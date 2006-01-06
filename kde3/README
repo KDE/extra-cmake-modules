@@ -13,5 +13,10 @@ basically one target, the install target.
 So run "make install" as root and then you are ready to use cmake for
 building KDE 3 applications.
 
+You can run the (Ruby) script am2cmake to automatically convert 
+KDE Makefile.am's to CMakeLists.txt for cmake. Starting from the 
+current directory it will convert all Makefile.am's in the subdirectories
+to cmake.
+
 Alexander Neundorf, 2006
 neundorf@kde.org
