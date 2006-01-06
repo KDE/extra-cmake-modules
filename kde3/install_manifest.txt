@@ -1,0 +1,4 @@
+/usr/local/share/CMake/Modules/FindKDE3.cmake
+/usr/local/share/CMake/Modules/KDE3Macros.cmake
+/usr/local/share/CMake/Modules/kde3init_dummy.cpp.in
+/usr/local/share/CMake/Modules/kde3uic.cmake

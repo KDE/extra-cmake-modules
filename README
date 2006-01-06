@@ -1,0 +1,13 @@
+If you are looking for an alternative to autotools to build
+KDE applications, you are right here.
+This directory contains files for creating KDE applications using cmake.
+cmake is an open source build system: http://www.cmake.org
+In the directory kde3/ you can find the files needed to build 
+applications, libraries, ioslaves, KParts, KDEInit Loadable Modules etc.
+for KDE 3.
+For more information read kde3/README , visit the cmake homepage or join 
+the cmake mailing list: http://www.cmake.org/mailman/listinfo/cmake 
+
+Alexander Neundorf, 2006
+neundorf@kde.org
+

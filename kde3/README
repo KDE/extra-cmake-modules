@@ -1,0 +1,17 @@
+This directory contains the cmake files required to build 
+KDE 3 software.
+It requires at least cmake 2.2.4, you can get it from the cmake web site:
+http://www.cmake.org or direcly from cmake cvs.
+The files FindKDE3.cmake, KDE3Macros.cmake, kde3uic.cmake and
+kde3init_dummy.cpp.in all have to be installed in the system 
+cmake module directory (typically /usr/local/share/CMake/Modules).
+You can either copy them manually to this directory or
+let cmake do this for. 
+For this run "cmake ." in this directory which will create a Makefile from
+the CMakeLists.txt in this directory. The generated Makefile will contain
+basically one target, the install target.
+So run "make install" as root and then you are ready to use cmake for
+building KDE 3 applications.
+
+Alexander Neundorf, 2006
+neundorf@kde.org
