@@ -1,0 +1,7 @@
+You can copy the CMakeLists.txt files you find here to the equivalent
+directories in kdebase (KDE 3.4.x and KDE 3.5.x should work) and then 
+run cmake there. This should create Makefiles or KDevelop project files
+which you can use to compile these apps.
+
+Alexander Neundorf, 2006
+neundorf@kde.org

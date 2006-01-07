@@ -6,10 +6,8 @@
 # KDE3_ADD_UI_FILES
 # KDE3_ADD_KCFG_FILES
 # KDE3_AUTOMOC
-# KDE3_TARGET_LINK_CONV_LIBRARIES
 # KDE3_CREATE_LIBTOOL_FILE
 # KDE3_PLACEHOLDER
-# KDE3_CREATE_LIBTOOL_FILE
 # KDE3_CREATE_FINAL_FILE
 # KDE3_ADD_KPART
 # KDE3_ADD_KLM
@@ -21,13 +19,16 @@
 #this should better be part of cmake:
 #add an additional file to the list of files a source file depends on
 MACRO(ADD_FILE_DEPENDANCY file)
-   SET(${file}_deps ${${file}_deps} ${ARGN})
-   SET_SOURCE_FILES_PROPERTIES(
-      ${file}
-      PROPERTIES
-      OBJECT_DEPENDS
-      "${${file}_deps}"
-   )
+
+   GET_SOURCE_FILE_PROPERTY(_deps ${file} OBJECT_DEPENDS)
+   IF (_deps)
+      SET(_deps ${_deps} ${ARGN})
+   ELSE (_deps)
+      SET(_deps ${ARGN})
+   ENDIF (_deps)
+
+   SET_SOURCE_FILES_PROPERTIES(${file} PROPERTIES OBJECT_DEPENDS "${_deps}")
+
 ENDMACRO(ADD_FILE_DEPENDANCY)
 
 
@@ -323,9 +324,7 @@ MACRO(KDE3_ADD_KPART _target_NAME _with_PREFIX)
       ADD_LIBRARY(${_target_NAME} MODULE ${_first_SRC} ${ARGN})
    ENDIF (KDE3_ENABLE_FINAL)
 
-   MESSAGE(STATUS "firstSrc: ${_first_SRC}")
    IF(_first_SRC)
-      MESSAGE(STATUS "setting empty prefix for ${_target_NAME}")
       SET_TARGET_PROPERTIES(${_target_NAME} PROPERTIES PREFIX "")
    ENDIF(_first_SRC)
 

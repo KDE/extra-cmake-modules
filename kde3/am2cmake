@@ -264,6 +264,7 @@ class CMakeFile
       inst.addFiles(files)
       case key
         when "kde_services" then inst.setLocation("/share/services")
+        when "kde_kcfg" then inst.setLocation("/share/config.kcfg")
         when "xdg_apps" then inst.setLocation("/share/applications/kde")
       end
 
