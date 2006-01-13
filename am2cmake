@@ -600,12 +600,16 @@ class CMakeFile
 
    def createKDE4ListsFile
       file=File.new(@listsFile, "w+");
+      file.printf("kde4_header()\n\n")
+      
       if @amFile=="Makefile.am"          # the toplevel Makefile.am
           file.printf("find_package(KDE4 REQUIRED)\n\n")
           file.printf("set(CMAKE_VERBOSE_MAKEFILE ON)\n\n")
           file.printf("add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})\n\n")
           file.printf("link_directories(${KDE4_LIB_DIR})\n\n")
           file.printf("include(ConvenienceLibs.cmake)\n\n")
+          file.printf("include(ManualStuff.cmake)\n\n")
+          file.printf("include(ConfigureChecks.cmake)\n\n")
       end
 
       if !@configHeaders.empty?
@@ -785,7 +789,7 @@ class CMakeFile
          file.printf("kde4_install_icons( %s )\n\n",@iconDir )
       end
 
-      file.printf("kde4_placeholder()\n\n")
+      file.printf("kde4_footer()\n\n")
 
       file.printf("\n\n#original Makefile.am contents follow:\n\n")
       @lines.each{ |line| file.printf("#%s", line)}
