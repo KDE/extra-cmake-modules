@@ -11,10 +11,12 @@ BuildNoKDE=0
 BuildKDE3=1
 BuildKDE4=2
 
+$withConv=false
+
+
 $buildType=BuildKDE3
 
 $allTargets=Array.new
-$infoFile=File.new("AdditionalInfo.txt", "w+")
 
 class InstallTarget
    def initialize
@@ -115,6 +117,11 @@ class CMakeFile
       @includeDirs=Array.new
       @subDirs=Array.new
       @skippedSubDirs=Array.new
+
+      @configHeaders=Array.new
+      $configHeaders.each do  |header|
+         @configHeaders.push($1) if header=~ Regexp.new("^"+@path+"([^\\/]+\\.h)\\.in")
+      end
 
       parseFile
 
@@ -385,6 +392,16 @@ class CMakeFile
             end
          end
       end
+      
+      if line =~ /^\s*COMPILE_FIRST\s*=\s*(\S+.*)$/
+         ($1).split.each do |dir|
+            if dir =~ /\$\(.+\)/
+               @skippedSubDirs.push(dir)
+            else
+               @subDirs.push(dir) if dir!="."
+            end
+         end
+      end
 
    end
 
@@ -397,6 +414,10 @@ class CMakeFile
           file.printf("ADD_DEFINITIONS(${QT_DEFINITIONS} ${KDE3_DEFINITIONS})\n\n")
           file.printf("LINK_DIRECTORIES(${KDE3_LIB_DIR})\n\n")
 
+      end
+      
+      if !@configHeaders.empty?
+         @configHeaders.each{ |header| file.printf("CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/#{header}.cmake ${CMAKE_CURRENT_BINARY_DIR}/#{header} )\n\n") }
       end
 
       if not @subDirs.empty?
@@ -579,25 +600,29 @@ class CMakeFile
 
    def createKDE4ListsFile
       file=File.new(@listsFile, "w+");
-      if @amFile=="Makefile.am" && $no_kde==false         # the toplevel Makefile.am
-          file.printf("FIND_PACKAGE(KDE4 REQUIRED)\n\n")
-          file.printf("SET(CMAKE_VERBOSE_MAKEFILE ON)\n\n")
-          file.printf("ADD_DEFINITIONS(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})\n\n")
-          file.printf("LINK_DIRECTORIES(${KDE4_LIB_DIR})\n\n")
+      if @amFile=="Makefile.am"          # the toplevel Makefile.am
+          file.printf("find_package(KDE4 REQUIRED)\n\n")
+          file.printf("set(CMAKE_VERBOSE_MAKEFILE ON)\n\n")
+          file.printf("add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})\n\n")
+          file.printf("link_directories(${KDE4_LIB_DIR})\n\n")
+          file.printf("include(ConvenienceLibs.cmake)\n\n")
+      end
 
+      if !@configHeaders.empty?
+         @configHeaders.each{ |header| file.printf("configure_file(${CMAKE_CURRENT_SOURCE_DIR}/#{header}.cmake ${CMAKE_CURRENT_BINARY_DIR}/#{header} )\n\n") }
       end
 
       if not @subDirs.empty?
-         @subDirs.each{ |dir| file.printf("ADD_SUBDIRECTORY( %s ) \n", dir)}
+         @subDirs.each{ |dir| file.printf("add_subdirectory( %s ) \n", dir)}
          file.printf("\n")
       end
       if not @skippedSubDirs.empty?
-         @skippedSubDirs.each{ |dir| file.printf("MESSAGE(STATUS \"${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir %s\")\n", dir)}
+         @skippedSubDirs.each{ |dir| file.printf("message(STATUS \"${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir %s\")\n", dir)}
       end
 
 
       if not @includeDirs.empty?
-         file.printf("INCLUDE_DIRECTORIES( ")
+         file.printf("include_directories( ")
          @includeDirs.each{ |dir| file.printf("%s ", dir) }
          file.printf(" )\n\n")
       end
@@ -609,12 +634,14 @@ class CMakeFile
             srcsName=buildTarget.name+"_LIB_SRCS"
          elsif buildTarget.type==StaticLib
             srcsName=buildTarget.name+"_STAT_SRCS"
+            if $withConvLibs
 #<porting info for libtool convenience libs>
-            $infoFile.printf("%s: %s\n", @amFile, buildTarget.name)
-            $infoFile.printf("SET(%s \n", srcsName)
-            buildTarget.sources.each { |currentFile| $infoFile.printf("${CMAKE_SOURCE_DIR}/%s%s\n", @path, currentFile) }
-            $infoFile.printf(")\n\n", srcsName)
-            next # do nothing for static libs
+               $convFile.printf("# %s: %s\n\n", @amFile, buildTarget.name)
+               $convFile.printf("set(%s \n", srcsName)
+               buildTarget.sources.each { |currentFile| $convFile.printf("  ${CMAKE_SOURCE_DIR}/%s%s\n", @path, currentFile) }
+               $convFile.printf(")\n\n", srcsName)
+               next # do nothing for static libs
+            end
 #</porting info for libtool convenience libs>
          elsif buildTarget.type==Part
             srcsName=buildTarget.name+"_PART_SRCS"
@@ -634,7 +661,7 @@ class CMakeFile
          end
 
          if not buildTarget.sources.empty?
-            file.printf("SET(%s\n", srcsName)
+            file.printf("set(%s\n", srcsName)
             needToCreateDummyFile=false
             buildTarget.sources.each do |currentFile|
                file.printf("%s\n", currentFile)
@@ -644,118 +671,103 @@ class CMakeFile
                end
             end
             file.printf(")\n\n")
-            file.printf("KDE4_AUTOMOC(${%s})\n\n", srcsName)
+            file.printf("kde4_automoc(${%s})\n\n", srcsName)
 
             if needToCreateDummyFile
 #                  printf("creating dummy file in #{@path} ________\n")
-               file.printf("FILE(WRITE dummy.cpp \"//autogenerated file by cmake\\n\")\n")
+               file.printf("file(WRITE dummy.cpp \"//autogenerated file by cmake\\n\")\n")
             end
          end
 
          if not buildTarget.uis.empty?
-            file.printf("SET( %s\n", uisName)
+            file.printf("set( %s\n", uisName)
             buildTarget.uis.each{ |currentFile| file.printf("%s\n", currentFile)}
             file.printf(")\n\n")
-            file.printf("KDE4_ADD_UI_FILES(%s ${%s} )\n\n", srcsName, uisName)
+            file.printf("kde4_add_ui_files(%s ${%s} )\n\n", srcsName, uisName)
          end
 
          if not buildTarget.ui3s.empty?
-            file.printf("SET( %s\n", ui3sName)
+            file.printf("set( %s\n", ui3sName)
             buildTarget.ui3s.each{ |currentFile| file.printf("%s\n", currentFile)}
             file.printf(")\n\n")
-            file.printf("KDE4_ADD_UI3_FILES(%s ${%s} )\n\n", srcsName, ui3sName)
+            file.printf("kde4_add_ui3_files(%s ${%s} )\n\n", srcsName, ui3sName)
          end
 
          if not buildTarget.skels.empty?
-            file.printf("SET( %s\n", skelsName)
+            file.printf("set( %s\n", skelsName)
             buildTarget.skels.each{ |currentFile| file.printf("%s\n", currentFile)}
             file.printf(")\n\n")
 
-            file.printf("KDE4_ADD_DCOP_SKELS(%s ${%s})\n\n", srcsName, skelsName)
+            file.printf("kde4_add_dcop_skels(%s ${%s})\n\n", srcsName, skelsName)
          end
 
          if not buildTarget.stubs.empty?
-            file.printf("SET( %s\n", stubsName)
+            file.printf("set( %s\n", stubsName)
             buildTarget.stubs.each{ |currentFile| file.printf("%s\n", currentFile)}
             file.printf(")\n\n")
 
-            file.printf("KDE4_ADD_DCOP_STUBS(%s ${%s})\n\n", srcsName, stubsName)
+            file.printf("kde4_add_dcop_stubs(%s ${%s})\n\n", srcsName, stubsName)
          end
 
          if not buildTarget.kcfgs.empty?
-            file.printf("SET( %s\n", kcfgsName)
+            file.printf("set( %s\n", kcfgsName)
             buildTarget.kcfgs.each{ |currentFile| file.printf("%s\n", currentFile)}
             file.printf(")\n\n")
 
-            file.printf("KDE4_ADD_KCFG_FILES(%s ${%s})\n\n", srcsName, kcfgsName)
+            file.printf("kde4_add_kcfg_files(%s ${%s})\n\n", srcsName, kcfgsName)
          end
 
          if buildTarget.type==SharedLib
-            file.printf("ADD_LIBRARY(%s SHARED ${%s})\n\n", buildTarget.name, srcsName)
-            file.printf("TARGET_LINK_LIBRARIES(%s ", buildTarget.name)
+            file.printf("kde4_add_library(%s SHARED ${%s})\n\n", buildTarget.name, srcsName)
+            file.printf("target_link_libraries(%s ", buildTarget.name)
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
             file.printf(" )\n\n")
 
-            file.printf("SET_TARGET_PROPERTIES(%s PROPERTIES VERSION 4.2.0 SOVERSION 4 )\n", buildTarget.name)
-            file.printf("INSTALL_TARGETS(/lib %s )\n\n", buildTarget.name)
+            file.printf("set_target_properties(%s PROPERTIES VERSION 4.2.0 SOVERSION 4 )\n", buildTarget.name)
+            file.printf("install_targets(/lib %s )\n\n", buildTarget.name)
          elsif buildTarget.type==StaticLib
-            file.printf("ADD_LIBRARY(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
+            file.printf("kde4_add_library(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
          elsif buildTarget.type==Part
             if buildTarget.stdPrefix
-               file.printf("KDE4_ADD_KPART(%s WITH_PREFIX ${%s})\n\n", buildTarget.name, srcsName)
+               file.printf("kde4_add_plugin(%s WITH_PREFIX ${%s})\n\n", buildTarget.name, srcsName)
             else
-               file.printf("KDE4_ADD_KPART(%s ${%s})\n\n", buildTarget.name, srcsName)
+               file.printf("kde4_add_plugin(%s ${%s})\n\n", buildTarget.name, srcsName)
             end
-            file.printf("TARGET_LINK_LIBRARIES(%s ", buildTarget.name)
+            file.printf("target_link_libraries(%s ", buildTarget.name)
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
             file.printf(" )\n\n")
 
-            file.printf("INSTALL_TARGETS(/lib/kde4 %s )\n\n", buildTarget.name)
+            file.printf("install_targets(/lib/kde4 %s )\n\n", buildTarget.name)
          elsif buildTarget.type==KDEInit
-            file.printf("KDE4_ADD_KLM( %s ${%s})\n\n", buildTarget.name, srcsName)
+            file.printf("kde4_add_klm( %s ${%s})\n\n", buildTarget.name, srcsName)
 
-            file.printf("TARGET_LINK_LIBRARIES(kdeinit_%s ", buildTarget.name)
+            file.printf("target_link_libraries(kdeinit_%s ", buildTarget.name)
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
             file.printf(" )\n\n")
 
-            file.printf("INSTALL_TARGETS(/lib kdeinit_%s )\n\n", buildTarget.name)
+            file.printf("install_targets(/lib kdeinit_%s )\n\n", buildTarget.name)
 
-            file.printf("TARGET_LINK_LIBRARIES( %s kdeinit_%s )\n", buildTarget.name, buildTarget.name)
+            file.printf("target_link_libraries( %s kdeinit_%s )\n", buildTarget.name, buildTarget.name)
 
-            file.printf("INSTALL_TARGETS(/bin %s )\n", buildTarget.name)
+            file.printf("install_targets(/bin %s )\n", buildTarget.name)
 
          else  #executable
-            if $no_kde
+            if buildTarget.test
+               file.printf("if(KDE4_BUILD_TESTS)\n")
+            end
 
-               file.printf("ADD_EXECUTABLE(%s ${%s})\n\n", buildTarget.name, srcsName)
+            file.printf("kde4_add_executable(%s ${%s})\n\n", buildTarget.name, srcsName)
 
-               file.printf("TARGET_LINK_LIBRARIES(%s ", buildTarget.name)
-               buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
-               file.printf(" )\n\n")
+            file.printf("target_link_libraries(%s ", buildTarget.name)
+            buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
+            file.printf(" )\n\n")
 
-               if buildTarget.install
-                  file.printf("INSTALL_TARGETS(/bin %s )\n\n", buildTarget.name)
-               end
+            if buildTarget.install
+               file.printf("install_targets(/bin %s )\n\n", buildTarget.name)
+            end
 
-            else
-               if buildTarget.test
-                  file.printf("IF(KDE4_BUILD_TESTS)\n")
-               end
-
-               file.printf("KDE4_ADD_EXECUTABLE(%s ${%s})\n\n", buildTarget.name, srcsName)
-
-               file.printf("TARGET_LINK_LIBRARIES(%s ", buildTarget.name)
-               buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
-               file.printf(" )\n\n")
-
-               if buildTarget.install
-                  file.printf("INSTALL_TARGETS(/bin %s )\n\n", buildTarget.name)
-               end
-
-               if buildTarget.test
-                  file.printf("ENDIF(KDE4_BUILD_TESTS)\n")
-               end
-
+            if buildTarget.test
+               file.printf("endif(KDE4_BUILD_TESTS)\n")
             end
 
          end
@@ -765,15 +777,15 @@ class CMakeFile
       file.printf("\n########### install files ###############\n\n")
 
       @installs.each do |key, install|
-         file.printf("INSTALL_FILES( %s FILES %s )\n", install.location, install.files)
+         file.printf("install_files( %s FILES %s )\n", install.location, install.files)
       end
       file.printf("\n")
 
       if @installIcons
-         file.printf("KDE4_INSTALL_ICONS( %s )\n\n",@iconDir )
+         file.printf("kde4_install_icons( %s )\n\n",@iconDir )
       end
 
-      file.printf("KDE4_PLACEHOLDER()\n\n")
+      file.printf("kde4_placeholder()\n\n")
 
       file.printf("\n\n#original Makefile.am contents follow:\n\n")
       @lines.each{ |line| file.printf("#%s", line)}
@@ -797,6 +809,7 @@ if (ARGV.length==1)
       $buildType=BuildKDE3
    elsif ARGV[0]=="--kde4"
       $buildType=BuildKDE4
+      $withConvLibs=true
    elsif ARGV[0]=="--help"
       printf("--help\t print this help text\n")
       printf("--version\t print version information\n")
@@ -805,17 +818,27 @@ if (ARGV.length==1)
       printf("--kde4\t create cmake files from KDE 4 unsermake files\n")
    elsif ARGV[0]=="--version"
       printf("am2cmake (C) 2005, Alexander Neundorf\n")
-      printf("Version 0.1, December 11th, 2005\n");
+      printf("Version 0.2, January 13th, 2006\n");
    else
       printf("Invalid argument, try --help\n")
    end
 end
 
+if $withConvLibs
+   $convFile=File.new("ConvenienceLibs.cmake", "w+")
+   $convFile.printf("\n#former libtool convenience libraries:\n\n")
+end   
 
-$infoFile.printf("in-Files\n")
-Dir["**/*.in"].each{|inFile| $infoFile.printf("%s\n", inFile)}
-$infoFile.printf("%s\n", "hallo")
-$infoFile.printf("\n\nStatic libs:\n")
+
+$configHeaders=Dir["**/*.h.in"]
+$configInIns=Dir["**/*.in.in"]
+
+infoFile=File.new("AdditionalInfo.txt", "w+")
+infoFile.printf(".h.in-Files\n")
+$configHeaders.each{|inFile| infoFile.printf("%s\n", inFile)}
+infoFile.printf("\n.in.in-Files\n")
+$configInIns.each{|inFile| infoFile.printf("%s\n", inFile)}
+
 
 Dir["**/Makefile.am"].each{ |currentFile| convertAmFile(currentFile)}
 
