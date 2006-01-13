@@ -264,8 +264,13 @@ MACRO(KDE4_INSTALL_ICONS _theme)
    ENDFOREACH (_current_ICON)
 ENDMACRO(KDE4_INSTALL_ICONS _theme)
 
-MACRO(KDE4_PLACEHOLDER)
-ENDMACRO(KDE4_PLACEHOLDER)
+# for the case that something should be added to every CMakeLists.txt at the top
+MACRO(KDE4_HEADER)
+ENDMACRO(KDE4_HEADER)
+
+# same as above, but at the end
+MACRO(KDE4_FOOTER)
+ENDMACRO(KDE4_FOOTER)
 
 MACRO(KDE4_CREATE_LIBTOOL_FILE _target)
    GET_TARGET_PROPERTY(_target_location ${_target} LOCATION)
@@ -307,7 +312,7 @@ ENDMACRO(KDE4_CREATE_FINAL_FILE _filename)
 OPTION(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 OPTION(KDE4_BUILD_TESTS  "Build the tests")
 
-MACRO(KDE4_ADD_KPART _target_NAME _with_PREFIX)
+MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
    IF (${_with_PREFIX} STREQUAL "WITH_PREFIX")
       SET(_first_SRC)
@@ -328,7 +333,7 @@ MACRO(KDE4_ADD_KPART _target_NAME _with_PREFIX)
 
    KDE4_CREATE_LIBTOOL_FILE(${_target_NAME})
 
-ENDMACRO(KDE4_ADD_KPART _target_NAME _with_PREFIX)
+ENDMACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 MACRO(KDE4_ADD_KLM _target_NAME )
 
@@ -358,5 +363,33 @@ MACRO(KDE4_ADD_EXECUTABLE _target_NAME )
    ENDIF (KDE4_ENABLE_FINAL)
 
 ENDMACRO(KDE4_ADD_EXECUTABLE _target_NAME)
+
+MACRO(KDE4_ADD_LIBRARY _target_NAME )
+#is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
+
+   SET(_first_SRC ${_lib_TYPE})
+   SET(_add_lib_param)
+
+   IF (${_lib_TYPE} STREQUAL "STATIC")
+      SET(_first_SRC)
+      SET(_add_lib_param STATIC)
+   ENDIF (${_lib_TYPE} STREQUAL "STATIC")
+   IF (${_lib_TYPE} STREQUAL "SHARED")
+      SET(_first_SRC)
+      SET(_add_lib_param SHARED)
+   ENDIF (${_lib_TYPE} STREQUAL "SHARED")
+   IF (${_lib_TYPE} STREQUAL "MODULE")
+      SET(_first_SRC)
+      SET(_add_lib_param MODULE)
+   ENDIF (${_lib_TYPE} STREQUAL "MODULE")
+
+   IF (KDE4_ENABLE_FINAL)
+      KDE4_CREATE_FINAL_FILE(${_target_NAME}_final.cpp ${_first_SRC} ${ARGN})
+      ADD_LIBRARY(${_target_NAME} ${_add_lib_param}  ${_target_NAME}_final.cpp)
+   ELSE (KDE4_ENABLE_FINAL)
+      ADD_LIBRARY(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN})
+   ENDIF (KDE4_ENABLE_FINAL)
+
+ENDMACRO(KDE4_ADD_LIBRARY _target_NAME )
 
 
