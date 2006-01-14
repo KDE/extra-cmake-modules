@@ -18,6 +18,48 @@ $buildType=BuildKDE3
 
 $allTargets=Array.new
 
+InstallDirsKDE3 = {
+   "kde_apps"     => "/share/applnk",
+   "kde_conf"     => "/share/config",
+   "kde_data"     => "/share/apps",
+   "kde_html"     => "/share/doc/HTML",
+   "kde_icon"     => "/share/icons",
+   "kde_kcfg"     => "/share/config.kcfg",
+   "kde_libs_html"=> "/share/doc/HTML",
+   "kde_locale"   => "/share/locale",
+   "kde_mime"     => "/share/mimelink",
+   "kde_services" => "/share/services",
+   "kde_servicetypes" => "/share/servicetypes",
+   "kde_sound"    => "/share/sounds",
+   "kde_templates"=> "/share/templates",
+   "kde_wallpaper"=> "/share/wallpapers",
+   "xdg_apps"     => "/share/applications/kde",
+   "xdg_directory"=> "/share/desktop-directories",
+   "data"         => "/share"
+}
+
+InstallDirsKDE4 = {
+   "kde_apps"     => "${KDE4_APPS_DIR}",
+   "kde_conf"     => "${KDE4_CONFIG_DIR}",
+   "kde_data"     => "${KDE4_DATA_DIR}",
+   "kde_html"     => "${KDE4_HTML_DIR}",
+   "kde_icon"     => "${KDE4_ICON_DIR}",
+   "kde_kcfg"     => "${KDE4_KCFG_DIR}",
+   "kde_libs_html"=> "${KDE4_LIBS_HTML_DIR}",
+   "kde_locale"   => "${KDE4_LOCALE_DIR}",
+   "kde_mime"     => "${KDE4_MIME_DIR}",
+   "kde_services" => "${KDE4_SERVICES_DIR}",
+   "kde_servicetypes" => "${KDE4_SERVICESTYPES_DIR}",
+   "kde_sound"    => "${KDE4_SOUND_DIR}",
+   "kde_templates"=> "${KDE4_TEMPLATES_DIR}",
+   "kde_wallpaper"=> "${KDE4_WALLPAPER_DIR}",
+   "xdg_apps"     => "${XDG_APPS_DIR}",
+   "xdg_directory"=> "${XDG_DIRECTORY_DIR}",
+   "data"         => "/share"
+}
+
+$installDirs=InstallDirsKDE3
+
 class InstallTarget
    def initialize
       @files=""
@@ -287,11 +329,14 @@ class CMakeFile
          inst=InstallTarget.new
       end
       inst.addFiles(files)
-      case key
-        when "kde_services" then inst.setLocation("/share/services")
-        when "kde_kcfg" then inst.setLocation("/share/config.kcfg")
-        when "xdg_apps" then inst.setLocation("/share/applications/kde")
+      if $installDirs.has_key?(key)
+         inst.setLocation($installDirs[key])
       end
+#      case key
+#        when "kde_services" then inst.setLocation("/share/services")
+#        when "kde_kcfg" then inst.setLocation("/share/config.kcfg")
+#        when "xdg_apps" then inst.setLocation("/share/applications/kde")
+#      end
 
       @installs[key]=inst
    end
@@ -304,35 +349,48 @@ class CMakeFile
          inst=InstallTarget.new
       end
 
-      if location =~ /\$\((\S+)\)(\/?\S*)/
+      if location =~ /\$\((\S+)dir\)(\/?\S*)/
          baseDir=$1
          subDir=$2
-#         printf("base: %s sub: %s\n", baseDir, subDir)
-         if baseDir=="kde_servicesdir"
-            inst.setLocation("/share/services"+subDir)
-            @installs[key]=inst
-         elsif baseDir=="kde_servicetypesdir"
-            inst.setLocation("/share/servicetypes"+subDir)
-            @installs[key]=inst
-         elsif baseDir=="kde_mimedir"
-            inst.setLocation("/share/mimelink"+subDir)
-            @installs[key]=inst
-         elsif baseDir=="kde_htmldir"
-            inst.setLocation("/share/doc/HTML"+subDir)
-            @installs[key]=inst
-         elsif baseDir=="kde_icondir"
-            inst.setLocation("/share/icons"+subDir)
-            @installs[key]=inst
-            @iconDir=key
-         elsif baseDir=="kde_datadir"
-            inst.setLocation("/share/apps"+subDir)
-            @installs[key]=inst
-         elsif baseDir=="datadir"
-            inst.setLocation("/share"+subDir)
+         if $installDirs.has_key?(baseDir)
+            inst.setLocation($installDirs[baseDir]+subDir)
             @installs[key]=inst
          end
+         if baseDir=="kde_icon"
+            @iconDir=key
+         end
+
+#      if location =~ /\$\((\S+)\)(\/?\S*)/
+##         printf("base: %s sub: %s\n", baseDir, subDir)
+#         if baseDir=="kde_confdir"
+#            inst.setLocation("/share/config"+subDir)
+#            @installs[key]=inst
+#         elsif baseDir=="kde_datadir"
+#            inst.setLocation("/share/apps"+subDir)
+#            @installs[key]=inst
+#         elsif baseDir=="kde_htmldir"
+#            inst.setLocation("/share/doc/HTML"+subDir)
+#            @installs[key]=inst
+#         elsif baseDir=="kde_icondir"
+#            inst.setLocation("/share/icons"+subDir)
+#            @installs[key]=inst
+###            @iconDir=key
+#         elsif baseDir=="kde_servicesdir"
+#            inst.setLocation("/share/services"+subDir)
+#            @installs[key]=inst
+#         elsif baseDir=="kde_servicetypesdir"
+#            inst.setLocation("/share/servicetypes"+subDir)
+#            @installs[key]=inst
+#         elsif baseDir=="kde_mimedir"
+#            inst.setLocation("/share/mimelink"+subDir)
+#            @installs[key]=inst
+#         elsif baseDir=="datadir"
+#            inst.setLocation("/share"+subDir)
+#            @installs[key]=inst
+#         end
       end
    end
+
 
    def evalLine(line)
       if line =~ /^\s*METASOURCES\s*=\s*AUTO\s*$/
@@ -816,6 +874,7 @@ if (ARGV.length==1)
    elsif ARGV[0]=="--kde4"
       $buildType=BuildKDE4
       $withConvLibs=true
+      $installDirs=InstallDirsKDE4
    elsif ARGV[0]=="--help"
       printf("--help\t print this help text\n")
       printf("--version\t print version information\n")
