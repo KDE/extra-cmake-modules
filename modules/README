@@ -1,0 +1,5 @@
+these are modules for detecting software packages needed by KDE, but not yet
+part of cmake
+
+Alex <neundorf@kde.org>
+

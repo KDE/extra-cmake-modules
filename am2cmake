@@ -84,16 +84,18 @@ class BuildTarget
          else
             if currentLib =~ /^-l(\S+)$/
                $1
+            elsif currentLib =~ /^.+\/lib(\w+)\.la$/
+               $1   
             else
                ""
             end
          end
+
+         if !lib.empty?
+            @libs.push(lib)
+         end
       end
 
-      if !lib.empty?
-         @libs.push(lib)
-#         printf("--- lib: #{lib}\n")
-      end
    end
 
 
@@ -363,7 +365,7 @@ class CMakeFile
                return
             end
 
-#            printf("target: #{buildTarget.name} lib: #{$2} line: #{line} d1: #{$1}\n")
+#            $stderr.printf("target: #{buildTarget.name} lib: #{$2} line: #{line} d1: #{$1}\n")
             buildTarget.addLibs($2)
          end
          return

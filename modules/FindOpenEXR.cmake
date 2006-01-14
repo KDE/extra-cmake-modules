@@ -1,0 +1,12 @@
+
+FIND_PATH(OPENEXR_INCLUDE_DIR ImfRgbaFile.h
+/usr/include
+/usr/local/include
+)
+
+
+
+IF(OPENEXR_INCLUDE_DIR)
+   SET(OPENEXR_FOUND TRUE)
+ENDIF(OPENEXR_INCLUDE_DIR)
+
