@@ -84,6 +84,7 @@ class BuildTarget
       @skels=Array.new
       @stubs=Array.new
       @kcfgs=Array.new
+      @qrcs=Array.new
       @am=Array.new
       @stdPrefix=withStdPrefix
       @install=install
@@ -111,6 +112,8 @@ class BuildTarget
             @stubs.push($1+".h")
          elsif currentSource =~ /^(\S+)\.kcfgc$/
             @kcfgs.push(currentSource)
+         elsif currentSource =~ /^(\S+)\.qrc$/
+            @qrcs.push(currentSource)
          else
             @sources.push(currentSource)
          end
@@ -160,7 +163,7 @@ class BuildTarget
    end
 
 
-   attr_reader :name, :type, :sources, :uis, :ui3s, :skels, :stdPrefix, :stubs, :kcfgs, :install, :test, :libs
+   attr_reader :name, :type, :sources, :uis, :ui3s, :skels, :stdPrefix, :stubs, :kcfgs, :install, :test, :libs, :qrcs
    attr_reader :versionNumberMajor, :versionNumberMinor, :versionNumberPatch
 
 end
@@ -717,6 +720,7 @@ class CMakeFile
          skelsName=buildTarget.name+"_DCOP_SKEL_SRCS"
          stubsName=buildTarget.name+"_DCOP_STUB_SRCS"
          kcfgsName=buildTarget.name+"_KCFG_SRCS"
+         qrcsName=buildTarget.name+"_QRC"
 
          if buildTarget.sources.empty?
             buildTarget.sources.push("dummy.cpp")
@@ -754,6 +758,14 @@ class CMakeFile
             file.printf(")\n\n")
             file.printf("kde4_add_ui3_files(%s ${%s} )\n\n", srcsName, ui3sName)
          end
+         
+         if not buildTarget.qrcs.empty?
+            file.printf("set( %s\n", qrcsName)
+            buildTarget.qrcs.each{ |currentFile| file.printf("%s\n", currentFile)}
+            file.printf(")\n\n")
+            file.printf("qt4_add_resources(%s ${%s} )\n\n", srcsName, qrcsName)
+         end
+
 
          if not buildTarget.skels.empty?
             file.printf("set( %s\n", skelsName)
