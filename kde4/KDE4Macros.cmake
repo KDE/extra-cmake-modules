@@ -182,6 +182,50 @@ MACRO(KDE4_ADD_UI_FILES _sources )
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE4_ADD_UI_FILES)
 
+#create the implementation files from the ui files and add them to the list of sources
+#usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})
+MACRO(KDE4_ADD_UI3_FILES _sources )
+   FOREACH (_current_FILE ${ARGN})
+
+      GET_FILENAME_COMPONENT(_basename ${_current_FILE} NAME_WE)
+      SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+      SET(_src ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
+      SET(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
+
+      ADD_CUSTOM_COMMAND(OUTPUT ${_header}
+         COMMAND ${QT_UIC_EXECUTABLE}
+         ARGS  -nounload -o ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+      )
+
+#     ADD_CUSTOM_COMMAND(OUTPUT ${_src}
+#         COMMAND uic
+#         ARGS -nounload -tr tr2i18n -o ${_src} -impl ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+#         DEPENDS ${_header}
+#      )
+
+      ADD_CUSTOM_COMMAND(OUTPUT ${_src}
+         COMMAND ${CMAKE_COMMAND}
+         ARGS
+         -DKDE_UIC_FILE:STRING=${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         -DKDE_UIC_CPP_FILE:STRING=${_src}
+         -DKDE_UIC_H_FILE:STRING=${_header}
+         -P ${CMAKE_ROOT}/Modules/kde4uic.cmake
+         DEPENDS ${_header}
+      )
+
+      ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
+         COMMAND ${QT_MOC_EXECUTABLE}
+         ARGS ${_header} -o ${_moc}
+         DEPENDS ${_header}
+      )
+
+      SET(${_sources} ${${_sources}} ${_src} ${_moc} )
+
+   ENDFOREACH (_current_FILE)
+ENDMACRO(KDE4_ADD_UI3_FILES)
+
+
 MACRO(KDE4_AUTOMOC)
    SET(_matching_FILES )
    FOREACH (_current_FILE ${ARGN})
@@ -364,7 +408,7 @@ MACRO(KDE4_ADD_EXECUTABLE _target_NAME )
 
 ENDMACRO(KDE4_ADD_EXECUTABLE _target_NAME)
 
-MACRO(KDE4_ADD_LIBRARY _target_NAME )
+MACRO(KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
 
    SET(_first_SRC ${_lib_TYPE})
@@ -390,6 +434,9 @@ MACRO(KDE4_ADD_LIBRARY _target_NAME )
       ADD_LIBRARY(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN})
    ENDIF (KDE4_ENABLE_FINAL)
 
-ENDMACRO(KDE4_ADD_LIBRARY _target_NAME )
+ENDMACRO(KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
+
+MACRO(KDE4_CREATE_DOXYGEN_DOCS)
+ENDMACRO(KDE4_CREATE_DOXYGEN_DOCS)
 

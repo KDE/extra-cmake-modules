@@ -60,7 +60,7 @@ SET(KDE4_LIBS_HTML_DIR     /share/doc/HTML)
 SET(KDE4_LOCALE_DIR        /share/locale)
 SET(KDE4_MIME_DIR          /share/mimelnk)
 SET(KDE4_SERVICES_DIR      /share/services)
-SET(KDE4_SERVICESTYPES_DIR /share/services)
+SET(KDE4_SERVICETYPES_DIR /share/services)
 SET(KDE4_SOUND_DIR         /share/sounds)
 SET(KDE4_TEMPLATES_DIR     /share/templates)
 SET(KDE4_WALLPAPER_DIR     /share/wallpapers)
@@ -79,7 +79,7 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
   SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
-  
+
   SET(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
   SET(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH})
   SET(KDE4_DCOPIDL_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/dcopidl )
@@ -185,7 +185,7 @@ ENDMACRO (KDE4_PRINT_RESULTS)
 IF (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
    #bail out if something wasn't found
    KDE4_PRINT_RESULTS()
-   MESSAGE(FATAL_ERROR "Could not find everything required for compiling KDE 3 programs")
+   MESSAGE(FATAL_ERROR "Could not find everything required for compiling KDE 4 programs")
 
 ENDIF (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
 
