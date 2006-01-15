@@ -89,6 +89,9 @@ class BuildTarget
       @install=install
       @test=test
       @libs=Array.new
+      @versionNumberMajor=1
+      @versionNumberMinor=0
+      @versionNumberPatch=0
 
       @libs.push("${QT_AND_KDECORE_LIBS}")
       $allTargets.push(self)
@@ -116,6 +119,7 @@ class BuildTarget
 
    def addLibs(libs)
       lib=""
+      previousWasVersionInfo=false
       libs.split.each do |currentLib|
          lib=case currentLib
          when "$(LIB_KDEUI)" then "kdeui"
@@ -127,7 +131,7 @@ class BuildTarget
             if currentLib =~ /^-l(\S+)$/
                $1
             elsif currentLib =~ /^.+\/lib(\w+)\.la$/
-               $1   
+               $1
             else
                ""
             end
@@ -136,12 +140,28 @@ class BuildTarget
          if !lib.empty?
             @libs.push(lib)
          end
+
+         #handle libtool version info, not sure it is correct
+         if previousWasVersionInfo
+            if currentLib =~ /^(\d+):(\d+):(\d+)$/
+               @versionNumberMajor=$1.to_i-$3.to_i
+               @versionNumberMinor=$3.to_i
+               @versionNumberPatch=$2.to_i
+            elsif previousWasVersionInfo && currentLib =~ /^(\d+):(\d+)$/
+               @versionNumberMajor=$1.to_i
+               @versionNumberMinor=$2.to_i
+               @versionNumberPatch=0
+            end
+         end
+         previousWasVersionInfo= (currentLib == "-version-info")
+         
       end
 
    end
 
 
    attr_reader :name, :type, :sources, :uis, :ui3s, :skels, :stdPrefix, :stubs, :kcfgs, :install, :test, :libs
+   attr_reader :versionNumberMajor, :versionNumberMinor, :versionNumberPatch
 
 end
 
@@ -154,6 +174,12 @@ class CMakeFile
       @listsFile=@path+"CMakeLists.txt"
       @iconDir="hicolor"
       @installIcons=false
+      
+      @createDoxygenDocs=false
+      @doxygenRecursive=false
+      @doxygenInternalDocs=false
+      @doxygenReferences=Array.new
+      @doxygenExcludes=Array.new
 
       @targets=Array.new
       @installs=Hash.new
@@ -199,7 +225,7 @@ class CMakeFile
          else
             cummLine+=" "+line.chomp #[0, line.length-1]
             if not cummLine.empty?
-               evalLine(cummLine)
+               parseLine(cummLine)
                cummLine=""
             end
          end
@@ -332,12 +358,6 @@ class CMakeFile
       if $installDirs.has_key?(key)
          inst.setLocation($installDirs[key])
       end
-#      case key
-#        when "kde_services" then inst.setLocation("/share/services")
-#        when "kde_kcfg" then inst.setLocation("/share/config.kcfg")
-#        when "xdg_apps" then inst.setLocation("/share/applications/kde")
-#      end
-
       @installs[key]=inst
    end
 
@@ -359,40 +379,24 @@ class CMakeFile
          if baseDir=="kde_icon"
             @iconDir=key
          end
-
-#      if location =~ /\$\((\S+)\)(\/?\S*)/
-##         printf("base: %s sub: %s\n", baseDir, subDir)
-#         if baseDir=="kde_confdir"
-#            inst.setLocation("/share/config"+subDir)
-#            @installs[key]=inst
-#         elsif baseDir=="kde_datadir"
-#            inst.setLocation("/share/apps"+subDir)
-#            @installs[key]=inst
-#         elsif baseDir=="kde_htmldir"
-#            inst.setLocation("/share/doc/HTML"+subDir)
-#            @installs[key]=inst
-#         elsif baseDir=="kde_icondir"
-#            inst.setLocation("/share/icons"+subDir)
-#            @installs[key]=inst
-###            @iconDir=key
-#         elsif baseDir=="kde_servicesdir"
-#            inst.setLocation("/share/services"+subDir)
-#            @installs[key]=inst
-#         elsif baseDir=="kde_servicetypesdir"
-#            inst.setLocation("/share/servicetypes"+subDir)
-#            @installs[key]=inst
-#         elsif baseDir=="kde_mimedir"
-#            inst.setLocation("/share/mimelink"+subDir)
-#            @installs[key]=inst
-#         elsif baseDir=="datadir"
-#            inst.setLocation("/share"+subDir)
-#            @installs[key]=inst
-#         end
       end
    end
 
+   def parseDoxygenSettings(line)
+      if line.include?("Doxyfile.am")
+         @createDoxygenDocs=true
+      elsif line =~ /^\s*DOXYGEN_SET_INTERNAL_DOCS\s*=\sYES.*/
+         @doxygenInternalDocs = true
+      elsif line =~ /^\s*DOXYGEN_SET_RECURSIVE\s*=\sYES.*/
+         @doxygenRecursive = true
+      elsif line =~ /^\s*DOXYGEN_REFERENCES\s*=\s*(\S+.*)$/
+         ($1).split.each { |ref| @doxygenReferences.push(ref) }
+      elsif line =~ /^\s*DOXYGEN_EXCLUDE\s*=\s*(\S+.*)$/
+         ($1).split.each { |exclude| @doxygenExcludes.push(exclude) }
+      end
+   end
 
-   def evalLine(line)
+   def parseLine(line)
       if line =~ /^\s*METASOURCES\s*=\s*AUTO\s*$/
          @automoc=true
          return
@@ -402,6 +406,11 @@ class CMakeFile
          return
       end
 
+
+      if line.include?("Doxyfile.am") || line.include?("DOXYGEN")
+         parseDoxygenSettings(line)
+      end
+      
       if line =~ /^\s*KDE_ICON\s*=/
          @installIcons=true
          return
@@ -443,7 +452,7 @@ class CMakeFile
          return
       end
 
-      if line =~ /^\s*SUBDIRS\s*=\s*(\S+.*)$/
+      if line =~ /^\s*SUBDIRS\s*=\s*(\S+.*)$/ || line =~ /^\s*COMPILE_FIRST\s*=\s*(\S+.*)$/
          ($1).split.each do |dir|
             if dir =~ /\$\(.+\)/
                @skippedSubDirs.push(dir)
@@ -452,17 +461,6 @@ class CMakeFile
             end
          end
       end
-      
-      if line =~ /^\s*COMPILE_FIRST\s*=\s*(\S+.*)$/
-         ($1).split.each do |dir|
-            if dir =~ /\$\(.+\)/
-               @skippedSubDirs.push(dir)
-            else
-               @subDirs.push(dir) if dir!="."
-            end
-         end
-      end
-
    end
 
    def createKDE3ListsFile
@@ -787,10 +785,12 @@ class CMakeFile
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
             file.printf(" )\n\n")
 
-            file.printf("set_target_properties(%s PROPERTIES VERSION 4.2.0 SOVERSION 4 )\n", buildTarget.name)
+            file.printf("set_target_properties(%s PROPERTIES VERSION %d.%d.%d SOVERSION %d )\n", buildTarget.name, buildTarget.versionNumberMajor, buildTarget.versionNumberMinor, buildTarget.versionNumberPatch, buildTarget.versionNumberMajor)
             file.printf("install_targets(/lib %s )\n\n", buildTarget.name)
+            
          elsif buildTarget.type==StaticLib
             file.printf("kde4_add_library(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
+            
          elsif buildTarget.type==Part
             if buildTarget.stdPrefix
                file.printf("kde4_add_plugin(%s WITH_PREFIX ${%s})\n\n", buildTarget.name, srcsName)
@@ -847,6 +847,29 @@ class CMakeFile
 
       if @installIcons
          file.printf("kde4_install_icons( %s )\n\n",@iconDir )
+      end
+      
+      if @createDoxygenDocs
+         file.printf("kde4_create_doxygen_docs( ")
+         
+         if @doxygenRecursive
+            file.printf("RECURSIVE ")
+         end
+         
+         if @doxygenInternalDocs
+            file.printf("INTERNAL_DOCS ")
+         end
+         
+         if not @doxygenReferences.empty?
+            file.printf("REFERENCES ")
+            @doxygenReferences.each { |ref| file.printf("%s ", ref) }
+         end
+         if not @doxygenExcludes.empty?
+            file.printf("EXCLUDE ")
+            @doxygenExcludes.each { |exclude| file.printf("%s ", exclude) }
+         end
+
+         file.printf(" )\n\n")
       end
 
       file.printf("kde4_footer()\n\n")
