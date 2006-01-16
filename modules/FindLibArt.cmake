@@ -1,11 +1,20 @@
+INCLUDE(UsePkgConfig)
+
+# use pkg-config to get the directories and then use these values
+# in the FIND_PATH() and FIND_LIBRARY() calls
+PKGCONFIG(libart-2.0 _libArtIncDir _libArtLinkDir _libArtLinkFlags _libArtCflags)
+
+SET(LIBART_DEFINITIONS ${_libArtCflags})
 
 FIND_PATH(LIBART_INCLUDE_DIR libart_lgpl/libart.h
+${_libArtIncDir}/libart-2.0
 /usr/include/libart-2.0
 /usr/local/include/libart-2.0
 )
 
 FIND_LIBRARY(LIBART_LIBRARY NAMES art_lgpl_2
 PATHS
+${_libArtLinkDir}
 /usr/lib
 /usr/local/lib
 )
