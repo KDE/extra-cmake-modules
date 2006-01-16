@@ -146,39 +146,20 @@ MACRO(KDE4_ADD_UI_FILES _sources )
 
       GET_FILENAME_COMPONENT(_basename ${_current_FILE} NAME_WE)
       SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
-      SET(_src ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
-      SET(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
 
+      # we need to run uic and replace some things in the generated file
+      # this is done by executing the cmake script kde4uic.cmake
       ADD_CUSTOM_COMMAND(OUTPUT ${_header}
-         COMMAND ${QT_UIC_EXECUTABLE}
-         ARGS  -nounload -o ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-      )
-
-#     ADD_CUSTOM_COMMAND(OUTPUT ${_src}
-#         COMMAND uic
-#         ARGS -nounload -tr tr2i18n -o ${_src} -impl ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-#         DEPENDS ${_header}
-#      )
-
-      ADD_CUSTOM_COMMAND(OUTPUT ${_src}
          COMMAND ${CMAKE_COMMAND}
          ARGS
-         -DKDE_UIC_FILE:STRING=${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-         -DKDE_UIC_CPP_FILE:STRING=${_src}
-         -DKDE_UIC_H_FILE:STRING=${_header}
+         -DKDE_UIC_EXECUTABLE:FILEPATH=${QT_UIC_EXECUTABLE}
+         -DKDE_UIC_FILE:FILEPATH=${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         -DKDE_UIC_H_FILE:FILEPATH=${_header}
+         -DKDE_UIC_BASENAME:STRING=${_basename}
+#         -DKDE_UIC_PLUGIN_DIR:FILEPATH="."
          -P ${CMAKE_ROOT}/Modules/kde4uic.cmake
-         DEPENDS ${_header}
+         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
       )
-
-      ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
-         COMMAND ${QT_MOC_EXECUTABLE}
-         ARGS ${_header} -o ${_moc}
-         DEPENDS ${_header}
-      )
-
-      SET(${_sources} ${${_sources}} ${_src} ${_moc} )
-
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE4_ADD_UI_FILES)
 
@@ -193,23 +174,23 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
       SET(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_header}
-         COMMAND ${QT_UIC_EXECUTABLE}
+         COMMAND ${QT_UIC3_EXECUTABLE}
          ARGS  -nounload -o ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
          DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
       )
 
-#     ADD_CUSTOM_COMMAND(OUTPUT ${_src}
-#         COMMAND uic
-#         ARGS -nounload -tr tr2i18n -o ${_src} -impl ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-#         DEPENDS ${_header}
-#      )
-
+      # we need to run uic3 and replace some things in the generated file
+      # this is done by executing the cmake script kde4uic.cmake
       ADD_CUSTOM_COMMAND(OUTPUT ${_src}
          COMMAND ${CMAKE_COMMAND}
          ARGS
-         -DKDE_UIC_FILE:STRING=${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-         -DKDE_UIC_CPP_FILE:STRING=${_src}
-         -DKDE_UIC_H_FILE:STRING=${_header}
+         -DKDE3:BOOL=ON
+         -DKDE_UIC_EXECUTABLE:FILEPATH=${QT_UIC3_EXECUTABLE}
+         -DKDE_UIC_FILE:FILEPATH=${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         -DKDE_UIC_CPP_FILE:FILEPATH=${_src}
+         -DKDE_UIC_H_FILE:FILEPATH=${_header}
+         -DKDE_UIC_BASENAME:STRING=${_basename}
+         -DKDE_UIC_PLUGIN_DIR:FILEPATH="."
          -P ${CMAKE_ROOT}/Modules/kde4uic.cmake
          DEPENDS ${_header}
       )
@@ -219,7 +200,6 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
          ARGS ${_header} -o ${_moc}
          DEPENDS ${_header}
       )
-
       SET(${_sources} ${${_sources}} ${_src} ${_moc} )
 
    ENDFOREACH (_current_FILE)
