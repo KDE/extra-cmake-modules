@@ -33,10 +33,13 @@ INCLUDE(FindQt4)
 #add the definitions found by FindQt to the current definitions
 #ADD_DEFINITIONS(${QT_DEFINITIONS} -DQT_CLEAN_NAMESPACE)
 
-SET(QT_AND_KDECORE_LIBS ${QT_LIBRARIES} kdecore)
+SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
 #add some KDE specific stuff
-SET(KDE4_DEFINITIONS -DQT_CLEAN_NAMESPACE -Wnon-virtual-dtor -Wno-long-long -Wundef -ansi -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common)
+SET(KDE4_DEFINITIONS -DQT3_SUPPORT -DQT_CLEAN_NAMESPACE )
+
+SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
 
 #only on linux, but not e.g. on FreeBSD:
 IF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
@@ -82,7 +85,8 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   SET(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
   SET(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH})
-  SET(KDE4_DCOPIDL_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/dcopidl )
+  SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
+  SET(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
   SET(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/dcopidl2cpp )
   SET(KDE4_KCFGC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/kconfig_compiler )
 
@@ -121,6 +125,12 @@ ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
     $ENV{KDEDIR}/bin
     /opt/kde/bin
     /opt/kde4/bin
+  )
+
+  FIND_PATH(KDE4_KALYPTUS_DIR kalyptus
+    $ENV{KDEDIR}/share/apps/dcopidl
+    /opt/kde/share/apps/dcopidl
+    /opt/kde4/share/apps/dcopidl
   )
 
   FIND_PROGRAM(KDE4_DCOPIDL2CPP_EXECUTABLE NAME dcopidl2cpp PATHS

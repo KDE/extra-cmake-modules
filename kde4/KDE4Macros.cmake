@@ -43,7 +43,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
          COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-         ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} > ${_kidl}
+         ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} > ${_kidl}
          DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
       )
 
@@ -197,7 +197,7 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
          COMMAND ${QT_MOC_EXECUTABLE}
-         ARGS ${_header} -o ${_moc}
+         ARGS -I ${QT_INCLUDE_DIR} ${_header} -o ${_moc}
          DEPENDS ${_header}
       )
       SET(${_sources} ${${_sources}} ${_src} ${_moc} )
@@ -205,19 +205,25 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE4_ADD_UI3_FILES)
 
+IF(UNIX)
+   SET(_HACK_MOC_DEFINE -DQ_WS_X11)
+ENDIF(UNIX)
+
 
 MACRO(KDE4_AUTOMOC)
    SET(_matching_FILES )
    FOREACH (_current_FILE ${ARGN})
-      IF (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
 
-         FILE(READ ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} _contents)
+      IF(${_current_FILE} MATCHES "^/.+")
+         SET(_tmp_FILE ${_current_FILE})
+      ELSE(${_current_FILE} MATCHES "^/.+")
+         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
+      ENDIF(${_current_FILE} MATCHES "^/.+")
 
-         IF(${_current_FILE} MATCHES "^/.+")
-            SET(_tmp_FILE ${_current_FILE})
-         ELSE(${_current_FILE} MATCHES "^/.+")
-            SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
-         ENDIF(${_current_FILE} MATCHES "^/.+")
+      IF (EXISTS ${_tmp_FILE})
+
+         FILE(READ ${_tmp_FILE} _contents)
+
          GET_FILENAME_COMPONENT(_abs_FILE ${_tmp_FILE} ABSOLUTE)
          GET_FILENAME_COMPONENT(_abs_PATH ${_abs_FILE} PATH)
 
@@ -230,19 +236,19 @@ MACRO(KDE4_AUTOMOC)
 #               SET(_header ${CMAKE_CURRENT_SOURCE_DIR}/${_basename}.h)
                SET(_header ${_abs_PATH}/${_basename}.h)
                SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
-
+#               MESSAGE(STATUS "----- moc: ${_moc}")
                ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
                   COMMAND ${QT_MOC_EXECUTABLE}
-                  ARGS ${_header} -o ${_moc}
+                  ARGS ${_HACK_MOC_DEFINE} ${_header} -o ${_moc}
                   DEPENDS ${_header}
                )
 
-               KDE4_ADD_FILE_DEPENDANCY(${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} ${_moc})
+               KDE4_ADD_FILE_DEPENDANCY(${_tmp_FILE} ${_moc})
 
             ENDFOREACH (_current_MOC_INC)
          ENDIF(_match)
 
-      ENDIF (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
+      ENDIF (EXISTS ${_tmp_FILE})
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE4_AUTOMOC)
 
@@ -366,7 +372,7 @@ MACRO(KDE4_ADD_KLM _target_NAME )
       ADD_LIBRARY(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final.cpp)
    ELSE (KDE4_ENABLE_FINAL)
       ADD_LIBRARY(kdeinit_${_target_NAME} SHARED ${ARGN} )
-      MESSAGE(STATUS "klm: kdeinit_${_target_NAME}")
+#      MESSAGE(STATUS "klm: kdeinit_${_target_NAME}")
    ENDIF (KDE4_ENABLE_FINAL)
 
    CONFIGURE_FILE(${CMAKE_ROOT}/Modules/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)

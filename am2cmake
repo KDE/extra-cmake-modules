@@ -125,6 +125,8 @@ class BuildTarget
       previousWasVersionInfo=false
       libs.split.each do |currentLib|
          lib=case currentLib
+         when "$(LIB_QT3SUPPORT)" then "${QT_QT3SUPPORT_LIBRARY}"
+         when "$(DCOP_LIB)" then "DCOP"
          when "$(LIB_KDEUI)" then "kdeui"
 #         when "${LIB_KDECORE}" then "${QT_AND_KDECORE_LIBS}"
          when "$(LIB_KIO)" then "kio"
@@ -203,7 +205,7 @@ class CMakeFile
           @includeDirs.push("${QT_INCLUDE_DIR}")
       elsif $buildType==BuildKDE4
           @includeDirs.push("${KDE4_INCLUDE_DIR}")
-          @includeDirs.push("${QT_INCLUDE_DIR}")
+          @includeDirs.push("${QT_INCLUDES}")
       end
       @includeDirs.push("${CMAKE_CURRENT_SOURCE_DIR}")
       @includeDirs.push("${CMAKE_CURRENT_BINARY_DIR}")
