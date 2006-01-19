@@ -36,15 +36,22 @@ ENDMACRO(KDE4_ADD_FILE_DEPENDANCY)
 #usage: KDE_ADD_COP_SKELS(foo_SRCS ${dcop_headers})
 MACRO(KDE4_ADD_DCOP_SKELS _sources)
    FOREACH (_current_FILE ${ARGN})
-      GET_FILENAME_COMPONENT(_basename ${_current_FILE} NAME_WE)
 
-      SET(_skel ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel_skel.cpp)
-      SET(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.kidl)
+      IF(${_current_FILE} MATCHES "^/.+") #abs path
+         SET(_tmp_FILE ${_current_FILE})
+      ELSE(${_current_FILE} MATCHES "^/.+")
+         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
+      ENDIF(${_current_FILE} MATCHES "^/.+")
+
+      GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
+
+      SET(_skel ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.cpp)
+      SET(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
          COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-         ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} > ${_kidl}
-         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} > ${_kidl}
+         DEPENDS ${_tmp_FILE}
       )
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
@@ -72,12 +79,12 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
 
       SET(_stub_CPP ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.cpp)
 #     SET(_stub_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.h)
-      SET(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.kidl)
+      SET(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
          COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-         ARGS ${tmp_FILE} > ${_kidl}
-         DEPENDS ${tmp_FILE}
+         ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} > ${_kidl}
+         DEPENDS ${_tmp_FILE}
       )
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
@@ -144,7 +151,13 @@ ENDMACRO(KDE4_ADD_KCFG_FILES)
 MACRO(KDE4_ADD_UI_FILES _sources )
    FOREACH (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_basename ${_current_FILE} NAME_WE)
+      IF(${_current_FILE} MATCHES "^/.+")
+         SET(_tmp_FILE ${_current_FILE})
+      ELSE(${_current_FILE} MATCHES "^/.+")
+         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
+      ENDIF(${_current_FILE} MATCHES "^/.+")
+
+      GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
       SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
 
       # we need to run uic and replace some things in the generated file
@@ -152,41 +165,72 @@ MACRO(KDE4_ADD_UI_FILES _sources )
       ADD_CUSTOM_COMMAND(OUTPUT ${_header}
          COMMAND ${CMAKE_COMMAND}
          ARGS
+         -DKDE4_HEADER:BOOL=ON
          -DKDE_UIC_EXECUTABLE:FILEPATH=${QT_UIC_EXECUTABLE}
-         -DKDE_UIC_FILE:FILEPATH=${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         -DKDE_UIC_FILE:FILEPATH=${_tmp_FILE}
          -DKDE_UIC_H_FILE:FILEPATH=${_header}
          -DKDE_UIC_BASENAME:STRING=${_basename}
-#         -DKDE_UIC_PLUGIN_DIR:FILEPATH="."
          -P ${CMAKE_ROOT}/Modules/kde4uic.cmake
-         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         DEPENDS ${_tmp_FILE}
       )
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE4_ADD_UI_FILES)
 
+MACRO(KDE4_GET_MOC_INC_DIRS _moc_INC_DIRS)
+   SET(${_moc_INC_DIRS})
+   GET_DIRECTORY_PROPERTY(_inc_DIRS INCLUDE_DIRECTORIES)
+
+   FOREACH(_current ${_inc_DIRS})
+      SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-I" ${_current})
+   ENDFOREACH(_current ${_inc_DIRS})
+ENDMACRO(KDE4_GET_MOC_INC_DIRS _moc_INC_DIRS)
+
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})
 MACRO(KDE4_ADD_UI3_FILES _sources )
+
+   KDE4_GET_MOC_INC_DIRS(_moc_INCS)
+
    FOREACH (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_basename ${_current_FILE} NAME_WE)
+      IF(${_current_FILE} MATCHES "^/.+")
+         SET(_tmp_FILE ${_current_FILE})
+      ELSE(${_current_FILE} MATCHES "^/.+")
+         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
+      ENDIF(${_current_FILE} MATCHES "^/.+")
+
+
+      GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
       SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
       SET(_src ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
       SET(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
 
+#      ADD_CUSTOM_COMMAND(OUTPUT ${_header}
+#         COMMAND ${QT_UIC3_EXECUTABLE}
+#         ARGS  -nounload -o ${_header} ${_tmp_FILE}
+#         DEPENDS ${_tmp_FILE}
+#      )
+
       ADD_CUSTOM_COMMAND(OUTPUT ${_header}
-         COMMAND ${QT_UIC3_EXECUTABLE}
-         ARGS  -nounload -o ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         COMMAND ${CMAKE_COMMAND}
+         -DKDE3_HEADER:BOOL=ON
+         -DKDE_UIC_EXECUTABLE:FILEPATH=${QT_UIC3_EXECUTABLE}
+         -DKDE_UIC_FILE:FILEPATH=${_tmp_FILE}
+         -DKDE_UIC_H_FILE:FILEPATH=${_header}
+         -DKDE_UIC_BASENAME:STRING=${_basename}
+         -DKDE_UIC_PLUGIN_DIR:FILEPATH="."
+         -P ${CMAKE_ROOT}/Modules/kde4uic.cmake
+         DEPENDS ${_tmp_FILE}
       )
 
-      # we need to run uic3 and replace some things in the generated file
+# we need to run uic3 and replace some things in the generated file
       # this is done by executing the cmake script kde4uic.cmake
       ADD_CUSTOM_COMMAND(OUTPUT ${_src}
          COMMAND ${CMAKE_COMMAND}
          ARGS
-         -DKDE3:BOOL=ON
+         -DKDE3_IMPL:BOOL=ON
          -DKDE_UIC_EXECUTABLE:FILEPATH=${QT_UIC3_EXECUTABLE}
-         -DKDE_UIC_FILE:FILEPATH=${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
+         -DKDE_UIC_FILE:FILEPATH=${_tmp_FILE}
          -DKDE_UIC_CPP_FILE:FILEPATH=${_src}
          -DKDE_UIC_H_FILE:FILEPATH=${_header}
          -DKDE_UIC_BASENAME:STRING=${_basename}
@@ -197,7 +241,7 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
          COMMAND ${QT_MOC_EXECUTABLE}
-         ARGS -I ${QT_INCLUDE_DIR} ${_header} -o ${_moc}
+         ARGS ${_moc_INCS} ${_header} -o ${_moc}
          DEPENDS ${_header}
       )
       SET(${_sources} ${${_sources}} ${_src} ${_moc} )
@@ -205,12 +249,10 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE4_ADD_UI3_FILES)
 
-IF(UNIX)
-   SET(_HACK_MOC_DEFINE -DQ_WS_X11 -DQ_OS_UNIX)
-ENDIF(UNIX)
-
 
 MACRO(KDE4_AUTOMOC)
+   KDE4_GET_MOC_INC_DIRS(_moc_INCS)
+
    SET(_matching_FILES )
    FOREACH (_current_FILE ${ARGN})
 
@@ -239,7 +281,7 @@ MACRO(KDE4_AUTOMOC)
 #               MESSAGE(STATUS "----- moc: ${_moc}")
                ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
                   COMMAND ${QT_MOC_EXECUTABLE}
-                  ARGS ${_HACK_MOC_DEFINE} ${_header} -o ${_moc}
+                  ARGS ${_moc_INCS} ${_header} -o ${_moc}
                   DEPENDS ${_header}
                )
 
