@@ -1,0 +1,85 @@
+#!/usr/bin/env ruby
+
+# simple script to generate simple cmake modules for finding libraries (packages)
+# Alexander Neundorf <neundorf@kde.org>, 2006
+# usage: generate_findpackage_file
+# then you will be prompted to enter the required parameters
+
+print("Name of package: ")
+package=gets.chomp
+
+print("pkgconfig package name [e.g. \"libxml-2.0\", leave empty to skip pkgconfig]: ")
+pkgconfig=gets.chomp
+
+print("Look for header (e.g. \"jpeglib.h\" or \"libxml/xpath.h\"): ")
+header=gets.chomp
+
+print("Include subdir (e.g. \"libxml2\", empty to skip ): ")
+incSubDir=gets.chomp
+if not incSubDir.empty?
+   incSubDir="/"+incSubDir
+end
+
+print("Look for library (e.g. \"jpeg\" or \"xml2\"): ")
+lib=gets.chomp
+
+cmakeIncDirName=package.upcase+"_INCLUDE_DIR"
+cmakeLibName=package.upcase+"_LIBRARY"
+cmakeDefsName=package.upcase+"_DEFINITIONS"
+cmakeFoundName=package.upcase+"_FOUND"
+cmakeQuietName=package.upcase+"_QUIETLY"
+cmakeRequiredName=package.upcase+"_REQUIRED"
+
+file=File.new("Find#{package}.cmake", "w+")
+
+
+file.printf("# - Try to find #{package}\n")
+file.printf("# Once done this will define\n")
+file.printf("#\n")
+file.printf("#  #{cmakeFoundName} - system has #{package}\n")
+file.printf("#  #{cmakeIncDirName} - the #{package} include directory\n")
+file.printf("#  #{cmakeLibName} - Link these to use OpenGL and GLU\n")
+file.printf("#  #{cmakeDefsName} - Compiler switches required for using #{package}\n")
+file.printf("#\n\n\n")
+
+
+if not pkgconfig.empty?
+   file.printf("# use pkg-config to get the directories and then use these values\n")
+   file.printf("# in the FIND_PATH() and FIND_LIBRARY() calls\n")
+   file.printf("INCLUDE(UsePkgConfig)\n\n")
+   file.printf("PKGCONFIG(#{pkgconfig} _#{package}IncDir _#{package}LinkDir _#{package}LinkFlags _#{package}Cflags)\n\n")
+   file.printf("SET(#{cmakeDefsName} ${_#{package}Cflags})\n\n")
+end
+
+file.printf("FIND_PATH(#{cmakeIncDirName} #{header}\n")
+if not pkgconfig.empty?
+   file.printf("  ${_#{package}IncDir}#{incSubDir}\n")
+end
+file.printf("  /usr/include#{incSubDir}\n")
+file.printf("  /usr/local/include#{incSubDir}\n")
+file.printf(")\n\n")
+
+file.printf("FIND_LIBRARY(#{cmakeLibName} NAMES #{lib}\n")
+file.printf("  PATHS\n")
+if not pkgconfig.empty?
+   file.printf("  ${_#{package}LinkDir}\n")
+end
+file.printf("  /usr/lib\n")
+file.printf("  /usr/local/lib\n")
+file.printf(")\n\n")
+
+file.printf("IF(#{cmakeIncDirName} AND #{cmakeLibName})\n")
+file.printf("   SET(#{cmakeFoundName} TRUE)\n")
+file.printf("ENDIF(#{cmakeIncDirName} AND #{cmakeLibName})\n\n")
+
+file.printf("IF(#{cmakeFoundName})\n")
+file.printf("  IF(NOT #{cmakeQuietName})\n")
+file.printf("    MESSAGE(STATUS \"Found #{package}: ${#{cmakeLibName}}\")\n")
+file.printf("  ENDIF(NOT #{cmakeQuietName})\n")
+file.printf("ELSE(#{cmakeFoundName})\n")
+file.printf("  IF(NOT #{cmakeRequiredName})\n")
+file.printf("    MESSAGE(SEND_ERROR \"Could not find #{package}\")\n")
+file.printf("  ENDIF(NOT #{cmakeRequiredName})\n")
+file.printf("ENDIF(#{cmakeFoundName})\n\n")
+
+printf("Done, generated Find#{package}.cmake\n")

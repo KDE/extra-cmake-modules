@@ -637,28 +637,53 @@ IF(QT4_QMAKE_FOUND)
   #
   ######################################
 
+  MACRO(QT4_GET_ABS_PATH _abs_filename _filename)
+     IF(${_filename} MATCHES "^/.+")
+        SET(${_abs_filename} ${_filename})
+     ELSE(${_filename} MATCHES "^/.+")
+        SET(${_abs_filename} ${CMAKE_CURRENT_SOURCE_DIR}/${_filename})
+     ENDIF(${_filename} MATCHES "^/.+")
+   ENDMACRO(QT4_GET_ABS_PATH)
+
+
+   MACRO(QT4_GET_MOC_INC_DIRS _moc_INC_DIRS)
+      SET(${_moc_INC_DIRS})
+      GET_DIRECTORY_PROPERTY(_inc_DIRS INCLUDE_DIRECTORIES)
+
+      FOREACH(_current ${_inc_DIRS})
+         SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-I" ${_current})
+      ENDFOREACH(_current ${_inc_DIRS})
+   ENDMACRO(QT4_GET_MOC_INC_DIRS)
+
+  MACRO(QT4_GENERATE_MOC infile outfile )
+  # get include dirs
+    QT4_GET_MOC_INC_DIRS(moc_includes)
+
+    QT4_GET_ABS_PATH(infile ${infile})
+
+    ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
+      COMMAND ${QT_MOC_EXECUTABLE}
+      ARGS ${moc_includes} -o ${outfile} ${infile}
+      MAIN_DEPENDENCY ${infile})
+  ENDMACRO(QT4_GENERATE_MOC)
+
 
   # QT4_WRAP_CPP(outfiles inputfile ... )
   # TODO  perhaps add support for -D, -U and other minor options
 
   MACRO(QT4_WRAP_CPP outfiles )
-
     # get include dirs
-    GET_DIRECTORY_PROPERTY(moc_includes_tmp INCLUDE_DIRECTORIES)
-    SET(moc_includes)
-    FOREACH(it ${moc_includes_tmp})
-      SET(moc_includes ${moc_includes} "-I${it}")
-    ENDFOREACH(it)
+    QT4_GET_MOC_INC_DIRS(moc_includes)
 
     FOREACH(it ${ARGN})
+      QT4_GET_ABS_PATH(it ${it})
       GET_FILENAME_COMPONENT(outfile ${it} NAME_WE)
 
-      SET(infile ${CMAKE_CURRENT_SOURCE_DIR}/${it})
       SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/moc_${outfile}.cxx)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_MOC_EXECUTABLE}
-        ARGS ${moc_includes} -o ${outfile} ${infile}
-        MAIN_DEPENDENCY ${infile})
+        ARGS ${moc_includes} -o ${outfile} ${it}
+        MAIN_DEPENDENCY ${it})
       SET(${outfiles} ${${outfiles}} ${outfile})
     ENDFOREACH(it)
 

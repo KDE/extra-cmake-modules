@@ -262,7 +262,10 @@ MACRO(KDE4_AUTOMOC)
          SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
       ENDIF(${_current_FILE} MATCHES "^/.+")
 
+#message(STATUS "file: ${_tmp_FILE}")
+
       IF (EXISTS ${_tmp_FILE})
+#message(STATUS "exists")
 
          FILE(READ ${_tmp_FILE} _contents)
 
@@ -271,7 +274,9 @@ MACRO(KDE4_AUTOMOC)
 
          STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
          IF(_match)
+#message(STATUS "match 1")
             FOREACH (_current_MOC_INC ${_match})
+#message(STATUS "match 2")
                STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
                GET_FILENAME_COMPONENT(_basename ${_current_MOC} NAME_WE)

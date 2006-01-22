@@ -135,8 +135,8 @@ class BuildTarget
          else
             if currentLib =~ /^-l(\S+)$/
                $1
-            elsif currentLib =~ /^.+\/lib(\w+)\.la$/
-               $1
+            elsif currentLib =~ /^(.+\/)?lib(\w+)\.la$/
+               $2
             else
                ""
             end
@@ -159,7 +159,7 @@ class BuildTarget
             end
          end
          previousWasVersionInfo= (currentLib == "-version-info")
-         
+
       end
 
    end
@@ -179,7 +179,7 @@ class CMakeFile
       @listsFile=@path+"CMakeLists.txt"
       @iconDir="hicolor"
       @installIcons=false
-      
+
       @createDoxygenDocs=false
       @doxygenRecursive=false
       @doxygenInternalDocs=false
@@ -415,7 +415,7 @@ class CMakeFile
       if line.include?("Doxyfile.am") || line.include?("DOXYGEN")
          parseDoxygenSettings(line)
       end
-      
+
       if line =~ /^\s*KDE_ICON\s*=/
          @installIcons=true
          return
@@ -478,7 +478,7 @@ class CMakeFile
           file.printf("LINK_DIRECTORIES(${KDE3_LIB_DIR})\n\n")
 
       end
-      
+
       if !@configHeaders.empty?
          @configHeaders.each{ |header| file.printf("CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/#{header}.cmake ${CMAKE_CURRENT_BINARY_DIR}/#{header} )\n\n") }
       end
@@ -664,7 +664,7 @@ class CMakeFile
    def createKDE4ListsFile
       file=File.new(@listsFile, "w+");
       file.printf("kde4_header()\n\n")
-      
+
       if @amFile=="Makefile.am"          # the toplevel Makefile.am
           file.printf("find_package(KDE4 REQUIRED)\n\n")
           file.printf("set(CMAKE_VERBOSE_MAKEFILE ON)\n\n")
@@ -760,7 +760,7 @@ class CMakeFile
             file.printf(")\n\n")
             file.printf("kde4_add_ui3_files(%s ${%s} )\n\n", srcsName, ui3sName)
          end
-         
+
          if not buildTarget.qrcs.empty?
             file.printf("set( %s\n", qrcsName)
             buildTarget.qrcs.each{ |currentFile| file.printf("%s\n", currentFile)}
@@ -801,10 +801,10 @@ class CMakeFile
 
             file.printf("set_target_properties(%s PROPERTIES VERSION %d.%d.%d SOVERSION %d )\n", buildTarget.name, buildTarget.versionNumberMajor, buildTarget.versionNumberMinor, buildTarget.versionNumberPatch, buildTarget.versionNumberMajor)
             file.printf("install_targets(/lib %s )\n\n", buildTarget.name)
-            
+
          elsif buildTarget.type==StaticLib
             file.printf("kde4_add_library(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
-            
+
          elsif buildTarget.type==Part
             if buildTarget.stdPrefix
                file.printf("kde4_add_plugin(%s WITH_PREFIX ${%s})\n\n", buildTarget.name, srcsName)
@@ -862,18 +862,18 @@ class CMakeFile
       if @installIcons
          file.printf("kde4_install_icons( %s )\n\n",@iconDir )
       end
-      
+
       if @createDoxygenDocs
          file.printf("kde4_create_doxygen_docs( ")
-         
+
          if @doxygenRecursive
             file.printf("RECURSIVE ")
          end
-         
+
          if @doxygenInternalDocs
             file.printf("INTERNAL_DOCS ")
          end
-         
+
          if not @doxygenReferences.empty?
             file.printf("REFERENCES ")
             @doxygenReferences.each { |ref| file.printf("%s ", ref) }
@@ -890,7 +890,7 @@ class CMakeFile
 
       file.printf("\n\n#original Makefile.am contents follow:\n\n")
       @lines.each{ |line| file.printf("#%s", line)}
-   
+
    end
 end
 
@@ -929,7 +929,7 @@ end
 if $withConvLibs
    $convFile=File.new("ConvenienceLibs.cmake", "w+")
    $convFile.printf("\n#former libtool convenience libraries:\n\n")
-end   
+end
 
 
 $configHeaders=Dir["**/*.h.in"]
