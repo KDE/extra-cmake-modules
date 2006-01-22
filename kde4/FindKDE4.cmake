@@ -27,6 +27,16 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
 
+IF(UNIX)
+   IF(APPLE)
+      MESSAGE(SEND_ERROR "Mac OSX  not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
+   ELSE(APPLE)
+      FIND_PACKAGE(X11 REQUIRED)
+   ENDIF(APPLE)
+ELSE(UNIX)
+   MESSAGE(SEND_ERROR "Win32 not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
+ENDIF(UNIX)
+
 #this line includes FindQt.cmake, which searches the Qt library and headers
 INCLUDE(FindQt4)
 
@@ -209,7 +219,7 @@ IF (NOT KDE4_FIND_QUIETLY)
 ENDIF (NOT KDE4_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
-SET(KDE4_INCLUDE_DIRS ${QT_INCLUDE_DIR} ${KDE4_INCLUDE_DIR})
+SET(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${X11_INCLUDE_DIR} )
 #INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR} ${KDE4_INCLUDE_DIR} .)
 #LINK_DIRECTORIES(${KDE4_LIB_DIR})
 
