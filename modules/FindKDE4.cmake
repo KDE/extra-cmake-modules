@@ -38,7 +38,7 @@ ELSE(UNIX)
 ENDIF(UNIX)
 
 #this line includes FindQt.cmake, which searches the Qt library and headers
-INCLUDE(FindQt4)
+FIND_PACKAGE(Qt4 REQUIRED)
 
 #add the definitions found by FindQt to the current definitions
 #ADD_DEFINITIONS(${QT_DEFINITIONS} -DQT_CLEAN_NAMESPACE)
