@@ -701,14 +701,6 @@ class CMakeFile
             srcsName=buildTarget.name+"_LIB_SRCS"
          elsif buildTarget.type==StaticLib
             srcsName=buildTarget.name+"_STAT_SRCS"
-            if $withConvLibs
-#<porting info for libtool convenience libs>
-               $convFile.printf("# %s: %s\n\n", @amFile, buildTarget.name)
-               $convFile.printf("set(%s \n", srcsName)
-               buildTarget.sources.each { |currentFile| $convFile.printf("  ${CMAKE_SOURCE_DIR}/%s%s\n", @path, currentFile) }
-               $convFile.printf(")\n\n", srcsName)
-               next # do nothing for static libs
-            end
 #</porting info for libtool convenience libs>
          elsif buildTarget.type==Part
             srcsName=buildTarget.name+"_PART_SRCS"
@@ -723,6 +715,49 @@ class CMakeFile
          stubsName=buildTarget.name+"_DCOP_STUB_SRCS"
          kcfgsName=buildTarget.name+"_KCFG_SRCS"
          qrcsName=buildTarget.name+"_QRC"
+
+
+         if buildTarget.type==StaticLib && $withConvLibs
+#<porting info for libtool convenience libs>
+            $convFile.printf("# %s: %s\n\n", @amFile, buildTarget.name)
+            
+            if buildTarget.sources.empty?
+               $convFile.printf("set(%s \n", srcsName)
+               buildTarget.sources.each { |currentFile| $convFile.printf("  ${CMAKE_SOURCE_DIR}/%s%s\n", @path, currentFile) }
+               $convFile.printf(")\n\n", srcsName)
+            end
+            if not buildTarget.uis.empty?
+               $convFile.printf("set( %s\n", uisName)
+               buildTarget.uis.each{ |currentFile| $convFile.printf("%s\n", currentFile)}
+               $convFile.printf(")\n\n")
+            end
+            if not buildTarget.ui3s.empty?
+               $convFile.printf("set( %s\n", ui3sName)
+               buildTarget.ui3s.each{ |currentFile| $convFile.printf("%s\n", currentFile)}
+               $convFile.printf(")\n\n")
+            end
+            if not buildTarget.qrcs.empty?
+               $convFile.printf("set( %s\n", qrcsName)
+               buildTarget.qrcs.each{ |currentFile| $convFile.printf("%s\n", currentFile)}
+               $convFile.printf(")\n\n")
+            end
+            if not buildTarget.skels.empty?
+               $convFile.printf("set( %s\n", skelsName)
+               buildTarget.skels.each{ |currentFile| $convFile.printf("%s\n", currentFile)}
+               $convFile.printf(")\n\n")
+            end
+            if not buildTarget.stubs.empty?
+               $convFile.printf("set( %s\n", stubsName)
+               buildTarget.stubs.each{ |currentFile| $convFile.printf("%s\n", currentFile)}
+               $convFile.printf(")\n\n")
+            end
+            if not buildTarget.kcfgs.empty?
+               $convFile.printf("set( %s\n", kcfgsName)
+               buildTarget.kcfgs.each{ |currentFile| $convFile.printf("%s\n", currentFile)}
+               $convFile.printf(")\n\n")
+            end
+            next # do nothing else for static libs
+         end
 
          if buildTarget.sources.empty?
             buildTarget.sources.push("dummy.cpp")

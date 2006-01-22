@@ -1,5 +1,5 @@
 # this file contains the following macros:
-# ADD_FILE_DEPENDANCY
+# KDE4_ADD_FILE_DEPENDANCY
 # KDE4_ADD_DCOP_SKELS
 # KDE4_ADD_DCOP_STUBS
 # KDE4_ADD_MOC_FILES
@@ -37,11 +37,7 @@ ENDMACRO(KDE4_ADD_FILE_DEPENDANCY)
 MACRO(KDE4_ADD_DCOP_SKELS _sources)
    FOREACH (_current_FILE ${ARGN})
 
-      IF(${_current_FILE} MATCHES "^/.+") #abs path
-         SET(_tmp_FILE ${_current_FILE})
-      ELSE(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
-      ENDIF(${_current_FILE} MATCHES "^/.+")
+      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
@@ -69,11 +65,7 @@ ENDMACRO(KDE4_ADD_DCOP_SKELS)
 MACRO(KDE4_ADD_DCOP_STUBS _sources)
    FOREACH (_current_FILE ${ARGN})
 
-      IF(${_current_FILE} MATCHES "^/.+") #abs path
-         SET(_tmp_FILE ${_current_FILE})
-      ELSE(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
-      ENDIF(${_current_FILE} MATCHES "^/.+")
+      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
@@ -102,11 +94,7 @@ ENDMACRO(KDE4_ADD_DCOP_STUBS)
 MACRO(KDE4_ADD_KCFG_FILES _sources)
    FOREACH (_current_FILE ${ARGN})
 
-      IF(${_current_FILE} MATCHES "^/.+") #abs path
-         SET(_tmp_FILE ${_current_FILE})
-      ELSE(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
-      ENDIF(${_current_FILE} MATCHES "^/.+")
+      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
@@ -151,11 +139,7 @@ ENDMACRO(KDE4_ADD_KCFG_FILES)
 MACRO(KDE4_ADD_UI_FILES _sources )
    FOREACH (_current_FILE ${ARGN})
 
-      IF(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${_current_FILE})
-      ELSE(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
-      ENDIF(${_current_FILE} MATCHES "^/.+")
+      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
       SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
@@ -176,29 +160,15 @@ MACRO(KDE4_ADD_UI_FILES _sources )
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE4_ADD_UI_FILES)
 
-MACRO(KDE4_GET_MOC_INC_DIRS _moc_INC_DIRS)
-   SET(${_moc_INC_DIRS})
-   GET_DIRECTORY_PROPERTY(_inc_DIRS INCLUDE_DIRECTORIES)
-
-   FOREACH(_current ${_inc_DIRS})
-      SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-I" ${_current})
-   ENDFOREACH(_current ${_inc_DIRS})
-ENDMACRO(KDE4_GET_MOC_INC_DIRS _moc_INC_DIRS)
-
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})
 MACRO(KDE4_ADD_UI3_FILES _sources )
 
-   KDE4_GET_MOC_INC_DIRS(_moc_INCS)
+   QT4_GET_MOC_INC_DIRS(_moc_INCS)
 
    FOREACH (_current_FILE ${ARGN})
 
-      IF(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${_current_FILE})
-      ELSE(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
-      ENDIF(${_current_FILE} MATCHES "^/.+")
-
+      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
       SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
@@ -251,21 +221,14 @@ ENDMACRO(KDE4_ADD_UI3_FILES)
 
 
 MACRO(KDE4_AUTOMOC)
-   KDE4_GET_MOC_INC_DIRS(_moc_INCS)
+   QT4_GET_MOC_INC_DIRS(_moc_INCS)
 
    SET(_matching_FILES )
    FOREACH (_current_FILE ${ARGN})
 
-      IF(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${_current_FILE})
-      ELSE(${_current_FILE} MATCHES "^/.+")
-         SET(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
-      ENDIF(${_current_FILE} MATCHES "^/.+")
-
-#message(STATUS "file: ${_tmp_FILE}")
+      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
 
       IF (EXISTS ${_tmp_FILE})
-#message(STATUS "exists")
 
          FILE(READ ${_tmp_FILE} _contents)
 
@@ -274,16 +237,13 @@ MACRO(KDE4_AUTOMOC)
 
          STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
          IF(_match)
-#message(STATUS "match 1")
             FOREACH (_current_MOC_INC ${_match})
-#message(STATUS "match 2")
                STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
                GET_FILENAME_COMPONENT(_basename ${_current_MOC} NAME_WE)
 #               SET(_header ${CMAKE_CURRENT_SOURCE_DIR}/${_basename}.h)
                SET(_header ${_abs_PATH}/${_basename}.h)
                SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
-#               MESSAGE(STATUS "----- moc: ${_moc}")
                ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
                   COMMAND ${QT_MOC_EXECUTABLE}
                   ARGS ${_moc_INCS} ${_header} -o ${_moc}

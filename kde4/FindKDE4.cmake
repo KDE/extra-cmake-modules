@@ -36,7 +36,8 @@ INCLUDE(FindQt4)
 SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
 #add some KDE specific stuff
-SET(KDE4_DEFINITIONS -DQT3_SUPPORT -DQT_CLEAN_NAMESPACE )
+# not used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
+SET(KDE4_DEFINITIONS -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -DQT_NO_TRANSLATION -D_REENTRANT )
 
 SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
@@ -45,6 +46,10 @@ SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi
 IF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
 ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+
+IF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+  SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -D_GNU_SOURCE)
+ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
 
 
 #SET(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -module -Wl,--no-undefined -Wl,--allow-shlib-undefined")
