@@ -1,3 +1,10 @@
 SET(CMAKE_INSTALL_PREFIX ${CMAKE_ROOT} )
-INSTALL_FILES(/Modules FILES FindKDE3.cmake KDE3Macros.cmake kde3init_dummy.cpp.in kde3uic.cmake )
+
+FILE(GLOB cmakeFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.cmake")
+
+INSTALL_FILES(/Modules FILES 
+kde3init_dummy.cpp.in 
+kde4init_dummy.cpp.in
+${cmakeFiles}
+)
 

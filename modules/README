@@ -1,5 +1,8 @@
-these are modules for detecting software packages needed by KDE, but not yet
-part of cmake
+these are additional cmake modules required for compiling KDE3 or KDE4
+applications with cmake. Some of them are enhanced versions of the files 
+coming with cmake, some of them are not yet part of cmake.
+To use them, copy them into the cmake Module directory or
+run "cmake ."  followed by "make install"
 
 Alex <neundorf@kde.org>
 
