@@ -27,8 +27,8 @@ cmakeIncDirName=package.upcase+"_INCLUDE_DIR"
 cmakeLibName=package.upcase+"_LIBRARY"
 cmakeDefsName=package.upcase+"_DEFINITIONS"
 cmakeFoundName=package.upcase+"_FOUND"
-cmakeQuietName=package.upcase+"_QUIETLY"
-cmakeRequiredName=package.upcase+"_REQUIRED"
+cmakeQuietName=package+"_FIND_QUIETLY"
+cmakeRequiredName=package+"_FIND_REQUIRED"
 
 file=File.new("Find#{package}.cmake", "w+")
 
@@ -77,9 +77,9 @@ file.printf("  IF(NOT #{cmakeQuietName})\n")
 file.printf("    MESSAGE(STATUS \"Found #{package}: ${#{cmakeLibName}}\")\n")
 file.printf("  ENDIF(NOT #{cmakeQuietName})\n")
 file.printf("ELSE(#{cmakeFoundName})\n")
-file.printf("  IF(NOT #{cmakeRequiredName})\n")
+file.printf("  IF(#{cmakeRequiredName})\n")
 file.printf("    MESSAGE(SEND_ERROR \"Could not find #{package}\")\n")
-file.printf("  ENDIF(NOT #{cmakeRequiredName})\n")
+file.printf("  ENDIF(#{cmakeRequiredName})\n")
 file.printf("ENDIF(#{cmakeFoundName})\n\n")
 
 printf("Done, generated Find#{package}.cmake\n")
