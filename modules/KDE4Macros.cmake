@@ -44,17 +44,28 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
       SET(_skel ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.cpp)
       SET(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
-      ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
-         COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-         ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} > ${_kidl}
-         DEPENDS ${_tmp_FILE}
-      )
+      IF (NOT HAVE_${_basename}_KIDL_RULE)
+        SET(HAVE_${_basename}_KIDL_RULE ON)
 
-      ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
-         COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
-         ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
-         DEPENDS ${_kidl}
-      )
+        ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
+           COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
+           ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} > ${_kidl}
+           DEPENDS ${_tmp_FILE}
+        )
+      ENDIF (NOT HAVE_${_basename}_KIDL_RULE)
+
+
+
+      IF (NOT HAVE_${_basename}_SKEL_RULE)
+        SET(HAVE_${_basename}_SKEL_RULE ON)
+
+        ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
+           COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
+           ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
+           DEPENDS ${_kidl}
+        )
+
+      ENDIF (NOT HAVE_${_basename}_SKEL_RULE)
 
       SET(${_sources} ${${_sources}} ${_skel})
 
@@ -73,17 +84,26 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
 #     SET(_stub_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.h)
       SET(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
-      ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
-         COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-         ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} > ${_kidl}
-         DEPENDS ${_tmp_FILE}
-      )
 
-      ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
-         COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
-         ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
-         DEPENDS ${_kidl}
-      )
+      IF (NOT HAVE_${_basename}_KIDL_RULE)
+        SET(HAVE_${_basename}_KIDL_RULE ON)
+
+        ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
+           COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
+           ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} > ${_kidl}
+           DEPENDS ${_tmp_FILE}
+        ) 
+      ENDIF (NOT HAVE_${_basename}_KIDL_RULE)
+
+      IF (NOT HAVE_${_basename}_STUB_RULE)
+        SET(HAVE_${_basename}_STUB_RULE ON)
+
+        ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
+           COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
+           ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
+           DEPENDS ${_kidl}
+        )
+      ENDIF (NOT HAVE_${_basename}_STUB_RULE)
 
       SET(${_sources} ${${_sources}} ${_stub_CPP})
 
