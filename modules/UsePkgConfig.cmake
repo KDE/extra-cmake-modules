@@ -18,7 +18,7 @@ MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
 # if pkg-config has been found
   IF(PKGCONFIG_EXECUTABLE)
 
-    EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --exists RETURN_VALUE _return_VALUE )
+    EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --exists RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
 
 # and if the package of interest also exists for pkg-config, then get the information
     IF(NOT _return_VALUE)

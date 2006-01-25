@@ -35,7 +35,8 @@ InstallDirsKDE3 = {
    "kde_wallpaper"=> "/share/wallpapers",
    "xdg_apps"     => "/share/applications/kde",
    "xdg_directory"=> "/share/desktop-directories",
-   "data"         => "/share"
+   "data"         => "/share",
+   "include"      => "/include"
 }
 
 InstallDirsKDE4 = {
@@ -55,7 +56,8 @@ InstallDirsKDE4 = {
    "kde_wallpaper"=> "${KDE4_WALLPAPER_DIR}",
    "xdg_apps"     => "${XDG_APPS_DIR}",
    "xdg_directory"=> "${XDG_DIRECTORY_DIR}",
-   "data"         => "/share"
+   "data"         => "/share",
+   "include"      => "/include"
 }
 
 $installDirs=InstallDirsKDE3
@@ -457,6 +459,11 @@ class CMakeFile
          return
       end
 
+      if line =~ /^\s*(\w*include)_HEADERS\s*=\s*(\S+.*)$/
+         addInstallFiles($1, $2)
+         return
+      end
+
       if line =~ /^\s*SUBDIRS\s*=\s*(\S+.*)$/ || line =~ /^\s*COMPILE_FIRST\s*=\s*(\S+.*)$/
          ($1).split.each do |dir|
             if dir =~ /\$\(.+\)/
@@ -620,7 +627,7 @@ class CMakeFile
 
             else
                if buildTarget.test
-                  file.printf("IF(KDE3_BUILD_TESTS)\n")
+                  file.printf("IF(KDE3_BUILD_TESTS)\n\n")
                end
 
                file.printf("KDE3_ADD_EXECUTABLE(%s ${%s})\n\n", buildTarget.name, srcsName)
@@ -720,7 +727,7 @@ class CMakeFile
          if buildTarget.type==StaticLib && $withConvLibs
 #<porting info for libtool convenience libs>
             $convFile.printf("# %s: %s\n\n", @amFile, buildTarget.name)
-            
+
             if buildTarget.sources.empty?
                $convFile.printf("set(%s \n", srcsName)
                buildTarget.sources.each { |currentFile| $convFile.printf("  ${CMAKE_SOURCE_DIR}/%s%s\n", @path, currentFile) }
@@ -866,7 +873,7 @@ class CMakeFile
 
          else  #executable
             if buildTarget.test
-               file.printf("if(KDE4_BUILD_TESTS)\n")
+               file.printf("if(KDE4_BUILD_TESTS)\n\n")
             end
 
             file.printf("kde4_add_executable(%s ${%s})\n\n", buildTarget.name, srcsName)

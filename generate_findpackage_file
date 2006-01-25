@@ -78,7 +78,7 @@ file.printf("    MESSAGE(STATUS \"Found #{package}: ${#{cmakeLibName}}\")\n")
 file.printf("  ENDIF(NOT #{cmakeQuietName})\n")
 file.printf("ELSE(#{cmakeFoundName})\n")
 file.printf("  IF(#{cmakeRequiredName})\n")
-file.printf("    MESSAGE(SEND_ERROR \"Could not find #{package}\")\n")
+file.printf("    MESSAGE(FATAL_ERROR \"Could not find #{package}\")\n")
 file.printf("  ENDIF(#{cmakeRequiredName})\n")
 file.printf("ENDIF(#{cmakeFoundName})\n\n")
 

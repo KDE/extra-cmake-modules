@@ -6,11 +6,20 @@
 #  VARIABLE - variable to store the result
 #
 
-INCLUDE(CheckTypeSize)
+INCLUDE(CheckCXXSourceCompiles)
 
 MACRO(CHECK_PROTOTYPE_EXISTS _SYMBOL _HEADER _RESULT)
-   SET(CMAKE_EXTRA_INCLUDE_FILES ${_HEADER})
-   CHECK_TYPE_SIZE(${_SYMBOL} ${_RESULT})
-   SET(CMAKE_EXTRA_INCLUDE_FILES)
+   SET(_CHECK_PROTO_EXISTS_SOURCE_CODE "
+#include <${_HEADER}>
+void cmakeRequireSymbol(int dummy,...){(void)dummy;}
+int main()
+{
+#ifndef ${_SYMBOL}
+  cmakeRequireSymbol(0,&${_SYMBOL});
+#endif
+  return 0;
+}
+")
+   CHECK_CXX_SOURCE_COMPILES("${_CHECK_PROTO_EXISTS_SOURCE_CODE}" ${_RESULT})
 ENDMACRO(CHECK_PROTOTYPE_EXISTS _SYMBOL _HEADER _RESULT)
 

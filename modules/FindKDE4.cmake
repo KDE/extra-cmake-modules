@@ -29,12 +29,12 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
 
 IF(UNIX)
    IF(APPLE)
-      MESSAGE(SEND_ERROR "Mac OSX  not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
+      MESSAGE(FATAL_ERROR "Mac OSX  not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
    ELSE(APPLE)
       FIND_PACKAGE(X11 REQUIRED)
    ENDIF(APPLE)
 ELSE(UNIX)
-   MESSAGE(SEND_ERROR "Win32 not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
+   MESSAGE(FATAL_ERROR "Win32 not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
 ENDIF(UNIX)
 
 #this line includes FindQt.cmake, which searches the Qt library and headers
@@ -56,7 +56,7 @@ IF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
   SET(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
   SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
 ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 
 IF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
