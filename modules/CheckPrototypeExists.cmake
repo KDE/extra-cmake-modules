@@ -9,8 +9,13 @@
 INCLUDE(CheckCXXSourceCompiles)
 
 MACRO(CHECK_PROTOTYPE_EXISTS _SYMBOL _HEADER _RESULT)
+   SET(_INCLUDE_FILES)
+   FOREACH(it ${_HEADER})
+      SET(_INCLUDE_FILES "${_INCLUDE_FILES}#include <${it}>\n")
+   ENDFOREACH(it)
+
    SET(_CHECK_PROTO_EXISTS_SOURCE_CODE "
-#include <${_HEADER}>
+${_INCLUDE_FILES}
 void cmakeRequireSymbol(int dummy,...){(void)dummy;}
 int main()
 {
