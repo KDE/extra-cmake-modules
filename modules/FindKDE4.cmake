@@ -29,7 +29,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
 
 IF(UNIX)
    IF(APPLE)
-      MESSAGE(FATAL_ERROR "Mac OSX  not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
+      #MESSAGE(FATAL_ERROR "Mac OSX  not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
    ELSE(APPLE)
       FIND_PACKAGE(X11 REQUIRED)
    ENDIF(APPLE)
@@ -66,6 +66,26 @@ IF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
   SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
 ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+
+# This will need to be modified later to support either Qt/X11 or Qt/Mac builds
+IF(APPLE)
+  # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
+  # -undefined dynamic_lookup; in the future we should do this programmatically
+  # hmm... why doesn't this work?
+  SET(ENV{MACOSX_DEPLOYMENT_TARGET} 10.3)
+
+  # "-undefined dynamic_lookup" means we don't care about missing symbols at link-time by default
+  # this is bad, but unavoidable until there is the equivalent of libtool -no-undefined implemented
+  # or perhaps it already is, and I just don't know where to look  ;)
+
+  SET(CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress")
+  SET(CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress")
+  #SET(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
+  #SET(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
+
+  SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common -Os")
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Os")
+ENDIF(APPLE)
 
 
 #SET(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -module -Wl,--no-undefined -Wl,--allow-shlib-undefined")
