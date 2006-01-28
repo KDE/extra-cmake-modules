@@ -132,7 +132,6 @@ FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake PATHS
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
   $ENV{QTDIR}/bin
   ${QT4_PATHS}
-  $ENV{PATH}
   NO_SYSTEM_PATH
 )
 
