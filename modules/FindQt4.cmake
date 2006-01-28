@@ -37,6 +37,8 @@
 #  QT_QTOPENGL_FOUND      True if QtOpenGL was found.
 #  QT_QTSQL_FOUND         True if QtSql was found.
 #  QT_QTXML_FOUND         True if QtXml was found.
+#  QT_QTSVG_FOUND         True if QtSvg was found.
+#  QT_QTTEST_FOUND        True if QtTest was found.
 #
 #  QT_DEFINITIONS   Definitions to use when compiling code that
 #                   uses Qt.
@@ -61,6 +63,8 @@
 #  QT_QTOPENGL_INCLUDE_DIR     Path to "include/QtOpenGL"
 #  QT_QTSQL_INCLUDE_DIR        Path to "include/QtSql"
 #  QT_QTXML_INCLUDE_DIR        Path to "include/QtXml"
+#  QT_QTSVG_INCLUDE_DIR        Path to "include/QtSvg"
+#  QT_QTTEST_INCLUDE_DIR       Path to "include/QtTest"
 #
 #  QT_LIBRARY_DIR              Path to "lib" of Qt4
 #
@@ -75,6 +79,8 @@
 #  QT_QTOPENGL_LIBRARY         Fullpath to QtOpenGL library
 #  QT_QTSQL_LIBRARY            Fullpath to QtSql library
 #  QT_QTXML_LIBRARY            Fullpath to QtXml library
+#  QT_QTSVG_LIBRARY            Fullpath to QtSvg library
+#  QT_QTTEST_LIBRARY           Fullpath to QtTest library
 #
 #  QT_QT3SUPPORT_LIBRARY_DEBUG  Fullpath to Qt3Support_debug library
 #  QT_QTASSISTANT_LIBRARY_DEBUG Fullpath to QtAssistant_debug library
@@ -87,6 +93,8 @@
 #  QT_QTOPENGL_LIBRARY_DEBUG    Fullpath to QtOpenGL_debug
 #  QT_QTSQL_LIBRARY_DEBUG       Fullpath to QtSql_debug
 #  QT_QTXML_LIBRARY_DEBUG       Fullpath to QtXml_debug
+#  QT_QTSVG_LIBRARY_DEBUG       Fullpath to QtSvg_debug
+#  QT_QTTEST_LIBRARY_DEBUG      Fullpath to QtTest_debug
 #
 # also defined, but not for general use are
 #  QT_MOC_EXECUTABLE          Where to find the moc tool.
@@ -243,6 +251,19 @@ IF(QT4_QMAKE_FOUND)
     ${QT_LIBRARY_DIR}/QtGui.framework/Headers
     )
 
+  # Set QT_QTSVG_INCLUDE_DIR
+  FIND_PATH( QT_QTSVG_INCLUDE_DIR QtSvg
+    ${QT_INCLUDE_DIR}/QtSvg
+    ${QT_LIBRARY_DIR}/QtSvg.framework/Headers
+    )
+    
+  # Set QT_QTTEST_INCLUDE_DIR
+  FIND_PATH( QT_QTTEST_INCLUDE_DIR QtTest
+    ${QT_INCLUDE_DIR}/QtTest
+    ${QT_LIBRARY_DIR}/QtTest.framework/Headers
+    )
+
+
   # Set QT_QTMOTIF_INCLUDE_DIR
   FIND_PATH( QT_QTMOTIF_INCLUDE_DIR QtMotif ${QT_INCLUDE_DIR}/QtMotif)
 
@@ -332,6 +353,15 @@ IF(QT4_QMAKE_FOUND)
       CACHE STRING "The QtXml library.")
     SET(QT_QTXML_LIBRARY_DEBUG "-framework QtXml"
       CACHE STRING "The QtXml library.")
+    SET(QT_QTSVG_LIBRARY "-framework QtSvg"
+      CACHE STRING "The QtSvg library.")
+    SET(QT_QTSVG_LIBRARY_DEBUG "-framework QtSvg"
+      CACHE STRING "The QtSvg library.")
+    SET(QT_QTTEST_LIBRARY "-framework QtTest"
+      CACHE STRING "The QtTest library.")
+    SET(QT_QTTEST_LIBRARY_DEBUG "-framework QtTest"
+      CACHE STRING "The QtTest library.")
+      
   ELSE (QT_USE_FRAMEWORKS)
 
     # Set QT_QTCORE_LIBRARY by searching for a lib with "QtCore."  as part of
@@ -395,6 +425,14 @@ IF(QT4_QMAKE_FOUND)
     # Set QT_QTXML_LIBRARY
     FIND_LIBRARY(QT_QTXML_LIBRARY NAMES QtXml QtXml4 PATHS ${QT_LIBRARY_DIR})
     FIND_LIBRARY(QT_QTXML_LIBRARY_DEBUG NAMES QtXml_debug QtXmld4 PATHS ${QT_LIBRARY_DIR})
+    
+    # Set QT_QTSVG_LIBRARY
+    FIND_LIBRARY(QT_QTSVG_LIBRARY NAMES QtSvg QtSvg4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTSVG_LIBRARY_DEBUG NAMES QtSvg_debug QtSvgd4 PATHS ${QT_LIBRARY_DIR})
+    
+    # Set QT_QTTEST_LIBRARY
+    FIND_LIBRARY(QT_QTTEST_LIBRARY NAMES QtTest QtTest4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTTEST_LIBRARY_DEBUG NAMES QtTest_debug QtTestd4 PATHS ${QT_LIBRARY_DIR})
 
   ENDIF (QT_USE_FRAMEWORKS)
 
@@ -448,6 +486,8 @@ IF(QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QTOPENGL)
   _QT4_ADJUST_LIB_VARS(QTSQL)
   _QT4_ADJUST_LIB_VARS(QTXML)
+  _QT4_ADJUST_LIB_VARS(QTSVG)
+  _QT4_ADJUST_LIB_VARS(QTTEST)
 
   #######################################
   #
