@@ -40,9 +40,6 @@ ENDIF(UNIX)
 #this line includes FindQt.cmake, which searches the Qt library and headers
 FIND_PACKAGE(Qt4 REQUIRED)
 
-#add the definitions found by FindQt to the current definitions
-#ADD_DEFINITIONS(${QT_DEFINITIONS} -DQT_CLEAN_NAMESPACE)
-
 SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
 #add some KDE specific stuff
@@ -51,21 +48,21 @@ SET(KDE4_DEFINITIONS -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -DQT_NO_TRA
 
 
 #only on linux, but not e.g. on FreeBSD:
-IF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+IF(CMAKE_SYSTEM_NAME MATCHES Linux)
   SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
   SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
   SET(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
   SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
-ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+ENDIF(CMAKE_SYSTEM_NAME MATCHES Linux)
 
-IF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+IF(CMAKE_SYSTEM_NAME MATCHES FreeBSD)
   SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -D_GNU_SOURCE)
   SET(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
   SET(CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
   SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
-ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+ENDIF(CMAKE_SYSTEM_NAME MATCHES FreeBSD)
 
 # This will need to be modified later to support either Qt/X11 or Qt/Mac builds
 IF(APPLE)
