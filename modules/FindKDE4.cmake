@@ -40,7 +40,7 @@ ENDIF(UNIX)
 #this line includes FindQt.cmake, which searches the Qt library and headers
 FIND_PACKAGE(Qt4 REQUIRED)
 
-SET(QT_AND_KDECORE_LIBS ${QT_DEFINITIONS} ${QT_QTCORE_LIBRARY} kdecore)
+SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
 #add some KDE specific stuff
 # not used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT

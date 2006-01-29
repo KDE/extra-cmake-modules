@@ -325,9 +325,9 @@ IF(QT4_QMAKE_FOUND)
   IF (QT_USE_FRAMEWORKS)
     # If FIND_LIBRARY found libraries in Apple frameworks, we would not have
     # to jump through these hoops.
-    SET(QT_QTCORE_LIBRARY "-F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} -framework QtCore"
+    SET(QT_QTCORE_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtCore"
       CACHE STRING "The QtCore library.")
-    SET(QT_QTCORE_LIBRARY_DEBUG "-F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} -framework QtCore"
+    SET(QT_QTCORE_LIBRARY_DEBUG "-F${QT_LIBRARY_DIR} -framework QtCore"
       CACHE STRING "The QtCore library.")
     SET(QT_QT3SUPPORT_LIBRARY "-framework Qt3Support"
       CACHE STRING "The Qt3Support library.")
@@ -359,9 +359,9 @@ IF(QT4_QMAKE_FOUND)
       CACHE STRING "The QtSvg library.")
 
     # WTF?  why don't we have frameworks?  :P
-    SET(QT_QTTEST_LIBRARY "-lQtTest"
+    SET(QT_QTTEST_LIBRARY "-L${QT_LIBRARY_DIR} -lQtTest"
       CACHE STRING "The QtTest library.")
-    SET(QT_QTTEST_LIBRARY_DEBUG "-lQtTest"
+    SET(QT_QTTEST_LIBRARY_DEBUG "-L${QT_LIBRARY_DIR} -lQtTest"
       CACHE STRING "The QtTest library.")
       
   ELSE (QT_USE_FRAMEWORKS)
