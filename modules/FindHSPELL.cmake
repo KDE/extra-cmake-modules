@@ -1,0 +1,35 @@
+# - Try to find HSPELL
+# Once done this will define
+#
+#  HSPELL_FOUND - system has HSPELL
+#  HSPELL_INCLUDE_DIR - the HSPELL include directory
+#  HSPELL_LIBRARY - Link these to use OpenGL and GLU
+#  HSPELL_DEFINITIONS - Compiler switches required for using HSPELL
+#
+
+
+FIND_PATH(HSPELL_INCLUDE_DIR hspell.h
+  /usr/include
+  /usr/local/include
+)
+
+FIND_LIBRARY(HSPELL_LIBRARY NAMES hspell
+  PATHS
+  /usr/lib
+  /usr/local/lib
+)
+
+IF(HSPELL_INCLUDE_DIR AND HSPELL_LIBRARY)
+   SET(HSPELL_FOUND TRUE)
+ENDIF(HSPELL_INCLUDE_DIR AND HSPELL_LIBRARY)
+
+IF(HSPELL_FOUND)
+  IF(NOT HSPELL_FIND_QUIETLY)
+    MESSAGE(STATUS "Found HSPELL: ${HSPELL_LIBRARY}")
+  ENDIF(NOT HSPELL_FIND_QUIETLY)
+ELSE(HSPELL_FOUND)
+  IF(HSPELL_FIND_REQUIRED)
+    MESSAGE(FATAL_ERROR "Could not find HSPELL")
+  ENDIF(HSPELL_FIND_REQUIRED)
+ENDIF(HSPELL_FOUND)
+

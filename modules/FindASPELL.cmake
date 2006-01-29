@@ -1,0 +1,35 @@
+# - Try to find ASPELL
+# Once done this will define
+#
+#  ASPELL_FOUND - system has ASPELL
+#  ASPELL_INCLUDE_DIR - the ASPELL include directory
+#  ASPELL_LIBRARY - Link these to use OpenGL and GLU
+#  ASPELL_DEFINITIONS - Compiler switches required for using ASPELL
+#
+
+
+FIND_PATH(ASPELL_INCLUDE_DIR aspell.h
+  /usr/include
+  /usr/local/include
+)
+
+FIND_LIBRARY(ASPELL_LIBRARY NAMES aspell
+  PATHS
+  /usr/lib
+  /usr/local/lib
+)
+
+IF(ASPELL_INCLUDE_DIR AND ASPELL_LIBRARY)
+   SET(ASPELL_FOUND TRUE)
+ENDIF(ASPELL_INCLUDE_DIR AND ASPELL_LIBRARY)
+
+IF(ASPELL_FOUND)
+  IF(NOT ASPELL_FIND_QUIETLY)
+    MESSAGE(STATUS "Found ASPELL: ${ASPELL_LIBRARY}")
+  ENDIF(NOT ASPELL_FIND_QUIETLY)
+ELSE(ASPELL_FOUND)
+  IF(ASPELL_FIND_REQUIRED)
+    MESSAGE(FATAL_ERROR "Could not find ASPELL")
+  ENDIF(ASPELL_FIND_REQUIRED)
+ENDIF(ASPELL_FOUND)
+
