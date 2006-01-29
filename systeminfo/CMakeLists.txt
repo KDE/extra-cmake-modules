@@ -1,34 +1,40 @@
+macro(LOG line)
+   message(STATUS ${line})
+   file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/SystemInfo.txt "${line}\n")
+endmacro(LOG line)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/SystemInfo.txt "CMake system information: \n")
 message(STATUS "-----------------------------------")
 message(STATUS "Printing system information: ")
 message(STATUS "-----------------------------------")
-message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
-message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
-message(STATUS "C compiler is gcc: ${CMAKE_COMPILER_IS_GNUCC}")
-message(STATUS "CXX compiler is g++: ${CMAKE_COMPILER_IS_GNUCXX}")
-message(STATUS "System: ${CMAKE_SYSTEM}")
-message(STATUS "System name: ${CMAKE_SYSTEM_NAME}")
-message(STATUS "System version: ${CMAKE_SYSTEM_VERSION}")
+
+log("C compiler: ${CMAKE_C_COMPILER}")
+log("CXX compiler: ${CMAKE_CXX_COMPILER}")
+log("C compiler is gcc: ${CMAKE_COMPILER_IS_GNUCC}")
+log("CXX compiler is g++: ${CMAKE_COMPILER_IS_GNUCXX}")
+log("System: ${CMAKE_SYSTEM}")
+log("System name: ${CMAKE_SYSTEM_NAME}")
+log("System version: ${CMAKE_SYSTEM_VERSION}")
 
 if(UNIX)
-   message(STATUS "This is some kind of UNIX environment")
+   log("This is some kind of UNIX environment")
 endif(UNIX)
 
 if(WIN32)
-   message(STATUS "This is Windows")
+   log("This is Windows")
 endif(WIN32)
 
 if(APPLE)
-   message(STATUS "This is an Apple")
+   log("This is an Apple")
 endif(APPLE)
 
 if(MINGW)
-   message(STATUS "This is MinGW")
+   log("This is MinGW")
 endif(MINGW)
 
 if(CYGWIN)
-   message(STATUS "This is Cygwin")
+   log("This is Cygwin")
 endif(CYGWIN)
-
 
 message(STATUS "-----------------------------------")
 
