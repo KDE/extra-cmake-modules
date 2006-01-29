@@ -87,7 +87,7 @@ ENDIF(APPLE)
 
 #SET(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -module -Wl,--no-undefined -Wl,--allow-shlib-undefined")
 
-SET(KDE4_DIR /opt/kde4)
+SET(KDE4_DIR         ${CMAKE_INSTALL_PREFIX})
 
 SET(KDE4_APPS_DIR          /share/applnk)
 SET(KDE4_CONFIG_DIR        /share/config)
