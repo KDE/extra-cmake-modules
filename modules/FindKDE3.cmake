@@ -31,7 +31,8 @@ SET(QT_MT_REQUIRED TRUE)
 #SET(QT_MIN_VERSION "3.0.0")
 
 #this line includes FindQt.cmake, which searches the Qt library and headers
-INCLUDE(FindQt3)
+FIND_PACKAGE(Qt3 REQUIRED)
+FIND_PACKAGE(X11 REQUIRED)
 
 #add the definitions found by FindQt to the current definitions
 #ADD_DEFINITIONS(${QT_DEFINITIONS} -DQT_CLEAN_NAMESPACE)
@@ -42,9 +43,9 @@ SET(QT_AND_KDECORE_LIBS ${QT_LIBRARIES} kdecore)
 SET(KDE3_DEFINITIONS -DQT_CLEAN_NAMESPACE -Wnon-virtual-dtor -Wno-long-long -Wundef -ansi -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common)
 
 #only on linux, but not e.g. on FreeBSD:
-IF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
   SET(KDE3_DEFINITIONS ${KDE3_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
-ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 
 #SET(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -module -Wl,--no-undefined -Wl,--allow-shlib-undefined")
@@ -65,7 +66,8 @@ FIND_PATH(KDE3_INCLUDE_DIR kurl.h
 )
 
 #now the KDE library directory
-FIND_PATH(KDE3_LIB_DIR libkdecore.so
+FIND_LIBRARY(KDE3_LIB_DIR NAMES kdecore
+  PATHS
   $ENV{KDEDIR}/lib
   /opt/kde/lib
   /opt/kde3/lib

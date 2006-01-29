@@ -27,24 +27,34 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
 
-IF(UNIX)
-   IF(APPLE)
-		SET(PLATFORM_DEFINITIONS -D__APPLE_KDE__)
-   ELSE(APPLE)
-      FIND_PACKAGE(X11 REQUIRED)
-   ENDIF(APPLE)
-ELSE(UNIX)
-   MESSAGE(FATAL_ERROR "Win32 not yet supported by FindKDE4.cmake and KDE4Macros.cmake, please edit them as required")
-ENDIF(UNIX)
-
 #this line includes FindQt.cmake, which searches the Qt library and headers
 FIND_PACKAGE(Qt4 REQUIRED)
 
 SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
-#add some KDE specific stuff
-# not used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
-SET(KDE4_DEFINITIONS -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -DQT_NO_TRANSLATION -D_REENTRANT ${PLATFORM_DEFINITIONS} )
+
+# this will move into Windows-cl.cmake
+IF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
+   SET(MSVC TRUE)
+ENDIF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
+
+#####################  and now the platform specific stuff  ############################
+
+IF(UNIX AND NOT APPLE)
+   FIND_PACKAGE(X11 REQUIRED)
+ENDIF(UNIX AND NOT APPLE)
+
+IF(CYGWIN)
+   MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
+ENDIF(CYGWIN)
+
+IF(MINGW)
+   MESSAGE(FATAL_ERROR "Support for MinGW not yet implemented, please edit FindKDE4.cmake to enable it")
+ENDIF(MINGW)
+
+IF(MSVC)
+   MESSAGE(FATAL_ERROR "Support for MSVC is not yet implemented, please edit FindKDE4.cmake to enable it")
+ENDIF(MSVC)
 
 
 #only on linux, but not e.g. on FreeBSD:
@@ -56,16 +66,20 @@ IF(CMAKE_SYSTEM_NAME MATCHES Linux)
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
 ENDIF(CMAKE_SYSTEM_NAME MATCHES Linux)
 
-IF(CMAKE_SYSTEM_NAME MATCHES FreeBSD)
+# works on FreeBSD, not tested on NetBSD and OpenBSD
+IF(CMAKE_SYSTEM_NAME MATCHES BSD)
   SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -D_GNU_SOURCE)
   SET(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
   SET(CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
   SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES FreeBSD)
+ENDIF(CMAKE_SYSTEM_NAME MATCHES BSD)
 
 # This will need to be modified later to support either Qt/X11 or Qt/Mac builds
 IF(APPLE)
+
+  SET(PLATFORM_DEFINITIONS -D__APPLE_KDE__)
+
   # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
   # -undefined dynamic_lookup; in the future we should do this programmatically
   # hmm... why doesn't this work?
@@ -84,11 +98,14 @@ IF(APPLE)
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Os")
 ENDIF(APPLE)
 
+###########    end of platform specific stuff  ##########################
 
-#SET(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -module -Wl,--no-undefined -Wl,--allow-shlib-undefined")
+#add some KDE specific stuff
+# not used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
+SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -DQT_NO_TRANSLATION -D_REENTRANT ${PLATFORM_DEFINITIONS} )
 
-SET(KDE4_DIR         ${CMAKE_INSTALL_PREFIX})
 
+SET(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
 SET(KDE4_APPS_DIR          /share/applnk)
 SET(KDE4_CONFIG_DIR        /share/config)
 SET(KDE4_DATA_DIR          /share/apps)
@@ -128,7 +145,8 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
-  #at first the KDE include direcory
+  # at first the KDE include direcory
+  # this should better check for a header which didn't exist in KDE < 4
   FIND_PATH(KDE4_INCLUDE_DIR kurl.h
     $ENV{KDEDIR}/include
     /opt/kde/include
@@ -139,22 +157,15 @@ ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
     /usr/local/include/kde
   )
 
-  #now the KDE library directory
-  FIND_PATH(KDE4_LIB_DIR libkdecore.so
+  # now the KDE library directory, kxmlcore is new with KDE4
+  FIND_LIBRARY(KDE4_LIB_DIR NAMES kxmlcore
+  PATHS
     $ENV{KDEDIR}/lib
     /opt/kde/lib
     /opt/kde4/lib
     /usr/lib
     /usr/local/lib
   )
-
-#now the KDE service types directory
-#FIND_PATH(KDE4_SERVICETYPES_DIR ktexteditor.desktop
-#  $ENV{KDEDIR}/share/servicetypes/
-#  /opt/kde/share/servicetypes/
-#  /opt/kde4/share/servicetypes/
-#)
-
 
   #now search for the dcop utilities
   FIND_PROGRAM(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
@@ -241,6 +252,4 @@ ENDIF (NOT KDE4_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
 SET(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${X11_INCLUDE_DIR} )
-#INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR} ${KDE4_INCLUDE_DIR} .)
-#LINK_DIRECTORIES(${KDE4_LIB_DIR})
 

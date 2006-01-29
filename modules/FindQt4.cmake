@@ -607,20 +607,22 @@ IF(QT4_QMAKE_FOUND)
   #
   ######################################
 
+  # this function takes a relative or absolute filename as argument in _filename
+  # and returns the absolute path in _abs_filename
+# it should work both with UNIX and Windows paths (Windows not tested), Alex
   MACRO(QT4_GET_ABS_PATH _abs_filename _filename)
-     IF(${_filename} MATCHES "^/.+")
-        SET(${_abs_filename} ${_filename})
-     ELSE(${_filename} MATCHES "^/.+")
-# if you are on windows and have problems converting relative paths to absolute paths
-# check if un-commenting the following lines works for you and let me know, Alex, neundorf@kde.org
-#        IF(${_filename} MATCHES "^[a-zA-Z]:\\\\")
-#           SET(${_abs_filename} ${_filename})
-#        ELSE(${_filename} MATCHES "^[a-zA-Z]:\\\\")
-           SET(${_abs_filename} ${CMAKE_CURRENT_SOURCE_DIR}/${_filename})
-#        ENDIF(${_filename} MATCHES "^[a-zA-Z]:\\\\")
-     ENDIF(${_filename} MATCHES "^/.+")
+    IF(${_filename} MATCHES "^([a-zA-Z]:)?/.+")
+      SET(${_abs_filename} ${_filename})
+    ELSE(${_filename} MATCHES "^([a-zA-Z]:)?/.+")
+      SET(${_abs_filename} ${CMAKE_CURRENT_SOURCE_DIR}/${_filename})
+    ENDIF(${_filename} MATCHES "^([a-zA-Z]:)?/.+")
+# the previous version, works only with UNIX paths
+#   IF(${_filename} MATCHES "^/.+")
+#      SET(${_abs_filename} ${_filename})
+#   ELSE(${_filename} MATCHES "^/.+")
+#      SET(${_abs_filename} ${CMAKE_CURRENT_SOURCE_DIR}/${_filename})
+#   ENDIF(${_filename} MATCHES "^/.+")
   ENDMACRO(QT4_GET_ABS_PATH)
-
 
   MACRO(QT4_GET_MOC_INC_DIRS _moc_INC_DIRS)
      SET(${_moc_INC_DIRS})
