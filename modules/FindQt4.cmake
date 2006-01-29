@@ -102,6 +102,9 @@
 #  QT_UIC3_EXECUTABLE         Where to find the uic3 tool.
 #  QT_RCC_EXECUTABLE          Where to find the rcc tool
 #
+#  QT_DOC_DIR                 Path to "doc" of Qt4
+#
+#
 # These are around for backwards compatibility
 # they will be set
 #  QT_WRAP_CPP  Set true if QT_MOC_EXECUTABLE is found
@@ -186,7 +189,7 @@ IF(QT4_QMAKE_FOUND)
   #
   ########################################
   IF (NOT QT_HEADERS_DIR)
-    # Set QT_QT_INCLUDE_DIR by searching for qglobal.h
+    # Set QT_QT_INCLUDE_DIR by searching for the QtGlobal header
     IF(QT_QMAKE_EXECUTABLE)
       EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
         ARGS "-query QT_INSTALL_HEADERS"
@@ -198,7 +201,7 @@ IF(QT4_QMAKE_FOUND)
   SET(QT_PATH_INCLUDE ${GLOB_TEMP_VAR})
   FILE(GLOB GLOB_TEMP_VAR /usr/local/Trolltech/Qt-4*/include/Qt/)
   SET(QT_PATH_INCLUDE ${GLOB_TEMP_VAR})
-  FIND_PATH( QT_QT_INCLUDE_DIR qglobal.h
+  FIND_PATH( QT_QT_INCLUDE_DIR QtGlobal
     "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/include/Qt"
     ${QT_PATH_INCLUDE}
     ${QT_HEADERS_DIR}/Qt
@@ -223,9 +226,19 @@ IF(QT4_QMAKE_FOUND)
   ENDIF( QT_QT_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
   IF( NOT QT_INCLUDE_DIR)
     IF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
-      MESSAGE( FATAL_ERROR "Could not find qglobal.h")
+      MESSAGE( FATAL_ERROR "Could not find QtGlobal header")
     ENDIF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
   ENDIF( NOT QT_INCLUDE_DIR)
+
+
+  FIND_PATH( QT_DOC_DIR /html/qcoreapplication.html
+    ${QT_PATH_INCLUDE}
+    $ENV{QTDIR}/doc
+    /usr/local/qt/doc
+    /usr/lib/qt/doc
+    /usr/share/qt4/doc
+    "C:/Program Files/qt/doc"
+  )
 
   IF (QT_USE_FRAMEWORKS)
     SET(QT_DEFINITIONS ${QT_DEFINITIONS}
@@ -256,7 +269,7 @@ IF(QT4_QMAKE_FOUND)
     ${QT_INCLUDE_DIR}/QtSvg
     ${QT_LIBRARY_DIR}/QtSvg.framework/Headers
     )
-    
+
   # Set QT_QTTEST_INCLUDE_DIR
   FIND_PATH( QT_QTTEST_INCLUDE_DIR QtTest
     ${QT_INCLUDE_DIR}/QtTest
@@ -363,7 +376,7 @@ IF(QT4_QMAKE_FOUND)
       CACHE STRING "The QtTest library.")
     SET(QT_QTTEST_LIBRARY_DEBUG "-L${QT_LIBRARY_DIR} -lQtTest"
       CACHE STRING "The QtTest library.")
-      
+
   ELSE (QT_USE_FRAMEWORKS)
 
     # Set QT_QTCORE_LIBRARY by searching for a lib with "QtCore."  as part of
@@ -427,11 +440,11 @@ IF(QT4_QMAKE_FOUND)
     # Set QT_QTXML_LIBRARY
     FIND_LIBRARY(QT_QTXML_LIBRARY NAMES QtXml QtXml4 PATHS ${QT_LIBRARY_DIR})
     FIND_LIBRARY(QT_QTXML_LIBRARY_DEBUG NAMES QtXml_debug QtXmld4 PATHS ${QT_LIBRARY_DIR})
-    
+
     # Set QT_QTSVG_LIBRARY
     FIND_LIBRARY(QT_QTSVG_LIBRARY NAMES QtSvg QtSvg4 PATHS ${QT_LIBRARY_DIR})
     FIND_LIBRARY(QT_QTSVG_LIBRARY_DEBUG NAMES QtSvg_debug QtSvgd4 PATHS ${QT_LIBRARY_DIR})
-    
+
     # Set QT_QTTEST_LIBRARY
     FIND_LIBRARY(QT_QTTEST_LIBRARY NAMES QtTest QtTest4 PATHS ${QT_LIBRARY_DIR})
     FIND_LIBRARY(QT_QTTEST_LIBRARY_DEBUG NAMES QtTest_debug QtTestd4 PATHS ${QT_LIBRARY_DIR})
@@ -459,16 +472,16 @@ IF(QT4_QMAKE_FOUND)
       IF (QT_${basename}_LIBRARY AND NOT QT_${basename}_LIBRARY_DEBUG)
         SET(QT_${basename}_LIBRARY_DEBUG ${QT_${basename}_LIBRARY})
       ENDIF (QT_${basename}_LIBRARY AND NOT QT_${basename}_LIBRARY_DEBUG)
-      
+
       # if only the debug version was found, set the release variable also to the debug version
       IF (QT_${basename}_LIBRARY_DEBUG AND NOT QT_${basename}_LIBRARY)
         SET(QT_${basename}_LIBRARY ${QT_${basename}_LIBRARY_DEBUG})
       ENDIF (QT_${basename}_LIBRARY_DEBUG AND NOT QT_${basename}_LIBRARY)
-      
+
       IF (QT_${basename}_LIBRARY)
         SET(QT_${basename}_FOUND 1)
       ENDIF (QT_${basename}_LIBRARY)
-      
+
       #add the include directory to QT_INCLUDES
       SET(QT_INCLUDES ${QT_INCLUDES} "${QT_${basename}_INCLUDE_DIR}")
     ENDIF (QT_${basename}_INCLUDE_DIR )
@@ -503,7 +516,7 @@ IF(QT4_QMAKE_FOUND)
       OUTPUT_VARIABLE qt_bins )
     SET(QT_BINARY_DIR ${qt_bins} CACHE INTERNAL "")
   ENDIF (NOT QT_BINARY_DIR)
-  
+
   # at first without the system paths, in order to prefer e.g. ${QTDIR}/bin/qmake over /usr/bin/qmake,
   # which might be a Qt3 qmake
   FIND_PROGRAM(QT_MOC_EXECUTABLE
