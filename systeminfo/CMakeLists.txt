@@ -36,5 +36,10 @@ if(CYGWIN)
    log("This is Cygwin")
 endif(CYGWIN)
 
+if(BORLAND)
+   log("This is for a Borland compiler")
+endif(BORLAND)
+
+
 message(STATUS "-----------------------------------")
 
