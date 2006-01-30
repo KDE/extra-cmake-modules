@@ -16,7 +16,7 @@ PKGCONFIG(libagg _AGGIncDir _AGGLinkDir _AGGLinkFlags _AGGCflags)
 
 SET(AGG_DEFINITIONS ${_AGGCflags})
 
-FIND_PATH(AGG_INCLUDE_DIR agg2/agg_conv_stroke.h
+FIND_PATH(AGG_INCLUDE_DIR agg2/agg_pixfmt_gray.h
   ${_AGGIncDir}
   /usr/include
   /usr/local/include
