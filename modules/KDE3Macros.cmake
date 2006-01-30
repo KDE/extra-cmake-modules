@@ -245,7 +245,7 @@ MACRO(KDE3_AUTOMOC)
             ENDFOREACH (_current_MOC_INC)
          ENDIF(_match)
 
-      ENDIF (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
+      ENDIF (EXISTS ${_tmp_FILE})
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE3_AUTOMOC)
 
