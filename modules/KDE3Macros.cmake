@@ -133,7 +133,7 @@ MACRO(KDE3_ADD_KCFG_FILES _sources)
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE3_KCFGC_EXECUTABLE}
-         ARGS ${_kcfg_FILE} ${_tmp_FILE}
+         ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_tmp_FILE}
          DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} )
 
       SET(${_sources} ${${_sources}} ${_src_FILE})
