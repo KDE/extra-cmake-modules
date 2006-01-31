@@ -53,7 +53,11 @@ IF(MINGW)
 ENDIF(MINGW)
 
 IF(MSVC)
-   MESSAGE(FATAL_ERROR "Support for MSVC is not yet implemented, please edit FindKDE4.cmake to enable it")
+   FIND_LIBRARY(KDE4_KDEWIN32_LIBRARY NAMES kdewin32)
+   IF (NOT KDE4_WIN32_LIBRARY)
+      MESSAGE(FATAL_ERROR "Could not find kdewin32 library, make sure to build and install kdelibs/win/ first" )
+   ENDIF (NOT KDE4_WIN32_LIBRARY)
+   SET(QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDE4_KDEWIN32_LIBRARY})
 ENDIF(MSVC)
 
 
