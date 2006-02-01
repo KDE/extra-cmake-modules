@@ -110,6 +110,7 @@ SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_
 
 
 SET(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
+SET(KDE4_SYSCONF_DIR	   ${CMAKE_INSTALL_SYSCONF})
 SET(KDE4_APPS_DIR          /share/applnk)
 SET(KDE4_CONFIG_DIR        /share/config)
 SET(KDE4_DATA_DIR          /share/apps)
@@ -128,6 +129,9 @@ SET(KDE4_WALLPAPER_DIR     /share/wallpapers)
 SET(XDG_APPS_DIR           /share/applications/kde)
 SET(XDG_DIRECTORY_DIR      /share/desktop-directories)
 
+IF(NOT KDE4_SYSCONF_DIR)
+    SET(KDE4_SYSCONF_DIR /etc)
+ENDIF(NOT KDE4_SYSCONF_DIR)
 
 #now try to find some kde stuff
 
