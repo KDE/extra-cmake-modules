@@ -44,8 +44,7 @@
 #                   uses Qt.
 #
 #  QT_INCLUDES      List of paths to all include directories of
-#                   Qt4 QT_INCLUDE_DIR, QT_QT_INCLUDE_DIR,
-#                   and QT_QTGUI_INCLUDE_DIR are
+#                   Qt4 QT_INCLUDE_DIR and QT_QTCORE_INCLUDE_DIR are
 #                   always in this variable even if NOTFOUND,
 #                   all other INCLUDE_DIRS are
 #                   only added if they are found.
@@ -189,7 +188,7 @@ IF(QT4_QMAKE_FOUND)
   #
   ########################################
   IF (NOT QT_HEADERS_DIR)
-    # Set QT_QT_INCLUDE_DIR by searching for the QtGlobal header
+    # Set QT_QTCORE_INCLUDE_DIR by searching for the QtGlobal header
     IF(QT_QMAKE_EXECUTABLE)
       EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
         ARGS "-query QT_INSTALL_HEADERS"
@@ -201,29 +200,31 @@ IF(QT4_QMAKE_FOUND)
   SET(QT_PATH_INCLUDE ${GLOB_TEMP_VAR})
   FILE(GLOB GLOB_TEMP_VAR /usr/local/Trolltech/Qt-4*/include/Qt/)
   SET(QT_PATH_INCLUDE ${GLOB_TEMP_VAR})
-  FIND_PATH( QT_QT_INCLUDE_DIR QtGlobal
-    "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/include/Qt"
+  
+  FIND_PATH( QT_QTCORE_INCLUDE_DIR QtGlobal
+    "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/include/QtCore"
     ${QT_PATH_INCLUDE}
-    ${QT_HEADERS_DIR}/Qt
+    ${QT_HEADERS_DIR}/QtCore
     ${QT_LIBRARY_DIR}/QtCore.framework/Headers
-    $ENV{QTDIR}/include/Qt
-    /usr/local/qt/include/Qt
-    /usr/local/include/Qt
-    /usr/lib/qt/include/Qt
-    /usr/include/Qt
-    /usr/share/qt4/include/Qt
-    "C:/Program Files/qt/include/Qt"
-    /usr/include/qt4/Qt)
+    $ENV{QTDIR}/include/QtCore
+    /usr/local/qt/include/QtCore
+    /usr/local/include/QtCore
+    /usr/lib/qt/include/QtCore
+    /usr/include/QtCore
+    /usr/share/qt4/include/QtCore
+    "C:/Program Files/qt/include/QtCore"
+    /usr/include/qt4/QtCore)
 
-  # Set QT_INCLUDE_DIR by removine "/Qt" in the string ${QT_QT_INCLUDE_DIR}
-  IF( QT_QT_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
+  # Set QT_INCLUDE_DIR by removine "/QtCore" in the string ${QT_QTCORE_INCLUDE_DIR}
+  IF( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
     IF (QT_USE_FRAMEWORKS)
       SET(QT_INCLUDE_DIR ${QT_HEADERS_DIR})
     ELSE (QT_USE_FRAMEWORKS)
-      STRING( REGEX REPLACE "/Qt$" "" qt4_include_dir ${QT_QT_INCLUDE_DIR})
+      STRING( REGEX REPLACE "/QtCore$" "" qt4_include_dir ${QT_QTCORE_INCLUDE_DIR})
       SET( QT_INCLUDE_DIR ${qt4_include_dir} CACHE PATH "")
     ENDIF (QT_USE_FRAMEWORKS)
-  ENDIF( QT_QT_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
+  ENDIF( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
+  
   IF( NOT QT_INCLUDE_DIR)
     IF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
       MESSAGE( FATAL_ERROR "Could not find QtGlobal header")
@@ -252,10 +253,10 @@ IF(QT4_QMAKE_FOUND)
     ${QT_LIBRARY_DIR}/Qt3Support.framework/Headers
     )
 
-  # Set QT_QTCORE_INCLUDE_DIR
-  FIND_PATH( QT_QTCORE_INCLUDE_DIR QtCore
-    ${QT_INCLUDE_DIR}/QtCore
-    ${QT_LIBRARY_DIR}/QtCore.framework/Headers
+  # Set QT_QT_INCLUDE_DIR
+  FIND_PATH( QT_QT_INCLUDE_DIR QtGlobal
+    ${QT_INCLUDE_DIR}/Qt
+    ${QT_LIBRARY_DIR}/Qt.framework/Headers
     )
 
   # Set QT_QTGUI_INCLUDE_DIR

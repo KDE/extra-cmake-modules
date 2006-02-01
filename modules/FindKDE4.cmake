@@ -23,6 +23,9 @@
 # KDE4_ADD_KPART
 # KDE4_ADD_KLM
 # KDE4_ADD_EXECUTABLE
+#
+# _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
+# _KDE4_PLATFORM_DEFINITIONS is used only internally
 
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
@@ -32,81 +35,7 @@ FIND_PACKAGE(Qt4 REQUIRED)
 
 SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
-
-# this will move into Windows-cl.cmake
-IF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
-   SET(MSVC TRUE)
-ENDIF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
-
-#####################  and now the platform specific stuff  ############################
-
-IF(UNIX AND NOT APPLE)
-   FIND_PACKAGE(X11 REQUIRED)
-ENDIF(UNIX AND NOT APPLE)
-
-IF(CYGWIN)
-   MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
-ENDIF(CYGWIN)
-
-IF(MINGW)
-   MESSAGE(FATAL_ERROR "Support for MinGW not yet implemented, please edit FindKDE4.cmake to enable it")
-ENDIF(MINGW)
-
-IF(MSVC)
-   FIND_LIBRARY(KDE4_KDEWIN32_LIBRARY NAMES kdewin32)
-   IF (NOT KDE4_WIN32_LIBRARY)
-      MESSAGE(FATAL_ERROR "Could not find kdewin32 library, make sure to build and install kdelibs/win/ first" )
-   ENDIF (NOT KDE4_WIN32_LIBRARY)
-   SET(QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDE4_KDEWIN32_LIBRARY})
-ENDIF(MSVC)
-
-
-#only on linux, but not e.g. on FreeBSD:
-IF(CMAKE_SYSTEM_NAME MATCHES Linux)
-  SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
-  SET(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-  SET(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-  SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES Linux)
-
-# works on FreeBSD, not tested on NetBSD and OpenBSD
-IF(CMAKE_SYSTEM_NAME MATCHES BSD)
-  SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -D_GNU_SOURCE)
-  SET(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
-  SET(CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
-  SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES BSD)
-
-# This will need to be modified later to support either Qt/X11 or Qt/Mac builds
-IF(APPLE)
-
-  SET(PLATFORM_DEFINITIONS -D__APPLE_KDE__)
-
-  # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
-  # -undefined dynamic_lookup; in the future we should do this programmatically
-  # hmm... why doesn't this work?
-  SET(ENV{MACOSX_DEPLOYMENT_TARGET} 10.3)
-
-  # "-undefined dynamic_lookup" means we don't care about missing symbols at link-time by default
-  # this is bad, but unavoidable until there is the equivalent of libtool -no-undefined implemented
-  # or perhaps it already is, and I just don't know where to look  ;)
-
-  SET(CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress")
-  SET(CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress")
-  #SET(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
-  #SET(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
-
-  SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common -Os")
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Os")
-ENDIF(APPLE)
-
-###########    end of platform specific stuff  ##########################
-
 #add some KDE specific stuff
-# not used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
-SET(KDE4_DEFINITIONS ${KDE4_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -DQT_NO_TRANSLATION -D_REENTRANT ${PLATFORM_DEFINITIONS} )
 
 
 SET(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
@@ -203,6 +132,83 @@ ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 
+# this will move into Windows-cl.cmake
+IF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
+   SET(MSVC TRUE)
+ENDIF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
+
+#####################  and now the platform specific stuff  ############################
+
+IF(UNIX AND NOT APPLE)
+   FIND_PACKAGE(X11 REQUIRED)
+   SET(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
+ENDIF(UNIX AND NOT APPLE)
+
+IF(CYGWIN)
+   MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
+ENDIF(CYGWIN)
+
+IF(MINGW)
+   MESSAGE(FATAL_ERROR "Support for MinGW not yet implemented, please edit FindKDE4.cmake to enable it")
+   SET(_KDE4_PLATFORM_INCLUDE_DIRS ${KDE4_INCLUDE_DIR}/win/include  ${KDE4_INCLUDE_DIR}/include/mingw )
+   SET( CMAKE_INCLUDE_PATH ${${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/mingw )
+ENDIF(MINGW)
+
+IF(MSVC)
+   FIND_LIBRARY( KDE4_KDEWIN32_LIBRARY NAMES kdewin32 )
+   IF ( NOT KDE4_WIN32_LIBRARY )
+      MESSAGE( FATAL_ERROR "Could not find kdewin32 library, make sure to build and install kdelibs/win/ first" )
+   ENDIF ( NOT KDE4_WIN32_LIBRARY )
+   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDE4_KDEWIN32_LIBRARY})
+   SET( _KDE4_PLATFORM_INCLUDE_DIRS ${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/msvc )
+   SET( _KDE4_PLATFORM_DEFINITIONS -D_WINSOCKAPI_ -DWIN32_LEAN_AND_MEAN -DMAKE_KDEWIN32_LIB -DUNICODE )
+   SET( CMAKE_INCLUDE_PATH ${${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/msvc )
+ENDIF(MSVC)
+
+#only on linux, but not e.g. on FreeBSD:
+IF(CMAKE_SYSTEM_NAME MATCHES Linux)
+  SET ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
+  SET ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+  SET ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+  SET ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+  SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
+ENDIF(CMAKE_SYSTEM_NAME MATCHES Linux)
+
+# works on FreeBSD, not tested on NetBSD and OpenBSD
+IF(CMAKE_SYSTEM_NAME MATCHES BSD)
+  SET ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
+  SET ( CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
+  SET ( CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
+  SET ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+  SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
+ENDIF(CMAKE_SYSTEM_NAME MATCHES BSD)
+
+# This will need to be modified later to support either Qt/X11 or Qt/Mac builds
+IF(APPLE)
+
+  SET ( _KDE4_PLATFORM_DEFINITIONS -D__APPLE_KDE__ )
+
+  # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
+  # -undefined dynamic_lookup; in the future we should do this programmatically
+  # hmm... why doesn't this work?
+  SET (ENV{MACOSX_DEPLOYMENT_TARGET} 10.3)
+
+  # "-undefined dynamic_lookup" means we don't care about missing symbols at link-time by default
+  # this is bad, but unavoidable until there is the equivalent of libtool -no-undefined implemented
+  # or perhaps it already is, and I just don't know where to look  ;)
+
+  SET (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress")
+  SET (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress")
+  #SET(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
+  #SET(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
+
+  SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common -Os")
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Os")
+ENDIF(APPLE)
+
+###########    end of platform specific stuff  ##########################
+
+
 # KDE4Macros.cmake contains all the KDE specific macros
 INCLUDE(KDE4Macros)
 
@@ -259,5 +265,7 @@ IF (NOT KDE4_FIND_QUIETLY)
 ENDIF (NOT KDE4_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
-SET(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${X11_INCLUDE_DIR} )
+SET(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
 
+# not used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
+SET(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -DQT_NO_TRANSLATION -D_REENTRANT )
