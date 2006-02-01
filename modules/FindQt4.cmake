@@ -256,7 +256,7 @@ IF(QT4_QMAKE_FOUND)
   # Set QT_QT_INCLUDE_DIR
   FIND_PATH( QT_QT_INCLUDE_DIR QtGlobal
     ${QT_INCLUDE_DIR}/Qt
-    ${QT_LIBRARY_DIR}/Qt.framework/Headers
+    ${QT_LIBRARY_DIR}/QtCore.framework/Headers
     )
 
   # Set QT_QTGUI_INCLUDE_DIR
