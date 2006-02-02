@@ -357,7 +357,7 @@ MACRO(KDE4_CREATE_LIBTOOL_FILE _target)
    FILE(APPEND ${_laname} "# Directory that this library needs to be installed in:\n")
    FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/lib/kde4'\n")
 
-   INSTALL_FILES(/lib/kde4 FILES ${_laname})
+   INSTALL_FILES(${KDE4_LIB_INSTALL_DIR}/kde4 FILES ${_laname})
 ENDMACRO(KDE4_CREATE_LIBTOOL_FILE)
 
 
