@@ -842,7 +842,7 @@ class CMakeFile
             file.printf(" )\n\n")
 
             file.printf("set_target_properties(%s PROPERTIES VERSION %d.%d.%d SOVERSION %d )\n", buildTarget.name, buildTarget.versionNumberMajor, buildTarget.versionNumberMinor, buildTarget.versionNumberPatch, buildTarget.versionNumberMajor)
-            file.printf("install_targets(/lib %s )\n\n", buildTarget.name)
+            file.printf("install_targets(${KDE4_LIB_INSTALL_DIR} %s )\n\n", buildTarget.name)
 
          elsif buildTarget.type==StaticLib
             file.printf("kde4_add_library(%s STATIC ${%s})\n\n", buildTarget.name, srcsName)
@@ -857,7 +857,7 @@ class CMakeFile
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
             file.printf(" )\n\n")
 
-            file.printf("install_targets(/lib/kde4 %s )\n\n", buildTarget.name)
+            file.printf("install_targets(${KDE4_LIB_INSTALL_DIR}/kde4 %s )\n\n", buildTarget.name)
          elsif buildTarget.type==KDEInit
             file.printf("kde4_add_klm( %s ${%s})\n\n", buildTarget.name, srcsName)
 
@@ -865,7 +865,7 @@ class CMakeFile
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
             file.printf(" )\n\n")
 
-            file.printf("install_targets(/lib kdeinit_%s )\n\n", buildTarget.name)
+            file.printf("install_targets(${KDE4_LIB_INSTALL_DIR} kdeinit_%s )\n\n", buildTarget.name)
 
             file.printf("target_link_libraries( %s kdeinit_%s )\n", buildTarget.name, buildTarget.name)
 
