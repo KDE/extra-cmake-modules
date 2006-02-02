@@ -458,6 +458,13 @@ MACRO(KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
       ADD_LIBRARY(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN})
    ENDIF (KDE4_ENABLE_FINAL)
 
+   IF (WIN32)
+      # for shared libraries a -DMAKE_target_LIB is required
+      string(TOUPPER ${_target_NAME} _symbol)
+      set(_symbol "MAKE_${_symbol}_LIB")
+      set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
+   ENDIF (WIN32)
+
 ENDMACRO(KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 
