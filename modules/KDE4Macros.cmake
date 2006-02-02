@@ -378,6 +378,7 @@ ENDMACRO(KDE4_CREATE_FINAL_FILES)
 
 OPTION(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 OPTION(KDE4_BUILD_TESTS  "Build the tests")
+OPTION(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
 
 MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
