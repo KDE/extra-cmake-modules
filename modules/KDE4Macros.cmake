@@ -442,10 +442,10 @@ MACRO(KDE4_ADD_KLM _target_NAME )
 
    CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
    
-   IF (WIN32)
-      # under windows, just build a normal executable
-      KDE4_ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${ARGN} )
-   ELSE (WIN32)
+#   IF (WIN32)
+#      # under windows, just build a normal executable
+#      KDE4_ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${ARGN} )
+#   ELSE (WIN32)
       # under UNIX, create a shared library and a small executable, which links to this library
       IF (KDE4_ENABLE_FINAL)
          KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${ARGN})
@@ -458,7 +458,7 @@ MACRO(KDE4_ADD_KLM _target_NAME )
 
       ADD_EXECUTABLE( ${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
       TARGET_LINK_LIBRARIES( ${_target_NAME} kdeinit_${_target_NAME} )
-   ENDIF (WIN32)
+#   ENDIF (WIN32)
 
 ENDMACRO(KDE4_ADD_KLM _target_NAME)
 
