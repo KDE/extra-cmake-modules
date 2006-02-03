@@ -323,6 +323,38 @@ MACRO(KDE4_INSTALL_ICONS _theme)
       FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
 
    ENDFOREACH (_current_ICON)
+   FILE(GLOB _icons *.svgz)
+   FOREACH(_current_ICON ${_icons} )
+      STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
+      STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name "${_current_ICON}")
+
+      SET(_icon_GROUP "actions")
+
+      IF(${_group} STREQUAL "mime")
+         SET(_icon_GROUP  "mimetypes")
+      ENDIF(${_group} STREQUAL "mime")
+
+      IF(${_group} STREQUAL "filesys")
+         SET(_icon_GROUP  "filesystems")
+      ENDIF(${_group} STREQUAL "filesys")
+
+      IF(${_group} STREQUAL "device")
+         SET(_icon_GROUP  "devices")
+      ENDIF(${_group} STREQUAL "device")
+
+      IF(${_group} STREQUAL "app")
+         SET(_icon_GROUP  "apps")
+      ENDIF(${_group} STREQUAL "app")
+
+      IF(${_group} STREQUAL "action")
+         SET(_icon_GROUP  "actions")
+      ENDIF(${_group} STREQUAL "action")
+
+      SET(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/share/icons/${_theme}/scalable/${_icon_GROUP}/${_name})
+      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "MESSAGE(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
+      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
+
+   ENDFOREACH (_current_ICON)
 ENDMACRO(KDE4_INSTALL_ICONS _theme)
 
 # for the case that something should be added to every CMakeLists.txt at the top
