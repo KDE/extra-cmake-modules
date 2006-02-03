@@ -57,7 +57,7 @@ SET(KDE4_SERVICETYPES_DIR /share/servicetypes)
 SET(KDE4_SOUND_DIR         /share/sounds)
 SET(KDE4_TEMPLATES_DIR     /share/templates)
 SET(KDE4_WALLPAPER_DIR     /share/wallpapers)
-
+SET(KDE4_KCONF_UPDATE_DIR	/share/apps/kconf_update/ )
 SET(XDG_APPS_DIR           /share/applications/kde)
 SET(XDG_DIRECTORY_DIR      /share/desktop-directories)
 
