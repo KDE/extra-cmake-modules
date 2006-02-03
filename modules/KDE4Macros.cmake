@@ -32,6 +32,14 @@ MACRO(KDE4_ADD_FILE_DEPENDANCY file)
 ENDMACRO(KDE4_ADD_FILE_DEPENDANCY)
 
 
+IF (UNIX)
+   # dcopidl needs the redirection under unix
+   SET (_KDE4_GT ">")
+ELSE (UNIX)
+   # but not under windows
+   SET (_KDE4_GT )
+ENDIF (UNIX)
+
 #create the kidl and skeletion file for dcop stuff
 #usage: KDE_ADD_COP_SKELS(foo_SRCS ${dcop_headers})
 MACRO(KDE4_ADD_DCOP_SKELS _sources)
@@ -49,7 +57,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
 
         ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
            COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-           ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} > ${_kidl}
+           ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} ${_KDE4_GT} ${_kidl}
            DEPENDS ${_tmp_FILE}
         )
       ENDIF (NOT HAVE_${_basename}_KIDL_RULE)
@@ -88,7 +96,7 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
 
         ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
            COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-           ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} > ${_kidl}
+           ARGS --srcdir ${KDE4_KALYPTUS_DIR} ${_tmp_FILE} ${_KDE4_GT} ${_kidl}
            DEPENDS ${_tmp_FILE}
         )
       ENDIF (NOT HAVE_${_basename}_KIDL_RULE)
