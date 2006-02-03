@@ -431,24 +431,34 @@ MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
       SET_TARGET_PROPERTIES(${_target_NAME} PROPERTIES PREFIX "")
    ENDIF(_first_SRC)
 
+#   IF (UNIX)
+   # I guess under windows the libtool file are not required
    KDE4_CREATE_LIBTOOL_FILE(${_target_NAME})
+#   ENDIF (UNIX)
 
 ENDMACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 MACRO(KDE4_ADD_KLM _target_NAME )
 
-   IF (KDE4_ENABLE_FINAL)
-      KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${ARGN})
-      ADD_LIBRARY(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
-   ELSE (KDE4_ENABLE_FINAL)
-      ADD_LIBRARY(kdeinit_${_target_NAME} SHARED ${ARGN} )
-#      MESSAGE(STATUS "klm: kdeinit_${_target_NAME}")
-   ENDIF (KDE4_ENABLE_FINAL)
-
    CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+   
+   IF (WIN32)
+      # under windows, just build a normal executable
+      KDE4_ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${ARGN} )
+   ELSE (WIN32)
+      # under UNIX, create a shared library and a small executable, which links to this library
+      IF (KDE4_ENABLE_FINAL)
+         KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${ARGN})
+         ADD_LIBRARY(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
+      ELSE (KDE4_ENABLE_FINAL)
+         ADD_LIBRARY(kdeinit_${_target_NAME} SHARED ${ARGN} )
+#      MESSAGE(STATUS "klm: kdeinit_${_target_NAME}")
+      ENDIF (KDE4_ENABLE_FINAL)
 
-   ADD_EXECUTABLE( ${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
-   TARGET_LINK_LIBRARIES( ${_target_NAME} kdeinit_${_target_NAME} )
+
+      ADD_EXECUTABLE( ${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
+      TARGET_LINK_LIBRARIES( ${_target_NAME} kdeinit_${_target_NAME} )
+   ENDIF (WIN32)
 
 ENDMACRO(KDE4_ADD_KLM _target_NAME)
 

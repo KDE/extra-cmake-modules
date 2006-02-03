@@ -39,10 +39,6 @@ SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
 
 SET(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
-#SET(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
-SET(KDE4_MAN_INSTALL_DIR "/man" CACHE STRING "The kde man install dir (default prefix/man/)")
-SET(KDE4_INFO_INSTALL_DIR "/info" CACHE STRING "The kde info install dir (default prefix/info)")
-SET(KDE4_LIB_INSTALL_DIR "/lib" CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
 SET(KDE4_APPS_DIR          /share/applnk)
 SET(KDE4_CONFIG_DIR        /share/config)
 SET(KDE4_DATA_DIR          /share/apps)
@@ -53,13 +49,21 @@ SET(KDE4_LIBS_HTML_DIR     /share/doc/HTML)
 SET(KDE4_LOCALE_DIR        /share/locale)
 SET(KDE4_MIME_DIR          /share/mimelnk)
 SET(KDE4_SERVICES_DIR      /share/services)
-SET(KDE4_SERVICETYPES_DIR /share/servicetypes)
+SET(KDE4_SERVICETYPES_DIR  /share/servicetypes)
 SET(KDE4_SOUND_DIR         /share/sounds)
 SET(KDE4_TEMPLATES_DIR     /share/templates)
 SET(KDE4_WALLPAPER_DIR     /share/wallpapers)
 SET(KDE4_KCONF_UPDATE_DIR	/share/apps/kconf_update/ )
 SET(XDG_APPS_DIR           /share/applications/kde)
 SET(XDG_DIRECTORY_DIR      /share/desktop-directories)
+
+
+# the following are directories where stuff will be installed to
+#SET(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
+SET(KDE4_MAN_INSTALL_DIR "/man" CACHE STRING "The kde man install dir (default prefix/man/)")
+SET(KDE4_INFO_INSTALL_DIR "/info" CACHE STRING "The kde info install dir (default prefix/info)")
+SET(KDE4_LIB_INSTALL_DIR "/lib" CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+
 
 
 
@@ -96,7 +100,7 @@ ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   )
 
   # now the KDE library directory, kxmlcore is new with KDE4
-  FIND_LIBRARY(KDE4_LIB_DIR NAMES kxmlcore
+  FIND_LIBRARY(KDE4_XMLCORE_LIBRARY NAMES kxmlcore
   PATHS
     $ENV{KDEDIR}/lib
     /opt/kde/lib
@@ -104,6 +108,8 @@ ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
     /usr/lib
     /usr/local/lib
   )
+
+  GET_FILENAME_COMPONENT(KDE4_LIB_DIR ${KDE4_XMLCORE_LIBRARY} PATH )
 
   #now search for the dcop utilities
   FIND_PROGRAM(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
@@ -140,34 +146,36 @@ ENDIF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
 
 #####################  and now the platform specific stuff  ############################
 
+
 IF(UNIX AND NOT APPLE)
    FIND_PACKAGE(X11 REQUIRED)
    SET(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
 ENDIF(UNIX AND NOT APPLE)
 
+
 IF(CYGWIN)
    MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
 ENDIF(CYGWIN)
 
+
+# windows, mingw
 IF(MINGW)
-   MESSAGE(FATAL_ERROR "Support for MinGW not yet implemented, please edit FindKDE4.cmake to enable it")
+   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} kdewin32 )
    SET(_KDE4_PLATFORM_INCLUDE_DIRS ${KDE4_INCLUDE_DIR}/win/include  ${KDE4_INCLUDE_DIR}/include/mingw )
    SET( CMAKE_INCLUDE_PATH ${${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/mingw )
 ENDIF(MINGW)
 
+
+# windows, microsoft compiler
 IF(MSVC)
-   FIND_LIBRARY( KDE4_KDEWIN32_LIBRARY NAMES kdewin32 )
-   IF ( NOT KDE4_KDEWIN32_LIBRARY )
-      MESSAGE( FATAL_ERROR "Could not find kdewin32 library, make sure to build and install kdelibs/win/ first" )
-   ENDIF ( NOT KDE4_KDEWIN32_LIBRARY )
-   
-   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDE4_KDEWIN32_LIBRARY})
+   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} kdewin32 )
    SET( _KDE4_PLATFORM_INCLUDE_DIRS ${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/msvc )
    SET( _KDE4_PLATFORM_DEFINITIONS -D_WINSOCKAPI_ -DWIN32_LEAN_AND_MEAN -DMAKE_KDEWIN32_LIB -DUNICODE )
    SET( CMAKE_INCLUDE_PATH ${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/msvc )
 ENDIF(MSVC)
 
-#only on linux, but not e.g. on FreeBSD:
+
+# only on linux, but not e.g. on FreeBSD:
 IF(CMAKE_SYSTEM_NAME MATCHES Linux)
   SET ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
   SET ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
@@ -175,6 +183,7 @@ IF(CMAKE_SYSTEM_NAME MATCHES Linux)
   SET ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
   SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
 ENDIF(CMAKE_SYSTEM_NAME MATCHES Linux)
+
 
 # works on FreeBSD, not tested on NetBSD and OpenBSD
 IF(CMAKE_SYSTEM_NAME MATCHES BSD)
@@ -184,6 +193,7 @@ IF(CMAKE_SYSTEM_NAME MATCHES BSD)
   SET ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
   SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
 ENDIF(CMAKE_SYSTEM_NAME MATCHES BSD)
+
 
 # This will need to be modified later to support either Qt/X11 or Qt/Mac builds
 IF(APPLE)
@@ -214,7 +224,8 @@ ENDIF(APPLE)
 # KDE4Macros.cmake contains all the KDE specific macros
 INCLUDE(KDE4Macros)
 
-#set KDE4_FOUND
+
+# decide whether KDE4 has been found
 IF (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
    SET(KDE4_FOUND TRUE)
 ELSE (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
@@ -252,15 +263,15 @@ MACRO (KDE4_PRINT_RESULTS)
    ELSE(KDE4_KCFGC_EXECUTABLE)
       MESSAGE(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
    ENDIF(KDE4_KCFGC_EXECUTABLE)
-
 ENDMACRO (KDE4_PRINT_RESULTS)
+
 
 IF (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
    #bail out if something wasn't found
    KDE4_PRINT_RESULTS()
    MESSAGE(FATAL_ERROR "Could not find everything required for compiling KDE 4 programs")
-
 ENDIF (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
+
 
 IF (NOT KDE4_FIND_QUIETLY)
    KDE4_PRINT_RESULTS()
