@@ -291,7 +291,7 @@ MACRO(KDE4_AUTOMOC)
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE4_AUTOMOC)
 
-MACRO(KDE4_INSTALL_ICONS _theme)
+MACRO(KDE4_INSTALL_ICONS _theme _defaultpath )
    ADD_CUSTOM_TARGET(install_icons )
    SET_TARGET_PROPERTIES(install_icons PROPERTIES POST_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake )
    FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "# icon installations rules\n")
@@ -326,7 +326,7 @@ MACRO(KDE4_INSTALL_ICONS _theme)
       ENDIF(${_group} STREQUAL "action")
 
 #      MESSAGE(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
-      SET(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/share/icons/${_theme}/${_size}x${_size}/${_icon_GROUP}/${_name})
+      SET(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/icons/${_theme}/${_size}x${_size}/${_icon_GROUP}/${_name})
       FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "MESSAGE(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
       FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
 
@@ -358,12 +358,12 @@ MACRO(KDE4_INSTALL_ICONS _theme)
          SET(_icon_GROUP  "actions")
       ENDIF(${_group} STREQUAL "action")
 
-      SET(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/share/icons/${_theme}/scalable/${_icon_GROUP}/${_name})
+      SET(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/icons/${_theme}/scalable/${_icon_GROUP}/${_name})
       FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "MESSAGE(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
       FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
 
    ENDFOREACH (_current_ICON)
-ENDMACRO(KDE4_INSTALL_ICONS _theme)
+ENDMACRO(KDE4_INSTALL_ICONS _theme _defaultpath)
 
 # for the case that something should be added to every CMakeLists.txt at the top
 MACRO(KDE4_HEADER)
