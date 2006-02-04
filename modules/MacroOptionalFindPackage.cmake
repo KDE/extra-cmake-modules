@@ -1,5 +1,5 @@
-# - OPTIONAL_FIND_PACKAGE() combines FIND_PACKAGE() with an OPTION()
-# OPTIONAL_FIND_PACKAGE( <name> [QUIT] )
+# - MACRO_OPTIONAL_FIND_PACKAGE() combines FIND_PACKAGE() with an OPTION()
+# MACRO_OPTIONAL_FIND_PACKAGE( <name> [QUIT] )
 # This macro is a combination of OPTION() and FIND_PACKAGE(), it
 # works like FIND_PACKAGE(), but additionally it automatically creates
 # an option name WITH_<name>, which can be disabled via the cmake GUI.
@@ -7,10 +7,10 @@
 # The standard <name>_FOUND variables can be used in the same way
 # as when using the normal FIND_PACKAGE()
 
-MACRO(OPTIONAL_FIND_PACKAGE _name )
+MACRO(MACRO_OPTIONAL_FIND_PACKAGE _name )
    OPTION(WITH_${_name} "Search for ${_name} package" ON)
    IF (WITH_${_name})
       FIND_PACKAGE(${_name} ${ARGN})
    ENDIF (WITH_${_name})
-ENDMACRO(OPTIONAL_FIND_PACKAGE)
+ENDMACRO(MACRO_OPTIONAL_FIND_PACKAGE)
 

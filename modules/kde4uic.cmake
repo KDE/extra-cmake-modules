@@ -37,11 +37,15 @@ ENDIF (KDE4_HEADER)
 #replace tr218n("") with QString::null to avoid waring from KLocale
 STRING(REGEX REPLACE "tr2i18n\\(\"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
 STRING(REGEX REPLACE "tr2i18n\\(\"\", \"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
-STRING(REGEX REPLACE "\nuic3: [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
-STRING(REGEX REPLACE "\n'[^\n]+' [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
-
 #replace image15_data with img15_filename to make enable_final work
 STRING(REGEX REPLACE "image([0-9]+)_data" "img\\1_${KDE_UIC_BASENAME}" _uic_CONTENTS "${_uic_CONTENTS}")
+
+# workaround which removes the stderr messages from uic, will be removed as soon as
+# I switch to EXEC_PROCESS() in the calls above
+STRING(REGEX REPLACE "\nuic3: [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
+STRING(REGEX REPLACE "\n'[^\n]+' [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
+STRING(REGEX REPLACE "\nWarning: [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
+
 
 FILE(WRITE ${KDE_UIC_CPP_FILE} "#include <kdialog.h>\n#include <klocale.h>\n\n${_uic_CONTENTS}\n")
 
