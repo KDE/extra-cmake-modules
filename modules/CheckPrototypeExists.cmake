@@ -20,7 +20,11 @@ void cmakeRequireSymbol(int dummy,...){(void)dummy;}
 int main()
 {
 #ifndef ${_SYMBOL}
+#ifndef _MSC_VER
   cmakeRequireSymbol(0,&${_SYMBOL});
+#else
+  char i = sizeof(&${_SYMBOL});
+#endif
 #endif
   return 0;
 }
