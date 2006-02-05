@@ -6,12 +6,11 @@
 # Checks the following optional VARIABLES (not arguments)
 #  CMAKE_REQUIRED_LIBRARIES - Link to extra libraries
 #  CMAKE_REQUIRED_FLAGS     - Extra flags to C compiler
-#  CMAKE_REQUIRED_INCLUDES  - Extra include directories
 #
 
 MACRO(CHECK_CXX_SOURCE_COMPILES SOURCE VAR)
   IF("${VAR}" MATCHES "^${VAR}$")
-    SET(MACRO_CHECK_FUNCTION_DEFINITIONS
+    SET(MACRO_CHECK_FUNCTION_DEFINITIONS 
       "-D${VAR} ${CMAKE_REQUIRED_FLAGS}")
     IF(CMAKE_REQUIRED_LIBRARIES)
       SET(CHECK_CXX_SOURCE_COMPILES_ADD_LIBRARIES
@@ -20,7 +19,6 @@ MACRO(CHECK_CXX_SOURCE_COMPILES SOURCE VAR)
     IF(CMAKE_REQUIRED_INCLUDES)
       SET(CHECK_CXX_SOURCE_COMPILES_ADD_INCLUDES
         "-DINCLUDE_DIRECTORIES:STRING=${CMAKE_REQUIRED_INCLUDES}")
-      STRING(REGEX REPLACE ";" "\\\\;" CHECK_CXX_SOURCE_COMPILES_ADD_INCLUDES "${CHECK_CXX_SOURCE_COMPILES_ADD_INCLUDES}")
     ENDIF(CMAKE_REQUIRED_INCLUDES)
     FILE(WRITE "${CMAKE_BINARY_DIR}/CMakeFiles/CMakeTmp/src.cxx"
       "${SOURCE}")
@@ -29,21 +27,21 @@ MACRO(CHECK_CXX_SOURCE_COMPILES SOURCE VAR)
     TRY_COMPILE(${VAR}
       ${CMAKE_BINARY_DIR}
       ${CMAKE_BINARY_DIR}/CMakeFiles/CMakeTmp/src.cxx
-      CMAKE_FLAGS
+      CMAKE_FLAGS 
       "${CHECK_CXX_SOURCE_COMPILES_ADD_LIBRARIES}"
       "${CHECK_CXX_SOURCE_COMPILES_ADD_INCLUDES}"
       OUTPUT_VARIABLE OUTPUT)
     IF(${VAR})
       SET(${VAR} 1 CACHE INTERNAL "Test ${FUNCTION}")
       MESSAGE(STATUS "Performing Test ${VAR} - Success")
-      WRITE_FILE(${CMAKE_BINARY_DIR}/CMakeFiles/CMakeOutput.log
+      WRITE_FILE(${CMAKE_BINARY_DIR}/CMakeFiles/CMakeOutput.log 
         "Performing C++ SOURCE FILE Test ${VAR} succeded with the following output:\n"
         "${OUTPUT}\n"
         "Source file was:\n${SOURCE}\n" APPEND)
     ELSE(${VAR})
       MESSAGE(STATUS "Performing Test ${VAR} - Failed")
       SET(${VAR} "" CACHE INTERNAL "Test ${FUNCTION}")
-      WRITE_FILE(${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log
+      WRITE_FILE(${CMAKE_BINARY_DIR}/CMakeFiles/CMakeError.log 
         "Performing C++ SOURCE FILE Test ${VAR} failed with the following output:\n"
         "${OUTPUT}\n"
         "Source file was:\n${SOURCE}\n" APPEND)
