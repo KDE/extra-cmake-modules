@@ -16,15 +16,10 @@ MACRO(CHECK_PROTOTYPE_EXISTS _SYMBOL _HEADER _RESULT)
 
    SET(_CHECK_PROTO_EXISTS_SOURCE_CODE "
 ${_INCLUDE_FILES}
-void cmakeRequireSymbol(int dummy,...){(void)dummy;}
 int main()
 {
 #ifndef ${_SYMBOL}
-#ifndef _MSC_VER
-  cmakeRequireSymbol(0,&${_SYMBOL});
-#else
-  char i = sizeof(&${_SYMBOL});
-#endif
+   int i = sizeof(&${_SYMBOL});
 #endif
   return 0;
 }
