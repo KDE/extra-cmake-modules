@@ -75,15 +75,17 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   MESSAGE(STATUS "Building kdelibs...")
 
-  SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
-  SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
-
   SET(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
   SET(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH})
+
+  SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
+  
   IF (WIN32)
-    SET(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
+     SET(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
+     SET(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )           # create the libraries in the same directory as the executables, so the linker will find them
   ELSE (WIN32)
-    SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
+     SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
+     SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
   ENDIF (WIN32)
   SET(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
   SET(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/dcopidl2cpp )
