@@ -42,7 +42,7 @@ STRING(REGEX REPLACE "image([0-9]+)_data" "img\\1_${KDE_UIC_BASENAME}" _uic_CONT
 
 # workaround which removes the stderr messages from uic, will be removed as soon as
 # I switch to EXEC_PROCESS() in the calls above
-STRING(REGEX REPLACE "\nuic3: [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
+STRING(REGEX REPLACE "\n[^\n]*uic3: [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
 STRING(REGEX REPLACE "\n'[^\n]+' [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
 STRING(REGEX REPLACE "\nWarning: [^\n]+" "" _uic_CONTENTS "${_uic_CONTENTS}" )
 
