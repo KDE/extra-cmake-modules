@@ -18,18 +18,18 @@
 
 #this should better be part of cmake:
 #add an additional file to the list of files a source file depends on
-MACRO(KDE4_ADD_FILE_DEPENDANCY file)
-
-   GET_SOURCE_FILE_PROPERTY(_deps ${file} OBJECT_DEPENDS)
-   IF (_deps)
-      SET(_deps ${_deps} ${ARGN})
-   ELSE (_deps)
-      SET(_deps ${ARGN})
-   ENDIF (_deps)
-
-   SET_SOURCE_FILES_PROPERTIES(${file} PROPERTIES OBJECT_DEPENDS "${_deps}")
-
-ENDMACRO(KDE4_ADD_FILE_DEPENDANCY)
+#MACRO(KDE4_ADD_FILE_DEPENDANCY file)
+#
+#   GET_SOURCE_FILE_PROPERTY(_deps ${file} OBJECT_DEPENDS)
+#   IF (_deps)
+#      SET(_deps ${_deps} ${ARGN})
+#   ELSE (_deps)
+#      SET(_deps ${ARGN})
+#   ENDIF (_deps)
+#
+#   SET_SOURCE_FILES_PROPERTIES(${file} PROPERTIES OBJECT_DEPENDS "${_deps}")
+#
+#ENDMACRO(KDE4_ADD_FILE_DEPENDANCY)
 
 
 #create the kidl and skeletion file for dcop stuff
@@ -275,7 +275,8 @@ MACRO(KDE4_AUTOMOC)
                   DEPENDS ${_header}
                )
 
-               KDE4_ADD_FILE_DEPENDANCY(${_tmp_FILE} ${_moc})
+#               KDE4_ADD_FILE_DEPENDANCY(${_tmp_FILE} ${_moc})
+               MACRO_APPEND_SOURCE_FILES_PROPERTIES(${_tmp_FILE} PROPERTIES OBJECT_DEPENDS ${_moc} )
 
             ENDFOREACH (_current_MOC_INC)
          ENDIF(_match)
@@ -396,6 +397,7 @@ MACRO(KDE4_CREATE_LIBTOOL_FILE _target _subdir)
    FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${KDE4_LIB_INSTALL_DIR}/${_subdir}'\n")
 
    INSTALL_FILES(${KDE4_LIB_INSTALL_DIR}/${_subdir} FILES ${_laname})
+   MACRO_APPEND_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${_laname})
 ENDMACRO(KDE4_CREATE_LIBTOOL_FILE)
 
 
@@ -448,6 +450,7 @@ ENDMACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 MACRO(KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+   MACRO_APPEND_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
    
 #   IF (WIN32)
 #      # under windows, just build a normal executable

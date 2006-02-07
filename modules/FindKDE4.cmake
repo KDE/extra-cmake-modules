@@ -35,6 +35,8 @@ FIND_PACKAGE(Qt4 REQUIRED)
 
 SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
+INCLUDE (MacroLibrary)
+
 #add some KDE specific stuff
 
 
@@ -171,21 +173,24 @@ IF (WIN32)
 
    
    # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
-   FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32 PATHS ${CMAKE_LIBRARY_PATH})
-   FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h ${CMAKE_INCLUDE_PATH})
+   FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32 PATHS )
+   FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h )
      
    # kdelibs/win/ has to be built before the rest of kdelibs/
    # eventually it will be moved out from kdelibs/
    IF (NOT KDEWIN32_LIBRARY OR NOT KDEWIN32_INCLUDE_DIR)
       MESSAGE(FATAL_ERROR "Could not find kdewin32 library, build and install kdelibs/win/ before building kdelibs/")
    ENDIF (NOT KDEWIN32_LIBRARY OR NOT KDEWIN32_INCLUDE_DIR)
+
+   # add the winsock2 library, using find_library or something like this would probably be better
+   SET(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY} ws2_32)
    
    IF(MINGW)
       #mingw compiler
-      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES} ${CMAKE_INCLUDE_PATH})
+      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES})
    ELSE(MINGW)
       # msvc compiler
-      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES}  ${CMAKE_INCLUDE_PATH})
+      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES})
 
       # add the MS SDK include directory if available
       SET(MS_SDK_DIR $ENV{MSSdk})
