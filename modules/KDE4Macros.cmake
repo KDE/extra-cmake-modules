@@ -393,9 +393,9 @@ MACRO(KDE4_CREATE_LIBTOOL_FILE _target _subdir)
    FILE(APPEND ${_laname} "# Should we warn about portability when linking against -modules?\nshouldnotlink=yes\n")
    FILE(APPEND ${_laname} "# Files to dlopen/dlpreopen\ndlopen=''\ndlpreopen=''\n")
    FILE(APPEND ${_laname} "# Directory that this library needs to be installed in:\n")
-   FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${KDE4_LIB_INSTALL_DIR}/kde4/${_subdir}'\n")
+   FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${KDE4_LIB_INSTALL_DIR}/${_subdir}'\n")
 
-   INSTALL_FILES(${KDE4_LIB_INSTALL_DIR}/kde4/${_subdir} FILES ${_laname})
+   INSTALL_FILES(${KDE4_LIB_INSTALL_DIR}/${_subdir} FILES ${_laname})
 ENDMACRO(KDE4_CREATE_LIBTOOL_FILE)
 
 
