@@ -81,7 +81,8 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   
   IF (WIN32)
      SET(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
-     SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+     SET(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
+#     SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
      # todo: copy Dlls only to ${CMAKE_BINARY_DIR}/lib
   ELSE (WIN32)
      SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
@@ -161,26 +162,54 @@ IF(UNIX AND NOT APPLE)
 ENDIF(UNIX AND NOT APPLE)
 
 
-IF(CYGWIN)
-   MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
-ENDIF(CYGWIN)
 
+IF (WIN32)
 
-# windows, mingw
-IF(MINGW)
-   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} kdewin32 )
-   SET(_KDE4_PLATFORM_INCLUDE_DIRS ${KDE4_INCLUDE_DIR}/win/include  ${KDE4_INCLUDE_DIR}/include/mingw )
-   SET( CMAKE_INCLUDE_PATH ${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/mingw )
-ENDIF(MINGW)
+   IF(CYGWIN)
+      MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
+   ENDIF(CYGWIN)
 
+   
+   # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
+   FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32)
+   FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h)
+     
+   # kdelibs/win/ has to be built before the rest of kdelibs/
+   # eventually it will be moved out from kdelibs/
+   IF (NOT KDEWIN32_LIBRARY OR NOT KDEWIN32_INCLUDE_DIR)
+      MESSAGE(FATAL_ERROR "Could not find kdewin32 library, build and install kdelibs/win/ before building kdelibs/")
+   ENDIF (NOT KDEWIN32_LIBRARY OR NOT KDEWIN32_INCLUDE_DIR)
+   
+   IF(MINGW)
+      #mingw compiler
+      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES})
+   ELSE(MINGW)
+      # msvc compiler
+      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES} )
 
-# windows, microsoft compiler
-IF(MSVC)
-   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} kdewin32 )
-   SET( _KDE4_PLATFORM_INCLUDE_DIRS ${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/msvc )
-   SET( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN -DUNICODE )
-   SET( CMAKE_INCLUDE_PATH ${KDE4_INCLUDE_DIR}/win/include ${KDE4_INCLUDE_DIR}/win/include/msvc )
-ENDIF(MSVC)
+      # add the MS SDK include directory if available
+      SET(MS_SDK_DIR $ENV{MSSdk})
+      IF (MS_SDK_DIR)
+         SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDES} ${MS_SDK_DIR}/include )
+      ENDIF (MS_SDK_DIR)
+      
+   ENDIF(MINGW)
+   
+   SET( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
+   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDEWIN32_LIBRARY} )
+   SET( CMAKE_INCLUDE_PATH ${KDEWIN32_INCLUDES} )
+     
+   # windows, mingw
+   IF(MINGW)
+   #hmmm, something special to do here ?
+   ENDIF(MINGW)
+   
+   # windows, microsoft compiler
+   IF(MSVC)
+      SET( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN -DUNICODE )
+   ENDIF(MSVC)
+
+ENDIF (WIN32)
 
 
 # only on linux, but not e.g. on FreeBSD:
