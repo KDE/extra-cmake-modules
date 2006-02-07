@@ -81,7 +81,8 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   
   IF (WIN32)
      SET(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
-     SET(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )           # create the libraries in the same directory as the executables, so the linker will find them
+     SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+     # todo: copy Dlls only to ${CMAKE_BINARY_DIR}/lib
   ELSE (WIN32)
      SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
      SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
