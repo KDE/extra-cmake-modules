@@ -42,6 +42,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
       SET(_skel ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.cpp)
+      SET(_skel_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.h)
       SET(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
       IF (NOT HAVE_${_basename}_KIDL_RULE)
@@ -62,6 +63,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
            ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
            DEPENDS ${_kidl}
         )
+        MACRO_APPEND_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${_skel_H})
 
       ENDIF (NOT HAVE_${_basename}_SKEL_RULE)
 
@@ -80,6 +82,7 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
       SET(_stub_CPP ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.cpp)
+      SET(_stub_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.h)
       SET(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
       IF (NOT HAVE_${_basename}_KIDL_RULE)
@@ -100,6 +103,8 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
            ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
            DEPENDS ${_kidl}
         )
+        MACRO_APPEND_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${_stub_H})
+        
       ENDIF (NOT HAVE_${_basename}_STUB_RULE)
 
       SET(${_sources} ${${_sources}} ${_stub_CPP})
