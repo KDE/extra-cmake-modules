@@ -850,8 +850,12 @@ class CMakeFile
          elsif buildTarget.type==Part
             if buildTarget.stdPrefix
                file.printf("kde4_add_plugin(%s WITH_PREFIX ${%s})\n\n", buildTarget.name, srcsName)
+
+kde4_create_libtool_file( / )
             else
                file.printf("kde4_add_plugin(%s ${%s})\n\n", buildTarget.name, srcsName)
+
+kde4_create_libtool_file( / )
             end
             file.printf("target_link_libraries(%s ", buildTarget.name)
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }

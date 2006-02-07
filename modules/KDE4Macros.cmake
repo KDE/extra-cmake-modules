@@ -371,7 +371,7 @@ MACRO(KDE4_FOOTER)
 ENDMACRO(KDE4_FOOTER)
 
 
-MACRO(KDE4_CREATE_LIBTOOL_FILE _target)
+MACRO(KDE4_CREATE_LIBTOOL_FILE _target _subdir)
    GET_TARGET_PROPERTY(_target_location ${_target} LOCATION)
 
    GET_FILENAME_COMPONENT(_laname ${_target_location} NAME_WE)
@@ -393,9 +393,9 @@ MACRO(KDE4_CREATE_LIBTOOL_FILE _target)
    FILE(APPEND ${_laname} "# Should we warn about portability when linking against -modules?\nshouldnotlink=yes\n")
    FILE(APPEND ${_laname} "# Files to dlopen/dlpreopen\ndlopen=''\ndlpreopen=''\n")
    FILE(APPEND ${_laname} "# Directory that this library needs to be installed in:\n")
-   FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${KDE4_LIB_INSTALL_DIR}/kde4'\n")
+   FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${KDE4_LIB_INSTALL_DIR}/kde4/${_subdir}'\n")
 
-   INSTALL_FILES(${KDE4_LIB_INSTALL_DIR}/kde4 FILES ${_laname})
+   INSTALL_FILES(${KDE4_LIB_INSTALL_DIR}/kde4/${_subdir} FILES ${_laname})
 ENDMACRO(KDE4_CREATE_LIBTOOL_FILE)
 
 
@@ -439,7 +439,7 @@ MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 #   IF (UNIX)
    # I guess under windows the libtool file are not required
-   KDE4_CREATE_LIBTOOL_FILE(${_target_NAME})
+   #KDE4_CREATE_LIBTOOL_FILE(${_target_NAME})
 #   ENDIF (UNIX)
 
 ENDMACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
