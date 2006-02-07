@@ -171,8 +171,8 @@ IF (WIN32)
 
    
    # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
-   FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32)
-   FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h)
+   FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32 PATHS ${CMAKE_LIBRARY_PATH})
+   FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h ${CMAKE_INCLUDE_PATH})
      
    # kdelibs/win/ has to be built before the rest of kdelibs/
    # eventually it will be moved out from kdelibs/
@@ -182,10 +182,10 @@ IF (WIN32)
    
    IF(MINGW)
       #mingw compiler
-      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES})
+      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES} ${CMAKE_INCLUDE_PATH})
    ELSE(MINGW)
       # msvc compiler
-      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES} )
+      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES}  ${CMAKE_INCLUDE_PATH})
 
       # add the MS SDK include directory if available
       SET(MS_SDK_DIR $ENV{MSSdk})
