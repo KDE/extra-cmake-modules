@@ -61,9 +61,9 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
         ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
-           DEPENDS ${_kidl}
-        )
-        MACRO_APPEND_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${_skel_H})
+           DEPENDS ${_kidl} dcopidl2cpp )
+           
+        MACRO_ADDITIONAL_CLEAN_FILES( ${_skel_H})
 
       ENDIF (NOT HAVE_${_basename}_SKEL_RULE)
 
@@ -101,9 +101,9 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
         ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
-           DEPENDS ${_kidl}
-        )
-        MACRO_APPEND_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${_stub_H})
+           DEPENDS ${_kidl} dcopidl2cpp )
+           
+        MACRO_ADDITIONAL_CLEAN_FILES( ${_stub_H})
         
       ENDIF (NOT HAVE_${_basename}_STUB_RULE)
 
@@ -130,7 +130,7 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE4_KCFGC_EXECUTABLE}
          ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_tmp_FILE}
-         DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} )
+         DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} kconfig_compiler )
 
       SET(${_sources} ${${_sources}} ${_src_FILE})
 
@@ -280,8 +280,7 @@ MACRO(KDE4_AUTOMOC)
                   DEPENDS ${_header}
                )
 
-#               KDE4_ADD_FILE_DEPENDANCY(${_tmp_FILE} ${_moc})
-               MACRO_APPEND_SOURCE_FILES_PROPERTIES(${_tmp_FILE} PROPERTIES OBJECT_DEPENDS ${_moc} )
+               MACRO_ADD_FILE_DEPENDENCIES(${_tmp_FILE} ${_moc})
 
             ENDFOREACH (_current_MOC_INC)
          ENDIF(_match)
@@ -402,7 +401,7 @@ MACRO(KDE4_CREATE_LIBTOOL_FILE _target _subdir)
    FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${KDE4_LIB_INSTALL_DIR}/${_subdir}'\n")
 
    INSTALL_FILES(${KDE4_LIB_INSTALL_DIR}/${_subdir} FILES ${_laname})
-   MACRO_APPEND_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${_laname})
+   MACRO_ADDITIONAL_CLEAN_FILES( ${_laname})
 ENDMACRO(KDE4_CREATE_LIBTOOL_FILE)
 
 
@@ -455,7 +454,7 @@ ENDMACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 MACRO(KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
-   MACRO_APPEND_DIRECTORY_PROPERTIES(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
+   MACRO_ADDITIONAL_CLEAN_FILES( ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
    
 #   IF (WIN32)
 #      # under windows, just build a normal executable

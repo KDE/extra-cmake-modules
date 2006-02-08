@@ -93,8 +93,10 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   SET(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH})
   SET(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
-  SET(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/dcopidl2cpp )
-  SET(KDE4_KCFGC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/kconfig_compiler )
+  
+  # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
+  SET(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
+  SET(KDE4_KCFGC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
 
 ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
@@ -150,10 +152,13 @@ ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 
-# this will move into Windows-cl.cmake
-IF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
-   SET(MSVC TRUE)
-ENDIF(WIN32 AND CMAKE_C_COMPILER MATCHES "cl\\.exe")
+# this is  already in cmake cvs and can be removed once we require it
+IF (WIN32)
+   GET_FILENAME_COMPONENT(_tmp_COMPILER_NAME ${CMAKE_CXX_COMPILER} NAME_WE)
+   IF ( _tmp_COMPILER_NAME MATCHES cl )
+      SET(MSVC TRUE)
+   ENDIF ( _tmp_COMPILER_NAME MATCHES cl )
+ENDIF (WIN32)
 
 #####################  and now the platform specific stuff  ############################
 
@@ -166,6 +171,8 @@ ENDIF(UNIX AND NOT APPLE)
 
 
 IF (WIN32)
+
+
 
    IF(CYGWIN)
       MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")

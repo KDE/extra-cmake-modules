@@ -2,6 +2,8 @@
 # OPTIONAL_FIND_PACKAGE( <name> [QUIT] )
 
 INCLUDE (MacroOptionalFindPackage)
-INCLUDE (MacroAppendDirectoryProperties)
-INCLUDE (MacroAppendSourceFilesProperties)
+INCLUDE (MacroAdditionalCleanFiles)
+INCLUDE (MacroAddFileDependencies)
+#INCLUDE (MacroAppendDirectoryProperties)
+#INCLUDE (MacroAppendSourceFilesProperties)
 
