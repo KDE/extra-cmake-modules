@@ -13,7 +13,7 @@ FIND_PATH(ASPELL_INCLUDE_DIR aspell.h
   /usr/local/include
 )
 
-FIND_LIBRARY(ASPELL_LIBRARY NAMES aspell
+FIND_LIBRARY(ASPELL_LIBRARY NAMES aspell aspell-15
   PATHS
   /usr/lib
   /usr/local/lib

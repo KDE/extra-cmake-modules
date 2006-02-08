@@ -4,7 +4,7 @@ FIND_PATH(OPENSSL_INCLUDE_DIR openssl/ssl.h
 /usr/local/include/
 )
 
-FIND_LIBRARY(OPENSSL_LIBRARY NAMES ssl
+FIND_LIBRARY(OPENSSL_LIBRARY NAMES ssl ssleay32
 PATHS
 /usr/lib
 /usr/local/lib

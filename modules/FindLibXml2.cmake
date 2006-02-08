@@ -22,7 +22,7 @@ FIND_PATH(LIBXML2_INCLUDE_DIR libxml/xpath.h
   /usr/local/include/libxml2
 )
 
-FIND_LIBRARY(LIBXML2_LIBRARY NAMES xml2
+FIND_LIBRARY(LIBXML2_LIBRARY NAMES xml2 libxml2
   PATHS
   ${_LibXml2LinkDir}
   /usr/lib

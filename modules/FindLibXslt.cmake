@@ -22,7 +22,7 @@ FIND_PATH(LIBXSLT_INCLUDE_DIR libxslt/xslt.h
   /usr/local/include
 )
 
-FIND_LIBRARY(LIBXSLT_LIBRARY NAMES xslt
+FIND_LIBRARY(LIBXSLT_LIBRARY NAMES xslt libxslt
   PATHS
   ${_LibXsltLinkDir}
   /usr/lib

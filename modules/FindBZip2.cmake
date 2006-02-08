@@ -14,7 +14,7 @@ FIND_PATH(BZIP2_INCLUDE_DIR bzlib.h
   /usr/local/include
 )
 
-FIND_LIBRARY(BZIP2_LIBRARY NAMES bz2
+FIND_LIBRARY(BZIP2_LIBRARY NAMES bz2 bzip2
   PATHS
   /usr/lib
   /usr/local/lib
