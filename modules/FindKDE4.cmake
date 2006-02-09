@@ -98,7 +98,16 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   SET(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
   SET(KDE4_KCFGC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
 
+  # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
+  SET( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
+  SET( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
+  
+
 ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+
+  # ... but not otherwise
+  SET( _KDE4_DCOPIDL2CPP_DEP )
+  SET( _KDE4_KCONFIG_COMPILER_DEP)
 
   # at first the KDE include direcory
   # this should better check for a header which didn't exist in KDE < 4

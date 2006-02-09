@@ -61,7 +61,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
         ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
-           DEPENDS ${_kidl} dcopidl2cpp )
+           DEPENDS ${_kidl} ${_KDE4_DCOPIDL2CPP_DEP} )
            
         MACRO_ADDITIONAL_CLEAN_FILES( ${_skel_H})
 
@@ -101,7 +101,7 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
         ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
-           DEPENDS ${_kidl} dcopidl2cpp )
+           DEPENDS ${_kidl} ${_KDE4_DCOPIDL2CPP_DEP} )
            
         MACRO_ADDITIONAL_CLEAN_FILES( ${_stub_H})
         
@@ -130,7 +130,7 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE4_KCFGC_EXECUTABLE}
          ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_tmp_FILE}
-         DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} kconfig_compiler )
+         DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
       SET(${_sources} ${${_sources}} ${_src_FILE})
 
