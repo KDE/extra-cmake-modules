@@ -2,21 +2,18 @@
 FIND_PATH(PCRE_INCLUDE_DIR pcre.h
 /usr/include/
 /usr/local/include/
-$ENV{GNUWIN32}/include/
 )
 
 FIND_LIBRARY(PCRE_PCRE_LIBRARY NAMES pcre
 PATHS
 /usr/lib
 /usr/local/lib
-$ENV{GNUWIN32}/lib/
 )
 
 FIND_LIBRARY(PCRE_PCREPOSIX_LIBRARY NAMES pcreposix
 PATHS
 /usr/lib
 /usr/local/lib
-$ENV{GNUWIN32}/lib/
 )
 
 SET(PCRE_LIBRARY ${PCRE_PCRE_LIBRARY} ${PCRE_PCREPOSIX_LIBRARY})
