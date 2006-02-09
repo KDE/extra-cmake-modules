@@ -81,11 +81,16 @@ IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
   
+  # adjust dcopidl and the library output path depending on the platform
   IF (WIN32)
-     SET(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
+     # under windows dcopidl.bat has to be used, except when using MSYS, then the perl script has to be used, Alex
+     IF ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+        SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
+     ELSE ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+        SET(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
+     ENDIF ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+  
      SET(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
-#     SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
-     # todo: copy Dlls only to ${CMAKE_BINARY_DIR}/lib
   ELSE (WIN32)
      SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
      SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )

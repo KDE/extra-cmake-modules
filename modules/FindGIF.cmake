@@ -13,7 +13,7 @@ FIND_PATH(GIF_INCLUDE_DIR gif_lib.h
   /usr/local/include
 )
 
-FIND_LIBRARY(GIF_LIBRARY NAMES gif libgif ungif libungif
+FIND_LIBRARY(GIF_LIBRARY NAMES gif libgif ungif libungif giflib
   PATHS
   /usr/lib
   /usr/local/lib
