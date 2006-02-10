@@ -17,6 +17,7 @@ PKGCONFIG(libxml-2.0 _LibXml2IncDir _LibXml2LinkDir _LibXml2LinkFlags _LibXml2Cf
 SET(LIBXML2_DEFINITIONS ${_LibXml2Cflags})
 
 FIND_PATH(LIBXML2_INCLUDE_DIR libxml/xpath.h
+  ${CMAKE_INCLUDE_PATH}/libxml2
   ${_LibXml2IncDir}/libxml2
   /usr/include/libxml2
   /usr/local/include/libxml2
