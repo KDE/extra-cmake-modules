@@ -194,9 +194,13 @@ IF (WIN32)
 
    
    # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
-   FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32 PATHS )
-   FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h )
-     
+   # search for kdewin32 in the default install directory for applications (default of (n)make install)
+   FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32 PATHS 
+      $ENV{ProgramFiles}/kdewin32/lib )
+   FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h
+      $ENV{ProgramFiles}/kdewin32/include )     
+
+
    # kdelibs/win/ has to be built before the rest of kdelibs/
    # eventually it will be moved out from kdelibs/
    IF (NOT KDEWIN32_LIBRARY OR NOT KDEWIN32_INCLUDE_DIR)
