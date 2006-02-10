@@ -204,8 +204,10 @@ IF (WIN32)
    ENDIF (NOT KDEWIN32_LIBRARY OR NOT KDEWIN32_INCLUDE_DIR)
 
    # add the winsock2 library, using find_library or something like this would probably be better
+   SET(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY} user32)
+   SET(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY} shell32)
    SET(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY} ws2_32)
-   
+
    IF(MINGW)
       #mingw compiler
       SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES})
