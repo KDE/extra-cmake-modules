@@ -28,7 +28,7 @@
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
 
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.3.3)
 
 #this line includes FindQt.cmake, which searches the Qt library and headers
 FIND_PACKAGE(Qt4 REQUIRED)

@@ -608,23 +608,6 @@ IF(QT4_QMAKE_FOUND)
   #
   ######################################
 
-  # this function takes a relative or absolute filename as argument in _filename
-  # and returns the absolute path in _abs_filename
-# it should work both with UNIX and Windows paths (Windows not tested), Alex
-  MACRO(QT4_GET_ABS_PATH _abs_filename _filename)
-    IF(${_filename} MATCHES "^([a-zA-Z]:)?/.+")
-      SET(${_abs_filename} ${_filename})
-    ELSE(${_filename} MATCHES "^([a-zA-Z]:)?/.+")
-      SET(${_abs_filename} ${CMAKE_CURRENT_SOURCE_DIR}/${_filename})
-    ENDIF(${_filename} MATCHES "^([a-zA-Z]:)?/.+")
-# the previous version, works only with UNIX paths
-#   IF(${_filename} MATCHES "^/.+")
-#      SET(${_abs_filename} ${_filename})
-#   ELSE(${_filename} MATCHES "^/.+")
-#      SET(${_abs_filename} ${CMAKE_CURRENT_SOURCE_DIR}/${_filename})
-#   ENDIF(${_filename} MATCHES "^/.+")
-  ENDMACRO(QT4_GET_ABS_PATH)
-
   MACRO(QT4_GET_MOC_INC_DIRS _moc_INC_DIRS)
      SET(${_moc_INC_DIRS})
      GET_DIRECTORY_PROPERTY(_inc_DIRS INCLUDE_DIRECTORIES)
@@ -638,8 +621,8 @@ IF(QT4_QMAKE_FOUND)
   # get include dirs
     QT4_GET_MOC_INC_DIRS(moc_includes)
 
-    QT4_GET_ABS_PATH(infile ${infile})
-
+    GET_FILENAME_COMPONENT(infile ${infile} ABSOLUTE)
+    
     ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
       COMMAND ${QT_MOC_EXECUTABLE}
       ARGS ${moc_includes} -o ${outfile} ${infile}
@@ -655,7 +638,7 @@ IF(QT4_QMAKE_FOUND)
     QT4_GET_MOC_INC_DIRS(moc_includes)
 
     FOREACH(it ${ARGN})
-      QT4_GET_ABS_PATH(it ${it})
+      GET_FILENAME_COMPONENT(it ${it} ABSOLUTE)
       GET_FILENAME_COMPONENT(outfile ${it} NAME_WE)
 
       SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/moc_${outfile}.cxx)

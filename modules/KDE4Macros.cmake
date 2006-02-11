@@ -13,31 +13,14 @@
 # KDE4_ADD_KDEINIT_EXECUTABLE
 # KDE4_ADD_EXECUTABLE
 
-
 #neundorf@kde.org
-
-#this should better be part of cmake:
-#add an additional file to the list of files a source file depends on
-#MACRO(KDE4_ADD_FILE_DEPENDANCY file)
-#
-#   GET_SOURCE_FILE_PROPERTY(_deps ${file} OBJECT_DEPENDS)
-#   IF (_deps)
-#      SET(_deps ${_deps} ${ARGN})
-#   ELSE (_deps)
-#      SET(_deps ${ARGN})
-#   ENDIF (_deps)
-#
-#   SET_SOURCE_FILES_PROPERTIES(${file} PROPERTIES OBJECT_DEPENDS "${_deps}")
-#
-#ENDMACRO(KDE4_ADD_FILE_DEPENDANCY)
-
 
 #create the kidl and skeletion file for dcop stuff
 #usage: KDE_ADD_COP_SKELS(foo_SRCS ${dcop_headers})
 MACRO(KDE4_ADD_DCOP_SKELS _sources)
    FOREACH (_current_FILE ${ARGN})
 
-      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
+      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
@@ -62,7 +45,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
            DEPENDS ${_kidl} ${_KDE4_DCOPIDL2CPP_DEP} )
-           
+
         MACRO_ADDITIONAL_CLEAN_FILES( ${_skel_H})
 
       ENDIF (NOT HAVE_${_basename}_SKEL_RULE)
@@ -77,7 +60,7 @@ ENDMACRO(KDE4_ADD_DCOP_SKELS)
 MACRO(KDE4_ADD_DCOP_STUBS _sources)
    FOREACH (_current_FILE ${ARGN})
 
-      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
+      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
@@ -102,9 +85,9 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
            DEPENDS ${_kidl} ${_KDE4_DCOPIDL2CPP_DEP} )
-           
+
         MACRO_ADDITIONAL_CLEAN_FILES( ${_stub_H})
-        
+
       ENDIF (NOT HAVE_${_basename}_STUB_RULE)
 
       SET(${_sources} ${${_sources}} ${_stub_CPP})
@@ -117,7 +100,7 @@ ENDMACRO(KDE4_ADD_DCOP_STUBS)
 MACRO(KDE4_ADD_KCFG_FILES _sources)
    FOREACH (_current_FILE ${ARGN})
 
-      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
+      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
@@ -138,24 +121,6 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
 
 ENDMACRO(KDE4_ADD_KCFG_FILES)
 
-
-#create the moc files and add them to the list of sources
-#usage: KDE_ADD_MOC_FILES(foo_SRCS ${moc_headers})
-#MACRO(KDE4_ADD_MOC_FILES _sources)
-#   FOREACH (_current_FILE ${ARGN})
-#      GET_FILENAME_COMPONENT(_basename ${_current_FILE} NAME_WE)
-#      GET_FILENAME_COMPONENT(_path ${_current_FILE} PATH)
-#      SET(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
-
-#      ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
-#         COMMAND ${QT_MOC_EXECUTABLE}
-#         ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} -o ${_moc}
-#         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-#      )
-#      SET(${_sources} ${${_sources}} ${_moc})
-#   ENDFOREACH (_current_FILE)
-#ENDMACRO(KDE4_ADD_MOC_FILES)
-
 IF(EXISTS "${CMAKE_ROOT}/Modules/kde4init_dummy.cpp.in")
    SET(KDE4_MODULE_DIR "${CMAKE_ROOT}/Modules")
 ELSE(EXISTS "${CMAKE_ROOT}/Modules/kde4init_dummy.cpp.in")
@@ -168,7 +133,7 @@ ENDIF(EXISTS "${CMAKE_ROOT}/Modules/kde4init_dummy.cpp.in")
 MACRO(KDE4_ADD_UI_FILES _sources )
    FOREACH (_current_FILE ${ARGN})
 
-      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
+      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
       SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
@@ -198,18 +163,12 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
 
    FOREACH (_current_FILE ${ARGN})
 
-      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
+      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
 
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
       SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
       SET(_src ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
       SET(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
-
-#      ADD_CUSTOM_COMMAND(OUTPUT ${_header}
-#         COMMAND ${QT_UIC3_EXECUTABLE}
-#         ARGS  -nounload -o ${_header} ${_tmp_FILE}
-#         DEPENDS ${_tmp_FILE}
-#      )
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_header}
          COMMAND ${CMAKE_COMMAND}
@@ -256,7 +215,7 @@ MACRO(KDE4_AUTOMOC)
    SET(_matching_FILES )
    FOREACH (_current_FILE ${ARGN})
 
-      QT4_GET_ABS_PATH(_tmp_FILE ${_current_FILE})
+      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
 
       IF (EXISTS ${_tmp_FILE})
 
@@ -292,7 +251,6 @@ ENDMACRO(KDE4_AUTOMOC)
 
 MACRO(KDE4_INSTALL_ICONS _theme _defaultpath )
    ADD_CUSTOM_TARGET(install_icons )
-   SET_TARGET_PROPERTIES(install_icons PROPERTIES POST_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake )
    FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "# icon installations rules\n")
    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "SET(CMAKE_BACKWARDS_COMPATIBILITY \"2.2\") \n")
 
@@ -363,6 +321,8 @@ MACRO(KDE4_INSTALL_ICONS _theme _defaultpath )
       FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
 
    ENDFOREACH (_current_ICON)
+   INSTALL(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake )
+
 ENDMACRO(KDE4_INSTALL_ICONS _theme _defaultpath)
 
 
@@ -455,7 +415,7 @@ MACRO(KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
    MACRO_ADDITIONAL_CLEAN_FILES( ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
-   
+
 #   IF (WIN32)
 #      # under windows, just build a normal executable
 #      KDE4_ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${ARGN} )
