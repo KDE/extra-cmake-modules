@@ -4,7 +4,7 @@ FIND_PATH(JASPER_INCLUDE_DIR jasper/jasper.h
 /usr/local/include
 )
 
-FIND_LIBRARY(JASPER_LIBRARY NAMES jasper
+FIND_LIBRARY(JASPER_LIBRARY NAMES jasper libjasper
 PATHS
 /usr/lib
 /usr/local/lib
