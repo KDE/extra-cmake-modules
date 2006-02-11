@@ -18,7 +18,7 @@
 # KDE4_ADD_KCFG_FILES
 # KDE4_AUTOMOC
 # KDE4_PLACEHOLDER
-# KDE4_CREATE_LIBTOOL_FILE
+# KDE4_INSTALL_LIBTOOL_FILE
 # KDE4_CREATE_FINAL_FILE
 # KDE4_ADD_KPART
 # KDE4_ADD_KLM
@@ -62,9 +62,10 @@ SET(XDG_DIRECTORY_DIR      /share/desktop-directories)
 
 # the following are directories where stuff will be installed to
 #SET(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
-SET(KDE4_MAN_INSTALL_DIR "/man" CACHE STRING "The kde man install dir (default prefix/man/)")
-SET(KDE4_INFO_INSTALL_DIR "/info" CACHE STRING "The kde info install dir (default prefix/info)")
-SET(KDE4_LIB_INSTALL_DIR "/lib" CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+SET(KDE4_MAN_INSTALL_DIR     "/man"      CACHE STRING "The kde man install dir (default prefix/man/)")
+SET(KDE4_INFO_INSTALL_DIR    "/info"     CACHE STRING "The kde info install dir (default prefix/info)")
+SET(KDE4_LIB_INSTALL_DIR     "/lib"      CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+SET(KDE4_PLUGIN_INSTALL_DIR  "/lib/kde4" CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is /lib/kde4)")
 
 
 

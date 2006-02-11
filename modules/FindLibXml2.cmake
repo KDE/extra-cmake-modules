@@ -16,12 +16,15 @@ PKGCONFIG(libxml-2.0 _LibXml2IncDir _LibXml2LinkDir _LibXml2LinkFlags _LibXml2Cf
 
 SET(LIBXML2_DEFINITIONS ${_LibXml2Cflags})
 
-FIND_PATH(LIBXML2_INCLUDE_DIR libxml/xpath.h
-  ${CMAKE_INCLUDE_PATH}/libxml2
-  ${_LibXml2IncDir}/libxml2
-  /usr/include/libxml2
-  /usr/local/include/libxml2
+FIND_PATH(LIBXML2_ROOT_INCLUDE_DIR libxml2/libxml/xpath.h
+  ${_LibXml2IncDir}
+  /usr/include
+  /usr/local/include
 )
+
+SET(LIBXML2_INCLUDE_DIR ${LIBXML2_ROOT_INCLUDE_DIR}/libxml2 CACHE PATH "LibXml2 include directory")
+
+MARK_AS_ADVANCED(LIBXML2_ROOT_INCLUDE_DIR)
 
 FIND_LIBRARY(LIBXML2_LIBRARY NAMES xml2 libxml2
   PATHS
