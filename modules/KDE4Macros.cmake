@@ -109,11 +109,18 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
 
       SET(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
       SET(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+      SET(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE4_KCFGC_EXECUTABLE}
          ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_tmp_FILE}
          DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
+
+
+      SET_SOURCE_FILES_PROPERTIES(${_header_FILE} PROPERTIES GENERATED TRUE)
+      QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
+
+      MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
 
       SET(${_sources} ${${_sources}} ${_src_FILE})
 

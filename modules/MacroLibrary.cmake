@@ -4,6 +4,5 @@
 INCLUDE (MacroOptionalFindPackage)
 INCLUDE (MacroAdditionalCleanFiles)
 INCLUDE (MacroAddFileDependencies)
-#INCLUDE (MacroAppendDirectoryProperties)
-#INCLUDE (MacroAppendSourceFilesProperties)
+INCLUDE (MacroGetenvWinPath)
 

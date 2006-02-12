@@ -37,3 +37,4 @@ MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
 
 ENDMACRO(PKGCONFIG _include_DIR _link_DIR _link_FLAGS _cflags)
 
+MARK_AS_ADVANCED(PKGCONFIG_EXECUTABLE)

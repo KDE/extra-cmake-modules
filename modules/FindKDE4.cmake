@@ -193,43 +193,10 @@ IF (WIN32)
       MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
    ENDIF(CYGWIN)
 
-   
-   # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
-   # search for kdewin32 in the default install directory for applications (default of (n)make install)
-   FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32 PATHS 
-      $ENV{ProgramFiles}/kdewin32/lib )
-   FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h
-      $ENV{ProgramFiles}/kdewin32/include )     
-
-
-   # kdelibs/win/ has to be built before the rest of kdelibs/
-   # eventually it will be moved out from kdelibs/
-   IF (NOT KDEWIN32_LIBRARY OR NOT KDEWIN32_INCLUDE_DIR)
-      MESSAGE(FATAL_ERROR "Could not find kdewin32 library, build and install kdelibs/win/ before building kdelibs/")
-   ENDIF (NOT KDEWIN32_LIBRARY OR NOT KDEWIN32_INCLUDE_DIR)
-
-   # add the winsock2 library, using find_library or something like this would probably be better
-   SET(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY} user32)
-   SET(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY} shell32)
-   SET(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY} ws2_32)
-
-   IF(MINGW)
-      #mingw compiler
-      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES})
-   ELSE(MINGW)
-      # msvc compiler
-      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES})
-
-      # add the MS SDK include directory if available
-      SET(MS_SDK_DIR $ENV{MSSdk})
-      IF (MS_SDK_DIR)
-         SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDES} ${MS_SDK_DIR}/include )
-      ENDIF (MS_SDK_DIR)
-      
-   ENDIF(MINGW)
+   FIND_PACKAGE(KDEWIN32 REQUIRED)
    
    SET( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
-   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDEWIN32_LIBRARY} )
+   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
      
    # windows, mingw
    IF(MINGW)

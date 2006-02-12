@@ -1,26 +1,35 @@
+# - Try to find the OpenSSL encryption library
+# Once done this will define
+#
+#  OPENSSL_FOUND - system has the OpenSSL library
+#  OPENSSL_INCLUDE_DIR - the OpenSSL include directory
+#  OPENSSL_LIBRARIES - The libraries needed to use OpenSSL
 
 FIND_PATH(OPENSSL_INCLUDE_DIR openssl/ssl.h
-/usr/include/
-/usr/local/include/
+   /usr/include/
+   /usr/local/include/
 )
 
-FIND_LIBRARY(OPENSSL_LIBRARY NAMES ssl ssleay32
-PATHS
-/usr/lib
-/usr/local/lib
+FIND_LIBRARY(OPENSSL_LIBRARIES NAMES ssl ssleay32
+   PATHS
+   /usr/lib
+   /usr/local/lib
 )
 
-IF(OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARY)
+IF(OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
    SET(OPENSSL_FOUND TRUE)
-ENDIF(OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARY)
+ENDIF(OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
 
 
 IF(OPENSSL_FOUND)
    IF(NOT OpenSSL_FIND_QUIETLY)
-      MESSAGE(STATUS "Found OpenSSL: ${OPENSSL_LIBRARY}")
+      MESSAGE(STATUS "Found OpenSSL: ${OPENSSL_LIBRARIES}")
    ENDIF(NOT OpenSSL_FIND_QUIETLY)
 ELSE(OPENSSL_FOUND)
    IF(OpenSSL_FIND_REQUIRED)
       MESSAGE(FATAL_ERROR "Could not find OpenSSL")
    ENDIF(OpenSSL_FIND_REQUIRED)
 ENDIF(OPENSSL_FOUND)
+
+MARK_AS_ADVANCED(OPENSSL_INCLUDE_DIR OPENSSL_LIBRARIES)
+
