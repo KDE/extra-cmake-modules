@@ -111,15 +111,20 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
       SET(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
       SET(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
 
+      # the command for creating the source file from the kcfg file
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE4_KCFGC_EXECUTABLE}
          ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_tmp_FILE}
          DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
-
+      # for the case that the header contains signals or slots, it has to be processed by moc
+      # since the generated header isn't listed as OUTPUT in the ADD_CUSTOM_COMMAND above, we
+      # have to tell cmake explicitly that it is generated, otherwise it will complain that it doesn't
+      # exist at cmake time
+      # the generated source will then include the moc file, but since the source doesn't exist
+      # yet at cmake time, this can't be recognized by KDE4_AUTOMOC, so we have to set the depedency explicitely
       SET_SOURCE_FILES_PROPERTIES(${_header_FILE} PROPERTIES GENERATED TRUE)
       QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
-
       MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
 
       SET(${_sources} ${${_sources}} ${_src_FILE})
