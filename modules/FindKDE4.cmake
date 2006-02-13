@@ -65,7 +65,7 @@ SET(XDG_DIRECTORY_DIR      /share/desktop-directories)
 SET(KDE4_MAN_INSTALL_DIR     "/man"      CACHE STRING "The kde man install dir (default prefix/man/)")
 SET(KDE4_INFO_INSTALL_DIR    "/info"     CACHE STRING "The kde info install dir (default prefix/info)")
 SET(KDE4_LIB_INSTALL_DIR     "/lib"      CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
-SET(KDE4_PLUGIN_INSTALL_DIR  "/lib/kde4" CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is /lib/kde4)")
+SET(KDE4_PLUGIN_INSTALL_DIR  "${KDE4_LIB_INSTALL_DIR}/kde4" CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
 
 
 
