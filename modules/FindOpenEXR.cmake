@@ -3,20 +3,24 @@
 # in the FIND_PATH() and FIND_LIBRARY() calls
 INCLUDE(UsePkgConfig)
 
-PKGCONFIG(OpenEXR _OPENEXRIncDir _OPENEXRLinkDir _OPENEXRLinkFlags _OPENEXRCflags)
+PKGCONFIG(OpenEXR _OpenEXRIncDir _OpenEXRLinkDir _OpenEXRLinkFlags _OpenEXRCflags)
+
+#PKGCONFIG(libagg _AGGIncDir _AGGLinkDir _AGGLinkFlags _AGGCflags)
 
 FIND_PATH(OPENEXR_INCLUDE_DIR ImfRgbaFile.h
-${_OPENEXRIncDir}
+${_OpenEXRIncDir}
+${_OpenEXRIncDir}/OpenEXR/
 /usr/include
 /usr/local/include
 )
 
-FIND_LIBRARY(OPENEXR_LIBRARIES NAMES Half Iex IlmImf Imath
+FIND_LIBRARY(OPENEXR_LIBRARIES NAMES IlmImf 
   PATHS
   ${_OPENEXRLinkDir}
   /usr/lib
   /usr/local/lib
 )
+
 
 IF(OPENEXR_INCLUDE_DIR AND OPENEXR_LIBRARIES)
    SET(OPENEXR_FOUND TRUE)
