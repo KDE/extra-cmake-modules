@@ -23,12 +23,12 @@ endif(FAM_INCLUDE_DIR AND FAM_LIBRARIES)
 
 
 if(FAM_FOUND)
-   if(not FAM_FIND_QUIETLY)
+   if(NOT FAM_FIND_QUIETLY)
       message(STATUS "Found fam: ${FAM_LIBRARIES}")
-   endif(not FAM_FIND_QUIETLY)
+   endif(NOT FAM_FIND_QUIETLY)
 else(FAM_FOUND)
    if(FAM_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find fam library")
+      message(FATAL_ERROR "Could NOT find fam library")
    endif(FAM_FIND_REQUIRED)
 endif(FAM_FOUND)
 

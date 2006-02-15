@@ -25,12 +25,12 @@ endif(JASPER_INCLUDE_DIR AND JASPER_LIBRARIES AND JPEG_LIBRARIES)
 
 
 if(JASPER_FOUND)
-   if(not Jasper_FIND_QUIETLY)
+   if(NOT Jasper_FIND_QUIETLY)
       message(STATUS "Found jasper: ${JASPER_LIBRARIES}")
-   endif(not Jasper_FIND_QUIETLY)
+   endif(NOT Jasper_FIND_QUIETLY)
 else(JASPER_FOUND)
    if(Jasper_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find jasper library")
+      message(FATAL_ERROR "Could NOT find jasper library")
    endif(Jasper_FIND_REQUIRED)
 endif(JASPER_FOUND)
 

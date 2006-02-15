@@ -95,7 +95,7 @@
 #  QT_QTSVG_LIBRARY_DEBUG       Fullpath to QtSvg_debug
 #  QT_QTTEST_LIBRARY_DEBUG      Fullpath to QtTest_debug
 #
-# also defined, but not for general use are
+# also defined, but NOT for general use are
 #  QT_MOC_EXECUTABLE          Where to find the moc tool.
 #  QT_UIC_EXECUTABLE          Where to find the uic tool.
 #  QT_UIC3_EXECUTABLE         Where to find the uic3 tool.
@@ -145,9 +145,9 @@ FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake PATHS
   NO_SYSTEM_PATH
 )
 
-if (not QT_QMAKE_EXECUTABLE)
+if (NOT QT_QMAKE_EXECUTABLE)
    FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake)
-endif (not QT_QMAKE_EXECUTABLE)
+endif (NOT QT_QMAKE_EXECUTABLE)
 
 if (QT_QMAKE_EXECUTABLE)
    EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_VERSION"
@@ -159,7 +159,7 @@ endif (QT_QMAKE_EXECUTABLE)
 
 if(QT4_QMAKE_FOUND)
   # Set QT_LIBRARY_DIR
-  if(not QT_LIBRARY_DIR)
+  if(NOT QT_LIBRARY_DIR)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
        ARGS "-query QT_INSTALL_LIBS"
        OUTPUT_VARIABLE QT_LIBRARY_DIR_TMP )
@@ -167,9 +167,9 @@ if(QT4_QMAKE_FOUND)
        set(QT_LIBRARY_DIR ${QT_LIBRARY_DIR_TMP} CACHE PATH "Qt library dir")
     else(EXISTS "${QT_LIBRARY_DIR_TMP}")
        message("Warning: QT_QMAKE_EXECUTABLE reported QT_INSTALL_LIBS as ${QT_LIBRARY_DIR_TMP}")
-       message("Warning: ${QT_LIBRARY_DIR_TMP} does not exist, Qt must not be installed correctly.")
+       message("Warning: ${QT_LIBRARY_DIR_TMP} does NOT exist, Qt must NOT be installed correctly.")
     endif(EXISTS "${QT_LIBRARY_DIR_TMP}")
-  endif(not QT_LIBRARY_DIR)
+  endif(NOT QT_LIBRARY_DIR)
 
   if (APPLE)
     if (EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
@@ -188,7 +188,7 @@ if(QT4_QMAKE_FOUND)
   #       Setting the INCLUDE-Variables
   #
   ########################################
-  if (not QT_HEADERS_DIR)
+  if (NOT QT_HEADERS_DIR)
     # Set QT_QTCORE_INCLUDE_DIR by searching for the QtGlobal header
     if(QT_QMAKE_EXECUTABLE)
       EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
@@ -196,7 +196,7 @@ if(QT4_QMAKE_FOUND)
         OUTPUT_VARIABLE qt_headers )
       set(QT_HEADERS_DIR ${qt_headers} CACHE INTERNAL "")
     endif(QT_QMAKE_EXECUTABLE)
-  endif (not QT_HEADERS_DIR)
+  endif (NOT QT_HEADERS_DIR)
   
   FILE(GLOB GLOB_TEMP_VAR /usr/local/qt-x11-commercial-3*/include/Qt/)
   set(QT_PATH_INCLUDE ${GLOB_TEMP_VAR})
@@ -218,20 +218,20 @@ if(QT4_QMAKE_FOUND)
     /usr/include/qt4/QtCore)
 
   # Set QT_INCLUDE_DIR by removine "/QtCore" in the string ${QT_QTCORE_INCLUDE_DIR}
-  if( QT_QTCORE_INCLUDE_DIR AND not QT_INCLUDE_DIR)
+  if( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
     if (QT_USE_FRAMEWORKS)
       set(QT_INCLUDE_DIR ${QT_HEADERS_DIR})
     else (QT_USE_FRAMEWORKS)
       STRING( REGEX REPLACE "/QtCore$" "" qt4_include_dir ${QT_QTCORE_INCLUDE_DIR})
       set( QT_INCLUDE_DIR ${qt4_include_dir} CACHE PATH "")
     endif (QT_USE_FRAMEWORKS)
-  endif( QT_QTCORE_INCLUDE_DIR AND not QT_INCLUDE_DIR)
+  endif( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
   
-  if( not QT_INCLUDE_DIR)
-    if( not Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
-      message( FATAL_ERROR "Could not find QtGlobal header")
-    endif( not Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
-  endif( not QT_INCLUDE_DIR)
+  if( NOT QT_INCLUDE_DIR)
+    if( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
+      message( FATAL_ERROR "Could NOT find QtGlobal header")
+    endif( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
+  endif( NOT QT_INCLUDE_DIR)
 
 
   FIND_PATH( QT_DOC_DIR /html/qcoreapplication.html
@@ -337,7 +337,7 @@ if(QT4_QMAKE_FOUND)
   ########################################
 
   if (QT_USE_FRAMEWORKS)
-    # If FIND_LIBRARY found libraries in Apple frameworks, we would not have
+    # If FIND_LIBRARY found libraries in Apple frameworks, we would NOT have
     # to jump through these hoops.
     set(QT_QTCORE_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtCore"
        CACHE STRING "The QtCore library.")
@@ -470,14 +470,14 @@ if(QT4_QMAKE_FOUND)
     if (QT_${basename}_INCLUDE_DIR)
 
       # if only the release version was found, set the debug variable also to the release version
-      if (QT_${basename}_LIBRARY AND not QT_${basename}_LIBRARY_DEBUG)
+      if (QT_${basename}_LIBRARY AND NOT QT_${basename}_LIBRARY_DEBUG)
         set(QT_${basename}_LIBRARY_DEBUG ${QT_${basename}_LIBRARY})
-      endif (QT_${basename}_LIBRARY AND not QT_${basename}_LIBRARY_DEBUG)
+      endif (QT_${basename}_LIBRARY AND NOT QT_${basename}_LIBRARY_DEBUG)
 
       # if only the debug version was found, set the release variable also to the debug version
-      if (QT_${basename}_LIBRARY_DEBUG AND not QT_${basename}_LIBRARY)
+      if (QT_${basename}_LIBRARY_DEBUG AND NOT QT_${basename}_LIBRARY)
         set(QT_${basename}_LIBRARY ${QT_${basename}_LIBRARY_DEBUG})
-      endif (QT_${basename}_LIBRARY_DEBUG AND not QT_${basename}_LIBRARY)
+      endif (QT_${basename}_LIBRARY_DEBUG AND NOT QT_${basename}_LIBRARY)
 
       if (QT_${basename}_LIBRARY)
         set(QT_${basename}_FOUND 1)
@@ -511,12 +511,12 @@ if(QT4_QMAKE_FOUND)
   #          ( moc, uic, rcc )
   #
   #######################################
-  if (not QT_BINARY_DIR)
+  if (NOT QT_BINARY_DIR)
      EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
         ARGS "-query QT_INSTALL_BINS"
         OUTPUT_VARIABLE qt_bins )
      set(QT_BINARY_DIR ${qt_bins} CACHE INTERNAL "")
-  endif (not QT_BINARY_DIR)
+  endif (NOT QT_BINARY_DIR)
 
   # at first without the system paths, in order to prefer e.g. ${QTDIR}/bin/qmake over /usr/bin/qmake,
   # which might be a Qt3 qmake
@@ -536,9 +536,9 @@ if(QT4_QMAKE_FOUND)
     )
 
   # if qmake wasn't found in the specific dirs, now check the system path
-  if (not QT_MOC_EXECUTABLE)
+  if (NOT QT_MOC_EXECUTABLE)
      FIND_PROGRAM(QT_MOC_EXECUTABLE NAMES moc )
-  endif (not QT_MOC_EXECUTABLE)
+  endif (NOT QT_MOC_EXECUTABLE)
 
   if (QT_MOC_EXECUTABLE)
      set ( QT_WRAP_CPP "YES")
@@ -574,9 +574,9 @@ if(QT4_QMAKE_FOUND)
     NO_SYSTEM_PATH
     )
 
-  if (not QT_UIC_EXECUTABLE)
+  if (NOT QT_UIC_EXECUTABLE)
      FIND_PROGRAM(QT_UIC_EXECUTABLE NAMES uic )
-  endif (not QT_UIC_EXECUTABLE)
+  endif (NOT QT_UIC_EXECUTABLE)
 
   if (QT_UIC_EXECUTABLE)
      set ( QT_WRAP_UI "YES")
@@ -697,14 +697,14 @@ if(QT4_QMAKE_FOUND)
   # if the includes,libraries,moc,uic and rcc are found then we have it
   if( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND QT_UIC_EXECUTABLE AND QT_RCC_EXECUTABLE)
     set( QT4_FOUND "YES" )
-    if( not Qt4_FIND_QUIETLY)
+    if( NOT Qt4_FIND_QUIETLY)
       message(STATUS "Found Qt-Version ${QTVERSION}")
 #      message(STATUS "Found Qt-Version ${QT_INST_MAJOR_VERSION}.${QT_INST_MINOR_VERSION}.${QT_INST_PATCH_VERSION}")
-    endif( not Qt4_FIND_QUIETLY)
+    endif( NOT Qt4_FIND_QUIETLY)
   else( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND QT_UIC_EXECUTABLE AND QT_RCC_EXECUTABLE)
     set( QT4_FOUND "NO")
     if( Qt4_FIND_REQUIRED)
-      message( FATAL_ERROR "Qt libraries, includes, moc, uic or/and rcc not found!")
+      message( FATAL_ERROR "Qt libraries, includes, moc, uic or/and rcc NOT found!")
     endif( Qt4_FIND_REQUIRED)
   endif( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND QT_UIC_EXECUTABLE AND  QT_RCC_EXECUTABLE)
   set(QT_FOUND ${QT4_FOUND})
@@ -739,7 +739,7 @@ else(QT4_QMAKE_FOUND)
     message("QT_QMAKE_EXECUTABLE set to qmake version: QTVERSION = ${QTVERSION}\nQT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}, please set to path to qmake from qt4.")
   endif(QT_QMAKE_EXECUTABLE)
   if( Qt4_FIND_REQUIRED)
-     message( FATAL_ERROR "Qt qmake not found!")
+     message( FATAL_ERROR "Qt qmake NOT found!")
   endif( Qt4_FIND_REQUIRED)
 
 endif(QT4_QMAKE_FOUND)

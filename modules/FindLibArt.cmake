@@ -42,12 +42,12 @@ endif(LIBART_INCLUDE_DIR AND LIBART_LIBRARIES)
 
 
 if(LIBART_FOUND)
-   if(not LibArt_FIND_QUIETLY)
+   if(NOT LibArt_FIND_QUIETLY)
       message(STATUS "Found libart: ${LIBART_LIBRARIES}")
-   endif(not LibArt_FIND_QUIETLY)
+   endif(NOT LibArt_FIND_QUIETLY)
 else(LIBART_FOUND)
    if(LibArt_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find libart")
+      message(FATAL_ERROR "Could NOT find libart")
    endif(LibArt_FIND_REQUIRED)
 endif(LIBART_FOUND)
 

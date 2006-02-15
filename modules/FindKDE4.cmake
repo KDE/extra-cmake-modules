@@ -111,7 +111,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
-  # ... but not otherwise
+  # ... but NOT otherwise
   set( _KDE4_DCOPIDL2CPP_DEP )
   set( _KDE4_KCONFIG_COMPILER_DEP)
 
@@ -178,10 +178,10 @@ endif (WIN32)
 #####################  and now the platform specific stuff  ############################
 
 
-if(UNIX AND not APPLE)
+if(UNIX AND NOT APPLE)
    FIND_PACKAGE(X11 REQUIRED)
    set(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
-endif(UNIX AND not APPLE)
+endif(UNIX AND NOT APPLE)
 
 
 
@@ -190,7 +190,7 @@ if (WIN32)
 
 
    if(CYGWIN)
-      message(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
+      message(FATAL_ERROR "Support for Cygwin NOT yet implemented, please edit FindKDE4.cmake to enable it")
    endif(CYGWIN)
 
    FIND_PACKAGE(KDEWIN32 REQUIRED)
@@ -211,7 +211,7 @@ if (WIN32)
 endif (WIN32)
 
 
-# only on linux, but not e.g. on FreeBSD:
+# only on linux, but NOT e.g. on FreeBSD:
 if(CMAKE_SYSTEM_NAME MATCHES Linux)
   set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
   set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
@@ -221,7 +221,7 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux)
 endif(CMAKE_SYSTEM_NAME MATCHES Linux)
 
 
-# works on FreeBSD, not tested on NetBSD and OpenBSD
+# works on FreeBSD, NOT tested on NetBSD and OpenBSD
 if(CMAKE_SYSTEM_NAME MATCHES BSD)
   set ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
   set ( CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
@@ -302,19 +302,19 @@ MACRO (KDE4_PRINT_RESULTS)
 ENDMACRO (KDE4_PRINT_RESULTS)
 
 
-if (KDE4_FIND_REQUIRED AND not KDE4_FOUND)
+if (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
    #bail out if something wasn't found
    KDE4_PRINT_RESULTS()
-   message(FATAL_ERROR "Could not find everything required for compiling KDE 4 programs")
-endif (KDE4_FIND_REQUIRED AND not KDE4_FOUND)
+   message(FATAL_ERROR "Could NOT find everything required for compiling KDE 4 programs")
+endif (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
 
 
-if (not KDE4_FIND_QUIETLY)
+if (NOT KDE4_FIND_QUIETLY)
    KDE4_PRINT_RESULTS()
-endif (not KDE4_FIND_QUIETLY)
+endif (NOT KDE4_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
 set(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
 
-# not used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
+# NOT used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DQT3_SUPPORT_WARNINGS )

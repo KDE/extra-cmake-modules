@@ -75,7 +75,7 @@ if (UNIX)
 
       # See if XOpenDisplay in X11 works by itself.
       CHECK_LIBRARY_EXISTS("${X11_LIBRARIES}" "XOpenDisplay" "${X11_LIBRARY_DIR}" X11_LIB_X11_SOLO)
-      if(not X11_LIB_X11_SOLO)
+      if(NOT X11_LIB_X11_SOLO)
         # Find library needed for dnet_ntoa.
         CHECK_LIBRARY_EXISTS("dnet" "dnet_ntoa" "" X11_LIB_DNET_HAS_DNET_NTOA) 
         if (X11_LIB_DNET_HAS_DNET_NTOA)
@@ -86,11 +86,11 @@ if (UNIX)
             set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -ldnet_stub)
           endif (X11_LIB_DNET_STUB_HAS_DNET_NTOA)
         endif (X11_LIB_DNET_HAS_DNET_NTOA)
-      endif(not X11_LIB_X11_SOLO)
+      endif(NOT X11_LIB_X11_SOLO)
 
       # Find library needed for gethostbyname.
       CHECK_FUNCTION_EXISTS("gethostbyname" CMAKE_HAVE_GETHOSTBYNAME)
-      if(not CMAKE_HAVE_GETHOSTBYNAME)
+      if(NOT CMAKE_HAVE_GETHOSTBYNAME)
         CHECK_LIBRARY_EXISTS("nsl" "gethostbyname" "" CMAKE_LIB_NSL_HAS_GETHOSTBYNAME) 
         if (CMAKE_LIB_NSL_HAS_GETHOSTBYNAME)
           set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lnsl)
@@ -100,34 +100,34 @@ if (UNIX)
             set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lbsd)
           endif (CMAKE_LIB_BSD_HAS_GETHOSTBYNAME)
         endif (CMAKE_LIB_NSL_HAS_GETHOSTBYNAME)
-      endif(not CMAKE_HAVE_GETHOSTBYNAME)
+      endif(NOT CMAKE_HAVE_GETHOSTBYNAME)
 
       # Find library needed for connect.
       CHECK_FUNCTION_EXISTS("connect" CMAKE_HAVE_CONNECT)
-      if(not CMAKE_HAVE_CONNECT)
+      if(NOT CMAKE_HAVE_CONNECT)
         CHECK_LIBRARY_EXISTS("socket" "connect" "" CMAKE_LIB_SOCKET_HAS_CONNECT) 
         if (CMAKE_LIB_SOCKET_HAS_CONNECT)
           set (X11_X_EXTRA_LIBS -lsocket ${X11_X_EXTRA_LIBS})
         endif (CMAKE_LIB_SOCKET_HAS_CONNECT)
-      endif(not CMAKE_HAVE_CONNECT)
+      endif(NOT CMAKE_HAVE_CONNECT)
 
       # Find library needed for remove.
       CHECK_FUNCTION_EXISTS("remove" CMAKE_HAVE_REMOVE)
-      if(not CMAKE_HAVE_REMOVE)
+      if(NOT CMAKE_HAVE_REMOVE)
         CHECK_LIBRARY_EXISTS("posix" "remove" "" CMAKE_LIB_POSIX_HAS_REMOVE) 
         if (CMAKE_LIB_POSIX_HAS_REMOVE)
           set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lposix)
         endif (CMAKE_LIB_POSIX_HAS_REMOVE)
-      endif(not CMAKE_HAVE_REMOVE)
+      endif(NOT CMAKE_HAVE_REMOVE)
 
       # Find library needed for shmat.
       CHECK_FUNCTION_EXISTS("shmat" CMAKE_HAVE_SHMAT)
-      if(not CMAKE_HAVE_SHMAT)
+      if(NOT CMAKE_HAVE_SHMAT)
         CHECK_LIBRARY_EXISTS("ipc" "shmat" "" CMAKE_LIB_IPS_HAS_SHMAT) 
         if (CMAKE_LIB_IPS_HAS_SHMAT)
           set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lipc)
         endif (CMAKE_LIB_IPS_HAS_SHMAT)
-      endif(not CMAKE_HAVE_SHMAT)
+      endif(NOT CMAKE_HAVE_SHMAT)
     endif($ENV{ISC} MATCHES "^yes$")
 
     CHECK_LIBRARY_EXISTS("ICE" "IceConnectionNumber" "${X11_LIBRARY_DIR}"

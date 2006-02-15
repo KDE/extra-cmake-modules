@@ -4,7 +4,7 @@
 # exists, the size will be stored to the variable.
 #
 #  VARIABLE - variable to store size if the type exists.
-#  HAVE_${VARIABLE} - does the variable exists or not
+#  HAVE_${VARIABLE} - does the variable exists or NOT
 
 MACRO(CHECK_TYPE_SIZE TYPE VARIABLE)
   set(CMAKE_ALLOW_UNKNOWN_VARIABLE_READ_ACCESS 1)

@@ -28,7 +28,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
       set(_skel_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.h)
       set(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
-      if (not HAVE_${_basename}_KIDL_RULE)
+      if (NOT HAVE_${_basename}_KIDL_RULE)
         set(HAVE_${_basename}_KIDL_RULE ON)
 
         ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
@@ -36,9 +36,9 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
            ARGS --srcdir ${KDE4_KALYPTUS_DIR} -o ${_kidl} ${_tmp_FILE}
            DEPENDS ${_tmp_FILE}
         )
-      endif (not HAVE_${_basename}_KIDL_RULE)
+      endif (NOT HAVE_${_basename}_KIDL_RULE)
 
-      if (not HAVE_${_basename}_SKEL_RULE)
+      if (NOT HAVE_${_basename}_SKEL_RULE)
         set(HAVE_${_basename}_SKEL_RULE ON)
 
         ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
@@ -48,7 +48,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
 
         MACRO_ADDITIONAL_CLEAN_FILES( ${_skel_H})
 
-      endif (not HAVE_${_basename}_SKEL_RULE)
+      endif (NOT HAVE_${_basename}_SKEL_RULE)
 
       set(${_sources} ${${_sources}} ${_skel})
 
@@ -68,7 +68,7 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
       set(_stub_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.h)
       set(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
-      if (not HAVE_${_basename}_KIDL_RULE)
+      if (NOT HAVE_${_basename}_KIDL_RULE)
         set(HAVE_${_basename}_KIDL_RULE ON)
 
         ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
@@ -76,9 +76,9 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
            ARGS --srcdir ${KDE4_KALYPTUS_DIR} -o ${_kidl} ${_tmp_FILE}
            DEPENDS ${_tmp_FILE}
         )
-      endif (not HAVE_${_basename}_KIDL_RULE)
+      endif (NOT HAVE_${_basename}_KIDL_RULE)
 
-      if (not HAVE_${_basename}_STUB_RULE)
+      if (NOT HAVE_${_basename}_STUB_RULE)
         set(HAVE_${_basename}_STUB_RULE ON)
 
         ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
@@ -88,7 +88,7 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
 
         MACRO_ADDITIONAL_CLEAN_FILES( ${_stub_H})
 
-      endif (not HAVE_${_basename}_STUB_RULE)
+      endif (NOT HAVE_${_basename}_STUB_RULE)
 
       set(${_sources} ${${_sources}} ${_stub_CPP})
 
@@ -238,6 +238,7 @@ MACRO(KDE4_AUTOMOC)
 
          STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
          if(_match)
+message("For ${_tmp_FILE} (${_current_FILE}) : found moc include")
             foreach (_current_MOC_INC ${_match})
                STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
@@ -272,7 +273,7 @@ MACRO(KDE4_INSTALL_ICONS _theme _defaultpath )
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _name  "${_current_ICON}")
       # if the string doesn't match the pattern, the result is the full string, so all three have the same content
- 	   if( not ${_size} STREQUAL ${_name} )
+ 	   if( NOT ${_size} STREQUAL ${_name} )
 	 	   set(_icon_GROUP "actions")
 
       	if(${_group} STREQUAL "mime")
@@ -299,7 +300,7 @@ MACRO(KDE4_INSTALL_ICONS _theme _defaultpath )
       	set(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/icons/${_theme}/${_size}x${_size}/${_icon_GROUP}/${_name})
       	FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "message(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
       	FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
-	   endif( not ${_size} STREQUAL ${_name} )
+	   endif( NOT ${_size} STREQUAL ${_name} )
    endforeach (_current_ICON)
    FILE(GLOB _icons *.svgz)
    foreach(_current_ICON ${_icons} )
@@ -416,7 +417,7 @@ MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
    endif(_first_SRC)
 
 #   if (UNIX)
-   # I guess under windows the libtool file are not required
+   # I guess under windows the libtool file are NOT required
    #KDE4_INSTALL_LIBTOOL_FILE(${_target_NAME})
 #   endif (UNIX)
 

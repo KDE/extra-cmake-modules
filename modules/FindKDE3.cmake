@@ -42,7 +42,7 @@ set(QT_AND_KDECORE_LIBS ${QT_LIBRARIES} kdecore)
 #add some KDE specific stuff
 set(KDE3_DEFINITIONS -DQT_CLEAN_NAMESPACE -Wnon-virtual-dtor -Wno-long-long -Wundef -ansi -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common)
 
-#only on linux, but not e.g. on FreeBSD:
+#only on linux, but NOT e.g. on FreeBSD:
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   set(KDE3_DEFINITIONS ${KDE3_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
 endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -143,16 +143,16 @@ MACRO (KDE3_PRINT_RESULTS)
 
 ENDMACRO (KDE3_PRINT_RESULTS)
 
-if (KDE3_FIND_REQUIRED AND not KDE3_FOUND)
+if (KDE3_FIND_REQUIRED AND NOT KDE3_FOUND)
    #bail out if something wasn't found
    KDE3_PRINT_RESULTS()
-   message(FATAL_ERROR "Could not find everything required for compiling KDE 3 programs")
+   message(FATAL_ERROR "Could NOT find everything required for compiling KDE 3 programs")
 
-endif (KDE3_FIND_REQUIRED AND not KDE3_FOUND)
+endif (KDE3_FIND_REQUIRED AND NOT KDE3_FOUND)
 
-if (not KDE3_FIND_QUIETLY)
+if (NOT KDE3_FIND_QUIETLY)
    KDE3_PRINT_RESULTS()
-endif (not KDE3_FIND_QUIETLY)
+endif (NOT KDE3_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
 set(KDE3_INCLUDE_DIRS ${QT_INCLUDE_DIR} ${KDE3_INCLUDE_DIR})

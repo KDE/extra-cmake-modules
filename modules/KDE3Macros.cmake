@@ -51,7 +51,7 @@ MACRO(KDE3_ADD_DCOP_SKELS _sources)
       set(_skel ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.cpp)
       set(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
-      if (not HAVE_${_basename}_KIDL_RULE)
+      if (NOT HAVE_${_basename}_KIDL_RULE)
          set(HAVE_${_basename}_KIDL_RULE ON)
 
           ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
@@ -59,9 +59,9 @@ MACRO(KDE3_ADD_DCOP_SKELS _sources)
           ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} > ${_kidl}
           DEPENDS ${_tmp_FILE}
          )
-       endif (not HAVE_${_basename}_KIDL_RULE)
+       endif (NOT HAVE_${_basename}_KIDL_RULE)
 
-      if (not HAVE_${_basename}_SKEL_RULE)
+      if (NOT HAVE_${_basename}_SKEL_RULE)
         set(HAVE_${_basename}_SKEL_RULE ON)
 
        ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
@@ -70,7 +70,7 @@ MACRO(KDE3_ADD_DCOP_SKELS _sources)
           DEPENDS ${_kidl}
           )
 
-      endif (not HAVE_${_basename}_SKEL_RULE)
+      endif (NOT HAVE_${_basename}_SKEL_RULE)
 
       set(${_sources} ${${_sources}} ${_skel})
 
@@ -88,7 +88,7 @@ MACRO(KDE3_ADD_DCOP_STUBS _sources)
       set(_stub_CPP ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.cpp)
       set(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
-      if (not HAVE_${_basename}_KIDL_RULE)
+      if (NOT HAVE_${_basename}_KIDL_RULE)
         set(HAVE_${_basename}_KIDL_RULE ON)
 
 
@@ -98,10 +98,10 @@ MACRO(KDE3_ADD_DCOP_STUBS _sources)
            DEPENDS ${tmp_FILE}
            )
 
-      endif (not HAVE_${_basename}_KIDL_RULE)
+      endif (NOT HAVE_${_basename}_KIDL_RULE)
 
 
-      if (not HAVE_${_basename}_STUB_RULE)
+      if (NOT HAVE_${_basename}_STUB_RULE)
         set(HAVE_${_basename}_STUB_RULE ON)
 
         ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
@@ -110,7 +110,7 @@ MACRO(KDE3_ADD_DCOP_STUBS _sources)
            DEPENDS ${_kidl}
          )
 
-      endif (not HAVE_${_basename}_STUB_RULE)
+      endif (NOT HAVE_${_basename}_STUB_RULE)
 
       set(${_sources} ${${_sources}} ${_stub_CPP})
 

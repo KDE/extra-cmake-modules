@@ -22,12 +22,12 @@ endif(OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
 
 
 if(OPENSSL_FOUND)
-   if(not OpenSSL_FIND_QUIETLY)
+   if(NOT OpenSSL_FIND_QUIETLY)
       message(STATUS "Found OpenSSL: ${OPENSSL_LIBRARIES}")
-   endif(not OpenSSL_FIND_QUIETLY)
+   endif(NOT OpenSSL_FIND_QUIETLY)
 else(OPENSSL_FOUND)
    if(OpenSSL_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find OpenSSL")
+      message(FATAL_ERROR "Could NOT find OpenSSL")
    endif(OpenSSL_FIND_REQUIRED)
 endif(OPENSSL_FOUND)
 

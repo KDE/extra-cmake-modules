@@ -40,12 +40,12 @@ endif(PCRE_INCLUDE_DIR AND PCRE_LIBRARIES)
 
 
 if(PCRE_FOUND)
-   if(not PCRE_FIND_QUIETLY)
+   if(NOT PCRE_FIND_QUIETLY)
       message(STATUS "Found PCRE: ${PCRE_LIBRARIES}")
-   endif(not PCRE_FIND_QUIETLY)
+   endif(NOT PCRE_FIND_QUIETLY)
 else(PCRE_FOUND)
    if(PCRE_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find PCRE")
+      message(FATAL_ERROR "Could NOT find PCRE")
    endif(PCRE_FIND_REQUIRED)
 endif(PCRE_FOUND)
 
