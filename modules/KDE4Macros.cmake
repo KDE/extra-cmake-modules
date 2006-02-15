@@ -238,7 +238,6 @@ MACRO(KDE4_AUTOMOC)
 
          STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
          if(_match)
-message("For ${_tmp_FILE} (${_current_FILE}) : found moc include")
             foreach (_current_MOC_INC ${_match})
                STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
@@ -417,7 +416,7 @@ MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
    endif(_first_SRC)
 
 #   if (UNIX)
-   # I guess under windows the libtool file are NOT required
+   # I guess under windows the libtool file are not required
    #KDE4_INSTALL_LIBTOOL_FILE(${_target_NAME})
 #   endif (UNIX)
 
