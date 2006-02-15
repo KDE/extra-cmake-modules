@@ -242,9 +242,11 @@ MACRO(KDE4_AUTOMOC)
                STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
                GET_FILENAME_COMPONENT(_basename ${_current_MOC} NAME_WE)
-#               set(_header ${CMAKE_CURRENT_SOURCE_DIR}/${_basename}.h)
                set(_header ${_abs_PATH}/${_basename}.h)
-               set(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
+               # Determine relative path to the header, so that foo/bar.h becomes foo/bar.moc
+               file(RELATIVE_PATH _relative_path ${CMAKE_CURRENT_SOURCE_DIR} ${_abs_PATH})
+               set(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_relative_path}/${_current_MOC})
+               #
                ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
                   COMMAND ${QT_MOC_EXECUTABLE}
                   ARGS ${_moc_INCS} ${_header} -o ${_moc}
