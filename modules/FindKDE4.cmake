@@ -95,14 +95,15 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   else (WIN32)
      set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
      set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+     set(KDE4_LD_LIBRARY_PATH LD_LIBRARY_PATH=${LIBRARY_OUTPUT_PATH}\$\${LD_LIBRARY_PATH+:\$\$LD_LIBRARY_PATH})
   endif (WIN32)
 
   set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH})
   set(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
   
   # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-  set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
-  set(KDE4_KCFGC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+  set(KDE4_DCOPIDL2CPP_EXECUTABLE ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
+  set(KDE4_KCFGC_EXECUTABLE ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
 
   # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
   set( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
