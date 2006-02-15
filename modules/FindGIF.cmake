@@ -11,12 +11,14 @@
 FIND_PATH(GIF_INCLUDE_DIR gif_lib.h
   /usr/include
   /usr/local/include
+ ${GNUWIN32_DIR}/include
 )
 
 FIND_LIBRARY(GIF_LIBRARIES NAMES gif libgif ungif libungif giflib
   PATHS
   /usr/lib
   /usr/local/lib
+ ${GNUWIN32_DIR}/lib
 )
 
 if(GIF_INCLUDE_DIR AND GIF_LIBRARIES)

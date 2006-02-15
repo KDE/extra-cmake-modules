@@ -20,6 +20,7 @@ FIND_PATH(LIBXSLT_INCLUDE_DIR libxslt/xslt.h
   ${_LibXsltIncDir}
   /usr/include
   /usr/local/include
+  ${GNUWIN32_DIR}/include
 )
 
 FIND_LIBRARY(LIBXSLT_LIBRARIES NAMES xslt libxslt
@@ -27,6 +28,7 @@ FIND_LIBRARY(LIBXSLT_LIBRARIES NAMES xslt libxslt
   ${_LibXsltLinkDir}
   /usr/lib
   /usr/local/lib
+  ${GNUWIN32_DIR}/lib
 )
 
 if(LIBXSLT_INCLUDE_DIR AND LIBXSLT_LIBRARIES)

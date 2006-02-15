@@ -8,12 +8,14 @@
 FIND_PATH(OPENSSL_INCLUDE_DIR openssl/ssl.h
    /usr/include/
    /usr/local/include/
+   ${GNUWIN32_DIR}/include
 )
 
 FIND_LIBRARY(OPENSSL_LIBRARIES NAMES ssl ssleay32
    PATHS
    /usr/lib
    /usr/local/lib
+   ${GNUWIN32_DIR}/lib
 )
 
 if(OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
