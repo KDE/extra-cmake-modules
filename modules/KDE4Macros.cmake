@@ -416,9 +416,16 @@ MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
    endif(_first_SRC)
 
 #   if (UNIX)
-   # I guess under windows the libtool file are not required
-   #KDE4_INSTALL_LIBTOOL_FILE(${_target_NAME})
+#   I guess under windows the libtool file are not required
+#   KDE4_INSTALL_LIBTOOL_FILE(${_target_NAME})
 #   endif (UNIX)
+
+   IF (WIN32)
+      # for shared libraries/plugins a -DMAKE_target_LIB is required
+      string(TOUPPER ${_target_NAME} _symbol)
+      set(_symbol "MAKE_${_symbol}_LIB")
+      set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
+   ENDIF (WIN32)
 
 ENDMACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
