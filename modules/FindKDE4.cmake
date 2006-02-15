@@ -33,39 +33,39 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.3.3)
 #this line includes FindQt.cmake, which searches the Qt library and headers
 FIND_PACKAGE(Qt4 REQUIRED)
 
-SET(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
+set(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
 INCLUDE (MacroLibrary)
 
 #add some KDE specific stuff
 
 
-SET(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
-SET(KDE4_APPS_DIR          /share/applnk)
-SET(KDE4_CONFIG_DIR        /share/config)
-SET(KDE4_DATA_DIR          /share/apps)
-SET(KDE4_HTML_DIR          /share/doc/HTML)
-SET(KDE4_ICON_DIR          /share/icons)
-SET(KDE4_KCFG_DIR          /share/config.kcfg)
-SET(KDE4_LIBS_HTML_DIR     /share/doc/HTML)
-SET(KDE4_LOCALE_DIR        /share/locale)
-SET(KDE4_MIME_DIR          /share/mimelnk)
-SET(KDE4_SERVICES_DIR      /share/services)
-SET(KDE4_SERVICETYPES_DIR  /share/servicetypes)
-SET(KDE4_SOUND_DIR         /share/sounds)
-SET(KDE4_TEMPLATES_DIR     /share/templates)
-SET(KDE4_WALLPAPER_DIR     /share/wallpapers)
-SET(KDE4_KCONF_UPDATE_DIR	/share/apps/kconf_update/ )
-SET(XDG_APPS_DIR           /share/applications/kde)
-SET(XDG_DIRECTORY_DIR      /share/desktop-directories)
+set(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
+set(KDE4_APPS_DIR          /share/applnk)
+set(KDE4_CONFIG_DIR        /share/config)
+set(KDE4_DATA_DIR          /share/apps)
+set(KDE4_HTML_DIR          /share/doc/HTML)
+set(KDE4_ICON_DIR          /share/icons)
+set(KDE4_KCFG_DIR          /share/config.kcfg)
+set(KDE4_LIBS_HTML_DIR     /share/doc/HTML)
+set(KDE4_LOCALE_DIR        /share/locale)
+set(KDE4_MIME_DIR          /share/mimelnk)
+set(KDE4_SERVICES_DIR      /share/services)
+set(KDE4_SERVICETYPES_DIR  /share/servicetypes)
+set(KDE4_SOUND_DIR         /share/sounds)
+set(KDE4_TEMPLATES_DIR     /share/templates)
+set(KDE4_WALLPAPER_DIR     /share/wallpapers)
+set(KDE4_KCONF_UPDATE_DIR	/share/apps/kconf_update/ )
+set(XDG_APPS_DIR           /share/applications/kde)
+set(XDG_DIRECTORY_DIR      /share/desktop-directories)
 
 
 # the following are directories where stuff will be installed to
-#SET(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
-SET(KDE4_MAN_INSTALL_DIR     "/man"      CACHE STRING "The kde man install dir (default prefix/man/)")
-SET(KDE4_INFO_INSTALL_DIR    "/info"     CACHE STRING "The kde info install dir (default prefix/info)")
-SET(KDE4_LIB_INSTALL_DIR     "/lib"      CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
-SET(KDE4_PLUGIN_INSTALL_DIR  "${KDE4_LIB_INSTALL_DIR}/kde4" CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+#set(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
+set(KDE4_MAN_INSTALL_DIR     "/man"      CACHE STRING "The kde man install dir (default prefix/man/)")
+set(KDE4_INFO_INSTALL_DIR    "/info"     CACHE STRING "The kde info install dir (default prefix/info)")
+set(KDE4_LIB_INSTALL_DIR     "/lib"      CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+set(KDE4_PLUGIN_INSTALL_DIR  "${KDE4_LIB_INSTALL_DIR}/kde4" CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
 
 
 
@@ -74,46 +74,46 @@ SET(KDE4_PLUGIN_INSTALL_DIR  "${KDE4_LIB_INSTALL_DIR}/kde4" CACHE STRING "The su
 
 #are we trying to compile kdelibs ?
 #then enter bootstrap mode
-IF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
-  MESSAGE(STATUS "Building kdelibs...")
+  message(STATUS "Building kdelibs...")
 
-  SET(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
+  set(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
 
-  SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
+  set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
   
   # adjust dcopidl and the library output path depending on the platform
-  IF (WIN32)
+  if (WIN32)
      # under windows dcopidl.bat has to be used, except when using MSYS, then the perl script has to be used, Alex
-     IF ("${CMAKE_GENERATOR}" MATCHES "MSYS")
-        SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
-     ELSE ("${CMAKE_GENERATOR}" MATCHES "MSYS")
-        SET(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
-     ENDIF ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+     if ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+        set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
+     else ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+        set(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
+     endif ("${CMAKE_GENERATOR}" MATCHES "MSYS")
   
-     SET(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
-  ELSE (WIN32)
-     SET(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
-     SET(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
-  ENDIF (WIN32)
+     set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
+  else (WIN32)
+     set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
+     set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+  endif (WIN32)
 
-  SET(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH})
-  SET(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
+  set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH})
+  set(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
   
   # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-  SET(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
-  SET(KDE4_KCFGC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+  set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
+  set(KDE4_KCFGC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
 
   # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
-  SET( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
-  SET( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
+  set( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
+  set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
   
 
-ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   # ... but not otherwise
-  SET( _KDE4_DCOPIDL2CPP_DEP )
-  SET( _KDE4_KCONFIG_COMPILER_DEP)
+  set( _KDE4_DCOPIDL2CPP_DEP )
+  set( _KDE4_KCONFIG_COMPILER_DEP)
 
   # at first the KDE include direcory
   # this should better check for a header which didn't exist in KDE < 4
@@ -164,95 +164,95 @@ ELSE(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
     /opt/kde4/bin
   )
 
-ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 
 # this is  already in cmake cvs and can be removed once we require it
-IF (WIN32)
+if (WIN32)
    GET_FILENAME_COMPONENT(_tmp_COMPILER_NAME ${CMAKE_CXX_COMPILER} NAME_WE)
-   IF ( _tmp_COMPILER_NAME MATCHES cl )
-      SET(MSVC TRUE)
-   ENDIF ( _tmp_COMPILER_NAME MATCHES cl )
-ENDIF (WIN32)
+   if ( _tmp_COMPILER_NAME MATCHES cl )
+      set(MSVC TRUE)
+   endif ( _tmp_COMPILER_NAME MATCHES cl )
+endif (WIN32)
 
 #####################  and now the platform specific stuff  ############################
 
 
-IF(UNIX AND NOT APPLE)
+if(UNIX AND not APPLE)
    FIND_PACKAGE(X11 REQUIRED)
-   SET(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
-ENDIF(UNIX AND NOT APPLE)
+   set(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
+endif(UNIX AND not APPLE)
 
 
 
-IF (WIN32)
+if (WIN32)
 
 
 
-   IF(CYGWIN)
-      MESSAGE(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
-   ENDIF(CYGWIN)
+   if(CYGWIN)
+      message(FATAL_ERROR "Support for Cygwin not yet implemented, please edit FindKDE4.cmake to enable it")
+   endif(CYGWIN)
 
    FIND_PACKAGE(KDEWIN32 REQUIRED)
    
-   SET( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
-   SET( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
+   set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
+   set( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
      
    # windows, mingw
-   IF(MINGW)
+   if(MINGW)
    #hmmm, something special to do here ?
-   ENDIF(MINGW)
+   endif(MINGW)
    
    # windows, microsoft compiler
-   IF(MSVC)
-      SET( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN -DUNICODE )
-   ENDIF(MSVC)
+   if(MSVC)
+      set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN -DUNICODE )
+   endif(MSVC)
 
-ENDIF (WIN32)
+endif (WIN32)
 
 
 # only on linux, but not e.g. on FreeBSD:
-IF(CMAKE_SYSTEM_NAME MATCHES Linux)
-  SET ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
-  SET ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-  SET ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-  SET ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-  SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES Linux)
+if(CMAKE_SYSTEM_NAME MATCHES Linux)
+  set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
+  set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+  set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+  set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+  set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
+endif(CMAKE_SYSTEM_NAME MATCHES Linux)
 
 
 # works on FreeBSD, not tested on NetBSD and OpenBSD
-IF(CMAKE_SYSTEM_NAME MATCHES BSD)
-  SET ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
-  SET ( CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
-  SET ( CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
-  SET ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-  SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES BSD)
+if(CMAKE_SYSTEM_NAME MATCHES BSD)
+  set ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
+  set ( CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
+  set ( CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
+  set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+  set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
+endif(CMAKE_SYSTEM_NAME MATCHES BSD)
 
 
 # This will need to be modified later to support either Qt/X11 or Qt/Mac builds
-IF(APPLE)
+if(APPLE)
 
-  SET ( _KDE4_PLATFORM_DEFINITIONS -D__APPLE_KDE__ )
+  set ( _KDE4_PLATFORM_DEFINITIONS -D__APPLE_KDE__ )
 
   # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
   # -undefined dynamic_lookup; in the future we should do this programmatically
   # hmm... why doesn't this work?
-  SET (ENV{MACOSX_DEPLOYMENT_TARGET} 10.3)
+  set (ENV{MACOSX_DEPLOYMENT_TARGET} 10.3)
 
   # "-undefined dynamic_lookup" means we don't care about missing symbols at link-time by default
   # this is bad, but unavoidable until there is the equivalent of libtool -no-undefined implemented
   # or perhaps it already is, and I just don't know where to look  ;)
 
-  SET (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress")
-  SET (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress")
-  #SET(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
-  #SET(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
+  set (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress")
+  set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress")
+  #set(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
+  #set(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
 
-  SET (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common -Os")
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Os")
-ENDIF(APPLE)
+  set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common -Os")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Os")
+endif(APPLE)
 
 ###########    end of platform specific stuff  ##########################
 
@@ -262,59 +262,59 @@ INCLUDE(KDE4Macros)
 
 
 # decide whether KDE4 has been found
-IF (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
-   SET(KDE4_FOUND TRUE)
-ELSE (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
-   SET(KDE4_FOUND FALSE)
-ENDIF (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
+if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
+   set(KDE4_FOUND TRUE)
+else (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
+   set(KDE4_FOUND FALSE)
+endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
 
 
 MACRO (KDE4_PRINT_RESULTS)
-   IF(KDE4_INCLUDE_DIR)
-      MESSAGE(STATUS "Found KDE4 include dir: ${KDE4_INCLUDE_DIR}")
-   ELSE(KDE4_INCLUDE_DIR)
-      MESSAGE(STATUS "Didn't find KDE4 headers")
-   ENDIF(KDE4_INCLUDE_DIR)
+   if(KDE4_INCLUDE_DIR)
+      message(STATUS "Found KDE4 include dir: ${KDE4_INCLUDE_DIR}")
+   else(KDE4_INCLUDE_DIR)
+      message(STATUS "Didn't find KDE4 headers")
+   endif(KDE4_INCLUDE_DIR)
 
-   IF(KDE4_LIB_DIR)
-      MESSAGE(STATUS "Found KDE4 library dir: ${KDE4_LIB_DIR}")
-   ELSE(KDE4_LIB_DIR)
-      MESSAGE(STATUS "Didn't find KDE4 core library")
-   ENDIF(KDE4_LIB_DIR)
+   if(KDE4_LIB_DIR)
+      message(STATUS "Found KDE4 library dir: ${KDE4_LIB_DIR}")
+   else(KDE4_LIB_DIR)
+      message(STATUS "Didn't find KDE4 core library")
+   endif(KDE4_LIB_DIR)
 
-   IF(KDE4_DCOPIDL_EXECUTABLE)
-      MESSAGE(STATUS "Found KDE4 dcopidl preprocessor: ${KDE4_DCOPIDL_EXECUTABLE}")
-   ELSE(KDE4_DCOPIDL_EXECUTABLE)
-      MESSAGE(STATUS "Didn't find the KDE4 dcopidl preprocessor")
-   ENDIF(KDE4_DCOPIDL_EXECUTABLE)
+   if(KDE4_DCOPIDL_EXECUTABLE)
+      message(STATUS "Found KDE4 dcopidl preprocessor: ${KDE4_DCOPIDL_EXECUTABLE}")
+   else(KDE4_DCOPIDL_EXECUTABLE)
+      message(STATUS "Didn't find the KDE4 dcopidl preprocessor")
+   endif(KDE4_DCOPIDL_EXECUTABLE)
 
-   IF(KDE4_DCOPIDL2CPP_EXECUTABLE)
-      MESSAGE(STATUS "Found KDE4 dcopidl2cpp preprocessor: ${KDE4_DCOPIDL2CPP_EXECUTABLE}")
-   ELSE(KDE4_DCOPIDL2CPP_EXECUTABLE)
-      MESSAGE(STATUS "Didn't find the KDE4 dcopidl2cpp preprocessor")
-   ENDIF(KDE4_DCOPIDL2CPP_EXECUTABLE)
+   if(KDE4_DCOPIDL2CPP_EXECUTABLE)
+      message(STATUS "Found KDE4 dcopidl2cpp preprocessor: ${KDE4_DCOPIDL2CPP_EXECUTABLE}")
+   else(KDE4_DCOPIDL2CPP_EXECUTABLE)
+      message(STATUS "Didn't find the KDE4 dcopidl2cpp preprocessor")
+   endif(KDE4_DCOPIDL2CPP_EXECUTABLE)
 
-   IF(KDE4_KCFGC_EXECUTABLE)
-      MESSAGE(STATUS "Found KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
-   ELSE(KDE4_KCFGC_EXECUTABLE)
-      MESSAGE(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
-   ENDIF(KDE4_KCFGC_EXECUTABLE)
+   if(KDE4_KCFGC_EXECUTABLE)
+      message(STATUS "Found KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
+   else(KDE4_KCFGC_EXECUTABLE)
+      message(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
+   endif(KDE4_KCFGC_EXECUTABLE)
 ENDMACRO (KDE4_PRINT_RESULTS)
 
 
-IF (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
+if (KDE4_FIND_REQUIRED AND not KDE4_FOUND)
    #bail out if something wasn't found
    KDE4_PRINT_RESULTS()
-   MESSAGE(FATAL_ERROR "Could not find everything required for compiling KDE 4 programs")
-ENDIF (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
+   message(FATAL_ERROR "Could not find everything required for compiling KDE 4 programs")
+endif (KDE4_FIND_REQUIRED AND not KDE4_FOUND)
 
 
-IF (NOT KDE4_FIND_QUIETLY)
+if (not KDE4_FIND_QUIETLY)
    KDE4_PRINT_RESULTS()
-ENDIF (NOT KDE4_FIND_QUIETLY)
+endif (not KDE4_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
-SET(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
+set(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
 
 # not used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
-SET(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DQT3_SUPPORT_WARNINGS )
+set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DQT3_SUPPORT_WARNINGS )

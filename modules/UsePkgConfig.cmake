@@ -10,18 +10,18 @@ FIND_PROGRAM(PKGCONFIG_EXECUTABLE NAMES pkg-config PATHS /usr/local/bin )
 
 MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
 # reset the variables at the beginning
-  SET(${_include_DIR})
-  SET(${_link_DIR})
-  SET(${_link_FLAGS})
-  SET(${_cflags})
+  set(${_include_DIR})
+  set(${_link_DIR})
+  set(${_link_FLAGS})
+  set(${_cflags})
 
 # if pkg-config has been found
-  IF(PKGCONFIG_EXECUTABLE)
+  if(PKGCONFIG_EXECUTABLE)
 
     EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --exists RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
 
 # and if the package of interest also exists for pkg-config, then get the information
-    IF(NOT _return_VALUE)
+    if(not _return_VALUE)
 
       EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --variable=includedir OUTPUT_VARIABLE ${_include_DIR} )
 
@@ -31,9 +31,9 @@ MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
 
       EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --cflags OUTPUT_VARIABLE ${_cflags} )
 
-    ENDIF(NOT _return_VALUE)
+    endif(not _return_VALUE)
 
-  ENDIF(PKGCONFIG_EXECUTABLE)
+  endif(PKGCONFIG_EXECUTABLE)
 
 ENDMACRO(PKGCONFIG _include_DIR _link_DIR _link_FLAGS _cflags)
 

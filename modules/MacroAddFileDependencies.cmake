@@ -4,11 +4,11 @@
 MACRO(MACRO_ADD_FILE_DEPENDENCIES _file)
 
    GET_SOURCE_FILE_PROPERTY(_deps ${_file} OBJECT_DEPENDS)
-   IF (_deps)
-      SET(_deps ${_deps} ${ARGN})
-   ELSE (_deps)
-      SET(_deps ${ARGN})
-   ENDIF (_deps)
+   if (_deps)
+      set(_deps ${_deps} ${ARGN})
+   else (_deps)
+      set(_deps ${ARGN})
+   endif (_deps)
 
    SET_SOURCE_FILES_PROPERTIES(${_file} PROPERTIES OBJECT_DEPENDS "${_deps}")
 

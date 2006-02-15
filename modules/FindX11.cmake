@@ -4,10 +4,10 @@
 #  X11_INCLUDE_DIR  - include directories to use X11
 #  X11_LIBRARIES    - link against these to use X11
 
-IF (UNIX)
-  SET(X11_FOUND 0)
+if (UNIX)
+  set(X11_FOUND 0)
 
-  SET(X11_INC_SEARCH_PATH
+  set(X11_INC_SEARCH_PATH
     /usr/X11R6/include 
     /usr/local/include 
     /usr/include/X11
@@ -17,7 +17,7 @@ IF (UNIX)
     /usr/include
   )
 
-  SET(X11_LIB_SEARCH_PATH
+  set(X11_LIB_SEARCH_PATH
     /usr/X11R6/lib
     /usr/local/lib 
     /usr/openwin/lib 
@@ -30,114 +30,114 @@ IF (UNIX)
   FIND_LIBRARY(X11_X11_LIB X11 ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xext_LIB Xext ${X11_LIB_SEARCH_PATH})
 
-  IF(X11_X11_INCLUDE_PATH)
-    SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH})
-  ENDIF(X11_X11_INCLUDE_PATH)
+  if(X11_X11_INCLUDE_PATH)
+    set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH})
+  endif(X11_X11_INCLUDE_PATH)
 
-  IF(X11_Xlib_INCLUDE_PATH)
-    SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xlib_INCLUDE_PATH})
-  ENDIF(X11_Xlib_INCLUDE_PATH)
+  if(X11_Xlib_INCLUDE_PATH)
+    set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xlib_INCLUDE_PATH})
+  endif(X11_Xlib_INCLUDE_PATH)
 
-  IF(X11_Xutil_INCLUDE_PATH)
-    SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xutil_INCLUDE_PATH})
-  ENDIF(X11_Xutil_INCLUDE_PATH)
+  if(X11_Xutil_INCLUDE_PATH)
+    set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xutil_INCLUDE_PATH})
+  endif(X11_Xutil_INCLUDE_PATH)
 
-  IF(X11_X11_LIB)
-    SET(X11_LIBRARIES ${X11_LIBRARIES} ${X11_X11_LIB})
-  ENDIF(X11_X11_LIB)
+  if(X11_X11_LIB)
+    set(X11_LIBRARIES ${X11_LIBRARIES} ${X11_X11_LIB})
+  endif(X11_X11_LIB)
 
-  IF(X11_Xext_LIB)
-    SET(X11_LIBRARIES ${X11_LIBRARIES} ${X11_Xext_LIB})
-  ENDIF(X11_Xext_LIB)
+  if(X11_Xext_LIB)
+    set(X11_LIBRARIES ${X11_LIBRARIES} ${X11_Xext_LIB})
+  endif(X11_Xext_LIB)
 
   # Deprecated variable for backwards compatibility with CMake 1.4
-  IF(X11_X11_INCLUDE_PATH)
-    IF(X11_LIBRARIES)
-      SET(X11_FOUND 1)
-    ENDIF(X11_LIBRARIES)
-  ENDIF(X11_X11_INCLUDE_PATH)
+  if(X11_X11_INCLUDE_PATH)
+    if(X11_LIBRARIES)
+      set(X11_FOUND 1)
+    endif(X11_LIBRARIES)
+  endif(X11_X11_INCLUDE_PATH)
 
-  SET(X11_LIBRARY_DIR "")
-  IF(X11_X11_LIB)
+  set(X11_LIBRARY_DIR "")
+  if(X11_X11_LIB)
     GET_FILENAME_COMPONENT(X11_LIBRARY_DIR ${X11_X11_LIB} PATH)
-  ENDIF(X11_X11_LIB)
+  endif(X11_X11_LIB)
 
-  IF(X11_FOUND)
+  if(X11_FOUND)
     INCLUDE(CheckFunctionExists)
     INCLUDE(CheckLibraryExists)
 
     # Translated from an autoconf-generated configure script.
     # See libs.m4 in autoconf's m4 directory.
-    IF($ENV{ISC} MATCHES "^yes$")
-      SET(X11_X_EXTRA_LIBS -lnsl_s -linet)
-    ELSE($ENV{ISC} MATCHES "^yes$")
-      SET(X11_X_EXTRA_LIBS "")
+    if($ENV{ISC} MATCHES "^yes$")
+      set(X11_X_EXTRA_LIBS -lnsl_s -linet)
+    else($ENV{ISC} MATCHES "^yes$")
+      set(X11_X_EXTRA_LIBS "")
 
       # See if XOpenDisplay in X11 works by itself.
       CHECK_LIBRARY_EXISTS("${X11_LIBRARIES}" "XOpenDisplay" "${X11_LIBRARY_DIR}" X11_LIB_X11_SOLO)
-      IF(NOT X11_LIB_X11_SOLO)
+      if(not X11_LIB_X11_SOLO)
         # Find library needed for dnet_ntoa.
         CHECK_LIBRARY_EXISTS("dnet" "dnet_ntoa" "" X11_LIB_DNET_HAS_DNET_NTOA) 
-        IF (X11_LIB_DNET_HAS_DNET_NTOA)
-          SET (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -ldnet)
-        ELSE (X11_LIB_DNET_HAS_DNET_NTOA)
+        if (X11_LIB_DNET_HAS_DNET_NTOA)
+          set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -ldnet)
+        else (X11_LIB_DNET_HAS_DNET_NTOA)
           CHECK_LIBRARY_EXISTS("dnet_stub" "dnet_ntoa" "" X11_LIB_DNET_STUB_HAS_DNET_NTOA) 
-          IF (X11_LIB_DNET_STUB_HAS_DNET_NTOA)
-            SET (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -ldnet_stub)
-          ENDIF (X11_LIB_DNET_STUB_HAS_DNET_NTOA)
-        ENDIF (X11_LIB_DNET_HAS_DNET_NTOA)
-      ENDIF(NOT X11_LIB_X11_SOLO)
+          if (X11_LIB_DNET_STUB_HAS_DNET_NTOA)
+            set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -ldnet_stub)
+          endif (X11_LIB_DNET_STUB_HAS_DNET_NTOA)
+        endif (X11_LIB_DNET_HAS_DNET_NTOA)
+      endif(not X11_LIB_X11_SOLO)
 
       # Find library needed for gethostbyname.
       CHECK_FUNCTION_EXISTS("gethostbyname" CMAKE_HAVE_GETHOSTBYNAME)
-      IF(NOT CMAKE_HAVE_GETHOSTBYNAME)
+      if(not CMAKE_HAVE_GETHOSTBYNAME)
         CHECK_LIBRARY_EXISTS("nsl" "gethostbyname" "" CMAKE_LIB_NSL_HAS_GETHOSTBYNAME) 
-        IF (CMAKE_LIB_NSL_HAS_GETHOSTBYNAME)
-          SET (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lnsl)
-        ELSE (CMAKE_LIB_NSL_HAS_GETHOSTBYNAME)
+        if (CMAKE_LIB_NSL_HAS_GETHOSTBYNAME)
+          set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lnsl)
+        else (CMAKE_LIB_NSL_HAS_GETHOSTBYNAME)
           CHECK_LIBRARY_EXISTS("bsd" "gethostbyname" "" CMAKE_LIB_BSD_HAS_GETHOSTBYNAME) 
-          IF (CMAKE_LIB_BSD_HAS_GETHOSTBYNAME)
-            SET (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lbsd)
-          ENDIF (CMAKE_LIB_BSD_HAS_GETHOSTBYNAME)
-        ENDIF (CMAKE_LIB_NSL_HAS_GETHOSTBYNAME)
-      ENDIF(NOT CMAKE_HAVE_GETHOSTBYNAME)
+          if (CMAKE_LIB_BSD_HAS_GETHOSTBYNAME)
+            set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lbsd)
+          endif (CMAKE_LIB_BSD_HAS_GETHOSTBYNAME)
+        endif (CMAKE_LIB_NSL_HAS_GETHOSTBYNAME)
+      endif(not CMAKE_HAVE_GETHOSTBYNAME)
 
       # Find library needed for connect.
       CHECK_FUNCTION_EXISTS("connect" CMAKE_HAVE_CONNECT)
-      IF(NOT CMAKE_HAVE_CONNECT)
+      if(not CMAKE_HAVE_CONNECT)
         CHECK_LIBRARY_EXISTS("socket" "connect" "" CMAKE_LIB_SOCKET_HAS_CONNECT) 
-        IF (CMAKE_LIB_SOCKET_HAS_CONNECT)
-          SET (X11_X_EXTRA_LIBS -lsocket ${X11_X_EXTRA_LIBS})
-        ENDIF (CMAKE_LIB_SOCKET_HAS_CONNECT)
-      ENDIF(NOT CMAKE_HAVE_CONNECT)
+        if (CMAKE_LIB_SOCKET_HAS_CONNECT)
+          set (X11_X_EXTRA_LIBS -lsocket ${X11_X_EXTRA_LIBS})
+        endif (CMAKE_LIB_SOCKET_HAS_CONNECT)
+      endif(not CMAKE_HAVE_CONNECT)
 
       # Find library needed for remove.
       CHECK_FUNCTION_EXISTS("remove" CMAKE_HAVE_REMOVE)
-      IF(NOT CMAKE_HAVE_REMOVE)
+      if(not CMAKE_HAVE_REMOVE)
         CHECK_LIBRARY_EXISTS("posix" "remove" "" CMAKE_LIB_POSIX_HAS_REMOVE) 
-        IF (CMAKE_LIB_POSIX_HAS_REMOVE)
-          SET (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lposix)
-        ENDIF (CMAKE_LIB_POSIX_HAS_REMOVE)
-      ENDIF(NOT CMAKE_HAVE_REMOVE)
+        if (CMAKE_LIB_POSIX_HAS_REMOVE)
+          set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lposix)
+        endif (CMAKE_LIB_POSIX_HAS_REMOVE)
+      endif(not CMAKE_HAVE_REMOVE)
 
       # Find library needed for shmat.
       CHECK_FUNCTION_EXISTS("shmat" CMAKE_HAVE_SHMAT)
-      IF(NOT CMAKE_HAVE_SHMAT)
+      if(not CMAKE_HAVE_SHMAT)
         CHECK_LIBRARY_EXISTS("ipc" "shmat" "" CMAKE_LIB_IPS_HAS_SHMAT) 
-        IF (CMAKE_LIB_IPS_HAS_SHMAT)
-          SET (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lipc)
-        ENDIF (CMAKE_LIB_IPS_HAS_SHMAT)
-      ENDIF(NOT CMAKE_HAVE_SHMAT)
-    ENDIF($ENV{ISC} MATCHES "^yes$")
+        if (CMAKE_LIB_IPS_HAS_SHMAT)
+          set (X11_X_EXTRA_LIBS ${X11_X_EXTRA_LIBS} -lipc)
+        endif (CMAKE_LIB_IPS_HAS_SHMAT)
+      endif(not CMAKE_HAVE_SHMAT)
+    endif($ENV{ISC} MATCHES "^yes$")
 
     CHECK_LIBRARY_EXISTS("ICE" "IceConnectionNumber" "${X11_LIBRARY_DIR}"
                          CMAKE_LIB_ICE_HAS_ICECONNECTIONNUMBER)
-    IF(CMAKE_LIB_ICE_HAS_ICECONNECTIONNUMBER)
-      SET (X11_X_PRE_LIBS -lSM -lICE)
-    ENDIF(CMAKE_LIB_ICE_HAS_ICECONNECTIONNUMBER)
+    if(CMAKE_LIB_ICE_HAS_ICECONNECTIONNUMBER)
+      set (X11_X_PRE_LIBS -lSM -lICE)
+    endif(CMAKE_LIB_ICE_HAS_ICECONNECTIONNUMBER)
     # Build the final list of libraries.
-    SET (X11_LIBRARIES ${X11_X_PRE_LIBS} ${X11_LIBRARIES} ${X11_X_EXTRA_LIBS})
-  ENDIF(X11_FOUND)
+    set (X11_LIBRARIES ${X11_X_PRE_LIBS} ${X11_LIBRARIES} ${X11_X_EXTRA_LIBS})
+  endif(X11_FOUND)
 
   MARK_AS_ADVANCED(
     X11_X11_INCLUDE_PATH
@@ -148,4 +148,4 @@ IF (UNIX)
     X11_LIBRARIES
     )
 
-ENDIF (UNIX)
+endif (UNIX)

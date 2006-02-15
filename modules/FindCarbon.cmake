@@ -2,7 +2,7 @@ INCLUDE(CMakeFindFrameworks)
 
 CMAKE_FIND_FRAMEWORKS(Carbon)
 
-IF(Carbon_FRAMEWORKS)
-	SET (CARBON_LIBRARY "-framework Carbon" CACHE FILEPATH "Carbon framework" FORCE)
-	SET (CARBON_FOUND 1)
-ENDIF(Carbon_FRAMEWORKS)
+if(Carbon_FRAMEWORKS)
+	set (CARBON_LIBRARY "-framework Carbon" CACHE FILEPATH "Carbon framework" FORCE)
+	set (CARBON_FOUND 1)
+endif(Carbon_FRAMEWORKS)

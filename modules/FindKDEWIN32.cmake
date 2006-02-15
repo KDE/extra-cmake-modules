@@ -5,7 +5,7 @@
 #  KDEWIN32_INCLUDES - the KDEWIN32 include directories
 #  KDEWIN32_LIBRARIES - The libraries needed to use KDEWIN32
 
-IF (WIN32)
+if (WIN32)
 
 INCLUDE(MacroGetenvWinPath)
 
@@ -28,31 +28,31 @@ FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32
 
 # kdelibs/win/ has to be built before the rest of kdelibs/
 # eventually it will be moved out from kdelibs/
-IF (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
-   SET(KDEWIN32_FOUND TRUE)
+if (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
+   set(KDEWIN32_FOUND TRUE)
    # add the winsock2 library, using find_library or something like this would probably be better
-   SET(KDEWIN32_LIBRARIES ${KDEWIN32_LIBRARY} user32 shell32 ws2_32)
+   set(KDEWIN32_LIBRARIES ${KDEWIN32_LIBRARY} user32 shell32 ws2_32)
 
-   IF(MINGW)
+   if(MINGW)
       #mingw compiler
-      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES})
-   ELSE(MINGW)
+      set(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES})
+   else(MINGW)
       # msvc compiler
       # add the MS SDK include directory if available
       MACRO_GETENV_WIN_PATH(MSSDK_DIR MSSDK)
-      SET(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES} ${MSSDK_DIR})
-   ENDIF(MINGW)
+      set(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES} ${MSSDK_DIR})
+   endif(MINGW)
    
-ENDIF (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
+endif (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
 
-IF (KDEWIN32_FOUND)
-   IF (NOT KDEWIN32_FIND_QUIETLY)
-      MESSAGE(STATUS "Found KDEWIN32: ${KDEWIN32_LIBRARY}")
-   ENDIF (NOT KDEWIN32_FIND_QUIETLY)
-ELSE (KDEWIN32_FOUND)
-   IF (KDEWIN32_FIND_REQUIRED)
-      MESSAGE(FATAL_ERROR "Could not find KDEWIN32 library\nPlease build and install kdelibs/win/ first")
-   ENDIF (KDEWIN32_FIND_REQUIRED)
-ENDIF (KDEWIN32_FOUND)
+if (KDEWIN32_FOUND)
+   if (not KDEWIN32_FIND_QUIETLY)
+      message(STATUS "Found KDEWIN32: ${KDEWIN32_LIBRARY}")
+   endif (not KDEWIN32_FIND_QUIETLY)
+else (KDEWIN32_FOUND)
+   if (KDEWIN32_FIND_REQUIRED)
+      message(FATAL_ERROR "Could not find KDEWIN32 library\nPlease build and install kdelibs/win/ first")
+   endif (KDEWIN32_FIND_REQUIRED)
+endif (KDEWIN32_FOUND)
 
-ENDIF (WIN32)
+endif (WIN32)

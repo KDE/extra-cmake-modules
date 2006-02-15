@@ -1,6 +1,6 @@
 
 #using a ui3 file with uic3
-IF(KDE3_IMPL)
+if(KDE3_IMPL)
 
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
     -nounload -tr tr2i18n
@@ -9,10 +9,10 @@ IF(KDE3_IMPL)
     OUTPUT_VARIABLE _uic_CONTENTS
     ERROR_QUIET
   )
-ENDIF(KDE3_IMPL)
+endif(KDE3_IMPL)
 
 
-IF(KDE3_HEADER)
+if(KDE3_HEADER)
 
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
     -nounload -tr tr2i18n
@@ -20,11 +20,11 @@ IF(KDE3_HEADER)
     OUTPUT_VARIABLE _uic_CONTENTS
     ERROR_QUIET
   )
-   SET(KDE_UIC_CPP_FILE ${KDE_UIC_H_FILE})
-ENDIF(KDE3_HEADER)
+   set(KDE_UIC_CPP_FILE ${KDE_UIC_H_FILE})
+endif(KDE3_HEADER)
 
 # the kde4 branch
-IF (KDE4_HEADER)
+if (KDE4_HEADER)
 
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
     -tr tr2i18n
@@ -33,8 +33,8 @@ IF (KDE4_HEADER)
     ERROR_QUIET
   )
 
-   SET(KDE_UIC_CPP_FILE ${KDE_UIC_H_FILE})
-ENDIF (KDE4_HEADER)
+   set(KDE_UIC_CPP_FILE ${KDE_UIC_H_FILE})
+endif (KDE4_HEADER)
 
 
 #replace tr218n("") with QString::null to avoid waring from KLocale
