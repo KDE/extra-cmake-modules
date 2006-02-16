@@ -637,16 +637,16 @@ if(QT4_QMAKE_FOUND)
     # get include dirs
     QT4_GET_MOC_INC_DIRS(moc_includes)
 
-    foreach(it ${ARGN})
+    FOREACH(it ${ARGN})
       GET_FILENAME_COMPONENT(it ${it} ABSOLUTE)
       GET_FILENAME_COMPONENT(outfile ${it} NAME_WE)
 
-      set(outfile ${CMAKE_CURRENT_BINARY_DIR}/moc_${outfile}.cxx)
+      SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/moc_${outfile}.cxx)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_MOC_EXECUTABLE}
         ARGS ${moc_includes} -o ${outfile} ${it}
         MAIN_DEPENDENCY ${it})
-      set(${outfiles} ${${outfiles}} ${outfile})
+      SET(${outfiles} ${${outfiles}} ${outfile})
     endforeach(it)
 
   ENDMACRO(QT4_WRAP_CPP)
@@ -656,16 +656,16 @@ if(QT4_QMAKE_FOUND)
 
   MACRO(QT4_WRAP_UI outfiles )
 
-    foreach(it ${ARGN})
+    FOREACH(it ${ARGN})
       GET_FILENAME_COMPONENT(outfile ${it} NAME_WE)
-      set(infile ${CMAKE_CURRENT_SOURCE_DIR}/${it})
-      set(outfile ${CMAKE_CURRENT_BINARY_DIR}/ui_${outfile}.h)
+      SET(infile ${CMAKE_CURRENT_SOURCE_DIR}/${it})
+      SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/ui_${outfile}.h)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_UIC_EXECUTABLE}
         ARGS -o ${outfile} ${infile}
         MAIN_DEPENDENCY ${infile})
-      set(${outfiles} ${${outfiles}} ${outfile})
-    endforeach(it)
+      SET(${outfiles} ${${outfiles}} ${outfile})
+    ENDFOREACH(it)
 
   ENDMACRO(QT4_WRAP_UI)
 
@@ -674,16 +674,16 @@ if(QT4_QMAKE_FOUND)
 
   MACRO(QT4_ADD_RESOURCES outfiles )
 
-    foreach(it ${ARGN})
+    FOREACH(it ${ARGN})
       GET_FILENAME_COMPONENT(outfilename ${it} NAME_WE)
-      set(infile ${CMAKE_CURRENT_SOURCE_DIR}/${it})
-      set(outfile ${CMAKE_CURRENT_BINARY_DIR}/qrc_${outfilename}.cxx)
+      SET(infile ${CMAKE_CURRENT_SOURCE_DIR}/${it})
+      SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/qrc_${outfilename}.cxx)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_RCC_EXECUTABLE}
         ARGS -name ${outfilename} -o ${outfile} ${infile}
         MAIN_DEPENDENCY ${infile} )
-      set(${outfiles} ${${outfiles}} ${outfile})
-    endforeach(it)
+      SET(${outfiles} ${${outfiles}} ${outfile})
+    ENDFOREACH(it)
 
   ENDMACRO(QT4_ADD_RESOURCES)
 

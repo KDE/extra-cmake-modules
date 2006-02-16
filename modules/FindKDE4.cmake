@@ -55,7 +55,7 @@ set(KDE4_SERVICETYPES_DIR  /share/servicetypes)
 set(KDE4_SOUND_DIR         /share/sounds)
 set(KDE4_TEMPLATES_DIR     /share/templates)
 set(KDE4_WALLPAPER_DIR     /share/wallpapers)
-set(KDE4_KCONF_UPDATE_DIR	/share/apps/kconf_update/ )
+set(KDE4_KCONF_UPDATE_DIR  /share/apps/kconf_update/ )
 set(XDG_APPS_DIR           /share/applications/kde)
 set(XDG_DIRECTORY_DIR      /share/desktop-directories)
 
@@ -188,8 +188,6 @@ endif(UNIX AND NOT APPLE)
 
 if (WIN32)
 
-
-
    if(CYGWIN)
       message(FATAL_ERROR "Support for Cygwin NOT yet implemented, please edit FindKDE4.cmake to enable it")
    endif(CYGWIN)
@@ -216,23 +214,23 @@ endif (WIN32)
 
 
 # only on linux, but NOT e.g. on FreeBSD:
-if(CMAKE_SYSTEM_NAME MATCHES Linux)
-  set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
-  set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-  set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-  set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-  set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
-endif(CMAKE_SYSTEM_NAME MATCHES Linux)
+if (CMAKE_SYSTEM_NAME MATCHES Linux)
+   set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
+   set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+   set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
+endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
 
 # works on FreeBSD, NOT tested on NetBSD and OpenBSD
-if(CMAKE_SYSTEM_NAME MATCHES BSD)
-  set ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
-  set ( CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
-  set ( CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
-  set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-  set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
-endif(CMAKE_SYSTEM_NAME MATCHES BSD)
+if (CMAKE_SYSTEM_NAME MATCHES BSD)
+   set ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
+   set ( CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
+   set ( CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
+   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
+endif (CMAKE_SYSTEM_NAME MATCHES BSD)
 
 
 # This will need to be modified later to support either Qt/X11 or Qt/Mac builds
@@ -257,6 +255,17 @@ if(APPLE)
   set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common -Os")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Os")
 endif(APPLE)
+
+
+# compiler specific stuff, maybe this should be done differently, Alex
+
+if (MSVC)
+   set (KDE4_ENABLE_EXCEPTIONS -EHsc)
+endif(MSVC)
+
+if (CMAKE_COMPILER_IS_GNUCXX)
+   set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
+endif (CMAKE_COMPILER_IS_GNUCXX)
 
 ###########    end of platform specific stuff  ##########################
 
