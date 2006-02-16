@@ -780,10 +780,12 @@ class CMakeFile
          end
 
          if not buildTarget.sources.empty?
-            file.printf("set(%s\n", srcsName)
+            file.printf("set(%s ", srcsName)
             needToCreateDummyFile=false
             buildTarget.sources.each do |currentFile|
-               file.printf("%s\n", currentFile)
+               # if there are more than 3 files, print each of them on its own line
+               file.printf("\n   ") if buildTarget.sources.size>3
+               file.printf("%s ", currentFile)
                if currentFile=="dummy.cpp"
 
                   needToCreateDummyFile=true if not FileTest.exists?(@path+"/dummy.cpp")
@@ -799,49 +801,63 @@ class CMakeFile
          end
 
          if not buildTarget.uis.empty?
-            file.printf("set( %s\n", uisName)
-            buildTarget.uis.each{ |currentFile| file.printf("%s\n", currentFile)}
+            file.printf("kde4_add_ui_files(%s ", srcsName )
+            buildTarget.uis.each do |currentFile| 
+               # if there are more than 3 files, print each of them on its own line
+               file.printf("\n   ") if buildTarget.uis.size>3
+               file.printf("%s ", currentFile)
+            end
             file.printf(")\n\n")
-            file.printf("kde4_add_ui_files(%s ${%s} )\n\n", srcsName, uisName)
          end
 
          if not buildTarget.ui3s.empty?
-            file.printf("set( %s\n", ui3sName)
-            buildTarget.ui3s.each{ |currentFile| file.printf("%s\n", currentFile)}
+            file.printf("kde4_add_ui3_files(%s ", srcsName)
+            buildTarget.ui3s.each do |currentFile| 
+               # if there are more than 3 files, print each of them on its own line
+               file.printf("\n   ") if buildTarget.ui3s.size>3
+               file.printf("%s ", currentFile)
+            end
             file.printf(")\n\n")
-            file.printf("kde4_add_ui3_files(%s ${%s} )\n\n", srcsName, ui3sName)
          end
 
          if not buildTarget.qrcs.empty?
-            file.printf("set( %s\n", qrcsName)
-            buildTarget.qrcs.each{ |currentFile| file.printf("%s\n", currentFile)}
+            file.printf("qt4_add_resources(%s ", srcsName)
+            buildTarget.qrcs.each do |currentFile| 
+               # if there are more than 3 files, print each of them on its own line
+               file.printf("\n   ") if buildTarget.qrcs.size>3
+               file.printf("%s ", currentFile)
+            end
             file.printf(")\n\n")
-            file.printf("qt4_add_resources(%s ${%s} )\n\n", srcsName, qrcsName)
          end
 
-
          if not buildTarget.skels.empty?
-            file.printf("set( %s\n", skelsName)
-            buildTarget.skels.each{ |currentFile| file.printf("%s\n", currentFile)}
+            file.printf("kde4_add_dcop_skels(%s ", srcsName)
+            buildTarget.skels.each do |currentFile| 
+               # if there are more than 3 files, print each of them on its own line
+               file.printf("\n   ") if buildTarget.skels.size>3
+               file.printf("%s ", currentFile)
+            end
             file.printf(")\n\n")
-
-            file.printf("kde4_add_dcop_skels(%s ${%s})\n\n", srcsName, skelsName)
          end
 
          if not buildTarget.stubs.empty?
-            file.printf("set( %s\n", stubsName)
-            buildTarget.stubs.each{ |currentFile| file.printf("%s\n", currentFile)}
+            file.printf("kde4_add_dcop_stubs(%s ", srcsName)
+            buildTarget.stubs.each do |currentFile| 
+               # if there are more than 3 files, print each of them on its own line
+               file.printf("\n   ") if buildTarget.stubs.size>3
+               file.printf("%s ", currentFile)
+            end
             file.printf(")\n\n")
-
-            file.printf("kde4_add_dcop_stubs(%s ${%s})\n\n", srcsName, stubsName)
          end
 
          if not buildTarget.kcfgs.empty?
-            file.printf("set( %s\n", kcfgsName)
-            buildTarget.kcfgs.each{ |currentFile| file.printf("%s\n", currentFile)}
+            file.printf("kde4_add_kcfg_files(%s ", srcsName)
+            buildTarget.kcfgs.each do |currentFile| 
+               # if there are more than 3 files, print each of them on its own line
+               file.printf("\n   ") if buildTarget.kcfgs.size>3
+               file.printf("%s ", currentFile)
+            end
             file.printf(")\n\n")
-
-            file.printf("kde4_add_kcfg_files(%s ${%s})\n\n", srcsName, kcfgsName)
          end
 
          if buildTarget.type==SharedLib
