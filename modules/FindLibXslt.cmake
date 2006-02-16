@@ -16,6 +16,8 @@ PKGCONFIG(libxslt _LibXsltIncDir _LibXsltLinkDir _LibXsltLinkFlags _LibXsltCflag
 
 set(LIBXSLT_DEFINITIONS ${_LibXsltCflags})
 
+FIND_PACKAGE(GNUWIN32)
+
 FIND_PATH(LIBXSLT_INCLUDE_DIR libxslt/xslt.h
   ${_LibXsltIncDir}
   /usr/include

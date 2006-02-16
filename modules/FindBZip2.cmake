@@ -7,17 +7,19 @@
 #  BZIP2_DEFINITIONS - Compiler switches required for using BZip2
 #  BZIP2_NEED_PREFIX - this is set if the functions are prefixed with BZ2_
 #
-
+FIND_PACKAGE(GNUWIN32)
 
 FIND_PATH(BZIP2_INCLUDE_DIR bzlib.h
   /usr/include
   /usr/local/include
+  ${GNUWIN32_DIR}/include
 )
 
 FIND_LIBRARY(BZIP2_LIBRARIES NAMES bz2 bzip2
   PATHS
   /usr/lib
   /usr/local/lib
+  ${GNUWIN32_DIR}/lib
 )
 
 if(BZIP2_INCLUDE_DIR AND BZIP2_LIBRARIES)

@@ -6,6 +6,7 @@
 #  GIF_LIBRARIES - Libraries needed to use GIF
 #  GIF_DEFINITIONS - Compiler switches required for using GIF
 #
+FIND_PACKAGE(GNUWIN32)
 
 
 FIND_PATH(GIF_INCLUDE_DIR gif_lib.h

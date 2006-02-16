@@ -1,3 +1,4 @@
+FIND_PACKAGE(GNUWIN32)
 
 FIND_PATH(ZLIB_INCLUDE_DIR zlib.h
 /usr/include
