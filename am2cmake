@@ -134,6 +134,15 @@ class BuildTarget
          when "$(LIB_KIO)" then "kio"
          when "$(LIB_KDEPRINT)" then "kdeprint"
          when "$(LIB_KPARTS)" then "kparts"
+		 when "$(LIB_KSPELL2)" then "kspell2"
+		 when "$(LIB_KDE3SUPPORT)" then "kde3support"
+		 when "$(LIB_KJS)" then "kjs"
+		 when "$(LIB_KHTML)" then "khtml"
+		 when "$(LIB_KNEWSTUFF)" then "knewstuff"
+		 when "$(LIB_KDEPIM)" then "kdepim"
+		 when "$(LIB_KDNSSD)" then "kdnssd"
+		 when "$(LIB_KIMPROXY)" then "kimproxy"
+		 when "$(LIB_KUTILS)" then "kutils"
          else
             if currentLib =~ /^-l(\S+)$/
                $1
