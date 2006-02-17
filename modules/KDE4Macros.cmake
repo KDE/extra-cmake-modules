@@ -261,80 +261,69 @@ MACRO(KDE4_AUTOMOC)
 ENDMACRO(KDE4_AUTOMOC)
 
 
-MACRO(KDE4_INSTALL_ICONS _theme _defaultpath )
+# only used internally by KDE4_INSTALL_ICONS
+MACRO( _KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME)
+
+   # if the string doesn't match the pattern, the result is the full string, so all three have the same content
+   IF( NOT ${_group} STREQUAL ${_install_NAME} )
+      SET(_icon_GROUP "actions")
+
+      IF(${_group} STREQUAL "mime")
+         SET(_icon_GROUP  "mimetypes")
+      ENDIF(${_group} STREQUAL "mime")
+
+      IF(${_group} STREQUAL "filesys")
+         SET(_icon_GROUP  "filesystems")
+      ENDIF(${_group} STREQUAL "filesys")
+
+      IF(${_group} STREQUAL "device")
+         SET(_icon_GROUP  "devices")
+      ENDIF(${_group} STREQUAL "device")
+
+      IF(${_group} STREQUAL "app")
+         SET(_icon_GROUP  "apps")
+      ENDIF(${_group} STREQUAL "app")
+
+      IF(${_group} STREQUAL "action")
+         SET(_icon_GROUP  "actions")
+      ENDIF(${_group} STREQUAL "action")
+
+#      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
+      SET(_ICON_INSTALL_NAME ${_install_PATH}/${_icon_GROUP}/${_install_NAME})
+      FILE(APPEND ${_install_SCRIPT} "MESSAGE(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
+      FILE(APPEND ${_install_SCRIPT} "CONFIGURE_FILE( ${_orig_NAME} ${_ICON_INSTALL_NAME} COPYONLY) \n")
+   ENDIF ( NOT ${_group} STREQUAL ${_install_NAME} )
+
+ENDMACRO( _KDE4_ADD_ICON_INSTALL_RULE )
+
+
+MACRO(KDE4_INSTALL_ICONS _defaultpath _theme )
    FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "# icon installations rules\n")
    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "set(CMAKE_BACKWARDS_COMPATIBILITY \"2.2\") \n")
 
+   # first the png icons
    FILE(GLOB _icons *.png)
-   foreach(_current_ICON ${_icons} )
+   FOREACH(_current_ICON ${_icons} )
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\1" _size  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _name  "${_current_ICON}")
-      # if the string doesn't match the pattern, the result is the full string, so all three have the same content
-      if( NOT ${_size} STREQUAL ${_name} )
-         set(_icon_GROUP "actions")
+      _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
+         ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/${_theme}/${_size}x${_size} 
+         ${_group} ${_current_ICON} ${_name})
+   ENDFOREACH (_current_ICON)
 
-         if(${_group} STREQUAL "mime")
-            set(_icon_GROUP  "mimetypes")
-         endif(${_group} STREQUAL "mime")
-
-         if(${_group} STREQUAL "filesys")
-            set(_icon_GROUP  "filesystems")
-         endif(${_group} STREQUAL "filesys")
-
-         if(${_group} STREQUAL "device")
-            set(_icon_GROUP  "devices")
-         endif(${_group} STREQUAL "device")
-
-         if(${_group} STREQUAL "app")
-            set(_icon_GROUP  "apps")
-         endif(${_group} STREQUAL "app")
-
-         if(${_group} STREQUAL "action")
-            set(_icon_GROUP  "actions")
-         endif(${_group} STREQUAL "action")
-
-#      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
-         set(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/icons/${_theme}/${_size}x${_size}/${_icon_GROUP}/${_name})
-         FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "message(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
-         FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
-      endif( NOT ${_size} STREQUAL ${_name} )
-   endforeach (_current_ICON)
+   # and now the svg icons
    FILE(GLOB _icons *.svgz)
-   foreach(_current_ICON ${_icons} )
+   FOREACH (_current_ICON ${_icons} )
       STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name "${_current_ICON}")
-
-      set(_icon_GROUP "actions")
-
-      if(${_group} STREQUAL "mime")
-         set(_icon_GROUP  "mimetypes")
-      endif(${_group} STREQUAL "mime")
-
-      if(${_group} STREQUAL "filesys")
-         set(_icon_GROUP  "filesystems")
-      endif(${_group} STREQUAL "filesys")
-
-      if(${_group} STREQUAL "device")
-         set(_icon_GROUP  "devices")
-      endif(${_group} STREQUAL "device")
-
-      if(${_group} STREQUAL "app")
-         set(_icon_GROUP  "apps")
-      endif(${_group} STREQUAL "app")
-
-      if(${_group} STREQUAL "action")
-         set(_icon_GROUP  "actions")
-      endif(${_group} STREQUAL "action")
-
-      set(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/icons/${_theme}/scalable/${_icon_GROUP}/${_name})
-      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "message(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
-      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
-
-   endforeach (_current_ICON)
+      _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
+                                 ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/${_theme}/scalable 
+                                 ${_group} ${_current_ICON} ${_name})
+   ENDFOREACH (_current_ICON)
    INSTALL(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake )
 
-ENDMACRO(KDE4_INSTALL_ICONS _theme _defaultpath)
+ENDMACRO(KDE4_INSTALL_ICONS)
 
 
 # for the case that something should be added to every CMakeLists.txt at the top
@@ -394,6 +383,7 @@ ENDMACRO(KDE4_CREATE_FINAL_FILES)
 OPTION(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 OPTION(KDE4_BUILD_TESTS  "Build the tests")
 OPTION(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
+
 
 MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
