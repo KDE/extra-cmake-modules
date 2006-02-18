@@ -18,14 +18,14 @@
 # KDE3_ADD_KCFG_FILES
 # KDE3_AUTOMOC
 # KDE3_PLACEHOLDER
-# KDE3_CREATE_LIBTOOL_FILE
+# KDE3_INSTALL_LIBTOOL_FILE
 # KDE3_CREATE_FINAL_FILE
 # KDE3_ADD_KPART
 # KDE3_ADD_KLM
 # KDE3_ADD_EXECUTABLE
 
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
+CMAKE_MINIMUM_REQUIRED(VERSION "2.3.3")
 
 set(QT_MT_REQUIRED TRUE)
 #set(QT_MIN_VERSION "3.0.0")
@@ -40,12 +40,20 @@ FIND_PACKAGE(X11 REQUIRED)
 set(QT_AND_KDECORE_LIBS ${QT_LIBRARIES} kdecore)
 
 #add some KDE specific stuff
-set(KDE3_DEFINITIONS -DQT_CLEAN_NAMESPACE -Wnon-virtual-dtor -Wno-long-long -Wundef -ansi -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common)
+set(KDE3_DEFINITIONS -DQT_CLEAN_NAMESPACE -D_GNU_SOURCE)
 
 #only on linux, but NOT e.g. on FreeBSD:
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-  set(KDE3_DEFINITIONS ${KDE3_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
+   set (KDE3_DEFINITIONS ${KDE3_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE)
+   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
 endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+
+# works on FreeBSD, NOT tested on NetBSD and OpenBSD
+if (CMAKE_SYSTEM_NAME MATCHES BSD)
+   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
+endif (CMAKE_SYSTEM_NAME MATCHES BSD)
 
 
 #set(CMAKE_SHARED_LINKER_FLAGS "-avoid-version -module -Wl,--no-undefined -Wl,--allow-shlib-undefined")
@@ -55,7 +63,8 @@ endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
 #now try to find some kde stuff
 
 #at first the KDE include direcory
-FIND_PATH(KDE3_INCLUDE_DIR kurl.h
+# kpassdlg.h comes from kdeui and doesn't exist in KDE4 anymore
+FIND_PATH(KDE3_INCLUDE_DIR kpassdlg.h
   $ENV{KDEDIR}/include
   /opt/kde/include
   /opt/kde3/include
