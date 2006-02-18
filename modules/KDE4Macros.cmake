@@ -133,12 +133,8 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
 
 ENDMACRO(KDE4_ADD_KCFG_FILES)
 
-if(EXISTS "${CMAKE_ROOT}/Modules/kde4init_dummy.cpp.in")
-   set(KDE4_MODULE_DIR "${CMAKE_ROOT}/Modules")
-else(EXISTS "${CMAKE_ROOT}/Modules/kde4init_dummy.cpp.in")
-   set(KDE4_MODULE_DIR "${CMAKE_SOURCE_DIR}/cmake/modules")
-endif(EXISTS "${CMAKE_ROOT}/Modules/kde4init_dummy.cpp.in")
 
+GET_FILENAME_COMPONENT( KDE4_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})

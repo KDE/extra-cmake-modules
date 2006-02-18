@@ -40,33 +40,32 @@ INCLUDE (MacroLibrary)
 #add some KDE specific stuff
 
 
-set(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
-set(KDE4_APPS_DIR          /share/applnk)
-set(KDE4_CONFIG_DIR        /share/config)
-set(KDE4_DATA_DIR          /share/apps)
-set(KDE4_HTML_DIR          /share/doc/HTML)
-set(KDE4_KCFG_DIR          /share/config.kcfg)
-set(KDE4_LIBS_HTML_DIR     /share/doc/HTML)
-set(KDE4_LOCALE_DIR        /share/locale)
-set(KDE4_MIME_DIR          /share/mimelnk)
-set(KDE4_SERVICES_DIR      /share/services)
-set(KDE4_SERVICETYPES_DIR  /share/servicetypes)
-set(KDE4_SOUND_DIR         /share/sounds)
-set(KDE4_TEMPLATES_DIR     /share/templates)
-set(KDE4_WALLPAPER_DIR     /share/wallpapers)
-set(KDE4_KCONF_UPDATE_DIR  /share/apps/kconf_update/ )
-set(XDG_APPS_DIR           /share/applications/kde)
-set(XDG_DIRECTORY_DIR      /share/desktop-directories)
-
-
 # the following are directories where stuff will be installed to
-#set(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
-set(ICON_INSTALL_DIR         "/share/icons" CACHE STRING "The icon install dir (default prefix/share/icons/)")
-set(KDE4_MAN_INSTALL_DIR     "/man"      CACHE STRING "The kde man install dir (default prefix/man/)")
-set(KDE4_INFO_INSTALL_DIR    "/info"     CACHE STRING "The kde info install dir (default prefix/info)")
-set(KDE4_LIB_INSTALL_DIR     "/lib"      CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
-set(KDE4_PLUGIN_INSTALL_DIR  "${KDE4_LIB_INSTALL_DIR}/kde4" CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+set(CONFIG_INSTALL_DIR       /share/config              CACHE STRING "The config file install dir")
+set(DATA_INSTALL_DIR         /share/apps                CACHE STRING "The parent directory where applications can install their data")
+set(HTML_INSTALL_DIR         /share/doc/HTML            CACHE STRING "The HTML install dir for documentation")
+set(ICON_INSTALL_DIR         /share/icons               CACHE STRING "The icon install dir (default prefix/share/icons/)")
+set(INFO_INSTALL_DIR         /info                      CACHE STRING "The kde info install dir (default prefix/info)")
+set(KCFG_INSTALL_DIR         /share/config.kcfg         CACHE STRING "The install dir for kconfig files")
+set(LIB_INSTALL_DIR          /lib                       CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+set(LOCALE_INSTALL_DIR       /share/locale              CACHE STRING "The install dir for translations")
+set(MAN_INSTALL_DIR          /man                       CACHE STRING "The kde man install dir (default prefix/man/)")
+set(MIME_INSTALL_DIR         /share/mimelnk             CACHE STRING "The install dir for the mimetype desktop files")
+set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"  CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+set(SERVICES_INSTALL_DIR     /share/services            CACHE STRING "The install dir for service (desktop, protocol, ...) files")
+set(SERVICETYPES_INSTALL_DIR /share/servicetypes        CACHE STRING "The install dir for servicestypes desktop files")
+set(SOUND_INSTALL_DIR        /share/sounds              CACHE STRING "The install dir for sound files")
+set(TEMPLATES_INSTALL_DIR    /share/templates           CACHE STRING "The install dir for templates (Create new file...)")
+set(WALLPAPER_INSTALL_DIR    /share/wallpapers          CACHE STRING "The install dir for wallpapers")
+set(KCONF_UPDATE_INSTALL_DIR /share/apps/kconf_update/  CACHE STRING "The kconf_update install dir")
+set(XDG_APPS_DIR             /share/applications/kde    CACHE STRING "The XDG apps dir")
+set(XDG_DIRECTORY_DIR        /share/desktop-directories CACHE STRING "The XDG directory")
 
+# seem to be unused:
+set(LIBS_HTML_INSTALL_DIR    /share/doc/HTML            CACHE STRING "Is this still used ?")
+set(APPLNK_INSTALL_DIR       /share/applnk              CACHE STRING "Is this still used ?")
+#set(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
+# set(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
 
 
 
@@ -117,8 +116,8 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   set( _KDE4_KCONFIG_COMPILER_DEP)
 
   # at first the KDE include direcory
-  # this should better check for a header which didn't exist in KDE < 4
-  FIND_PATH(KDE4_INCLUDE_DIR kurl.h
+  # kpassworddialog.h is new with KDE4
+  FIND_PATH(KDE4_INCLUDE_DIR kpassworddialog.h
     $ENV{KDEDIR}/include
     /opt/kde/include
     /opt/kde4/include
@@ -275,11 +274,11 @@ INCLUDE(KDE4Macros)
 
 
 # decide whether KDE4 has been found
-if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
+if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
    set(KDE4_FOUND TRUE)
-else (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
+else (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
    set(KDE4_FOUND FALSE)
-endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_SERVICETYPES_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
+endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
 
 
 MACRO (KDE4_PRINT_RESULTS)
