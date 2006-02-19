@@ -929,7 +929,8 @@ class CMakeFile
       file.printf("\n")
 
       if @installIcons
-         file.printf("kde4_install_icons( %s )\n\n",@iconDir )
+         #add a default theme (not perfect for convert but enough to avoid pb
+		 file.printf("kde4_install_icons( %s %s )\n\n",@iconDir, crystalsvg )
       end
 
       if @createDoxygenDocs
