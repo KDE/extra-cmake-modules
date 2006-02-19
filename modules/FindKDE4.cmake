@@ -8,6 +8,7 @@
 # KDE4_DCOPIDL_EXECUTABLE
 # KDE4_DCOPIDL2CPP_EXECUTABLE
 # KDE4_KCFGC_EXECUTABLE
+# KDE4_MEINPROC_EXECUTABLE
 # KDE4_FOUND
 # it also adds the following macros (from KDE4Macros.cmake)
 # ADD_FILE_DEPENDANCY
@@ -103,6 +104,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
   set(KDE4_DCOPIDL2CPP_EXECUTABLE ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
   set(KDE4_KCFGC_EXECUTABLE ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+  set(KDE4_MEINPROC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
 
   # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
   set( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
@@ -164,6 +166,12 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
     /opt/kde4/bin
   )
 
+  FIND_PROGRAM(KDE4_MEINPROC_EXECUTABLE NAME meinproc PATHS
+    $ENV{KDEDIR}/bin
+    /opt/kde/bin
+    /opt/kde4/bin
+  )
+
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 
@@ -183,6 +191,12 @@ if(UNIX AND NOT APPLE)
    set(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
 endif(UNIX AND NOT APPLE)
 
+
+# Set a default build type for single-configuration
+# CMake generators if no build type is set.
+IF (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+   SET(CMAKE_BUILD_TYPE RelWithDebInfo)
+ENDIF (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 
 
 if (WIN32)
@@ -217,8 +231,9 @@ if (CMAKE_SYSTEM_NAME MATCHES Linux)
    set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
    set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
    set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
+   # optimization flags are set further below for the various build types
+   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
+   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -fno-exceptions -fno-check-new -fno-common")
 endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
 
@@ -227,8 +242,9 @@ if (CMAKE_SYSTEM_NAME MATCHES BSD)
    set ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
    set ( CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
    set ( CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
-   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
+   # optimization flags are set further below for the various build types
+   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
+   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
 endif (CMAKE_SYSTEM_NAME MATCHES BSD)
 
 
@@ -251,8 +267,10 @@ if(APPLE)
   #set(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
   #set(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
 
-  set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common -Os")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common -Os")
+  # removed -Os, was there a special reason for using -Os instead of -O2 ?, Alex
+  # optimization flags are set below for the various build types
+  set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common")
 endif(APPLE)
 
 
@@ -264,6 +282,13 @@ endif(MSVC)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
    set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
+   # Select flags.
+   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+   set(CMAKE_CXX_FLAGS_RELEASE        "-O2")
+   set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
+   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g")
+   set(CMAKE_C_FLAGS_RELEASE          "-O2")
+   set(CMAKE_C_FLAGS_DEBUG            "-O0 -g")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 ###########    end of platform specific stuff  ##########################
