@@ -30,10 +30,15 @@ if (UNIX)
   FIND_PATH(X11_Xaccess_INCLUDE_PATH X11/extensions/XKBstr.h ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xcomposite_INCLUDE_PATH X11/extensions/Xcomposite.h ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xfixes_INCLUDE_PATH X11/extensions/Xfixes.h ${X11_INC_SEARCH_PATH})
+  FIND_PATH(X11_Xrandr_INCLUDE_PATH X11/extensions/Xrandr.h ${X11_INC_SEARCH_PATH})
+  FIND_PATH(X11_Xdamage_INCLUDE_PATH X11/extensions/Xdamage.h ${X11_INC_SEARCH_PATH})
+  FIND_PATH(X11_Xrender_INCLUDE_PATH X11/extensions/Xrender.h ${X11_INC_SEARCH_PATH})
   FIND_LIBRARY(X11_X11_LIB X11 ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xext_LIB Xext ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xcomposite_LIB Xcomposite ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xfixes_LIB Xfixes ${X11_LIB_SEARCH_PATH})
+  FIND_LIBRARY(X11_Xrandr_LIB Xrandr ${X11_LIB_SEARCH_PATH})
+  FIND_LIBRARY(X11_Xdamage_LIB Xdamage ${X11_LIB_SEARCH_PATH})
 
   if(X11_X11_INCLUDE_PATH)
     set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH})
@@ -66,6 +71,14 @@ if (UNIX)
   if(X11_Xfixes_INCLUDE_PATH)
     set(X11_Xfixes_FOUND TRUE)
   endif(X11_Xfixes_INCLUDE_PATH)
+
+  if(X11_Xrandr_INCLUDE_PATH)
+    set(X11_Xrandr_FOUND TRUE)
+  endif(X11_Xrandr_INCLUDE_PATH)
+
+  if(X11_Xdamage_INCLUDE_PATH AND X11_Xcomposite_INCLUDE_PATH AND X11_Xrender_INCLUDE_PATH)
+    set(X11_kompmgr_FOUND TRUE)
+  endif(X11_Xdamage_INCLUDE_PATH AND X11_Xcomposite_INCLUDE_PATH AND X11_Xrender_INCLUDE_PATH)
 
   # Deprecated variable for backwards compatibility with CMake 1.4
   if(X11_X11_INCLUDE_PATH)
@@ -167,6 +180,12 @@ if (UNIX)
     X11_Xaccess_INCLUDE_PATH
     X11_Xfixes_LIB
     X11_Xfixes_INCLUDE_PATH
+    X11_Xrandr_LIB
+    X11_Xrandr_INCLUDE_PATH
+    X11_Xdamage_LIB
+    X11_Xdamage_INCLUDE_PATH
+    X11_Xrender_LIB
+    X11_Xrender_INCLUDE_PATH
     X11_LIBRARIES
     )
 
