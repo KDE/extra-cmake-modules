@@ -37,6 +37,8 @@ if (UNIX)
   FIND_PATH(X11_Xrender_INCLUDE_PATH X11/extensions/Xrender.h ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xf86misc_INCLUDE_PATH X11/extensions/xf86misc.h ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xinerama_INCLUDE_PATH X11/extensions/Xinerama.h ${X11_INC_SEARCH_PATH})
+  FIND_PATH(X11_XTest_INCLUDE_PATH X11/extensions/XTest.h ${X11_INC_SEARCH_PATH})
+  FIND_PATH(X11_Xcursor_INCLUDE_PATH X11/Xcursor/Xcursor.h ${X11_INC_SEARCH_PATH})
   FIND_LIBRARY(X11_X11_LIB X11 ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xext_LIB Xext ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xcomposite_LIB Xcomposite ${X11_LIB_SEARCH_PATH})
@@ -45,6 +47,8 @@ if (UNIX)
   FIND_LIBRARY(X11_Xdamage_LIB Xdamage ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xxf86misc_LIB Xxf86misc ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xinerama_LIB Xinerama ${X11_LIB_SEARCH_PATH})
+  FIND_LIBRARY(X11_XTest_LIB Xtst ${X11_LIB_SEARCH_PATH})
+  FIND_LIBRARY(X11_Xcursor_LIB Xcursor ${X11_LIB_SEARCH_PATH})
 
   if(X11_X11_INCLUDE_PATH)
     set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH})
@@ -75,6 +79,10 @@ if (UNIX)
     set(X11_Xcomposite_FOUND TRUE)
   endif(X11_Xcomposite_INCLUDE_PATH)
 
+  if(X11_XTest_INCLUDE_PATH)
+    set(X11_XTest_FOUND TRUE)
+  endif(X11_XTest_INCLUDE_PATH)
+
   if(X11_Xinerama_INCLUDE_PATH)
     set(X11_Xinerama_FOUND TRUE)
   endif(X11_Xinerama_INCLUDE_PATH)
@@ -90,6 +98,10 @@ if (UNIX)
   if(X11_Xxf86misc_INCLUDE_PATH)
     set(X11_Xxf86misc_FOUND TRUE)
   endif(X11_Xxf86misc_INCLUDE_PATH)
+
+  if(X11_Xcursor_INCLUDE_PATH)
+    set(X11_Xcursor_FOUND TRUE)
+  endif(X11_Xcursor_INCLUDE_PATH)
 
   if(X11_Xdamage_INCLUDE_PATH AND X11_Xcomposite_INCLUDE_PATH AND X11_Xrender_INCLUDE_PATH)
     set(X11_kompmgr_FOUND TRUE)
@@ -205,6 +217,10 @@ if (UNIX)
 	X11_Xxf86misc_INCLUDE_PATH
 	X11_Xinerama_LIB
 	X11_Xinerama_INCLUDE_PATH
+    X11_XTest_LIB
+    X11_XTest_INCLUDE_PATH
+    X11_Xcursor_LIB
+    X11_Xcursor_INCLUDE_PATH
     X11_LIBRARIES
     )
 
