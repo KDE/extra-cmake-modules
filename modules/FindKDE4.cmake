@@ -116,7 +116,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   # ... but NOT otherwise
   set( _KDE4_DCOPIDL2CPP_DEP )
   set( _KDE4_KCONFIG_COMPILER_DEP)
-
+	set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
   # at first the KDE include direcory
   # kpassworddialog.h is new with KDE4
   FIND_PATH(KDE4_INCLUDE_DIR kpassworddialog.h
