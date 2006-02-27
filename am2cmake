@@ -143,6 +143,7 @@ class BuildTarget
 		 when "$(LIB_KDNSSD)" then "kdnssd"
 		 when "$(LIB_KIMPROXY)" then "kimproxy"
 		 when "$(LIB_KUTILS)" then "kutils"
+		 when "$(LIB_KSYCOCA)" then "kio"
          else
             if currentLib =~ /^-l(\S+)$/
                $1
