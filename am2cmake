@@ -687,7 +687,6 @@ class CMakeFile
           file.printf("add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})\n\n")
           file.printf("link_directories(${KDE4_LIB_DIR})\n\n")
           file.printf("include(ConvenienceLibs.cmake)\n\n")
-          file.printf("include(ManualStuff.cmake)\n\n")
           file.printf("include(ConfigureChecks.cmake)\n\n")
       end
 
@@ -886,7 +885,7 @@ class CMakeFile
 
             file.printf("install_targets(${LIB_INSTALL_DIR}/kde4 %s )\n\n", buildTarget.name)
          elsif buildTarget.type==KDEInit
-            file.printf("kde4_add_klm( %s ${%s})\n\n", buildTarget.name, srcsName)
+            file.printf("kde4_add_kdeinit_executable( %s ${%s})\n\n", buildTarget.name, srcsName)
 
             file.printf("target_link_libraries(kdeinit_%s ", buildTarget.name)
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
