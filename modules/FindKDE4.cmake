@@ -291,6 +291,8 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    set(CMAKE_C_FLAGS_DEBUG            "-O0 -g")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
+SET(CMAKE_DEBUG_POSTFIX "_debug")
+
 ###########    end of platform specific stuff  ##########################
 
 
