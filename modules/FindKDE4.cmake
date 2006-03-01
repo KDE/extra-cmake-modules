@@ -217,6 +217,12 @@ if (WIN32)
 
 endif (WIN32)
 
+# also use /usr/local by default under UNIX, including Mac OS X
+if (UNIX)
+   link_directories(/usr/local/lib)
+   include_directories(/usr/local/include)
+endif (UNIX)
+
 
 # only on linux, but NOT e.g. on FreeBSD:
 if (CMAKE_SYSTEM_NAME MATCHES Linux)
@@ -334,16 +340,16 @@ MACRO (KDE4_PRINT_RESULTS)
 ENDMACRO (KDE4_PRINT_RESULTS)
 
 
-if (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
+if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
    #bail out if something wasn't found
    KDE4_PRINT_RESULTS()
    message(FATAL_ERROR "Could NOT find everything required for compiling KDE 4 programs")
-endif (KDE4_FIND_REQUIRED AND NOT KDE4_FOUND)
+endif (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
 
 
-if (NOT KDE4_FIND_QUIETLY)
+if (NOT KDE4Internal_FIND_QUIETLY)
    KDE4_PRINT_RESULTS()
-endif (NOT KDE4_FIND_QUIETLY)
+endif (NOT KDE4Internal_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
 set(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
