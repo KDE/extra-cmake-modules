@@ -175,14 +175,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 
-# this is  already in cmake cvs and can be removed once we require it
-if (WIN32)
-   GET_FILENAME_COMPONENT(_tmp_COMPILER_NAME ${CMAKE_CXX_COMPILER} NAME_WE)
-   if ( _tmp_COMPILER_NAME MATCHES cl )
-      set(MSVC TRUE)
-   endif ( _tmp_COMPILER_NAME MATCHES cl )
-endif (WIN32)
-
 #####################  and now the platform specific stuff  ############################
 
 
@@ -291,7 +283,8 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    set(CMAKE_C_FLAGS_DEBUG            "-O0 -g")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
-SET(CMAKE_DEBUG_POSTFIX "_debug")
+# it seems we prefer not to use a different postfix for debug libs, Alex
+# SET(CMAKE_DEBUG_POSTFIX "_debug")
 
 ###########    end of platform specific stuff  ##########################
 
