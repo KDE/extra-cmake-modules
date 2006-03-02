@@ -113,6 +113,30 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
+   get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
+   # this file contains all dependencies of all libraries of kdelibs, Alex
+   include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
+
+# the following variables should be named KDE4_KIO_LIBRARIES etc
+# Alex
+
+   set(LIB_KDECORE ${QT_AND_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${X11_X11_LIB} DCOP ${ZLIB_LIBRARY})
+
+   # kdeui_LIB_DEPENDS comes from KDELibsDependencies.cmake, Alex
+   set(LIB_KDEUI ${kdeui_LIB_DEPENDS} kdeui)
+
+message(STATUS "kdeui: ${LIB_KDEUI}")
+
+   set(LIB_KIO ${LIB_KDEUI} kio)
+
+   set(LIB_KPARTS ${LIB_KIO} kparts)
+
+   set(LIB_KUTILS ${LIB_KPARTS} kutils)
+
+   set(LIB_KDE3SUPPORT ${QT_QT3SUPPORT_LIBRARY} ${LIB_KUTILS} kde3support)
+
+
+
   # ... but NOT otherwise
   set( _KDE4_DCOPIDL2CPP_DEP )
   set( _KDE4_KCONFIG_COMPILER_DEP)
