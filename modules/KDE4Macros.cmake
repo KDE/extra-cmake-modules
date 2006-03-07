@@ -299,24 +299,24 @@ MACRO(KDE4_INSTALL_ICONS _defaultpath _theme )
 
    # first the png icons
    FILE(GLOB _icons *.png)
-   FOREACH(_current_ICON ${_icons} )
+   foreach(_current_ICON ${_icons} )
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\1" _size  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _name  "${_current_ICON}")
       _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
          ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/${_theme}/${_size}x${_size} 
          ${_group} ${_current_ICON} ${_name})
-   ENDFOREACH (_current_ICON)
+   ENDforeach (_current_ICON)
 
    # and now the svg icons
    FILE(GLOB _icons *.svgz)
-   FOREACH (_current_ICON ${_icons} )
+   foreach (_current_ICON ${_icons} )
       STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name "${_current_ICON}")
       _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
                                  ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/${_theme}/scalable 
                                  ${_group} ${_current_ICON} ${_name})
-   ENDFOREACH (_current_ICON)
+   ENDforeach (_current_ICON)
    INSTALL(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake )
 
 ENDMACRO(KDE4_INSTALL_ICONS)
@@ -376,9 +376,18 @@ MACRO(KDE4_CREATE_FINAL_FILES _filenameCPP _filenameC )
 ENDMACRO(KDE4_CREATE_FINAL_FILES)
 
 
-OPTION(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
-OPTION(KDE4_BUILD_TESTS  "Build the tests")
-OPTION(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
+MACRO(KDE4_HANDLE_RPATH _target_NAME)
+   if (KDE4_NEED_WRAPPER_SCRIPTS)
+      if (APPLE)
+         set(_library_path_variable "DYLD_LIBRARY_PATH")
+      else (APPLE)
+         set(_library_path_variable "LD_LIBRARY_PATH")
+      endif (APPLE)
+      set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
+      get_target_property(_executable ${_target_NAME} LOCATION )
+      configure_file(${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/${_target_NAME}.sh)
+   endif (KDE4_NEED_WRAPPER_SCRIPTS)
+ENDMACRO(KDE4_HANDLE_RPATH)
 
 
 MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
@@ -435,6 +444,7 @@ MACRO(KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
 
       ADD_EXECUTABLE( ${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
+      KDE4_HANDLE_RPATH(${_target_NAME})
       TARGET_LINK_LIBRARIES( ${_target_NAME} kdeinit_${_target_NAME} )
 #   endif (WIN32)
 
@@ -443,12 +453,13 @@ ENDMACRO(KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME)
 
 MACRO(KDE4_ADD_EXECUTABLE _target_NAME )
 
-   if (KDE4_ENABLE_FINAL)
+   IF (KDE4_ENABLE_FINAL)
       KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${ARGN})
       ADD_EXECUTABLE(${_target_NAME} ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
-   else (KDE4_ENABLE_FINAL)
+   ELSE (KDE4_ENABLE_FINAL)
       ADD_EXECUTABLE(${_target_NAME} ${ARGN} )
-   endif (KDE4_ENABLE_FINAL)
+   ENDIF (KDE4_ENABLE_FINAL)
+   KDE4_HANDLE_RPATH(${_target_NAME})
 
 ENDMACRO(KDE4_ADD_EXECUTABLE _target_NAME)
 

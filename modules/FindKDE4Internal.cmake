@@ -69,6 +69,40 @@ set(APPLNK_INSTALL_DIR       /share/applnk              CACHE STRING "Is this st
 # set(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
 
 
+option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
+option(KDE4_BUILD_TESTS  "Build the tests")
+option(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
+
+
+# RPATH handling
+set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
+if (UNIX)
+
+   set(KDE4_NEED_WRAPPER_SCRIPTS TRUE)
+
+   # to disable RPATH completely, set CMAKE_SKIP_RPATH to TRUE
+
+   option(KDE4_RPATH_TO_BUILD_DIR "Compile executables with RPATH set to both the builddir and the installdir, otherwise RPATH will be set to the install dir. You can disable RPATH completely by setting CMAKE_SKIP_RPATH to ON" ON)
+
+   # this avoids relinking during installation
+   set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+   set(CMAKE_SKIP_BUILD_RPATH TRUE)
+   # this is the list of RPATHs, start empty
+
+   # optionally add the builddir
+   if (KDE4_RPATH_TO_BUILD_DIR)
+      set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
+   endif (KDE4_RPATH_TO_BUILD_DIR)
+
+   if (CMAKE_SKIP_RPATH)
+      set(KDE4_NEED_WRAPPER_SCRIPTS TRUE)
+   endif (CMAKE_SKIP_RPATH)
+
+endif (UNIX)
+
+# set it to false again until the next kde release of cmake is required
+set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
+
 
 #now try to find some kde stuff
 
@@ -76,41 +110,45 @@ set(APPLNK_INSTALL_DIR       /share/applnk              CACHE STRING "Is this st
 #then enter bootstrap mode
 if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
-  message(STATUS "Building kdelibs...")
+   message(STATUS "Building kdelibs...")
 
-  set(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
+   set(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
 
-  set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
+   set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
   
-  # adjust dcopidl and the library output path depending on the platform
-  if (WIN32)
-     # under windows dcopidl.bat has to be used, except when using MSYS, then the perl script has to be used, Alex
-     if ("${CMAKE_GENERATOR}" MATCHES "MSYS")
-        set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
-     else ("${CMAKE_GENERATOR}" MATCHES "MSYS")
-        set(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
-     endif ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+   # adjust dcopidl and the library output path depending on the platform
+   if (WIN32)
+      # under windows dcopidl.bat has to be used, except when using MSYS, then the perl script has to be used, Alex
+      if ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+         set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
+      else ("${CMAKE_GENERATOR}" MATCHES "MSYS")
+         set(KDE4_DCOPIDL_EXECUTABLE call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
+      endif ("${CMAKE_GENERATOR}" MATCHES "MSYS")
   
-     set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
-  else (WIN32)
-     set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
-     set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
-     set(KDE4_LD_LIBRARY_PATH LD_LIBRARY_PATH=${LIBRARY_OUTPUT_PATH}\$\${LD_LIBRARY_PATH+:\$\$LD_LIBRARY_PATH})
-  endif (WIN32)
+      set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
+   else (WIN32)
+      set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
+      set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+   endif (WIN32)
 
-  set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH})
-  set(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
+   set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
+   set(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
   
-  # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-  set(KDE4_DCOPIDL2CPP_EXECUTABLE ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
-  set(KDE4_KCFGC_EXECUTABLE ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-  set(KDE4_MEINPROC_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
+   # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
+   if (KDE4_NEED_WRAPPER_SCRIPTS)
+      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp.sh )
+      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.sh )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.sh )
+   else (KDE4_NEED_WRAPPER_SCRIPTS)
+      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
+      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
+   endif (KDE4_NEED_WRAPPER_SCRIPTS)
 
-  # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
-  set( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
-  set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
+   # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
+   set( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
+   set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
   
-
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
@@ -141,6 +179,7 @@ message(STATUS "kdeui: ${LIB_KDEUI}")
   set( _KDE4_DCOPIDL2CPP_DEP )
   set( _KDE4_KCONFIG_COMPILER_DEP)
 	set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+
   # at first the KDE include direcory
   # kpassworddialog.h is new with KDE4
   FIND_PATH(KDE4_INCLUDE_DIR kpassworddialog.h
@@ -201,13 +240,6 @@ endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 #####################  and now the platform specific stuff  ############################
 
-
-if(UNIX AND NOT APPLE)
-   FIND_PACKAGE(X11 REQUIRED)
-   set(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
-endif(UNIX AND NOT APPLE)
-
-
 # Set a default build type for single-configuration
 # CMake generators if no build type is set.
 IF (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
@@ -242,11 +274,65 @@ if (WIN32)
 
 endif (WIN32)
 
+
 # also use /usr/local by default under UNIX, including Mac OS X
 if (UNIX)
    link_directories(/usr/local/lib)
    include_directories(/usr/local/include)
+
+   # build the install RPATH
+   set(CMAKE_INSTALL_RPATH)
+
+   # optionally add the builddir
+   if (KDE4_RPATH_TO_BUILD_DIR)
+      set(CMAKE_INSTALL_RPATH ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/ )
+   endif (KDE4_RPATH_TO_BUILD_DIR)
+
+   # add the library install dir
+   set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR})
+   # add the Qt library dir
+   set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${QT_LIBRARY_DIR})
+
+   # building something else than kdelibs/ ?
+   # then add the dir where the kde libraries are installed
+   if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+      set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${KDE4_LIB_DIR} )
+   endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+
 endif (UNIX)
+
+
+# UNIX, except OS X
+if (UNIX AND NOT APPLE)
+   find_package(X11 REQUIRED)
+   set(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
+endif (UNIX AND NOT APPLE)
+
+
+# This will need to be modified later to support either Qt/X11 or Qt/Mac builds
+if (APPLE)
+
+  set ( _KDE4_PLATFORM_DEFINITIONS -D__APPLE_KDE__ )
+
+  # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
+  # -undefined dynamic_lookup; in the future we should do this programmatically
+  # hmm... why doesn't this work?
+  set (ENV{MACOSX_DEPLOYMENT_TARGET} 10.3)
+
+  # "-undefined dynamic_lookup" means we don't care about missing symbols at link-time by default
+  # this is bad, but unavoidable until there is the equivalent of libtool -no-undefined implemented
+  # or perhaps it already is, and I just don't know where to look  ;)
+
+  set (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress")
+  set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress")
+  #set(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
+  #set(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
+
+  # removed -Os, was there a special reason for using -Os instead of -O2 ?, Alex
+  # optimization flags are set below for the various build types
+  set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common")
+endif (APPLE)
 
 
 # only on linux, but NOT e.g. on FreeBSD:
@@ -269,32 +355,6 @@ if (CMAKE_SYSTEM_NAME MATCHES BSD)
    set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
    set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
 endif (CMAKE_SYSTEM_NAME MATCHES BSD)
-
-
-# This will need to be modified later to support either Qt/X11 or Qt/Mac builds
-if(APPLE)
-
-  set ( _KDE4_PLATFORM_DEFINITIONS -D__APPLE_KDE__ )
-
-  # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
-  # -undefined dynamic_lookup; in the future we should do this programmatically
-  # hmm... why doesn't this work?
-  set (ENV{MACOSX_DEPLOYMENT_TARGET} 10.3)
-
-  # "-undefined dynamic_lookup" means we don't care about missing symbols at link-time by default
-  # this is bad, but unavoidable until there is the equivalent of libtool -no-undefined implemented
-  # or perhaps it already is, and I just don't know where to look  ;)
-
-  set (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress")
-  set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress")
-  #set(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
-  #set(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
-
-  # removed -Os, was there a special reason for using -Os instead of -O2 ?, Alex
-  # optimization flags are set below for the various build types
-  set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common")
-endif(APPLE)
 
 
 # compiler specific stuff, maybe this should be done differently, Alex

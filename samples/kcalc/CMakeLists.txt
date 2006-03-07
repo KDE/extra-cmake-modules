@@ -30,33 +30,25 @@ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/config.h.cmake ${CMAKE_BINARY_DIR}/config.h)
 ########### next target ###############
 
 SET(kcalc_KDEINIT_SRCS
-kcalc.cpp
-kcalc_button.cpp
-kcalc_const_button.cpp
-kcalc_const_menu.cpp
-kcalc_core.cpp
-kcalcdisplay.cpp
-dlabel.cpp
-stats.cpp
-)
+   kcalc.cpp
+   kcalc_button.cpp
+   kcalc_const_button.cpp
+   kcalc_const_menu.cpp
+   kcalc_core.cpp
+   kcalcdisplay.cpp
+   dlabel.cpp
+   stats.cpp
+   )
 
 KDE3_AUTOMOC(${kcalc_KDEINIT_SRCS})
 
-SET( kcalc_UI
-colors.ui
-general.ui
-constants.ui
-)
+SET( kcalc_UI colors.ui general.ui constants.ui )
 
 KDE3_ADD_UI_FILES(kcalc_KDEINIT_SRCS ${kcalc_UI} )
 
-SET( kcalc_KCFG_SRCS
-kcalc_settings.kcfgc
-)
+KDE3_ADD_KCFG_FILES(kcalc_KDEINIT_SRCS kcalc_settings.kcfgc )
 
-KDE3_ADD_KCFG_FILES(kcalc_KDEINIT_SRCS ${kcalc_KCFG_SRCS})
-
-KDE3_ADD_KLM( kcalc ${kcalc_KDEINIT_SRCS})
+KDE3_ADD_KDEINIT_EXECUTABLE( kcalc ${kcalc_KDEINIT_SRCS})
 
 # gmp, knumber and kdeui added manually
 TARGET_LINK_LIBRARIES(kdeinit_kcalc  ${QT_AND_KDECORE_LIBS} kdeui knumber gmp)
@@ -75,7 +67,6 @@ INSTALL_FILES( /share/apps/kconf_update FILES kcalcrc.upd )
 
 KDE3_INSTALL_ICONS( hicolor )
 
-KDE3_PLACEHOLDER()
 
 
 

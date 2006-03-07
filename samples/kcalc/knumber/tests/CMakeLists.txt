@@ -3,9 +3,7 @@ INCLUDE_DIRECTORIES( ${CMAKE_SOURCE_DIR}/kcalc/knumber ${KDE3_INCLUDE_DIR} ${QT_
 
 ########### next target ###############
 
-SET(knumbertest_SRCS
-knumbertest.cpp
-)
+SET(knumbertest_SRCS knumbertest.cpp )
 
 KDE3_AUTOMOC(${knumbertest_SRCS})
 
@@ -18,8 +16,6 @@ ENDIF(KDE3_BUILD_TESTS)
 
 ########### install files ###############
 
-
-KDE3_PLACEHOLDER()
 
 
 

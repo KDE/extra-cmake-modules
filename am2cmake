@@ -610,7 +610,7 @@ class CMakeFile
 
             file.printf("INSTALL_TARGETS(/lib/kde3 %s )\n\n", buildTarget.name)
          elsif buildTarget.type==KDEInit
-            file.printf("KDE3_ADD_KLM( %s ${%s})\n\n", buildTarget.name, srcsName)
+            file.printf("KDE3_ADD_KDEINIT_EXECUTABLE( %s ${%s})\n\n", buildTarget.name, srcsName)
 
             file.printf("TARGET_LINK_LIBRARIES(kdeinit_%s ", buildTarget.name)
             buildTarget.libs.each { |currentLib| file.printf(" %s", currentLib) }
@@ -670,8 +670,6 @@ class CMakeFile
       if @installIcons
          file.printf("KDE3_INSTALL_ICONS( %s )\n\n",@iconDir )
       end
-
-      file.printf("KDE3_PLACEHOLDER()\n\n")
 
       file.printf("\n\n#original Makefile.am contents follow:\n\n")
       @lines.each{ |line| file.printf("#%s", line)}

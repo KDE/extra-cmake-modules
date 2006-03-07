@@ -8,10 +8,7 @@ ADD_DEFINITIONS(-D_GNU_SOURCE -D_ISOC99_SOURCE ) # added manually
 
 ########### next target ###############
 
-SET(knumber_STAT_SRCS
-knumber.cpp
-knumber_priv.cpp
-)
+SET(knumber_STAT_SRCS knumber.cpp knumber_priv.cpp )
 
 KDE3_AUTOMOC(${knumber_STAT_SRCS})
 
@@ -20,8 +17,6 @@ ADD_LIBRARY(knumber STATIC ${knumber_STAT_SRCS})
 
 ########### install files ###############
 
-
-KDE3_PLACEHOLDER()
 
 
 

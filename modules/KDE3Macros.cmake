@@ -1,5 +1,4 @@
 # this file contains the following macros:
-# ADD_FILE_DEPENDANCY
 # KDE3_ADD_DCOP_SKELS
 # KDE3_ADD_DCOP_STUBS
 # KDE3_ADD_MOC_FILES
@@ -7,10 +6,9 @@
 # KDE3_ADD_KCFG_FILES
 # KDE3_AUTOMOC
 # KDE3_INSTALL_LIBTOOL_FILE
-# KDE3_PLACEHOLDER
 # KDE3_CREATE_FINAL_FILE
 # KDE3_ADD_KPART
-# KDE3_ADD_KLM
+# KDE3_ADD_KDEINIT_EXECUTABLE
 # KDE3_ADD_EXECUTABLE
 
 
@@ -164,12 +162,6 @@ MACRO(KDE3_ADD_UI_FILES _sources )
          ARGS  -nounload -o ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
          DEPENDS ${_tmp_FILE}
       )
-
-#     ADD_CUSTOM_COMMAND(OUTPUT ${_src}
-#         COMMAND uic
-#         ARGS -nounload -tr tr2i18n -o ${_src} -impl ${_header} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE}
-#         DEPENDS ${_header}
-#      )
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_src}
          COMMAND ${CMAKE_COMMAND}
@@ -335,12 +327,12 @@ MACRO(KDE3_ADD_KPART _target_NAME _with_PREFIX)
       SET_TARGET_PROPERTIES(${_target_NAME} PROPERTIES PREFIX "")
    ENDIF(_first_SRC)
 
-   KDE3_CREATE_LIBTOOL_FILE(${_target_NAME})
+   KDE3_INSTALL_LIBTOOL_FILE(${_target_NAME})
 
 ENDMACRO(KDE3_ADD_KPART)
 
 
-MACRO(KDE3_ADD_KLM _target_NAME )
+MACRO(KDE3_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    IF (KDE3_ENABLE_FINAL)
       KDE3_CREATE_FINAL_FILE(${_target_NAME}_final.cpp ${ARGN})
@@ -354,7 +346,7 @@ MACRO(KDE3_ADD_KLM _target_NAME )
    ADD_EXECUTABLE( ${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
    TARGET_LINK_LIBRARIES( ${_target_NAME} kdeinit_${_target_NAME} )
 
-ENDMACRO(KDE3_ADD_KLM)
+ENDMACRO(KDE3_ADD_KDEINIT_EXECUTABLE)
 
 
 MACRO(KDE3_ADD_EXECUTABLE _target_NAME )

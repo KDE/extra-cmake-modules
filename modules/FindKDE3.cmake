@@ -1,31 +1,70 @@
 # - Find the KDE3 include and library dirs, KDE preprocessors and define a some macros
 #
-# KDE3_DEFINITIONS
-# KDE3_INCLUDE_DIR
-# KDE3_INCLUDE_DIRS
-# KDE3_LIB_DIR
-# KDE3_SERVICETYPES_DIR
-# KDE3_DCOPIDL_EXECUTABLE
-# KDE3_DCOPIDL2CPP_EXECUTABLE
-# KDE3_KCFGC_EXECUTABLE
-# KDE3_FOUND
-# it also adds the following macros (from KDE3Macros.cmake)
-# ADD_FILE_DEPENDANCY
-# KDE3_ADD_DCOP_SKELS
-# KDE3_ADD_DCOP_STUBS
-# KDE3_ADD_MOC_FILES
-# KDE3_ADD_UI_FILES
-# KDE3_ADD_KCFG_FILES
-# KDE3_AUTOMOC
-# KDE3_PLACEHOLDER
-# KDE3_INSTALL_LIBTOOL_FILE
-# KDE3_CREATE_FINAL_FILE
-# KDE3_ADD_KPART
-# KDE3_ADD_KLM
-# KDE3_ADD_EXECUTABLE
+# This module defines the following variables:
+# KDE3_DEFINITIONS         - compiler definitions required for compiling KDE software
+# KDE3_INCLUDE_DIR         - the KDE include directory
+# KDE3_INCLUDE_DIRS        - the KDE and the Qt include directory, for use with INCLUDE_DIRECTORIES()
+# KDE3_LIB_DIR             - the directory where the KDE libraries are installed, for use with LINK_DIR()
+# QT_AND_KDECORE_LIBRARIES - this contains both the Qt and the kdecore library
+# KDE3_DCOPIDL_EXECUTABLE  - the dcopidl executable
+# KDE3_DCOPIDL2CPP_EXECUTABLE - the dcopidl2cpp executable
+# KDE3_KCFGC_EXECUTABLE    - the kconfig_compiler executable
+# KDE3_FOUND               - set to TRUE if all of the above has been found
+#
+# The following user adjustable options are provided:
+#
+# KDE3_ENABLE_FINAL - enable this for KDE-style enable-final all-in-one compilation
+# KDE3_BUILD_TESTS - enable this to build KDE testcases
+#
+#
+# It also adds the following macros (from KDE3Macros.cmake)
+# SRCS_VAR is always the variable which contains the list of source files for your application or library.
+#
+# KDE3_AUTOMOC(file1 ... fileN)
+#    Call this if you want to have automatic moc file handling.
+#    This means if you include "foo.moc" in the source file foo.cpp
+#    a moc file for the header foo.h will be created automatically.
+#
+# KDE3_ADD_MOC_FILES(SRCS_VAR file1 ... fileN )
+#    If you don't use the KDE3_AUTOMOC() macro, for the files
+#    listed here moc files will be created (named "foo.moc.cpp")
+#
+# KDE3_ADD_DCOP_SKELS(SRCS_VAR header1.h ... headerN.h )
+#    Use this to generate DCOP skeletions from the listed headers.
+#
+# KDE3_ADD_DCOP_STUBS(SRCS_VAR header1.h ... headerN.h )
+#     Use this to generate DCOP stubs from the listed headers.
+#
+# KDE3_ADD_UI_FILES(SRCS_VAR file1.ui ... fileN.ui )
+#    Use this to add the Qt designer ui files to your application/library.
+#
+# KDE3_ADD_KCFG_FILES(SRCS_VAR file1.kcfgc ... fileN.kcfgc )
+#    Use this to add KDE kconfig compiler files to your application/library.
+#
+# KDE3_INSTALL_LIBTOOL_FILE(target)
+#    This will create and install a simple libtool file for the given target.
+#
+# KDE3_ADD_EXECUTABLE(name file1 ... fileN )
+#    Equivalent to ADD_EXECUTABLE(), but additionally supports KDE3_ENABLE_FINAL
+#
+# KDE3_ADD_KPART(name [WITH_PREFIX] file1 ... fileN )
+#    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
+#    It supports KDE3_ENABLE_FINAL
+#    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib", otherwise it won't.
+#    It creates and install an appropriate libtool la-file.
+#
+# KDE3_ADD_KDEINIT_EXECUTABLE(name file1 ... fileN )
+#    Create a KDE application in the form of a module loadable via kdeinit.
+#    It supports KDE3_ENABLE_FINAL.
+#    A library named kdeinit_<name> will be created and a small executable which links to it.
+#    Supports KDE3_ENABLE_FINAL
+#
+# Author: Alexander Neundorf <neundorf@kde.org>
 
+IF(NOT UNIX)
+   MESSAGE(FATAL_ERROR "Compiling KDE3 applications and libraries under Windows is not supported")
+ENDIF(NOT UNIX)
 
-CMAKE_MINIMUM_REQUIRED(VERSION "2.3.3")
 
 SET(QT_MT_REQUIRED TRUE)
 #SET(QT_MIN_VERSION "3.0.0")
@@ -34,8 +73,6 @@ SET(QT_MT_REQUIRED TRUE)
 FIND_PACKAGE(Qt3 REQUIRED)
 FIND_PACKAGE(X11 REQUIRED)
 
-#add the definitions found by FindQt to the current definitions
-#ADD_DEFINITIONS(${QT_DEFINITIONS} -DQT_CLEAN_NAMESPACE)
 
 SET(QT_AND_KDECORE_LIBS ${QT_LIBRARIES} kdecore)
 
@@ -85,11 +122,11 @@ FIND_LIBRARY(KDE3_LIB_DIR NAMES kdecore
 )
 
 #now the KDE service types directory
-FIND_PATH(KDE3_SERVICETYPES_DIR ktexteditor.desktop
-  $ENV{KDEDIR}/share/servicetypes/
-  /opt/kde/share/servicetypes/
-  /opt/kde3/share/servicetypes/
-)
+#FIND_PATH(KDE3_SERVICETYPES_DIR ktexteditor.desktop
+#  $ENV{KDEDIR}/share/servicetypes/
+#  /opt/kde/share/servicetypes/
+#  /opt/kde3/share/servicetypes/
+#)
 
 #now search for the dcop utilities
 FIND_PROGRAM(KDE3_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
@@ -108,15 +145,17 @@ FIND_PROGRAM(KDE3_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS
   /opt/kde/bin
   /opt/kde3/bin)
 
+
 # KDE3Macros.cmake contains all the KDE specific macros
 INCLUDE(KDE3Macros)
 
+
 #SET KDE3_FOUND
-IF (KDE3_INCLUDE_DIR AND KDE3_LIB_DIR AND KDE3_SERVICETYPES_DIR AND KDE3_DCOPIDL_EXECUTABLE AND KDE3_DCOPIDL2CPP_EXECUTABLE AND KDE3_KCFGC_EXECUTABLE)
+IF (KDE3_INCLUDE_DIR AND KDE3_LIB_DIR AND KDE3_DCOPIDL_EXECUTABLE AND KDE3_DCOPIDL2CPP_EXECUTABLE AND KDE3_KCFGC_EXECUTABLE)
    SET(KDE3_FOUND TRUE)
-ELSE (KDE3_INCLUDE_DIR AND KDE3_LIB_DIR AND KDE3_SERVICETYPES_DIR AND KDE3_DCOPIDL_EXECUTABLE AND KDE3_DCOPIDL2CPP_EXECUTABLE AND KDE3_KCFGC_EXECUTABLE)
+ELSE (KDE3_INCLUDE_DIR AND KDE3_LIB_DIR AND KDE3_DCOPIDL_EXECUTABLE AND KDE3_DCOPIDL2CPP_EXECUTABLE AND KDE3_KCFGC_EXECUTABLE)
    SET(KDE3_FOUND FALSE)
-ENDIF (KDE3_INCLUDE_DIR AND KDE3_LIB_DIR AND KDE3_SERVICETYPES_DIR AND KDE3_DCOPIDL_EXECUTABLE AND KDE3_DCOPIDL2CPP_EXECUTABLE AND KDE3_KCFGC_EXECUTABLE)
+ENDIF (KDE3_INCLUDE_DIR AND KDE3_LIB_DIR AND KDE3_DCOPIDL_EXECUTABLE AND KDE3_DCOPIDL2CPP_EXECUTABLE AND KDE3_KCFGC_EXECUTABLE)
 
 
 MACRO (KDE3_PRINT_RESULTS)
@@ -152,6 +191,7 @@ MACRO (KDE3_PRINT_RESULTS)
 
 ENDMACRO (KDE3_PRINT_RESULTS)
 
+
 IF (KDE3_FIND_REQUIRED AND NOT KDE3_FOUND)
    #bail out if something wasn't found
    KDE3_PRINT_RESULTS()
@@ -159,12 +199,11 @@ IF (KDE3_FIND_REQUIRED AND NOT KDE3_FOUND)
 
 ENDIF (KDE3_FIND_REQUIRED AND NOT KDE3_FOUND)
 
+
 IF (NOT KDE3_FIND_QUIETLY)
    KDE3_PRINT_RESULTS()
 ENDIF (NOT KDE3_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
 SET(KDE3_INCLUDE_DIRS ${QT_INCLUDE_DIR} ${KDE3_INCLUDE_DIR})
-#INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR} ${KDE3_INCLUDE_DIR} .)
-#LINK_DIRECTORIES(${KDE3_LIB_DIR})
 

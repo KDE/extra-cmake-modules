@@ -84,7 +84,6 @@ INSTALL_TARGETS(/lib/kde3 kmanpart )
 INSTALL_FILES( /share/apps/kio_man FILES kio_man.css )
 INSTALL_FILES( /share/services FILES man.protocol kmanpart.desktop )
 
-KDE3_PLACEHOLDER()
 
 
 

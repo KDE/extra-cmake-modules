@@ -37,7 +37,6 @@ INSTALL_TARGETS(/lib/kde3 kcm_view1394 )
 INSTALL_FILES( /share/applications/kde FILES kcmview1394.desktop )
 INSTALL_FILES( /share/apps/kcmview1394 FILES oui.db )
 
-KDE3_PLACEHOLDER()
 
 
 

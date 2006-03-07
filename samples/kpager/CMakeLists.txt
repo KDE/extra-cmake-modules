@@ -12,18 +12,16 @@ INCLUDE_DIRECTORIES( ${KDE3_INCLUDE_DIR} ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_SOURC
 ########### next target ###############
 
 SET(kpager_SRCS
-desktop.cpp
-kpager.cpp
-config.cpp
-windowdrag.cpp
-main.cpp
-)
+   desktop.cpp
+   kpager.cpp
+   config.cpp
+   windowdrag.cpp
+   main.cpp
+   )
 
 KDE3_AUTOMOC(${kpager_SRCS})
 
-SET( kpager_DCOP_SKEL_SRCS
-kpagerIface.h
-)
+SET( kpager_DCOP_SKEL_SRCS kpagerIface.h )
 
 KDE3_ADD_DCOP_SKELS(kpager_SRCS ${kpager_DCOP_SKEL_SRCS})
 
@@ -39,8 +37,6 @@ INSTALL_TARGETS(/bin kpager )
 INSTALL_FILES( /share/applications/kde FILES kpager.desktop )
 
 KDE3_INSTALL_ICONS( hicolor )
-
-KDE3_PLACEHOLDER()
 
 
 
