@@ -1,10 +1,11 @@
 
-EXEC_PROGRAM(uic ARGS
+EXECUTE_PROCESS(COMMAND uic
    -nounload -tr tr2i18n
    -impl ${KDE_UIC_H_FILE}
    ${KDE_UIC_FILE}
    OUTPUT_VARIABLE _uic_CONTENTS
-)
+   ERROR_QUIET
+  )
 
 STRING(REGEX REPLACE "tr2i18n\\(\"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
 STRING(REGEX REPLACE "tr2i18n\\(\"\", \"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
