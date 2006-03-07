@@ -5,16 +5,22 @@
 #  HEADER - the header(s) where the prototype should be declared
 #  VARIABLE - variable to store the result
 #
+# The following variables may be set before calling this macro to
+# modify the way the check is run:
+#
+#  CMAKE_REQUIRED_FLAGS = string of compile command line flags
+#  CMAKE_REQUIRED_DEFINITIONS = list of macros to define (-DFOO=bar)
+#  CMAKE_REQUIRED_INCLUDES = list of include directories
 
 INCLUDE(CheckCXXSourceCompiles)
 
 MACRO(CHECK_PROTOTYPE_EXISTS _SYMBOL _HEADER _RESULT)
-   set(_INCLUDE_FILES)
-   foreach(it ${_HEADER})
-      set(_INCLUDE_FILES "${_INCLUDE_FILES}#include <${it}>\n")
-   endforeach(it)
+   SET(_INCLUDE_FILES)
+   FOREACH(it ${_HEADER})
+      SET(_INCLUDE_FILES "${_INCLUDE_FILES}#include <${it}>\n")
+   ENDFOREACH(it)
 
-   set(_CHECK_PROTO_EXISTS_SOURCE_CODE "
+   SET(_CHECK_PROTO_EXISTS_SOURCE_CODE "
 ${_INCLUDE_FILES}
 int main()
 {
