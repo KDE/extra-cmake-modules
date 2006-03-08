@@ -189,13 +189,21 @@ MACRO(KDE3_AUTOMOC)
    SET(_matching_FILES )
    FOREACH (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
+      GET_FILENAME_COMPONENT(_abs_FILE ${_current_FILE} ABSOLUTE)
 
-      IF (EXISTS ${_tmp_FILE})
+      # if "SKIP_AUTOMOC" is set to true, we will not handle this file here.
+      # here. this is required to make bouic work correctly:
+      # we need to add generated .cpp files to the sources (to compile them),
+      # but we cannot let automoc handle them, as the .cpp files don't exist yet when
+      # cmake is run for the very first time on them -> however the .cpp files might
+      # exist at a later run. at that time we need to skip them, so that we don't add two
+      # different rules for the same moc file
+      GET_SOURCE_FILE_PROPERTY(_skip ${_abs_FILE} SKIP_AUTOMOC)
 
-         FILE(READ ${_tmp_FILE} _contents)
+      IF (EXISTS ${_abs_FILE} AND NOT _skip)
 
-         GET_FILENAME_COMPONENT(_abs_FILE ${_tmp_FILE} ABSOLUTE)
+         FILE(READ ${_abs_FILE} _contents)
+
          GET_FILENAME_COMPONENT(_abs_PATH ${_abs_FILE} PATH)
 
          STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
@@ -214,12 +222,12 @@ MACRO(KDE3_AUTOMOC)
                   DEPENDS ${_header}
                )
 
-               MACRO_ADD_FILE_DEPENDENCIES(${_tmp_FILE} ${_moc})
+               MACRO_ADD_FILE_DEPENDENCIES(${_abs_FILE} ${_moc})
 
             ENDFOREACH (_current_MOC_INC)
          ENDIF(_match)
 
-      ENDIF (EXISTS ${_tmp_FILE})
+      ENDIF (EXISTS ${_abs_FILE} AND NOT _skip)
    ENDFOREACH (_current_FILE)
 ENDMACRO(KDE3_AUTOMOC)
 

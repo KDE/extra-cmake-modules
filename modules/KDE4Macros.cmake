@@ -223,13 +223,12 @@ MACRO(KDE4_AUTOMOC)
    set(_matching_FILES )
    foreach (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
+      GET_FILENAME_COMPONENT(_abs_FILE ${_current_FILE} ABSOLUTE)
 
-      if (EXISTS ${_tmp_FILE})
+      if (EXISTS ${_abs_FILE})
 
-         FILE(READ ${_tmp_FILE} _contents)
+         FILE(READ ${_abs_FILE} _contents)
 
-         GET_FILENAME_COMPONENT(_abs_FILE ${_tmp_FILE} ABSOLUTE)
          GET_FILENAME_COMPONENT(_abs_PATH ${_abs_FILE} PATH)
 
          STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
@@ -247,12 +246,12 @@ MACRO(KDE4_AUTOMOC)
                   DEPENDS ${_header}
                )
 
-               MACRO_ADD_FILE_DEPENDENCIES(${_tmp_FILE} ${_moc})
+               MACRO_ADD_FILE_DEPENDENCIES(${_abs_FILE} ${_moc})
 
             endforeach (_current_MOC_INC)
          endif(_match)
 
-      endif (EXISTS ${_tmp_FILE})
+      endif (EXISTS ${_abs_FILE})
    endforeach (_current_FILE)
 ENDMACRO(KDE4_AUTOMOC)
 
