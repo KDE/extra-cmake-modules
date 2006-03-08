@@ -8,6 +8,12 @@ install_files(/share/apps/cmake/modules FILES  kde3init_dummy.cpp.in  kde4init_d
 set (FILES_TO_REMOVE
    ${CMAKE_INSTALL_PREFIX}/share/apps/cmake/modules/FindKDE4.cmake
    )
+# files to remove once we depend on the cmake release:
+# UsePkgconfig.cmake
+# FindKDE3.cmake
+# KDE3Macros.cmake
+# kde3uic.cmake
+# kde3init_dummy.cpp.in
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/remove_files.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/remove_files.cmake)
 
