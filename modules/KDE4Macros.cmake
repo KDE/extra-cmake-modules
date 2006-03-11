@@ -105,8 +105,7 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
       FILE(READ ${_tmp_FILE} _contents)
-      STRING(REGEX REPLACE "^(.*\n)?File=([^\n]+)\n.*$" "\\2"  _kcfg_FILE "${_contents}")
-
+      STRING(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILE "${_contents}")
       set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
       set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
       set(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
