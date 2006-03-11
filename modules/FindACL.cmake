@@ -4,6 +4,8 @@
 #  ACL_FOUND - system has the ACL library
 #  ACL_LIBS - The libraries needed to use ACL
 
+INCLUDE(CheckIncludeFiles)
+
 check_include_files(attr/libattr.h HAVE_ATTR_LIBATTR_H)
 check_include_files(sys/xattr.h HAVE_SYS_XATTR_H)
 check_include_files(sys/acl.h HAVE_SYS_ACL_H)
