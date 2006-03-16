@@ -222,38 +222,46 @@ MACRO(KDE4_AUTOMOC)
    set(_matching_FILES )
    foreach (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_abs_FILE ${_current_FILE} ABSOLUTE)
+      get_filename_component(_abs_FILE ${_current_FILE} ABSOLUTE)
+      # if "SKIP_AUTOMOC" is set to true, we will not handle this file here.
+      # here. this is required to make bouic work correctly:
+      # we need to add generated .cpp files to the sources (to compile them),
+      # but we cannot let automoc handle them, as the .cpp files don't exist yet when
+      # cmake is run for the very first time on them -> however the .cpp files might
+      # exist at a later run. at that time we need to skip them, so that we don't add two
+      # different rules for the same moc file
+      get_source_file_property(_skip ${_abs_FILE} SKIP_AUTOMOC)
 
-      if (EXISTS ${_abs_FILE})
+      if (EXISTS ${_abs_FILE} AND NOT _skip)
 
-         FILE(READ ${_abs_FILE} _contents)
+         file(READ ${_abs_FILE} _contents)
 
-         GET_FILENAME_COMPONENT(_abs_PATH ${_abs_FILE} PATH)
+         get_filename_component(_abs_PATH ${_abs_FILE} PATH)
 
-         STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
+         string(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
          if(_match)
             foreach (_current_MOC_INC ${_match})
-               STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
+               string(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
-               GET_FILENAME_COMPONENT(_basename ${_current_MOC} NAME_WE)
+               get_filename_component(_basename ${_current_MOC} NAME_WE)
 #               set(_header ${CMAKE_CURRENT_SOURCE_DIR}/${_basename}.h)
                set(_header ${_abs_PATH}/${_basename}.h)
                #set(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
 				set(_moc    ${_abs_PATH}/${_current_MOC})
-               ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
+               add_custom_command(OUTPUT ${_moc}
                   COMMAND ${QT_MOC_EXECUTABLE}
                   ARGS ${_moc_INCS} ${_header} -o ${_moc}
                   DEPENDS ${_header}
                )
 
-               MACRO_ADD_FILE_DEPENDENCIES(${_abs_FILE} ${_moc})
+               macro_add_file_dependencies(${_abs_FILE} ${_moc})
 
             endforeach (_current_MOC_INC)
          endif(_match)
 
-      endif (EXISTS ${_abs_FILE})
+      endif (EXISTS ${_abs_FILE} AND NOT _skip)
    endforeach (_current_FILE)
-ENDMACRO(KDE4_AUTOMOC)
+endmacro(KDE4_AUTOMOC)
 
 
 # only used internally by KDE4_INSTALL_ICONS

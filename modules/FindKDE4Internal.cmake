@@ -29,14 +29,14 @@
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
 
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.3.3)
+cmake_minimum_required(VERSION 2.3.3)
 
 #this line includes FindQt.cmake, which searches the Qt library and headers
-FIND_PACKAGE(Qt4 REQUIRED)
+find_package(Qt4 REQUIRED)
 
 set(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
-INCLUDE (MacroLibrary)
+include (MacroLibrary)
 
 #add some KDE specific stuff
 
@@ -78,30 +78,30 @@ option(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
 set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
 if (UNIX)
 
-   set(KDE4_NEED_WRAPPER_SCRIPTS TRUE)
-
-   # to disable RPATH completely, set CMAKE_SKIP_RPATH to TRUE
-
-   option(KDE4_RPATH_TO_BUILD_DIR "Compile executables with RPATH set to both the builddir and the installdir, otherwise RPATH will be set to the install dir. You can disable RPATH completely by setting CMAKE_SKIP_RPATH to ON" ON)
-
-   # this avoids relinking during installation
-   set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-   set(CMAKE_SKIP_BUILD_RPATH TRUE)
-   # this is the list of RPATHs, start empty
-
-   # optionally add the builddir
-   if (KDE4_RPATH_TO_BUILD_DIR)
-      set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
-   endif (KDE4_RPATH_TO_BUILD_DIR)
-
-   if (CMAKE_SKIP_RPATH)
+   if ("${RPATH_STYLE}" MATCHES "none")
+      set(RPATH_STYLE_MATCHED TRUE)
       set(KDE4_NEED_WRAPPER_SCRIPTS TRUE)
-   endif (CMAKE_SKIP_RPATH)
+   endif ("${RPATH_STYLE}" MATCHES "none")
 
+   if (NOT APPLE)
+      if ("${RPATH_STYLE}" MATCHES "install")
+         set(RPATH_STYLE_MATCHED TRUE)
+         set(KDE4_NEED_WRAPPER_SCRIPTS TRUE)
+      endif ("${RPATH_STYLE}" MATCHES "install")
+
+      if ("${RPATH_STYLE}" MATCHES "both")
+         set(RPATH_STYLE_MATCHED TRUE)
+      endif ("${RPATH_STYLE}" MATCHES "both")
+
+   endif (NOT APPLE)
+
+   if(NOT RPATH_STYLE_MATCHED)
+      set(RPATH_STYLE_MATCHED TRUE)
+   endif(NOT RPATH_STYLE_MATCHED)
 endif (UNIX)
 
 # set it to false again until the next kde release of cmake is required
-set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
+# set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
 
 
 #now try to find some kde stuff
@@ -129,7 +129,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    else (WIN32)
       set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
       set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib ) 
-      set(KDE4_LD_LIBRARY_PATH LD_LIBRARY_PATH=${LIBRARY_OUTPUT_PATH}\$\${LD_LIBRARY_PATH+:\$\$LD_LIBRARY_PATH} )
+#      set(KDE4_LD_LIBRARY_PATH LD_LIBRARY_PATH=${LIBRARY_OUTPUT_PATH}\$\${LD_LIBRARY_PATH+:\$\$LD_LIBRARY_PATH} )
    endif (WIN32)
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
@@ -137,13 +137,13 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   
    # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
    if (KDE4_NEED_WRAPPER_SCRIPTS)
-      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp.sh )
-      set(KDE4_KCFGC_EXECUTABLE       ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.sh )
-      set(KDE4_MEINPROC_EXECUTABLE    ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.sh )
+      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp.sh )
+      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.sh )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.sh )
    else (KDE4_NEED_WRAPPER_SCRIPTS)
-      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
-      set(KDE4_KCFGC_EXECUTABLE       ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-      set(KDE4_MEINPROC_EXECUTABLE    ${KDE4_LD_LIBRARY_PATH} ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
+      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
+      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
    endif (KDE4_NEED_WRAPPER_SCRIPTS)
 
    # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
@@ -152,38 +152,68 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
+  # ... but NOT otherwise
+   set( _KDE4_DCOPIDL2CPP_DEP )
+   set( _KDE4_KCONFIG_COMPILER_DEP)
+   set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+
    get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
    # this file contains all dependencies of all libraries of kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
 
-# the following variables should be named KDE4_KIO_LIBRARIES etc
-# Alex
+   find_library(KDE4_KDECORE_LIBRARY NAMES kdecore PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KDECORE_LIBRARIES ${kdecore_LIB_DEPENDS} ${KDE4_KDECORE_LIBRARY} )
 
-   set(LIB_KDECORE ${QT_AND_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${X11_X11_LIB} DCOP ${ZLIB_LIBRARY})
+   find_library(KDE4_KDEUI_LIBRARY NAMES kdeui PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KDEUI_LIBRARIES ${kdeui_LIB_DEPENDS} ${KDE4_KDEUI_LIBRARY} )
 
-   # kdeui_LIB_DEPENDS comes from KDELibsDependencies.cmake, Alex
-   set(LIB_KDEUI ${kdeui_LIB_DEPENDS} kdeui)
+   find_library(KDE4_KIO_LIBRARY NAMES kio PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KIO_LIBRARIES ${kio_LIB_DEPENDS} ${KDE4_KIO_LIBRARY} )
 
-message(STATUS "kdeui: ${LIB_KDEUI}")
+   find_library(KDE4_KPARTS_LIBRARY NAMES kparts PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KPARTS_LIBRARIES ${kparts_LIB_DEPENDS} ${KDE4_KPARTS_LIBRARY} )
 
-   set(LIB_KIO ${LIB_KDEUI} kio)
+   find_library(KDE4_KUTILS_LIBRARY NAMES kutils PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KUTILS_LIBRARIES ${kutils_LIB_DEPENDS} ${KDE4_KUTILS_LIBRARY} )
 
-   set(LIB_KPARTS ${LIB_KIO} kparts)
-
-   set(LIB_KUTILS ${LIB_KPARTS} kutils)
-
-   set(LIB_KDE3SUPPORT ${QT_QT3SUPPORT_LIBRARY} ${LIB_KUTILS} kde3support)
-
+   find_library(KDE4_KDE3SUPPORT_LIBRARY NAMES kde3support PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KDE3SUPPORT_LIBRARIES ${kde3support_LIB_DEPENDS} ${KDE4_KDE3SUPPORT_LIBRARY} )
 
 
-  # ... but NOT otherwise
-  set( _KDE4_DCOPIDL2CPP_DEP )
-  set( _KDE4_KCONFIG_COMPILER_DEP)
-	set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+   # now the KDE library directory, kxmlcore is new with KDE4
+   find_library(KDE4_KXMLCORE_LIBRARY NAMES kxmlcore
+      PATHS
+      ${KDE4_LIB_INSTALL_DIR}
+      $ENV{KDEDIR}/lib
+      /opt/kde/lib
+      /opt/kde4/lib
+      /usr/lib
+      /usr/local/lib)
+   set(KDE4_KXMLCORE_LIBRARIES ${kxmlcore_LIB_DEPENDS} ${KDE4_KXMLCORE_LIBRARY} )
+
+   get_filename_component(KDE4_LIB_DIR ${KDE4_KXMLCORE_LIBRARY} PATH )
+
+
+
+   set(LIB_KDECORE ${KDE4_KDECORE_LIBRARIES})
+   set(LIB_KDEUI ${KDE4_KDEUI_LIBRARIES})
+   set(LIB_KIO ${KDE4_KIO_LIBRARIES})
+   set(LIB_KPARTS ${KDE4_KPARTS_LIBRARIES})
+   set(LIB_KUTILS ${KDE4_KUTILS_LIBRARIES})
+   set(LIB_KDE3SUPPORT ${KDE4_KDE3SUPPORT_LIBRARIES})
+
+#   set(LIB_KDECORE ${QT_AND_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${X11_X11_LIB} DCOP ${ZLIB_LIBRARY})
+#   set(LIB_KDEUI ${kdeui_LIB_DEPENDS} kdeui)
+#   set(LIB_KIO ${LIB_KDEUI} kio)
+#   set(LIB_KPARTS ${LIB_KIO} kparts)
+#   set(LIB_KUTILS ${LIB_KPARTS} kutils)
+#   set(LIB_KDE3SUPPORT ${QT_QT3SUPPORT_LIBRARY} ${LIB_KUTILS} kde3support)
+
 
   # at first the KDE include direcory
   # kpassworddialog.h is new with KDE4
-  FIND_PATH(KDE4_INCLUDE_DIR kpassworddialog.h
+  find_path(KDE4_INCLUDE_DIR kpassworddialog.h
+    ${KDE4_INCLUDE_INSTALL_DIR}
     $ENV{KDEDIR}/include
     /opt/kde/include
     /opt/kde4/include
@@ -193,48 +223,66 @@ message(STATUS "kdeui: ${LIB_KDEUI}")
     /usr/local/include/kde
   )
 
-  # now the KDE library directory, kxmlcore is new with KDE4
-  FIND_LIBRARY(KDE4_XMLCORE_LIBRARY NAMES kxmlcore
-  PATHS
-    $ENV{KDEDIR}/lib
-    /opt/kde/lib
-    /opt/kde4/lib
-    /usr/lib
-    /usr/local/lib
-  )
-
-  GET_FILENAME_COMPONENT(KDE4_LIB_DIR ${KDE4_XMLCORE_LIBRARY} PATH )
-
   #now search for the dcop utilities
-  FIND_PROGRAM(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
+  find_program(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
+    ${KDE4_BIN_INSTALL_DIR}
     $ENV{KDEDIR}/bin
     /opt/kde/bin
     /opt/kde4/bin
+    NO_SYSTEM_PATH
+    NO_CMAKE_SYSTEM_PATH
   )
 
-  FIND_PATH(KDE4_KALYPTUS_DIR kalyptus
-    $ENV{KDEDIR}/share/apps/dcopidl
-    /opt/kde/share/apps/dcopidl
-    /opt/kde4/share/apps/dcopidl
-  )
+   if (NOT KDE4_DCOPIDL_EXECUTABLE)
+      find_program(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl )
+   endif (NOT KDE4_DCOPIDL_EXECUTABLE)
 
-  FIND_PROGRAM(KDE4_DCOPIDL2CPP_EXECUTABLE NAME dcopidl2cpp PATHS
-    $ENV{KDEDIR}/bin
-    /opt/kde/bin
-    /opt/kde4/bin
-  )
 
-  FIND_PROGRAM(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS
-    $ENV{KDEDIR}/bin
-    /opt/kde/bin
-    /opt/kde4/bin
-  )
+   find_path(KDE4_KALYPTUS_DIR kalyptus
+     ${KDE4_DATA_INSTALL_DIR}/dcopidl
+     $ENV{KDEDIR}/share/apps/dcopidl
+     /opt/kde/share/apps/dcopidl
+     /opt/kde4/share/apps/dcopidl
+   )
 
-  FIND_PROGRAM(KDE4_MEINPROC_EXECUTABLE NAME meinproc PATHS
-    $ENV{KDEDIR}/bin
-    /opt/kde/bin
-    /opt/kde4/bin
-  )
+   find_program(KDE4_DCOPIDL2CPP_EXECUTABLE NAME dcopidl2cpp PATHS
+     ${KDE4_BIN_INSTALL_DIR}
+     $ENV{KDEDIR}/bin
+     /opt/kde/bin
+     /opt/kde4/bin
+     NO_SYSTEM_PATH
+     NO_CMAKE_SYSTEM_PATH
+   )
+
+   if (NOT KDE4_DCOPIDL2CPP_EXECUTABLE)
+      find_program(KDE4_DCOPIDL2CPP_EXECUTABLE NAME dcopidl2cpp )
+   endif (NOT KDE4_DCOPIDL2CPP_EXECUTABLE)
+
+   find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS
+     ${KDE4_BIN_INSTALL_DIR}
+     $ENV{KDEDIR}/bin
+     /opt/kde/bin
+     /opt/kde4/bin
+     NO_SYSTEM_PATH
+     NO_CMAKE_SYSTEM_PATH
+   )
+
+   if (NOT KDE4_KCFGC_EXECUTABLE)
+      find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
+   endif (NOT KDE4_KCFGC_EXECUTABLE)
+
+   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc PATHS
+     ${KDE4_BIN_INSTALL_DIR}
+     $ENV{KDEDIR}/bin
+     /opt/kde/bin
+     /opt/kde4/bin
+     NO_SYSTEM_PATH
+     NO_CMAKE_SYSTEM_PATH
+   )
+
+   if (NOT KDE4_MEINPROC_EXECUTABLE)
+      find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc )
+   endif (NOT KDE4_MEINPROC_EXECUTABLE)
 
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
@@ -243,9 +291,9 @@ endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 # Set a default build type for single-configuration
 # CMake generators if no build type is set.
-IF (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-   SET(CMAKE_BUILD_TYPE RelWithDebInfo)
-ENDIF (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE RelWithDebInfo)
+endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 
 
 if (WIN32)
@@ -254,7 +302,7 @@ if (WIN32)
       message(FATAL_ERROR "Support for Cygwin NOT yet implemented, please edit FindKDE4.cmake to enable it")
    endif(CYGWIN)
 
-   FIND_PACKAGE(KDEWIN32 REQUIRED)
+   find_package(KDEWIN32 REQUIRED)
    
    set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
    set( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
@@ -267,10 +315,10 @@ if (WIN32)
    # windows, microsoft compiler
    if(MSVC)
       set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN -DUNICODE )
-      IF(CMAKE_COMPILER_2005)
-         ADD_DEFINITIONS( -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE )
-         SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4661" )
-      ENDIF(CMAKE_COMPILER_2005)
+      if(CMAKE_COMPILER_2005)
+         add_definitions( -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE )
+         set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4661" )
+      endif(CMAKE_COMPILER_2005)
    endif(MSVC)
 
 endif (WIN32)
@@ -281,24 +329,60 @@ if (UNIX)
    link_directories(/usr/local/lib)
    include_directories(/usr/local/include)
 
-   # build the install RPATH
-   set(CMAKE_INSTALL_RPATH)
+   # the rest is RPATH handling
+   set(RPATH_STYLE_MATCHED FALSE)
 
-   # optionally add the builddir
-   if (KDE4_RPATH_TO_BUILD_DIR)
-      set(CMAKE_INSTALL_RPATH ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/ )
-   endif (KDE4_RPATH_TO_BUILD_DIR)
+   if ("${RPATH_STYLE}" MATCHES "none")
+      # no relinking, needs LD_LIBRARY_PATH
+      set(RPATH_STYLE_MATCHED TRUE)
+      set(CMAKE_SKIP_RPATH TRUE)
+   endif ("${RPATH_STYLE}" MATCHES "none")
 
-   # add the library install dir
-   set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR})
-   # add the Qt library dir
-   set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${QT_LIBRARY_DIR})
+   if (NOT APPLE)
+      if ("${RPATH_STYLE}" MATCHES "install")
+         # no relinking, needs LD_LIBRARY_PATH from the builddir
+         set(RPATH_STYLE_MATCHED TRUE)
+         set(CMAKE_SKIP_BUILD_RPATH TRUE)
+         set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+         set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}  ${QT_LIBRARY_DIR} )
+         # building something else than kdelibs/ ?
+         # then add the dir where the kde libraries are installed
+         if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+            set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${KDE4_LIB_DIR} )
+         endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
-   # building something else than kdelibs/ ?
-   # then add the dir where the kde libraries are installed
-   if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-      set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${KDE4_LIB_DIR} )
-   endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+      endif ("${RPATH_STYLE}" MATCHES "install")
+
+      if ("${RPATH_STYLE}" MATCHES "both")
+         # no relinking, prefers the lib in the builddir over the installed one
+         set(RPATH_STYLE_MATCHED TRUE)
+         set(CMAKE_SKIP_BUILD_RPATH TRUE)
+         set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+         set(CMAKE_INSTALL_RPATH ${LIBRARY_OUTPUT_PATH} ${CMAKE_INSTALL_PREFIX}/lib )
+
+         set(CMAKE_INSTALL_RPATH ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR} ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}  ${QT_LIBRARY_DIR} )
+         # building something else than kdelibs/ ?
+         # then add the dir where the kde libraries are installed
+         if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+            set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${KDE4_LIB_DIR} )
+         endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+
+      endif ("${RPATH_STYLE}" MATCHES "both")
+
+   endif (NOT APPLE)
+
+   if(NOT RPATH_STYLE_MATCHED)
+      # rpath to the builddir, relinking to the install dir
+
+      set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
+      # building something else than kdelibs/ ?
+      # then add the dir where the kde libraries are installed
+      if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+         set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${KDE4_LIB_DIR} )
+      endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+
+      set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR})
+   endif(NOT RPATH_STYLE_MATCHED)
 
 endif (UNIX)
 
@@ -382,7 +466,7 @@ endif (CMAKE_COMPILER_IS_GNUCXX)
 
 
 # KDE4Macros.cmake contains all the KDE specific macros
-INCLUDE(KDE4Macros)
+include(KDE4Macros)
 
 
 # decide whether KDE4 has been found
@@ -393,7 +477,7 @@ else (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCO
 endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
 
 
-MACRO (KDE4_PRINT_RESULTS)
+macro (KDE4_PRINT_RESULTS)
    if(KDE4_INCLUDE_DIR)
       message(STATUS "Found KDE4 include dir: ${KDE4_INCLUDE_DIR}")
    else(KDE4_INCLUDE_DIR)
@@ -423,18 +507,18 @@ MACRO (KDE4_PRINT_RESULTS)
    else(KDE4_KCFGC_EXECUTABLE)
       message(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
    endif(KDE4_KCFGC_EXECUTABLE)
-ENDMACRO (KDE4_PRINT_RESULTS)
+endmacro (KDE4_PRINT_RESULTS)
 
 
 if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
    #bail out if something wasn't found
-   KDE4_PRINT_RESULTS()
+   kde4_print_results()
    message(FATAL_ERROR "Could NOT find everything required for compiling KDE 4 programs")
 endif (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
 
 
 if (NOT KDE4Internal_FIND_QUIETLY)
-   KDE4_PRINT_RESULTS()
+   kde4_print_results()
 endif (NOT KDE4Internal_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path

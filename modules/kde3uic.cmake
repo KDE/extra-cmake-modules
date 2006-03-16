@@ -1,4 +1,9 @@
 
+
+# used internally by KDE3Macros.cmake
+# neundorf@kde.org
+
+
 EXECUTE_PROCESS(COMMAND uic
    -nounload -tr tr2i18n
    -impl ${KDE_UIC_H_FILE}

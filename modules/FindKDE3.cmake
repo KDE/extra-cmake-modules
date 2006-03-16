@@ -24,6 +24,8 @@
 #    Call this if you want to have automatic moc file handling.
 #    This means if you include "foo.moc" in the source file foo.cpp
 #    a moc file for the header foo.h will be created automatically.
+#    You can set the property SKIP_AUTOMAKE using SET_SOURCE_FILES_PROPERTIES()
+#    to exclude some files in the list from being processed.
 #
 # KDE3_ADD_MOC_FILES(SRCS_VAR file1 ... fileN )
 #    If you don't use the KDE3_AUTOMOC() macro, for the files

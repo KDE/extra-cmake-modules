@@ -1,3 +1,7 @@
+
+
+# See FindKDE3.cmake for documentation.
+#
 # this file contains the following macros:
 # KDE3_ADD_DCOP_SKELS
 # KDE3_ADD_DCOP_STUBS

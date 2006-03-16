@@ -143,6 +143,7 @@ FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake PATHS
   $ENV{QTDIR}/bin
   ${QT4_PATHS}
   NO_SYSTEM_PATH
+  NO_CMAKE_SYSTEM_PATH
 )
 
 if (NOT QT_QMAKE_EXECUTABLE)
@@ -533,6 +534,7 @@ if(QT4_QMAKE_FOUND)
     C:/Progra~1/qt/bin
     /usr/bin/qt4
     NO_SYSTEM_PATH
+    NO_CMAKE_SYSTEM_PATH
     )
 
   # if qmake wasn't found in the specific dirs, now check the system path
@@ -572,6 +574,7 @@ if(QT4_QMAKE_FOUND)
     C:/Progra~1/qt/bin
     /usr/bin/qt4
     NO_SYSTEM_PATH
+    NO_CMAKE_SYSTEM_PATH
     )
 
   if (NOT QT_UIC_EXECUTABLE)
