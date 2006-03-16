@@ -171,11 +171,11 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
    foreach (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
-
+	GET_FILENAME_COMPONENT(_abs_PATH ${_tmp_FILE} PATH)
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
-      set(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
-      set(_src ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
-      set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
+      set(_header ${_abs_PATH}/${_basename}.h)
+      set(_src ${_abs_PATH}/${_basename}.cpp)
+      set(_moc ${_abs_PATH}/${_basename}.moc.cpp)
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_header}
          COMMAND ${CMAKE_COMMAND}
