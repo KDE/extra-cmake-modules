@@ -1,29 +1,152 @@
 # - Find the KDE4 include and library dirs, KDE preprocessors and define a some macros
 #
-# KDE4_DEFINITIONS
-# KDE4_INCLUDE_DIR
-# KDE4_INCLUDE_DIRS
-# KDE4_LIB_DIR
-# KDE4_SERVICETYPES_DIR
-# KDE4_DCOPIDL_EXECUTABLE
-# KDE4_DCOPIDL2CPP_EXECUTABLE
-# KDE4_KCFGC_EXECUTABLE
-# KDE4_MEINPROC_EXECUTABLE
-# KDE4_FOUND
-# it also adds the following macros (from KDE4Macros.cmake)
-# ADD_FILE_DEPENDANCY
-# KDE4_ADD_DCOP_SKELS
-# KDE4_ADD_DCOP_STUBS
-# KDE4_ADD_MOC_FILES
-# KDE4_ADD_UI_FILES
-# KDE4_ADD_KCFG_FILES
-# KDE4_AUTOMOC
-# KDE4_PLACEHOLDER
-# KDE4_INSTALL_LIBTOOL_FILE
-# KDE4_CREATE_FINAL_FILE
-# KDE4_ADD_KPART
-# KDE4_ADD_KLM
-# KDE4_ADD_EXECUTABLE
+# This module defines the following variables:
+#
+# KDE4_FOUND               - set to TRUE if everything required for building KDE software has been found
+#
+# KDE4_DEFINITIONS         - compiler definitions required for compiling KDE software
+# KDE4_INCLUDE_DIR         - the KDE 4 include directory
+# KDE4_INCLUDE_DIRS        - all include directories required for KDE, i.e. 
+#                            KDE4_INCLUDE_DIR, but also the Qt4 include directories 
+#                            and other platform specific include directories
+# KDE4_LIB_DIR             - the directory where the KDE libraries are installed,
+#                            intended to be used with LINK_DIRECTORIES()
+#
+# The following variables are defined for the various tools required to
+# compile KDE software:
+#
+# KDE4_DCOPIDL_EXECUTABLE  - the dcopidl executable
+# KDE4_DCOPIDL2CPP_EXECUTABLE - the dcopidl2cpp executable
+# KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
+# KDE4_MEINPROC_EXECUTABLE - the meinproc executable
+#
+# The following variables point to the location of the KDE libraries,
+# but shouldn't be used directly:
+#
+# KDE4_KDECORE_LIBRARY     - the kdecore library
+# KDE4_KDEUI_LIBRARY       - the kdeui library
+# KDE4_KIO_LIBRARY         - the kio library
+# KDE4_KPARTS_LIBRARY      - the kparts library
+# KDE4_KUTILS_LIBRARY      - the kutils library
+# KDE4_KDE3SUPPORT_LIBRARY - the kde3support library
+# KDE4_KXMLCORE_LIBRARY    - the kxmlcore library
+#
+# Compared to the variables above, the following variables
+# also contain all of the depending libraries, so the variables below
+# should be used instead of the ones above:
+#
+# KDE4_KDECORE_LIBRARIES     - the kdecore library and all depending libraries
+# KDE4_KDEUI_LIBRARIES       - the kdeui library and all depending libraries
+# KDE4_KIO_LIBRARIES         - the kio library and all depending libraries
+# KDE4_KPARTS_LIBRARIES      - the kparts library and all depending libraries
+# KDE4_KUTILS_LIBRARIES      - the kutils library and all depending libraries
+# KDE4_KDE3SUPPORT_LIBRARIES - the kde3support library and all depending libraries
+# KDE4_KXMLCORE_LIBRARIES    - the kxmlcore library and all depending libraries
+#
+# This module defines a bunch of variables used as locations
+# for install directories. They are all interpreted relative
+# to CMAKE_INSTALL_PREFIX
+#
+# CONFIG_INSTALL_DIR       - the config file install dir
+# DATA_INSTALL_DIR         - the parent directory where applications can install their data
+# HTML_INSTALL_DIR         - the HTML install dir for documentation
+# ICON_INSTALL_DIR         - the icon install dir (default prefix/share/icons/)
+# INFO_INSTALL_DIR         - the kde info install dir (default prefix/info)
+# KCFG_INSTALL_DIR         - the install dir for kconfig files
+# LIB_INSTALL_DIR          - the subdirectory relative to the install prefix where libraries will be installed (default is /lib)
+# LOCALE_INSTALL_DIR       - the install dir for translations
+# MAN_INSTALL_DIR          - the kde man page install dir (default prefix/man/)
+# MIME_INSTALL_DIR         - the install dir for the mimetype desktop files
+# PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)
+# SERVICES_INSTALL_DIR     - the install dir for service (desktop, protocol, ...) files
+# SERVICETYPES_INSTALL_DIR - the install dir for servicestypes desktop files
+# SOUND_INSTALL_DIR        - the install dir for sound files
+# TEMPLATES_INSTALL_DIR    - the install dir for templates (Create new file...)
+# WALLPAPER_INSTALL_DIR    - the install dir for wallpapers
+# KCONF_UPDATE_INSTALL_DIR - the kconf_update install dir
+# XDG_APPS_DIR             - the XDG apps dir
+# XDG_DIRECTORY_DIR        - the XDG directory
+#
+# The following variables are provided, but are seem to be unused:
+# LIBS_HTML_INSTALL_DIR    /share/doc/HTML            CACHE STRING "Is this still used ?")
+# APPLNK_INSTALL_DIR       /share/applnk              CACHE STRING "Is this still used ?")
+#
+# The following user adjustable options are provided:
+#
+# RPATH_STYLE       - select the style in which RPATH is handled, one of "none", "install", "both" and "default"
+# KDE4_ENABLE_FINAL - enable KDE-style enable-final all-in-one-compilation
+# KDE4_BUILD_TESTS  - enable this to build the testcases
+#
+# It also adds the following macros (from KDE4Macros.cmake)
+# KDE4_ADD_DCOP_SKELS (SRCS_VAR file1.h ... fileN.h)
+#    Use this to generate DCOP skeletons from the listed headers.
+#
+# KDE4_ADD_DCOP_STUBS (SRCS_VAR file1.h ... fileN.h)
+#    Use this to generate DCOP stubs from the listed headers.
+#
+# KDE4_ADD_UI_FILES (SRCS_VAR file1.ui ... fileN.ui)
+#    Use this to add Qt designer ui files to your application/library.
+#
+# KDE4_ADD_UI3_FILES (SRCS_VAR file1.ui ... fileN.ui)
+#    Use this to add Qt designer ui files from Qt version 3 to your application/library.
+#
+# KDE4_ADD_KCFG_FILES (SRCS_VAR file1.kcfgc ... fileN.kcfgc)
+#    Use this to add KDE config compiler files to your application/library.
+#
+# KDE4_AUTOMOC(file1 ... fileN)
+#    Call this if you want to have automatic moc file handling.
+#    This means if you include "foo.moc" in the source file foo.cpp
+#    a moc file for the header foo.h will be created automatically.
+#    You can set the property SKIP_AUTOMAKE using SET_SOURCE_FILES_PROPERTIES()
+#    to exclude some files in the list from being processed.
+#    If you don't want automoc, you can also use QT4_WRAP_CPP() or QT4_GENERATE_MOC()
+#    from FindQt4.cmake to have the moc files generated. This will be faster
+#    but require more manual work.
+#
+# KDE4_HEADER()
+#    This is a macro which is currently empty.
+#    It is automatically inserted by the am2cmake script at the top
+#    of each converted CMakeLists.txt
+#
+# KDE4_FOOTER()
+#    This is a macro which is currently empty.
+#    It is automatically inserted by the am2cmake script at the end
+#    of each converted CMakeLists.txt
+#
+# KDE4_INSTALL_LIBTOOL_FILE ( subdir target )
+#    This will create and install a simple libtool file for the 
+#    given target. This might be required for other software.
+#    The libtool file will be install in subdir, relative to CMAKE_INSTALL_PREFIX .
+#
+# KDE4_CREATE_FINAL_FILES (filename_CXX filename_C file1 ... fileN)
+#    This macro is intended mainly for internal uses.
+#    It is used for enable-final. It will generate two source files,
+#    one for the C files and one for the C++ files.
+#    These files will have the names given in filename_CXX and filename_C.
+#
+# KDE4_ADD_PLUGIN ( name [WITH_PREFIX] file1 ... fileN )
+#    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
+#    It supports KDE4_ENABLE_FINAL.
+#    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib", otherwise it won't.
+#    It creates and installs an appropriate libtool la-file.
+#
+# KDE4_ADD_KDEINIT_EXECUTABLE (name file1 ... fileN)
+#    Create a KDE application in the form of a module loadable via kdeinit.
+#    A library named kdeinit_<name> will be created and a small executable which links to it.
+#    It supports KDE3_ENABLE_FINAL
+#
+# KDE4_ADD_EXECUTABLE (name file1 ... fileN)
+#    Equivalent to ADD_EXECUTABLE(), but additionally adds support for KDE4_ENABLE_FINAL.
+#    If you don't need support for KDE4_ENABLE_FINAL, you can just use the 
+#    normal ADD_EXECUTABLE().
+#
+# KDE4_ADD_LIBRARY (name [STATIC | SHARED | MODULE ] file1 ... fileN)
+#    Equivalent to ADD_LIBRARY(), but additionally it supports KDE4_ENABLE_FINAL
+#    and under Windows it adds a -DMAKE_<name>_LIB definition to the compilation.
+#
+# KDE4_INSTALL_ICONS( path theme)
+#    Installs all png and svgz files in the current directory to the icon
+#    directoy given in path, in the subdirectory for the given icon theme.
 #
 # _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
@@ -32,7 +155,7 @@
 cmake_minimum_required(VERSION 2.3.3)
 
 #this line includes FindQt.cmake, which searches the Qt library and headers
-find_package(Qt4 REQUIRED)
+find_package(Qt4 REQUIRED)                                      
 
 set(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 
@@ -75,6 +198,7 @@ option(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
 
 
 # RPATH handling
+set(RPATH_STYLE "default" CACHE STRING "Determine RAPTH handling") 
 set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
 if (UNIX)
 
