@@ -236,11 +236,11 @@ if (UNIX)
     X11_X11_INCLUDE_PATH
     X11_X11_LIB
     X11_Xext_LIB
-	X11_Xau_LIB
+    X11_Xau_LIB
     X11_Xlib_INCLUDE_PATH
     X11_Xutil_INCLUDE_PATH
     X11_Xcomposite_INCLUDE_PATH
-	X11_Xcomposite_LIB
+    X11_Xcomposite_LIB
     X11_Xaccess_INCLUDE_PATH
     X11_Xfixes_LIB
     X11_Xfixes_INCLUDE_PATH
@@ -250,19 +250,26 @@ if (UNIX)
     X11_Xdamage_INCLUDE_PATH
     X11_Xrender_LIB
     X11_Xrender_INCLUDE_PATH
-	X11_Xxf86misc_LIB
-	X11_Xxf86misc_INCLUDE_PATH
-	X11_Xinerama_LIB
-	X11_Xinerama_INCLUDE_PATH
+    X11_Xxf86misc_LIB
+    X11_Xxf86misc_INCLUDE_PATH
+    X11_Xinerama_LIB
+    X11_Xinerama_INCLUDE_PATH
     X11_XTest_LIB
     X11_XTest_INCLUDE_PATH
     X11_Xcursor_LIB
     X11_Xcursor_INCLUDE_PATH
-	X11_dpms_INCLUDE_PATH
-	X11_Xt_LIB
-	X11_Xss_LIB
-	X11_Xdmcp_LIB
+    X11_dpms_INCLUDE_PATH
+    X11_Xt_LIB
+    X11_Xss_LIB
+    X11_Xdmcp_LIB
     X11_LIBRARIES
+    X11_Xaccessrules_INCLUDE_PATH
+    X11_Xaccessstr_INCLUDE_PATH
+    X11_Xdmcp_INCLUDE_PATH
+    X11_Xf86misc_INCLUDE_PATH
+    X11_Xkb_INCLUDE_PATH
+    X11_Xkblib_INCLUDE_PATH
+    X11_Xscreensaver_INCLUDE_PATH
     )
 
 endif (UNIX)
