@@ -577,10 +577,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
    set(CMAKE_CXX_FLAGS_RELEASE        "-O2")
-   set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g")
+   set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
+   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
    set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g")
    set(CMAKE_C_FLAGS_RELEASE          "-O2")
-   set(CMAKE_C_FLAGS_DEBUG            "-O0 -g")
+   set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
+   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 # it seems we prefer not to use a different postfix for debug libs, Alex
