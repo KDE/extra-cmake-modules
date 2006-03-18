@@ -315,7 +315,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       /usr/local/lib)
    set(KDE4_KXMLCORE_LIBRARIES ${kxmlcore_LIB_DEPENDS} ${KDE4_KXMLCORE_LIBRARY} )
 
-   get_filename_component(KDE4_LIB_DIR ${KDE4_KXMLCORE_LIBRARY} PATH )
+   get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
 
 
