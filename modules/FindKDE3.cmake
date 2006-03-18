@@ -53,13 +53,12 @@
 #    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
 #    It supports KDE3_ENABLE_FINAL
 #    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib", otherwise it won't.
-#    It creates and install an appropriate libtool la-file.
+#    It creates and installs an appropriate libtool la-file.
 #
 # KDE3_ADD_KDEINIT_EXECUTABLE(name file1 ... fileN )
 #    Create a KDE application in the form of a module loadable via kdeinit.
-#    It supports KDE3_ENABLE_FINAL.
 #    A library named kdeinit_<name> will be created and a small executable which links to it.
-#    Supports KDE3_ENABLE_FINAL
+#    It supports KDE3_ENABLE_FINAL
 #
 # Author: Alexander Neundorf <neundorf@kde.org>
 
