@@ -1,3 +1,6 @@
+
+# for documentation look at FindKDE4Internal.cmake
+#
 # this file contains the following macros:
 # KDE4_ADD_FILE_DEPENDANCY
 # KDE4_ADD_DCOP_SKELS
@@ -106,9 +109,9 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
 
       FILE(READ ${_tmp_FILE} _contents)
       STRING(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILE "${_contents}")
-      set(_src_FILE    ${_abs_PATH}/${_basename}.cpp)
-      set(_header_FILE ${_abs_PATH}/${_basename}.h)
-      set(_moc_FILE    ${_abs_PATH}/${_basename}.moc)
+      set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
+      set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+      set(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
       
 	  # the command for creating the source file from the kcfg file
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
@@ -171,11 +174,11 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
    foreach (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
-	GET_FILENAME_COMPONENT(_abs_PATH ${_tmp_FILE} PATH)
+#      GET_FILENAME_COMPONENT(_abs_PATH ${_tmp_FILE} PATH)
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
-      set(_header ${_abs_PATH}/${_basename}.h)
-      set(_src ${_abs_PATH}/${_basename}.cpp)
-      set(_moc ${_abs_PATH}/${_basename}.moc.cpp)
+      set(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+      set(_src ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
+      set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_header}
          COMMAND ${CMAKE_COMMAND}
@@ -246,8 +249,8 @@ MACRO(KDE4_AUTOMOC)
                get_filename_component(_basename ${_current_MOC} NAME_WE)
 #               set(_header ${CMAKE_CURRENT_SOURCE_DIR}/${_basename}.h)
                set(_header ${_abs_PATH}/${_basename}.h)
-               #set(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
-				set(_moc    ${_abs_PATH}/${_current_MOC})
+               set(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
+	       #set(_moc    ${_abs_PATH}/${_current_MOC})
                add_custom_command(OUTPUT ${_moc}
                   COMMAND ${QT_MOC_EXECUTABLE}
                   ARGS ${_moc_INCS} ${_header} -o ${_moc}
