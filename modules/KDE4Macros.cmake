@@ -116,7 +116,7 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
 	  # the command for creating the source file from the kcfg file
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE4_KCFGC_EXECUTABLE}
-         ARGS ${_abs_PATH}/${_kcfg_FILE} ${_tmp_FILE} -d ${_abs_PATH}
+         ARGS ${_abs_PATH}/${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
          DEPENDS ${_tmp_FILE} ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
       # for the case that the header contains signals or slots, it has to be processed by moc
