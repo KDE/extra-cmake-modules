@@ -152,7 +152,7 @@
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
 
 
-cmake_minimum_required(VERSION 2.3.3)
+cmake_minimum_required(VERSION 2.3.4)
 
 #this line includes FindQt.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
@@ -162,6 +162,12 @@ set(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
 include (MacroLibrary)
 
 #add some KDE specific stuff
+
+# set CMAKE_INSTALL_PREFIX to $KDEDIR, 
+if ($ENV{KDEDIR} MATCHES "[:print:]")
+   set(CMAKE_INSTALL_PREFIX  $ENV{KDEDIR})
+endif ($ENV{KDEDIR} MATCHES "[:print:]")
+message(STATUS "Setting installation dir: ${CMAKE_INSTALL_PREFIX}")
 
 
 # the following are directories where stuff will be installed to
