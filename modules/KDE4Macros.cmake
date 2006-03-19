@@ -295,17 +295,13 @@ MACRO( _KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NA
       ENDIF(${_group} STREQUAL "action")
 
 #      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
-      SET(_ICON_INSTALL_NAME ${_install_PATH}/${_icon_GROUP}/${_install_NAME})
-      FILE(APPEND ${_install_SCRIPT} "MESSAGE(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
-      FILE(APPEND ${_install_SCRIPT} "CONFIGURE_FILE( ${_orig_NAME} ${_ICON_INSTALL_NAME} COPYONLY) \n")
+   INSTALL(FILES ${_orig_NAME} DESTINATION ${_install_PATH}/${_icon_GROUP}/ RENAME ${_install_NAME} )
    ENDIF ( NOT ${_group} STREQUAL ${_install_NAME} )
 
 ENDMACRO( _KDE4_ADD_ICON_INSTALL_RULE )
 
 
 MACRO(KDE4_INSTALL_ICONS _defaultpath _theme )
-   FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "# icon installations rules\n")
-   FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "set(CMAKE_BACKWARDS_COMPATIBILITY \"2.2\") \n")
 
    # first the png icons
    FILE(GLOB _icons *.png)
@@ -327,7 +323,6 @@ MACRO(KDE4_INSTALL_ICONS _defaultpath _theme )
                                  ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/${_theme}/scalable 
                                  ${_group} ${_current_ICON} ${_name})
    ENDforeach (_current_ICON)
-   INSTALL(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake )
 
 ENDMACRO(KDE4_INSTALL_ICONS)
 
