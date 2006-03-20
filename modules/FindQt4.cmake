@@ -206,10 +206,10 @@ if(QT4_QMAKE_FOUND)
   
   FIND_PATH( QT_QTCORE_INCLUDE_DIR QtGlobal
     "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/include/QtCore"
-    ${QT_PATH_INCLUDE}
     ${QT_HEADERS_DIR}/QtCore
     ${QT_LIBRARY_DIR}/QtCore.framework/Headers
     $ENV{QTDIR}/include/QtCore
+    ${QT_PATH_INCLUDE}
     /usr/local/qt/include/QtCore
     /usr/local/include/QtCore
     /usr/lib/qt/include/QtCore
