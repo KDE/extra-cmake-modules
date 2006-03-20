@@ -22,7 +22,7 @@ INCLUDE(MacroLibrary)
 
 #create the kidl and skeletion file for dcop stuff
 #usage: KDE_ADD_COP_SKELS(foo_SRCS ${dcop_headers})
-MACRO(KDE3_ADD_DCOP_SKELS _sources)
+MACRO (KDE3_ADD_DCOP_SKELS _sources)
    FOREACH (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -35,11 +35,11 @@ MACRO(KDE3_ADD_DCOP_SKELS _sources)
          SET(HAVE_${_basename}_KIDL_RULE ON)
 
           ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
-          COMMAND ${KDE3_DCOPIDL_EXECUTABLE}
-          ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} > ${_kidl}
-          DEPENDS ${_tmp_FILE}
-         )
-       ENDIF (NOT HAVE_${_basename}_KIDL_RULE)
+             COMMAND ${KDE3_DCOPIDL_EXECUTABLE}
+             ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} > ${_kidl}
+             DEPENDS ${_tmp_FILE}
+          )
+      ENDIF (NOT HAVE_${_basename}_KIDL_RULE)
 
       IF (NOT HAVE_${_basename}_SKEL_RULE)
         SET(HAVE_${_basename}_SKEL_RULE ON)
@@ -48,7 +48,7 @@ MACRO(KDE3_ADD_DCOP_SKELS _sources)
           COMMAND ${KDE3_DCOPIDL2CPP_EXECUTABLE}
           ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
           DEPENDS ${_kidl}
-          )
+       )
 
       ENDIF (NOT HAVE_${_basename}_SKEL_RULE)
 
@@ -56,10 +56,10 @@ MACRO(KDE3_ADD_DCOP_SKELS _sources)
 
    ENDFOREACH (_current_FILE)
 
-ENDMACRO(KDE3_ADD_DCOP_SKELS)
+ENDMACRO (KDE3_ADD_DCOP_SKELS)
 
 
-MACRO(KDE3_ADD_DCOP_STUBS _sources)
+MACRO (KDE3_ADD_DCOP_STUBS _sources)
    FOREACH (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -77,7 +77,7 @@ MACRO(KDE3_ADD_DCOP_STUBS _sources)
            COMMAND ${KDE3_DCOPIDL_EXECUTABLE}
            ARGS ${tmp_FILE} > ${_kidl}
            DEPENDS ${tmp_FILE}
-           )
+        )
 
       ENDIF (NOT HAVE_${_basename}_KIDL_RULE)
 
@@ -89,7 +89,7 @@ MACRO(KDE3_ADD_DCOP_STUBS _sources)
            COMMAND ${KDE3_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
            DEPENDS ${_kidl}
-         )
+        )
 
       ENDIF (NOT HAVE_${_basename}_STUB_RULE)
 
@@ -97,10 +97,10 @@ MACRO(KDE3_ADD_DCOP_STUBS _sources)
 
    ENDFOREACH (_current_FILE)
 
-ENDMACRO(KDE3_ADD_DCOP_STUBS)
+ENDMACRO (KDE3_ADD_DCOP_STUBS)
 
 
-MACRO(KDE3_ADD_KCFG_FILES _sources)
+MACRO (KDE3_ADD_KCFG_FILES _sources)
    FOREACH (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -116,18 +116,18 @@ MACRO(KDE3_ADD_KCFG_FILES _sources)
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE3_KCFGC_EXECUTABLE}
          ARGS ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} ${_tmp_FILE}
-         DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE} )
+         DEPENDS ${_tmp_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg_FILE})
 
       SET(${_sources} ${${_sources}} ${_src_FILE})
 
    ENDFOREACH (_current_FILE)
 
-ENDMACRO(KDE3_ADD_KCFG_FILES)
+ENDMACRO (KDE3_ADD_KCFG_FILES)
 
 
 #create the moc files and add them to the list of sources
 #usage: KDE_ADD_MOC_FILES(foo_SRCS ${moc_headers})
-MACRO(KDE3_ADD_MOC_FILES _sources)
+MACRO (KDE3_ADD_MOC_FILES _sources)
    FOREACH (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -144,14 +144,14 @@ MACRO(KDE3_ADD_MOC_FILES _sources)
       SET(${_sources} ${${_sources}} ${_moc})
 
    ENDFOREACH (_current_FILE)
-ENDMACRO(KDE3_ADD_MOC_FILES)
+ENDMACRO (KDE3_ADD_MOC_FILES)
 
 
-GET_FILENAME_COMPONENT( KDE3_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
+GET_FILENAME_COMPONENT(KDE3_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})
-MACRO(KDE3_ADD_UI_FILES _sources )
+MACRO (KDE3_ADD_UI_FILES _sources)
    FOREACH (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -183,14 +183,14 @@ MACRO(KDE3_ADD_UI_FILES _sources )
          DEPENDS ${_header}
       )
 
-      SET(${_sources} ${${_sources}} ${_src} ${_moc} )
+      SET(${_sources} ${${_sources}} ${_src} ${_moc})
 
    ENDFOREACH (_current_FILE)
-ENDMACRO(KDE3_ADD_UI_FILES)
+ENDMACRO (KDE3_ADD_UI_FILES)
 
 
-MACRO(KDE3_AUTOMOC)
-   SET(_matching_FILES )
+MACRO (KDE3_AUTOMOC)
+   SET(_matching_FILES)
    FOREACH (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_abs_FILE ${_current_FILE} ABSOLUTE)
@@ -211,7 +211,7 @@ MACRO(KDE3_AUTOMOC)
          GET_FILENAME_COMPONENT(_abs_PATH ${_abs_FILE} PATH)
 
          STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
-         IF(_match)
+         IF (_match)
             FOREACH (_current_MOC_INC ${_match})
                STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
@@ -229,57 +229,57 @@ MACRO(KDE3_AUTOMOC)
                MACRO_ADD_FILE_DEPENDENCIES(${_abs_FILE} ${_moc})
 
             ENDFOREACH (_current_MOC_INC)
-         ENDIF(_match)
+         ENDIF (_match)
 
       ENDIF (EXISTS ${_abs_FILE} AND NOT _skip)
    ENDFOREACH (_current_FILE)
-ENDMACRO(KDE3_AUTOMOC)
+ENDMACRO (KDE3_AUTOMOC)
 
 
-MACRO(KDE3_INSTALL_ICONS _theme)
-   ADD_CUSTOM_TARGET(install_icons )
-   SET_TARGET_PROPERTIES(install_icons PROPERTIES POST_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake )
+MACRO (KDE3_INSTALL_ICONS _theme)
+   ADD_CUSTOM_TARGET(install_icons)
+   SET_TARGET_PROPERTIES(install_icons PROPERTIES POST_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake)
    FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "# icon installations rules\n")
    FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "SET(CMAKE_BACKWARDS_COMPATIBILITY \"2.2\") \n")
 
    FILE(GLOB _icons *.png)
-   FOREACH(_current_ICON ${_icons} )
+   FOREACH (_current_ICON ${_icons})
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\1" _size "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _name "${_current_ICON}")
 
       SET(_icon_GROUP "actions")
 
-      IF(${_group} STREQUAL "mime")
+      IF (${_group} STREQUAL "mime")
          SET(_icon_GROUP  "mimetypes")
-      ENDIF(${_group} STREQUAL "mime")
+      ENDIF (${_group} STREQUAL "mime")
 
-      IF(${_group} STREQUAL "filesys")
+      IF (${_group} STREQUAL "filesys")
          SET(_icon_GROUP  "filesystems")
-      ENDIF(${_group} STREQUAL "filesys")
+      ENDIF (${_group} STREQUAL "filesys")
 
-      IF(${_group} STREQUAL "device")
+      IF (${_group} STREQUAL "device")
          SET(_icon_GROUP  "devices")
-      ENDIF(${_group} STREQUAL "device")
+      ENDIF (${_group} STREQUAL "device")
 
-      IF(${_group} STREQUAL "app")
+      IF (${_group} STREQUAL "app")
          SET(_icon_GROUP  "apps")
-      ENDIF(${_group} STREQUAL "app")
+      ENDIF (${_group} STREQUAL "app")
 
-      IF(${_group} STREQUAL "action")
+      IF (${_group} STREQUAL "action")
          SET(_icon_GROUP  "actions")
-      ENDIF(${_group} STREQUAL "action")
+      ENDIF (${_group} STREQUAL "action")
 
-#      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
+#      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}")
       SET(_ICON_INSTALL_NAME ${CMAKE_INSTALL_PREFIX}/share/icons/${_theme}/${_size}x${_size}/${_icon_GROUP}/${_name})
       FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "message(STATUS \"Installing ${_ICON_INSTALL_NAME}\") \n")
-      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE( ${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
+      FILE(APPEND ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake "CONFIGURE_FILE(${_current_ICON} ${_ICON_INSTALL_NAME} COPYONLY) \n")
 
    ENDFOREACH (_current_ICON)
-ENDMACRO(KDE3_INSTALL_ICONS)
+ENDMACRO (KDE3_INSTALL_ICONS)
 
 
-MACRO(KDE3_INSTALL_LIBTOOL_FILE _target)
+MACRO (KDE3_INSTALL_LIBTOOL_FILE _target)
    GET_TARGET_PROPERTY(_target_location ${_target} LOCATION)
 
    GET_FILENAME_COMPONENT(_laname ${_target_location} NAME_WE)
@@ -304,23 +304,23 @@ MACRO(KDE3_INSTALL_LIBTOOL_FILE _target)
    FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/lib/kde3'\n")
 
    INSTALL_FILES(/lib/kde3 FILES ${_laname})
-ENDMACRO(KDE3_INSTALL_LIBTOOL_FILE)
+ENDMACRO (KDE3_INSTALL_LIBTOOL_FILE)
 
 
-MACRO(KDE3_CREATE_FINAL_FILE _filename)
+MACRO (KDE3_CREATE_FINAL_FILE _filename)
    FILE(WRITE ${_filename} "//autogenerated file\n")
    FOREACH (_current_FILE ${ARGN})
       FILE(APPEND ${_filename} "#include \"${_current_FILE}\"\n")
    ENDFOREACH (_current_FILE)
 
-ENDMACRO(KDE3_CREATE_FINAL_FILE)
+ENDMACRO (KDE3_CREATE_FINAL_FILE)
 
 
 OPTION(KDE3_ENABLE_FINAL "Enable final all-in-one compilation")
 OPTION(KDE3_BUILD_TESTS  "Build the tests")
 
 
-MACRO(KDE3_ADD_KPART _target_NAME _with_PREFIX)
+MACRO (KDE3_ADD_KPART _target_NAME _with_PREFIX)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise SET the prefix empty
    IF (${_with_PREFIX} STREQUAL "WITH_PREFIX")
       SET(_first_SRC)
@@ -335,41 +335,41 @@ MACRO(KDE3_ADD_KPART _target_NAME _with_PREFIX)
       ADD_LIBRARY(${_target_NAME} MODULE ${_first_SRC} ${ARGN})
    ENDIF (KDE3_ENABLE_FINAL)
 
-   IF(_first_SRC)
+   IF (_first_SRC)
       SET_TARGET_PROPERTIES(${_target_NAME} PROPERTIES PREFIX "")
-   ENDIF(_first_SRC)
+   ENDIF (_first_SRC)
 
    KDE3_INSTALL_LIBTOOL_FILE(${_target_NAME})
 
-ENDMACRO(KDE3_ADD_KPART)
+ENDMACRO (KDE3_ADD_KPART)
 
 
-MACRO(KDE3_ADD_KDEINIT_EXECUTABLE _target_NAME )
+MACRO (KDE3_ADD_KDEINIT_EXECUTABLE _target_NAME)
 
    IF (KDE3_ENABLE_FINAL)
       KDE3_CREATE_FINAL_FILE(${_target_NAME}_final.cpp ${ARGN})
       ADD_LIBRARY(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final.cpp)
    ELSE (KDE3_ENABLE_FINAL)
-      ADD_LIBRARY(kdeinit_${_target_NAME} SHARED ${ARGN} )
+      ADD_LIBRARY(kdeinit_${_target_NAME} SHARED ${ARGN})
    ENDIF (KDE3_ENABLE_FINAL)
 
    CONFIGURE_FILE(${KDE3_MODULE_DIR}/kde3init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
 
-   ADD_EXECUTABLE( ${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
-   TARGET_LINK_LIBRARIES( ${_target_NAME} kdeinit_${_target_NAME} )
+   ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+   TARGET_LINK_LIBRARIES(${_target_NAME} kdeinit_${_target_NAME})
 
-ENDMACRO(KDE3_ADD_KDEINIT_EXECUTABLE)
+ENDMACRO (KDE3_ADD_KDEINIT_EXECUTABLE)
 
 
-MACRO(KDE3_ADD_EXECUTABLE _target_NAME )
+MACRO (KDE3_ADD_EXECUTABLE _target_NAME)
 
    IF (KDE3_ENABLE_FINAL)
       KDE3_CREATE_FINAL_FILE(${_target_NAME}_final.cpp ${ARGN})
       ADD_EXECUTABLE(${_target_NAME} ${_target_NAME}_final.cpp)
    ELSE (KDE3_ENABLE_FINAL)
-      ADD_EXECUTABLE(${_target_NAME} ${ARGN} )
+      ADD_EXECUTABLE(${_target_NAME} ${ARGN})
    ENDIF (KDE3_ENABLE_FINAL)
 
-ENDMACRO(KDE3_ADD_EXECUTABLE)
+ENDMACRO (KDE3_ADD_EXECUTABLE)
 
 

@@ -33,15 +33,15 @@ if (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
    # add the winsock2 library, using find_library or something like this would probably be better
    set(KDEWIN32_LIBRARIES ${KDEWIN32_LIBRARY} user32 shell32 ws2_32)
 
-   if(MINGW)
+   if (MINGW)
       #mingw compiler
       set(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/mingw ${QT_INCLUDES})
-   else(MINGW)
+   else (MINGW)
       # msvc compiler
       # add the MS SDK include directory if available
       MACRO_GETENV_WIN_PATH(MSSDK_DIR MSSDK)
       set(KDEWIN32_INCLUDES ${KDEWIN32_INCLUDE_DIR} ${KDEWIN32_INCLUDE_DIR}/msvc  ${QT_INCLUDES} ${MSSDK_DIR})
-   endif(MINGW)
+   endif (MINGW)
    
 endif (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
 

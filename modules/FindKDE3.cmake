@@ -62,9 +62,9 @@
 #
 # Author: Alexander Neundorf <neundorf@kde.org>
 
-IF(NOT UNIX)
+IF (NOT UNIX)
    MESSAGE(FATAL_ERROR "Compiling KDE3 applications and libraries under Windows is not supported")
-ENDIF(NOT UNIX)
+ENDIF (NOT UNIX)
 
 
 SET(QT_MT_REQUIRED TRUE)
@@ -81,16 +81,16 @@ SET(QT_AND_KDECORE_LIBS ${QT_LIBRARIES} kdecore)
 SET(KDE3_DEFINITIONS -DQT_CLEAN_NAMESPACE -D_GNU_SOURCE)
 
 #only on linux, but NOT e.g. on FreeBSD:
-IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
-   SET (KDE3_DEFINITIONS ${KDE3_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE)
-   SET ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-   SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
-ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+IF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+   SET(KDE3_DEFINITIONS ${KDE3_DEFINITIONS} -D_XOPEN_SOURCE=500 -D_BSD_SOURCE)
+   SET(CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -fno-exceptions -fno-check-new -fno-common")
+ENDIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 # works on FreeBSD, NOT tested on NetBSD and OpenBSD
 IF (CMAKE_SYSTEM_NAME MATCHES BSD)
-   SET ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
-   SET ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
+   SET(CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-common")
+   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -O2 -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
 ENDIF (CMAKE_SYSTEM_NAME MATCHES BSD)
 
 
@@ -134,18 +134,19 @@ FIND_PROGRAM(KDE3_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
   $ENV{KDEDIR}/bin
   /opt/kde/bin
   /opt/kde3/bin
-  )
+)
 
 FIND_PROGRAM(KDE3_DCOPIDL2CPP_EXECUTABLE NAME dcopidl2cpp PATHS
   $ENV{KDEDIR}/bin
   /opt/kde/bin
-  /opt/kde3/bin)
+  /opt/kde3/bin
+)
 
 FIND_PROGRAM(KDE3_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS
   $ENV{KDEDIR}/bin
   /opt/kde/bin
-  /opt/kde3/bin)
-
+  /opt/kde3/bin
+)
 
 # KDE3Macros.cmake contains all the KDE specific macros
 INCLUDE(KDE3Macros)
@@ -160,35 +161,35 @@ ENDIF (KDE3_INCLUDE_DIR AND KDE3_LIB_DIR AND KDE3_DCOPIDL_EXECUTABLE AND KDE3_DC
 
 
 MACRO (KDE3_PRINT_RESULTS)
-   IF(KDE3_INCLUDE_DIR)
+   IF (KDE3_INCLUDE_DIR)
       MESSAGE(STATUS "Found KDE3 include dir: ${KDE3_INCLUDE_DIR}")
-   ELSE(KDE3_INCLUDE_DIR)
+   ELSE (KDE3_INCLUDE_DIR)
       MESSAGE(STATUS "Didn't find KDE3 headers")
-   ENDIF(KDE3_INCLUDE_DIR)
+   ENDIF (KDE3_INCLUDE_DIR)
 
-   IF(KDE3_LIB_DIR)
+   IF (KDE3_LIB_DIR)
       MESSAGE(STATUS "Found KDE3 library dir: ${KDE3_LIB_DIR}")
-   ELSE(KDE3_LIB_DIR)
+   ELSE (KDE3_LIB_DIR)
       MESSAGE(STATUS "Didn't find KDE3 core library")
-   ENDIF(KDE3_LIB_DIR)
+   ENDIF (KDE3_LIB_DIR)
 
-   IF(KDE3_DCOPIDL_EXECUTABLE)
+   IF (KDE3_DCOPIDL_EXECUTABLE)
       MESSAGE(STATUS "Found KDE3 dcopidl preprocessor: ${KDE3_DCOPIDL_EXECUTABLE}")
-   ELSE(KDE3_DCOPIDL_EXECUTABLE)
+   ELSE (KDE3_DCOPIDL_EXECUTABLE)
       MESSAGE(STATUS "Didn't find the KDE3 dcopidl preprocessor")
-   ENDIF(KDE3_DCOPIDL_EXECUTABLE)
+   ENDIF (KDE3_DCOPIDL_EXECUTABLE)
 
-   IF(KDE3_DCOPIDL2CPP_EXECUTABLE)
+   IF (KDE3_DCOPIDL2CPP_EXECUTABLE)
       MESSAGE(STATUS "Found KDE3 dcopidl2cpp preprocessor: ${KDE3_DCOPIDL2CPP_EXECUTABLE}")
-   ELSE(KDE3_DCOPIDL2CPP_EXECUTABLE)
+   ELSE (KDE3_DCOPIDL2CPP_EXECUTABLE)
       MESSAGE(STATUS "Didn't find the KDE3 dcopidl2cpp preprocessor")
-   ENDIF(KDE3_DCOPIDL2CPP_EXECUTABLE)
+   ENDIF (KDE3_DCOPIDL2CPP_EXECUTABLE)
 
-   IF(KDE3_KCFGC_EXECUTABLE)
+   IF (KDE3_KCFGC_EXECUTABLE)
       MESSAGE(STATUS "Found KDE3 kconfig_compiler preprocessor: ${KDE3_KCFGC_EXECUTABLE}")
-   ELSE(KDE3_KCFGC_EXECUTABLE)
+   ELSE (KDE3_KCFGC_EXECUTABLE)
       MESSAGE(STATUS "Didn't find the KDE3 kconfig_compiler preprocessor")
-   ENDIF(KDE3_KCFGC_EXECUTABLE)
+   ENDIF (KDE3_KCFGC_EXECUTABLE)
 
 ENDMACRO (KDE3_PRINT_RESULTS)
 
