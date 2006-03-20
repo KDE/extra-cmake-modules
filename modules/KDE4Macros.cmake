@@ -20,7 +20,7 @@
 
 #create the kidl and skeletion file for dcop stuff
 #usage: KDE_ADD_COP_SKELS(foo_SRCS ${dcop_headers})
-MACRO(KDE4_ADD_DCOP_SKELS _sources)
+MACRO (KDE4_ADD_DCOP_SKELS _sources)
    foreach (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -49,7 +49,7 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
            ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
            DEPENDS ${_kidl} ${_KDE4_DCOPIDL2CPP_DEP} )
 
-        MACRO_ADDITIONAL_CLEAN_FILES( ${_skel_H})
+        MACRO_ADDITIONAL_CLEAN_FILES(${_skel_H})
 
       endif (NOT HAVE_${_basename}_SKEL_RULE)
 
@@ -57,10 +57,10 @@ MACRO(KDE4_ADD_DCOP_SKELS _sources)
 
    endforeach (_current_FILE)
 
-ENDMACRO(KDE4_ADD_DCOP_SKELS)
+ENDMACRO (KDE4_ADD_DCOP_SKELS)
 
 
-MACRO(KDE4_ADD_DCOP_STUBS _sources)
+MACRO (KDE4_ADD_DCOP_STUBS _sources)
    foreach (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -89,7 +89,7 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
            ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
            DEPENDS ${_kidl} ${_KDE4_DCOPIDL2CPP_DEP} )
 
-        MACRO_ADDITIONAL_CLEAN_FILES( ${_stub_H})
+        MACRO_ADDITIONAL_CLEAN_FILES(${_stub_H})
 
       endif (NOT HAVE_${_basename}_STUB_RULE)
 
@@ -97,10 +97,10 @@ MACRO(KDE4_ADD_DCOP_STUBS _sources)
 
    endforeach (_current_FILE)
 
-ENDMACRO(KDE4_ADD_DCOP_STUBS)
+ENDMACRO (KDE4_ADD_DCOP_STUBS)
 
 
-MACRO(KDE4_ADD_KCFG_FILES _sources)
+MACRO (KDE4_ADD_KCFG_FILES _sources)
    foreach (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -133,14 +133,14 @@ MACRO(KDE4_ADD_KCFG_FILES _sources)
 
    endforeach (_current_FILE)
 
-ENDMACRO(KDE4_ADD_KCFG_FILES)
+ENDMACRO (KDE4_ADD_KCFG_FILES)
 
 
-GET_FILENAME_COMPONENT( KDE4_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
+GET_FILENAME_COMPONENT(KDE4_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})
-MACRO(KDE4_ADD_UI_FILES _sources )
+MACRO (KDE4_ADD_UI_FILES _sources )
    foreach (_current_FILE ${ARGN})
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -162,12 +162,12 @@ MACRO(KDE4_ADD_UI_FILES _sources )
          DEPENDS ${_tmp_FILE}
       )
    endforeach (_current_FILE)
-ENDMACRO(KDE4_ADD_UI_FILES)
+ENDMACRO (KDE4_ADD_UI_FILES)
 
 
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})
-MACRO(KDE4_ADD_UI3_FILES _sources )
+MACRO (KDE4_ADD_UI3_FILES _sources )
 
    QT4_GET_MOC_INC_DIRS(_moc_INCS)
 
@@ -216,10 +216,10 @@ MACRO(KDE4_ADD_UI3_FILES _sources )
       set(${_sources} ${${_sources}} ${_src} ${_moc} )
 
    endforeach (_current_FILE)
-ENDMACRO(KDE4_ADD_UI3_FILES)
+ENDMACRO (KDE4_ADD_UI3_FILES)
 
 
-MACRO(KDE4_AUTOMOC)
+MACRO (KDE4_AUTOMOC)
    QT4_GET_MOC_INC_DIRS(_moc_INCS)
 
    set(_matching_FILES )
@@ -242,7 +242,7 @@ MACRO(KDE4_AUTOMOC)
          get_filename_component(_abs_PATH ${_abs_FILE} PATH)
 
          string(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
-         if(_match)
+         if (_match)
             foreach (_current_MOC_INC ${_match})
                string(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
@@ -260,52 +260,52 @@ MACRO(KDE4_AUTOMOC)
                macro_add_file_dependencies(${_abs_FILE} ${_moc})
 
             endforeach (_current_MOC_INC)
-         endif(_match)
+         endif (_match)
 
       endif (EXISTS ${_abs_FILE} AND NOT _skip)
    endforeach (_current_FILE)
-endmacro(KDE4_AUTOMOC)
+endmacro (KDE4_AUTOMOC)
 
 
 # only used internally by KDE4_INSTALL_ICONS
-MACRO( _KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME)
+MACRO (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME)
 
    # if the string doesn't match the pattern, the result is the full string, so all three have the same content
-   IF( NOT ${_group} STREQUAL ${_install_NAME} )
+   IF (NOT ${_group} STREQUAL ${_install_NAME} )
       SET(_icon_GROUP "actions")
 
-      IF(${_group} STREQUAL "mime")
+      IF (${_group} STREQUAL "mime")
          SET(_icon_GROUP  "mimetypes")
-      ENDIF(${_group} STREQUAL "mime")
+      ENDIF (${_group} STREQUAL "mime")
 
-      IF(${_group} STREQUAL "filesys")
+      IF (${_group} STREQUAL "filesys")
          SET(_icon_GROUP  "filesystems")
-      ENDIF(${_group} STREQUAL "filesys")
+      ENDIF (${_group} STREQUAL "filesys")
 
-      IF(${_group} STREQUAL "device")
+      IF (${_group} STREQUAL "device")
          SET(_icon_GROUP  "devices")
-      ENDIF(${_group} STREQUAL "device")
+      ENDIF (${_group} STREQUAL "device")
 
-      IF(${_group} STREQUAL "app")
+      IF (${_group} STREQUAL "app")
          SET(_icon_GROUP  "apps")
-      ENDIF(${_group} STREQUAL "app")
+      ENDIF (${_group} STREQUAL "app")
 
-      IF(${_group} STREQUAL "action")
+      IF (${_group} STREQUAL "action")
          SET(_icon_GROUP  "actions")
-      ENDIF(${_group} STREQUAL "action")
+      ENDIF (${_group} STREQUAL "action")
 
 #      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
    INSTALL(FILES ${_orig_NAME} DESTINATION ${_install_PATH}/${_icon_GROUP}/ RENAME ${_install_NAME} )
-   ENDIF ( NOT ${_group} STREQUAL ${_install_NAME} )
+   ENDIF (NOT ${_group} STREQUAL ${_install_NAME} )
 
-ENDMACRO( _KDE4_ADD_ICON_INSTALL_RULE )
+ENDMACRO (_KDE4_ADD_ICON_INSTALL_RULE)
 
 
-MACRO(KDE4_INSTALL_ICONS _defaultpath _theme )
+MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
 
    # first the png icons
    FILE(GLOB _icons *.png)
-   foreach(_current_ICON ${_icons} )
+   foreach (_current_ICON ${_icons} )
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\1" _size  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _name  "${_current_ICON}")
@@ -324,20 +324,20 @@ MACRO(KDE4_INSTALL_ICONS _defaultpath _theme )
                                  ${_group} ${_current_ICON} ${_name})
    ENDforeach (_current_ICON)
 
-ENDMACRO(KDE4_INSTALL_ICONS)
+ENDMACRO (KDE4_INSTALL_ICONS)
 
 
 # for the case that something should be added to every CMakeLists.txt at the top
-MACRO(KDE4_HEADER)
-ENDMACRO(KDE4_HEADER)
+MACRO (KDE4_HEADER)
+ENDMACRO (KDE4_HEADER)
 
 
 # same as above, but at the end
-MACRO(KDE4_FOOTER)
-ENDMACRO(KDE4_FOOTER)
+MACRO (KDE4_FOOTER)
+ENDMACRO (KDE4_FOOTER)
 
 
-MACRO(KDE4_INSTALL_LIBTOOL_FILE _subdir _target)
+MACRO (KDE4_INSTALL_LIBTOOL_FILE _subdir _target)
    GET_TARGET_PROPERTY(_target_location ${_target} LOCATION)
 
    GET_FILENAME_COMPONENT(_laname ${_target_location} NAME_WE)
@@ -362,26 +362,26 @@ MACRO(KDE4_INSTALL_LIBTOOL_FILE _subdir _target)
    FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${_subdir}'\n")
 
    INSTALL_FILES(${_subdir} FILES ${_laname})
-   MACRO_ADDITIONAL_CLEAN_FILES( ${_laname})
-ENDMACRO(KDE4_INSTALL_LIBTOOL_FILE)
+   MACRO_ADDITIONAL_CLEAN_FILES(${_laname})
+ENDMACRO (KDE4_INSTALL_LIBTOOL_FILE)
 
 
-MACRO(KDE4_CREATE_FINAL_FILES _filenameCPP _filenameC )
+MACRO (KDE4_CREATE_FINAL_FILES _filenameCPP _filenameC )
    FILE(WRITE ${_filenameCPP} "//autogenerated file\n")
    FILE(WRITE ${_filenameC} "/*autogenerated file*/\n")
    foreach (_current_FILE ${ARGN})
       STRING(REGEX MATCH ".+\\.c$" _isCFile ${_current_FILE})
-      if(_isCFile)
+      if (_isCFile)
          FILE(APPEND ${_filenameC} "#include \"${_current_FILE}\"\n")
-      else(_isCFile)
+      else (_isCFile)
          FILE(APPEND ${_filenameCPP} "#include \"${_current_FILE}\"\n")
-      endif(_isCFile)
+      endif (_isCFile)
    endforeach (_current_FILE)
 
-ENDMACRO(KDE4_CREATE_FINAL_FILES)
+ENDMACRO (KDE4_CREATE_FINAL_FILES)
 
 
-MACRO(KDE4_HANDLE_RPATH _target_NAME)
+MACRO (KDE4_HANDLE_RPATH _target_NAME)
    if (KDE4_NEED_WRAPPER_SCRIPTS)
       if (APPLE)
          set(_library_path_variable "DYLD_LIBRARY_PATH")
@@ -392,10 +392,10 @@ MACRO(KDE4_HANDLE_RPATH _target_NAME)
       get_target_property(_executable ${_target_NAME} LOCATION )
       configure_file(${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/${_target_NAME}.sh)
    endif (KDE4_NEED_WRAPPER_SCRIPTS)
-ENDMACRO(KDE4_HANDLE_RPATH)
+ENDMACRO (KDE4_HANDLE_RPATH)
 
 
-MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
+MACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
    if (${_with_PREFIX} STREQUAL "WITH_PREFIX")
       set(_first_SRC)
@@ -410,9 +410,9 @@ MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
       ADD_LIBRARY(${_target_NAME} MODULE ${_first_SRC} ${ARGN})
    endif (KDE4_ENABLE_FINAL)
 
-   if(_first_SRC)
+   if (_first_SRC)
       SET_TARGET_PROPERTIES(${_target_NAME} PROPERTIES PREFIX "")
-   endif(_first_SRC)
+   endif (_first_SRC)
 
 #   if (UNIX)
 #   I guess under windows the libtool file are not required
@@ -426,13 +426,13 @@ MACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    ENDIF (WIN32)
 
-ENDMACRO(KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
+ENDMACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 
-MACRO(KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
+MACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
-   MACRO_ADDITIONAL_CLEAN_FILES( ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
+   MACRO_ADDITIONAL_CLEAN_FILES(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
 
 #   if (WIN32)
 #      # under windows, just build a normal executable
@@ -448,15 +448,15 @@ MACRO(KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
       endif (KDE4_ENABLE_FINAL)
 
 
-      ADD_EXECUTABLE( ${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp )
+      ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
       KDE4_HANDLE_RPATH(${_target_NAME})
-      TARGET_LINK_LIBRARIES( ${_target_NAME} kdeinit_${_target_NAME} )
+      TARGET_LINK_LIBRARIES(${_target_NAME} kdeinit_${_target_NAME})
 #   endif (WIN32)
 
-ENDMACRO(KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME)
+ENDMACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME)
 
 
-MACRO(KDE4_ADD_EXECUTABLE _target_NAME )
+MACRO (KDE4_ADD_EXECUTABLE _target_NAME )
 
    IF (KDE4_ENABLE_FINAL)
       KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${ARGN})
@@ -466,10 +466,10 @@ MACRO(KDE4_ADD_EXECUTABLE _target_NAME )
    ENDIF (KDE4_ENABLE_FINAL)
    KDE4_HANDLE_RPATH(${_target_NAME})
 
-ENDMACRO(KDE4_ADD_EXECUTABLE _target_NAME)
+ENDMACRO (KDE4_ADD_EXECUTABLE _target_NAME)
 
 
-MACRO(KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
+MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
 
    set(_first_SRC ${_lib_TYPE})
@@ -502,9 +502,9 @@ MACRO(KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    endif (WIN32)
 
-ENDMACRO(KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
+ENDMACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 
-MACRO(KDE4_CREATE_DOXYGEN_DOCS)
-ENDMACRO(KDE4_CREATE_DOXYGEN_DOCS)
+MACRO (KDE4_CREATE_DOXYGEN_DOCS)
+ENDMACRO (KDE4_CREATE_DOXYGEN_DOCS)
 
