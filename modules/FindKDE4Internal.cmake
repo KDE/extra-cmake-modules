@@ -163,10 +163,6 @@ include (MacroLibrary)
 
 #add some KDE specific stuff
 
-# set CMAKE_INSTALL_PREFIX to $KDEDIR, 
-if ($ENV{KDEDIR} MATCHES "[:print:]")
-   set(CMAKE_INSTALL_PREFIX  $ENV{KDEDIR})
-endif ($ENV{KDEDIR} MATCHES "[:print:]")
 message(STATUS "Setting installation dir: ${CMAKE_INSTALL_PREFIX}")
 
 
