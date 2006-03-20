@@ -1,2 +1,2 @@
 
-exec_program( ${CMAKE_COMMAND} ARGS -E remove ${FILES_TO_REMOVE} )
+exec_program(${CMAKE_COMMAND} ARGS -E remove ${FILES_TO_REMOVE})

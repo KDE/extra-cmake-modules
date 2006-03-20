@@ -1,6 +1,6 @@
 
 #using a ui3 file with uic3
-if(KDE3_IMPL)
+if (KDE3_IMPL)
 
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
     -nounload -tr tr2i18n
@@ -9,10 +9,10 @@ if(KDE3_IMPL)
     OUTPUT_VARIABLE _uic_CONTENTS
     ERROR_QUIET
   )
-endif(KDE3_IMPL)
+endif (KDE3_IMPL)
 
 
-if(KDE3_HEADER)
+if (KDE3_HEADER)
 
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
     -nounload -tr tr2i18n
@@ -21,7 +21,7 @@ if(KDE3_HEADER)
     ERROR_QUIET
   )
    set(KDE_UIC_CPP_FILE ${KDE_UIC_H_FILE})
-endif(KDE3_HEADER)
+endif (KDE3_HEADER)
 
 # the kde4 branch
 if (KDE4_HEADER)
