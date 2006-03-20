@@ -30,18 +30,33 @@
 # KDE4_KUTILS_LIBRARY      - the kutils library
 # KDE4_KDE3SUPPORT_LIBRARY - the kde3support library
 # KDE4_KXMLCORE_LIBRARY    - the kxmlcore library
+# KDE4_KHTML_LIBRARY       - the khtml library
+# KDE4_KJS_LIBRARY         - the kjs library
+# KDE4_KNEWSTUFF_LIBRARY   - the knewstuff library
+# KDE4_DCOP_LIBRARY        - the DCOP library
+# KDE4_KDEPRINT_LIBRARY    - the kdeprint library
+# KDE4_KSPELL2_LIBRARY     - the kspell2 library
+# KDE4_KDNSSD_LIBRARY      - the kdnssd library 
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
 # should be used instead of the ones above:
 #
-# KDE4_KDECORE_LIBRARIES     - the kdecore library and all depending libraries
-# KDE4_KDEUI_LIBRARIES       - the kdeui library and all depending libraries
-# KDE4_KIO_LIBRARIES         - the kio library and all depending libraries
-# KDE4_KPARTS_LIBRARIES      - the kparts library and all depending libraries
-# KDE4_KUTILS_LIBRARIES      - the kutils library and all depending libraries
-# KDE4_KDE3SUPPORT_LIBRARIES - the kde3support library and all depending libraries
-# KDE4_KXMLCORE_LIBRARIES    - the kxmlcore library and all depending libraries
+# KDE4_KDECORE_LIBS          - the kdecore library and all depending libraries
+# KDE4_KDEUI_LIBS            - the kdeui library and all depending libraries
+# KDE4_KIO_LIBS              - the kio library and all depending libraries
+# KDE4_KPARTS_LIBS           - the kparts library and all depending libraries
+# KDE4_KUTILS_LIBS           - the kutils library and all depending libraries
+# KDE4_KDE3SUPPORT_LIBS      - the kde3support library and all depending libraries
+# KDE4_KXMLCORE_LIBS         - the kxmlcore library and all depending libraries
+# KDE4_KHTML_LIBS            - the khtml library and all depending libraries
+# KDE4_KJS_LIBS              - the kjs library and all depending libraries
+# KDE4_KNEWSTUFF_LIBS        - the knewstuff library and all depending libraries
+# KDE4_DCOP_LIBS             - the DCOP library and all depending libraries
+# KDE4_KDEPRINT_LIBS         - the kdeprint library and all depending libraries
+# KDE4_KSPELL2_LIBS          - the kspell2 library and all depending libraries
+# KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
+#
 #
 # This module defines a bunch of variables used as locations
 # for install directories. They are all interpreted relative
@@ -152,19 +167,14 @@
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
 
 
-cmake_minimum_required(VERSION 2.3.4)
+cmake_minimum_required(VERSION 2.3.4 FATAL_ERROR)
 
 #this line includes FindQt.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
 
-set(QT_AND_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
-
 include (MacroLibrary)
 
 #add some KDE specific stuff
-
-message(STATUS "Setting installation dir: ${CMAKE_INSTALL_PREFIX}")
-
 
 # the following are directories where stuff will be installed to
 set(CONFIG_INSTALL_DIR       /share/config              CACHE STRING "The config file install dir")
@@ -239,6 +249,8 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    message(STATUS "Building kdelibs...")
 
    set(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
+   set(KDE4_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
+
 
    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
   
@@ -288,23 +300,43 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
 
    find_library(KDE4_KDECORE_LIBRARY NAMES kdecore PATHS ${KDE4_LIB_INSTALL_DIR} )
-   set(KDE4_KDECORE_LIBRARIES ${kdecore_LIB_DEPENDS} ${KDE4_KDECORE_LIBRARY} )
+   set(KDE4_KDECORE_LIBS ${kdecore_LIB_DEPENDS} ${KDE4_KDECORE_LIBRARY} )
 
    find_library(KDE4_KDEUI_LIBRARY NAMES kdeui PATHS ${KDE4_LIB_INSTALL_DIR} )
-   set(KDE4_KDEUI_LIBRARIES ${kdeui_LIB_DEPENDS} ${KDE4_KDEUI_LIBRARY} )
+   set(KDE4_KDEUI_LIBS ${kdeui_LIB_DEPENDS} ${KDE4_KDEUI_LIBRARY} )
 
    find_library(KDE4_KIO_LIBRARY NAMES kio PATHS ${KDE4_LIB_INSTALL_DIR} )
-   set(KDE4_KIO_LIBRARIES ${kio_LIB_DEPENDS} ${KDE4_KIO_LIBRARY} )
+   set(KDE4_KIO_LIBS ${kio_LIB_DEPENDS} ${KDE4_KIO_LIBRARY} )
 
    find_library(KDE4_KPARTS_LIBRARY NAMES kparts PATHS ${KDE4_LIB_INSTALL_DIR} )
-   set(KDE4_KPARTS_LIBRARIES ${kparts_LIB_DEPENDS} ${KDE4_KPARTS_LIBRARY} )
+   set(KDE4_KPARTS_LIBS ${kparts_LIB_DEPENDS} ${KDE4_KPARTS_LIBRARY} )
 
    find_library(KDE4_KUTILS_LIBRARY NAMES kutils PATHS ${KDE4_LIB_INSTALL_DIR} )
-   set(KDE4_KUTILS_LIBRARIES ${kutils_LIB_DEPENDS} ${KDE4_KUTILS_LIBRARY} )
+   set(KDE4_KUTILS_LIBS ${kutils_LIB_DEPENDS} ${KDE4_KUTILS_LIBRARY} )
 
    find_library(KDE4_KDE3SUPPORT_LIBRARY NAMES kde3support PATHS ${KDE4_LIB_INSTALL_DIR} )
-   set(KDE4_KDE3SUPPORT_LIBRARIES ${kde3support_LIB_DEPENDS} ${KDE4_KDE3SUPPORT_LIBRARY} )
+   set(KDE4_KDE3SUPPORT_LIBS ${kde3support_LIB_DEPENDS} ${KDE4_KDE3SUPPORT_LIBRARY} )
 
+   find_library(KDE4_KHTML_LIBRARY NAMES khtml PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KHTML_LIBS ${khtml_LIB_DEPENDS} ${KDE4_KHTML_LIBRARY} )
+
+   find_library(KDE4_KJS_LIBRARY NAMES kjs PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KJS_LIBS ${kjs_LIB_DEPENDS} ${KDE4_KJS_LIBRARY} )
+
+   find_library(KDE4_KNEWSTUFF_LIBRARY NAMES knewstuff PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KNEWSTUFF_LIBS ${knewstuff_LIB_DEPENDS} ${KDE4_KNEWSTUFF_LIBRARY} )
+
+   find_library(KDE4_DCOP_LIBRARY NAMES DCOP PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_DCOP_LIBS ${DCOP_LIB_DEPENDS} ${KDE4_DCOP_LIBRARY} )
+
+   find_library(KDE4_KDEPRINT_LIBRARY NAMES kdeprint PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KDEPRINT_LIBS ${kdeprint_LIB_DEPENDS} ${KDE4_KDEPRINT_LIBRARY} )
+
+   find_library(KDE4_KSPELL2_LIBRARY NAMES kspell2 PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KSPELL2_LIBS ${kspell2_LIB_DEPENDS} ${KDE4_KSPELL2_LIBRARY} )
+
+   find_library(KDE4_KDNSSD_LIBRARY NAMES kdnssd PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KDNSSD_LIBS ${kdnssd_LIB_DEPENDS} ${KDE4_KDNSSD_LIBRARY} )
 
    # now the KDE library directory, kxmlcore is new with KDE4
    find_library(KDE4_KXMLCORE_LIBRARY NAMES kxmlcore
@@ -318,22 +350,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    set(KDE4_KXMLCORE_LIBRARIES ${kxmlcore_LIB_DEPENDS} ${KDE4_KXMLCORE_LIBRARY} )
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
-
-
-
-   set(LIB_KDECORE ${KDE4_KDECORE_LIBRARIES})
-   set(LIB_KDEUI ${KDE4_KDEUI_LIBRARIES})
-   set(LIB_KIO ${KDE4_KIO_LIBRARIES})
-   set(LIB_KPARTS ${KDE4_KPARTS_LIBRARIES})
-   set(LIB_KUTILS ${KDE4_KUTILS_LIBRARIES})
-   set(LIB_KDE3SUPPORT ${KDE4_KDE3SUPPORT_LIBRARIES})
-
-#   set(LIB_KDECORE ${QT_AND_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${X11_X11_LIB} DCOP ${ZLIB_LIBRARY})
-#   set(LIB_KDEUI ${kdeui_LIB_DEPENDS} kdeui)
-#   set(LIB_KIO ${LIB_KDEUI} kio)
-#   set(LIB_KPARTS ${LIB_KIO} kparts)
-#   set(LIB_KUTILS ${LIB_KPARTS} kutils)
-#   set(LIB_KDE3SUPPORT ${QT_QT3SUPPORT_LIBRARY} ${LIB_KUTILS} kde3support)
 
 
   # at first the KDE include direcory
@@ -410,6 +426,17 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc )
    endif (NOT KDE4_MEINPROC_EXECUTABLE)
 
+
+# all the following are deprecated and should be changed to the KDE4_..._LIBRARIES ASAP, Alex
+   set(LIB_KDECORE ${KDE4_KDECORE_LIBS})
+   set(QT_AND_KDECORE_LIBS ${KDE4_KDECORE_LIBS})
+   set(LIB_KDEUI ${KDE4_KDEUI_LIBRARIES})
+   set(LIB_KIO ${KDE4_KIO_LIBRARIES})
+   set(LIB_KPARTS ${KDE4_KPARTS_LIBRARIES})
+   set(LIB_KUTILS ${KDE4_KUTILS_LIBRARIES})
+   set(LIB_KDE3SUPPORT ${KDE4_KDE3SUPPORT_LIBRARIES})
+
+
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 
@@ -431,7 +458,12 @@ if (WIN32)
    find_package(KDEWIN32 REQUIRED)
    
    set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
-   set( QT_AND_KDECORE_LIBS ${QT_AND_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
+
+   # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely, 
+   # otherwise they come from KDELibsDependencies.cmake, Alex
+   if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+      set( KDE4_KDECORE_LIBS ${KDE4_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
+   endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
      
    # windows, mingw
    if(MINGW)
@@ -654,3 +686,6 @@ set(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUD
 
 # NOT used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DQT3_SUPPORT_WARNINGS -DKDE_DEPREACTED_WARNINGS )
+
+# always add CMAKE_CCURRENT_SOURCE_DIR and CMAKE_CURRENT_BINARY_DIR to the include path to save some typing, Alex
+set(CMAKE_INCLUDE_CURRENT_DIR TRUE)
