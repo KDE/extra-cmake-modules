@@ -157,30 +157,12 @@ IF (WIN32)
   SET(QT_DEFINITIONS -DQT_DLL)
 ENDIF(WIN32)
 
-FILE(GLOB GLOB_TEMP_VAR /usr/local/Trolltech/Qt-4*/)
-SET(GLOB_TEMP_VAR)
-IF (GLOB_TEMP_VAR)
-  SET(QT4_PATHS ${QT4_PATHS} ${GLOB_TEMP_VAR})
-ENDIF (GLOB_TEMP_VAR)
-SET(GLOB_TEMP_VAR)
-FILE(GLOB GLOB_TEMP_VAR /usr/local/qt-x11-commercial-4*/bin/)
-IF (GLOB_TEMP_VAR)
-   SET(QT4_PATHS ${QT4_PATHS} ${GLOB_TEMP_VAR})
-ENDIF (GLOB_TEMP_VAR)
-
 # check for qmake
 FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES  qmake-qt4 qmake PATHS
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
   $ENV{QTDIR}/bin
-  ${QT4_PATHS}
-  NO_SYSTEM_PATH
-  NO_CMAKE_SYSTEM_PATH
 )
-
-IF (NOT QT_QMAKE_EXECUTABLE)
-   FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES  qmake-qt4 qmake)
-ENDIF (NOT QT_QMAKE_EXECUTABLE)
 
 IF (QT_QMAKE_EXECUTABLE)
    EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_VERSION"
@@ -221,35 +203,21 @@ IF (QT4_QMAKE_FOUND)
   #       Setting the INCLUDE-Variables
   #
   ########################################
+  # Set QT_QTCORE_INCLUDE_DIR by searching for the QtGlobal header
   IF (NOT QT_HEADERS_DIR)
-    # Set QT_QTCORE_INCLUDE_DIR by searching for the QtGlobal header
-    IF (QT_QMAKE_EXECUTABLE)
-      EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
-        ARGS "-query QT_INSTALL_HEADERS"
-        OUTPUT_VARIABLE qt_headers )
-      SET(QT_HEADERS_DIR ${qt_headers} CACHE INTERNAL "")
-    ENDIF(QT_QMAKE_EXECUTABLE)
-  ENDIF (NOT QT_HEADERS_DIR)
-  
-  FILE(GLOB GLOB_TEMP_VAR /usr/local/qt-x11-commercial-3*/include/Qt/)
-  SET(QT_PATH_INCLUDE ${GLOB_TEMP_VAR})
-  FILE(GLOB GLOB_TEMP_VAR /usr/local/Trolltech/Qt-4*/include/Qt/)
-  SET(QT_PATH_INCLUDE ${GLOB_TEMP_VAR})
+    EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
+      ARGS "-query QT_INSTALL_HEADERS"
+      OUTPUT_VARIABLE qt_headers )
+    SET(QT_HEADERS_DIR ${qt_headers} CACHE INTERNAL "")
+  ENDIF(NOT QT_HEADERS_DIR)
   
   FIND_PATH(QT_QTCORE_INCLUDE_DIR QtGlobal
     "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/include/QtCore"
     ${QT_HEADERS_DIR}/QtCore
     ${QT_LIBRARY_DIR}/QtCore.framework/Headers
     $ENV{QTDIR}/include/QtCore
-    ${QT_PATH_INCLUDE}
-    /usr/local/qt/include/QtCore
-    /usr/local/include/QtCore
-    /usr/lib/qt/include/QtCore
-    /usr/include/QtCore
-    /usr/share/qt4/include/QtCore
-   "$ENV{ProgramFiles}/qt/include/Qt"
-    "C:/Program Files/qt/include/QtCore"
-    /usr/include/qt4/QtCore)
+   "$ENV{ProgramFiles}/qt/include/Qt" 
+   )
 
   # Set QT_INCLUDE_DIR by removine "/QtCore" in the string ${QT_QTCORE_INCLUDE_DIR}
   IF( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
@@ -268,14 +236,10 @@ IF (QT4_QMAKE_FOUND)
   ENDIF( NOT QT_INCLUDE_DIR)
 
 
-  FIND_PATH(QT_DOC_DIR /html/qcoreapplication.html
-    ${QT_PATH_INCLUDE}
-    $ENV{QTDIR}/doc
-    /usr/local/qt/doc
-    /usr/lib/qt/doc
-    /usr/share/qt4/doc
-    "C:/Program Files/qt/doc"
-  )
+  EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
+    ARGS "-query QT_INSTALL_DOCS"
+    OUTPUT_VARIABLE qt_doc_dir )
+  SET(QT_DOC_DIR ${qt_doc_dir} CACHE PATH "The location of the Qt docs")
 
   IF (QT_USE_FRAMEWORKS)
     SET(QT_DEFINITIONS ${QT_DEFINITIONS} -F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} )
@@ -404,13 +368,6 @@ IF (QT4_QMAKE_FOUND)
       PATHS
       ${QT_LIBRARY_DIR}
       $ENV{QTDIR}/lib
-      /usr/local/qt/lib
-      /usr/local/lib
-      /usr/lib/qt/lib
-      /usr/lib
-      /usr/share/qt4/lib
-      C:/Progra~1/qt/lib
-      /usr/lib/qt4
     )
 
     # Set QT_QTCORE_LIBRARY_DEBUG by searching for a lib with "QtCore_debug"
@@ -420,13 +377,6 @@ IF (QT4_QMAKE_FOUND)
       PATHS
       ${QT_LIBRARY_DIR}
       $ENV{QTDIR}/lib
-      /usr/local/qt/lib
-      /usr/local/lib
-      /usr/lib/qt/lib
-      /usr/lib
-      /usr/share/qt4/lib
-      C:/Progra~1/qt/lib
-      /usr/lib/qt4
     )
 
     # Set QT_QT3SUPPORT_LIBRARY
@@ -492,18 +442,21 @@ IF (QT4_QMAKE_FOUND)
 
       # if only the release version was found, set the debug variable also to the release version
       IF (QT_${basename}_LIBRARY_RELEASE AND NOT QT_${basename}_LIBRARY_DEBUG)
-        SET(QT_${basename}_LIBRARY_DEBUG ${QT_${basename}_LIBRARY})
-        SET(QT_${basename}_LIBRARY       ${QT_${basename}_LIBRARY})
+        SET(QT_${basename}_LIBRARY_DEBUG ${QT_${basename}_LIBRARY_RELEASE})
+        SET(QT_${basename}_LIBRARY       ${QT_${basename}_LIBRARY_RELEASE})
+        SET(QT_${basename}_LIBRARIES     ${QT_${basename}_LIBRARY_RELEASE})
       ENDIF (QT_${basename}_LIBRARY_RELEASE AND NOT QT_${basename}_LIBRARY_DEBUG)
 
       # if only the debug version was found, set the release variable also to the debug version
       IF (QT_${basename}_LIBRARY_DEBUG AND NOT QT_${basename}_LIBRARY_RELEASE)
         SET(QT_${basename}_LIBRARY_RELEASE ${QT_${basename}_LIBRARY_DEBUG})
         SET(QT_${basename}_LIBRARY         ${QT_${basename}_LIBRARY_DEBUG})
+        SET(QT_${basename}_LIBRARIES       ${QT_${basename}_LIBRARY_DEBUG})
       ENDIF (QT_${basename}_LIBRARY_DEBUG AND NOT QT_${basename}_LIBRARY_RELEASE)
 
       IF (QT_${basename}_LIBRARY_DEBUG AND QT_${basename}_LIBRARY_RELEASE)
         SET(QT_${basename}_LIBRARY         ${QT_${basename}_LIBRARY_RELEASE})
+        SET(QT_${basename}_LIBRARIES       optimized ${QT_${basename}_LIBRARY_RELEASE} debug ${QT_${basename}_LIBRARY_DEBUG})
       ENDIF (QT_${basename}_LIBRARY_DEBUG AND QT_${basename}_LIBRARY_RELEASE)
 
       SET(QT_${basename}_LIBRARY ${QT_${basename}_LIBRARY} CACHE FILEPATH "The Qt ${basename} library")
@@ -554,13 +507,6 @@ IF (QT4_QMAKE_FOUND)
     PATHS
     ${QT_BINARY_DIR}
     $ENV{QTDIR}/bin
-    /usr/local/qt/bin
-    /usr/local/bin
-    /usr/lib/qt/bin
-    /usr/bin
-    /usr/share/qt4/bin
-    C:/Progra~1/qt/bin
-    /usr/bin/qt4
     NO_SYSTEM_PATH
     NO_CMAKE_SYSTEM_PATH
     )
@@ -579,13 +525,6 @@ IF (QT4_QMAKE_FOUND)
     PATHS
     ${QT_BINARY_DIR}
     $ENV{QTDIR}/bin
-    /usr/local/qt/bin
-    /usr/local/bin
-    /usr/lib/qt/bin
-    /usr/bin
-    /usr/share/qt4/bin
-    C:/Progra~1/qt/bin
-    /usr/bin/qt4
     )
 
   # first the specific paths, then the system path, same as with qmake
@@ -594,13 +533,6 @@ IF (QT4_QMAKE_FOUND)
     PATHS
     ${QT_BINARY_DIR}
     $ENV{QTDIR}/bin
-    /usr/local/qt/bin
-    /usr/local/bin
-    /usr/lib/qt/bin
-    /usr/bin
-    /usr/share/qt4/bin
-    C:/Progra~1/qt/bin
-    /usr/bin/qt4
     NO_SYSTEM_PATH
     NO_CMAKE_SYSTEM_PATH
     )
@@ -618,13 +550,6 @@ IF (QT4_QMAKE_FOUND)
     PATHS
     ${QT_BINARY_DIR}
     $ENV{QTDIR}/bin
-    /usr/local/qt/bin
-    /usr/local/bin
-    /usr/lib/qt/bin
-    /usr/bin
-    /usr/share/qt4/bin
-    C:/Progra~1/qt/bin
-    /usr/bin/qt4
     )
 
   MARK_AS_ADVANCED( QT_UIC_EXECUTABLE QT_UIC3_EXECUTABLE QT_MOC_EXECUTABLE QT_RCC_EXECUTABLE )
