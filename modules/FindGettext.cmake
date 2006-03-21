@@ -21,6 +21,14 @@ if (HAVE_LIBINTL_H)
    set(GETTEXT_SOURCE "built in libc (libintl.h present)")
 endif (HAVE_LIBINTL_H)
 
+# Check for libintl, and check that it provides libintl_dgettext.
+FIND_LIBRARY(LIBINTL_LIBRARY NAMES intl libintl
+   PATHS
+   /usr/lib
+   /usr/local/lib
+)
+CHECK_LIBRARY_EXISTS(${LIBINTL_LIBRARY} "libintl_dgettext" "" GETTEXT_LIBRARIES)
+
 if (GETTEXT_FOUND)
    if (NOT Gettext_FIND_QUIETLY)
       message(STATUS "Found Gettext: ${GETTEXT_SOURCE}")
