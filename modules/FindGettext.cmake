@@ -18,18 +18,17 @@ set(GETTEXT_LIBRARIES)
 
 if (HAVE_LIBINTL_H)
    set(GETTEXT_FOUND TRUE)
-   set(GETTEXT_SOURCE "libintl.h")
+   set(GETTEXT_SOURCE "built in libc (libintl.h present)")
 endif (HAVE_LIBINTL_H)
 
 if (GETTEXT_FOUND)
    if (NOT Gettext_FIND_QUIETLY)
-      message(STATUS "Gettext functionality present (${GETTEXT_SOURCE})")
+      message(STATUS "Found Gettext: ${GETTEXT_SOURCE}")
    endif (NOT Gettext_FIND_QUIETLY)
 else (GETTEXT_FOUND)
-   if (NOT Gettext_FIND_QUIETLY)
-      message(STATUS "Gettext functionality NOT present, "
-                     "translations will not be available")
-   endif (NOT Gettext_FIND_QUIETLY)
+   if (Gettext_FIND_REQUIRED)
+      message(STATUS "Could NOT find Gettext")
+   endif (Gettext_FIND_REQUIRED)
 endif (GETTEXT_FOUND)
 
 MARK_AS_ADVANCED(GETTEXT_INCLUDE_DIR GETTEXT_LIBRARIES)
