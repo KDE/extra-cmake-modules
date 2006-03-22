@@ -339,41 +339,34 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    set(KDE4_KDNSSD_LIBS ${kdnssd_LIB_DEPENDS} ${KDE4_KDNSSD_LIBRARY} )
 
    # now the KDE library directory, kxmlcore is new with KDE4
-   find_library(KDE4_KXMLCORE_LIBRARY NAMES kxmlcore
-      PATHS
-      ${KDE4_LIB_INSTALL_DIR}
-      $ENV{KDEDIR}/lib
-      /opt/kde/lib
-      /opt/kde4/lib
-      /usr/lib
-      /usr/local/lib)
+   find_library(KDE4_KXMLCORE_LIBRARY NAMES kxmlcore PATHS ${KDE4_LIB_INSTALL_DIR} )
    set(KDE4_KXMLCORE_LIBRARIES ${kxmlcore_LIB_DEPENDS} ${KDE4_KXMLCORE_LIBRARY} )
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
 
-  # at first the KDE include direcory
-  # kpassworddialog.h is new with KDE4
-  find_path(KDE4_INCLUDE_DIR kpassworddialog.h
-    ${KDE4_INCLUDE_INSTALL_DIR}
-    $ENV{KDEDIR}/include
-    /opt/kde/include
-    /opt/kde4/include
-    /usr/local/include
-    /usr/include/
-    /usr/include/kde
-    /usr/local/include/kde
-  )
+   # at first the KDE include direcory
+   # kpassworddialog.h is new with KDE4
+   find_path(KDE4_INCLUDE_DIR kpassworddialog.h
+      ${KDE4_INCLUDE_INSTALL_DIR}
+      $ENV{KDEDIR}/include
+      /opt/kde/include
+      /opt/kde4/include
+      /usr/local/include
+      /usr/include/
+      /usr/include/kde
+      /usr/local/include/kde
+    )
 
-  #now search for the dcop utilities
-  find_program(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
-    ${KDE4_BIN_INSTALL_DIR}
-    $ENV{KDEDIR}/bin
-    /opt/kde/bin
-    /opt/kde4/bin
-    NO_SYSTEM_PATH
-    NO_CMAKE_SYSTEM_PATH
-  )
+   #now search for the dcop utilities
+   find_program(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
+      ${KDE4_BIN_INSTALL_DIR}
+      $ENV{KDEDIR}/bin
+      /opt/kde/bin
+      /opt/kde4/bin
+      NO_SYSTEM_PATH
+      NO_CMAKE_SYSTEM_PATH
+   )
 
    if (NOT KDE4_DCOPIDL_EXECUTABLE)
       find_program(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl )
@@ -425,17 +418,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    if (NOT KDE4_MEINPROC_EXECUTABLE)
       find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc )
    endif (NOT KDE4_MEINPROC_EXECUTABLE)
-
-
-# all the following are deprecated and should be changed to the KDE4_..._LIBRARIES ASAP, Alex
-   set(LIB_KDECORE ${KDE4_KDECORE_LIBS})
-   set(QT_AND_KDECORE_LIBS ${KDE4_KDECORE_LIBS})
-   set(LIB_KDEUI ${KDE4_KDEUI_LIBRARIES})
-   set(LIB_KIO ${KDE4_KIO_LIBRARIES})
-   set(LIB_KPARTS ${KDE4_KPARTS_LIBRARIES})
-   set(LIB_KUTILS ${KDE4_KUTILS_LIBRARIES})
-   set(LIB_KDE3SUPPORT ${KDE4_KDE3SUPPORT_LIBRARIES})
-
 
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
