@@ -18,7 +18,7 @@ set(GETTEXT_LIBRARIES)
 
 if (HAVE_LIBINTL_H)
    set(GETTEXT_FOUND TRUE)
-   set(GETTEXT_SOURCE "built in libc (libintl.h present)")
+   set(GETTEXT_SOURCE "built in libc")
 endif (HAVE_LIBINTL_H)
 
 # Check for libintl, and check that it provides libintl_dgettext. Needed on BSD systems (e.g. Mac OS X)
@@ -27,11 +27,14 @@ FIND_LIBRARY(LIBINTL_LIBRARY NAMES intl libintl
    /usr/lib
    /usr/local/lib
 )
-CHECK_LIBRARY_EXISTS(${LIBINTL_LIBRARY} "libintl_dgettext" "" LIBINTL_HAS_DGETTEXT)
-if (LIBINTL_HAS_DGETTEXT)
-   set(GETTEXT_SOURCE "in ${LIBINTL_LIBRARY}")
-   set(GETTEXT_LIBRARIES ${LIBINTL_LIBRARY})
-endif (LIBINTL_HAS_DGETTEXT)
+
+if (LIBINTL_LIBRARY)
+   CHECK_LIBRARY_EXISTS(${LIBINTL_LIBRARY} "libintl_dgettext" "" LIBINTL_HAS_DGETTEXT)
+   if (LIBINTL_HAS_DGETTEXT)
+      set(GETTEXT_SOURCE "in ${LIBINTL_LIBRARY}")
+      set(GETTEXT_LIBRARIES ${LIBINTL_LIBRARY})
+   endif (LIBINTL_HAS_DGETTEXT)
+endif (LIBINTL_LIBRARY)
 
 if (GETTEXT_FOUND)
    if (NOT Gettext_FIND_QUIETLY)
