@@ -503,7 +503,7 @@ IF (QT4_QMAKE_FOUND)
   # at first without the system paths, in order to prefer e.g. ${QTDIR}/bin/qmake over /usr/bin/qmake,
   # which might be a Qt3 qmake
   FIND_PROGRAM(QT_MOC_EXECUTABLE
-    NAMES moc
+    NAMES moc-qt4 moc
     PATHS
     ${QT_BINARY_DIR}
     $ENV{QTDIR}/bin
@@ -513,7 +513,7 @@ IF (QT4_QMAKE_FOUND)
 
   # if qmake wasn't found in the specific dirs, now check the system path
   IF (NOT QT_MOC_EXECUTABLE)
-     FIND_PROGRAM(QT_MOC_EXECUTABLE NAMES moc )
+     FIND_PROGRAM(QT_MOC_EXECUTABLE NAMES moc-qt4 moc )
   ENDIF (NOT QT_MOC_EXECUTABLE)
 
   IF (QT_MOC_EXECUTABLE)
@@ -529,7 +529,7 @@ IF (QT4_QMAKE_FOUND)
 
   # first the specific paths, then the system path, same as with qmake
   FIND_PROGRAM(QT_UIC_EXECUTABLE
-    NAMES uic
+    NAMES uic-qt4 uic
     PATHS
     ${QT_BINARY_DIR}
     $ENV{QTDIR}/bin
@@ -538,7 +538,7 @@ IF (QT4_QMAKE_FOUND)
     )
 
   IF (NOT QT_UIC_EXECUTABLE)
-     FIND_PROGRAM(QT_UIC_EXECUTABLE NAMES uic )
+     FIND_PROGRAM(QT_UIC_EXECUTABLE NAMES uic-qt4 uic )
   ENDIF (NOT QT_UIC_EXECUTABLE)
 
   IF (QT_UIC_EXECUTABLE)
