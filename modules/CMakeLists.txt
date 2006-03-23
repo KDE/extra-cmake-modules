@@ -4,7 +4,7 @@ file(GLOB cmakeFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.cmake")
 
 set(module_install_dir /share/apps/cmake/modules )
 
-install_files(${module_install_dir} FILES  kde3init_dummy.cpp.in  kde4init_dummy.cpp.in ${cmakeFiles} )
+install_files(${module_install_dir} FILES  kde4init_dummy.cpp.in ${cmakeFiles} )
 
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
 set(FILES_TO_REMOVE
