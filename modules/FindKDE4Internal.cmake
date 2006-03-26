@@ -6,7 +6,7 @@
 #
 # KDE4_DEFINITIONS         - compiler definitions required for compiling KDE software
 # KDE4_INCLUDE_DIR         - the KDE 4 include directory
-# KDE4_INCLUDE_DIRS        - all include directories required for KDE, i.e. 
+# KDE4_INCLUDES            - all include directories required for KDE, i.e. 
 #                            KDE4_INCLUDE_DIR, but also the Qt4 include directories 
 #                            and other platform specific include directories
 # KDE4_LIB_DIR             - the directory where the KDE libraries are installed,
@@ -664,7 +664,7 @@ if (NOT KDE4Internal_FIND_QUIETLY)
 endif (NOT KDE4Internal_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
-set(KDE4_INCLUDE_DIRS ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
+set(KDE4_INCLUDES ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
 
 # NOT used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DQT3_SUPPORT_WARNINGS -DKDE_DEPRECATED_WARNINGS )
