@@ -196,11 +196,11 @@ set(WALLPAPER_INSTALL_DIR    /share/wallpapers          CACHE STRING "The instal
 set(KCONF_UPDATE_INSTALL_DIR /share/apps/kconf_update/  CACHE STRING "The kconf_update install dir")
 set(XDG_APPS_DIR             /share/applications/kde    CACHE STRING "The XDG apps dir")
 set(XDG_DIRECTORY_DIR        /share/desktop-directories CACHE STRING "The XDG directory")
+set(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
 
 # seem to be unused:
 set(LIBS_HTML_INSTALL_DIR    /share/doc/HTML            CACHE STRING "Is this still used ?")
 set(APPLNK_INSTALL_DIR       /share/applnk              CACHE STRING "Is this still used ?")
-#set(KDE4_SYSCONF_INSTALL_DIR "/etc" CACHE STRING "The kde sysconfig install dir (default /etc)")
 # set(KDE4_DIR               ${CMAKE_INSTALL_PREFIX})
 
 
