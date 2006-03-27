@@ -210,13 +210,13 @@ IF (QT4_QMAKE_FOUND)
       OUTPUT_VARIABLE qt_headers )
     SET(QT_HEADERS_DIR ${qt_headers} CACHE INTERNAL "")
   ENDIF(NOT QT_HEADERS_DIR)
-  
+
   FIND_PATH(QT_QTCORE_INCLUDE_DIR QtGlobal
     "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/include/QtCore"
     ${QT_HEADERS_DIR}/QtCore
     ${QT_LIBRARY_DIR}/QtCore.framework/Headers
     $ENV{QTDIR}/include/QtCore
-   "$ENV{ProgramFiles}/qt/include/Qt" 
+   "$ENV{ProgramFiles}/qt/include/Qt"
    )
 
   # Set QT_INCLUDE_DIR by removine "/QtCore" in the string ${QT_QTCORE_INCLUDE_DIR}
@@ -228,7 +228,7 @@ IF (QT4_QMAKE_FOUND)
       SET( QT_INCLUDE_DIR ${qt4_include_dir} CACHE PATH "")
     ENDIF (QT_USE_FRAMEWORKS)
   ENDIF( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
-  
+
   IF( NOT QT_INCLUDE_DIR)
     IF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
       MESSAGE( FATAL_ERROR "Could NOT find QtGlobal header")
@@ -574,7 +574,7 @@ IF (QT4_QMAKE_FOUND)
      QT4_GET_MOC_INC_DIRS(moc_includes)
 
      GET_FILENAME_COMPONENT(infile ${infile} ABSOLUTE)
-    
+
      ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_MOC_EXECUTABLE}
         ARGS ${moc_includes} -o ${outfile} ${infile}
@@ -652,10 +652,10 @@ IF (QT4_QMAKE_FOUND)
 
    MACRO(QT4_AUTOMOC)
       QT4_GET_MOC_INC_DIRS(_moc_INCS)
-   
+
       SET(_matching_FILES )
       FOREACH (_current_FILE ${ARGN})
-   
+
          GET_FILENAME_COMPONENT(_abs_FILE ${_current_FILE} ABSOLUTE)
          # if "SKIP_AUTOMOC" is set to true, we will not handle this file here.
          # here. this is required to make bouic work correctly:
@@ -665,18 +665,18 @@ IF (QT4_QMAKE_FOUND)
          # exist at a later run. at that time we need to skip them, so that we don't add two
          # different rules for the same moc file
          GET_SOURCE_FILE_PROPERTY(_skip ${_abs_FILE} SKIP_AUTOMOC)
-   
+
          IF (EXISTS ${_abs_FILE} AND NOT _skip)
-   
+
             FILE(READ ${_abs_FILE} _contents)
-   
+
             GET_FILENAME_COMPONENT(_abs_PATH ${_abs_FILE} PATH)
-   
+
             STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
             IF(_match)
                FOREACH (_current_MOC_INC ${_match})
                   STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
-   
+
                   GET_filename_component(_basename ${_current_MOC} NAME_WE)
    #               SET(_header ${CMAKE_CURRENT_SOURCE_DIR}/${_basename}.h)
                   SET(_header ${_abs_PATH}/${_basename}.h)
@@ -686,7 +686,7 @@ IF (QT4_QMAKE_FOUND)
                      ARGS ${_moc_INCS} ${_header} -o ${_moc}
                      DEPENDS ${_header}
                   )
-   
+
                   _QT4_ADD_FILE_DEPENDENCIES(${_abs_FILE} ${_moc})
                ENDFOREACH (_current_MOC_INC)
             ENDIF(_match)
@@ -716,6 +716,19 @@ IF (QT4_QMAKE_FOUND)
   SET(QT_FOUND ${QT4_FOUND})
 
 
+  INCLUDE(CheckSymbolExists)
+  # Save required includes variable
+  SET(CMAKE_REQUIRED_INCLUDES_SAVE ${CMAKE_REQUIRED_INCLUDES})
+  # Add QT_INCLUDE_DIR to CMAKE_REQUIRED_INCLUDES
+  SET(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_INCLUDE_DIR}")
+  # Check for Window system symbols (note: only one should end up being set)
+  CHECK_SYMBOL_EXISTS(Q_WS_X11 "QtCore/qglobal.h" Q_WS_X11)
+  CHECK_SYMBOL_EXISTS(Q_WS_MAC "QtCore/qglobal.h" Q_WS_MAC)
+  CHECK_SYMBOL_EXISTS(Q_WS_WIN32 "QtCore/qglobal.h" Q_WS_WIN32)
+  CHECK_SYMBOL_EXISTS(Q_WS_WIN64 "QtCore/qglobal.h" Q_WS_WIN64)
+  # Restore CMAKE_REQUIRED_INCLUDES variable
+  SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_SAVE})
+
   #######################################
   #
   #       System dependent settings
@@ -723,7 +736,10 @@ IF (QT4_QMAKE_FOUND)
   #######################################
   # for unix add X11 stuff
   IF(UNIX)
-    FIND_PACKAGE(X11)
+    # on OS X X11 may not be required
+    IF (Q_WS_X11)
+      FIND_PACKAGE(X11)
+    ENDIF (Q_WS_X11)
     FIND_PACKAGE(Threads)
     SET(QT_QTCORE_LIBRARY ${QT_QTCORE_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
   ENDIF(UNIX)
