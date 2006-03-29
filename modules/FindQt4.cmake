@@ -724,8 +724,7 @@ IF (QT4_QMAKE_FOUND)
   # Check for Window system symbols (note: only one should end up being set)
   CHECK_SYMBOL_EXISTS(Q_WS_X11 "QtCore/qglobal.h" Q_WS_X11)
   CHECK_SYMBOL_EXISTS(Q_WS_MAC "QtCore/qglobal.h" Q_WS_MAC)
-  CHECK_SYMBOL_EXISTS(Q_WS_WIN32 "QtCore/qglobal.h" Q_WS_WIN32)
-  CHECK_SYMBOL_EXISTS(Q_WS_WIN64 "QtCore/qglobal.h" Q_WS_WIN64)
+  CHECK_SYMBOL_EXISTS(Q_WS_WIN "QtCore/qglobal.h" Q_WS_WIN)
   # Restore CMAKE_REQUIRED_INCLUDES variable
   SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_SAVE})
 
