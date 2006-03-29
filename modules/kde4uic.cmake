@@ -37,7 +37,7 @@ if (KDE4_HEADER)
 endif (KDE4_HEADER)
 
 
-#replace tr218n("") with QString::null to avoid waring from KLocale
+#replace tr218n("") with QString::null to avoid warning from KLocale
 STRING(REGEX REPLACE "tr2i18n\\(\"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
 STRING(REGEX REPLACE "tr2i18n\\(\"\", \"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
 #replace image15_data with img15_filename to make enable_final work
