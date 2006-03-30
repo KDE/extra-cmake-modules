@@ -430,7 +430,7 @@ ENDMACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 MACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
-   MACRO_ADDITIONAL_CLEAN_FILES(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+   #MACRO_ADDITIONAL_CLEAN_FILES(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
 
 #   if (WIN32)
 #      # under windows, just build a normal executable
