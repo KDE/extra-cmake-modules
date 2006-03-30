@@ -1,5 +1,7 @@
 # - Find QT 4
 # This module can be used to find Qt4.
+# The most important issue is that the Qt4 qmake is available via the system path.
+# This qmake is then used to detect basically everything else.
 # This module defines a number of key variables and macros. First is
 # QT_USE_FILE which is the path to a CMake file that can be included to compile
 # Qt 4 applications and libraries.  By default, the QtCore and QtGui
@@ -158,21 +160,59 @@ IF (WIN32)
 ENDIF(WIN32)
 
 # check for qmake
-FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES  qmake-qt4 qmake PATHS
+FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake qmake-qt4 PATHS
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
   $ENV{QTDIR}/bin
 )
 
 IF (QT_QMAKE_EXECUTABLE)
-   EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_VERSION"
-      OUTPUT_VARIABLE QTVERSION)
-   IF(QTVERSION MATCHES "4.*")
-      SET(QT4_QMAKE_FOUND TRUE)
-   ENDIF(QTVERSION MATCHES "4.*")
+   EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_VERSION" OUTPUT_VARIABLE QTVERSION)
+
+   # we need at least version 4.0.0
+   IF (NOT QT_MIN_VERSION)
+      SET(QT_MIN_VERSION "4.0.0")
+   ENDIF (NOT QT_MIN_VERSION)
+
+   SET(QT4_QMAKE_FOUND TRUE)
+   IF (QT_MIN_VERSION)
+      #now parse the parts of the user given version string into variables
+      STRING(REGEX MATCH "^[0-9]+\\.[0-9]+\\.[0-9]+$" req_qt_major_vers "${QT_MIN_VERSION}")
+      IF (NOT req_qt_major_vers)
+        MESSAGE( FATAL_ERROR "Invalid Qt version string given: \"${QT_MIN_VERSION}\", expected e.g. \"4.0.1\"")
+      ENDIF (NOT req_qt_major_vers)
+
+
+      # now parse the parts of the user given version string into variables
+      STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" req_qt_major_vers "${QT_MIN_VERSION}")
+      STRING(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" req_qt_minor_vers "${QT_MIN_VERSION}")
+      STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" req_qt_patch_vers "${QT_MIN_VERSION}")
+
+      IF (NOT req_qt_major_vers EQUAL 4)
+        MESSAGE( FATAL_ERROR "Invalid Qt version string given: \"${QT_MIN_VERSION}\", major version 4 is required, e.g. \"4.0.1\"")
+      ENDIF (NOT req_qt_major_vers EQUAL 4)
+
+      # and now the version string given by qmake
+      STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" found_qt_major_vers "${QTVERSION}")
+      STRING(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" found_qt_minor_vers "${QTVERSION}")
+      STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" found_qt_patch_vers "${QTVERSION}")
+
+      # compute an overall version number which can be compared at once
+      MATH(EXPR req_vers "${req_qt_major_vers}*10000 + ${req_qt_minor_vers}*100 + ${req_qt_patch_vers}")
+      MATH(EXPR found_vers "${found_qt_major_vers}*10000 + ${found_qt_minor_vers}*100 + ${found_qt_patch_vers}")
+
+      IF (found_vers LESS req_vers)
+         SET(Qt4_QMAKE_FOUND NO)
+      ELSE (found_vers LESS req_vers)
+         SET(Qt4_QMAKE_FOUND YES)
+      ENDIF (found_vers LESS req_vers)
+
+      ENDIF (QT_MIN_VERSION)
 ENDIF (QT_QMAKE_EXECUTABLE)
 
 IF (QT4_QMAKE_FOUND)
+
+  # ask qmake for the library dir
   # Set QT_LIBRARY_DIR
   IF (NOT QT_LIBRARY_DIR)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
@@ -198,18 +238,36 @@ IF (QT4_QMAKE_FOUND)
     MARK_AS_ADVANCED(QT_USE_FRAMEWORKS)
   ENDIF (APPLE)
 
-  ########################################
-  #
-  #       Setting the INCLUDE-Variables
-  #
-  ########################################
-  # Set QT_QTCORE_INCLUDE_DIR by searching for the QtGlobal header
+  # ask qmake for the binary dir
+  IF (NOT QT_BINARY_DIR)
+     EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE}
+        ARGS "-query QT_INSTALL_BINS"
+        OUTPUT_VARIABLE qt_bins )
+     SET(QT_BINARY_DIR ${qt_bins} CACHE INTERNAL "")
+  ENDIF (NOT QT_BINARY_DIR)
+
+  # ask qmake for the include dir
   IF (NOT QT_HEADERS_DIR)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QT_INSTALL_HEADERS"
       OUTPUT_VARIABLE qt_headers )
     SET(QT_HEADERS_DIR ${qt_headers} CACHE INTERNAL "")
   ENDIF(NOT QT_HEADERS_DIR)
+
+
+  # ask qmake for the documentation directory
+  IF (NOT QT_DOC_DIR)
+    EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
+      ARGS "-query QT_INSTALL_DOCS"
+      OUTPUT_VARIABLE qt_doc_dir )
+    SET(QT_DOC_DIR ${qt_doc_dir} CACHE PATH "The location of the Qt docs")
+  ENDIF (NOT QT_DOC_DIR)
+
+  ########################################
+  #
+  #       Setting the INCLUDE-Variables
+  #
+  ########################################
 
   FIND_PATH(QT_QTCORE_INCLUDE_DIR QtGlobal
     "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/include/QtCore"
@@ -235,90 +293,108 @@ IF (QT4_QMAKE_FOUND)
     ENDIF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
   ENDIF( NOT QT_INCLUDE_DIR)
 
-
-  EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
-    ARGS "-query QT_INSTALL_DOCS"
-    OUTPUT_VARIABLE qt_doc_dir )
-  SET(QT_DOC_DIR ${qt_doc_dir} CACHE PATH "The location of the Qt docs")
-
   IF (QT_USE_FRAMEWORKS)
     SET(QT_DEFINITIONS ${QT_DEFINITIONS} -F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} )
   ENDIF (QT_USE_FRAMEWORKS)
 
   # Set QT_QT3SUPPORT_INCLUDE_DIR
   FIND_PATH(QT_QT3SUPPORT_INCLUDE_DIR Qt3Support
+    PATHS
     ${QT_INCLUDE_DIR}/Qt3Support
     ${QT_LIBRARY_DIR}/Qt3Support.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QT_INCLUDE_DIR
   FIND_PATH(QT_QT_INCLUDE_DIR qglobal.h
+    PATHS
     ${QT_INCLUDE_DIR}/Qt
     ${QT_LIBRARY_DIR}/QtCore.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTGUI_INCLUDE_DIR
   FIND_PATH(QT_QTGUI_INCLUDE_DIR QtGui
+    PATHS
     ${QT_INCLUDE_DIR}/QtGui
     ${QT_LIBRARY_DIR}/QtGui.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTSVG_INCLUDE_DIR
   FIND_PATH(QT_QTSVG_INCLUDE_DIR QtSvg
+    PATHS
     ${QT_INCLUDE_DIR}/QtSvg
     ${QT_LIBRARY_DIR}/QtSvg.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTTEST_INCLUDE_DIR
   FIND_PATH(QT_QTTEST_INCLUDE_DIR QtTest
+    PATHS
     ${QT_INCLUDE_DIR}/QtTest
     ${QT_LIBRARY_DIR}/QtTest.framework/Headers
+    NO_DEFAULT_PATH
     )
 
 
   # Set QT_QTMOTIF_INCLUDE_DIR
-  FIND_PATH(QT_QTMOTIF_INCLUDE_DIR QtMotif ${QT_INCLUDE_DIR}/QtMotif)
+  FIND_PATH(QT_QTMOTIF_INCLUDE_DIR QtMotif PATHS ${QT_INCLUDE_DIR}/QtMotif NO_DEFAULT_PATH )
 
   # Set QT_QTNETWORK_INCLUDE_DIR
   FIND_PATH(QT_QTNETWORK_INCLUDE_DIR QtNetwork
+    PATHS
     ${QT_INCLUDE_DIR}/QtNetwork
     ${QT_LIBRARY_DIR}/QtNetwork.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTNSPLUGIN_INCLUDE_DIR
   FIND_PATH(QT_QTNSPLUGIN_INCLUDE_DIR QtNsPlugin
+    PATHS
     ${QT_INCLUDE_DIR}/QtNsPlugin
     ${QT_LIBRARY_DIR}/QtNsPlugin.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTOPENGL_INCLUDE_DIR
   FIND_PATH(QT_QTOPENGL_INCLUDE_DIR QtOpenGL
+    PATHS
     ${QT_INCLUDE_DIR}/QtOpenGL
     ${QT_LIBRARY_DIR}/QtOpenGL.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTSQL_INCLUDE_DIR
   FIND_PATH(QT_QTSQL_INCLUDE_DIR QtSql
+    PATHS
     ${QT_INCLUDE_DIR}/QtSql
     ${QT_LIBRARY_DIR}/QtSql.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTXML_INCLUDE_DIR
   FIND_PATH(QT_QTXML_INCLUDE_DIR QtXml
+    PATHS
     ${QT_INCLUDE_DIR}/QtXml
     ${QT_LIBRARY_DIR}/QtXml.framework/Headers
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTASSISTANT_INCLUDE_DIR
   FIND_PATH(QT_QTASSISTANT_INCLUDE_DIR QtAssistant
+    PATHS
     ${QT_INCLUDE_DIR}/QtAssistant
     ${QT_HEADERS_DIR}/QtAssistant
+    NO_DEFAULT_PATH
     )
 
   # Set QT_QTDESIGNER_INCLUDE_DIR
   FIND_PATH(QT_QTDESIGNER_INCLUDE_DIR QDesignerComponents
+    PATHS
     ${QT_INCLUDE_DIR}/QtDesigner
     ${QT_HEADERS_DIR}/QtDesigner
+    NO_DEFAULT_PATH
     )
 
   # Make variables changeble to the advanced user
@@ -361,75 +437,61 @@ IF (QT4_QMAKE_FOUND)
 
   ELSE (QT_USE_FRAMEWORKS)
 
-    # Set QT_QTCORE_LIBRARY by searching for a lib with "QtCore."  as part of
-    # the filename
-    FIND_LIBRARY(  QT_QTCORE_LIBRARY_RELEASE
-      NAMES QtCore QtCore4
-      PATHS
-      ${QT_LIBRARY_DIR}
-      $ENV{QTDIR}/lib
-    )
-
-    # Set QT_QTCORE_LIBRARY_DEBUG by searching for a lib with "QtCore_debug"
-    # as part of the filename
-    FIND_LIBRARY(QT_QTCORE_LIBRARY_DEBUG
-      NAMES QtCore_debug QtCored4
-      PATHS
-      ${QT_LIBRARY_DIR}
-      $ENV{QTDIR}/lib
-    )
+    # Set QT_QTCORE_LIBRARY by searching for a lib with "QtCore."  as part of the filename
+    FIND_LIBRARY(QT_QTCORE_LIBRARY_RELEASE NAMES QtCore QtCore4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH )
+    FIND_LIBRARY(QT_QTCORE_LIBRARY_DEBUG NAMES QtCore_debug QtCored4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QT3SUPPORT_LIBRARY
-    FIND_LIBRARY(QT_QT3SUPPORT_LIBRARY_RELEASE NAMES Qt3Support Qt3Support4 PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QT3SUPPORT_LIBRARY_DEBUG   NAMES Qt3Support_debug Qt3Supportd4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QT3SUPPORT_LIBRARY_RELEASE NAMES Qt3Support Qt3Support4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QT3SUPPORT_LIBRARY_DEBUG   NAMES Qt3Support_debug Qt3Supportd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTGUI_LIBRARY
-    FIND_LIBRARY(QT_QTGUI_LIBRARY_RELEASE NAMES QtGui QtGui4 PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTGUI_LIBRARY_DEBUG   NAMES QtGui_debug QtGuid4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTGUI_LIBRARY_RELEASE NAMES QtGui QtGui4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTGUI_LIBRARY_DEBUG   NAMES QtGui_debug QtGuid4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTMOTIF_LIBRARY
-    FIND_LIBRARY(QT_QTMOTIF_LIBRARY_RELEASE NAMES QtMotif PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTMOTIF_LIBRARY_DEBUG   NAMES QtMotif_debug PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTMOTIF_LIBRARY_RELEASE NAMES QtMotif PATHS ${QT_LIBRARY_DIR}       NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTMOTIF_LIBRARY_DEBUG   NAMES QtMotif_debug PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTNETWORK_LIBRARY
-    FIND_LIBRARY(QT_QTNETWORK_LIBRARY_RELEASE NAMES QtNetwork QtNetwork4 PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTNETWORK_LIBRARY_DEBUG   NAMES QtNetwork_debug QtNetworkd4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTNETWORK_LIBRARY_RELEASE NAMES QtNetwork QtNetwork4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTNETWORK_LIBRARY_DEBUG   NAMES QtNetwork_debug QtNetworkd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTNSPLUGIN_LIBRARY
-    FIND_LIBRARY(QT_QTNSPLUGIN_LIBRARY_RELEASE NAMES QtNsPlugin PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTNSPLUGIN_LIBRARY_DEBUG   NAMES QtNsPlugin_debug PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTNSPLUGIN_LIBRARY_RELEASE NAMES QtNsPlugin PATHS ${QT_LIBRARY_DIR}       NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTNSPLUGIN_LIBRARY_DEBUG   NAMES QtNsPlugin_debug PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTOPENGL_LIBRARY
-    FIND_LIBRARY(QT_QTOPENGL_LIBRARY_RELEASE NAMES QtOpenGL QtOpenGL4 PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTOPENGL_LIBRARY_DEBUG   NAMES QtOpenGL_debug QtOpenGLd4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTOPENGL_LIBRARY_RELEASE NAMES QtOpenGL QtOpenGL4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTOPENGL_LIBRARY_DEBUG   NAMES QtOpenGL_debug QtOpenGLd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTSQL_LIBRARY
-    FIND_LIBRARY(QT_QTSQL_LIBRARY_RELEASE NAMES QtSql QtSql4 PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTSQL_LIBRARY_DEBUG   NAMES QtSql_debug QtSqld4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTSQL_LIBRARY_RELEASE NAMES QtSql QtSql4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTSQL_LIBRARY_DEBUG   NAMES QtSql_debug QtSqld4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTXML_LIBRARY
-    FIND_LIBRARY(QT_QTXML_LIBRARY_RELEASE NAMES QtXml QtXml4 PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTXML_LIBRARY_DEBUG   NAMES QtXml_debug QtXmld4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTXML_LIBRARY_RELEASE NAMES QtXml QtXml4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTXML_LIBRARY_DEBUG   NAMES QtXml_debug QtXmld4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTSVG_LIBRARY
-    FIND_LIBRARY(QT_QTSVG_LIBRARY_RELEASE NAMES QtSvg QtSvg4 PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTSVG_LIBRARY_DEBUG   NAMES QtSvg_debug QtSvgd4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTSVG_LIBRARY_RELEASE NAMES QtSvg QtSvg4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTSVG_LIBRARY_DEBUG   NAMES QtSvg_debug QtSvgd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTTEST_LIBRARY
-    FIND_LIBRARY(QT_QTTEST_LIBRARY_RELEASE NAMES QtTest QtTest4 PATHS ${QT_LIBRARY_DIR})
-    FIND_LIBRARY(QT_QTTEST_LIBRARY_DEBUG   NAMES QtTest_debug QtTest_debug4 QtTestd4 PATHS ${QT_LIBRARY_DIR})
+    FIND_LIBRARY(QT_QTTEST_LIBRARY_RELEASE NAMES QtTest QtTest4 PATHS ${QT_LIBRARY_DIR}                      NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTTEST_LIBRARY_DEBUG   NAMES QtTest_debug QtTest_debug4 QtTestd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     MARK_AS_ADVANCED(QT_QT3SUPPORT_LIBRARY QT_QTGUI_LIBRARY )
 
   ENDIF (QT_USE_FRAMEWORKS)
 
   # Set QT_QTASSISTANT_LIBRARY
-  FIND_LIBRARY(QT_QTASSISTANT_LIBRARY_RELEASE NAMES QtAssistantClient QtAssistant QtAssistant4 PATHS ${QT_LIBRARY_DIR})
-  FIND_LIBRARY(QT_QTASSISTANT_LIBRARY_DEBUG   NAMES QtAssistantClientd QtAssistantClient_debug QtAssistant_debug QtAssistantd4 PATHS ${QT_LIBRARY_DIR})
+  FIND_LIBRARY(QT_QTASSISTANT_LIBRARY_RELEASE NAMES QtAssistantClient QtAssistant QtAssistant4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+  FIND_LIBRARY(QT_QTASSISTANT_LIBRARY_DEBUG   NAMES QtAssistantClientd QtAssistantClient_debug QtAssistant_debug QtAssistantd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
   # Set QT_QTDESIGNER_LIBRARY
-  FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_RELEASE NAMES QtDesigner QtDesigner4 PATHS ${QT_LIBRARY_DIR})
-  FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_DEBUG   NAMES QtDesigner_debug QtDesignerd4 PATHS ${QT_LIBRARY_DIR})
+  FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_RELEASE NAMES QtDesigner QtDesigner4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+  FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_DEBUG   NAMES QtDesigner_debug QtDesignerd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
   ############################################
   #
@@ -493,64 +555,64 @@ IF (QT4_QMAKE_FOUND)
   #          ( moc, uic, rcc )
   #
   #######################################
-  IF (NOT QT_BINARY_DIR)
-     EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE}
-        ARGS "-query QT_INSTALL_BINS"
-        OUTPUT_VARIABLE qt_bins )
-     SET(QT_BINARY_DIR ${qt_bins} CACHE INTERNAL "")
-  ENDIF (NOT QT_BINARY_DIR)
 
-  # at first without the system paths, in order to prefer e.g. ${QTDIR}/bin/qmake over /usr/bin/qmake,
-  # which might be a Qt3 qmake
+# try to find the qmake.conf file
+   EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE} ARGS "-query QMAKE_MKSPECS" OUTPUT_VARIABLE QT_MKSPECS_DIR )
+   # get location of preferred qmake.conf file if QMAKESPEC is set
+   SET(QMAKESPEC "$ENV{QMAKESPEC}")
+   IF(NOT QMAKESPEC)
+     IF(NOT WIN32)
+       # Unix platforms have 'default' softlink going to the default qmake.conf file
+       SET(QMAKESPEC "default")
+     ELSE(NOT WIN32)
+       # Randomly get this qmkspec since we are only checking for uic/moc names
+       SET(QMAKESPEC "win32-msvc.net")
+     ENDIF(NOT WIN32)
+   ENDIF(NOT QMAKESPEC)
+
+   # if we can find the qmake.conf file, let's inspect it for possible names of moc and uic
+   IF(EXISTS "${QT_MKSPECS_DIR}/${QMAKESPEC}/qmake.conf")
+     FILE(READ "${QT_MKSPECS_DIR}/${QMAKESPEC}/qmake.conf" QMAKE_CONF_FILE)
+     STRING(REGEX MATCH "(QMAKE_MOC)[ \t]*=[^\n]*" QMAKE_MOC_NAME "${QMAKE_CONF_FILE}")
+     STRING(REGEX REPLACE "(QMAKE_MOC)[ \t=\$]*\\[(QT_INSTALL_BINS)\\][\\/]" "" QMAKE_MOC_NAME "${QMAKE_MOC_NAME}")
+     STRING(REGEX MATCH "(QMAKE_UIC)[ \t]*=[^\n]*" QMAKE_UIC_NAME "${QMAKE_CONF_FILE}")
+     STRING(REGEX REPLACE "(QMAKE_UIC)[ \t=\$]*\\[(QT_INSTALL_BINS)\\][\\/]" "" QMAKE_UIC_NAME "${QMAKE_UIC_NAME}")
+   ENDIF(EXISTS "${QT_MKSPECS_DIR}/${QMAKESPEC}/qmake.conf")
+
+
   FIND_PROGRAM(QT_MOC_EXECUTABLE
-    NAMES moc-qt4 moc
-    PATHS
-    ${QT_BINARY_DIR}
-    $ENV{QTDIR}/bin
-    NO_SYSTEM_PATH
-    NO_CMAKE_SYSTEM_PATH
+    NAMES ${QMAKE_MOC_NAME}
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
     )
-
-  # if qmake wasn't found in the specific dirs, now check the system path
-  IF (NOT QT_MOC_EXECUTABLE)
-     FIND_PROGRAM(QT_MOC_EXECUTABLE NAMES moc-qt4 moc )
-  ENDIF (NOT QT_MOC_EXECUTABLE)
-
-  IF (QT_MOC_EXECUTABLE)
-     set(QT_WRAP_CPP "YES")
-  ENDIF (QT_MOC_EXECUTABLE)
 
   FIND_PROGRAM(QT_UIC3_EXECUTABLE
     NAMES uic3
-    PATHS
-    ${QT_BINARY_DIR}
-    $ENV{QTDIR}/bin
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
     )
 
-  # first the specific paths, then the system path, same as with qmake
   FIND_PROGRAM(QT_UIC_EXECUTABLE
-    NAMES uic-qt4 uic
-    PATHS
-    ${QT_BINARY_DIR}
-    $ENV{QTDIR}/bin
-    NO_SYSTEM_PATH
-    NO_CMAKE_SYSTEM_PATH
+    NAMES ${QMAKE_UIC_NAME}
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
     )
-
-  IF (NOT QT_UIC_EXECUTABLE)
-     FIND_PROGRAM(QT_UIC_EXECUTABLE NAMES uic-qt4 uic )
-  ENDIF (NOT QT_UIC_EXECUTABLE)
-
-  IF (QT_UIC_EXECUTABLE)
-     set(QT_WRAP_UI "YES")
-  ENDIF (QT_UIC_EXECUTABLE)
 
   FIND_PROGRAM(QT_RCC_EXECUTABLE
     NAMES rcc
-    PATHS
-    ${QT_BINARY_DIR}
-    $ENV{QTDIR}/bin
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
     )
+
+  IF (QT_MOC_EXECUTABLE)
+     SET(QT_WRAP_CPP "YES")
+  ENDIF (QT_MOC_EXECUTABLE)
+
+  IF (QT_UIC_EXECUTABLE)
+     SET(QT_WRAP_UI "YES")
+  ENDIF (QT_UIC_EXECUTABLE)
+
+
 
   MARK_AS_ADVANCED( QT_UIC_EXECUTABLE QT_UIC3_EXECUTABLE QT_MOC_EXECUTABLE QT_RCC_EXECUTABLE )
 
@@ -568,6 +630,7 @@ IF (QT4_QMAKE_FOUND)
         SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-I" ${_current})
      ENDFOREACH(_current ${_inc_DIRS})
   ENDMACRO(QT4_GET_MOC_INC_DIRS)
+
 
   MACRO (QT4_GENERATE_MOC infile outfile )
   # get include dirs
@@ -621,6 +684,7 @@ IF (QT4_QMAKE_FOUND)
 
   ENDMACRO (QT4_WRAP_UI)
 
+
   # QT4_ADD_RESOURCE(outfiles inputfile ... )
   # TODO  perhaps consider adding support for compression and root options to rcc
 
@@ -649,6 +713,7 @@ IF (QT4_QMAKE_FOUND)
       ENDIF (_deps)
       SET_SOURCE_FILES_PROPERTIES(${_file} PROPERTIES OBJECT_DEPENDS "${_deps}")
    ENDMACRO(_QT4_ADD_FILE_DEPENDENCIES)
+
 
    MACRO(QT4_AUTOMOC)
       QT4_GET_MOC_INC_DIRS(_moc_INCS)
@@ -701,6 +766,7 @@ IF (QT4_QMAKE_FOUND)
   #       decide if Qt got found
   #
   ######################################
+
   # if the includes,libraries,moc,uic and rcc are found then we have it
   IF( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND QT_UIC_EXECUTABLE AND QT_RCC_EXECUTABLE)
     SET( QT4_FOUND "YES" )
@@ -725,6 +791,14 @@ IF (QT4_QMAKE_FOUND)
   CHECK_SYMBOL_EXISTS(Q_WS_X11 "QtCore/qglobal.h" Q_WS_X11)
   CHECK_SYMBOL_EXISTS(Q_WS_MAC "QtCore/qglobal.h" Q_WS_MAC)
   CHECK_SYMBOL_EXISTS(Q_WS_WIN "QtCore/qglobal.h" Q_WS_WIN)
+
+  IF (QT_QTCOPY_REQUIRED)
+     CHECK_SYMBOL_EXISTS(QT_IS_QTCOPY "QtCore/qglobal.h" QT_KDE_QT_COPY)
+     IF (NOT QT_IS_QTCOPY)
+        MESSAGE(FATAL_ERROR "qt-copy is required, but hasn't been found")
+     ENDIF (NOT QT_IS_QTCOPY)
+  ENDIF (QT_QTCOPY_REQUIRED)
+
   # Restore CMAKE_REQUIRED_INCLUDES variable
   SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES_SAVE})
 
@@ -755,7 +829,9 @@ IF (QT4_QMAKE_FOUND)
 
   SET( QT_QT_LIBRARY "")
   SET( QT_QTMAIN_LIBRARY "")
+
 ELSE(QT4_QMAKE_FOUND)
+
   IF(QT_QMAKE_EXECUTABLE)
     MESSAGE("QT_QMAKE_EXECUTABLE set to qmake version: QTVERSION = ${QTVERSION}\nQT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}, please set to path to qmake from qt4.")
   ENDIF(QT_QMAKE_EXECUTABLE)
