@@ -471,7 +471,7 @@ endif (WIN32)
 # also use /usr/local by default under UNIX, including Mac OS X
 if (UNIX)
    link_directories(/usr/local/lib)
-   include_directories(/usr/local/include)
+   set( _KDE4_PLATFORM_INCLUDE_DIRS /usr/local/include )
 
    # the rest is RPATH handling
    set(RPATH_STYLE_MATCHED FALSE)
@@ -534,7 +534,8 @@ endif (UNIX)
 # UNIX, except OS X
 if (UNIX AND NOT APPLE)
    find_package(X11 REQUIRED)
-   set(_KDE4_PLATFORM_INCLUDE_DIRS ${X11_INCLUDE_DIR} )
+   # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
+   set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
 endif (UNIX AND NOT APPLE)
 
 
