@@ -731,7 +731,7 @@ IF (QT4_QMAKE_FOUND)
          # different rules for the same moc file
          GET_SOURCE_FILE_PROPERTY(_skip ${_abs_FILE} SKIP_AUTOMOC)
 
-         IF (EXISTS ${_abs_FILE} AND NOT _skip)
+         IF ( NOT _skip AND EXISTS ${_abs_FILE} )
 
             FILE(READ ${_abs_FILE} _contents)
 
@@ -755,7 +755,7 @@ IF (QT4_QMAKE_FOUND)
                   _QT4_ADD_FILE_DEPENDENCIES(${_abs_FILE} ${_moc})
                ENDFOREACH (_current_MOC_INC)
             ENDIF(_match)
-         ENDIF (EXISTS ${_abs_FILE} AND NOT _skip)
+         ENDIF ( NOT _skip AND EXISTS ${_abs_FILE} )
       ENDFOREACH (_current_FILE)
    ENDMACRO(QT4_AUTOMOC)
 
