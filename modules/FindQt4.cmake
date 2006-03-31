@@ -556,44 +556,21 @@ IF (QT4_QMAKE_FOUND)
   #
   #######################################
 
-# try to find the qmake.conf file
-   EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE} ARGS "-query QMAKE_MKSPECS" OUTPUT_VARIABLE QT_MKSPECS_DIR )
-   # get location of preferred qmake.conf file if QMAKESPEC is set
-   SET(QMAKESPEC "$ENV{QMAKESPEC}")
-   IF(NOT QMAKESPEC)
-     IF(NOT WIN32)
-       # Unix platforms have 'default' softlink going to the default qmake.conf file
-       SET(QMAKESPEC "default")
-     ELSE(NOT WIN32)
-       # Randomly get this qmkspec since we are only checking for uic/moc names
-       SET(QMAKESPEC "win32-msvc.net")
-     ENDIF(NOT WIN32)
-   ENDIF(NOT QMAKESPEC)
-
-   # if we can find the qmake.conf file, let's inspect it for possible names of moc and uic
-   IF(EXISTS "${QT_MKSPECS_DIR}/${QMAKESPEC}/qmake.conf")
-     FILE(READ "${QT_MKSPECS_DIR}/${QMAKESPEC}/qmake.conf" QMAKE_CONF_FILE)
-     STRING(REGEX MATCH "(QMAKE_MOC)[ \t]*=[^\n]*" QMAKE_MOC_NAME "${QMAKE_CONF_FILE}")
-     STRING(REGEX REPLACE "(QMAKE_MOC)[ \t=\$]*\\[(QT_INSTALL_BINS)\\][\\/]" "" QMAKE_MOC_NAME "${QMAKE_MOC_NAME}")
-     STRING(REGEX MATCH "(QMAKE_UIC)[ \t]*=[^\n]*" QMAKE_UIC_NAME "${QMAKE_CONF_FILE}")
-     STRING(REGEX REPLACE "(QMAKE_UIC)[ \t=\$]*\\[(QT_INSTALL_BINS)\\][\\/]" "" QMAKE_UIC_NAME "${QMAKE_UIC_NAME}")
-   ENDIF(EXISTS "${QT_MKSPECS_DIR}/${QMAKESPEC}/qmake.conf")
-
 
   FIND_PROGRAM(QT_MOC_EXECUTABLE
-    NAMES ${QMAKE_MOC_NAME}
+    NAMES moc moc-qt4
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
+    )
+
+  FIND_PROGRAM(QT_UIC_EXECUTABLE
+    NAMES uic uic-qt4
     PATHS ${QT_BINARY_DIR}
     NO_DEFAULT_PATH
     )
 
   FIND_PROGRAM(QT_UIC3_EXECUTABLE
     NAMES uic3
-    PATHS ${QT_BINARY_DIR}
-    NO_DEFAULT_PATH
-    )
-
-  FIND_PROGRAM(QT_UIC_EXECUTABLE
-    NAMES ${QMAKE_UIC_NAME}
     PATHS ${QT_BINARY_DIR}
     NO_DEFAULT_PATH
     )
