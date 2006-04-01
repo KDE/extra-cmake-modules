@@ -136,6 +136,7 @@
 #  QT_RCC_EXECUTABLE          Where to find the rcc tool
 #
 #  QT_DOC_DIR                 Path to "doc" of Qt4
+#  QT_MKSPECS_DIR             Path to "mkspecs" of Qt4
 #
 #
 # These are around for backwards compatibility
@@ -262,6 +263,14 @@ IF (QT4_QMAKE_FOUND)
       OUTPUT_VARIABLE qt_doc_dir )
     SET(QT_DOC_DIR ${qt_doc_dir} CACHE PATH "The location of the Qt docs")
   ENDIF (NOT QT_DOC_DIR)
+
+  # ask qmake for the mkspecs directory
+  IF (NOT QT_MKSPECS_DIR)
+    EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
+      ARGS "-query QMAKE_MKSPECS"
+      OUTPUT_VARIABLE qt_mkspecs_dir )
+    SET(QT_MKSPECS_DIR ${qt_mkspecs_dir} CACHE PATH "The location of the Qt mkspecs")
+  ENDIF (NOT QT_MKSPECS_DIR)
 
   ########################################
   #
@@ -401,7 +410,7 @@ IF (QT4_QMAKE_FOUND)
   MARK_AS_ADVANCED( QT_LIBRARY_DIR QT_INCLUDE_DIR QT_QT_INCLUDE_DIR QT_DOC_DIR)
 
   # Set QT_INCLUDES
-  SET( QT_INCLUDES ${QT_INCLUDE_DIR} ${QT_QT_INCLUDE_DIR} )
+  SET( QT_INCLUDES ${QT_INCLUDE_DIR} ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default )
 
 
   ########################################
