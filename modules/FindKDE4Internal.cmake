@@ -56,6 +56,7 @@
 # KDE4_KDEPRINT_LIBS         - the kdeprint library and all depending libraries
 # KDE4_KSPELL2_LIBS          - the kspell2 library and all depending libraries
 # KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
+# KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
 #
 #
 # This module defines a bunch of variables used as locations
@@ -210,7 +211,7 @@ option(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
 
 
 # RPATH handling
-set(RPATH_STYLE "default" CACHE STRING "Determine RAPTH handling") 
+set(RPATH_STYLE "default" CACHE STRING "Determine RPATH handling") 
 set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
 if (UNIX)
 
@@ -338,6 +339,9 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    find_library(KDE4_KSPELL2_LIBRARY NAMES kspell2 PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KSPELL2_LIBS ${kspell2_LIB_DEPENDS} ${KDE4_KSPELL2_LIBRARY} )
+
+   find_library(KDE4_KDESU_LIBRARY NAMES kdesu PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KDESU_LIBS ${kdesu_LIB_DEPENDS} ${KDE4_KDESU_LIBRARY} )
 
    find_library(KDE4_KDNSSD_LIBRARY NAMES kdnssd PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDNSSD_LIBS ${kdnssd_LIB_DEPENDS} ${KDE4_KDNSSD_LIBRARY} )
