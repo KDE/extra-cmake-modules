@@ -454,15 +454,47 @@ MACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 ENDMACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME)
 
 
-MACRO (KDE4_ADD_EXECUTABLE _target_NAME )
+MACRO (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
 
-   IF (KDE4_ENABLE_FINAL)
-      KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${ARGN})
-      ADD_EXECUTABLE(${_target_NAME} ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
-   ELSE (KDE4_ENABLE_FINAL)
-      ADD_EXECUTABLE(${_target_NAME} ${ARGN} )
-   ENDIF (KDE4_ENABLE_FINAL)
-   KDE4_HANDLE_RPATH(${_target_NAME})
+   set(_first_SRC ${_first_ARG} )
+   set(_add_executable_param)
+   set(_type "GUI")
+
+   # determine additional parameters for add_executable()
+   if (APPLE)
+#      set(_add_executable_param MACOSX_BUNDLE)
+   endif (APPLE)
+   if (WIN32)
+#      set(_add_executable_param WIN32)
+   endif (WIN32)
+
+
+   if (${_first_ARG} STREQUAL "NOGUI")
+      set(_type "NOGUI")
+      set(_first_SRC)
+   endif (${_first_ARG} STREQUAL "NOGUI")
+   if (${_first_ARG} STREQUAL "BUILDTOOL")
+      set(_type "BUILDTOOL")
+      set(_first_SRC)
+   endif (${_first_ARG} STREQUAL "BUILDTOOL")
+
+   if (KDE4_ENABLE_FINAL)
+      kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_first_SRC} ${ARGN})
+      add_executable(${_target_NAME} ${_add_executable_param} ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
+   else (KDE4_ENABLE_FINAL)
+      add_executable(${_target_NAME} ${_add_executable_param} ${_first_SRC} ${ARGN} )
+   endif (KDE4_ENABLE_FINAL)
+
+   # and now the RPATH handling... 
+   if (${_type} STREQUAL "GUI")
+   endif (${_type} STREQUAL "GUI")
+   if (${_type} STREQUAL "NOGUI")
+   endif (${_type} STREQUAL "NOGUI")
+   if (${_type} STREQUAL "BUILDTOOL")
+#      set_target_properties(${_target_NAME} SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
+   endif (${_type} STREQUAL "BUILDTOOL")
+
+   kde4_handle_rpath(${_target_NAME})
 
 ENDMACRO (KDE4_ADD_EXECUTABLE _target_NAME)
 
