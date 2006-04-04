@@ -2,17 +2,13 @@
 # for documentation look at FindKDE4Internal.cmake
 #
 # this file contains the following macros:
-# KDE4_ADD_FILE_DEPENDANCY
 # KDE4_ADD_DCOP_SKELS
 # KDE4_ADD_DCOP_STUBS
-# KDE4_ADD_MOC_FILES
 # KDE4_ADD_UI_FILES
 # KDE4_ADD_KCFG_FILES
 # KDE4_AUTOMOC
 # KDE4_INSTALL_LIBTOOL_FILE
-# KDE4_PLACEHOLDER
-# KDE4_CREATE_FINAL_FILE
-# KDE4_ADD_KPART
+# KDE4_CREATE_FINAL_FILES
 # KDE4_ADD_KDEINIT_EXECUTABLE
 # KDE4_ADD_EXECUTABLE
 
@@ -125,7 +121,6 @@ MACRO (KDE4_ADD_KCFG_FILES _sources)
 
       QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
       MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
-      MACRO_ADD_FILE_DEPENDENCIES(${_moc_FILE} ${_header_FILE} )
 
       set(${_sources} ${${_sources}} ${_src_FILE} ${_header_FILE})
 
