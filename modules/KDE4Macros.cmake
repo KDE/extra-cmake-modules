@@ -103,29 +103,26 @@ ENDMACRO (KDE4_ADD_DCOP_STUBS)
 MACRO (KDE4_ADD_KCFG_FILES _sources)
    foreach (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
-      GET_FILENAME_COMPONENT(_abs_PATH ${_tmp_FILE} PATH)
-      GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
+      get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
+      get_filename_component(_abs_PATH ${_tmp_FILE} PATH)
+      get_filename_component(_basename ${_tmp_FILE} NAME_WE)
 
-      FILE(READ ${_tmp_FILE} _contents)
-      STRING(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILE "${_contents}")
+      file(READ ${_tmp_FILE} _contents)
+      string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILE "${_contents}")
       set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
       set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
       set(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
       
-	  # the command for creating the source file from the kcfg file
+      # the command for creating the source file from the kcfg file
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE4_KCFGC_EXECUTABLE}
          ARGS ${_abs_PATH}/${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
          DEPENDS ${_tmp_FILE} ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
-      # for the case that the header contains signals or slots, it has to be processed by moc
-      # since the generated header isn't listed as OUTPUT in the ADD_CUSTOM_COMMAND above, we
-      # have to tell cmake explicitly that it is generated, otherwise it will complain that it doesn't
-      # exist at cmake time
-      # the generated source will then include the moc file, but since the source doesn't exist
-      # yet at cmake time, this can't be recognized by KDE4_AUTOMOC, so we have to set the depedency explicitely
-      SET_SOURCE_FILES_PROPERTIES(${_header_FILE} PROPERTIES GENERATED TRUE)
+      # the above command generates both the source and the header files
+      # this custom command creates the appropriate dependency
+      ADD_CUSTOM_COMMAND(OUTPUT ${_header_FILE} DEPENDS ${_src_FILE} )
+
       QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
       MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
 
