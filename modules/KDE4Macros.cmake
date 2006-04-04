@@ -126,7 +126,7 @@ MACRO (KDE4_ADD_KCFG_FILES _sources)
       QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
       MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
 
-      set(${_sources} ${${_sources}} ${_src_FILE})
+      set(${_sources} ${${_sources}} ${_src_FILE} ${_header_FILE})
 
    endforeach (_current_FILE)
 
