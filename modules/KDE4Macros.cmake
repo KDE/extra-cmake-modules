@@ -19,7 +19,7 @@
 #neundorf@kde.org
 
 #create the kidl and skeletion file for dcop stuff
-#usage: KDE_ADD_COP_SKELS(foo_SRCS ${dcop_headers})
+#usage: KDE4_ADD_DCOP_SKELS(foo_SRCS ${dcop_headers})
 MACRO (KDE4_ADD_DCOP_SKELS _sources)
    foreach (_current_FILE ${ARGN})
 
@@ -125,6 +125,7 @@ MACRO (KDE4_ADD_KCFG_FILES _sources)
 
       QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
       MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
+      MACRO_ADD_FILE_DEPENDENCIES(${_moc_FILE} ${_header_FILE} )
 
       set(${_sources} ${${_sources}} ${_src_FILE} ${_header_FILE})
 
@@ -136,7 +137,7 @@ ENDMACRO (KDE4_ADD_KCFG_FILES)
 GET_FILENAME_COMPONENT(KDE4_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 #create the implementation files from the ui files and add them to the list of sources
-#usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})
+#usage: KDE4_ADD_UI_FILES(foo_SRCS ${ui_files})
 MACRO (KDE4_ADD_UI_FILES _sources )
    foreach (_current_FILE ${ARGN})
 
@@ -162,7 +163,7 @@ ENDMACRO (KDE4_ADD_UI_FILES)
 
 
 #create the implementation files from the ui files and add them to the list of sources
-#usage: KDE_ADD_UI_FILES(foo_SRCS ${ui_files})
+#usage: KDE4_ADD_UI3_FILES(foo_SRCS ${ui_files})
 MACRO (KDE4_ADD_UI3_FILES _sources )
 
    QT4_GET_MOC_INC_DIRS(_moc_INCS)
