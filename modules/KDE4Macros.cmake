@@ -457,19 +457,20 @@ MACRO (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
    if (APPLE)
 #      set(_add_executable_param MACOSX_BUNDLE)
    endif (APPLE)
-   if (WIN32)
+# should this be enabled on windows ? Alex
+#   if (WIN32)
 #      set(_add_executable_param WIN32)
-   endif (WIN32)
+#   endif (WIN32)
 
 
    if (${_first_ARG} STREQUAL "NOGUI")
       set(_type "NOGUI")
       set(_first_SRC)
    endif (${_first_ARG} STREQUAL "NOGUI")
-   if (${_first_ARG} STREQUAL "BUILDTOOL")
-      set(_type "BUILDTOOL")
+   if (${_first_ARG} STREQUAL "TOOL")
+      set(_type "TOOL")
       set(_first_SRC)
-   endif (${_first_ARG} STREQUAL "BUILDTOOL")
+   endif (${_first_ARG} STREQUAL "TOOL")
 
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_first_SRC} ${ARGN})
@@ -481,11 +482,13 @@ MACRO (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
    # and now the RPATH handling... 
    if (${_type} STREQUAL "GUI")
    endif (${_type} STREQUAL "GUI")
+
    if (${_type} STREQUAL "NOGUI")
    endif (${_type} STREQUAL "NOGUI")
-   if (${_type} STREQUAL "BUILDTOOL")
+
+   if (${_type} STREQUAL "TOOL")
 #      set_target_properties(${_target_NAME} SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
-   endif (${_type} STREQUAL "BUILDTOOL")
+   endif (${_type} STREQUAL "TOOL")
 
    kde4_handle_rpath(${_target_NAME})
 
