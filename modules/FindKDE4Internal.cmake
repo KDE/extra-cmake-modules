@@ -492,7 +492,7 @@ if (UNIX)
          set(RPATH_STYLE_MATCHED TRUE)
          set(CMAKE_SKIP_BUILD_RPATH TRUE)
          set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-         set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}  ${QT_LIBRARY_DIR} )
+         set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
          # building something else than kdelibs/ ?
          # then add the dir where the kde libraries are installed
          if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)

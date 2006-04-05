@@ -455,7 +455,7 @@ MACRO (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
 
    # determine additional parameters for add_executable()
    if (APPLE)
-#      set(_add_executable_param MACOSX_BUNDLE)
+      set(_add_executable_param MACOSX_BUNDLE)
    endif (APPLE)
 # should this be enabled on windows ? Alex
 #   if (WIN32)
