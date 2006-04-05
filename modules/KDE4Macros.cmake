@@ -138,7 +138,7 @@ MACRO (KDE4_ADD_UI_FILES _sources )
 
       GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
-      SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+      SET(_header ${CMAKE_CURRENT_BINARY_DIR}/ui_${_basename}.h)
 
       # we need to run uic and replace some things in the generated file
       # this is done by executing the cmake script kde4uic.cmake
