@@ -483,9 +483,11 @@ MACRO (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
 
    # and now the RPATH handling... 
    if (${_type} STREQUAL "GUI")
+#      set_target_properties(${_target_NAME} SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
    endif (${_type} STREQUAL "GUI")
 
    if (${_type} STREQUAL "NOGUI")
+#      set_target_properties(${_target_NAME} SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
    endif (${_type} STREQUAL "NOGUI")
 
    if (${_type} STREQUAL "TOOL")
