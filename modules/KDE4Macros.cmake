@@ -14,7 +14,7 @@
 
 #neundorf@kde.org
 
-#create the kidl and skeletion file for dcop stuff
+#create the kidl and skeleton file for dcop stuff
 #usage: KDE4_ADD_DCOP_SKELS(foo_SRCS ${dcop_headers})
 MACRO (KDE4_ADD_DCOP_SKELS _sources)
    foreach (_current_FILE ${ARGN})
@@ -33,7 +33,7 @@ MACRO (KDE4_ADD_DCOP_SKELS _sources)
         ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
            COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
            ARGS --srcdir ${KDE4_KALYPTUS_DIR} -o ${_kidl} ${_tmp_FILE}
-           DEPENDS ${_tmp_FILE}
+           MAIN_DEPENDENCY ${_tmp_FILE}
         )
       endif (NOT HAVE_${_basename}_KIDL_RULE)
 
@@ -43,7 +43,8 @@ MACRO (KDE4_ADD_DCOP_SKELS _sources)
         ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
-           DEPENDS ${_kidl} ${_KDE4_DCOPIDL2CPP_DEP} )
+           MAIN_DEPENDENCY ${_kidl}
+           DEPENDS ${_KDE4_DCOPIDL2CPP_DEP} )
 
         MACRO_ADDITIONAL_CLEAN_FILES(${_skel_H})
 
@@ -73,7 +74,7 @@ MACRO (KDE4_ADD_DCOP_STUBS _sources)
         ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
            COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
            ARGS --srcdir ${KDE4_KALYPTUS_DIR} -o ${_kidl} ${_tmp_FILE}
-           DEPENDS ${_tmp_FILE}
+           MAIN_DEPENDENCY ${_tmp_FILE}
         )
       endif (NOT HAVE_${_basename}_KIDL_RULE)
 
@@ -83,7 +84,8 @@ MACRO (KDE4_ADD_DCOP_STUBS _sources)
         ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
-           DEPENDS ${_kidl} ${_KDE4_DCOPIDL2CPP_DEP} )
+           MAIN_DEPENDENCY ${_kidl}
+           DEPENDS ${_KDE4_DCOPIDL2CPP_DEP} )
 
         MACRO_ADDITIONAL_CLEAN_FILES(${_stub_H})
 
@@ -113,7 +115,8 @@ MACRO (KDE4_ADD_KCFG_FILES _sources)
       ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
          COMMAND ${KDE4_KCFGC_EXECUTABLE}
          ARGS ${_abs_PATH}/${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
-         DEPENDS ${_tmp_FILE} ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
+         MAIN_DEPENDENCY ${_tmp_FILE}
+         DEPENDS ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
       # the above command generates both the source and the header files
       # this custom command creates the appropriate dependency
@@ -151,7 +154,7 @@ MACRO (KDE4_ADD_UI_FILES _sources )
          -DKDE_UIC_H_FILE:FILEPATH=${_header}
          -DKDE_UIC_BASENAME:STRING=${_basename}
          -P ${KDE4_MODULE_DIR}/kde4uic.cmake
-         DEPENDS ${_tmp_FILE}
+         MAIN_DEPENDENCY ${_tmp_FILE}
       )
    endforeach (_current_FILE)
 ENDMACRO (KDE4_ADD_UI_FILES)
@@ -180,7 +183,7 @@ MACRO (KDE4_ADD_UI3_FILES _sources )
          -DKDE_UIC_BASENAME:STRING=${_basename}
          -DKDE_UIC_PLUGIN_DIR:FILEPATH="."
          -P ${KDE4_MODULE_DIR}/kde4uic.cmake
-         DEPENDS ${_tmp_FILE}
+         MAIN_DEPENDENCY ${_tmp_FILE}
       )
 
 # we need to run uic3 and replace some things in the generated file
@@ -196,13 +199,13 @@ MACRO (KDE4_ADD_UI3_FILES _sources )
          -DKDE_UIC_BASENAME:STRING=${_basename}
          -DKDE_UIC_PLUGIN_DIR:FILEPATH="."
          -P ${KDE4_MODULE_DIR}/kde4uic.cmake
-         DEPENDS ${_header}
+         MAIN_DEPENDENCY ${_header}
       )
 
       ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
          COMMAND ${QT_MOC_EXECUTABLE}
          ARGS ${_moc_INCS} ${_header} -o ${_moc}
-         DEPENDS ${_header}
+         MAIN_DEPENDENCY ${_header}
       )
       set(${_sources} ${${_sources}} ${_src} ${_moc} )
 
@@ -245,7 +248,7 @@ MACRO (KDE4_AUTOMOC)
                add_custom_command(OUTPUT ${_moc}
                   COMMAND ${QT_MOC_EXECUTABLE}
                   ARGS ${_moc_INCS} ${_header} -o ${_moc}
-                  DEPENDS ${_header}
+                  MAIN_DEPENDENCY ${_header}
                )
 
                macro_add_file_dependencies(${_abs_FILE} ${_moc})

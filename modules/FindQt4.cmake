@@ -632,7 +632,7 @@ IF (QT4_QMAKE_FOUND)
      ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_MOC_EXECUTABLE}
         ARGS ${moc_includes} -o ${outfile} ${infile}
-        MAIN_DEPENDENCY ${infile})
+        DEPENDS ${infile})
   ENDMACRO (QT4_GENERATE_MOC)
 
 
@@ -651,7 +651,7 @@ IF (QT4_QMAKE_FOUND)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_MOC_EXECUTABLE}
         ARGS ${moc_includes} -o ${outfile} ${it}
-        MAIN_DEPENDENCY ${it})
+        DEPENDS ${it})
       SET(${outfiles} ${${outfiles}} ${outfile})
     ENDFOREACH(it)
 
