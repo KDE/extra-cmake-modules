@@ -210,37 +210,6 @@ option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
 
 
-# RPATH handling
-set(RPATH_STYLE "default" CACHE STRING "Determine RPATH handling") 
-set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
-if (UNIX)
-
-   if ("${RPATH_STYLE}" MATCHES "none")
-      set(RPATH_STYLE_MATCHED TRUE)
-      set(KDE4_NEED_WRAPPER_SCRIPTS TRUE)
-   endif ("${RPATH_STYLE}" MATCHES "none")
-
-   if (NOT APPLE)
-      if ("${RPATH_STYLE}" MATCHES "install")
-         set(RPATH_STYLE_MATCHED TRUE)
-         set(KDE4_NEED_WRAPPER_SCRIPTS TRUE)
-      endif ("${RPATH_STYLE}" MATCHES "install")
-
-      if ("${RPATH_STYLE}" MATCHES "both")
-         set(RPATH_STYLE_MATCHED TRUE)
-      endif ("${RPATH_STYLE}" MATCHES "both")
-
-   endif (NOT APPLE)
-
-   if(NOT RPATH_STYLE_MATCHED)
-      set(RPATH_STYLE_MATCHED TRUE)
-   endif(NOT RPATH_STYLE_MATCHED)
-endif (UNIX)
-
-# set it to false again until the next kde release of cmake is required
-# set(KDE4_NEED_WRAPPER_SCRIPTS FALSE)
-
-
 #now try to find some kde stuff
 
 #are we trying to compile kdelibs ?
@@ -269,26 +238,21 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       endif ("${CMAKE_GENERATOR}" MATCHES "MSYS")
   
       set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
+      # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
+      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
+      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
    else (WIN32)
       set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
       set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib ) 
-#      set(KDE4_LD_LIBRARY_PATH LD_LIBRARY_PATH=${LIBRARY_OUTPUT_PATH}\$\${LD_LIBRARY_PATH+:\$\$LD_LIBRARY_PATH} )
+      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp.sh )
+      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.sh )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.sh )
    endif (WIN32)
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
    set(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
   
-   # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-   if (KDE4_NEED_WRAPPER_SCRIPTS)
-      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp.sh )
-      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.sh )
-      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.sh )
-   else (KDE4_NEED_WRAPPER_SCRIPTS)
-      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
-      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
-   endif (KDE4_NEED_WRAPPER_SCRIPTS)
-
    # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
    set( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
@@ -478,60 +442,20 @@ if (UNIX)
    set( _KDE4_PLATFORM_INCLUDE_DIRS /usr/local/include )
 
    # the rest is RPATH handling
-   set(RPATH_STYLE_MATCHED FALSE)
 
-   if ("${RPATH_STYLE}" MATCHES "none")
-      # no relinking, needs LD_LIBRARY_PATH
-      set(RPATH_STYLE_MATCHED TRUE)
-      set(CMAKE_SKIP_RPATH TRUE)
-   endif ("${RPATH_STYLE}" MATCHES "none")
-
-   if (NOT APPLE)
-      if ("${RPATH_STYLE}" MATCHES "install")
-         # no relinking, needs LD_LIBRARY_PATH from the builddir
-         set(RPATH_STYLE_MATCHED TRUE)
-         set(CMAKE_SKIP_BUILD_RPATH TRUE)
-         set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-         set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
-         # building something else than kdelibs/ ?
-         # then add the dir where the kde libraries are installed
-         if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-            set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${KDE4_LIB_DIR} )
-         endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-
-      endif ("${RPATH_STYLE}" MATCHES "install")
-
-      if ("${RPATH_STYLE}" MATCHES "both")
-         # no relinking, prefers the lib in the builddir over the installed one
-         set(RPATH_STYLE_MATCHED TRUE)
-         set(CMAKE_SKIP_BUILD_RPATH TRUE)
-         set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-         set(CMAKE_INSTALL_RPATH ${LIBRARY_OUTPUT_PATH} ${CMAKE_INSTALL_PREFIX}/lib )
-
-         set(CMAKE_INSTALL_RPATH ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR} ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}  ${QT_LIBRARY_DIR} )
-         # building something else than kdelibs/ ?
-         # then add the dir where the kde libraries are installed
-         if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-            set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${KDE4_LIB_DIR} )
-         endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-
-      endif ("${RPATH_STYLE}" MATCHES "both")
-
-   endif (NOT APPLE)
-
-   if(NOT RPATH_STYLE_MATCHED)
-      # rpath to the builddir, relinking to the install dir
-
+   if (APPLE)
+      set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR})
+   else (APPLE)
       set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
       # building something else than kdelibs/ ?
       # then add the dir where the kde libraries are installed
       if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-         set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH} ${KDE4_LIB_DIR} )
+         set(CMAKE_INSTALL_RPATH  ${KDE4_LIB_DIR} ${CMAKE_INSTALL_RPATH} )
       endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
-      set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR})
-   endif(NOT RPATH_STYLE_MATCHED)
-
+      set(CMAKE_SKIP_BUILD_RPATH TRUE)
+      set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+   endif (APPLE)
 endif (UNIX)
 
 

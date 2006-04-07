@@ -366,27 +366,44 @@ MACRO (KDE4_CREATE_FINAL_FILES _filenameCPP _filenameC )
    foreach (_current_FILE ${ARGN})
       STRING(REGEX MATCH ".+\\.c$" _isCFile ${_current_FILE})
       if (_isCFile)
-         FILE(APPEND ${_filenameC} "#include \"${_current_FILE}\"\n")
+         file(APPEND ${_filenameC} "#include \"${_current_FILE}\"\n")
       else (_isCFile)
-         FILE(APPEND ${_filenameCPP} "#include \"${_current_FILE}\"\n")
+         file(APPEND ${_filenameCPP} "#include \"${_current_FILE}\"\n")
       endif (_isCFile)
    endforeach (_current_FILE)
 
 ENDMACRO (KDE4_CREATE_FINAL_FILES)
 
 
-MACRO (KDE4_HANDLE_RPATH _target_NAME)
-   if (KDE4_NEED_WRAPPER_SCRIPTS)
+macro (KDE4_HANDLE_RPATH _target_NAME _type)
+   if (UNIX)
+
+      # set the RPATH related properties
+      if (NOT CMAKE_SKIP_RPATH)
+         if (${_type} STREQUAL "GUI")
+            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
+         endif (${_type} STREQUAL "GUI")
+      
+         if (${_type} STREQUAL "NOGUI")
+            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
+         endif (${_type} STREQUAL "NOGUI")
+      
+         if (${_type} STREQUAL "RUN_UNINSTALLED")
+            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
+         endif (${_type} STREQUAL "RUN_UNINSTALLED")
+      endif (NOT CMAKE_SKIP_RPATH)
+
       if (APPLE)
          set(_library_path_variable "DYLD_LIBRARY_PATH")
       else (APPLE)
          set(_library_path_variable "LD_LIBRARY_PATH")
       endif (APPLE)
+
       set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
       get_target_property(_executable ${_target_NAME} LOCATION )
       configure_file(${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/${_target_NAME}.sh)
-   endif (KDE4_NEED_WRAPPER_SCRIPTS)
-ENDMACRO (KDE4_HANDLE_RPATH)
+   endif (UNIX)
+endmacro (KDE4_HANDLE_RPATH)
 
 
 MACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
@@ -443,14 +460,13 @@ MACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
 
       ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
-      KDE4_HANDLE_RPATH(${_target_NAME})
+      KDE4_HANDLE_RPATH(${_target_NAME} GUI)
       TARGET_LINK_LIBRARIES(${_target_NAME} kdeinit_${_target_NAME})
 #   endif (WIN32)
 
 ENDMACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME)
 
-
-MACRO (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
+macro (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
 
    set(_first_SRC ${_first_ARG} )
    set(_add_executable_param)
@@ -471,11 +487,11 @@ MACRO (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
       set(_first_SRC)
       set(_add_executable_param)
    endif (${_first_ARG} STREQUAL "NOGUI")
-   if (${_first_ARG} STREQUAL "TOOL")
-      set(_type "TOOL")
+   if (${_first_ARG} STREQUAL "RUN_UNINSTALLED")
+      set(_type "RUN_UNINSTALLED")
       set(_first_SRC)
       set(_add_executable_param)
-   endif (${_first_ARG} STREQUAL "TOOL")
+   endif (${_first_ARG} STREQUAL "RUN_UNINSTALLED")
 
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_first_SRC} ${ARGN})
@@ -484,22 +500,9 @@ MACRO (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
       add_executable(${_target_NAME} ${_add_executable_param} ${_first_SRC} ${ARGN} )
    endif (KDE4_ENABLE_FINAL)
 
-   # and now the RPATH handling... 
-   if (${_type} STREQUAL "GUI")
-#      set_target_properties(${_target_NAME} SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
-   endif (${_type} STREQUAL "GUI")
+   kde4_handle_rpath(${_target_NAME} ${_type})
 
-   if (${_type} STREQUAL "NOGUI")
-#      set_target_properties(${_target_NAME} SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
-   endif (${_type} STREQUAL "NOGUI")
-
-   if (${_type} STREQUAL "TOOL")
-#      set_target_properties(${_target_NAME} SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
-   endif (${_type} STREQUAL "TOOL")
-
-   kde4_handle_rpath(${_target_NAME})
-
-ENDMACRO (KDE4_ADD_EXECUTABLE _target_NAME)
+endmacro (KDE4_ADD_EXECUTABLE _target_NAME)
 
 
 MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
