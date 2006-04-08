@@ -7,19 +7,13 @@
 #  LIBXSLT_DEFINITIONS - Compiler switches required for using LibXslt
 #
 
-IF (WIN32)
-	FIND_PACKAGE(GNUWIN32)
-	SET(_LibXsltIncDir  ${GNUWIN32_DIR}/include)
-	SET(_LibXsltLinkDir ${GNUWIN32_DIR}/lib)
-ELSE (WIN32)
+IF (NOT WIN32)
 	# use pkg-config to get the directories and then use these values
 	# in the FIND_PATH() and FIND_LIBRARY() calls
 	INCLUDE(UsePkgConfig)
 	PKGCONFIG(libxslt _LibXsltIncDir _LibXsltLinkDir _LibXsltLinkFlags _LibXsltCflags)
-ENDIF (WIN32)
-
-set(LIBXSLT_DEFINITIONS ${_LibXsltCflags})
-
+	set(LIBXSLT_DEFINITIONS ${_LibXsltCflags})
+ENDIF (NOT WIN32)
 
 FIND_PATH(LIBXSLT_INCLUDE_DIR libxslt/xslt.h
   ${_LibXsltIncDir}

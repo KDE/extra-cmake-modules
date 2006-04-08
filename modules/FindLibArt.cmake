@@ -4,27 +4,19 @@
 #  LIBART_FOUND - system has the LibArt
 #  LIBART_INCLUDE_DIR - the LibArt include directory
 #  LIBART_LIBRARIES - The libraries needed to use LibArt
-# under Windows this also checks in the GNUWIN32 directory, so make
-# sure that the GNUWIN32 directory gets found if you use the GNUWIN32 version of PCRE
-# under UNIX pkgconfig among others pkg-config is used to find the directories
 
-
-INCLUDE(UsePkgConfig)
-
-# use pkg-config to get the directories and then use these values
-# in the FIND_PATH() and FIND_LIBRARY() calls
-PKGCONFIG(libart-2.0 _libArtIncDir _libArtLinkDir _libArtLinkFlags _libArtCflags)
-
-set(LIBART_DEFINITIONS ${_libArtCflags})
-
-# under windows, try to find the base gnuwin32 directory, do nothing under UNIX
-FIND_PACKAGE(GNUWIN32)
+IF (NOT WIN32)
+	INCLUDE(UsePkgConfig)
+	# use pkg-config to get the directories and then use these values
+	# in the FIND_PATH() and FIND_LIBRARY() calls
+	PKGCONFIG(libart-2.0 _libArtIncDir _libArtLinkDir _libArtLinkFlags _libArtCflags)
+	set(LIBART_DEFINITIONS ${_libArtCflags})
+ENDIF (NOT WIN32)
 
 FIND_PATH(LIBART_INCLUDE_DIR libart_lgpl/libart.h
    ${_libArtIncDir}/libart-2.0
    /usr/include/libart-2.0
    /usr/local/include/libart-2.0
-   ${GNUWIN32_DIR}/include
 )
 
 FIND_LIBRARY(LIBART_LIBRARIES NAMES art_lgpl_2
@@ -32,7 +24,6 @@ FIND_LIBRARY(LIBART_LIBRARIES NAMES art_lgpl_2
    ${_libArtLinkDir}
    /usr/lib
    /usr/local/lib
-   ${GNUWIN32_DIR}/lib
 )
 
 

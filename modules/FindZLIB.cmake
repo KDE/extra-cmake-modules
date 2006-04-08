@@ -1,18 +1,14 @@
-FIND_PACKAGE(GNUWIN32)
 
 FIND_PATH(ZLIB_INCLUDE_DIR zlib.h
    /usr/include
    /usr/local/include
-   ${GNUWIN32_DIR}/include
 )
 
 FIND_LIBRARY(ZLIB_LIBRARY NAMES z zlib
 PATHS
    /usr/lib
    /usr/local/lib
-   ${GNUWIN32_DIR}/lib
 )
-
 
 IF (ZLIB_INCLUDE_DIR)
    SET(ZLIB_FOUND TRUE)

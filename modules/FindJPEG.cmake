@@ -7,20 +7,15 @@
 # also defined, but not for general use are
 #  JPEG_LIBRARY, where to find the JPEG library.
 
-# under windows, try to find the base gnuwin32 directory, do nothing under UNIX
-FIND_PACKAGE(GNUWIN32)
-
-
 FIND_PATH(JPEG_INCLUDE_DIR jpeglib.h
 /usr/local/include
 /usr/include
-${GNUWIN32_DIR}/include
 )
 
 SET(JPEG_NAMES ${JPEG_NAMES} jpeg)
 FIND_LIBRARY(JPEG_LIBRARY
   NAMES ${JPEG_NAMES}
-  PATHS /usr/lib /usr/local/lib ${GNUWIN32_DIR}/lib
+  PATHS /usr/lib /usr/local/lib
   )
 
 IF (JPEG_LIBRARY)
