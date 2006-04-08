@@ -401,7 +401,18 @@ macro (KDE4_HANDLE_RPATH _target_NAME _type)
 
       set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
       get_target_property(_executable ${_target_NAME} LOCATION )
-      configure_file(${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake ${_executable}.sh)
+
+      # use add_custom_target() to have the sh-wrapper generated during build time instead of cmake time
+      add_custom_target(${_target_NAME}sh_target 
+         COMMAND ${CMAKE_COMMAND}
+         -D_filename=${_executable}.sh -D_library_path_variable=${_library_path_variable}
+         -D_ld_library_path="${_ld_library_path}" -D_executable=${_executable}
+         -P ${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake
+         )
+
+      add_dependencies(${_target_NAME} ${_target_NAME}sh_target)
+      macro_additional_clean_files(${_executable}.sh)
+
    endif (UNIX)
 endmacro (KDE4_HANDLE_RPATH)
 
