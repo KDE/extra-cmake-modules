@@ -5,4 +5,5 @@ INCLUDE(MacroOptionalFindPackage)
 INCLUDE(MacroAdditionalCleanFiles)
 INCLUDE(MacroAddFileDependencies)
 INCLUDE(MacroGetenvWinPath)
+INCLUDE(MacroEnsureOutOfSourceBuild)
 
