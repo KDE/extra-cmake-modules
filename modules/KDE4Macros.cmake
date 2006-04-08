@@ -401,7 +401,7 @@ macro (KDE4_HANDLE_RPATH _target_NAME _type)
 
       set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
       get_target_property(_executable ${_target_NAME} LOCATION )
-      configure_file(${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/${_target_NAME}.sh)
+      configure_file(${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake ${_executable}.sh)
    endif (UNIX)
 endmacro (KDE4_HANDLE_RPATH)
 
