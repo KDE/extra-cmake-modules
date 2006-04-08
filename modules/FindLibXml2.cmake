@@ -6,13 +6,17 @@
 #  LIBXML2_LIBRARIES - the libraries needed to use LibXml2
 #  LIBXML2_DEFINITIONS - Compiler switches required for using LibXml2
 #
-# use pkg-config to get the directories and then use these values
-# in the FIND_PATH() and FIND_LIBRARY() calls
 
-
-INCLUDE(UsePkgConfig)
-
-PKGCONFIG(libxml-2.0 _LibXml2IncDir _LibXml2LinkDir _LibXml2LinkFlags _LibXml2Cflags)
+IF (WIN32)
+	FIND_PACKAGE(GNUWIN32)
+	SET(_LibXml2IncDir  ${GNUWIN32_DIR}/include)
+	SET(_LibXml2LinkDir ${GNUWIN32_DIR}/lib)
+ELSE (WIN32)
+	# use pkg-config to get the directories and then use these values
+	# in the FIND_PATH() and FIND_LIBRARY() calls
+	INCLUDE(UsePkgConfig)
+	PKGCONFIG(libxml-2.0 _LibXml2IncDir _LibXml2LinkDir _LibXml2LinkFlags _LibXml2Cflags)
+ENDIF (WIN32)
 
 set(LIBXML2_DEFINITIONS ${_LibXml2Cflags})
 
