@@ -167,6 +167,9 @@ FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake qmake-qt4 PATHS
   $ENV{QTDIR}/bin
 )
 
+SET(QT4_INSTALLED_VERSION_TOO_OLD FALSE)
+
+
 IF (QT_QMAKE_EXECUTABLE)
 
    SET(QT4_QMAKE_FOUND FALSE)
@@ -208,7 +211,7 @@ IF (QT_QMAKE_EXECUTABLE)
    
       IF (found_vers LESS req_vers)
          SET(QT4_QMAKE_FOUND FALSE)
-   	     MESSAGE(FATAL_ERROR "The installed QT version (${QTVERSION}) is to old , at least version (${QT_MIN_VERSION}) is required")
+         SET(QT4_INSTALLED_VERSION_TOO_OLD TRUE)
       ELSE (found_vers LESS req_vers)
          SET(QT4_QMAKE_FOUND TRUE)
       ENDIF (found_vers LESS req_vers)
@@ -824,11 +827,16 @@ IF (QT4_QMAKE_FOUND)
 
 ELSE(QT4_QMAKE_FOUND)
 
-  IF(QT_QMAKE_EXECUTABLE)
-    MESSAGE("QT_QMAKE_EXECUTABLE set to qmake version: QTVERSION = ${QTVERSION}\nQT_QMAKE_EXECUTABLE = ${QT_QMAKE_EXECUTABLE}, please set to path to qmake from qt4.")
-  ENDIF(QT_QMAKE_EXECUTABLE)
-  IF(Qt4_FIND_REQUIRED)
-     MESSAGE( FATAL_ERROR "Qt qmake not found!")
-  ENDIF(Qt4_FIND_REQUIRED)
+   IF(Qt4_FIND_REQUIRED)
+      IF(QT4_INSTALLED_VERSION_TOO_OLD)
+         MESSAGE(FATAL_ERROR "The installed Qt version ${QTVERSION} is too old, at least version ${QT_MIN_VERSION} is required")
+      ELSE(QT4_INSTALLED_VERSION_TOO_OLD)
+         MESSAGE( FATAL_ERROR "Qt qmake not found!")
+      ENDIF(QT4_INSTALLED_VERSION_TOO_OLD)
+   ELSE(Qt4_FIND_REQUIRED)
+      IF(QT4_INSTALLED_VERSION_TOO_OLD AND NOT Qt4_FIND_QUIETLY)
+         MESSAGE(STATUS "The installed Qt version ${QTVERSION} is too old, at least version ${QT_MIN_VERSION} is required")
+      ENDIF(QT4_INSTALLED_VERSION_TOO_OLD AND NOT Qt4_FIND_QUIETLY)
+   ENDIF(Qt4_FIND_REQUIRED)
  
 ENDIF (QT4_QMAKE_FOUND)
