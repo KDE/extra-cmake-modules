@@ -10,7 +10,8 @@
 # functionality can also reside in standalone Gettext library, or the one
 # embedded within kdelibs (cf. gettext.m4 from Gettext source).
 
-INCLUDE(CheckIncludeFiles)
+include(CheckIncludeFiles)
+include(CheckLibraryExists)
 include(CheckFunctionExists)
 
 check_include_files(libintl.h HAVE_LIBINTL_H)
