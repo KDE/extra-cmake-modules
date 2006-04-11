@@ -20,7 +20,8 @@ FIND_LIBRARY(CUPS_LIBRARIES NAMES cups
 )
 
 if (CUPS_INCLUDE_DIR AND CUPS_LIBRARIES)
-   set(CUPS_FOUND TRUE)
+   # ippDeleteAttribute is new in cups-1.1.19 (and used by kdeprint)
+   check_library_exists(cups ippDeleteAttribute "" CUPS_FOUND)
 endif (CUPS_INCLUDE_DIR AND CUPS_LIBRARIES)
 
 if (CUPS_FOUND)
