@@ -177,7 +177,7 @@ IF (QT_QMAKE_EXECUTABLE)
    EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_VERSION" OUTPUT_VARIABLE QTVERSION)
 
    # check that we found the Qt4 qmake, Qt3 qmake output won't match here
-   STRING(REGEX MATCH "^[0-9]+\\.[0-9]+\\.[0-9]+$" qt_version_tmp "${QTVERSION}")
+   STRING(REGEX MATCH "^[0-9]+\\.[0-9]+\\.[0-9]+" qt_version_tmp "${QTVERSION}")
    IF (qt_version_tmp)
 
       # we need at least version 4.0.0
@@ -186,7 +186,7 @@ IF (QT_QMAKE_EXECUTABLE)
       ENDIF (NOT QT_MIN_VERSION)
    
       #now parse the parts of the user given version string into variables
-      STRING(REGEX MATCH "^[0-9]+\\.[0-9]+\\.[0-9]+$" req_qt_major_vers "${QT_MIN_VERSION}")
+      STRING(REGEX MATCH "^[0-9]+\\.[0-9]+\\.[0-9]+" req_qt_major_vers "${QT_MIN_VERSION}")
       IF (NOT req_qt_major_vers)
          MESSAGE( FATAL_ERROR "Invalid Qt version string given: \"${QT_MIN_VERSION}\", expected e.g. \"4.0.1\"")
       ENDIF (NOT req_qt_major_vers)
