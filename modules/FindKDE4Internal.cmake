@@ -19,6 +19,7 @@
 # KDE4_DCOPIDL2CPP_EXECUTABLE - the dcopidl2cpp executable
 # KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
 # KDE4_MEINPROC_EXECUTABLE - the meinproc executable
+# KDE4_MAKEKDEWIDGETS_EXECUTABLE - the makekdewidgets executable
 #
 # The following variables point to the location of the KDE libraries,
 # but shouldn't be used directly:
@@ -242,12 +243,14 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
       set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
+      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
       set(KDE4_DCOPIDL_EXECUTABLE ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
       set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib ) 
       set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp.sh )
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.sh )
       set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.sh )
+      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.sh )
    endif (WIN32)
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
@@ -390,6 +393,19 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    if (NOT KDE4_MEINPROC_EXECUTABLE)
       find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc )
    endif (NOT KDE4_MEINPROC_EXECUTABLE)
+
+   find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets PATHS
+     ${KDE4_BIN_INSTALL_DIR}
+     $ENV{KDEDIR}/bin
+     /opt/kde/bin
+     /opt/kde4/bin
+     NO_SYSTEM_PATH
+     NO_CMAKE_SYSTEM_PATH
+   )
+
+   if (NOT KDE4_MAKEKDEWIDGETS_EXECUTABLE)
+      find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
+   endif (NOT KDE4_MAKEKDEWIDGETS_EXECUTABLE)
 
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
