@@ -5,31 +5,45 @@
 #  OPENSSL_INCLUDE_DIR - the OpenSSL include directory
 #  OPENSSL_LIBRARIES - The libraries needed to use OpenSSL
 
-FIND_PATH(OPENSSL_INCLUDE_DIR openssl/ssl.h
-   /usr/include/
-   /usr/local/include/
-)
+IF (CACHED_OPENSSL)
 
-FIND_LIBRARY(OPENSSL_LIBRARIES NAMES ssl ssleay32
-   PATHS
-   /usr/lib
-   /usr/local/lib
-)
+  # in cache already
+  IF ("${CACHED_OPENSSL}" STREQUAL "YES")
+    SET(OPENSSL_FOUND TRUE)
+  ENDIF ("${CACHED_OPENSSL}" STREQUAL "YES")
 
-if (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
-   set(OPENSSL_FOUND TRUE)
-endif (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
+ELSE (CACHED_OPENSSL)
 
-
-if (OPENSSL_FOUND)
-   if (NOT OpenSSL_FIND_QUIETLY)
-      message(STATUS "Found OpenSSL: ${OPENSSL_LIBRARIES}")
-   endif (NOT OpenSSL_FIND_QUIETLY)
-else (OPENSSL_FOUND)
-   if (OpenSSL_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find OpenSSL")
-   endif (OpenSSL_FIND_REQUIRED)
-endif (OPENSSL_FOUND)
-
-MARK_AS_ADVANCED(OPENSSL_INCLUDE_DIR OPENSSL_LIBRARIES)
-
+  FIND_PATH(OPENSSL_INCLUDE_DIR openssl/ssl.h
+     /usr/include/
+     /usr/local/include/
+  )
+  
+  FIND_LIBRARY(OPENSSL_LIBRARIES NAMES ssl ssleay32
+     PATHS
+     /usr/lib
+     /usr/local/lib
+  )
+  
+  if (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
+     set(OPENSSL_FOUND TRUE)
+     set(CACHED_OPENSSL "YES")
+  else (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
+     set(CACHED_OPENSSL "NO")
+  endif (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
+  
+  
+  if (OPENSSL_FOUND)
+     if (NOT OpenSSL_FIND_QUIETLY)
+        message(STATUS "Found OpenSSL: ${OPENSSL_LIBRARIES}")
+     endif (NOT OpenSSL_FIND_QUIETLY)
+  else (OPENSSL_FOUND)
+     if (OpenSSL_FIND_REQUIRED)
+        message(FATAL_ERROR "Could NOT find OpenSSL")
+     endif (OpenSSL_FIND_REQUIRED)
+  endif (OPENSSL_FOUND)
+  
+  set(CACHED_OPENSSL ${CACHED_OPENSSL} CACHE INTERNAL "If openssl was checked")
+  MARK_AS_ADVANCED(OPENSSL_INCLUDE_DIR OPENSSL_LIBRARIES)
+  
+ENDIF (CACHED_OPENSSL)

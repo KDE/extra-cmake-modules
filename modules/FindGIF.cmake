@@ -7,29 +7,44 @@
 #  GIF_DEFINITIONS - Compiler switches required for using GIF
 #
 
-FIND_PATH(GIF_INCLUDE_DIR gif_lib.h
-  /usr/include
-  /usr/local/include
-)
+IF (CACHED_GIF)
 
-FIND_LIBRARY(GIF_LIBRARIES NAMES gif libgif ungif libungif giflib
-  PATHS
-  /usr/lib
-  /usr/local/lib
-)
+  # in cache already
+  IF ("${CACHED_GIF}" STREQUAL "YES")
+    SET(GIF_FOUND TRUE)
+  ENDIF ("${CACHED_GIF}" STREQUAL "YES")
 
-if (GIF_INCLUDE_DIR AND GIF_LIBRARIES)
-   set(GIF_FOUND TRUE)
-endif (GIF_INCLUDE_DIR AND GIF_LIBRARIES)
+ELSE (CACHED_GIF)
 
-if (GIF_FOUND)
-  if (NOT GIF_FIND_QUIETLY)
-    message(STATUS "Found GIF: ${GIF_LIBRARIES}")
-  endif (NOT GIF_FIND_QUIETLY)
-else (GIF_FOUND)
-  if (GIF_FIND_REQUIRED)
-    message(FATAL_ERROR "Could NOT find GIF")
-  endif (GIF_FIND_REQUIRED)
-endif (GIF_FOUND)
-
-MARK_AS_ADVANCED(GIF_INCLUDE_DIR GIF_LIBRARIES)
+  FIND_PATH(GIF_INCLUDE_DIR gif_lib.h
+    /usr/include
+    /usr/local/include
+  )
+  
+  FIND_LIBRARY(GIF_LIBRARIES NAMES gif libgif ungif libungif giflib
+    PATHS
+    /usr/lib
+    /usr/local/lib
+  )
+  
+  if (GIF_INCLUDE_DIR AND GIF_LIBRARIES)
+     set(GIF_FOUND TRUE)
+     set(CACHED_GIF "YES")
+  else (GIF_INCLUDE_DIR AND GIF_LIBRARIES)
+     set(CACHED_GIF "NO")
+  endif (GIF_INCLUDE_DIR AND GIF_LIBRARIES)
+  
+  if (GIF_FOUND)
+    if (NOT GIF_FIND_QUIETLY)
+      message(STATUS "Found GIF: ${GIF_LIBRARIES}")
+    endif (NOT GIF_FIND_QUIETLY)
+  else (GIF_FOUND)
+    if (GIF_FIND_REQUIRED)
+      message(FATAL_ERROR "Could NOT find GIF")
+    endif (GIF_FIND_REQUIRED)
+  endif (GIF_FOUND)
+  
+  set(CACHED_GIF ${CACHED_GIF} CACHE INTERNAL "If gif was checked")
+  MARK_AS_ADVANCED(GIF_INCLUDE_DIR GIF_LIBRARIES)
+  
+ENDIF (CACHED_GIF)

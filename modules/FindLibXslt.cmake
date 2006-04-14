@@ -7,40 +7,54 @@
 #  LIBXSLT_DEFINITIONS - Compiler switches required for using LibXslt
 #
 
-IF (NOT WIN32)
-	# use pkg-config to get the directories and then use these values
-	# in the FIND_PATH() and FIND_LIBRARY() calls
-	INCLUDE(UsePkgConfig)
-	PKGCONFIG(libxslt _LibXsltIncDir _LibXsltLinkDir _LibXsltLinkFlags _LibXsltCflags)
-	set(LIBXSLT_DEFINITIONS ${_LibXsltCflags})
-ENDIF (NOT WIN32)
+IF (CACHED_LIBXSLT)
 
-FIND_PATH(LIBXSLT_INCLUDE_DIR libxslt/xslt.h
-  ${_LibXsltIncDir}
-  /usr/include
-  /usr/local/include
-)
+  # in cache already
+  IF ("${CACHED_LIBXSLT}" STREQUAL "YES")
+    SET(LIBXSLT_FOUND TRUE)
+  ENDIF ("${CACHED_LIBXSLT}" STREQUAL "YES")
 
-FIND_LIBRARY(LIBXSLT_LIBRARIES NAMES xslt libxslt
-  PATHS
-  ${_LibXsltLinkDir}
-  /usr/lib
-  /usr/local/lib
-)
+ELSE (CACHED_LIBXSLT)
 
-if (LIBXSLT_INCLUDE_DIR AND LIBXSLT_LIBRARIES)
-   set(LIBXSLT_FOUND TRUE)
-endif (LIBXSLT_INCLUDE_DIR AND LIBXSLT_LIBRARIES)
+  IF (NOT WIN32)
+    # use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    INCLUDE(UsePkgConfig)
+    PKGCONFIG(libxslt _LibXsltIncDir _LibXsltLinkDir _LibXsltLinkFlags _LibXsltCflags)
+    set(LIBXSLT_DEFINITIONS ${_LibXsltCflags})
+  ENDIF (NOT WIN32)
 
-if (LIBXSLT_FOUND)
-  if (NOT LibXslt_FIND_QUIETLY)
+  FIND_PATH(LIBXSLT_INCLUDE_DIR libxslt/xslt.h
+    ${_LibXsltIncDir}
+    /usr/include
+    /usr/local/include
+  )
+  
+  FIND_LIBRARY(LIBXSLT_LIBRARIES NAMES xslt libxslt
+    PATHS
+    ${_LibXsltLinkDir}
+    /usr/lib
+    /usr/local/lib
+  )
+  
+  if (LIBXSLT_INCLUDE_DIR AND LIBXSLT_LIBRARIES)
+     set(LIBXSLT_FOUND TRUE)
+     set(CACHED_LIBXSLT "YES")
+  else (LIBXSLT_INCLUDE_DIR AND LIBXSLT_LIBRARIES)
+     set(CACHED_LIBXSLT "NO")
+  endif (LIBXSLT_INCLUDE_DIR AND LIBXSLT_LIBRARIES)
+  
+  if (LIBXSLT_FOUND)
+    if (NOT LibXslt_FIND_QUIETLY)
     message(STATUS "Found LibXslt: ${LIBXSLT_LIBRARIES}")
-  endif (NOT LibXslt_FIND_QUIETLY)
-else (LIBXSLT_FOUND)
-  if (LibXslt_FIND_REQUIRED)
+    endif (NOT LibXslt_FIND_QUIETLY)
+  else (LIBXSLT_FOUND)
+    if (LibXslt_FIND_REQUIRED)
     message(FATAL_ERROR "Could NOT find LibXslt")
-  endif (LibXslt_FIND_REQUIRED)
-endif (LIBXSLT_FOUND)
-
-MARK_AS_ADVANCED(LIBXSLT_INCLUDE_DIR LIBXSLT_LIBRARIES)
-
+    endif (LibXslt_FIND_REQUIRED)
+  endif (LIBXSLT_FOUND)
+  
+  set(CACHED_LIBXSLT ${CACHED_LIBXSLT} CACHE INTERNAL "If libxslt was checked")
+  MARK_AS_ADVANCED(LIBXSLT_INCLUDE_DIR LIBXSLT_LIBRARIES)
+  
+ENDIF (CACHED_LIBXSLT)
