@@ -553,18 +553,22 @@ endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DC
 
 
 macro (KDE4_PRINT_RESULTS)
-   if(KDE4_INCLUDE_DIR)
-      message(STATUS "Found KDE4 include dir: ${KDE4_INCLUDE_DIR}")
-   else(KDE4_INCLUDE_DIR)
-      message(STATUS "Didn't find KDE4 headers")
-   endif(KDE4_INCLUDE_DIR)
 
-   if(KDE4_LIB_DIR)
-      message(STATUS "Found KDE4 library dir: ${KDE4_LIB_DIR}")
-   else(KDE4_LIB_DIR)
-      message(STATUS "Didn't find KDE4 core library")
-   endif(KDE4_LIB_DIR)
+   # inside kdelibs the include dir and lib dir are internal, not "found"
+   if(NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+       if(KDE4_INCLUDE_DIR)
+          message(STATUS "Found KDE4 include dir: ${KDE4_INCLUDE_DIR}")
+       else(KDE4_INCLUDE_DIR)
+          message(STATUS "Didn't find KDE4 headers")
+       endif(KDE4_INCLUDE_DIR)
 
+       if(KDE4_LIB_DIR)
+          message(STATUS "Found KDE4 library dir: ${KDE4_LIB_DIR}")
+       else(KDE4_LIB_DIR)
+          message(STATUS "Didn't find KDE4 core library")
+       endif(KDE4_LIB_DIR)
+   endif(NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+  
    if(KDE4_DCOPIDL_EXECUTABLE)
       message(STATUS "Found KDE4 dcopidl preprocessor: ${KDE4_DCOPIDL_EXECUTABLE}")
    else(KDE4_DCOPIDL_EXECUTABLE)
