@@ -11,6 +11,7 @@
 # KDE4_CREATE_FINAL_FILES
 # KDE4_ADD_KDEINIT_EXECUTABLE
 # KDE4_ADD_EXECUTABLE
+# KDE4_ADD_WIDGET_FILES
 
 #neundorf@kde.org
 
@@ -553,4 +554,29 @@ ENDMACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 MACRO (KDE4_CREATE_DOXYGEN_DOCS)
 ENDMACRO (KDE4_CREATE_DOXYGEN_DOCS)
+
+
+MACRO (KDE4_ADD_WIDGET_FILES _sources)
+   FOREACH (_current_FILE ${ARGN})
+
+      GET_FILENAME_COMPONENT(_input ${_current_FILE} ABSOLUTE)
+      GET_FILENAME_COMPONENT(_basename ${_input} NAME_WE)
+      SET(_source ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.cpp)
+      SET(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.moc)
+
+      # create source file from the .widgets file
+      ADD_CUSTOM_COMMAND(OUTPUT ${_source}
+         COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE}
+        ARGS -o ${_source} ${_input}
+        MAIN_DEPENDENCY ${_input})
+
+      # create moc file
+      QT4_GENERATE_MOC(${_source} ${_moc} )
+      MACRO_ADD_FILE_DEPENDENCIES(${_source} ${_moc})
+
+      SET(${_sources} ${${_sources}} ${_source})
+
+   ENDFOREACH (_current_FILE)
+
+ENDMACRO (KDE4_ADD_WIDGET_FILES)
 

@@ -110,6 +110,10 @@
 # KDE4_ADD_KCFG_FILES (SRCS_VAR file1.kcfgc ... fileN.kcfgc)
 #    Use this to add KDE config compiler files to your application/library.
 #
+# KDE4_ADD_WIDGET_FILES (SRCS_VAR file1.widgets ... fileN.widgets)
+#    Use this to add widget description files for the makekdewidgets code generator
+#    for Qt Designer plugins.
+#
 # KDE4_AUTOMOC(file1 ... fileN)
 #    Call this if you want to have automatic moc file handling.
 #    This means if you include "foo.moc" in the source file foo.cpp
