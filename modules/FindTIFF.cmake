@@ -7,14 +7,14 @@
 # also defined, but NOT for general use are
 #  TIFF_LIBRARY, where to find the TIFF library.
 
-IF (CACHED_TIFF)
+IF (DEFINED CACHED_TIFF)
 
   # in cache already
   IF ("${CACHED_TIFF}" STREQUAL "YES")
     SET(TIFF_FOUND TRUE)
   ENDIF ("${CACHED_TIFF}" STREQUAL "YES")
 
-ELSE (CACHED_TIFF)
+ELSE (DEFINED CACHED_TIFF)
 
   FIND_PATH(TIFF_INCLUDE_DIR tiff.h
     /usr/local/include
@@ -50,4 +50,4 @@ ELSE (CACHED_TIFF)
   set(CACHED_TIFF ${CACHED_TIFF} CACHE INTERNAL "If tiff was checked")
   MARK_AS_ADVANCED(TIFF_INCLUDE_DIR TIFF_LIBRARY)
 
-ENDIF (CACHED_TIFF)
+ENDIF (DEFINED CACHED_TIFF)

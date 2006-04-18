@@ -6,14 +6,14 @@
 #  LIBXML2_LIBRARIES - the libraries needed to use LibXml2
 #  LIBXML2_DEFINITIONS - Compiler switches required for using LibXml2
 
-IF (CACHED_LIBXML2)
+IF (DEFINED CACHED_LIBXML2)
 
     # in cache already
     IF ("${CACHED_LIBXML2}" STREQUAL "YES")
         SET(LIBXML2_FOUND TRUE)
     ENDIF ("${CACHED_LIBXML2}" STREQUAL "YES")
 
-ELSE (CACHED_LIBXML2)
+ELSE (DEFINED CACHED_LIBXML2)
 
     IF (NOT WIN32)
         # use pkg-config to get the directories and then use these values
@@ -55,4 +55,4 @@ ELSE (CACHED_LIBXML2)
 
     SET(CACHED_LIBXML2 ${CACHED_LIBXML2} CACHE INTERNAL "If libxml2 was checked")
 
-ENDIF (CACHED_LIBXML2)
+ENDIF (DEFINED CACHED_LIBXML2)

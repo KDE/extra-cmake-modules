@@ -10,14 +10,14 @@
 # functionality can also reside in standalone Gettext library, or the one
 # embedded within kdelibs (cf. gettext.m4 from Gettext source).
 
-IF (CACHED_GETTEXT)
+IF (DEFINED CACHED_GETTEXT)
 
   # in cache already
   IF ("${CACHED_GETTEXT}" STREQUAL "YES")
     SET(GETTEXT_FOUND TRUE)
   ENDIF ("${CACHED_GETTEXT}" STREQUAL "YES")
 
-ELSE (CACHED_GETTEXT)
+ELSE (DEFINED CACHED_GETTEXT)
 
   include(CheckIncludeFiles)
   include(CheckLibraryExists)
@@ -64,4 +64,4 @@ ELSE (CACHED_GETTEXT)
   set(CACHED_GETTEXT ${CACHED_GETTEXT} CACHE INTERNAL "If gettext was checked")
   MARK_AS_ADVANCED(GETTEXT_INCLUDE_DIR GETTEXT_LIBRARIES)
 
-ENDIF( CACHED_GETTEXT )
+ENDIF(DEFINED CACHED_GETTEXT)
