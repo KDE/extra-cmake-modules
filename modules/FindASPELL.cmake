@@ -7,6 +7,10 @@
 #  ASPELL_DEFINITIONS - Compiler switches required for using ASPELL
 #
 
+if (ASPELL_INCLUDE_DIR AND ASPELL_LIBRARIES)
+  # Already in cache, be silent
+  set(ASPELL_FIND_QUIETLY TRUE)
+endif (ASPELL_INCLUDE_DIR AND ASPELL_LIBRARIES)
 
 FIND_PATH(ASPELL_INCLUDE_DIR aspell.h
   /usr/include

@@ -7,6 +7,11 @@
 #  HSPELL_DEFINITIONS - Compiler switches required for using HSPELL
 #
 
+if (HSPELL_INCLUDE_DIR AND HSPELL_LIBRARIES)
+  # Already in cache, be silent
+  set(HSPELL_FIND_QUIETLY TRUE)
+endif (HSPELL_INCLUDE_DIR AND HSPELL_LIBRARIES)
+
 
 FIND_PATH(HSPELL_INCLUDE_DIR hspell.h
   /usr/include

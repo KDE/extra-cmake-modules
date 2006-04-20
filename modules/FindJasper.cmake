@@ -5,6 +5,13 @@
 #  JASPER_INCLUDE_DIR - the Jasper include directory
 #  JASPER_LIBRARIES - The libraries needed to use Jasper
 
+FIND_PACKAGE(JPEG)
+
+if (JASPER_INCLUDE_DIR AND JASPER_LIBRARIES AND JPEG_LIBRARIES)
+  # Already in cache, be silent
+  set(Jasper_FIND_QUIETLY TRUE)
+endif (JASPER_INCLUDE_DIR AND JASPER_LIBRARIES AND JPEG_LIBRARIES)
+
 FIND_PATH(JASPER_INCLUDE_DIR jasper/jasper.h
    /usr/include
    /usr/local/include
@@ -15,8 +22,6 @@ FIND_LIBRARY(JASPER_LIBRARY NAMES jasper libjasper
    /usr/lib
    /usr/local/lib
 )
-
-FIND_PACKAGE(JPEG)
 
 if (JASPER_INCLUDE_DIR AND JASPER_LIBRARIES AND JPEG_LIBRARIES)
    set(JASPER_FOUND TRUE)

@@ -19,6 +19,8 @@ ELSE (DEFINED CACHED_LIBART)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     PKGCONFIG(libart-2.0 _libArtIncDir _libArtLinkDir _libArtLinkFlags _libArtCflags)
+
+    ######### ?? where is this used ?? ###############
     set(LIBART_DEFINITIONS ${_libArtCflags})
   ENDIF (NOT WIN32)
 
