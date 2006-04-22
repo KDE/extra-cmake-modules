@@ -156,10 +156,15 @@
 #    A library named kdeinit_<name> will be created and a small executable which links to it.
 #    It supports KDE3_ENABLE_FINAL
 #
-# KDE4_ADD_EXECUTABLE (name file1 ... fileN)
+# KDE4_ADD_EXECUTABLE (name [ NOGUI | RUN_UNINSTALLED] file1 ... fileN)
 #    Equivalent to ADD_EXECUTABLE(), but additionally adds support for KDE4_ENABLE_FINAL.
 #    If you don't need support for KDE4_ENABLE_FINAL, you can just use the 
 #    normal ADD_EXECUTABLE().
+#    If the executable has to be run from the buildtree (e.g. unit tests and code generators
+#    used later on when compiling), set the option RUN_UNINSTALLED.
+#    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
+#    application bundles are created, with the NOGUI option no bundles but simple executables
+#    are created. Currently it doesn't have any effect on other platforms.
 #
 # KDE4_ADD_LIBRARY (name [STATIC | SHARED | MODULE ] file1 ... fileN)
 #    Equivalent to ADD_LIBRARY(), but additionally it supports KDE4_ENABLE_FINAL

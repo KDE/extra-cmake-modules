@@ -99,7 +99,7 @@ MACRO (KDE4_ADD_DCOP_STUBS _sources)
 ENDMACRO (KDE4_ADD_DCOP_STUBS)
 
 
-MACRO (KDE4_ADD_KCFG_FILES _sources)
+macro (KDE4_ADD_KCFG_FILES _sources)
    foreach (_current_FILE ${ARGN})
 
       get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
@@ -113,15 +113,11 @@ MACRO (KDE4_ADD_KCFG_FILES _sources)
       set(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
       
       # the command for creating the source file from the kcfg file
-      ADD_CUSTOM_COMMAND(OUTPUT ${_src_FILE}
+      add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
          COMMAND ${KDE4_KCFGC_EXECUTABLE}
          ARGS ${_abs_PATH}/${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
          MAIN_DEPENDENCY ${_tmp_FILE}
          DEPENDS ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
-
-      # the above command generates both the source and the header files
-      # this custom command creates the appropriate dependency
-      ADD_CUSTOM_COMMAND(OUTPUT ${_header_FILE} DEPENDS ${_src_FILE} )
 
       QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
       MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
@@ -130,7 +126,7 @@ MACRO (KDE4_ADD_KCFG_FILES _sources)
 
    endforeach (_current_FILE)
 
-ENDMACRO (KDE4_ADD_KCFG_FILES)
+endmacro (KDE4_ADD_KCFG_FILES)
 
 
 GET_FILENAME_COMPONENT(KDE4_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
@@ -413,6 +409,15 @@ macro (KDE4_HANDLE_RPATH _target_NAME _type)
 
       macro_additional_clean_files(${_executable}.sh)
 
+      # under UNIX, set the property WRAPPER_SCRIPT to the name of the generated shell script
+      # so it can be queried and used later on easily
+      set_target_properties(${_target_NAME} PROPERTIES WRAPPER_SCRIPT ${_executable}.sh)
+
+   else (UNIX)
+      # under windows, set the property WRAPPER_SCRIPT just to the name of the executable
+      # maybe later this will change to a generated batch file (for setting the PATH so that the Qt libs are found)
+      get_target_property(_executable ${_target_NAME} LOCATION )
+      set_target_properties(${_target_NAME} PROPERTIES WRAPPER_SCRIPT ${_executable})
    endif (UNIX)
 endmacro (KDE4_HANDLE_RPATH)
 
