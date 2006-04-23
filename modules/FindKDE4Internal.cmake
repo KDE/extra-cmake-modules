@@ -268,12 +268,15 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
    set( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
+   set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
   
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   # ... but NOT otherwise
    set( _KDE4_DCOPIDL2CPP_DEP )
    set( _KDE4_KCONFIG_COMPILER_DEP)
+   set( _KDE4_MAKEKDEWIDGETS_DEP)
+
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
    get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
