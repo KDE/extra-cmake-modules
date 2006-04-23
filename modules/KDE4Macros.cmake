@@ -571,9 +571,9 @@ MACRO (KDE4_ADD_WIDGET_FILES _sources)
 
       # create source file from the .widgets file
       ADD_CUSTOM_COMMAND(OUTPUT ${_source}
-         COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE}
+        COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE}
         ARGS -o ${_source} ${_input}
-        MAIN_DEPENDENCY ${_input})
+        MAIN_DEPENDENCY ${_input} DEPENDS ${_KDE4_MAKEKDEWIDGETS_DEP})
 
       # create moc file
       QT4_GENERATE_MOC(${_source} ${_moc} )
