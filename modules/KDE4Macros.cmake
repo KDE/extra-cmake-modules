@@ -133,16 +133,16 @@ GET_FILENAME_COMPONENT(KDE4_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE4_ADD_UI_FILES(foo_SRCS ${ui_files})
-MACRO (KDE4_ADD_UI_FILES _sources )
+macro (KDE4_ADD_UI_FILES _sources )
    foreach (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
-      GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
-      SET(_header ${CMAKE_CURRENT_BINARY_DIR}/ui_${_basename}.h)
+      get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
+      get_filename_component(_basename ${_tmp_FILE} NAME_WE)
+      set(_header ${CMAKE_CURRENT_BINARY_DIR}/ui_${_basename}.h)
 
       # we need to run uic and replace some things in the generated file
       # this is done by executing the cmake script kde4uic.cmake
-      ADD_CUSTOM_COMMAND(OUTPUT ${_header}
+      add_custom_command(OUTPUT ${_header}
          COMMAND ${CMAKE_COMMAND}
          ARGS
          -DKDE4_HEADER:BOOL=ON
@@ -153,8 +153,9 @@ MACRO (KDE4_ADD_UI_FILES _sources )
          -P ${KDE4_MODULE_DIR}/kde4uic.cmake
          MAIN_DEPENDENCY ${_tmp_FILE}
       )
+      set(${_sources} ${${_sources}} ${_header})
    endforeach (_current_FILE)
-ENDMACRO (KDE4_ADD_UI_FILES)
+endmacro (KDE4_ADD_UI_FILES)
 
 
 #create the implementation files from the ui files and add them to the list of sources
