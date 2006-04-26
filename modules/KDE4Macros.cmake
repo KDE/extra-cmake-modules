@@ -31,7 +31,7 @@ MACRO (KDE4_ADD_DCOP_SKELS _sources)
       if (NOT HAVE_${_basename}_KIDL_RULE)
         set(HAVE_${_basename}_KIDL_RULE ON)
 
-        ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
+        add_custom_command(OUTPUT ${_kidl}
            COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
            ARGS --srcdir ${KDE4_KALYPTUS_DIR} -o ${_kidl} ${_tmp_FILE}
            MAIN_DEPENDENCY ${_tmp_FILE}
@@ -41,13 +41,13 @@ MACRO (KDE4_ADD_DCOP_SKELS _sources)
       if (NOT HAVE_${_basename}_SKEL_RULE)
         set(HAVE_${_basename}_SKEL_RULE ON)
 
-        ADD_CUSTOM_COMMAND(OUTPUT ${_skel}
+        add_custom_command(OUTPUT ${_skel_H} ${_skel}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
            MAIN_DEPENDENCY ${_kidl}
            DEPENDS ${_KDE4_DCOPIDL2CPP_DEP} )
 
-        MACRO_ADDITIONAL_CLEAN_FILES(${_skel_H})
+        macro_additional_clean_files(${_skel_H})
 
       endif (NOT HAVE_${_basename}_SKEL_RULE)
 
@@ -61,9 +61,9 @@ ENDMACRO (KDE4_ADD_DCOP_SKELS)
 MACRO (KDE4_ADD_DCOP_STUBS _sources)
    foreach (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
+      get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
 
-      GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
+      get_filename_component(_basename ${_tmp_FILE} NAME_WE)
 
       set(_stub_CPP ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.cpp)
       set(_stub_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.h)
@@ -72,7 +72,7 @@ MACRO (KDE4_ADD_DCOP_STUBS _sources)
       if (NOT HAVE_${_basename}_KIDL_RULE)
         set(HAVE_${_basename}_KIDL_RULE ON)
 
-        ADD_CUSTOM_COMMAND(OUTPUT ${_kidl}
+        add_custom_command(OUTPUT ${_kidl}
            COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
            ARGS --srcdir ${KDE4_KALYPTUS_DIR} -o ${_kidl} ${_tmp_FILE}
            MAIN_DEPENDENCY ${_tmp_FILE}
@@ -82,13 +82,13 @@ MACRO (KDE4_ADD_DCOP_STUBS _sources)
       if (NOT HAVE_${_basename}_STUB_RULE)
         set(HAVE_${_basename}_STUB_RULE ON)
 
-        ADD_CUSTOM_COMMAND(OUTPUT ${_stub_CPP}
+        add_custom_command(OUTPUT ${_stub_H} ${_stub_CPP}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
            MAIN_DEPENDENCY ${_kidl}
            DEPENDS ${_KDE4_DCOPIDL2CPP_DEP} )
 
-        MACRO_ADDITIONAL_CLEAN_FILES(${_stub_H})
+        macro_additional_clean_files(${_stub_H})
 
       endif (NOT HAVE_${_basename}_STUB_RULE)
 
@@ -166,13 +166,13 @@ MACRO (KDE4_ADD_UI3_FILES _sources )
 
    foreach (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
-      GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
+      get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
+      get_filename_component(_basename ${_tmp_FILE} NAME_WE)
       set(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
       set(_src ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
       set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc.cpp)
 
-      ADD_CUSTOM_COMMAND(OUTPUT ${_header}
+      add_custom_command(OUTPUT ${_header}
          COMMAND ${CMAKE_COMMAND}
          -DKDE3_HEADER:BOOL=ON
          -DKDE_UIC_EXECUTABLE:FILEPATH=${QT_UIC3_EXECUTABLE}
@@ -186,7 +186,7 @@ MACRO (KDE4_ADD_UI3_FILES _sources )
 
 # we need to run uic3 and replace some things in the generated file
       # this is done by executing the cmake script kde4uic.cmake
-      ADD_CUSTOM_COMMAND(OUTPUT ${_src}
+      add_custom_command(OUTPUT ${_src}
          COMMAND ${CMAKE_COMMAND}
          ARGS
          -DKDE3_IMPL:BOOL=ON
