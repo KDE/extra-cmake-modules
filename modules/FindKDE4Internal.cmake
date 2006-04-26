@@ -185,7 +185,7 @@ set(QT_MIN_VERSION "4.1.1")
 find_package(Qt4 REQUIRED)                                      
 
 include (MacroLibrary)
-include (CheckCXXSourceCompiles)
+include (CheckCXXCompilerFlag)
 
 #add some KDE specific stuff
 
@@ -558,13 +558,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
    # visibility support
-   set (SAFE_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
-   set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -fvisibility=hidden")
-   CHECK_CXX_SOURCE_COMPILES("int main() { return 0; }" __KDE_HAVE_GCC_VISIBILITY)
+   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
    if (__KDE_HAVE_GCC_VISIBILITY)
-     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
    endif (__KDE_HAVE_GCC_VISIBILITY)
-   set (CMAKE_REQUIRED_FLAGS "${SAFE_CMAKE_REQUIRED_FLAGS}")
 
 endif (CMAKE_COMPILER_IS_GNUCXX)
 

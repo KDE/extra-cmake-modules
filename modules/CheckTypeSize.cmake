@@ -4,6 +4,8 @@
 # exists, the size will be stored to the variable.
 #  VARIABLE - variable to store size if the type exists.
 #  HAVE_${VARIABLE} - does the variable exists or NOT
+#
+# remove once we require cmake 2.4.1
 
 MACRO (CHECK_TYPE_SIZE TYPE VARIABLE)
   SET(CMAKE_ALLOW_UNKNOWN_VARIABLE_READ_ACCESS 1)
