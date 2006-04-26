@@ -185,6 +185,7 @@ set(QT_MIN_VERSION "4.1.1")
 find_package(Qt4 REQUIRED)                                      
 
 include (MacroLibrary)
+include (CheckCXXSourceCompiles)
 
 #add some KDE specific stuff
 
@@ -521,27 +522,17 @@ if (APPLE)
 endif (APPLE)
 
 
-# only on linux, but NOT e.g. on FreeBSD:
 if (CMAKE_SYSTEM_NAME MATCHES Linux)
    set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
    set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
    set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-   # optimization flags are set further below for the various build types
-   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -fno-exceptions -fno-check-new -fno-common")
 endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
-
-# works on FreeBSD, NOT tested on NetBSD and OpenBSD
 if (CMAKE_SYSTEM_NAME MATCHES BSD)
    set ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
    set ( CMAKE_SHARED_LINKER_FLAGS "-avoid-version -lc")
    set ( CMAKE_MODULE_LINKER_FLAGS "-avoid-version -lc")
-   # optimization flags are set further below for the various build types
-   set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-   set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wconversion -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-exceptions -fno-check-new -fno-common")
 endif (CMAKE_SYSTEM_NAME MATCHES BSD)
-
 
 # compiler specific stuff, maybe this should be done differently, Alex
 
@@ -560,6 +551,21 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    set(CMAKE_C_FLAGS_RELEASE          "-O2")
    set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
    set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
+
+   if (CMAKE_SYSTEM_NAME MATCHES Linux)
+     set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
+     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -fno-exceptions -fno-check-new -fno-common")
+   endif (CMAKE_SYSTEM_NAME MATCHES Linux)
+
+   # visibility support
+   set (SAFE_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
+   set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -fvisibility=hidden")
+   CHECK_CXX_SOURCE_COMPILES("int main() { return 0; }" __KDE_HAVE_GCC_VISIBILITY)
+   if (__KDE_HAVE_GCC_VISIBILITY)
+     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+   endif (__KDE_HAVE_GCC_VISIBILITY)
+   set (CMAKE_REQUIRED_FLAGS "${SAFE_CMAKE_REQUIRED_FLAGS}")
+
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 # it seems we prefer not to use a different postfix for debug libs, Alex
