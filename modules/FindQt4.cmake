@@ -13,6 +13,7 @@
 #                    QT_USE_QTASSISTANT
 #                    QT_USE_QTDESIGNER
 #                    QT_USE_QTMOTIF
+#                    QT_USE_QTMAIN
 #                    QT_USE_QTNETWORK
 #                    QT_USE_QTNSPLUGIN
 #                    QT_USE_QTOPENGL
@@ -125,11 +126,15 @@
 #                             QT_QTSVG_LIBRARY_RELEASE
 #                             QT_QTSVG_LIBRARY_DEBUG
 #
-#The QtTest library:          QT_QTTEST_LIBRARY
+# The QtTest library:         QT_QTTEST_LIBRARY
 #                             QT_QTTEST_LIBRARY_RELEASE
 #                             QT_QTTEST_LIBRARY_DEBUG
 #
-#The QtUiTools library:          QT_QTUITOOLS_LIBRARY
+# The qtmain library for Windows QT_QTMAIN_LIBRARY
+#                             QT_QTMAIN_LIBRARY_RELEASE
+#                             QT_QTMAIN_LIBRARY_DEBUG
+#
+#The QtUiTools library:       QT_QTUITOOLS_LIBRARY
 #                             QT_QTUITOOLS_LIBRARY_RELEASE
 #                             QT_QTUITOOLS_LIBRARY_DEBUG
 #
@@ -154,7 +159,6 @@
 # These variables are set to "" Because Qt structure changed
 # (They make no sense in Qt4)
 #  QT_QT_LIBRARY        Qt-Library is now split
-#  QT_QTMAIN_LIBRARY    Qt-Library is now split
 
 INCLUDE(CheckSymbolExists)
 
@@ -543,7 +547,7 @@ IF (QT4_QMAKE_FOUND)
     FIND_LIBRARY(QT_QTSVG_LIBRARY_RELEASE NAMES QtSvg QtSvg4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
     FIND_LIBRARY(QT_QTSVG_LIBRARY_DEBUG   NAMES QtSvg_debug QtSvgd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
-    # Set QT_QTSVG_LIBRARY
+    # Set QT_QTUITOOLS_LIBRARY
     FIND_LIBRARY(QT_QTUITOOLS_LIBRARY_RELEASE NAMES QtUiTools QtUiTools4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
     FIND_LIBRARY(QT_QTUITOOLS_LIBRARY_DEBUG   NAMES QtUiTools_debug QtUiToolsd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
@@ -562,7 +566,7 @@ IF (QT4_QMAKE_FOUND)
   # Set QT_QTDESIGNER_LIBRARY
   FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_RELEASE NAMES QtDesigner QtDesigner4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
   FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_DEBUG   NAMES QtDesigner_debug QtDesignerd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
-
+  
   ############################################
   #
   # Check the existence of the libraries.
@@ -605,6 +609,11 @@ IF (QT4_QMAKE_FOUND)
     MARK_AS_ADVANCED(QT_${basename}_LIBRARY QT_${basename}_LIBRARY_RELEASE QT_${basename}_LIBRARY_DEBUG QT_${basename}_INCLUDE_DIR)
   ENDMACRO (_QT4_ADJUST_LIB_VARS)
 
+  IF(WIN32)
+     _QT4_ADJUST_LIB_VARS(QTMAIN)
+  ENDIF(WIN32)
+
+
   _QT4_ADJUST_LIB_VARS(QTCORE)
   _QT4_ADJUST_LIB_VARS(QTGUI)
   _QT4_ADJUST_LIB_VARS(QT3SUPPORT)
@@ -630,17 +639,25 @@ IF (QT4_QMAKE_FOUND)
   #######################################
 
 
-  FIND_PROGRAM(QT_MOC_EXECUTABLE
-    NAMES moc moc-qt4
-    PATHS ${QT_BINARY_DIR}
-    NO_DEFAULT_PATH
-    )
+   # find moc and uic using qmake
+   FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/CMakeTmpQmake/tmp.pro
+      "message("MOC <$$QMAKE_MOC>")
+      message("UIC <$$QMAKE_UIC>")
+   ")
 
-  FIND_PROGRAM(QT_UIC_EXECUTABLE
-    NAMES uic uic-qt4
-    PATHS ${QT_BINARY_DIR}
-    NO_DEFAULT_PATH
-    )
+   EXECUTE_PROCESS(COMMAND ${QT_QMAKE_EXECUTABLE}
+      WORKING_DIRECTORY  ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/CMakeTmpQmake
+      OUTPUT_VARIABLE _moc_OUTPUT
+      ERROR_VARIABLE _moc_OUTPUT )
+
+   FILE(REMOVE_RECURSE "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/CMakeTmpQmake")
+
+   STRING(REGEX REPLACE ".*MOC<([^>]+).*" "\\1" QT_MOC_EXECUTABLE "${_moc_OUTPUT}" )
+   STRING(REGEX REPLACE ".*UIC<([^>]+).*" "\\1" QT_UIC_EXECUTABLE "${_moc_OUTPUT}" )
+
+   SET(QT_MOC_EXECUTABLE ${QT_MOC_EXECUTABLE} CACHE FILEPATH "The moc executable")
+   SET(QT_UIC_EXECUTABLE ${QT_UIC_EXECUTABLE} CACHE FILEPATH "The uic executable")
+
 
   FIND_PROGRAM(QT_UIC3_EXECUTABLE
     NAMES uic3
@@ -858,7 +875,6 @@ IF (QT4_QMAKE_FOUND)
   SET (QT_UIC_EXE ${QT_UIC_EXECUTABLE} )
 
   SET( QT_QT_LIBRARY "")
-  SET( QT_QTMAIN_LIBRARY "")
 
 ELSE(QT4_QMAKE_FOUND)
 
@@ -875,3 +891,4 @@ ELSE(QT4_QMAKE_FOUND)
    ENDIF(Qt4_FIND_REQUIRED)
  
 ENDIF (QT4_QMAKE_FOUND)
+
