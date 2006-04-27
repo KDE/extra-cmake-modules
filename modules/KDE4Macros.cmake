@@ -25,7 +25,6 @@ MACRO (KDE4_ADD_DCOP_SKELS _sources)
       GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
 
       set(_skel ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.cpp)
-      set(_skel_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.h)
       set(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
 
       if (NOT HAVE_${_basename}_KIDL_RULE)
@@ -41,7 +40,7 @@ MACRO (KDE4_ADD_DCOP_SKELS _sources)
       if (NOT HAVE_${_basename}_SKEL_RULE)
         set(HAVE_${_basename}_SKEL_RULE ON)
 
-        add_custom_command(OUTPUT ${_skel_H} ${_skel}
+        add_custom_command(OUTPUT ${_skel}
            COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
            ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
            MAIN_DEPENDENCY ${_kidl}
