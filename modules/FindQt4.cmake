@@ -129,6 +129,10 @@
 #                             QT_QTTEST_LIBRARY_RELEASE
 #                             QT_QTTEST_LIBRARY_DEBUG
 #
+#The QtUiTools library:          QT_QTUITOOLS_LIBRARY
+#                             QT_QTUITOOLS_LIBRARY_RELEASE
+#                             QT_QTUITOOLS_LIBRARY_DEBUG
+#
 # also defined, but NOT for general use are
 #  QT_MOC_EXECUTABLE          Where to find the moc tool.
 #  QT_UIC_EXECUTABLE          Where to find the uic tool.
@@ -383,6 +387,15 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
+  # Set QT_QTUITOOLS_INCLUDE_DIR
+  FIND_PATH(QT_QTUITOOLS_INCLUDE_DIR QtTest
+    PATHS
+    ${QT_INCLUDE_DIR}/QtUiTools
+    ${QT_LIBRARY_DIR}/QtUiTools.framework/Headers
+    NO_DEFAULT_PATH
+    )
+
+
 
   # Set QT_QTMOTIF_INCLUDE_DIR
   IF(Q_WS_X11)
@@ -477,6 +490,9 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_QTXML_LIBRARY_DEBUG        "-framework QtXml"      CACHE STRING "The QtXml library.")
     SET(QT_QTSVG_LIBRARY_RELEASE      "-framework QtSvg"      CACHE STRING "The QtSvg library.")
     SET(QT_QTSVG_LIBRARY_DEBUG        "-framework QtSvg"      CACHE STRING "The QtSvg library.")
+    SET(QT_QTUITOOLS_LIBRARY_RELEASE      "-framework QtUiTools"      CACHE STRING "The QtUiTools library.")
+    SET(QT_QTUITOOLS_LIBRARY_DEBUG        "-framework QtUiTools"      CACHE STRING "The QtUiTools library.")
+
 
     # WTF?  why don't we have frameworks?  :P
     SET(QT_QTTEST_LIBRARY_RELEASE "-L${QT_LIBRARY_DIR} -lQtTest" CACHE STRING "The QtTest library.")
@@ -526,6 +542,10 @@ IF (QT4_QMAKE_FOUND)
     # Set QT_QTSVG_LIBRARY
     FIND_LIBRARY(QT_QTSVG_LIBRARY_RELEASE NAMES QtSvg QtSvg4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
     FIND_LIBRARY(QT_QTSVG_LIBRARY_DEBUG   NAMES QtSvg_debug QtSvgd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
+    # Set QT_QTSVG_LIBRARY
+    FIND_LIBRARY(QT_QTUITOOLS_LIBRARY_RELEASE NAMES QtUiTools QtUiTools4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTUITOOLS_LIBRARY_DEBUG   NAMES QtUiTools_debug QtUiToolsd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     # Set QT_QTTEST_LIBRARY
     FIND_LIBRARY(QT_QTTEST_LIBRARY_RELEASE NAMES QtTest QtTest4 PATHS ${QT_LIBRARY_DIR}                      NO_DEFAULT_PATH)
@@ -599,6 +619,7 @@ IF (QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QTSQL)
   _QT4_ADJUST_LIB_VARS(QTXML)
   _QT4_ADJUST_LIB_VARS(QTSVG)
+  _QT4_ADJUST_LIB_VARS(QTUITOOLS)
   _QT4_ADJUST_LIB_VARS(QTTEST)
 
   #######################################
