@@ -184,6 +184,9 @@ set(QT_MIN_VERSION "4.1.1")
 #this line includes FindQt.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
 
+# Perl is required for building KDE software, e.g. for dcopidl
+find_package(Perl REQUIRED)
+
 include (MacroLibrary)
 include (CheckCXXCompilerFlag)
 
