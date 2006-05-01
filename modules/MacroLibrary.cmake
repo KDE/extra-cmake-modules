@@ -6,4 +6,4 @@ INCLUDE(MacroAdditionalCleanFiles)
 INCLUDE(MacroAddFileDependencies)
 INCLUDE(MacroGetenvWinPath)
 INCLUDE(MacroEnsureOutOfSourceBuild)
-
+INCLUDE(MacroBoolTo01)
