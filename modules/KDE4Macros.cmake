@@ -371,7 +371,8 @@ MACRO (KDE4_CREATE_FINAL_FILES _filenameCPP _filenameC )
 
 ENDMACRO (KDE4_CREATE_FINAL_FILES)
 
-
+# this macro sets the RPATH related options for executables
+# and creates wrapper shell scripts for the executables
 macro (KDE4_HANDLE_RPATH _target_NAME _type)
    if (UNIX)
 
@@ -521,7 +522,7 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
 endmacro (KDE4_ADD_EXECUTABLE _target_NAME)
 
 
-MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
+macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
 
    set(_first_SRC ${_lib_TYPE})
@@ -541,10 +542,10 @@ MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    endif (${_lib_TYPE} STREQUAL "MODULE")
 
    if (KDE4_ENABLE_FINAL)
-      KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_first_SRC} ${ARGN})
-      ADD_LIBRARY(${_target_NAME} ${_add_lib_param}  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
+      kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_first_SRC} ${ARGN})
+      add_library(${_target_NAME} ${_add_lib_param}  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
    else (KDE4_ENABLE_FINAL)
-      ADD_LIBRARY(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN})
+      add_library(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN})
    endif (KDE4_ENABLE_FINAL)
 
    if (WIN32)
@@ -554,11 +555,7 @@ MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    endif (WIN32)
 
-ENDMACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
-
-
-MACRO (KDE4_CREATE_DOXYGEN_DOCS)
-ENDMACRO (KDE4_CREATE_DOXYGEN_DOCS)
+endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 
 MACRO (KDE4_ADD_WIDGET_FILES _sources)
