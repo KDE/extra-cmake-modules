@@ -121,10 +121,10 @@ if (UNIX)
      set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xcomposite_INCLUDE_PATH})
   endif (X11_Xcomposite_INCLUDE_PATH)
 
-  if (X11_XTest_INCLUDE_PATH)
+  if (X11_XTest_INCLUDE_PATH AND X11_XTest_LIB)
       set(X11_XTest_FOUND TRUE)
       set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_XTest_INCLUDE_PATH})
-  endif (X11_XTest_INCLUDE_PATH)
+  endif (X11_XTest_INCLUDE_PATH AND X11_XTest_LIB)
 
   if (X11_Xinerama_INCLUDE_PATH)
      set(X11_Xinerama_FOUND TRUE)
