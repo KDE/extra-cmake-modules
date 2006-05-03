@@ -109,7 +109,6 @@ macro (KDE4_ADD_KCFG_FILES _sources)
       string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILE "${_contents}")
       set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
       set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
-      set(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
       
       # the command for creating the source file from the kcfg file
       add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
@@ -117,9 +116,6 @@ macro (KDE4_ADD_KCFG_FILES _sources)
          ARGS ${_abs_PATH}/${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
          MAIN_DEPENDENCY ${_tmp_FILE}
          DEPENDS ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
-
-      QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
-      MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
 
       set(${_sources} ${${_sources}} ${_src_FILE} ${_header_FILE})
 
