@@ -151,10 +151,10 @@ if (UNIX)
      set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xxf86misc_INCLUDE_PATH})
   endif (X11_Xxf86misc_INCLUDE_PATH)
 
-  if (X11_Xcursor_INCLUDE_PATH)
+  if (X11_Xcursor_INCLUDE_PATH AND X11_Xcursor_LIB)
      set(X11_Xcursor_FOUND TRUE)
      set(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xcursor_INCLUDE_PATH})
-  endif (X11_Xcursor_INCLUDE_PATH)
+  endif (X11_Xcursor_INCLUDE_PATH AND X11_Xcursor_LIB)
 
   if (X11_Xscreensaver_INCLUDE_PATH)
      set(X11_Xscreensaver_FOUND TRUE)
