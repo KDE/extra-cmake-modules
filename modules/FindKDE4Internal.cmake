@@ -177,7 +177,6 @@
 # _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
 
-
 cmake_minimum_required(VERSION 2.4.0 FATAL_ERROR)
 
 set(QT_MIN_VERSION "4.1.1")
@@ -280,6 +279,50 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    set( _KDE4_DCOPIDL2CPP_DEP )
    set( _KDE4_KCONFIG_COMPILER_DEP)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
+
+   # Check the version of kde. KDE4_KDECONFIG_EXECUTABLE was set by FindKDE4
+   EXEC_PROGRAM(${KDE4_KDECONFIG_EXECUTABLE} ARGS "--version" OUTPUT_VARIABLE kdeconfig_output )
+
+   STRING(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
+   IF (KDEVERSION)
+
+      # avoid porting against kdelibs trunk
+      string(REGEX MATCH "DONTPORT" _match "${kdeconfig_output}")
+      if (_match)
+         message ( FATAL_ERROR "ERROR: don't port against this version of kdelibs! Use /branches/work/kdelibs4_snapshot instead!!" )
+      endif (_match)
+
+
+      # we need at least this version:
+      IF (NOT KDE_MIN_VERSION)
+         SET(KDE_MIN_VERSION "3.9.0")
+      ENDIF (NOT KDE_MIN_VERSION)
+   
+      #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
+   
+      # now parse the parts of the user given version string into variables
+      STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" req_kde_major_vers "${KDE_MIN_VERSION}")
+      STRING(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" req_kde_minor_vers "${KDE_MIN_VERSION}")
+      STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" req_kde_patch_vers "${KDE_MIN_VERSION}")
+   
+      # and now the version string given by kde-config
+      STRING(REGEX REPLACE "KDE: ([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" found_kde_major_vers "${KDEVERSION}")
+      STRING(REGEX REPLACE "KDE: [0-9]+\\.([0-9])+\\.[0-9]+.*" "\\1" found_kde_minor_vers "${KDEVERSION}")
+      STRING(REGEX REPLACE "KDE: [0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" found_kde_patch_vers "${KDEVERSION}")
+   
+      # compute an overall version number which can be compared at once
+      MATH(EXPR req_vers "${req_kde_major_vers}*10000 + ${req_kde_minor_vers}*100 + ${req_kde_patch_vers}")
+      MATH(EXPR found_vers "${found_kde_major_vers}*10000 + ${found_kde_minor_vers}*100 + ${found_kde_patch_vers}")
+   
+      IF (found_vers LESS req_vers)
+         SET(KDE4_FOUND FALSE)
+         SET(KDE4_INSTALLED_VERSION_TOO_OLD TRUE)
+      ENDIF (found_vers LESS req_vers)
+
+   ELSE (KDEVERSION)
+      message(FATAL_ERROR "Couldn't parse KDE version string from the kde-config output:\n${kdeconfig_output}")
+   ENDIF (KDEVERSION)
+
 
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
@@ -422,13 +465,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    if (NOT KDE4_MAKEKDEWIDGETS_EXECUTABLE)
       find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
    endif (NOT KDE4_MAKEKDEWIDGETS_EXECUTABLE)
-
-   # avoid porting against kdelibs trunk
-   file(READ ${KDE4_INCLUDE_DIR}/kdeversion.h _contents)
-   string(REGEX MATCHALL "DONTPORT" _match "${_contents}")
-   if (_match)
-      message ( FATAL_ERROR "Don't port against this version of kdelibs! Use /branches/work/kdelibs4_snapshot instead!!" )
-   endif (_match)
 
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
@@ -586,11 +622,10 @@ include(KDE4Macros)
 
 
 # decide whether KDE4 has been found
-if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
+set(KDE4_FOUND FALSE)
+if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE AND NOT KDE4_INSTALLED_VERSION_TOO_OLD)
    set(KDE4_FOUND TRUE)
-else (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
-   set(KDE4_FOUND FALSE)
-endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE)
+endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE AND NOT KDE4_INSTALLED_VERSION_TOO_OLD)
 
 
 macro (KDE4_PRINT_RESULTS)
@@ -633,7 +668,11 @@ endmacro (KDE4_PRINT_RESULTS)
 if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
    #bail out if something wasn't found
    kde4_print_results()
-   message(FATAL_ERROR "Could NOT find everything required for compiling KDE 4 programs")
+   if (KDE4_INSTALLED_VERSION_TOO_OLD)
+     message(FATAL_ERROR "ERROR: the installed kdelibs version ${KDEVERSION} is too old, at least version ${KDE_MIN_VERSION} is required")
+   else (KDE4_INSTALLED_VERSION_TOO_OLD)
+     message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
+   endif (KDE4_INSTALLED_VERSION_TOO_OLD)
 endif (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
 
 
