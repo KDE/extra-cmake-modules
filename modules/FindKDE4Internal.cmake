@@ -423,6 +423,13 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
    endif (NOT KDE4_MAKEKDEWIDGETS_EXECUTABLE)
 
+   # avoid porting against kdelibs trunk
+   file(READ ${KDE4_INCLUDE_DIR}/kdeversion.h _contents)
+   string(REGEX MATCHALL "DONTPORT" _match "${_contents}")
+   if (_match)
+      message ( FATAL_ERROR "Don't port against this version of kdelibs! Use /branches/work/kdelibs4_snapshot instead!!" )
+   endif (_match)
+
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 
