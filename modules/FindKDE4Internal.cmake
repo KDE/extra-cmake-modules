@@ -177,6 +177,8 @@
 # _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
 
+INCLUDE (MacroEnsureVersion)
+
 cmake_minimum_required(VERSION 2.4.0 FATAL_ERROR)
 
 set(QT_MIN_VERSION "4.1.1")
@@ -292,6 +294,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
          message ( FATAL_ERROR "ERROR: don't port against this version of kdelibs! Use /branches/work/kdelibs4_snapshot instead!!" )
       endif (_match)
 
+      STRING(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
 
       # we need at least this version:
       IF (NOT KDE_MIN_VERSION)
@@ -299,26 +302,9 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       ENDIF (NOT KDE_MIN_VERSION)
    
       #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
-   
-      # now parse the parts of the user given version string into variables
-      STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" req_kde_major_vers "${KDE_MIN_VERSION}")
-      STRING(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" req_kde_minor_vers "${KDE_MIN_VERSION}")
-      STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" req_kde_patch_vers "${KDE_MIN_VERSION}")
-   
-      # and now the version string given by kde-config
-      STRING(REGEX REPLACE "KDE: ([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" found_kde_major_vers "${KDEVERSION}")
-      STRING(REGEX REPLACE "KDE: [0-9]+\\.([0-9])+\\.[0-9]+.*" "\\1" found_kde_minor_vers "${KDEVERSION}")
-      STRING(REGEX REPLACE "KDE: [0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" found_kde_patch_vers "${KDEVERSION}")
-   
-      # compute an overall version number which can be compared at once
-      MATH(EXPR req_vers "${req_kde_major_vers}*10000 + ${req_kde_minor_vers}*100 + ${req_kde_patch_vers}")
-      MATH(EXPR found_vers "${found_kde_major_vers}*10000 + ${found_kde_minor_vers}*100 + ${found_kde_patch_vers}")
-   
-      IF (found_vers LESS req_vers)
-         SET(KDE4_FOUND FALSE)
-         SET(KDE4_INSTALLED_VERSION_TOO_OLD TRUE)
-      ENDIF (found_vers LESS req_vers)
 
+      MACRO_ENSURE_VERSION( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_TOO_OLD )
+   
    ELSE (KDEVERSION)
       message(FATAL_ERROR "Couldn't parse KDE version string from the kde-config output:\n${kdeconfig_output}")
    ENDIF (KDEVERSION)
