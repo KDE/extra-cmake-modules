@@ -381,7 +381,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
     )
 
    #now search for the dcop utilities
-   find_program(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl PATHS
+   find_program(KDE4_DCOPIDL_EXECUTABLE NAMES dcopidl dcopidl.bat PATHS
       ${KDE4_BIN_INSTALL_DIR}
       $ENV{KDEDIR}/bin
       /opt/kde/bin
@@ -391,7 +391,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    )
 
    if (NOT KDE4_DCOPIDL_EXECUTABLE)
-      find_program(KDE4_DCOPIDL_EXECUTABLE NAME dcopidl )
+      find_program(KDE4_DCOPIDL_EXECUTABLE NAMES dcopidl dcopidl.bat )
    endif (NOT KDE4_DCOPIDL_EXECUTABLE)
 
 
