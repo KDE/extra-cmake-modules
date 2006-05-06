@@ -56,7 +56,7 @@ TARGET_LINK_LIBRARIES(kdeinit_kcalc  ${QT_AND_KDECORE_LIBS} kdeui knumber gmp)
 INSTALL_TARGETS(/lib kdeinit_kcalc )
 
 TARGET_LINK_LIBRARIES( kcalc kdeinit_kcalc )
-INSTALL_TARGETS(/bin kcalc )
+install(TARGETS kcalc DESTINATION bin)
 
 ########### install files ###############
 

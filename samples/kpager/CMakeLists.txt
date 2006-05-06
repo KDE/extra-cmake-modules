@@ -29,7 +29,7 @@ KDE3_ADD_EXECUTABLE(kpager ${kpager_SRCS})
 
 TARGET_LINK_LIBRARIES(kpager  ${QT_AND_KDECORE_LIBS} kdeui )
 
-INSTALL_TARGETS(/bin kpager )
+install(TARGETS kpager DESTINATION bin)
 
 
 ########### install files ###############
