@@ -151,12 +151,17 @@
 #    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib", otherwise it won't.
 #    It creates and installs an appropriate libtool la-file.
 #
-# KDE4_ADD_KDEINIT_EXECUTABLE (name file1 ... fileN)
+# KDE4_ADD_KDEINIT_EXECUTABLE (name [NOGUI] [RUN_UNINSTALLED] file1 ... fileN)
 #    Create a KDE application in the form of a module loadable via kdeinit.
 #    A library named kdeinit_<name> will be created and a small executable which links to it.
-#    It supports KDE3_ENABLE_FINAL
+#    It supports KDE4_ENABLE_FINAL
+#    If the executable has to be run from the buildtree (e.g. unit tests and code generators
+#    used later on when compiling), set the option RUN_UNINSTALLED.
+#    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
+#    application bundles are created, with the NOGUI option no bundles but simple executables
+#    are created. Currently it doesn't have any effect on other platforms.
 #
-# KDE4_ADD_EXECUTABLE (name [ NOGUI | RUN_UNINSTALLED] file1 ... fileN)
+# KDE4_ADD_EXECUTABLE (name [NOGUI] [RUN_UNINSTALLED] file1 ... fileN)
 #    Equivalent to ADD_EXECUTABLE(), but additionally adds support for KDE4_ENABLE_FINAL.
 #    If you don't need support for KDE4_ENABLE_FINAL, you can just use the 
 #    normal ADD_EXECUTABLE().
@@ -353,8 +358,8 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    set(KDE4_KSPELL2_LIBS ${kspell2_LIB_DEPENDS} ${KDE4_KSPELL2_LIBRARY} )
 
    if (UNIX)
-      find_library(KDE4_KDESU_LIBRARY NAMES kdesu PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-      set(KDE4_KDESU_LIBS ${kdesu_LIB_DEPENDS} ${KDE4_KDESU_LIBRARY} )
+   find_library(KDE4_KDESU_LIBRARY NAMES kdesu PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KDESU_LIBS ${kdesu_LIB_DEPENDS} ${KDE4_KDESU_LIBRARY} )
    endif (UNIX)
 
    find_library(KDE4_KDNSSD_LIBRARY NAMES kdnssd PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
@@ -386,8 +391,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       $ENV{KDEDIR}/bin
       /opt/kde/bin
       /opt/kde4/bin
-      NO_SYSTEM_PATH
-      NO_CMAKE_SYSTEM_PATH
+      NO_DEFAULT_PATH
    )
 
    if (NOT KDE4_DCOPIDL_EXECUTABLE)
@@ -407,8 +411,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
      $ENV{KDEDIR}/bin
      /opt/kde/bin
      /opt/kde4/bin
-     NO_SYSTEM_PATH
-     NO_CMAKE_SYSTEM_PATH
+      NO_DEFAULT_PATH
    )
 
    if (NOT KDE4_DCOPIDL2CPP_EXECUTABLE)
@@ -420,8 +423,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
      $ENV{KDEDIR}/bin
      /opt/kde/bin
      /opt/kde4/bin
-     NO_SYSTEM_PATH
-     NO_CMAKE_SYSTEM_PATH
+      NO_DEFAULT_PATH
    )
 
    if (NOT KDE4_KCFGC_EXECUTABLE)
@@ -433,8 +435,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
      $ENV{KDEDIR}/bin
      /opt/kde/bin
      /opt/kde4/bin
-     NO_SYSTEM_PATH
-     NO_CMAKE_SYSTEM_PATH
+      NO_DEFAULT_PATH
    )
 
    if (NOT KDE4_MEINPROC_EXECUTABLE)
@@ -446,8 +447,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
      $ENV{KDEDIR}/bin
      /opt/kde/bin
      /opt/kde4/bin
-     NO_SYSTEM_PATH
-     NO_CMAKE_SYSTEM_PATH
+      NO_DEFAULT_PATH
    )
 
    if (NOT KDE4_MAKEKDEWIDGETS_EXECUTABLE)

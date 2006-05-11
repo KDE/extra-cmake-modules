@@ -442,6 +442,10 @@ MACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
       SET_TARGET_PROPERTIES(${_target_NAME} PROPERTIES PREFIX "")
    endif (_first_SRC)
 
+   if (NOT CMAKE_SKIP_RPATH)
+       set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "")
+   endif (NOT CMAKE_SKIP_RPATH)
+
 #   if (UNIX)
 #   I guess under windows the libtool file are not required
 #   KDE4_INSTALL_LIBTOOL_FILE(${_target_NAME})
@@ -457,9 +461,62 @@ MACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 ENDMACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 
-MACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
+# this macro checks is intended to check whether a list of source
+# files has the "NOGUI" or "RUN_UNINSTALLED" keywords at the beginning
+# in _output_LIST the list of source files is returned with the "NOGUI"
+# and "RUN_UNINSTALLED" keywords removed
+# if "NOGUI" is in the list of files, the _nogui argument is set to 
+# "NOGUI" (which evaluates to TRUE in cmake), otherwise it is set empty
+# (which evaluates to FALSE in cmake)
+# if "RUN_UNINSTALLED" is in the list of files, the _uninst argument is set to 
+# "RUN_UNINSTALLED" (which evaluates to TRUE in cmake), otherwise it is set empty
+# (which evaluates to FALSE in cmake)
+MACRO(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
+   set(${_nogui})  
+   set(${_uninst})
+   set(${_output_LIST} ${ARGN})
+   list(LENGTH ${_output_LIST} count)
 
-   CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+   list(GET ${_output_LIST} 0 first_PARAM)
+
+   set(second_PARAM "NOTFOUND")
+   if (${count} GREATER 1)
+      list(GET ${_output_LIST} 1 second_PARAM)
+   endif (${count} GREATER 1)
+
+   set(remove "NOTFOUND")
+
+   if (${first_PARAM} STREQUAL "NOGUI")
+      set(${_nogui} "NOGUI")
+      set(remove 0)
+   endif (${first_PARAM} STREQUAL "NOGUI")
+
+   if (${second_PARAM} STREQUAL "NOGUI")
+      set(${_nogui} "NOGUI")
+      set(remove 0;1)
+   endif (${second_PARAM} STREQUAL "NOGUI")
+
+   if (${first_PARAM} STREQUAL "RUN_UNINSTALLED")
+      set(${_uninst} "RUN_UNINSTALLED")
+      set(remove 0)   
+   endif (${first_PARAM} STREQUAL "RUN_UNINSTALLED")
+
+   if (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
+      set(${_uninst} "RUN_UNINSTALLED")
+      set(remove 0;1)
+   endif (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
+
+   if (NOT "${remove}" STREQUAL "NOTFOUND")
+      list(REMOVE_ITEM ${_output_LIST} ${remove})
+   endif (NOT "${remove}" STREQUAL "NOTFOUND")
+
+ENDMACRO(KDE4_CHECK_EXECUTABLE_PARAMS)
+
+
+macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
+
+   kde4_check_executable_params(_SRCS _nogui _uninst ${ARGN})
+   configure_file(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
    #MACRO_ADDITIONAL_CLEAN_FILES(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
 
 #   if (WIN32)
@@ -468,24 +525,26 @@ MACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 #   else (WIN32)
       # under UNIX, create a shared library and a small executable, which links to this library
       if (KDE4_ENABLE_FINAL)
-         KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${ARGN})
-         ADD_LIBRARY(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
+         kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_SRCS})
+         add_library(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
+	 if (NOT CMAKE_SKIP_RPATH)
+            set_target_properties(kdeinit_${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "")
+         endif (NOT CMAKE_SKIP_RPATH)
+
       else (KDE4_ENABLE_FINAL)
-         ADD_LIBRARY(kdeinit_${_target_NAME} SHARED ${ARGN} )
-#      message(STATUS "klm: kdeinit_${_target_NAME}")
+         add_library(kdeinit_${_target_NAME} SHARED ${_SRCS} )
       endif (KDE4_ENABLE_FINAL)
 
-
-      ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
-      KDE4_HANDLE_RPATH(${_target_NAME} GUI)
-      TARGET_LINK_LIBRARIES(${_target_NAME} kdeinit_${_target_NAME})
+      kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+      target_link_libraries(${_target_NAME} kdeinit_${_target_NAME})
 #   endif (WIN32)
 
-ENDMACRO (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME)
+endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
-macro (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
+macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
-   set(_first_SRC ${_first_ARG} )
+   kde4_check_executable_params( _SRCS _nogui _uninst ${ARGN})
+
    set(_add_executable_param)
    set(_type "GUI")
 
@@ -498,31 +557,28 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME _first_ARG)
 #      set(_add_executable_param WIN32)
 #   endif (WIN32)
 
-
-   if (${_first_ARG} STREQUAL "NOGUI")
+   if (_nogui)
       set(_type "NOGUI")
-      set(_first_SRC)
       set(_add_executable_param)
-   endif (${_first_ARG} STREQUAL "NOGUI")
-   if (${_first_ARG} STREQUAL "RUN_UNINSTALLED")
+   endif (_nogui)
+   
+   if (_uninst)
       set(_type "RUN_UNINSTALLED")
-      set(_first_SRC)
-      set(_add_executable_param)
-   endif (${_first_ARG} STREQUAL "RUN_UNINSTALLED")
+   endif (_uninst)
 
    if (KDE4_ENABLE_FINAL)
-      kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_first_SRC} ${ARGN})
+      kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_SRCS})
       add_executable(${_target_NAME} ${_add_executable_param} ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
    else (KDE4_ENABLE_FINAL)
-      add_executable(${_target_NAME} ${_add_executable_param} ${_first_SRC} ${ARGN} )
+      add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS} )
    endif (KDE4_ENABLE_FINAL)
 
    kde4_handle_rpath(${_target_NAME} ${_type})
 
-endmacro (KDE4_ADD_EXECUTABLE _target_NAME)
+endmacro (KDE4_ADD_EXECUTABLE)
 
 
-macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
+MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
 
    set(_first_SRC ${_lib_TYPE})
@@ -542,11 +598,15 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    endif (${_lib_TYPE} STREQUAL "MODULE")
 
    if (KDE4_ENABLE_FINAL)
-      kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_first_SRC} ${ARGN})
-      add_library(${_target_NAME} ${_add_lib_param}  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
+      KDE4_CREATE_FINAL_FILES(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_first_SRC} ${ARGN})
+      ADD_LIBRARY(${_target_NAME} ${_add_lib_param}  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
    else (KDE4_ENABLE_FINAL)
-      add_library(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN})
+      ADD_LIBRARY(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN})
    endif (KDE4_ENABLE_FINAL)
+
+   if (NOT CMAKE_SKIP_RPATH)
+       set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "")
+   endif (NOT CMAKE_SKIP_RPATH)
 
    if (WIN32)
       # for shared libraries a -DMAKE_target_LIB is required
@@ -555,7 +615,7 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    endif (WIN32)
 
-endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
+ENDMACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 
 MACRO (KDE4_ADD_WIDGET_FILES _sources)

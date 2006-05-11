@@ -716,6 +716,8 @@ IF (QT4_QMAKE_FOUND)
         COMMAND ${QT_MOC_EXECUTABLE}
         ARGS ${moc_includes} -o ${outfile} ${infile}
         DEPENDS ${infile})
+
+     MACRO_ADD_FILE_DEPENDENCIES(${infile} ${outfile})
   ENDMACRO (QT4_GENERATE_MOC)
 
 
