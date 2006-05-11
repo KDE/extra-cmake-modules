@@ -10,14 +10,12 @@
 # functionality can also reside in standalone Gettext library, or the one
 # embedded within kdelibs (cf. gettext.m4 from Gettext source).
 
-IF (DEFINED CACHED_GETTEXT)
+if (LIBC_HAS_DGETTEXT OR LIBINTL_HAS_DGETTEXT)
 
   # in cache already
-  IF ("${CACHED_GETTEXT}" STREQUAL "YES")
-    SET(GETTEXT_FOUND TRUE)
-  ENDIF ("${CACHED_GETTEXT}" STREQUAL "YES")
+  SET(GETTEXT_FOUND TRUE)
 
-ELSE (DEFINED CACHED_GETTEXT)
+else (LIBC_HAS_DGETTEXT OR LIBINTL_HAS_DGETTEXT)
 
   include(CheckIncludeFiles)
   include(CheckLibraryExists)
@@ -49,19 +47,15 @@ ELSE (DEFINED CACHED_GETTEXT)
   endif (HAVE_LIBINTL_H)
   
   if (GETTEXT_FOUND)
-     set(CACHED_GETTEXT "YES")
      if (NOT Gettext_FIND_QUIETLY)
         message(STATUS "Found Gettext: ${GETTEXT_SOURCE}")
      endif (NOT Gettext_FIND_QUIETLY)
   else (GETTEXT_FOUND)
      if (Gettext_FIND_REQUIRED)
         message(STATUS "Could NOT find Gettext")
-     else (Gettext_FIND_REQUIRED)
-        set(CACHED_GETTEXT "NO")
      endif (Gettext_FIND_REQUIRED)
   endif (GETTEXT_FOUND)
   
-  set(CACHED_GETTEXT ${CACHED_GETTEXT} CACHE INTERNAL "If gettext was checked")
   MARK_AS_ADVANCED(GETTEXT_INCLUDE_DIR GETTEXT_LIBRARIES)
 
-ENDIF(DEFINED CACHED_GETTEXT)
+endif (LIBC_HAS_DGETTEXT OR LIBINTL_HAS_DGETTEXT)

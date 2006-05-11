@@ -7,14 +7,12 @@
 #  AGG_DEFINITIONS - Compiler switches required for using AGG
 #
 
-IF (DEFINED CACHED_AGG)
+if (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
 
   # in cache already
-  IF ("${CACHED_AGG}" STREQUAL "YES")
-    SET(AGG_FOUND TRUE)
-  ENDIF ("${CACHED_AGG}" STREQUAL "YES")
+  SET(AGG_FOUND TRUE)
 
-ELSE (DEFINED CACHED_AGG)
+else (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
 
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
@@ -42,12 +40,10 @@ ELSE (DEFINED CACHED_AGG)
   endif (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
   
   if (AGG_FOUND)
-    set(CACHED_AGG "YES")
     if (NOT AGG_FIND_QUIETLY)
       message(STATUS "Found AGG: ${AGG_LIBRARIES}")
     endif (NOT AGG_FIND_QUIETLY)
   else (AGG_FOUND)
-    set(CACHED_AGG "NO")
     if (AGG_FIND_REQUIRED)
       message(FATAL_ERROR "Could NOT find AGG")
     endif (AGG_FIND_REQUIRED)
@@ -55,6 +51,4 @@ ELSE (DEFINED CACHED_AGG)
   
   MARK_AS_ADVANCED(AGG_INCLUDE_DIR AGG_LIBRARIES)
   
-  set(CACHED_AGG ${CACHED_AGG} CACHE INTERNAL "If libagg was checked")
-
-ENDIF (DEFINED CACHED_AGG)
+endif (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
