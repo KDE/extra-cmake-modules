@@ -6,8 +6,6 @@
 #
 MACRO(MACRO_ENSURE_VERSION requested_version found_version var_too_old)
 
-    message(STATUS "requested_version=${requested_version}  found_version=${found_version}")
-
     # parse the parts of the version strings
     STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" req_major_vers "${requested_version}")
     STRING(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" req_minor_vers "${requested_version}")
