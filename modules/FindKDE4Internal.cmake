@@ -124,16 +124,6 @@
 #    from FindQt4.cmake to have the moc files generated. This will be faster
 #    but require more manual work.
 #
-# KDE4_HEADER()
-#    This is a macro which is currently empty.
-#    It is automatically inserted by the am2cmake script at the top
-#    of each converted CMakeLists.txt
-#
-# KDE4_FOOTER()
-#    This is a macro which is currently empty.
-#    It is automatically inserted by the am2cmake script at the end
-#    of each converted CMakeLists.txt
-#
 # KDE4_INSTALL_LIBTOOL_FILE ( subdir target )
 #    This will create and install a simple libtool file for the 
 #    given target. This might be required for other software.

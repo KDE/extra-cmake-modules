@@ -318,16 +318,6 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
 ENDMACRO (KDE4_INSTALL_ICONS)
 
 
-# for the case that something should be added to every CMakeLists.txt at the top
-MACRO (KDE4_HEADER)
-ENDMACRO (KDE4_HEADER)
-
-
-# same as above, but at the end
-MACRO (KDE4_FOOTER)
-ENDMACRO (KDE4_FOOTER)
-
-
 MACRO (KDE4_INSTALL_LIBTOOL_FILE _subdir _target)
    GET_TARGET_PROPERTY(_target_location ${_target} LOCATION)
 
