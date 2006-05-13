@@ -547,9 +547,18 @@ endif (APPLE)
 
 
 if (CMAKE_SYSTEM_NAME MATCHES Linux)
-   set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
-   set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
-   set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+   if (CMAKE_COMPILER_IS_GNUCXX)
+      set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
+      set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+      set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -avoid-version -Wl,--no-undefined -lc")
+   endif (CMAKE_COMPILER_IS_GNUCXX)
+   if (CMAKE_C_COMPILER MATCHES "icc")
+      set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
+#      set ( CMAKE_SHARED_LINKER_FLAGS "-Qoption,ld,--fatal-warnings -avoid-version --no-undefined -lc")
+#      set ( CMAKE_MODULE_LINKER_FLAGS "-Qoption,ld,--fatal-warnings -avoid-version --no-undefined -lc")
+      set ( CMAKE_SHARED_LINKER_FLAGS "")
+      set ( CMAKE_MODULE_LINKER_FLAGS "")
+   endif (CMAKE_C_COMPILER MATCHES "icc")
 endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
 if (CMAKE_SYSTEM_NAME MATCHES BSD)
@@ -588,6 +597,31 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    endif (__KDE_HAVE_GCC_VISIBILITY)
 
 endif (CMAKE_COMPILER_IS_GNUCXX)
+
+if (CMAKE_C_COMPILER MATCHES "icc")
+   set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
+   # Select flags.
+   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+   set(CMAKE_CXX_FLAGS_RELEASE        "-O2")
+   set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
+   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
+   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g")
+   set(CMAKE_C_FLAGS_RELEASE          "-O2")
+   set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
+   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
+
+   if (CMAKE_SYSTEM_NAME MATCHES Linux)
+     set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -ansi -Wall -Wpointer-arith")
+     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wall -Wpointer-arith -fno-exceptions")
+   endif (CMAKE_SYSTEM_NAME MATCHES Linux)
+
+   # visibility support
+#   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
+#   if (__KDE_HAVE_GCC_VISIBILITY)
+#      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+#   endif (__KDE_HAVE_GCC_VISIBILITY)
+
+endif (CMAKE_C_COMPILER MATCHES "icc")
 
 # it seems we prefer not to use a different postfix for debug libs, Alex
 # SET(CMAKE_DEBUG_POSTFIX "_debug")
