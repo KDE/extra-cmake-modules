@@ -5,6 +5,11 @@
 #  FAM_INCLUDE_DIR - the FAM include directory
 #  FAM_LIBRARIES - The libraries needed to use FAM
 
+if (FAM_INCLUDE_DIR)
+  # Already in cache, be silent
+  set(FAM_FIND_QUIETLY TRUE)
+endif (FAM_INCLUDE_DIR)
+
 FIND_PATH(FAM_INCLUDE_DIR fam.h
    /usr/include
    /usr/local/include
