@@ -20,9 +20,15 @@ FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h
 
 # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
 # search for kdewin32 in the default install directory for applications (default of (n)make install)
-FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32
-   PATHS
-   ${_program_FILES_DIR}/kdewin32/lib
+if (MSVC)
+   set(_KDEWIN32_POSTFIX d)
+else (MSVC)
+   set(_KDEWIN32_POSTFIX )
+endif (MSVC)
+
+FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32${_KDEWIN32_POSTFIX}
+  PATHS
+  ${_program_FILES_DIR}/kdewin32/lib
 )
 
 
