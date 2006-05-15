@@ -5,6 +5,11 @@
 #  SASL2_INCLUDE_DIR - the SASL2 include directory
 #  SASL2_LIBRARIES - The libraries needed to use SASL2
 
+if (SASL2_INCLUDE_DIR)
+  # Already in cache, be silent
+  set(SASL2_FIND_QUIETLY TRUE)
+endif (SASL2_INCLUDE_DIR)
+
 FIND_PATH(SASL2_INCLUDE_DIR sasl/sasl.h
    /usr/include
    /usr/local/include
