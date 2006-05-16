@@ -31,6 +31,13 @@ FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32${_KDEWIN32_POSTFIX}
   ${_program_FILES_DIR}/kdewin32/lib
 )
 
+if (NOT KDEWIN32_LIBRARY AND NOT MSVC)
+  # We can mix release/debug builds
+  FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32 kdewin32d
+  PATHS
+  ${_program_FILES_DIR}/kdewin32/lib
+  )
+endif (NOT KDEWIN32_LIBRARY AND NOT MSVC)
 
 # kdelibs/win/ has to be built before the rest of kdelibs/
 # eventually it will be moved out from kdelibs/
