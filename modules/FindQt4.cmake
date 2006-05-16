@@ -648,8 +648,8 @@ IF (QT4_QMAKE_FOUND)
 
    # find moc and uic using qmake
    FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/CMakeTmpQmake/tmp.pro
-      "message("MOC <$$QMAKE_MOC>")
-      message("UIC <$$QMAKE_UIC>")
+      "message("MOC <$$QMAKE_MOC>") 
+      message("UIC <$$QMAKE_UIC>") 
    ")
 
    EXECUTE_PROCESS(COMMAND ${QT_QMAKE_EXECUTABLE}
@@ -661,6 +661,9 @@ IF (QT4_QMAKE_FOUND)
 
    STRING(REGEX REPLACE ".*MOC<([^>]+).*" "\\1" QT_MOC_EXECUTABLE "${_moc_OUTPUT}" )
    STRING(REGEX REPLACE ".*UIC<([^>]+).*" "\\1" QT_UIC_EXECUTABLE "${_moc_OUTPUT}" )
+
+   FILE(TO_CMAKE_PATH "${QT_MOC_EXECUTABLE}" QT_MOC_EXECUTABLE)
+   FILE(TO_CMAKE_PATH "${QT_UIC_EXECUTABLE}" QT_UIC_EXECUTABLE)
 
    SET(QT_MOC_EXECUTABLE ${QT_MOC_EXECUTABLE} CACHE FILEPATH "The moc executable")
    SET(QT_UIC_EXECUTABLE ${QT_UIC_EXECUTABLE} CACHE FILEPATH "The uic executable")
