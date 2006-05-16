@@ -20,24 +20,21 @@ FIND_PATH(KDEWIN32_INCLUDE_DIR winposix_export.h
 
 # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
 # search for kdewin32 in the default install directory for applications (default of (n)make install)
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-   set(_KDEWIN32_POSTFIX d)
-else (CMAKE_BUILD_TYPE MATCHES Debug)
-   set(_KDEWIN32_POSTFIX )
-endif (CMAKE_BUILD_TYPE MATCHES Debug)
+set(_KDEWIN32_SEARCHNAMES kdewin32 kdewin32d)
 
-FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32${_KDEWIN32_POSTFIX}
-  PATHS
-  ${_program_FILES_DIR}/kdewin32/lib
+#overwrite when using msvc, which cannot mix debug/release libraries
+if(MSVC)
+   if(CMAKE_BUILD_TYPE MATCHES Debug)
+      set(_KDEWIN32_SEARCHNAMES kdewin32d )
+   else(CMAKE_BUILD_TYPE MATCHES Debug)
+      set(_KDEWIN32_SEARCHNAMES kdewin32 )
+   endif(CMAKE_BUILD_TYPE MATCHES Debug)
+endif(MSVC)
+
+FIND_LIBRARY(KDEWIN32_LIBRARY NAMES ${_KDEWIN32_SEARCHNAMES} 
+   PATHS 
+   ${_program_FILES_DIR}/kdewin32/lib
 )
-
-if (NOT KDEWIN32_LIBRARY AND NOT MSVC)
-  # We can mix release/debug builds
-  FIND_LIBRARY(KDEWIN32_LIBRARY NAMES kdewin32 kdewin32d
-  PATHS
-  ${_program_FILES_DIR}/kdewin32/lib
-  )
-endif (NOT KDEWIN32_LIBRARY AND NOT MSVC)
 
 # kdelibs/win/ has to be built before the rest of kdelibs/
 # eventually it will be moved out from kdelibs/
