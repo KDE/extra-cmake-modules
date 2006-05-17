@@ -451,6 +451,24 @@ MACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 ENDMACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 
+# hmm this is a hack
+# the behaviour of LIST(REMOVE_ITEM ... ) changed from 2.4.1 beta to 2.4.2 stable
+# detect this here
+# this can be removed once we require cmake >= 2.4.2
+set(remove_item_test_list one two)
+# with cmake 2.4.1 this means remove index 0, 
+# with >= 2.4.2 this means remove the items which have the value "0"
+list(REMOVE_ITEM remove_item_test_list 0)
+list(LENGTH remove_item_test_list _test_list_length)
+# so with 2.4.1 the list will have only one item left, with 2.4.2 two
+if (${_test_list_length} EQUAL 2)
+   set(_REMOVE_AT_INDEX_KEYWORD REMOVE_AT)
+else (${_test_list_length} EQUAL 2)
+   set(_REMOVE_AT_INDEX_KEYWORD REMOVE_ITEM)
+endif (${_test_list_length} EQUAL 2)
+
+
+
 # this macro checks is intended to check whether a list of source
 # files has the "NOGUI" or "RUN_UNINSTALLED" keywords at the beginning
 # in _output_LIST the list of source files is returned with the "NOGUI"
@@ -497,7 +515,7 @@ MACRO(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
    endif (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
 
    if (NOT "${remove}" STREQUAL "NOTFOUND")
-      list(REMOVE_ITEM ${_output_LIST} ${remove})
+      list(${_REMOVE_AT_INDEX_KEYWORD} ${_output_LIST} ${remove})
    endif (NOT "${remove}" STREQUAL "NOTFOUND")
 
 ENDMACRO(KDE4_CHECK_EXECUTABLE_PARAMS)
