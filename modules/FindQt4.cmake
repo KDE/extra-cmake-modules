@@ -598,7 +598,11 @@ IF (QT4_QMAKE_FOUND)
       ENDIF (QT_${basename}_LIBRARY_DEBUG AND NOT QT_${basename}_LIBRARY_RELEASE)
 
       IF (QT_${basename}_LIBRARY_DEBUG AND QT_${basename}_LIBRARY_RELEASE)
-        SET(QT_${basename}_LIBRARY         ${QT_${basename}_LIBRARY_RELEASE})
+        IF(NOT MSVC)
+          SET(QT_${basename}_LIBRARY       ${QT_${basename}_LIBRARY_RELEASE})
+        ELSE(NOT MSVC)
+          SET(QT_${basename}_LIBRARY       optimized ${QT_${basename}_LIBRARY_RELEASE} debug ${QT_${basename}_LIBRARY_DEBUG})
+        ENDIF(NOT MSVC)
         SET(QT_${basename}_LIBRARIES       optimized ${QT_${basename}_LIBRARY_RELEASE} debug ${QT_${basename}_LIBRARY_DEBUG})
       ENDIF (QT_${basename}_LIBRARY_DEBUG AND QT_${basename}_LIBRARY_RELEASE)
 
