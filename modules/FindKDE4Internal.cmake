@@ -611,14 +611,11 @@ if (CMAKE_C_COMPILER MATCHES "icc")
    set(CMAKE_C_FLAGS_DEBUG            "-O2 -g -Ob0 -noalign")
    set(CMAKE_C_FLAGS_DEBUGFULL        "-g -Ob0 -noalign")
 
-   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -no-gcc -Wpointer-arith -fno-common")
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -no-gcc -Wpointer-arith -fno-exceptions -fno-common")
+   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wpointer-arith -fno-common")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wpointer-arith -fno-exceptions -fno-common")
 
    # visibility support
-#   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_ICC_VISIBILITY)
-#   if (__KDE_HAVE_ICC_VISIBILITY)
-#      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-#   endif (__KDE_HAVE_ICC_VISIBILITY)
+   set (__KDE_HAVE_ICC_VISIBILITY)
 
 endif (CMAKE_C_COMPILER MATCHES "icc")
 
