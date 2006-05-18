@@ -37,7 +37,7 @@ if(MSVC)
 	if(MSVC_IDE)
 		# the ide needs	the debug and release version
 		if( NOT KDEWIN32_LIBRARY_DEBUG OR NOT KDEWIN32_LIBRARY_RELEASE)
-		   message(FATAL_ERROR "Could NOT find the debug AND release version of the KDEWIN32 library.\nYou need to have both to use MSVC projects.\nPlease build and install both kdelibs/win/ libraries first:\nUse a project generator or the cmake parameter\n-DCMAKE_BUILD_TYPE=release for building the release version nmake makefiles.")
+		   message(FATAL_ERROR "\nCould NOT find the debug AND release version of the KDEWIN32 library.\nYou need to have both to use MSVC projects.\nPlease build and install both kdelibs/win/ libraries first.\n")
 		endif( NOT KDEWIN32_LIBRARY_DEBUG OR NOT KDEWIN32_LIBRARY_RELEASE)
 		SET(KDEWIN32_LIBRARY optimized ${KDEWIN32_LIBRARY_RELEASE} debug ${KDEWIN32_LIBRARY_DEBUG})
 	else(MSVC_IDE)
