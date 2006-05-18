@@ -615,7 +615,11 @@ if (CMAKE_C_COMPILER MATCHES "icc")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wpointer-arith -fno-exceptions -fno-common")
 
    # visibility support
-   set (__KDE_HAVE_ICC_VISIBILITY)
+   set(__KDE_HAVE_ICC_VISIBILITY)
+#   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_ICC_VISIBILITY)
+#   if (__KDE_HAVE_ICC_VISIBILITY)
+#      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+#   endif (__KDE_HAVE_ICC_VISIBILITY)
 
 endif (CMAKE_C_COMPILER MATCHES "icc")
 
