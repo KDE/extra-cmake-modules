@@ -17,7 +17,8 @@ FIND_PATH(GIF_INCLUDE_DIR gif_lib.h
   /usr/local/include
 )
 
-FIND_LIBRARY(GIF_LIBRARIES NAMES gif libgif ungif libungif giflib
+set(POTENTIAL_GIF_LIBS gif libgif ungif libungif giflib)
+FIND_LIBRARY(GIF_LIBRARIES NAMES ${POTENTIAL_GIF_LIBS}
   PATHS
   /usr/lib
   /usr/local/lib
@@ -33,6 +34,8 @@ if (GIF_FOUND)
   endif (NOT GIF_FIND_QUIETLY)
 else (GIF_FOUND)
   if (GIF_FIND_REQUIRED)
+    message(STATUS "Looked for GIF libraries named ${POTENTIAL_GIF_LIBS}.")
+    message(STATUS "Found no acceptable GIF library. This is fatal.")
     message(FATAL_ERROR "Could NOT find GIF")
   endif (GIF_FIND_REQUIRED)
 endif (GIF_FOUND)

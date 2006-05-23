@@ -8,7 +8,8 @@ FIND_PATH(ZLIB_INCLUDE_DIR zlib.h
  /usr/local/include
 )
 
-FIND_LIBRARY(ZLIB_LIBRARY NAMES z zlib
+set(POTENTIAL_Z_LIBS z zlib)
+FIND_LIBRARY(ZLIB_LIBRARY NAMES ${POTENTIAL_Z_LIBS}
 PATHS
  /usr/lib
  /usr/local/lib
@@ -24,7 +25,9 @@ IF (ZLIB_FOUND)
    ENDIF (NOT ZLIB_FIND_QUIETLY)
 ELSE (ZLIB_FOUND)
    IF (ZLIB_FIND_REQUIRED)
-      MESSAGE(FATAL_ERROR "Could not find z library")
+      MESSAGE(STATUS "Looked for Z libraries named ${POTENTIAL_Z_LIBS}.")
+      MESSAGE(STATUS "Found no acceptable Z library. This is fatal.")
+      MESSAGE(FATAL_ERROR "Could NOT find z library")
    ENDIF (ZLIB_FIND_REQUIRED)
 ENDIF (ZLIB_FOUND)
 
