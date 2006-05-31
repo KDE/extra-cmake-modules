@@ -16,7 +16,7 @@
 #  QDBUS_GENERATE_INTERFACE(file.h)
 #    Generates the XML interface description from the given header file.
 #
-#  QDBUS_ADD_ADAPTOR(SRC_VAR file1.xml ... fileN.xml)
+#  QDBUS_ADD_ADAPTORS(SRC_VAR file1.xml ... fileN.xml)
 #    Generates adaptor code from the given XML files.
 #
 

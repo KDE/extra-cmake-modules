@@ -16,6 +16,7 @@ macro(qdbus_add_interfaces _sources)
 
       qt4_generate_moc(${_target_base}.h ${_target_base}.moc)
       macro_add_file_dependencies(${_target_base}.h ${_target_base}.moc )
+      set_source_files_properties(${_target_base}.cpp PROPERTIES SKIP_AUTOMOC true)
 
       set(${_sources} ${${_sources}} ${_target_base}.cpp)
    endforeach (_i ${ARGN})
@@ -33,7 +34,7 @@ macro(qdbus_generate_interface _header)
    )
 endmacro(qdbus_generate_interface)
 
-macro(qdbus_add_adaptor _sources)
+macro(qdbus_add_adaptors _sources)
    foreach (_i ${ARGN})
       get_filename_component(_xml_file ${_i} ABSOLUTE)
       get_filename_component(_basename ${_i} NAME_WE)
@@ -47,7 +48,8 @@ macro(qdbus_add_adaptor _sources)
 
       qt4_generate_moc(${_target_base}.h ${_target_base}.moc)
       macro_add_file_dependencies(${_target_base}.h ${_target_base}.moc)
+      set_source_files_properties(${_target_base}.cpp PROPERTIES SKIP_AUTOMOC true)
 
       set(${_sources} ${${_sources}} ${_target_base}.cpp)
    endforeach (_i ${ARGN})
-endmacro(qdbus_add_adaptor)
+endmacro(qdbus_add_adaptors)
