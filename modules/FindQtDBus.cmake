@@ -2,7 +2,7 @@
 # Once done this will define
 #
 #  QDBUS_FOUND - system has QtDBus
-#  QDBUS_INCLUDE_DIR - the QtDBus include directory
+#  QDBUS_INCLUDE_DIRS - the QtDBus include directories
 #  QDBUS_LIBRARIES - Link these to use QtDBus
 #  QDBUS_DEFINITIONS - Compiler switches required for using QtDBus
 #
@@ -14,7 +14,6 @@
 #    Generates interface code from the given XML files.
 #
 
-
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 INCLUDE(UsePkgConfig)
@@ -22,8 +21,8 @@ INCLUDE(UsePkgConfig)
 PKGCONFIG("dbus-1" _dbusIncDir _dbusLinkDir _dbusLinkFlags _dbusCflags)
 PKGCONFIG("dbus-qt4-1" _qdbusIncDir _qdbusLinkDir _qdbusLinkFlags _qdbusCflags)
 
-set(QDBUS_DEFINITIONS ${_dbusCflags} ${_qdbusCflags})
-set(QDBUS_INCLUDE_DIRS ${_dbusIncDir} ${_qdbusIncDir})
+set(QDBUS_DEFINITIONS ${_dbusCflags} ${_qdbusCflags} CACHE INTERNAL "Definitions for Qt DBUS")
+set(QDBUS_INCLUDE_DIRS ${_dbusIncDir} ${_qdbusIncDir} CACHE INTERNAL "Include dirs for Qt DBUS")
 
 FIND_LIBRARY(QDBUS_LIBRARIES NAMES dbus-qt4-1
   PATHS ${_qdbusLinkDir}
