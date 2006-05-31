@@ -259,6 +259,14 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    STRING(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
    IF (KDEVERSION)
 
+      # avoid porting against kdelibs trunk
+      string(REGEX MATCH "DONTPORT" _match "${kdeconfig_output}")
+      if (_match)
+         message ( FATAL_ERROR "ERROR: don't port against this
+      version of kdelibs! Use /branches/work/kdelibs4_snapshot
+      instead!!" )
+      endif (_match)
+
       STRING(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
 
       # we need at least this version:
