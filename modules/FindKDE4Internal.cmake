@@ -15,8 +15,6 @@
 # The following variables are defined for the various tools required to
 # compile KDE software:
 #
-# KDE4_DCOPIDL_EXECUTABLE  - the dcopidl executable
-# KDE4_DCOPIDL2CPP_EXECUTABLE - the dcopidl2cpp executable
 # KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
 # KDE4_MEINPROC_EXECUTABLE - the meinproc executable
 # KDE4_MAKEKDEWIDGETS_EXECUTABLE - the makekdewidgets executable
@@ -34,7 +32,6 @@
 # KDE4_KHTML_LIBRARY       - the khtml library
 # KDE4_KJS_LIBRARY         - the kjs library
 # KDE4_KNEWSTUFF_LIBRARY   - the knewstuff library
-# KDE4_DCOP_LIBRARY        - the DCOP library
 # KDE4_KDEPRINT_LIBRARY    - the kdeprint library
 # KDE4_KSPELL2_LIBRARY     - the kspell2 library
 # KDE4_KDNSSD_LIBRARY      - the kdnssd library 
@@ -53,7 +50,6 @@
 # KDE4_KHTML_LIBS            - the khtml library and all depending libraries
 # KDE4_KJS_LIBS              - the kjs library and all depending libraries
 # KDE4_KNEWSTUFF_LIBS        - the knewstuff library and all depending libraries
-# KDE4_DCOP_LIBS             - the DCOP library and all depending libraries
 # KDE4_KDEPRINT_LIBS         - the kdeprint library and all depending libraries
 # KDE4_KSPELL2_LIBS          - the kspell2 library and all depending libraries
 # KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
@@ -95,12 +91,6 @@
 # KDE4_BUILD_TESTS  - enable this to build the testcases
 #
 # It also adds the following macros (from KDE4Macros.cmake)
-# KDE4_ADD_DCOP_SKELS (SRCS_VAR file1.h ... fileN.h)
-#    Use this to generate DCOP skeletons from the listed headers.
-#
-# KDE4_ADD_DCOP_STUBS (SRCS_VAR file1.h ... fileN.h)
-#    Use this to generate DCOP stubs from the listed headers.
-#
 # KDE4_ADD_UI_FILES (SRCS_VAR file1.ui ... fileN.ui)
 #    Use this to add Qt designer ui files to your application/library.
 #
@@ -180,7 +170,7 @@ set(QT_MIN_VERSION "4.1.1")
 #this line includes FindQt.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
 
-# Perl is required for building KDE software, e.g. for dcopidl
+# Perl is required for building KDE software,
 find_package(Perl REQUIRED)
 
 include (MacroLibrary)
@@ -238,45 +228,28 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
   
-   # adjust dcopidl and the library output path depending on the platform
    if (WIN32)
-      # under windows dcopidl.bat has to be used, except when using MSYS, then the perl script has to be used, Alex
-      if ("${CMAKE_GENERATOR}" MATCHES "MSYS")
-         set(KDE4_DCOPIDL_EXECUTABLE         ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
-         set(KDE4_DCOPIDL_EXECUTABLE_INSTALL ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
-      else ("${CMAKE_GENERATOR}" MATCHES "MSYS")
-         set(KDE4_DCOPIDL_EXECUTABLE         call ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
-         set(KDE4_DCOPIDL_EXECUTABLE_INSTALL      ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl.bat )
-      endif ("${CMAKE_GENERATOR}" MATCHES "MSYS")
-  
       set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
       # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp )
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
       set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
-      set(KDE4_DCOPIDL_EXECUTABLE         ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
-      set(KDE4_DCOPIDL_EXECUTABLE_INSTALL ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/dcopidl )
       set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib ) 
-      set(KDE4_DCOPIDL2CPP_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/dcopidl2cpp.sh )
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.sh )
       set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.sh )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.sh )
    endif (WIN32)
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
-   set(KDE4_KALYPTUS_DIR ${CMAKE_SOURCE_DIR}/dcop/dcopidlng/ )
   
-   # when building kdelibs, make the dcop and kcfg rules depend on the binaries...
-   set( _KDE4_DCOPIDL2CPP_DEP dcopidl2cpp)
+   # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
   
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   # ... but NOT otherwise
-   set( _KDE4_DCOPIDL2CPP_DEP )
    set( _KDE4_KCONFIG_COMPILER_DEP)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
 
@@ -285,12 +258,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    STRING(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
    IF (KDEVERSION)
-
-      # avoid porting against kdelibs trunk
-      string(REGEX MATCH "DONTPORT" _match "${kdeconfig_output}")
-      if (_match)
-         message ( FATAL_ERROR "ERROR: don't port against this version of kdelibs! Use /branches/work/kdelibs4_snapshot instead!!" )
-      endif (_match)
 
       STRING(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
 
@@ -341,9 +308,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    find_library(KDE4_KNEWSTUFF_LIBRARY NAMES knewstuff PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KNEWSTUFF_LIBS ${knewstuff_LIB_DEPENDS} ${KDE4_KNEWSTUFF_LIBRARY} )
 
-   find_library(KDE4_DCOP_LIBRARY NAMES DCOP PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_DCOP_LIBS ${DCOP_LIB_DEPENDS} ${KDE4_DCOP_LIBRARY} )
-
    find_library(KDE4_KDEPRINT_LIBRARY NAMES kdeprint PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDEPRINT_LIBS ${kdeprint_LIB_DEPENDS} ${KDE4_KDEPRINT_LIBRARY} )
 
@@ -377,39 +341,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       /usr/include/kde
       /usr/local/include/kde
     )
-
-   #now search for the dcop utilities
-   find_program(KDE4_DCOPIDL_EXECUTABLE NAMES dcopidl dcopidl.bat PATHS
-      ${KDE4_BIN_INSTALL_DIR}
-      $ENV{KDEDIR}/bin
-      /opt/kde/bin
-      /opt/kde4/bin
-      NO_DEFAULT_PATH
-   )
-
-   if (NOT KDE4_DCOPIDL_EXECUTABLE)
-      find_program(KDE4_DCOPIDL_EXECUTABLE NAMES dcopidl dcopidl.bat )
-   endif (NOT KDE4_DCOPIDL_EXECUTABLE)
-
-
-   find_path(KDE4_KALYPTUS_DIR kalyptus
-     ${KDE4_DATA_INSTALL_DIR}/dcopidl
-     $ENV{KDEDIR}/share/apps/dcopidl
-     /opt/kde/share/apps/dcopidl
-     /opt/kde4/share/apps/dcopidl
-   )
-
-   find_program(KDE4_DCOPIDL2CPP_EXECUTABLE NAME dcopidl2cpp PATHS
-     ${KDE4_BIN_INSTALL_DIR}
-     $ENV{KDEDIR}/bin
-     /opt/kde/bin
-     /opt/kde4/bin
-      NO_DEFAULT_PATH
-   )
-
-   if (NOT KDE4_DCOPIDL2CPP_EXECUTABLE)
-      find_program(KDE4_DCOPIDL2CPP_EXECUTABLE NAME dcopidl2cpp )
-   endif (NOT KDE4_DCOPIDL2CPP_EXECUTABLE)
 
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS
      ${KDE4_BIN_INSTALL_DIR}
@@ -635,9 +566,9 @@ include(KDE4Macros)
 
 # decide whether KDE4 has been found
 set(KDE4_FOUND FALSE)
-if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE AND NOT KDE4_INSTALLED_VERSION_TOO_OLD)
+if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND NOT KDE4_INSTALLED_VERSION_TOO_OLD)
    set(KDE4_FOUND TRUE)
-endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_DCOPIDL_EXECUTABLE AND KDE4_DCOPIDL2CPP_EXECUTABLE AND KDE4_KCFGC_EXECUTABLE AND NOT KDE4_INSTALLED_VERSION_TOO_OLD)
+endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND NOT KDE4_INSTALLED_VERSION_TOO_OLD)
 
 
 macro (KDE4_PRINT_RESULTS)
@@ -657,18 +588,6 @@ macro (KDE4_PRINT_RESULTS)
        endif(KDE4_LIB_DIR)
    endif(NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
   
-   if(KDE4_DCOPIDL_EXECUTABLE)
-      message(STATUS "Found KDE4 dcopidl preprocessor: ${KDE4_DCOPIDL_EXECUTABLE}")
-   else(KDE4_DCOPIDL_EXECUTABLE)
-      message(STATUS "Didn't find the KDE4 dcopidl preprocessor")
-   endif(KDE4_DCOPIDL_EXECUTABLE)
-
-   if(KDE4_DCOPIDL2CPP_EXECUTABLE)
-      message(STATUS "Found KDE4 dcopidl2cpp preprocessor: ${KDE4_DCOPIDL2CPP_EXECUTABLE}")
-   else(KDE4_DCOPIDL2CPP_EXECUTABLE)
-      message(STATUS "Didn't find the KDE4 dcopidl2cpp preprocessor")
-   endif(KDE4_DCOPIDL2CPP_EXECUTABLE)
-
    if(KDE4_KCFGC_EXECUTABLE)
       message(STATUS "Found KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
    else(KDE4_KCFGC_EXECUTABLE)
