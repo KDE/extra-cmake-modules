@@ -6,6 +6,13 @@
 #  QDBUS_LIBRARIES - Link these to use QtDBus
 #  QDBUS_DEFINITIONS - Compiler switches required for using QtDBus
 #
+#  QDBUS_IDL2CPP_EXECUTABLE - The adaptor/interface code generator
+#  QDBUS_CPP2XML_EXECUTABLE - The interface parser
+#
+# Macros (from QtDBusMacros.cmake):
+#  QDBUS_ADD_INTERFACES(SRC_VAR file1.xml ... fileN.xml)
+#    Generates interface code from the given XML files.
+#
 
 
 # use pkg-config to get the directories and then use these values
@@ -37,3 +44,8 @@ else (QDBUS_FOUND)
   message(STATUS "See also the PORTING-TO-DBUS.txt file in kdelibs/")
   message(FATAL_ERROR "Could NOT find QtDBus")
 endif (QDBUS_FOUND)
+
+find_program(QDBUS_IDL2CPP_EXECUTABLE NAME dbusidl2cpp PATHS)
+find_program(QDBUS_CPP2XML_EXECUTABLE NAME dbuscpp2xml PATHS)
+
+include( QtDBusMacros )
