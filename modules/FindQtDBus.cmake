@@ -13,6 +13,12 @@
 #  QDBUS_ADD_INTERFACES(SRC_VAR file1.xml ... fileN.xml)
 #    Generates interface code from the given XML files.
 #
+#  QDBUS_GENERATE_INTERFACE(file.h)
+#    Generates the XML interface description from the given header file.
+#
+#  QDBUS_ADD_ADAPTOR(SRC_VAR file1.xml ... fileN.xml)
+#    Generates adaptor code from the given XML files.
+#
 
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
