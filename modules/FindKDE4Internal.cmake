@@ -35,6 +35,8 @@
 # KDE4_KDEPRINT_LIBRARY    - the kdeprint library
 # KDE4_KSPELL2_LIBRARY     - the kspell2 library
 # KDE4_KDNSSD_LIBRARY      - the kdnssd library 
+# KDE4_PHONONCORE_LIBRARY  - the phononcore library
+# KDE4_PHONONUI_LIBRARY    - the phononui library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -54,7 +56,8 @@
 # KDE4_KSPELL2_LIBS          - the kspell2 library and all depending libraries
 # KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 # KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
-#
+# KDE4_PHONONCORE_LIBS       - the phononcore library and all depending librairies
+# KDE4_PHONONUI_LIBS         - the phononui library and all depending librairies
 #
 # This module defines a bunch of variables used as locations
 # for install directories. They are all interpreted relative
@@ -333,6 +336,13 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    # now the KDE library directory, kxmlcore is new with KDE4
    find_library(KDE4_KXMLCORE_LIBRARY NAMES kxmlcore PATHS ${KDE4_LIB_INSTALL_DIR} )
    set(KDE4_KXMLCORE_LIBRARIES ${kxmlcore_LIB_DEPENDS} ${KDE4_KXMLCORE_LIBRARY} )
+
+   find_library(KDE4_PHONONCORE_LIBRARY NAMES phononcore PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_PHONONUI_LIBRARIES ${phononcore_LIB_DEPENDS} ${KDE4_PHONONCORE_LIBRARY} )
+
+   find_library(KDE4_PHONONUI_LIBRARY NAMES phononui PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_PHONONUI_LIBRARIES ${phononui_LIB_DEPENDS} ${KDE4_PHONONUI_LIBRARY} )
+
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
