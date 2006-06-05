@@ -1,10 +1,8 @@
 if (WIN32)
 
-INCLUDE(MacroGetenvWinPath)
+file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
 
-MACRO_GETENV_WIN_PATH(_progFiles PROGRAMFILES)
-
-FIND_FILE(GNUWIN32_DIR gnuwin32
+find_file(GNUWIN32_DIR gnuwin32
    ${_progFiles}
    "C:/"
 )
