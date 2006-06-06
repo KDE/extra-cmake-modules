@@ -27,19 +27,38 @@ if (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
 
 else (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
 
-   # use pkg-config to get the directories and then use these values
-   # in the FIND_PATH() and FIND_LIBRARY() calls
-   INCLUDE(UsePkgConfig)
+   if (WIN32)
+       find_file(QDBUS_DIR qt-dbus
+          ${_progFiles}
+          "C:/"
+       )
+       set(QDBUS_DEFINITIONS CACHE INTERNAL "Definitions for Qt DBUS")
+       set(QDBUS_INCLUDE_DIRS ${QDBUS_DIR}/include/dbus-1.0 CACHE INTERNAL "Include dirs for Qt DBUS")
 
-   PKGCONFIG("dbus-1" _dbusIncDir _dbusLinkDir _dbusLinkFlags _dbusCflags)
-   PKGCONFIG("dbus-qt4-1" _qdbusIncDir _qdbusLinkDir _qdbusLinkFlags _qdbusCflags)
+       FIND_LIBRARY(QDBUS_LIBRARIES NAMES dbus-qt4-1
+         PATHS ${QDBUS_DIR}/lib
+       )           
+       # how to add specific pathes to find_program, using PATHS seems not to work on win32
+       # find_program(QDBUS_IDL2CPP_EXECUTABLE NAME dbusidl2cpp PATHS ${QDBUS_DIR}/bin)
+       find_file(QDBUS_IDL2CPP_EXECUTABLE dbusidl2cpp.exe ${QDBUS_DIR}/bin)
+       find_file(QDBUS_CPP2XML_EXECUTABLE dbuscpp2xml.exe ${QDBUS_DIR}/bin)
+      
+   else (WIN32)
+       # use pkg-config to get the directories and then use these values
+       # in the FIND_PATH() and FIND_LIBRARY() calls
+       INCLUDE(UsePkgConfig)
+    
+       PKGCONFIG("dbus-1" _dbusIncDir _dbusLinkDir _dbusLinkFlags _dbusCflags)
+       PKGCONFIG("dbus-qt4-1" _qdbusIncDir _qdbusLinkDir _qdbusLinkFlags _qdbusCflags)
+    
+       set(QDBUS_DEFINITIONS ${_dbusCflags} ${_qdbusCflags} CACHE INTERNAL "Definitions for Qt DBUS")
+       set(QDBUS_INCLUDE_DIRS ${_dbusIncDir} ${_qdbusIncDir} CACHE INTERNAL "Include dirs for Qt DBUS")
+   
+       FIND_LIBRARY(QDBUS_LIBRARIES NAMES dbus-qt4-1
+         PATHS ${_qdbusLinkDir}
+       )
 
-   set(QDBUS_DEFINITIONS ${_dbusCflags} ${_qdbusCflags} CACHE INTERNAL "Definitions for Qt DBUS")
-   set(QDBUS_INCLUDE_DIRS ${_dbusIncDir} ${_qdbusIncDir} CACHE INTERNAL "Include dirs for Qt DBUS")
-
-   FIND_LIBRARY(QDBUS_LIBRARIES NAMES dbus-qt4-1
-     PATHS ${_qdbusLinkDir}
-   )
+   endif (WIN32)
 
    if (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
       set(QDBUS_FOUND TRUE)
@@ -59,7 +78,8 @@ else (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
 
 endif(QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
 
-find_program(QDBUS_IDL2CPP_EXECUTABLE NAME dbusidl2cpp PATHS)
-find_program(QDBUS_CPP2XML_EXECUTABLE NAME dbuscpp2xml PATHS)
-
+if (NOT WIN32)
+    find_program(QDBUS_IDL2CPP_EXECUTABLE NAME dbusidl2cpp PATHS )
+    find_program(QDBUS_CPP2XML_EXECUTABLE NAME dbuscpp2xml PATHS )
+endif (NOT WIN32)
 include( QtDBusMacros )
