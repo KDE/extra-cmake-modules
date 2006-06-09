@@ -89,7 +89,6 @@
 #
 # The following user adjustable options are provided:
 #
-# RPATH_STYLE       - select the style in which RPATH is handled, one of "none", "install", "both" and "default"
 # KDE4_ENABLE_FINAL - enable KDE-style enable-final all-in-one-compilation
 # KDE4_BUILD_TESTS  - enable this to build the testcases
 #
