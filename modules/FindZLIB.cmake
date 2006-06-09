@@ -1,23 +1,34 @@
-if (ZLIB_INCLUDE_DIR)
+# - Try to find a z compression library
+# under Windows the zlib exists with a variety of slightly different names
+# Once done this will define
+#
+#  ZLIB_FOUND - system has zlib
+#  ZLIB_INCLUDE_DIR - the zlib include directory
+#  ZLIB_LIBRARY - The libraries needed to use zlib
+
+
+IF (ZLIB_INCLUDE_DIR)
   # Already in cache, be silent
-  set(ZLIB_FIND_QUIETLY TRUE)
-endif (ZLIB_INCLUDE_DIR)
+  SET(ZLIB_FIND_QUIETLY TRUE)
+ENDIF (ZLIB_INCLUDE_DIR)
 
 FIND_PATH(ZLIB_INCLUDE_DIR zlib.h
  /usr/include
  /usr/local/include
 )
 
-set(POTENTIAL_Z_LIBS z zlib)
+SET(POTENTIAL_Z_LIBS z zlib zdll)
 FIND_LIBRARY(ZLIB_LIBRARY NAMES ${POTENTIAL_Z_LIBS}
-PATHS
- /usr/lib
- /usr/local/lib
+   PATHS
+   /usr/lib
+   /usr/local/lib
 )
 
-IF (ZLIB_INCLUDE_DIR)
+IF (ZLIB_INCLUDE_DIR AND ZLIB_LIBRARY)
    SET(ZLIB_FOUND TRUE)
-ENDIF (ZLIB_INCLUDE_DIR)
+ELSE (ZLIB_INCLUDE_DIR AND ZLIB_LIBRARY)
+   SET(ZLIB_FOUND FALSE)
+ENDIF (ZLIB_INCLUDE_DIR AND ZLIB_LIBRARY)
 
 IF (ZLIB_FOUND)
    IF (NOT ZLIB_FIND_QUIETLY)
