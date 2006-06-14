@@ -55,7 +55,7 @@ else (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
        set(QDBUS_INCLUDE_DIRS ${_dbusIncDir} ${_qdbusIncDir} CACHE INTERNAL "Include dirs for Qt DBUS")
    
        FIND_LIBRARY(QDBUS_LIBRARIES NAMES dbus-qt4-1
-         PATHS ${_qdbusLinkDir}
+         PATHS ${_qdbusLinkDir} ${_dbusLinkDir}
        )
 
    endif (WIN32)
