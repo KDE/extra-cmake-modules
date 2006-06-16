@@ -59,7 +59,7 @@ else (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
 
        PKGCONFIG("dbus-qt4-1" _qdbusIncDir _qdbusLinkDir _qdbusLinkFlags _qdbusCflags)
        if (NOT _qdbusIncDir)
-         message(STATUS "You need the Qt4 bindings for dbus. The current recommendation is to install them from kdesupprt.")
+         message(STATUS "You need the Qt4 bindings for dbus. The current recommendation is to install them from kdesupport.")
          message(STATUS "If you have qt-dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-qt4-1' works")
          message(STATUS "See also the PORTING-TO-DBUS.txt file in kdelibs/")
          message(FATAL_ERROR "Could NOT find qt-dbus")
