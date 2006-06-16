@@ -42,18 +42,32 @@ else (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
        # find_program(QDBUS_IDL2CPP_EXECUTABLE NAME dbusidl2cpp PATHS "${QDBUS_DIR}/bin")
        find_file(QDBUS_IDL2CPP_EXECUTABLE dbusidl2cpp.exe "${QDBUS_DIR}/bin")
        find_file(QDBUS_CPP2XML_EXECUTABLE dbuscpp2xml.exe "${QDBUS_DIR}/bin")
-      
+
    else (WIN32)
+
        # use pkg-config to get the directories and then use these values
        # in the FIND_PATH() and FIND_LIBRARY() calls
        INCLUDE(UsePkgConfig)
-    
+
        PKGCONFIG("dbus-1" _dbusIncDir _dbusLinkDir _dbusLinkFlags _dbusCflags)
+       if (NOT _dbusIncDir)
+         message(STATUS "You need D-BUS 0.62 or newer.")
+         message(STATUS "If you have dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-1' works")
+         message(STATUS "See also the PORTING-TO-DBUS.txt file in kdelibs/")
+         message(FATAL_ERROR "Could NOT find DBus")
+       endif (NOT _dbusIncDir)
+
        PKGCONFIG("dbus-qt4-1" _qdbusIncDir _qdbusLinkDir _qdbusLinkFlags _qdbusCflags)
-    
+       if (NOT _qdbusIncDir)
+         message(STATUS "You need the Qt4 bindings for dbus. The current recommendation is to install them from kdesupprt.")
+         message(STATUS "If you have qt-dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-qt4-1' works")
+         message(STATUS "See also the PORTING-TO-DBUS.txt file in kdelibs/")
+         message(FATAL_ERROR "Could NOT find qt-dbus")
+       endif (NOT _qdbusIncDir)
+
        set(QDBUS_DEFINITIONS ${_dbusCflags} ${_qdbusCflags} CACHE INTERNAL "Definitions for Qt DBUS")
        set(QDBUS_INCLUDE_DIRS ${_dbusIncDir} ${_qdbusIncDir} CACHE INTERNAL "Include dirs for Qt DBUS")
-   
+
        FIND_LIBRARY(QDBUS_LIBRARIES NAMES dbus-qt4-1
          PATHS ${_qdbusLinkDir} ${_dbusLinkDir}
        )
