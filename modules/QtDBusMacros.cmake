@@ -5,12 +5,13 @@
 macro(qdbus_add_interfaces _sources)
    foreach (_i ${ARGN})
       get_filename_component(_xml_file ${_i} ABSOLUTE)
-      get_filename_component(_basename ${_i} NAME_WE)
-      set(_target_base ${CMAKE_CURRENT_BINARY_DIR}/${_basename})
+      string(REGEX REPLACE ".*\\.([^\\.]+)\\.xml$" "\\1" _basename ${_i})
+      string(TOLOWER ${_basename} _basename)
+      set(_target_base ${CMAKE_CURRENT_BINARY_DIR}/${_basename}interface)
 
       add_custom_command(OUTPUT ${_target_base}.cpp ${_target_base}.h 
          COMMAND ${QDBUS_IDL2CPP_EXECUTABLE}
-         ARGS -m -p ${_basename} ${_xml_file}
+         ARGS -m -p ${_target_base} ${_xml_file}
          DEPENDS ${_xml_file}
       )
 
@@ -37,7 +38,8 @@ endmacro(qdbus_generate_interface)
 macro(qdbus_add_adaptors _sources)
    foreach (_i ${ARGN})
       get_filename_component(_xml_file ${_i} ABSOLUTE)
-      get_filename_component(_basename ${_i} NAME_WE)
+      string(REGEX REPLACE ".*\\.([^\\.]+)\\.xml$" "\\1" _basename ${_i})
+      string(TOLOWER ${_basename} _basename)
       set(_target_base ${CMAKE_CURRENT_BINARY_DIR}/${_basename}adaptor)
 
       add_custom_command(OUTPUT ${_target_base}.cpp ${_target_base}.h
