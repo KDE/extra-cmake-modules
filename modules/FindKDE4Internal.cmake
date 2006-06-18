@@ -169,7 +169,7 @@ INCLUDE (MacroEnsureVersion)
 cmake_minimum_required(VERSION 2.4.1 FATAL_ERROR)
 
 set(QT_MIN_VERSION "4.1.1")
-#this line includes FindQt.cmake, which searches the Qt library and headers
+#this line includes FindQt4.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
 
 # Perl is required for building KDE software,
@@ -465,7 +465,8 @@ endif (UNIX)
 
 # UNIX, except OS X
 if (UNIX AND NOT APPLE)
-   find_package(X11 REQUIRED)
+   # Done by FindQt4.cmake already
+   #find_package(X11 REQUIRED)
    # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
    set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
 endif (UNIX AND NOT APPLE)
