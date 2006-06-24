@@ -1,58 +1,86 @@
 # This file defines two macros:
-# MACRO_LOG_FEATURE(VAR FEATURE DESCRIPTION URL)
-# Logs the information so that it can be displayed at the end
-# of the configure run
-# VAR : variable which is TRUE or FALSE indicating whether the feature is supported
-# FEATURE: name of the feature, e.g. "libjpeg"
-# DESCRIPTION: description what this feature provides
-# URL: home page
+#
+# MACRO_LOG_FEATURE(VAR FEATURE DESCRIPTION URL MIN_VERSION COMMENTS)
+#   Logs the information so that it can be displayed at the end
+#   of the configure run
+#   VAR : TRUE or FALSE, indicating whether the feature is supported
+#   FEATURE: name of the feature, e.g. "libjpeg"
+#   DESCRIPTION: description what this feature provides
+#   URL: home page
+#   REQUIRED: TRUE or FALSE, indicating whether the featue is required
+#   MIN_VERSION: minimum version number. empty string if unneeded
+#   COMMENTS: More info you may want to provide.  empty string if unnecessary
 #
 # MACRO_DISPLAY_FEATURE_LOG()
-# Call this at the end of the toplevel CMakeLists.txt to display the collected results
+#   Call this to display the collected results.
+#   Exits CMake with a FATAL error message if a required feature is missing
 #
 # Example:
 #
 # INCLUDE(MacroLogFeature)
 #
 # FIND_PACKAGE(JPEG)
-# MACRO_LOG_FEATURE(JPEG_FOUND "libjpeg" "Support JPEG images" "http://www.ijg.org")
+# MACRO_LOG_FEATURE(JPEG_FOUND "libjpeg" "Support JPEG images" "http://www.ijg.org" TRUE "3.2a" "")
 # ...
 # MACRO_DISPLAY_FEATURE_LOG()
 
 
 
-MACRO(MACRO_LOG_FEATURE _var _package _description _url)
-
-   IF (NOT EXISTS "${CMAKE_BINARY_DIR}/EnabledFeatures.txt")
-      FILE(WRITE "${CMAKE_BINARY_DIR}/EnabledFeatures.txt" "\n")
-   ENDIF (NOT EXISTS "${CMAKE_BINARY_DIR}/EnabledFeatures.txt")
-
-   IF (NOT EXISTS "${CMAKE_BINARY_DIR}/DisabledFeatures.txt")
-      FILE(WRITE "${CMAKE_BINARY_DIR}/DisabledFeatures.txt" "\n")
-   ENDIF (NOT EXISTS "${CMAKE_BINARY_DIR}/DisabledFeatures.txt")
-
+MACRO(MACRO_LOG_FEATURE _var _package _description _url _required _minvers _comments)
 
    IF (${_var})
-      SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
+     SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
    ELSE (${_var})
-      SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/DisabledFeatures.txt)
+     IF (${_required})
+       SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/MissingRequirements.txt)
+     ELSE (${_required})
+       SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/DisabledFeatures.txt)
+     ENDIF (${_required})
    ENDIF (${_var})
 
-   FILE(APPEND "${_LOGFILENAME}" "PACKAGE: ${_package}\nDESCRIPTION: ${_description}\nURL: ${_url}\n\n")
+   IF (NOT EXISTS ${_LOGFILENAME})
+     FILE(WRITE ${_LOGFILENAME} "\n")
+   ENDIF (NOT EXISTS ${_LOGFILENAME})
 
+   FILE(APPEND "${_LOGFILENAME}" "=======================================\n")
+   FILE(APPEND "${_LOGFILENAME}" "PACKAGE:     ${_package}\n")
+   FILE(APPEND "${_LOGFILENAME}" "DESCRIPTION: ${_description}\n")
+   FILE(APPEND "${_LOGFILENAME}" "URL:         ${_url}\n")
+   IF (${_minvers} MATCHES ".*")
+     FILE(APPEND "${_LOGFILENAME}" "VERSION:     ${_minvers}\n")
+   ENDIF (${_minvers} MATCHES ".*")
+   IF (${_comments} MATCHES ".*")
+     FILE(APPEND "${_LOGFILENAME}" "COMMENTS:    ${_comments}\n")
+   ENDIF (${_comments} MATCHES ".*")
+ 
 ENDMACRO(MACRO_LOG_FEATURE)
 
 
 MACRO(MACRO_DISPLAY_FEATURE_LOG)
-   IF (EXISTS "${CMAKE_BINARY_DIR}/EnabledFeatures.txt")
-      FILE(READ ${CMAKE_BINARY_DIR}/EnabledFeatures.txt _features)
-      MESSAGE(STATUS "Enabled features:\n${_features}")
-      FILE(REMOVE ${CMAKE_BINARY_DIR}/EnabledFeatures.txt)
-   ENDIF (EXISTS "${CMAKE_BINARY_DIR}/EnabledFeatures.txt")
 
-   IF (EXISTS "${CMAKE_BINARY_DIR}/DisabledFeatures.txt")
-      FILE(READ ${CMAKE_BINARY_DIR}/DisabledFeatures.txt _features)
-      MESSAGE(STATUS "Disabled features:\n${_features}")
-      FILE(REMOVE ${CMAKE_BINARY_DIR}/DisabledFeatures.txt)
-   ENDIF (EXISTS "${CMAKE_BINARY_DIR}/DisabledFeatures.txt")
+   SET(_file ${CMAKE_BINARY_DIR}/MissingRequirements.txt )
+   IF (EXISTS ${_file})
+      FILE(APPEND ${_file} "=======================================")
+      FILE(READ ${_file} _requirements)
+      MESSAGE(STATUS "\nMissing Requirements:${_requirements}")
+      FILE(REMOVE ${_file})
+      MESSAGE(FATAL_ERROR "Exiting: Missing Requirements")
+   ENDIF (EXISTS ${_file})
+
+   SET(_file ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
+   IF (EXISTS ${_file})
+      FILE(APPEND ${_file} "=======================================")
+      FILE(READ ${_file} _enabled)
+      MESSAGE(STATUS "\nEnabled Features:${_enabled}")
+      FILE(REMOVE ${_file})
+   ENDIF (EXISTS ${_file})
+
+   SET(_file ${CMAKE_BINARY_DIR}/DisabledFeatures.txt )
+   IF (EXISTS ${_file})
+      FILE(APPEND ${_file} "=======================================")
+      FILE(READ ${_file} _disabled)
+      MESSAGE(STATUS "\nDisabled Features:${_disabled}")
+      FILE(REMOVE ${_file})
+   ENDIF (EXISTS ${_file})
+
 ENDMACRO(MACRO_DISPLAY_FEATURE_LOG)
