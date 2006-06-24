@@ -19,6 +19,7 @@
 #  QDBUS_ADD_ADAPTORS(SRC_VAR file1.xml ... fileN.xml)
 #    Generates adaptor code from the given XML files.
 #
+INCLUDE(MacroLogFeature)
 
 if (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
 
@@ -51,19 +52,16 @@ else (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
 
        PKGCONFIG("dbus-1" _dbusIncDir _dbusLinkDir _dbusLinkFlags _dbusCflags)
        if (NOT _dbusIncDir)
-         message(STATUS "You need D-BUS 0.62 or newer.")
-         message(STATUS "If you have dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-1' works")
-         message(STATUS "See also the PORTING-TO-DBUS.txt file in kdelibs/")
-         message(FATAL_ERROR "Could NOT find DBus")
+	 MACRO_LOG_FEATURE(0 "D-BUS" "D-BUS message bus system" "http://www.freedesktop.org/wiki/Software_2fdbus" 1 "0.62" "If you have dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-1' works.  See also the PORTING-TO-DBUS.txt file in kdelibs/")
        endif (NOT _dbusIncDir)
 
        PKGCONFIG("dbus-qt4-1" _qdbusIncDir _qdbusLinkDir _qdbusLinkFlags _qdbusCflags)
        if (NOT _qdbusIncDir)
-         message(STATUS "You need the Qt4 bindings for dbus. The current recommendation is to install them from kdesupport.")
-         message(STATUS "If you have qt-dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-qt4-1' works")
-         message(STATUS "See also the PORTING-TO-DBUS.txt file in kdelibs/")
-         message(FATAL_ERROR "Could NOT find qt-dbus")
+	 MACRO_LOG_FEATURE(0 "QtDBus" "Qt4 D-BUS Bindings" "$SVNROOT/trunk/kdesupport" 1 "SVN" "If you have qt-dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-qt4-1' works.  See also the PORTING-TO-DBUS.txt file in kdelibs/")
        endif (NOT _qdbusIncDir)
+
+       # report and exit here if qbus or qtdbus not found
+       MACRO_DISPLAY_FEATURE_LOG()
 
        set(QDBUS_DEFINITIONS ${_dbusCflags} ${_qdbusCflags} CACHE INTERNAL "Definitions for Qt DBUS")
        set(QDBUS_INCLUDE_DIRS ${_dbusIncDir} ${_qdbusIncDir} CACHE INTERNAL "Include dirs for Qt DBUS")
