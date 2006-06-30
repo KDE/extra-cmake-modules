@@ -19,78 +19,9 @@
 #  QDBUS_ADD_ADAPTORS(SRC_VAR file1.xml ... fileN.xml)
 #    Generates adaptor code from the given XML files.
 #
-INCLUDE(MacroLogFeature)
-
-if (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
-
-   # already in cache
-   set(QDBUS_FOUND TRUE)
-
-else (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
-
-   if (WIN32)
-       find_file(QDBUS_DIR qt-dbus
-          ${_progFiles}
-          "C:/"
-       )
-       set(QDBUS_DEFINITIONS CACHE INTERNAL "Definitions for Qt DBUS")
-       set(QDBUS_INCLUDE_DIRS "${QDBUS_DIR}/include/dbus-1.0" CACHE INTERNAL "Include dirs for Qt DBUS")
-
-       FIND_LIBRARY(QDBUS_LIBRARIES NAMES dbus-qt4-1
-         PATHS "${QDBUS_DIR}/lib"
-       )           
-       # how to add specific pathes to find_program, using PATHS seems not to work on win32
-       # find_program(QDBUS_IDL2CPP_EXECUTABLE NAME dbusidl2cpp PATHS "${QDBUS_DIR}/bin")
-       find_file(QDBUS_IDL2CPP_EXECUTABLE dbusidl2cpp.exe "${QDBUS_DIR}/bin")
-       find_file(QDBUS_CPP2XML_EXECUTABLE dbuscpp2xml.exe "${QDBUS_DIR}/bin")
-
-   else (WIN32)
-
-       # use pkg-config to get the directories and then use these values
-       # in the FIND_PATH() and FIND_LIBRARY() calls
-       INCLUDE(UsePkgConfig)
-
-       PKGCONFIG("dbus-1" _dbusIncDir _dbusLinkDir _dbusLinkFlags _dbusCflags)
-       if (NOT _dbusIncDir)
-	 MACRO_LOG_FEATURE(0 "D-BUS" "D-BUS message bus system" "http://www.freedesktop.org/wiki/Software_2fdbus" 1 "0.62" "If you have dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-1' works.  See also the PORTING-TO-DBUS.txt file in kdelibs/")
-       endif (NOT _dbusIncDir)
-
-       PKGCONFIG("dbus-qt4-1" _qdbusIncDir _qdbusLinkDir _qdbusLinkFlags _qdbusCflags)
-       if (NOT _qdbusIncDir)
-	 MACRO_LOG_FEATURE(0 "QtDBus" "Qt4 D-BUS Bindings" "$SVNROOT/trunk/kdesupport" 1 "SVN" "If you have qt-dbus installed, check PKG_CONFIG_PATH so that 'pkg-config --libs dbus-qt4-1' works.  See also the PORTING-TO-DBUS.txt file in kdelibs/")
-       endif (NOT _qdbusIncDir)
-
-       # report and exit here if qbus or qtdbus not found
-       MACRO_DISPLAY_FEATURE_LOG()
-
-       set(QDBUS_DEFINITIONS ${_dbusCflags} ${_qdbusCflags} CACHE INTERNAL "Definitions for Qt DBUS")
-       set(QDBUS_INCLUDE_DIRS ${_dbusIncDir} ${_qdbusIncDir} CACHE INTERNAL "Include dirs for Qt DBUS")
-
-       FIND_LIBRARY(QDBUS_LIBRARIES NAMES dbus-qt4-1
-         PATHS ${_qdbusLinkDir} ${_dbusLinkDir}
-       )
-
-   endif (WIN32)
-
-   if (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
-      set(QDBUS_FOUND TRUE)
-   endif (QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
-
-   message(STATUS "QtDBus Results: ${QDBUS_LIBRARIES} ${QDBUS_INCLUDE_DIRS} ${QDBUS_DEFINITIONS}")
-   if (QDBUS_FOUND)
-     if (NOT QDBUS_FIND_QUIETLY)
-       message(STATUS "Found QtDBus: ${QDBUS_LIBRARIES}")
-     endif (NOT QDBUS_FIND_QUIETLY)
-   else (QDBUS_FOUND)
-     message(STATUS "You need D-BUS 0.62 or newer with Qt4 bindings enabled.")
-     message(STATUS "See also the PORTING-TO-DBUS.txt file in kdelibs/")
-     message(FATAL_ERROR "Could NOT find QtDBus")
-   endif (QDBUS_FOUND)
-
-endif(QDBUS_INCLUDE_DIRS AND QDBUS_LIBRARIES)
-
-if (NOT WIN32)
-    find_program(QDBUS_IDL2CPP_EXECUTABLE NAME dbusidl2cpp PATHS )
-    find_program(QDBUS_CPP2XML_EXECUTABLE NAME dbuscpp2xml PATHS )
-endif (NOT WIN32)
-include( QtDBusMacros )
+SET(QDBUS_FOUND)
+SET(QDBUS_INCLUDE_DIRS ${QT_DBUS_INCLUDE_DIR})
+SET(QDBUS_LIBRARIES ${QT_QTDBUS_LIBRARY_DEBUG})
+SET(QDBUS_DEFINITIONS -I${QDBUS_INCLUDE_DIRS})
+SET(QDBUS_IDL2CPP_EXECUTABLE)
+SET(QDBUS_CPP2XML_EXECUTABLE)
