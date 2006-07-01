@@ -503,6 +503,7 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_QTXML_LIBRARY_DEBUG        "-framework QtXml"      CACHE STRING "The QtXml library.")
     SET(QT_QTSVG_LIBRARY_RELEASE      "-framework QtSvg"      CACHE STRING "The QtSvg library.")
     SET(QT_QTSVG_LIBRARY_DEBUG        "-framework QtSvg"      CACHE STRING "The QtSvg library.")
+    SET(QT_QTDBUS_LIBRARY_RELEASE     "-framework QtDBus"     CACHE STRING "The QtBBus library.")
     SET(QT_QTDBUS_LIBRARY_DEBUG       "-framework QtDBus"     CACHE STRING "The QtBBus library.")
 
 
