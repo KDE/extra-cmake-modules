@@ -168,7 +168,7 @@ INCLUDE (MacroEnsureVersion)
 
 cmake_minimum_required(VERSION 2.4.1 FATAL_ERROR)
 
-set(QT_MIN_VERSION "4.1.1")
+set(QT_MIN_VERSION "4.2.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
 

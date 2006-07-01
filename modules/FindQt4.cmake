@@ -36,6 +36,7 @@
 #  QT_QTGUI_FOUND         True if QtGui was found.
 #  QT_QT3SUPPORT_FOUND    True if Qt3Support was found.
 #  QT_QTASSISTANT_FOUND   True if QtAssistant was found.
+#  QT_QTDBUS_FOUND        True if QtDBus was found.
 #  QT_QTDESIGNER_FOUND    True if QtDesigner was found.
 #  QT_QTMOTIF_FOUND       True if QtMotif was found.
 #  QT_QTNETWORK_FOUND     True if QtNetwork was found.
@@ -60,6 +61,7 @@
 #  QT_QTASSISTANT_INCLUDE_DIR  Path to "include/QtAssistant" 
 #  QT_QTCORE_INCLUDE_DIR       Path to "include/QtCore"         
 #  QT_QTDESIGNER_INCLUDE_DIR   Path to "include/QtDesigner" 
+#  QT_QTDBUS_INCLUDE_DIR       Path to "include/QtDBus" 
 #  QT_QTGUI_INCLUDE_DIR        Path to "include/QtGui" 
 #  QT_QTMOTIF_INCLUDE_DIR      Path to "include/QtMotif" 
 #  QT_QTNETWORK_INCLUDE_DIR    Path to "include/QtNetwork" 
@@ -89,6 +91,10 @@
 # The QtCore library:         QT_QTCORE_LIBRARY
 #                             QT_QTCORE_LIBRARY_RELEASE
 #                             QT_QTCORE_LIBRARY_DEBUG
+#
+# The QtDBus library:         QT_QTDBUS_LIBRARY
+#                             QT_QTDBUS_LIBRARY_RELEASE
+#                             QT_QTDBUS_LIBRARY_DEBUG
 #
 # The QtDesigner library:     QT_QTDESIGNER_LIBRARY
 #                             QT_QTDESIGNER_LIBRARY_RELEASE
@@ -143,6 +149,8 @@
 #  QT_UIC_EXECUTABLE          Where to find the uic tool.
 #  QT_UIC3_EXECUTABLE         Where to find the uic3 tool.
 #  QT_RCC_EXECUTABLE          Where to find the rcc tool
+#  QT_DBUSCPP2XML_EXECUTABLE  Where to find the dbuscpp2xml tool.
+#  QT_DBUSXML2CPP_EXECUTABLE  Where to find the dbusxml2cpp tool.
 #  
 #  QT_DOC_DIR                 Path to "doc" of Qt4
 #  QT_MKSPECS_DIR             Path to "mkspecs" of Qt4
@@ -463,8 +471,8 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
-  # Set QT_DBUS_INCLUDE_DIR
-  FIND_PATH(QT_DBUS_INCLUDE_DIR QtDBus
+  # Set QT_QTDBUS_INCLUDE_DIR
+  FIND_PATH(QT_QTDBUS_INCLUDE_DIR QtDBus
     PATHS
     ${QT_INCLUDE_DIR}/QtDBus
     ${QT_HEADERS_DIR}/QtDBus
@@ -693,6 +701,18 @@ IF (QT4_QMAKE_FOUND)
 
   FIND_PROGRAM(QT_RCC_EXECUTABLE 
     NAMES rcc
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
+    )
+
+  FIND_PROGRAM(QT_DBUSCPP2XML_EXECUTABLE 
+    NAMES dbuscpp2xml
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
+    )
+
+  FIND_PROGRAM(QT_DBUSXML2CPP_EXECUTABLE 
+    NAMES dbusxml2cpp
     PATHS ${QT_BINARY_DIR}
     NO_DEFAULT_PATH
     )
