@@ -210,7 +210,7 @@ set(APPLNK_INSTALL_DIR       /share/applnk              CACHE STRING "Is this st
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
-option(KDE4_IGNORE_DONTPORT "ignore the \"don't port\" message from kdelisb (not snapshot)" OFF)
+option(KDE4_IGNORE_DONTPORT "ignore the \"don't port\" message from kdelibs (not snapshot)" OFF)
 
 #now try to find some kde stuff
 
