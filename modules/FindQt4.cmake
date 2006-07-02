@@ -892,7 +892,7 @@ IF (QT4_QMAKE_FOUND)
     SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
     SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
   
-    ADD_CUSTOM_COMMAND(OUTPUT ${_target_base}.cpp ${_target_base}.h
+    ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
           COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -a ${_basename} ${_infile}
           DEPENDS ${_infile}
         )
