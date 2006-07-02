@@ -565,3 +565,13 @@ MACRO (KDE4_ADD_WIDGET_FILES _sources)
 
 ENDMACRO (KDE4_ADD_WIDGET_FILES)
 
+MACRO(KDE4_ADD_DCOP_SKELS)
+   MESSAGE(FATAL_ERROR "There is a call to KDE4_ADD_DCOP_SKELS() in one of the CMakeLists.txt, but DCOP is no longer supported by KDE4.
+ Please remove it and port to DBUS")
+ENDMACRO(KDE4_ADD_DCOP_SKELS)
+
+MACRO(KDE4_ADD_DCOP_STUBS)
+   MESSAGE(FATAL_ERROR "There is a call to KDE4_ADD_DCOP_STUBS() in one of the CMakeLists.txt, but DCOP is no longer supported by KDE4.
+ Please remove it and port to DBUS")
+ENDMACRO(KDE4_ADD_DCOP_STUBS)
+
