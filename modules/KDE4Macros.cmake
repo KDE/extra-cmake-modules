@@ -2,8 +2,6 @@
 # for documentation look at FindKDE4Internal.cmake
 #
 # this file contains the following macros:
-# KDE4_ADD_DCOP_SKELS
-# KDE4_ADD_DCOP_STUBS
 # KDE4_ADD_UI_FILES
 # KDE4_ADD_KCFG_FILES
 # KDE4_AUTOMOC
@@ -14,89 +12,6 @@
 # KDE4_ADD_WIDGET_FILES
 
 #neundorf@kde.org
-
-#create the kidl and skeleton file for dcop stuff
-#usage: KDE4_ADD_DCOP_SKELS(foo_SRCS ${dcop_headers})
-MACRO (KDE4_ADD_DCOP_SKELS _sources)
-   foreach (_current_FILE ${ARGN})
-
-      GET_FILENAME_COMPONENT(_tmp_FILE ${_current_FILE} ABSOLUTE)
-
-      GET_FILENAME_COMPONENT(_basename ${_tmp_FILE} NAME_WE)
-
-      set(_skel ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_skel.cpp)
-      set(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
-
-      if (NOT HAVE_${_basename}_KIDL_RULE)
-        set(HAVE_${_basename}_KIDL_RULE ON)
-
-        add_custom_command(OUTPUT ${_kidl}
-           COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-           ARGS --srcdir ${KDE4_KALYPTUS_DIR} -o ${_kidl} ${_tmp_FILE}
-           MAIN_DEPENDENCY ${_tmp_FILE}
-        )
-      endif (NOT HAVE_${_basename}_KIDL_RULE)
-
-      if (NOT HAVE_${_basename}_SKEL_RULE)
-        set(HAVE_${_basename}_SKEL_RULE ON)
-
-        add_custom_command(OUTPUT ${_skel}
-           COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
-           ARGS --c++-suffix cpp --no-signals --no-stub ${_kidl}
-           MAIN_DEPENDENCY ${_kidl}
-           DEPENDS ${_KDE4_DCOPIDL2CPP_DEP} )
-
-        macro_additional_clean_files(${_skel_H})
-
-      endif (NOT HAVE_${_basename}_SKEL_RULE)
-
-      set(${_sources} ${${_sources}} ${_skel})
-
-   endforeach (_current_FILE)
-
-ENDMACRO (KDE4_ADD_DCOP_SKELS)
-
-
-MACRO (KDE4_ADD_DCOP_STUBS _sources)
-   foreach (_current_FILE ${ARGN})
-
-      get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
-
-      get_filename_component(_basename ${_tmp_FILE} NAME_WE)
-
-      set(_stub_CPP ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.cpp)
-      set(_stub_H ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_stub.h)
-      set(_kidl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.kidl)
-
-      if (NOT HAVE_${_basename}_KIDL_RULE)
-        set(HAVE_${_basename}_KIDL_RULE ON)
-
-        add_custom_command(OUTPUT ${_kidl}
-           COMMAND ${KDE4_DCOPIDL_EXECUTABLE}
-           ARGS --srcdir ${KDE4_KALYPTUS_DIR} -o ${_kidl} ${_tmp_FILE}
-           MAIN_DEPENDENCY ${_tmp_FILE}
-        )
-      endif (NOT HAVE_${_basename}_KIDL_RULE)
-
-      if (NOT HAVE_${_basename}_STUB_RULE)
-        set(HAVE_${_basename}_STUB_RULE ON)
-
-        add_custom_command(OUTPUT ${_stub_H} ${_stub_CPP}
-           COMMAND ${KDE4_DCOPIDL2CPP_EXECUTABLE}
-           ARGS --c++-suffix cpp --no-signals --no-skel ${_kidl}
-           MAIN_DEPENDENCY ${_kidl}
-           DEPENDS ${_KDE4_DCOPIDL2CPP_DEP} )
-
-        macro_additional_clean_files(${_stub_H})
-
-      endif (NOT HAVE_${_basename}_STUB_RULE)
-
-      set(${_sources} ${${_sources}} ${_stub_CPP})
-
-   endforeach (_current_FILE)
-
-ENDMACRO (KDE4_ADD_DCOP_STUBS)
-
 
 macro (KDE4_ADD_KCFG_FILES _sources)
    foreach (_current_FILE ${ARGN})
