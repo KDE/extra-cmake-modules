@@ -856,6 +856,7 @@ IF (QT4_QMAKE_FOUND)
     QT4_GENERATE_MOC(${_header} ${_moc})
   
     SET(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
+    MACRO_ADD_FILE_DEPENDENCIES(${_impl} ${_moc})
   
   ENDMACRO(QT4_ADD_DBUS_INTERFACE)
   
@@ -899,6 +900,7 @@ IF (QT4_QMAKE_FOUND)
   
     QT4_GENERATE_MOC(${_header} ${_moc})
     SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
+    MACRO_ADD_FILE_DEPENDENCIES(${_impl} ${_moc})
   
     SET(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
   ENDMACRO(QT4_ADD_DBUS_ADAPTOR)
