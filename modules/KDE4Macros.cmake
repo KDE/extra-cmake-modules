@@ -33,8 +33,9 @@ macro (KDE4_ADD_KCFG_FILES _sources)
          MAIN_DEPENDENCY ${_tmp_FILE}
          DEPENDS ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
-      QT4_GENERATE_MOC(${_header_FILE} ${_moc_FILE} )
-      MACRO_ADD_FILE_DEPENDENCIES(${_src_FILE} ${_moc_FILE} )
+      qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
+      set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
+      macro_add_file_dependencies(${_src_FILE} ${_moc_FILE} )
 
       set(${_sources} ${${_sources}} ${_src_FILE} ${_header_FILE})
 

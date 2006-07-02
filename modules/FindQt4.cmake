@@ -19,7 +19,6 @@
 #                    QT_USE_QTOPENGL
 #                    QT_USE_QTSQL
 #                    QT_USE_QTXML
-#
 # All the libraries required are stored in a variable called QT_LIBRARIES.  
 # Add this variable to your TARGET_LINK_LIBRARIES.
 #  
@@ -28,7 +27,30 @@
 #  macro QT4_ADD_RESOURCE(outfiles inputfile ... )
 #  macro QT4_AUTOMOC(inputfile ... )
 #  macro QT4_GENERATE_MOC(inputfile outputfile )
-#  
+#
+#  macro QT4_ADD_DBUS_INTERFACE(outfiles interface basename)
+#        create a the interface header and implementation files with the 
+#        given basename from the given interface xml file and add it to 
+#        the list of sources
+#
+#  macro QT4_ADD_DBUS_INTERFACES(outfiles inputfile ... )
+#        create the interface header and implementation files 
+#        for all listed interface xml files
+#        the name will be automatically determined from the name of the xml file
+#
+#  macro QT4_ADD_DBUS_ADAPTOR(outfiles interface basename )
+#        create a the adaptor header and implementation files with the 
+#        given basename from the given interface xml file and add it to 
+#        the list of sources
+#
+#  macro QT4_ADD_DBUS_ADAPTORS(outfiles inputfile ... )
+#        create the adaptor header and implementation files 
+#        for all listed interface xml files
+#        the name will be automatically determined from the name of the xml file
+#
+#  macro QT4_GENERATE_DBUS_INTERFACE( header)
+#        generate the xml interface file from the given header
+#
 #  QT_FOUND         If false, don't try to use Qt.
 #  QT4_FOUND        If false, don't try to use Qt 4.
 #                      
@@ -817,6 +839,80 @@ IF (QT4_QMAKE_FOUND)
     ENDFOREACH (it)
 
   ENDMACRO (QT4_ADD_RESOURCES)
+
+
+  MACRO(QT4_ADD_DBUS_INTERFACE _sources _interface _basename)
+    GET_FILENAME_COMPONENT(_infile ${_interface} ABSOLUTE)
+    SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+    SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
+    SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
+  
+    ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
+        COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -p ${_basename} ${_infile}
+        DEPENDS ${_infile})
+  
+    SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
+    
+    QT4_GENERATE_MOC(${_header} ${_moc})
+  
+    SET(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
+  
+  ENDMACRO(QT4_ADD_DBUS_INTERFACE)
+  
+  
+  MACRO(QT4_ADD_DBUS_INTERFACES _sources)
+     FOREACH (_current_FILE ${ARGN})
+        GET_FILENAME_COMPONENT(_infile ${_current_FILE} ABSOLUTE)
+  
+  # get the part before the ".xml" suffix
+        STRING(REGEX REPLACE "(.*[/\\.])?([^\\.]+)\\.xml" "\\2" _basename ${_current_FILE})
+        STRING(TOLOWER ${_basename} _basename)
+  
+        QT4_ADD_DBUS_INTERFACE(${_sources} ${_infile} ${_basename}interface)
+     ENDFOREACH (_current_FILE)
+  ENDMACRO(QT4_ADD_DBUS_INTERFACES)
+  
+  
+  MACRO(QT4_GENERATE_DBUS_INTERFACE _header)
+    GET_FILENAME_COMPONENT(_in_file ${_header} ABSOLUTE)
+    GET_FILENAME_COMPONENT(_basename ${_header} NAME_WE)
+    SET(_target ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.xml)
+  
+    ADD_CUSTOM_COMMAND(OUTPUT ${_target}
+        COMMAND ${QT_DBUSCPP2XML_EXECUTABLE} ${_in_file} > ${_target}
+        DEPENDS ${_in_file}
+    )
+  ENDMACRO(QT4_GENERATE_DBUS_INTERFACE)
+  
+  
+  MACRO(QT4_ADD_DBUS_ADAPTOR _sources _interface _basename)
+    GET_FILENAME_COMPONENT(_infile ${_interface} ABSOLUTE)
+  
+    SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+    SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
+    SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
+  
+    ADD_CUSTOM_COMMAND(OUTPUT ${_target_base}.cpp ${_target_base}.h
+          COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -a ${_basename} ${_infile}
+          DEPENDS ${_infile}
+        )
+  
+    QT4_GENERATE_MOC(${_header} ${_moc})
+    SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
+  
+    SET(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
+  ENDMACRO(QT4_ADD_DBUS_ADAPTOR)
+  
+  
+   MACRO(QT4_ADD_DBUS_ADAPTORS _sources)
+      FOREACH (_current_FILE ${ARGN})
+         GET_FILENAME_COMPONENT(_xml_file ${_current_FILE} ABSOLUTE)
+         STRING(REGEX REPLACE "(.*[/\\.])?([^\\.]+)\\.xml" "\\2" _basename ${_current_FILE})
+         STRING(TOLOWER ${_basename} _basename)
+        
+         QT4_ADD_DBUS_ADAPTOR(${_sources} ${_xml_file} ${_basename}adaptor)
+      ENDFOREACH (_current_FILE ${ARGN})
+   ENDMACRO(QT4_ADD_DBUS_ADAPTORS)
 
 
    MACRO(QT4_AUTOMOC)
