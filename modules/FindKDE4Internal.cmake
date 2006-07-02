@@ -210,7 +210,7 @@ set(APPLNK_INSTALL_DIR       /share/applnk              CACHE STRING "Is this st
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
-
+option(KDE4_IGNORE_DONTPORT "ignore the \"don't port\" message from kdelisb (not snapshot)" OFF)
 
 #now try to find some kde stuff
 
@@ -256,18 +256,21 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
 
    # Check the version of kde. KDE4_KDECONFIG_EXECUTABLE was set by FindKDE4
-   EXEC_PROGRAM(${KDE4_KDECONFIG_EXECUTABLE} ARGS "--version" OUTPUT_VARIABLE kdeconfig_output )
+   exec_program(${KDE4_KDECONFIG_EXECUTABLE} ARGS "--version" OUTPUT_VARIABLE kdeconfig_output )
 
-   STRING(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
-   IF (KDEVERSION)
+   string(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
+   if (KDEVERSION)
 
-      # avoid porting against kdelibs trunk
-      string(REGEX MATCH "DONTPORT" _match "${kdeconfig_output}")
-      if (_match)
-         message ( FATAL_ERROR "ERROR: don't port against this
-      version of kdelibs! Use /branches/work/kdelibs4_snapshot
-      instead!!" )
-      endif (_match)
+      if (NOT KDE4_IGNORE_DONTPORT)
+         # avoid porting against kdelibs trunk
+         string(REGEX MATCH "DONTPORT" _match "${kdeconfig_output}")
+         if (_match)
+            message ( FATAL_ERROR "ERROR: don't port against this
+            version of kdelibs! Use /branches/work/kdelibs4_snapshot instead !" )
+         endif (_match)
+
+      endif (NOT KDE4_IGNORE_DONTPORT)
+
 
       STRING(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
 
