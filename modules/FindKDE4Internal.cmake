@@ -192,8 +192,8 @@ include (CheckCXXCompilerFlag)
 # set(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"                  CACHE PATH "The kde info install dir (default prefix/info)")
 # set(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"                 CACHE PATH "The kde info install dir (default prefix/info)")
 # set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib"                  CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
-# set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/lib"                      CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
-# set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                     CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+# set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+# set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4/modules"             CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
 # 
 # set(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"              CACHE PATH "The config file install dir")
 # set(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"                CACHE PATH "The parent directory where applications can install their data")
@@ -294,6 +294,8 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
   
+   set(KDE4_INSTALLED_VERSION_OK TRUE)
+  
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   # ... but NOT otherwise
@@ -316,21 +318,20 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
       endif (NOT KDE4_IGNORE_DONTPORT)
 
-
-      STRING(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
+      string(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
 
       # we need at least this version:
-      IF (NOT KDE_MIN_VERSION)
-         SET(KDE_MIN_VERSION "3.9.0")
-      ENDIF (NOT KDE_MIN_VERSION)
+      if (NOT KDE_MIN_VERSION)
+         set(KDE_MIN_VERSION "3.9.0")
+      endif (NOT KDE_MIN_VERSION)
    
       #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
 
-      MACRO_ENSURE_VERSION( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_TOO_OLD )
+      macro_ensure_version( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_OK )
    
-   ELSE (KDEVERSION)
+   else (KDEVERSION)
       message(FATAL_ERROR "Couldn't parse KDE version string from the kde-config output:\n${kdeconfig_output}")
-   ENDIF (KDEVERSION)
+   endif (KDEVERSION)
 
 
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
@@ -373,8 +374,8 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    set(KDE4_KSPELL2_LIBS ${kspell2_LIB_DEPENDS} ${KDE4_KSPELL2_LIBRARY} )
 
    if (UNIX)
-   find_library(KDE4_KDESU_LIBRARY NAMES kdesu PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KDESU_LIBS ${kdesu_LIB_DEPENDS} ${KDE4_KDESU_LIBRARY} )
+      find_library(KDE4_KDESU_LIBRARY NAMES kdesu PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+      set(KDE4_KDESU_LIBS ${kdesu_LIB_DEPENDS} ${KDE4_KDESU_LIBRARY} )
    endif (UNIX)
 
    find_library(KDE4_KDNSSD_LIBRARY NAMES kdnssd PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
@@ -496,9 +497,9 @@ if (UNIX)
    # the rest is RPATH handling
 
    if (APPLE)
-      set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR})
+      set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
    else (APPLE)
-      set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
+      set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
       # building something else than kdelibs/ ?
       # then add the dir where the kde libraries are installed
       if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
@@ -590,9 +591,24 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 
    # visibility support
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
-   if (__KDE_HAVE_GCC_VISIBILITY)
+   
+# get information about gcc
+   exec_program(${CMAKE_C_COMPILER} ARGS -v OUTPUT_VARIABLE _gcc_info)
+   
+   string (REGEX MATCH " [34]\\.[0-9]\\.[0-9] " _gcc_version "${_gcc_info}")
+   macro_ensure_version("4.1.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_1)
+   
+   if (GCC_IS_NEWER_THAN_4_1)  
+      string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_info}")
+   else (GCC_IS_NEWER_THAN_4_1)  
+      set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
+   endif (GCC_IS_NEWER_THAN_4_1)  
+
+   if (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_AT_LEAST_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-   endif (__KDE_HAVE_GCC_VISIBILITY)
+   endif (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_AT_LEAST_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
+
+   message(STATUS "have_visibility: ${__KDE_HAVE_GCC_VISIBILITY} version>=4.1: ${GCC_IS_NEWER_THAN_4_1} bad alloctor: ${_GCC_COMPILED_WITH_BAD_ALLOCATOR}")
 
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
@@ -632,9 +648,9 @@ include(KDE4Macros)
 
 # decide whether KDE4 has been found
 set(KDE4_FOUND FALSE)
-if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND NOT KDE4_INSTALLED_VERSION_TOO_OLD)
+if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND KDE4_INSTALLED_VERSION_OK)
    set(KDE4_FOUND TRUE)
-endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND NOT KDE4_INSTALLED_VERSION_TOO_OLD)
+endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND KDE4_INSTALLED_VERSION_OK)
 
 
 macro (KDE4_PRINT_RESULTS)
@@ -665,11 +681,11 @@ endmacro (KDE4_PRINT_RESULTS)
 if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
    #bail out if something wasn't found
    kde4_print_results()
-   if (KDE4_INSTALLED_VERSION_TOO_OLD)
+   if (NOT KDE4_INSTALLED_VERSION_OK)
      message(FATAL_ERROR "ERROR: the installed kdelibs version ${KDEVERSION} is too old, at least version ${KDE_MIN_VERSION} is required")
-   else (KDE4_INSTALLED_VERSION_TOO_OLD)
+   else (NOT KDE4_INSTALLED_VERSION_OK)
      message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
-   endif (KDE4_INSTALLED_VERSION_TOO_OLD)
+   endif (NOT KDE4_INSTALLED_VERSION_OK)
 endif (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
 
 
@@ -684,5 +700,5 @@ set(KDE4_INCLUDES ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DI
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DQT3_SUPPORT_WARNINGS -DKDE_DEPRECATED_WARNINGS )
 
 string(REGEX REPLACE "/lib" "" KDELIBSUFF ${LIB_INSTALL_DIR} )
-MESSAGE(STATUS "KDELIBSUFF :<${KDELIBSUFF}>")
+message(STATUS "KDELIBSUFF :<${KDELIBSUFF}>")
 
