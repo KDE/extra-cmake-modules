@@ -172,6 +172,11 @@ set(QT_MIN_VERSION "4.2.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
 
+if (NOT QT_DBUSXML2CPP_EXECUTABLE)
+   message(FATAL_ERROR "Qt4 dbusxml2cpp was not found. Make sure it has been built and installed by Qt")
+endif (NOT QT_DBUSXML2CPP_EXECUTABLE)
+
+
 # Perl is required for building KDE software,
 find_package(Perl REQUIRED)
 
@@ -180,26 +185,67 @@ include (CheckCXXCompilerFlag)
 
 #add some KDE specific stuff
 
+# set(SHARE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/share CACHE PATH "Base directory for files which go to share/")
+# set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}       CACHE PATH  "Base directory for executables and libraries")
+#
+## the following are directories where stuff will be installed to
+# set(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"                  CACHE PATH "The kde info install dir (default prefix/info)")
+# set(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"                 CACHE PATH "The kde info install dir (default prefix/info)")
+# set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib"                  CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+# set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/lib"                      CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+# set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                     CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+# 
+# set(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"              CACHE PATH "The config file install dir")
+# set(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"                CACHE PATH "The parent directory where applications can install their data")
+# set(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"            CACHE PATH "The HTML install dir for documentation")
+# set(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"               CACHE PATH "The icon install dir (default prefix/share/icons/)")
+# set(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"         CACHE PATH "The install dir for kconfig files")
+# set(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"              CACHE PATH "The install dir for translations")
+# set(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"             CACHE PATH "The install dir for the mimetype desktop files")
+# set(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/services"            CACHE PATH "The install dir for service (desktop, protocol, ...) files")
+# set(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/servicetypes"        CACHE PATH "The install dir for servicestypes desktop files")
+# set(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"              CACHE PATH "The install dir for sound files")
+# set(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"           CACHE PATH "The install dir for templates (Create new file...)")
+# set(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"          CACHE PATH "The install dir for wallpapers")
+# set(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"            CACHE PATH "The kconf_update install dir")
+# # this one shouldn't be used anymore
+# set(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/share/applnk"        CACHE PATH "Is this still used ?")
+# 
+# set(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde"    CACHE PATH "The XDG apps dir")
+# set(XDG_DIRECTORY_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories" CACHE PATH "The XDG directory")
+# 
+# set(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"                 CACHE PATH "The kde sysconfig install dir (default /etc)")
+# set(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"                 CACHE PATH "The kde man install dir (default prefix/man/)")
+# set(INFO_INSTALL_DIR         "${CMAKE_INSTALL_PREFIX}/info"                CACHE PATH "The kde info install dir (default prefix/info)")
+# 
+
+#################################
+
+
+
 # the following are directories where stuff will be installed to
+set(INFO_INSTALL_DIR         /info                      CACHE STRING "The kde info install dir (default prefix/info)")
+set(LIB_INSTALL_DIR          /lib                       CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+set(MAN_INSTALL_DIR          /man                       CACHE STRING "The kde man install dir (default prefix/man/)")
+set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"  CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+
 set(CONFIG_INSTALL_DIR       /share/config              CACHE STRING "The config file install dir")
 set(DATA_INSTALL_DIR         /share/apps                CACHE STRING "The parent directory where applications can install their data")
 set(HTML_INSTALL_DIR         /share/doc/HTML            CACHE STRING "The HTML install dir for documentation")
 set(ICON_INSTALL_DIR         /share/icons               CACHE STRING "The icon install dir (default prefix/share/icons/)")
-set(INFO_INSTALL_DIR         /info                      CACHE STRING "The kde info install dir (default prefix/info)")
 set(KCFG_INSTALL_DIR         /share/config.kcfg         CACHE STRING "The install dir for kconfig files")
-set(LIB_INSTALL_DIR          /lib                       CACHE STRING "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
 set(LOCALE_INSTALL_DIR       /share/locale              CACHE STRING "The install dir for translations")
-set(MAN_INSTALL_DIR          /man                       CACHE STRING "The kde man install dir (default prefix/man/)")
 set(MIME_INSTALL_DIR         /share/mimelnk             CACHE STRING "The install dir for the mimetype desktop files")
-set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"  CACHE STRING "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
 set(SERVICES_INSTALL_DIR     /share/services            CACHE STRING "The install dir for service (desktop, protocol, ...) files")
 set(SERVICETYPES_INSTALL_DIR /share/servicetypes        CACHE STRING "The install dir for servicestypes desktop files")
 set(SOUND_INSTALL_DIR        /share/sounds              CACHE STRING "The install dir for sound files")
 set(TEMPLATES_INSTALL_DIR    /share/templates           CACHE STRING "The install dir for templates (Create new file...)")
 set(WALLPAPER_INSTALL_DIR    /share/wallpapers          CACHE STRING "The install dir for wallpapers")
 set(KCONF_UPDATE_INSTALL_DIR /share/apps/kconf_update/  CACHE STRING "The kconf_update install dir")
+
 set(XDG_APPS_DIR             /share/applications/kde    CACHE STRING "The XDG apps dir")
 set(XDG_DIRECTORY_DIR        /share/desktop-directories CACHE STRING "The XDG directory")
+
 set(SYSCONF_INSTALL_DIR      "/etc"                     CACHE STRING "The kde sysconfig install dir (default /etc)")
 
 # seem to be unused:
@@ -209,7 +255,6 @@ set(APPLNK_INSTALL_DIR       /share/applnk              CACHE STRING "Is this st
 
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
-option(KDE4_USE_QT_EMB   "link to Qt-embedded, don't use X")
 option(KDE4_IGNORE_DONTPORT "ignore the \"don't port\" message from kdelibs (not snapshot)" OFF)
 
 #now try to find some kde stuff
