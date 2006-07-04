@@ -2,19 +2,19 @@
 
 file(GLOB cmakeFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.cmake")
 
-set(module_install_dir ${DATA_INSTALL_DIR}/apps/cmake/modules )
+set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
 
 install( FILES  kde4init_dummy.cpp.in ${cmakeFiles} DESTINATION ${module_install_dir}  )
 
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
 set(FILES_TO_REMOVE
- ${CMAKE_INSTALL_PREFIX}${module_install_dir}/MacroGetenvWinPath.cmake
- ${CMAKE_INSTALL_PREFIX}${module_install_dir}/FindKDE4.cmake
- ${CMAKE_INSTALL_PREFIX}${module_install_dir}/UsePkgconfig.cmake
- ${CMAKE_INSTALL_PREFIX}${module_install_dir}/FindKDE3.cmake
- ${CMAKE_INSTALL_PREFIX}${module_install_dir}/KDE3Macros.cmake
- ${CMAKE_INSTALL_PREFIX}${module_install_dir}/kde3uic.cmake
- ${CMAKE_INSTALL_PREFIX}${module_install_dir}/kde3init_dummy.cpp.in )
+ ${module_install_dir}/MacroGetenvWinPath.cmake
+ ${module_install_dir}/FindKDE4.cmake
+ ${module_install_dir}/UsePkgconfig.cmake
+ ${module_install_dir}/FindKDE3.cmake
+ ${module_install_dir}/KDE3Macros.cmake
+ ${module_install_dir}/kde3uic.cmake
+ ${module_install_dir}/kde3init_dummy.cpp.in )
 
 # remove the following files once we depend on cmake >= 2.4.3
 # FindZLIB.cmake
