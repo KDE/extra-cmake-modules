@@ -461,19 +461,21 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 #      KDE4_ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${ARGN} )
 #   else (WIN32)
       # under UNIX, create a shared library and a small executable, which links to this library
-      if (KDE4_ENABLE_FINAL)
-         kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_SRCS})
-         add_library(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
-	 if (NOT CMAKE_SKIP_RPATH)
-            set_target_properties(kdeinit_${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "")
-         endif (NOT CMAKE_SKIP_RPATH)
+   if (KDE4_ENABLE_FINAL)
+      kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_SRCS})
+      add_library(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
 
       else (KDE4_ENABLE_FINAL)
          add_library(kdeinit_${_target_NAME} SHARED ${_SRCS} )
       endif (KDE4_ENABLE_FINAL)
 
-      kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
-      target_link_libraries(${_target_NAME} kdeinit_${_target_NAME})
+
+   if (NOT CMAKE_SKIP_RPATH)
+       set_target_properties(kdeinit_${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "")
+   endif (NOT CMAKE_SKIP_RPATH)
+
+   kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+   target_link_libraries(${_target_NAME} kdeinit_${_target_NAME})
 #   endif (WIN32)
 
 endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)

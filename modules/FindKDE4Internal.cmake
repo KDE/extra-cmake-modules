@@ -595,7 +595,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 # get information about gcc
    exec_program(${CMAKE_C_COMPILER} ARGS -v OUTPUT_VARIABLE _gcc_info)
    
-   string (REGEX MATCH " [34]\\.[0-9]\\.[0-9] " _gcc_version "${_gcc_info}")
+   string (REGEX MATCH " [34]\\.[0-9]\\.[0-9]" _gcc_version "${_gcc_info}")
    macro_ensure_version("4.1.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_1)
    
    if (GCC_IS_NEWER_THAN_4_1)  
