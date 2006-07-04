@@ -303,7 +303,7 @@ macro (KDE4_HANDLE_RPATH _target_NAME _type)
          set(_library_path_variable "LD_LIBRARY_PATH")
       endif (APPLE)
 
-      set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
+      set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
       get_target_property(_executable ${_target_NAME} LOCATION )
 
       # use add_custom_target() to have the sh-wrapper generated during build time instead of cmake time
@@ -325,6 +325,19 @@ macro (KDE4_HANDLE_RPATH _target_NAME _type)
       # maybe later this will change to a generated batch file (for setting the PATH so that the Qt libs are found)
       get_target_property(_executable ${_target_NAME} LOCATION )
       set_target_properties(${_target_NAME} PROPERTIES WRAPPER_SCRIPT ${_executable})
+      
+      set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/;${LIB_INSTALL_DIR};${KDE4_LIB_DIR};${QT_LIBRARY_DIR}")
+      get_target_property(_executable ${_target_NAME} LOCATION )
+      
+       # use add_custom_target() to have the batch-file-wrapper generated during build time instead of cmake time
+      add_custom_command(TARGET ${_target_NAME} POST_BUILD
+         COMMAND ${CMAKE_COMMAND}
+         -D_filename=${_executable}.bat 
+         -D_ld_library_path="${_ld_library_path}" -D_executable=${_executable}
+         -P ${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake
+         )
+      
+      
    endif (UNIX)
 endmacro (KDE4_HANDLE_RPATH)
 
