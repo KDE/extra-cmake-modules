@@ -195,9 +195,9 @@ include (CheckCXXCompilerFlag)
  set(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"                  CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
  set(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"                 CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
  set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib"                  CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)" FORCE)
- set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/lib"                      CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)" FORCE)
+ set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)" FORCE)
  set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                     CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)" FORCE)
- set(INCLUDE_INSTALL_DIR       "${CMAKE_INSTALL_PREFIX}/include"             CACHE PATH "The subdirectory to the header prefix" FORCE)
+ set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"             CACHE PATH "The subdirectory to the header prefix" FORCE)
  set(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"              CACHE PATH "The config file install dir" FORCE)
  set(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"                CACHE PATH "The parent directory where applications can install their data" FORCE)
  set(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"            CACHE PATH "The HTML install dir for documentation" FORCE)
@@ -464,6 +464,17 @@ if (WIN32)
       endif(CMAKE_COMPILER_2005)
    endif(MSVC)
 
+
+   # for visual studio IDE set the path correctly for custom commands
+   # maybe under windows bat-files should be generated for running apps during the build
+   if(MSVC_IDE)
+     get_filename_component(PERL_LOCATION "${PERL_EXECUTABLE}" PATH)
+     file(TO_NATIVE_PATH "${PERL_LOCATION}" PERL_PATH_WINDOWS)
+     file(TO_NATIVE_PATH "${QT_BINARY_DIR}" QT_BIN_DIR_WINDOWS)
+     set(CMAKE_MSVCIDE_RUN_PATH "${PERL_PATH_WINDOWS}\;${QT_BIN_DIR_WINDOWS}"
+       CACHE STATIC "MSVC IDE Run path" FORCE)
+   endif(MSVC_IDE)
+
 endif (WIN32)
 
 
@@ -477,15 +488,26 @@ if (UNIX)
    if (APPLE)
       set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
    else (APPLE)
-      set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
-      # building something else than kdelibs/ ?
-      # then add the dir where the kde libraries are installed
-      if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-         set(CMAKE_INSTALL_RPATH  ${KDE4_LIB_DIR} ${CMAKE_INSTALL_RPATH} )
-      endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+      if (CMAKE_PATCH_VERSION) # at least cmake 2.4.3, in earlier version CMAKE_PATCH_VERSION is empty
+         # add our LIB_INSTALL_DIR to the RPATH and use the RPATH figured out cmake when compiling
+         set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR} )
+         set(CMAKE_SKIP_BUILD_RPATH ON)
+         set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+         set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+      else (CMAKE_PATCH_VERSION) # at least cmake 2.4.3
+   
+         set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
+         # building something else than kdelibs/ ?
+         # then add the dir where the kde libraries are installed
+         if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
+            set(CMAKE_INSTALL_RPATH  ${KDE4_LIB_DIR} ${CMAKE_INSTALL_RPATH} )
+         endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
-      set(CMAKE_SKIP_BUILD_RPATH TRUE)
-      set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+         set(CMAKE_SKIP_BUILD_RPATH TRUE)
+         set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+      
+      endif (CMAKE_PATCH_VERSION) # at least cmake 2.4.3
+      
    endif (APPLE)
 endif (UNIX)
 

@@ -38,7 +38,7 @@
 #        for all listed interface xml files
 #        the name will be automatically determined from the name of the xml file
 #
-#  macro QT4_ADD_DBUS_ADAPTOR(outfiles xmlfile parentheader parentclassname )
+#  macro QT4_ADD_DBUS_ADAPTOR(outfiles xmlfile parentheader parentclassname [basename] )
 #        create a dbus adaptor (header and implementation file) from the xml file
 #        describing the interface, and add it to the list of sources. The adaptor
 #        forwards the calls to a parent class, defined in parentheader and named
@@ -885,8 +885,13 @@ IF (QT4_QMAKE_FOUND)
   
   MACRO(QT4_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass)
     GET_FILENAME_COMPONENT(_infile ${_xml_file} ABSOLUTE)
-    STRING(REGEX REPLACE "(.*[/\\.])?([^\\.]+)\\.xml" "\\2adaptor" _basename ${_infile})
-    STRING(TOLOWER ${_basename} _basename)
+    
+    IF (ARGV1)
+       SET(_basename ${ARGV1} )
+    ELSE (ARGV1)
+       STRING(REGEX REPLACE "(.*[/\\.])?([^\\.]+)\\.xml" "\\2adaptor" _basename ${_infile})
+       STRING(TOLOWER ${_basename} _basename)
+    ENDIF (ARGV1)
 
     SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
     SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
