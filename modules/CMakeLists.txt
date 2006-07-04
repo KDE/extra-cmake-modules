@@ -8,6 +8,8 @@ install( FILES  kde4init_dummy.cpp.in ${cmakeFiles} DESTINATION ${module_install
 
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
 set(FILES_TO_REMOVE
+ ${module_install_dir}/FindQtDBus.cmake
+ ${module_install_dir}/QtDBusMacros.cmake
  ${module_install_dir}/MacroGetenvWinPath.cmake
  ${module_install_dir}/FindKDE4.cmake
  ${module_install_dir}/UsePkgconfig.cmake
