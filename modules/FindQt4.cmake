@@ -38,22 +38,19 @@
 #        for all listed interface xml files
 #        the name will be automatically determined from the name of the xml file
 #
-#  macro QT4_ADD_DBUS_ADAPTOR(outfiles interface basename )
-#        create a the adaptor header and implementation files with the 
-#        given basename from the given interface xml file and add it to 
-#        the list of sources
-#
-#  macro QT4_ADD_DBUS_ADAPTORS(outfiles inputfile ... )
-#        create the adaptor header and implementation files 
-#        for all listed interface xml files
-#        the name will be automatically determined from the name of the xml file
+#  macro QT4_ADD_DBUS_ADAPTOR(outfiles xmlfile parentheader parentclassname )
+#        create a dbus adaptor (header and implementation file) from the xml file
+#        describing the interface, and add it to the list of sources. The adaptor
+#        forwards the calls to a parent class, defined in parentheader and named
+#        parentclassname. The name of the generated files will be
+#        <basename>adaptor.{cpp,h} where basename is the basename of the xml file.
 #
 #  macro QT4_GENERATE_DBUS_INTERFACE( header)
 #        generate the xml interface file from the given header
 #
 #  QT_FOUND         If false, don't try to use Qt.
 #  QT4_FOUND        If false, don't try to use Qt 4.
-#                      
+#
 #  QT_QTCORE_FOUND        True if QtCore was found.
 #  QT_QTGUI_FOUND         True if QtGui was found.
 #  QT_QT3SUPPORT_FOUND    True if Qt3Support was found.
@@ -886,36 +883,30 @@ IF (QT4_QMAKE_FOUND)
   ENDMACRO(QT4_GENERATE_DBUS_INTERFACE)
   
   
-  MACRO(QT4_ADD_DBUS_ADAPTOR _sources _interface _basename)
-    GET_FILENAME_COMPONENT(_infile ${_interface} ABSOLUTE)
-  
+  MACRO(QT4_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass)
+    GET_FILENAME_COMPONENT(_infile ${_xml_file} ABSOLUTE)
+    STRING(REGEX REPLACE "(.*[/\\.])?([^\\.]+)\\.xml" "\\2adaptor" _basename ${_infile})
+    STRING(TOLOWER ${_basename} _basename)
+
     SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
     SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
     SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
-  
+
     ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
-          COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -a ${_basename} ${_infile}
+          COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -a ${_basename} -i ${_include} -l ${_parentClass} ${_infile}
           DEPENDS ${_infile}
         )
-  
+
     QT4_GENERATE_MOC(${_header} ${_moc})
     SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
     MACRO_ADD_FILE_DEPENDENCIES(${_impl} ${_moc})
-  
+
     SET(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
   ENDMACRO(QT4_ADD_DBUS_ADAPTOR)
-  
-  
-   MACRO(QT4_ADD_DBUS_ADAPTORS _sources)
-      FOREACH (_current_FILE ${ARGN})
-         GET_FILENAME_COMPONENT(_xml_file ${_current_FILE} ABSOLUTE)
-         STRING(REGEX REPLACE "(.*[/\\.])?([^\\.]+)\\.xml" "\\2" _basename ${_current_FILE})
-         STRING(TOLOWER ${_basename} _basename)
-        
-         QT4_ADD_DBUS_ADAPTOR(${_sources} ${_xml_file} ${_basename}adaptor)
-      ENDFOREACH (_current_FILE ${ARGN})
-   ENDMACRO(QT4_ADD_DBUS_ADAPTORS)
 
+  MACRO(QT4_ADD_DBUS_ADAPTORS _sources)
+    message(FATAL_ERROR "There is a call to QT4_ADD_DBUS_ADAPTORS() in the CMakeLists.txt for '${ARGV0}', but this macro has been removed, please use QT4_ADD_DBUS_ADAPTOR and specify the include file and classname for the parent object implementing the code")
+  ENDMACRO(QT4_ADD_DBUS_ADAPTORS _sources)
 
    MACRO(QT4_AUTOMOC)
       QT4_GET_MOC_INC_DIRS(_moc_INCS)
