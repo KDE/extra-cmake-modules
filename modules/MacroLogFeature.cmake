@@ -1,6 +1,6 @@
 # This file defines two macros:
 #
-# MACRO_LOG_FEATURE(VAR FEATURE DESCRIPTION URL MIN_VERSION COMMENTS)
+# MACRO_LOG_FEATURE(VAR FEATURE DESCRIPTION URL [REQUIRED [MIN_VERSION [COMMENTS]]])
 #   Logs the information so that it can be displayed at the end
 #   of the configure run
 #   VAR : TRUE or FALSE, indicating whether the feature is supported
@@ -26,7 +26,11 @@
 
 
 
-MACRO(MACRO_LOG_FEATURE _var _package _description _url _required _minvers _comments)
+MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _comments)
+
+   SET(_required "${ARGV4}")
+   SET(_minvers "${ARGV5}")
+   SET(_comments "${ARGV6}")
 
    IF (${_var})
      SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
