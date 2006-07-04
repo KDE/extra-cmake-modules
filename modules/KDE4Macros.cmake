@@ -217,7 +217,7 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _name  "${_current_ICON}")
       _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
-         ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/${_theme}/${_size}x${_size} 
+         ${_defaultpath}/${_theme}/${_size}x${_size} 
          ${_group} ${_current_ICON} ${_name})
    ENDforeach (_current_ICON)
 
@@ -227,7 +227,7 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
       STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name "${_current_ICON}")
       _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
-                                 ${CMAKE_INSTALL_PREFIX}/${_defaultpath}/${_theme}/scalable 
+                                 ${_defaultpath}/${_theme}/scalable 
                                  ${_group} ${_current_ICON} ${_name})
    ENDforeach (_current_ICON)
 
@@ -258,7 +258,7 @@ MACRO (KDE4_INSTALL_LIBTOOL_FILE _subdir _target)
    FILE(APPEND ${_laname} "# Directory that this library needs to be installed in:\n")
    FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${_subdir}'\n")
 
-   INSTALL_FILES(${_subdir} FILES ${_laname})
+   INSTALL(FILES ${_laname} DESTINATION ${_subdir})
    MACRO_ADDITIONAL_CLEAN_FILES(${_laname})
 ENDMACRO (KDE4_INSTALL_LIBTOOL_FILE)
 
