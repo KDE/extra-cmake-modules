@@ -227,6 +227,8 @@ include (CheckCXXCompilerFlag)
 #################################
 
 
+# get the directory of the current file, used later on in the file
+get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 # the following are directories where stuff will be installed to
 
@@ -314,7 +316,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
-   get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
    # this file contains all dependencies of all libraries of kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
 
@@ -643,7 +644,7 @@ endif (CMAKE_C_COMPILER MATCHES "icc")
 
 
 # KDE4Macros.cmake contains all the KDE specific macros
-include(KDE4Macros)
+include(${kde_cmake_module_dir}/KDE4Macros.cmake)
 
 
 # decide whether KDE4 has been found
@@ -701,3 +702,13 @@ set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQ
 
 string(REGEX REPLACE ".*/lib" "" KDELIBSUFF ${LIB_INSTALL_DIR} )
 message(STATUS "KDELIBSUFF :<${KDELIBSUFF}>")
+
+
+if (NOT _kde4_uninstall_rule_created)
+   set(_kde4_uninstall_rule_created TRUE)
+
+   configure_file("${kde_cmake_module_dir}/kde4_cmake_uninstall.cmake.in" "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake" @ONLY)
+
+   add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake")
+
+endif (NOT _kde4_uninstall_rule_created)
