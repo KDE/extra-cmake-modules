@@ -37,6 +37,7 @@
 # KDE4_KDNSSD_LIBRARY      - the kdnssd library 
 # KDE4_PHONONCORE_LIBRARY  - the phononcore library
 # KDE4_PHONONUI_LIBRARY    - the phononui library
+# KDE4_KDEFX_LIBRARY       - the kdefx library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -58,6 +59,7 @@
 # KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
 # KDE4_PHONONCORE_LIBS       - the phononcore library and all depending librairies
 # KDE4_PHONONUI_LIBS         - the phononui library and all depending librairies
+# KDE4_KDEFX_LIBS            - the kdefx library and all depending librairies
 #
 # This module defines a bunch of variables used as locations
 # for install directories. They are all interpreted relative
@@ -251,6 +253,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    set(KDE4_KIO_LIBS ${KDE4_KDEUI_LIBS} kio)
    set(KDE4_KPARTS_LIBS ${KDE4_KIO_LIBS} kparts)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
+   set(KDE4_KDEFX_LIBS ${KDE4_KDEFX_LIBS} kdefx)
 
 
    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
@@ -321,6 +324,9 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    find_library(KDE4_KDECORE_LIBRARY NAMES kdecore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDECORE_LIBS ${kdecore_LIB_DEPENDS} ${KDE4_KDECORE_LIBRARY} )
+   
+   find_library(KDE4_KDEFX_LIBRARY NAMES kdefx PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KDEFX_LIBS ${kdefx_LIB_DEPENDS} ${KDE4_KDEFX_LIBRARY} )
 
    find_library(KDE4_KDEUI_LIBRARY NAMES kdeui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDEUI_LIBS ${kdeui_LIB_DEPENDS} ${KDE4_KDEUI_LIBRARY} )
