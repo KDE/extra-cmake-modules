@@ -154,10 +154,13 @@ MACRO (KDE4_AUTOMOC)
                string(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
                get_filename_component(_basename ${_current_MOC} NAME_WE)
-#               set(_header ${CMAKE_CURRENT_SOURCE_DIR}/${_basename}.h)
                set(_header ${_abs_PATH}/${_basename}.h)
                set(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
-	       #set(_moc    ${_abs_PATH}/${_current_MOC})
+
+               if (NOT EXISTS ${_abs_PATH}/${_basename}.h)
+                  message(FATAL_ERROR "In the file \"${_abs_FILE}\" the moc file \"${_current_MOC}\" is included, but \"${_abs_PATH}/${_basename}.h\" doesn't exist.")
+               endif (NOT EXISTS ${_abs_PATH}/${_basename}.h)
+
                add_custom_command(OUTPUT ${_moc}
                   COMMAND ${QT_MOC_EXECUTABLE}
                   ARGS ${_moc_INCS} ${_header} -o ${_moc}
