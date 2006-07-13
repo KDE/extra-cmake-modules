@@ -449,7 +449,9 @@ if (WIN32)
 
    find_package(KDEWIN32 REQUIRED)
    
-   set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
+   find_package(GNUWIN32)
+   
+   set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES} ${GNUWIN32_INCLUDE_DIR})
 
    # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely, 
    # otherwise they come from KDELibsDependencies.cmake, Alex
