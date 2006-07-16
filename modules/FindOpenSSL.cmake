@@ -4,13 +4,20 @@
 #  OPENSSL_FOUND - system has the OpenSSL library
 #  OPENSSL_INCLUDE_DIR - the OpenSSL include directory
 #  OPENSSL_LIBRARIES - The libraries needed to use OpenSSL
+if(OPENSSL_LIBRARIES)
+   SET(LIB_FOUND 1)
+endif(OPENSSL_LIBRARIES)
 
-if (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
+if(SSL_EAY_DEBUG AND SSL_EAY_RELEASE)
+   SET(LIB_FOUND 1)
+endif(SSL_EAY_DEBUG AND SSL_EAY_RELEASE)
+
+if (OPENSSL_INCLUDE_DIR AND LIB_FOUND)
 
   # in cache already
   SET(OPENSSL_FOUND TRUE)
 
-else (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
+else (OPENSSL_INCLUDE_DIR AND LIB_FOUND)
 
   FIND_PATH(OPENSSL_INCLUDE_DIR openssl/ssl.h
      /usr/include/
@@ -20,8 +27,9 @@ else (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
   if(WIN32 AND MSVC)
       # /MD and /MDd are the standard values - if somone wants to use
       # others, the libnames have to change here too
+      # use also ssl and ssleay32 in debug as fallback for openssl < 0.9.8b
 
-      FIND_LIBRARY(SSL_EAY_DEBUG NAMES ssleay32MDd )
+      FIND_LIBRARY(SSL_EAY_DEBUG NAMES ssleay32MDd ssl ssleay32)
       FIND_LIBRARY(SSL_EAY_RELEASE NAMES ssleay32MD ssl ssleay32)
 
       IF(MSVC_IDE)
@@ -65,4 +73,4 @@ else (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
 
   MARK_AS_ADVANCED(OPENSSL_INCLUDE_DIR OPENSSL_LIBRARIES)
 
-endif (OPENSSL_INCLUDE_DIR AND OPENSSL_LIBRARIES)
+endif (OPENSSL_INCLUDE_DIR AND LIB_FOUND)
