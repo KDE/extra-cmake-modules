@@ -335,8 +335,8 @@ macro (KDE4_HANDLE_RPATH _target_NAME _type)
        # use add_custom_target() to have the batch-file-wrapper generated during build time instead of cmake time
       add_custom_command(TARGET ${_target_NAME} POST_BUILD
          COMMAND ${CMAKE_COMMAND}
-         -D_filename=${_executable}.bat 
-         -D_ld_library_path="${_ld_library_path}" -D_executable=${_executable}
+         -D_filename="${_executable}.bat"
+         -D_ld_library_path="${_ld_library_path}" -D_executable="${_executable}"
          -P ${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake
          )
       
