@@ -13,32 +13,39 @@
 
 #neundorf@kde.org
 
-macro (KDE4_ADD_KCFG_FILES _sources)
+macro (KDE4_ADD_KCFG_FILES _sources )
+   IF( ${ARGV1} STREQUAL "GENERATE_MOC" )
+      SET(_kcfg_generatemoc TRUE)
+   ENDIF( ${ARGV1} STREQUAL "GENERATE_MOC" )
+
    foreach (_current_FILE ${ARGN})
 
-      get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
-      get_filename_component(_abs_PATH ${_tmp_FILE} PATH)
-      get_filename_component(_basename ${_tmp_FILE} NAME_WE)
+     if(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
+       get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
+       get_filename_component(_abs_PATH ${_tmp_FILE} PATH)
+       get_filename_component(_basename ${_tmp_FILE} NAME_WE)
 
-      file(READ ${_tmp_FILE} _contents)
-      string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILE "${_contents}")
-      set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
-      set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
-      set(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
-      
-      # the command for creating the source file from the kcfg file
-      add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
-         COMMAND ${KDE4_KCFGC_EXECUTABLE}
-         ARGS ${_abs_PATH}/${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
-         MAIN_DEPENDENCY ${_tmp_FILE}
-         DEPENDS ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
+       file(READ ${_tmp_FILE} _contents)
+       string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILE "${_contents}")
+       set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
+       set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+       set(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
 
-      qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
-      set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
-      macro_add_file_dependencies(${_src_FILE} ${_moc_FILE} )
+       # the command for creating the source file from the kcfg file
+       add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
+          COMMAND ${KDE4_KCFGC_EXECUTABLE}
+          ARGS ${_abs_PATH}/${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
+          MAIN_DEPENDENCY ${_tmp_FILE}
+          DEPENDS ${_abs_PATH}/${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
-      set(${_sources} ${${_sources}} ${_src_FILE} ${_header_FILE})
+       if(_kcfg_generatemoc)
+         qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
+         set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
+         macro_add_file_dependencies(${_src_FILE} ${_moc_FILE} )
+       endif(_kcfg_generatemoc)
 
+       set(${_sources} ${${_sources}} ${_src_FILE} ${_header_FILE})
+     endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
    endforeach (_current_FILE)
 
 endmacro (KDE4_ADD_KCFG_FILES)

@@ -101,8 +101,9 @@
 # KDE4_ADD_UI3_FILES (SRCS_VAR file1.ui ... fileN.ui)
 #    Use this to add Qt designer ui files from Qt version 3 to your application/library.
 #
-# KDE4_ADD_KCFG_FILES (SRCS_VAR file1.kcfgc ... fileN.kcfgc)
+# KDE4_ADD_KCFG_FILES (SRCS_VAR [GENERATE_MOC] file1.kcfgc ... fileN.kcfgc)
 #    Use this to add KDE config compiler files to your application/library.
+#    Use optional GENERATE_MOC to generate moc if you use signals in your kcfg files.
 #
 # KDE4_ADD_WIDGET_FILES (SRCS_VAR file1.widgets ... fileN.widgets)
 #    Use this to add widget description files for the makekdewidgets code generator
