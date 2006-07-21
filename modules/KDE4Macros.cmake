@@ -237,8 +237,8 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\1" _size  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\2" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/[a-zA-Z]+([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\3" _name  "${_current_ICON}")
-      _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake·
-         ${_defaultpath}/${_theme}/${_size}x${_size}·
+      _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+         ${_defaultpath}/${_theme}/${_size}x${_size}
          ${_group} ${_current_ICON} ${_name})
    ENDforeach (_current_ICON)
 
