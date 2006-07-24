@@ -1,7 +1,6 @@
 # Find if we installed kdepimlibs before to compile it
 
-#TODO: use kcal/kcal.h, but it doesn't exist yet
-FIND_PATH( KDEPIMLIBS_INCLUDE_DIR emailfunctions/email.h 
+FIND_PATH( KDEPIMLIBS_INCLUDE_DIR kcal/kcal.h
   ${KDE4_INCLUDE_DIR}
 )
 
