@@ -303,11 +303,20 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
    # and now the svg icons
    FILE(GLOB _icons *.svgz)
    foreach (_current_ICON ${_icons} )
-      STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name "${_current_ICON}")
-      _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
+       if( ${_theme} STREQUAL "crystalsvg" )
+            STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
+            STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name "${_current_ICON}")
+            _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
                                  ${_defaultpath}/${_theme}/scalable 
                                  ${_group} ${_current_ICON} ${_name})
+       endif( ${_theme} STREQUAL "crystalsvg" )
+       if( ${_theme} STREQUAL "hicolor" )
+            STRING(REGEX REPLACE "^.*/hisc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
+            STRING(REGEX REPLACE "^.*/hisc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name  "${_current_ICON}")
+            _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+                                 ${_defaultpath}/${_theme}/scalable
+                                 ${_group} ${_current_ICON} ${_name})
+       endif( ${_theme} STREQUAL "hicolor" )
    ENDforeach (_current_ICON)
 
 ENDMACRO (KDE4_INSTALL_ICONS)
