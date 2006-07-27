@@ -227,31 +227,31 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _size  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\4" _name  "${_current_ICON}")
-      
+
       if( ${_type} STREQUAL "cr" )
           if(${_theme} STREQUAL "crystalsvg" )
-                _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
-                    ${_defaultpath}/${_theme}/${_size}x${_size} 
+                _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+                    ${_defaultpath}/${_theme}/${_size}x${_size}
                     ${_group} ${_current_ICON} ${_name})
           #else(${_theme} STREQUAL "crystalsvg" )
             #MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
           endif(${_theme} STREQUAL "crystalsvg" )
       endif(${_type} STREQUAL "cr" )
-      
+
       if( ${_type} STREQUAL "lo" )
           if(${_theme} STREQUAL "locolor" )
                 _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                    ${_defaultpath}/${_theme}/${_size}x${_size}·
+                    ${_defaultpath}/${_theme}/${_size}x${_size}
                     ${_group} ${_current_ICON} ${_name})
           #else(${_theme} STREQUAL "locolor" )
           #    MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
           endif(${_theme} STREQUAL "locolor" )
       endif(${_type} STREQUAL "lo" )
-      
+
       if( ${_type} STREQUAL "hi" )
           if( ${_theme} STREQUAL "hicolor" )
                 _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                    ${_defaultpath}/${_theme}/${_size}x${_size}·
+                    ${_defaultpath}/${_theme}/${_size}x${_size}
                     ${_group} ${_current_ICON} ${_name})
           #else(${_theme} STREQUAL "hicolor" )
           #    MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
