@@ -197,7 +197,7 @@ include (CheckCXXCompilerFlag)
 ## the following are directories where stuff will be installed to
  set(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"                  CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
  set(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"                 CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
- set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib"                  CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+ set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib"                  CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)" FORCE)
  set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)" FORCE)
  set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                     CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)" FORCE)
  set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"             CACHE PATH "The subdirectory to the header prefix" FORCE)
