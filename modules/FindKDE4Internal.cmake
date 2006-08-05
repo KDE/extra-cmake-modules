@@ -190,15 +190,15 @@ include (CheckCXXCompilerFlag)
 
 
 #add some KDE specific stuff
-
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" FORCE)
  set(SHARE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/share CACHE PATH "Base directory for files which go to share/" FORCE)
  set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}       CACHE PATH  "Base directory for executables and libraries" FORCE)
 #
 ## the following are directories where stuff will be installed to
  set(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"                  CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
  set(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"                 CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
- set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib"                  CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)" FORCE)
- set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)" FORCE)
+ set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}"     CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib${LIB_SUFFIX})" FORCE)
+ set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib/kde4/libexec)" FORCE)
  set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                     CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)" FORCE)
  set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"             CACHE PATH "The subdirectory to the header prefix" FORCE)
  set(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"              CACHE PATH "The config file install dir" FORCE)
@@ -717,7 +717,7 @@ set(KDE4_INCLUDES ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DI
 # NOT used in Qt4: QT_NO_COMPAT, QT_CLEAN_NAMESPACE, QT_THREAD_SUPPORT
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT3_SUPPORT -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DQT3_SUPPORT_WARNINGS -DKDE_DEPRECATED_WARNINGS )
 
-string(REGEX REPLACE ".*/lib" "" KDELIBSUFF ${LIB_INSTALL_DIR} )
+set( KDELIBSUFF ${LIB_SUFFIX} )
 
 
 if (NOT _kde4_uninstall_rule_created)
