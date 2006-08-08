@@ -347,7 +347,6 @@ MACRO (KDE4_INSTALL_LIBTOOL_FILE _subdir _target)
    FILE(APPEND ${_laname} "libdir='${CMAKE_INSTALL_PREFIX}/${_subdir}'\n")
 
    INSTALL(FILES ${_laname} DESTINATION ${_subdir})
-   MACRO_ADDITIONAL_CLEAN_FILES(${_laname})
 ENDMACRO (KDE4_INSTALL_LIBTOOL_FILE)
 
 
