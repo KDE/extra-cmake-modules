@@ -469,9 +469,14 @@ if (WIN32)
    # windows, microsoft compiler
    if(MSVC)
       set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN -DUNICODE )
+      # C4250: 'class1' : inherits 'class2::member' via dominance
+      set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4250" )
+      # C4251: 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4251" )
       if(CMAKE_COMPILER_2005)
+         # to avoid a lot of deprecated warnings
          add_definitions( -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE )
+         # 'identifier' : no suitable definition provided for explicit template instantiation request
          set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4661" )
       endif(CMAKE_COMPILER_2005)
    endif(MSVC)
