@@ -190,7 +190,7 @@ include (CheckCXXCompilerFlag)
 
 
 #add some KDE specific stuff
-set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" FORCE)
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
  set(SHARE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/share CACHE PATH "Base directory for files which go to share/" FORCE)
  set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}       CACHE PATH  "Base directory for executables and libraries" FORCE)
 #
