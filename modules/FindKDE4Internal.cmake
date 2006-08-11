@@ -239,7 +239,6 @@ get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
-option(KDE4_IGNORE_DONTPORT "ignore the \"don't port\" message from kdelibs (not snapshot)" OFF)
 
 #now try to find some kde stuff
 
@@ -292,16 +291,6 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    string(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
    if (KDEVERSION)
-
-      if (NOT KDE4_IGNORE_DONTPORT)
-         # avoid porting against kdelibs trunk
-         string(REGEX MATCH "DONTPORT" _match "${kdeconfig_output}")
-         if (_match)
-            message ( FATAL_ERROR "ERROR: don't port against this
-            version of kdelibs! Use /branches/work/kdelibs4_snapshot instead !" )
-         endif (_match)
-
-      endif (NOT KDE4_IGNORE_DONTPORT)
 
       string(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
 
