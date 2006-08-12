@@ -775,6 +775,8 @@ IF (QT4_QMAKE_FOUND)
         ARGS ${moc_includes} -o ${outfile} ${abs_infile}
         DEPENDS ${abs_infile})
 
+     SET_SOURCE_FILES_PROPERTIES(${outfile} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
+
      MACRO_ADD_FILE_DEPENDENCIES(${abs_infile} ${outfile})
   ENDMACRO (QT4_GENERATE_MOC)
 
