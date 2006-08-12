@@ -2,7 +2,7 @@ if (WIN32)
 
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
 
-find_file(GNUWIN32_DIR gnuwin32
+find_file(GNUWIN32_DIR gnuwin32 win32libs PATHS
    ${_progFiles}
    "C:/"
 )
