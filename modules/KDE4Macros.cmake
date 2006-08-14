@@ -12,6 +12,7 @@
 # KDE4_ADD_WIDGET_FILES
 
 #neundorf@kde.org
+#montel@kde.org
 
 macro (KDE4_ADD_KCFG_FILES _sources )
    IF( ${ARGV1} STREQUAL "GENERATE_MOC" )
@@ -218,7 +219,7 @@ MACRO (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NA
 ENDMACRO (_KDE4_ADD_ICON_INSTALL_RULE)
 
 
-MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
+MACRO (KDE4_INSTALL_ICONS _defaultpath )
 
    # first the png icons
    FILE(GLOB _icons *.png)
@@ -227,96 +228,82 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath _theme )
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _size  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\4" _name  "${_current_ICON}")
-
+      SET(_theme_GROUP "nogroup")
       if( ${_type} STREQUAL "cr" )
-          if(${_theme} STREQUAL "crystalsvg" )
-                _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                    ${_defaultpath}/${_theme}/${_size}x${_size}
-                    ${_group} ${_current_ICON} ${_name})
-          #else(${_theme} STREQUAL "crystalsvg" )
-            #MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
-          endif(${_theme} STREQUAL "crystalsvg" )
+	SET(_theme_GROUP  "crystalsvg")	
       endif(${_type} STREQUAL "cr" )
 
       if( ${_type} STREQUAL "lo" )
-          if(${_theme} STREQUAL "locolor" )
-                _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                    ${_defaultpath}/${_theme}/${_size}x${_size}
-                    ${_group} ${_current_ICON} ${_name})
-          #else(${_theme} STREQUAL "locolor" )
-          #    MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
-          endif(${_theme} STREQUAL "locolor" )
+      	SET(_theme_GROUP  "locolor")
       endif(${_type} STREQUAL "lo" )
 
       if( ${_type} STREQUAL "hi" )
-          if( ${_theme} STREQUAL "hicolor" )
-                _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                    ${_defaultpath}/${_theme}/${_size}x${_size}
-                    ${_group} ${_current_ICON} ${_name})
-          #else(${_theme} STREQUAL "hicolor" )
-          #    MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
-          endif(${_theme} STREQUAL "hicolor" )
+ 	SET(_theme_GROUP  "hicolor")
       endif(${_type} STREQUAL "hi" )
+      
+      if( NOT ${_theme_GROUP} STREQUAL "nogroup")
+      		_KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+                    ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
+                    ${_group} ${_current_ICON} ${_name})
+      endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
 
    ENDforeach (_current_ICON)
 
    # mng icons
    FILE(GLOB _icons *.mng)
    foreach (_current_ICON ${_icons} )
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\1" _type  "${_current_ICON}")
+      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\1" _type  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\2" _size  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\3" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\4" _name  "${_current_ICON}")
+      SET(_theme_GROUP "nogroup")
       if( ${_type} STREQUAL "cr" )
-          if( ${_theme} STREQUAL "crystalsvg" )
-            _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                ${_defaultpath}/${_theme}/${_size}x${_size}
-                ${_group} ${_current_ICON} ${_name})
-          #else( ${_theme} STREQUAL "crystalsvg" )
-            #MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
-          endif( ${_theme} STREQUAL "crystalsvg" )
+	SET(_theme_GROUP  "crystalsvg")
       endif(${_type} STREQUAL "cr" )
       
       if( ${_type} STREQUAL "lo" )
-          if( ${_theme} STREQUAL "locolor" )
-            _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                ${_defaultpath}/${_theme}/${_size}x${_size}
-                ${_group} ${_current_ICON} ${_name})
-          #else(${_theme} STREQUAL "locolor" )
-          #  MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
-          endif(${_theme} STREQUAL "locolor" )
+        SET(_theme_GROUP  "locolor")
       endif(${_type} STREQUAL "lo" )
 
       if( ${_type} STREQUAL "hi" )
-          if(${_theme} STREQUAL "hicolor" )
-            _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                ${_defaultpath}/${_theme}/${_size}x${_size}
-                ${_group} ${_current_ICON} ${_name})
-          else(${_theme} STREQUAL "hicolor" )
-          #  MESSAGE(STATUS "icon : ${_current_ICON} is not put into good theme directory ${_theme}")
-          #endif(${_theme} STREQUAL "hicolor" )
+        SET(_theme_GROUP  "hicolor")
       endif(${_type} STREQUAL "hi" )
-   
+
+      if( NOT ${_theme_GROUP} STREQUAL "nogroup")
+        	_KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+                ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
+                ${_group} ${_current_ICON} ${_name})
+      endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
+
    ENDforeach (_current_ICON)
 
 
    # and now the svg icons
    FILE(GLOB _icons *.svgz)
    foreach (_current_ICON ${_icons} )
-       if( ${_theme} STREQUAL "crystalsvg" )
-            STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
-            STRING(REGEX REPLACE "^.*/crsc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name "${_current_ICON}")
-            _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake 
-                                 ${_defaultpath}/${_theme}/scalable 
+	    STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _type "${_current_ICON}")
+            STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _group "${_current_ICON}")
+            STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\3" _name "${_current_ICON}")
+	    SET(_theme_GROUP "nogroup")
+
+	    if(${_type} STREQUAL "lo" )
+		SET(_theme_GROUP  "locolor")
+	    endif(${_type} STREQUAL "lo" )
+
+            if(${_type} STREQUAL "cr" )
+		SET(_theme_GROUP  "crystalsvg")
+            endif(${_type} STREQUAL "cr" )
+            
+            if(${_type} STREQUAL "hi" )
+                SET(_theme_GROUP  "hicolor")
+            endif(${_type} STREQUAL "hi" )
+
+            if( NOT ${_theme_GROUP} STREQUAL "nogroup")
+                	_KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+                                 ${_defaultpath}/${_theme_GROUP}/scalable
                                  ${_group} ${_current_ICON} ${_name})
-       endif( ${_theme} STREQUAL "crystalsvg" )
-       if( ${_theme} STREQUAL "hicolor" )
-            STRING(REGEX REPLACE "^.*/hisc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _group "${_current_ICON}")
-            STRING(REGEX REPLACE "^.*/hisc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _name  "${_current_ICON}")
-            _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                                 ${_defaultpath}/${_theme}/scalable
-                                 ${_group} ${_current_ICON} ${_name})
-       endif( ${_theme} STREQUAL "hicolor" )
+            endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
+
    ENDforeach (_current_ICON)
 
 ENDMACRO (KDE4_INSTALL_ICONS)
