@@ -1,8 +1,5 @@
 # This file defines the Feature Logging macros.
 #
-# MACRO_INIT_LOG_FEATURE()
-#   Call this to initialize the feature logging facility.
-#
 # MACRO_LOG_FEATURE(VAR FEATURE DESCRIPTION URL [REQUIRED [MIN_VERSION [COMMENTS]]])
 #   Logs the information so that it can be displayed at the end
 #   of the configure run
@@ -21,13 +18,31 @@
 # Example:
 #
 # INCLUDE(MacroLogFeature)
-# MACRO_INIT_LOG_FEATURE()
 #
 # FIND_PACKAGE(JPEG)
 # MACRO_LOG_FEATURE(JPEG_FOUND "libjpeg" "Support JPEG images" "http://www.ijg.org" TRUE "3.2a" "")
 # ...
 # MACRO_DISPLAY_FEATURE_LOG()
 
+
+IF (NOT _macroLogFeatureAlreadyIncluded)
+   SET(_file ${CMAKE_BINARY_DIR}/MissingRequirements.txt )
+   IF (EXISTS ${_file})
+      FILE(REMOVE ${_file})
+   ENDIF (EXISTS ${_file})
+
+   SET(_file ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
+   IF (EXISTS ${_file})
+      FILE(REMOVE ${_file})
+   ENDIF (EXISTS ${_file})
+
+   SET(_file ${CMAKE_BINARY_DIR}/DisabledFeatures.txt )
+   IF (EXISTS ${_file})
+      FILE(REMOVE ${_file})
+  ENDIF (EXISTS ${_file})
+
+  SET(_macroLogFeatureAlreadyIncluded TRUE)
+ENDIF (NOT _macroLogFeatureAlreadyIncluded)
 
 
 MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _comments)
@@ -63,25 +78,6 @@ MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _
  
 ENDMACRO(MACRO_LOG_FEATURE)
 
-
-MACRO(MACRO_INIT_LOG_FEATURE)
-
-   SET(_file ${CMAKE_BINARY_DIR}/MissingRequirements.txt )
-   IF (EXISTS ${_file})
-      FILE(REMOVE ${_file})
-   ENDIF (EXISTS ${_file})
-
-   SET(_file ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
-   IF (EXISTS ${_file})
-      FILE(REMOVE ${_file})
-   ENDIF (EXISTS ${_file})
-
-   SET(_file ${CMAKE_BINARY_DIR}/DisabledFeatures.txt )
-   IF (EXISTS ${_file})
-      FILE(REMOVE ${_file})
-   ENDIF (EXISTS ${_file})
-
-ENDMACRO(MACRO_INIT_LOG_FEATURE)
 
 MACRO(MACRO_DISPLAY_FEATURE_LOG)
 
