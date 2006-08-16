@@ -239,6 +239,7 @@ get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
+option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 #now try to find some kde stuff
 
@@ -595,6 +596,16 @@ if (CMAKE_COMPILER_IS_GNUCXX)
      set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -fno-exceptions -fno-check-new -fno-common")
    endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
+
+   check_cxx_compiler_flag(-fPIE HAVE_FPIE_SUPPORT)
+   if(KDE4_ENABLE_FPIE)
+       if(HAVE_FPIE_SUPPORT)
+        set (KDE4_CXX_FPIE_FLAGS "-fPIE")
+        set (KDE4_PIE_LDFLAGS "-pie")
+       else(HAVE_FPIE_SUPPORT)
+        MESSAGE(STATUS "Your compiler doesn't support PIE flag")
+       endif(HAVE_FPIE_SUPPORT)
+   endif(KDE4_ENABLE_FPIE)
    # visibility support
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
    
