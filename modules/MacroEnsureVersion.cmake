@@ -8,11 +8,11 @@ MACRO(MACRO_ENSURE_VERSION requested_version found_version var_too_old)
 
     # parse the parts of the version string
     STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" req_major_vers "${requested_version}")
-    STRING(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" req_minor_vers "${requested_version}")
+    STRING(REGEX REPLACE "[0-9]+\\.([0-9]+)\\.[0-9]+" "\\1" req_minor_vers "${requested_version}")
     STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" req_patch_vers "${requested_version}")
    
     STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" found_major_vers "${found_version}")
-    STRING(REGEX REPLACE "[0-9]+\\.([0-9])+\\.[0-9]+.*" "\\1" found_minor_vers "${found_version}")
+    STRING(REGEX REPLACE "[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" found_minor_vers "${found_version}")
     STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" found_patch_vers "${found_version}")
    
     # compute an overall version number which can be compared at once
