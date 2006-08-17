@@ -93,6 +93,7 @@
 #
 # KDE4_ENABLE_FINAL - enable KDE-style enable-final all-in-one-compilation
 # KDE4_BUILD_TESTS  - enable this to build the testcases
+# KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature 
 #
 # It also adds the following macros (from KDE4Macros.cmake)
 # KDE4_ADD_UI_FILES (SRCS_VAR file1.ui ... fileN.ui)
@@ -239,6 +240,11 @@ get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
+
+#Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable 
+#which is something between a shared library and a normal executable. 
+#Programs compiled with these features appear as ?shared object? with the file command.
+#info from "http://www.linuxfromscratch.org/hlfs/view/unstable/glibc/chapter02/pie.html"
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 #now try to find some kde stuff
