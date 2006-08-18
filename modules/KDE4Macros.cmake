@@ -539,9 +539,9 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
       kde4_create_final_files(${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c ${_SRCS})
       add_library(kdeinit_${_target_NAME} SHARED  ${_target_NAME}_final_cpp.cpp ${_target_NAME}_final_c.c)
 
-      else (KDE4_ENABLE_FINAL)
-         add_library(kdeinit_${_target_NAME} SHARED ${_SRCS} )
-      endif (KDE4_ENABLE_FINAL)
+   else (KDE4_ENABLE_FINAL)
+      add_library(kdeinit_${_target_NAME} SHARED ${_SRCS} )
+   endif (KDE4_ENABLE_FINAL)
 
 
    if (NOT CMAKE_SKIP_RPATH)
