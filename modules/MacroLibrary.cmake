@@ -4,6 +4,8 @@
 INCLUDE(MacroOptionalFindPackage)
 INCLUDE(MacroAdditionalCleanFiles)
 INCLUDE(MacroAddFileDependencies)
+INCLUDE(MacroAddCompileFlags)
+INCLUDE(MacroAddLinkFlags)
 INCLUDE(MacroEnsureOutOfSourceBuild)
 INCLUDE(MacroBoolTo01)
 INCLUDE(MacroPushRequiredVars)
