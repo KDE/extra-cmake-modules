@@ -205,13 +205,13 @@ INCLUDE (MacroEnsureVersion)
 
 cmake_minimum_required(VERSION 2.4.1 FATAL_ERROR)
 
-set(QT_MIN_VERSION "4.1.3")
+set(QT_MIN_VERSION "4.2.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
 
-#if (NOT QT_DBUSXML2CPP_EXECUTABLE)
-#   message(FATAL_ERROR "Qt4 dbusxml2cpp was not found. Make sure it has been built and installed by Qt")
-#endif (NOT QT_DBUSXML2CPP_EXECUTABLE)
+if (NOT QT_DBUSXML2CPP_EXECUTABLE)
+   message(FATAL_ERROR "Qt4 dbusxml2cpp was not found. Make sure it has been built and installed by Qt")
+endif (NOT QT_DBUSXML2CPP_EXECUTABLE)
 
 
 # Perl is required for building KDE software,
