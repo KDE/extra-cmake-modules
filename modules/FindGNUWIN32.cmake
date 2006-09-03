@@ -11,7 +11,7 @@ if(NOT GNUWIN32_DIR)
 		find_file(GNUWIN32_DIR gnuwin32 win32libs 
    			PATHS
    			"${_progFiles}"
-   			"C:/"
+   			"C:/" "D:/" "E:/" "F:/" "G:/"
 		)
 	endif(NOT GNUWIN32_DIR)
 endif(NOT GNUWIN32_DIR)
