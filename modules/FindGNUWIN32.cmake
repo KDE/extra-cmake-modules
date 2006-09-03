@@ -1,11 +1,12 @@
 if (WIN32)
 
 if(NOT GNUWIN32_DIR)
-	file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
+   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
 endif(NOT GNUWIN32_DIR)
 
-find_file(GNUWIN32_DIR gnuwin32 win32libs PATHS
-   ${_progFiles}
+find_file(GNUWIN32_DIR gnuwin32 win32libs 
+   PATHS
+   "${_progFiles}"
    "C:/" "D:/" "E:/" "F:/" "G:/"
 )
 
