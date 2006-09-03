@@ -1,14 +1,20 @@
 if (WIN32)
 
+# check if GNUWIN32_DIR is already set 
+# (e.g. by command line argument or the calling script)
 if(NOT GNUWIN32_DIR)
-   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
+	# check for enviroment variable
+	file(TO_CMAKE_PATH "$ENV{GNUWIN32_DIR}" GNUWIN32_DIR)
+	if(NOT GNUWIN32_DIR)
+		# search in the default program install folder
+		file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
+		find_file(GNUWIN32_DIR gnuwin32 win32libs 
+   			PATHS
+   			"${_progFiles}"
+   			"C:/"
+		)
+	endif(NOT GNUWIN32_DIR)
 endif(NOT GNUWIN32_DIR)
-
-find_file(GNUWIN32_DIR gnuwin32 win32libs 
-   PATHS
-   "${_progFiles}"
-   "C:/" "D:/" "E:/" "F:/" "G:/"
-)
 
 if (GNUWIN32_DIR)
    set(GNUWIN32_INCLUDE_DIR ${GNUWIN32_DIR}/include)
