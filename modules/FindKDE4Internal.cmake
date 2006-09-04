@@ -224,40 +224,44 @@ include (CheckCXXCompilerFlag)
 
 
 #add some KDE specific stuff
-set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
- set(SHARE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/share CACHE PATH "Base directory for files which go to share/" FORCE)
- set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}       CACHE PATH  "Base directory for executables and libraries" FORCE)
-#
-## the following are directories where stuff will be installed to
- set(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"                  CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
- set(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"                 CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
- set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}"     CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib${LIB_SUFFIX})" FORCE)
- set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib/kde4/libexec)" FORCE)
- set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                     CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)" FORCE)
- set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"             CACHE PATH "The subdirectory to the header prefix" FORCE)
- set(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"              CACHE PATH "The config file install dir" FORCE)
- set(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"                CACHE PATH "The parent directory where applications can install their data" FORCE)
- set(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"            CACHE PATH "The HTML install dir for documentation" FORCE)
- set(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"               CACHE PATH "The icon install dir (default prefix/share/icons/)" FORCE)
- set(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"         CACHE PATH "The install dir for kconfig files" FORCE)
- set(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"              CACHE PATH "The install dir for translations" FORCE)
- set(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"             CACHE PATH "The install dir for the mimetype desktop files" FORCE)
- set(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/services"            CACHE PATH "The install dir for service (desktop, protocol, ...) files" FORCE)
- set(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/servicetypes"        CACHE PATH "The install dir for servicestypes desktop files" FORCE)
- set(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"              CACHE PATH "The install dir for sound files" FORCE)
- set(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"           CACHE PATH "The install dir for templates (Create new file...)" FORCE) 
- set(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"          CACHE PATH "The install dir for wallpapers" FORCE)
- set(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"            CACHE PATH "The kconf_update install dir" FORCE)
+
+
+# the following are directories where stuff will be installed to
+ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
+ set(SHARE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/share CACHE PATH "Base directory for files which go to share/")
+ set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}       CACHE PATH  "Base directory for executables and libraries")
+
+ set(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"                  CACHE PATH "The install dir for executables (default prefix/bin)")
+ set(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"                 CACHE PATH "The install dir for system executables (default prefix/sbin)")
+ set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}"     CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib${LIB_SUFFIX})")
+
+ set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib/kde4/libexec)")
+ set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                     CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+
+ set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"             CACHE PATH "The subdirectory to the header prefix")
+ set(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"              CACHE PATH "The config file install dir")
+ set(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"                CACHE PATH "The parent directory where applications can install their data")
+ set(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"            CACHE PATH "The HTML install dir for documentation")
+ set(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"               CACHE PATH "The icon install dir (default prefix/share/icons/)")
+ set(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"         CACHE PATH "The install dir for kconfig files")
+ set(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"              CACHE PATH "The install dir for translations")
+ set(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"             CACHE PATH "The install dir for the mimetype desktop files")
+ set(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/services"            CACHE PATH "The install dir for service (desktop, protocol, ...) files")
+ set(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/servicetypes"        CACHE PATH "The install dir for servicestypes desktop files")
+ set(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"              CACHE PATH "The install dir for sound files")
+ set(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"           CACHE PATH "The install dir for templates (Create new file...)") 
+ set(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"          CACHE PATH "The install dir for wallpapers")
+ set(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"            CACHE PATH "The kconf_update install dir")
  # this one shouldn't be used anymore
- set(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/applnk"              CACHE PATH "Is this still used ?" FORCE)
- set(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"           CACHE PATH "The install dir for autostart files" FORCE)
+ set(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/applnk"              CACHE PATH "Is this still used ?")
+ set(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"           CACHE PATH "The install dir for autostart files")
  
- set(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde"    CACHE PATH "The XDG apps dir" FORCE)
- set(XDG_DIRECTORY_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories" CACHE PATH "The XDG directory" FORCE)
+ set(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde"    CACHE PATH "The XDG apps dir")
+ set(XDG_DIRECTORY_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories" CACHE PATH "The XDG directory")
  
- set(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"                 CACHE PATH "The kde sysconfig install dir (default /etc)" FORCE)
- set(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"                 CACHE PATH "The kde man install dir (default prefix/man/)" FORCE)
- set(INFO_INSTALL_DIR         "${CMAKE_INSTALL_PREFIX}/info"                CACHE PATH "The kde info install dir (default prefix/info)" FORCE)
+ set(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"                 CACHE PATH "The kde sysconfig install dir (default /etc)")
+ set(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"                 CACHE PATH "The kde man install dir (default prefix/man/)")
+ set(INFO_INSTALL_DIR         "${CMAKE_INSTALL_PREFIX}/info"                CACHE PATH "The kde info install dir (default prefix/info)")
 # set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
 # set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4/modules"             CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
 # 
@@ -669,8 +673,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    if (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_AT_LEAST_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
    endif (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_AT_LEAST_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
-
-   message(STATUS "have_visibility: ${__KDE_HAVE_GCC_VISIBILITY} version>=4.1: ${GCC_IS_NEWER_THAN_4_1} bad alloctor: ${_GCC_COMPILED_WITH_BAD_ALLOCATOR}")
 
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
