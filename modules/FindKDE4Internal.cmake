@@ -172,8 +172,8 @@
 # Copyright (c) 2006, Alexander Neundorf <neundorf@kde.org>
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
-# Redistribution and use is allowed according to the terms of the BSD license, 
-# for details see the accompanying COYPING-CMAKE-SCRIPTS file.
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
 INCLUDE (MacroEnsureVersion)
