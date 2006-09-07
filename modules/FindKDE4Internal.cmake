@@ -172,7 +172,7 @@
 # Copyright (c) 2006, Alexander Neundorf <neundorf@kde.org>
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
-# Redistribution and use is allowed following the conditions of the BSD license, 
+# Redistribution and use is allowed according to the terms of the BSD license, 
 # for details see the accompanying COYPING-CMAKE-SCRIPTS file.
 
 
