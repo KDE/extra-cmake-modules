@@ -1,6 +1,12 @@
 # Find if we installed kdepimlibs before to compile it
+#
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-FIND_PATH( KDEPIMLIBS_INCLUDE_DIR kcal/kcal.h
+
+find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal.h
   ${KDE4_INCLUDE_DIR}
 )
 

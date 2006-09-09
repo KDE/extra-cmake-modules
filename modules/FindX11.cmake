@@ -4,6 +4,9 @@
 #  X11_INCLUDE_DIR  - include directories to use X11
 #  X11_LIBRARIES    - link against these to use X11
 
+# Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
+# See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+
 if (UNIX)
   set(X11_FOUND 0)
 

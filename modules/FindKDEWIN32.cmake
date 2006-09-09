@@ -4,6 +4,12 @@
 #  KDEWIN32_FOUND - system has KDEWIN32
 #  KDEWIN32_INCLUDES - the KDEWIN32 include directories
 #  KDEWIN32_LIBRARIES - The libraries needed to use KDEWIN32
+#
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if (WIN32)
 

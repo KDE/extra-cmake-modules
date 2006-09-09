@@ -7,6 +7,10 @@
 #
 # remove once we require cmake 2.4.1
 
+# Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
+# See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+
+
 MACRO (CHECK_TYPE_SIZE TYPE VARIABLE)
   SET(CMAKE_ALLOW_UNKNOWN_VARIABLE_READ_ACCESS 1)
   IF ("HAVE_${VARIABLE}" MATCHES "^HAVE_${VARIABLE}$")

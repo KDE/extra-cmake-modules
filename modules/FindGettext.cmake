@@ -9,6 +9,12 @@
 # present in libc. Must have more robust system for release, where Gettext
 # functionality can also reside in standalone Gettext library, or the one
 # embedded within kdelibs (cf. gettext.m4 from Gettext source).
+#
+# Copyright (c) 2006, Chusslove Illich, <caslav.ilic@gmx.net>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if (LIBC_HAS_DGETTEXT OR LIBINTL_HAS_DGETTEXT)
 

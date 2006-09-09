@@ -14,6 +14,10 @@
 #  CMAKE_REQUIRED_INCLUDES = list of include directories
 #  CMAKE_REQUIRED_LIBRARIES = list of libraries to link
 
+# Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
+# See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+
+
 MACRO(CHECK_C_SOURCE_RUNS SOURCE VAR)
   IF("${VAR}" MATCHES "^${VAR}$")
     SET(MACRO_CHECK_FUNCTION_DEFINITIONS 

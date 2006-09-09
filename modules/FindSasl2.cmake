@@ -4,6 +4,12 @@
 #  SASL2_FOUND - system has SASL2
 #  SASL2_INCLUDE_DIR - the SASL2 include directory
 #  SASL2_LIBRARIES - The libraries needed to use SASL2
+#
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if (SASL2_INCLUDE_DIR)
   # Already in cache, be silent

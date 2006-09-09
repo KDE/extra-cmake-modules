@@ -6,6 +6,11 @@
 #  HSPELL_LIBRARIES - The libraries needed to use HSPELL
 #  HSPELL_DEFINITIONS - Compiler switches required for using HSPELL
 #
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if (HSPELL_INCLUDE_DIR AND HSPELL_LIBRARIES)
   # Already in cache, be silent

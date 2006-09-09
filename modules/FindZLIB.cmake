@@ -5,6 +5,9 @@
 #  ZLIB_LIBRARIES   - List of libraries when using zlib.
 #  ZLIB_FOUND       - True if zlib found.
 
+# Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
+# See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+
 
 IF (ZLIB_INCLUDE_DIR)
   # Already in cache, be silent

@@ -4,6 +4,12 @@
 #  JASPER_FOUND - system has Jasper
 #  JASPER_INCLUDE_DIR - the Jasper include directory
 #  JASPER_LIBRARIES - The libraries needed to use Jasper
+#
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 FIND_PACKAGE(JPEG)
 

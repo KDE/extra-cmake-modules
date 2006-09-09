@@ -1,3 +1,10 @@
+
+# Copyright (c) 2006, Peter Kuemmel, <syntheticpp@yahoo.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+
 if (WIN32)
 
 # check if GNUWIN32_DIR is already set 

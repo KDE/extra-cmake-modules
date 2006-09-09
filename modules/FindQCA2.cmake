@@ -8,6 +8,12 @@
 #
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
+#
+# Copyright (c) 2006, Michael Larouche, <michael.larouche@kdemail.net>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 
 INCLUDE(UsePkgConfig)

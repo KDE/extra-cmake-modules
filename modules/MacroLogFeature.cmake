@@ -24,6 +24,10 @@
 # ...
 # MACRO_DISPLAY_FEATURE_LOG()
 
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 IF (NOT _macroLogFeatureAlreadyIncluded)
    SET(_file ${CMAKE_BINARY_DIR}/MissingRequirements.txt )

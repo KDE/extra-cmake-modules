@@ -6,6 +6,8 @@
 #  GIF_LIBRARIES - Libraries needed to use GIF
 #  GIF_DEFINITIONS - Compiler switches required for using GIF
 #
+# Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
+# See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
 if (GIF_INCLUDE_DIR AND GIF_LIBRARIES)
   # Already in cache, be silent

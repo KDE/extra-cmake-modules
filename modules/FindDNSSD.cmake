@@ -7,6 +7,11 @@
 #  DNSSD_DEFINITIONS - Compiler switches required for using DNSSD
 #
 # need more test: look at into dnssd/configure.in.in
+#
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 FIND_PATH(DNSSD_INCLUDE_DIR dns_sd.h
   /usr/include

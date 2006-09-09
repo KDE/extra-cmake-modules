@@ -4,6 +4,12 @@
 #  POSTGRESQL_INCLUDE_DIR, where to find POSTGRESQL.h
 #  POSTGRESQL_LIBRARIES, the libraries needed to use POSTGRESQL.
 #  POSTGRESQL_FOUND, If false, do not try to use PostgreSQL.
+#
+# Copyright (c) 2006, Jaroslaw Staniek, <js@iidea.pl>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 find_path(POSTGRESQL_INCLUDE_DIR libpq-fe.h
    /usr/include/pgsql

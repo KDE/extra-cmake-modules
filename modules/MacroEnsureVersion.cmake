@@ -1,9 +1,12 @@
-# LGPL-v2, David Faure
-#
 # This macro compares version numbers of the form "x.y.z"
 # MACRO_ENSURE_VERSION( ${FOO_MIN_VERSION} ${FOO_VERSION_FOUND} FOO_VERSION_OK)
 # will set FOO_VERSIN_OK to true if FOO_VERSION_FOUND >= FOO_MIN_VERSION
+
+# Copyright (c) 2006, David Faure, <faure@kde.org>
 #
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 MACRO(MACRO_ENSURE_VERSION requested_version found_version var_too_old)
 
     # parse the parts of the version string

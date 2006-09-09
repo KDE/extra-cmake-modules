@@ -1,3 +1,8 @@
+# Copyright (c) 2006, Benjamin Reed, <ranger@befunk.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 INCLUDE(CMakeFindFrameworks)
 
 CMAKE_FIND_FRAMEWORKS(Carbon)

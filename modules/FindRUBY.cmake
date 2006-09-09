@@ -1,11 +1,16 @@
-# - Find ruby
-# This module finds if RUBY is installed and determines where the include files
+# - Find Ruby
+# This module finds if Ruby is installed and determines where the include files
 # and libraries are. It also determines what the name of the library is. This
 # code sets the following variables:
 #
 #  RUBY_INCLUDE_PATH = path to where ruby.h can be found
 #  RUBY_EXECUTABLE   = full path to the ruby binary
 #
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if(RUBY_LIBRARY AND RUBY_INCLUDE_PATH)
 	# Already in cache, be silent

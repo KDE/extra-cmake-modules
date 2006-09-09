@@ -4,6 +4,13 @@
 #  OPENSSL_FOUND - system has the OpenSSL library
 #  OPENSSL_INCLUDE_DIR - the OpenSSL include directory
 #  OPENSSL_LIBRARIES - The libraries needed to use OpenSSL
+#
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+
 if(OPENSSL_LIBRARIES)
    SET(LIB_FOUND 1)
 endif(OPENSSL_LIBRARIES)

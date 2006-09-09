@@ -5,6 +5,11 @@
 #  FONTCONFIG_LIBRARIES - Link these to use FONTCONFIG
 #  FONTCONFIG_DEFINITIONS - Compiler switches required for using FONTCONFIG
 #
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if (FONTCONFIG_LIBRARIES AND FONTCONFIG_DEFINITIONS)
 

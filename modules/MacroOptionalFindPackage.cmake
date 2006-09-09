@@ -7,6 +7,12 @@
 # The standard <name>_FOUND variables can be used in the same way
 # as when using the normal FIND_PACKAGE()
 
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+
 MACRO (MACRO_OPTIONAL_FIND_PACKAGE _name )
    OPTION(WITH_${_name} "Search for ${_name} package" ON)
    if (WITH_${_name})

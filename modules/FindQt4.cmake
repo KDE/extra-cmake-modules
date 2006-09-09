@@ -186,6 +186,10 @@
 # These variables are set to "" Because Qt structure changed 
 # (They make no sense in Qt4)
 #  QT_QT_LIBRARY        Qt-Library is now split
+#
+# Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
+# See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+
 
 INCLUDE(CheckSymbolExists)
 INCLUDE(MacroAddFileDependencies)

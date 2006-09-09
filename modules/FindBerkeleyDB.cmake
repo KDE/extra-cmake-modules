@@ -6,7 +6,10 @@
 #  BERKELEY_DB_LIBRARIES - Link these to use Berkeley DB
 #  BERKELEY_DB_DEFINITIONS - Compiler switches required for using Berkeley DB
 #
-
+# Copyright (c) 2006, Alexander Dymo, <adymo@kdevelop.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 FIND_PATH(BERKELEY_DB_INCLUDE_DIR db.h
   /usr/include/

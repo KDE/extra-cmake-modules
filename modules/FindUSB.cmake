@@ -4,6 +4,12 @@
 #  LIBUSB_FOUND - system has libusb
 #  LIBUSB_INCLUDE_DIR - the libusb include directory
 #  LIBUSB_LIBRARIES - Link these to use libusb
+#
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
 

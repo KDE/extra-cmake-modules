@@ -10,7 +10,11 @@
 # SET(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS} -DSOME_MORE_DEF)
 # CHECK_FUNCTION_EXISTS(...)
 # MACRO_POP_REQUIRED_VARS()
+
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 MACRO(MACRO_PUSH_REQUIRED_VARS)
    SET(_CMAKE_REQUIRED_INCLUDES_SAVE    ${CMAKE_REQUIRED_INCLUDES})

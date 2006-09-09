@@ -11,8 +11,11 @@
 # KDE4_ADD_EXECUTABLE
 # KDE4_ADD_WIDGET_FILES
 
-#neundorf@kde.org
-#montel@kde.org
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 macro (KDE4_ADD_KCFG_FILES _sources )
    IF( ${ARGV1} STREQUAL "GENERATE_MOC" )

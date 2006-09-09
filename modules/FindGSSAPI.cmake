@@ -5,6 +5,12 @@
 #  GSSAPI_INCS - the GSSAPI include directory
 #  GSSAPI_LIBS - the libraries needed to use GSSAPI
 #  GSSAPI_FLAVOR - the type of API - MIT or HEIMDAL
+#
+# Copyright (c) 2006, Pino Toscano, <toscano.pino@tiscali.it>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 IF(GSSAPI_LIBS AND GSSAPI_FLAVOR)
 

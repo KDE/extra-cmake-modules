@@ -5,6 +5,11 @@
 #  FREETYPE_INCLUDE_DIR - the FONTCONFIG include directory
 #  FREETYPE_LIBRARIES - Link these to use FREETYPE
 #
+# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if (FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
 

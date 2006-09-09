@@ -4,6 +4,12 @@
 #  MYSQL_INCLUDE_DIR, where to find mysql.h
 #  MYSQL_LIBRARIES, the libraries needed to use MySQL.
 #  MYSQL_FOUND, If false, do not try to use MySQL.
+#
+# Copyright (c) 2006, Jaroslaw Staniek, <js@iidea.pl>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 find_path(MYSQL_INCLUDE_DIR mysql.h
    /usr/include/mysql

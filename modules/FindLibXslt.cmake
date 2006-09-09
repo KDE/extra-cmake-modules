@@ -6,6 +6,11 @@
 #  LIBXSLT_LIBRARIES - Link these to LibXslt
 #  LIBXSLT_DEFINITIONS - Compiler switches required for using LibXslt
 #
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if (LIBXSLT_INCLUDE_DIR AND LIBXSLT_LIBRARIES)
 

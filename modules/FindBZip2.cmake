@@ -6,6 +6,12 @@
 #  BZIP2_LIBRARIES - Link these to use BZip2
 #  BZIP2_DEFINITIONS - Compiler switches required for using BZip2
 #  BZIP2_NEED_PREFIX - this is set if the functions are prefixed with BZ2_
+#
+# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 
 if (BZIP2_INCLUDE_DIR AND BZIP2_LIBRARIES)
