@@ -178,7 +178,7 @@
 
 INCLUDE (MacroEnsureVersion)
 
-cmake_minimum_required(VERSION 2.4.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.4.3 FATAL_ERROR)
 
 set(QT_MIN_VERSION "4.2.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
@@ -196,10 +196,7 @@ include (MacroLibrary)
 include (CheckCXXCompilerFlag)
 
 
-
-
 #add some KDE specific stuff
-
 
 # the following are directories where stuff will be installed to
  set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
@@ -286,9 +283,9 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
       set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib ) 
-      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.sh )
-      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.sh )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.sh )
+      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.shell )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.shell )
+      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
    endif (WIN32)
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
@@ -513,26 +510,11 @@ if (UNIX)
    if (APPLE)
       set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
    else (APPLE)
-      if (CMAKE_PATCH_VERSION) # at least cmake 2.4.3, in earlier version CMAKE_PATCH_VERSION is empty
-         # add our LIB_INSTALL_DIR to the RPATH and use the RPATH figured out cmake when compiling
-         set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR} )
-         set(CMAKE_SKIP_BUILD_RPATH ON)
-         set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-         set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-      else (CMAKE_PATCH_VERSION) # at least cmake 2.4.3
-   
-         set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR} ${QT_LIBRARY_DIR} )
-         # building something else than kdelibs/ ?
-         # then add the dir where the kde libraries are installed
-         if (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-            set(CMAKE_INSTALL_RPATH  ${KDE4_LIB_DIR} ${CMAKE_INSTALL_RPATH} )
-         endif (NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-
-         set(CMAKE_SKIP_BUILD_RPATH TRUE)
-         set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-      
-      endif (CMAKE_PATCH_VERSION) # at least cmake 2.4.3
-      
+      # add our LIB_INSTALL_DIR to the RPATH and use the RPATH figured out by cmake when compiling
+      set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR} )
+      set(CMAKE_SKIP_BUILD_RPATH TRUE)
+      set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+      set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
    endif (APPLE)
 endif (UNIX)
 
@@ -735,10 +717,7 @@ endif (NOT KDE4Internal_FIND_QUIETLY)
 #add the found Qt and KDE include directories to the current include path
 set(KDE4_INCLUDES ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
 
-set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DKDE_DEPRECATED_WARNINGS )
-
-set( KDELIBSUFF ${LIB_SUFFIX} )
-
+set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DKDE_DEPRECATED_WARNINGS )
 
 if (NOT _kde4_uninstall_rule_created)
    set(_kde4_uninstall_rule_created TRUE)

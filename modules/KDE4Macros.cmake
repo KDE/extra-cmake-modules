@@ -386,16 +386,16 @@ macro (KDE4_HANDLE_RPATH _target_NAME _type)
       # use add_custom_target() to have the sh-wrapper generated during build time instead of cmake time
       add_custom_command(TARGET ${_target_NAME} POST_BUILD
          COMMAND ${CMAKE_COMMAND}
-         -D_filename=${_executable}.sh -D_library_path_variable=${_library_path_variable}
+         -D_filename=${_executable}.shell -D_library_path_variable=${_library_path_variable}
          -D_ld_library_path="${_ld_library_path}" -D_executable=${_executable}
          -P ${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake
          )
 
-      macro_additional_clean_files(${_executable}.sh)
+      macro_additional_clean_files(${_executable}.shell)
 
       # under UNIX, set the property WRAPPER_SCRIPT to the name of the generated shell script
       # so it can be queried and used later on easily
-      set_target_properties(${_target_NAME} PROPERTIES WRAPPER_SCRIPT ${_executable}.sh)
+      set_target_properties(${_target_NAME} PROPERTIES WRAPPER_SCRIPT ${_executable}.shell)
 
    else (UNIX)
       # under windows, set the property WRAPPER_SCRIPT just to the name of the executable
@@ -457,24 +457,6 @@ MACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 ENDMACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 
-# hmm this is a hack
-# the behaviour of LIST(REMOVE_ITEM ... ) changed from 2.4.1 beta to 2.4.2 stable
-# detect this here
-# this can be removed once we require cmake >= 2.4.2
-set(remove_item_test_list one two)
-# with cmake 2.4.1 this means remove index 0, 
-# with >= 2.4.2 this means remove the items which have the value "0"
-list(REMOVE_ITEM remove_item_test_list 0)
-list(LENGTH remove_item_test_list _test_list_length)
-# so with 2.4.1 the list will have only one item left, with 2.4.2 two
-if (${_test_list_length} EQUAL 2)
-   set(_REMOVE_AT_INDEX_KEYWORD REMOVE_AT)
-else (${_test_list_length} EQUAL 2)
-   set(_REMOVE_AT_INDEX_KEYWORD REMOVE_ITEM)
-endif (${_test_list_length} EQUAL 2)
-
-
-
 # this macro checks is intended to check whether a list of source
 # files has the "NOGUI" or "RUN_UNINSTALLED" keywords at the beginning
 # in _output_LIST the list of source files is returned with the "NOGUI"
@@ -521,7 +503,7 @@ MACRO(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
    endif (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
 
    if (NOT "${remove}" STREQUAL "NOTFOUND")
-      list(${_REMOVE_AT_INDEX_KEYWORD} ${_output_LIST} ${remove})
+      list(REMOVE_AT ${_output_LIST} ${remove})
    endif (NOT "${remove}" STREQUAL "NOTFOUND")
 
 ENDMACRO(KDE4_CHECK_EXECUTABLE_PARAMS)
