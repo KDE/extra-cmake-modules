@@ -168,8 +168,8 @@
 #  QT_UIC_EXECUTABLE          Where to find the uic tool.
 #  QT_UIC3_EXECUTABLE         Where to find the uic3 tool.
 #  QT_RCC_EXECUTABLE          Where to find the rcc tool
-#  QT_DBUSCPP2XML_EXECUTABLE  Where to find the dbuscpp2xml tool.
-#  QT_DBUSXML2CPP_EXECUTABLE  Where to find the dbusxml2cpp tool.
+#  QT_DBUSCPP2XML_EXECUTABLE  Where to find the qdbuscpp2xml tool.
+#  QT_DBUSXML2CPP_EXECUTABLE  Where to find the qdbusxml2cpp tool.
 #  
 #  QT_DOC_DIR                 Path to "doc" of Qt4
 #  QT_MKSPECS_DIR             Path to "mkspecs" of Qt4

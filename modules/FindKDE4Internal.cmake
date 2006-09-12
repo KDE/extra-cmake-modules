@@ -185,7 +185,7 @@ set(QT_MIN_VERSION "4.2.0")
 find_package(Qt4 REQUIRED)                                      
 
 if (NOT QT_DBUSXML2CPP_EXECUTABLE)
-   message(FATAL_ERROR "Qt4 dbusxml2cpp was not found. Make sure it has been built and installed by Qt")
+   message(FATAL_ERROR "Qt4 qdbusxml2cpp was not found. Make sure it has been built and installed by Qt")
 endif (NOT QT_DBUSXML2CPP_EXECUTABLE)
 
 
