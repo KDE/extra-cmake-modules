@@ -542,8 +542,8 @@ if (APPLE)
   # this is bad, but unavoidable until there is the equivalent of libtool -no-undefined implemented
   # or perhaps it already is, and I just don't know where to look  ;)
 
-  set (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress")
-  set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress")
+  set (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress ${CMAKE_SHARED_LINKER_FLAGS}")
+  set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress ${CMAKE_MODULE_LINKER_FLAGS}")
   #set(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
   #set(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
 
