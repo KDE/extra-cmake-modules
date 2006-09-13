@@ -536,13 +536,11 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_QTSVG_LIBRARY_DEBUG        "-framework QtSvg"      CACHE STRING "The QtSvg library.")
     SET(QT_QTDBUS_LIBRARY_RELEASE     "-framework QtDBus"     CACHE STRING "The QtDBus library.")
     SET(QT_QTDBUS_LIBRARY_DEBUG       "-framework QtDBus"     CACHE STRING "The QtDBus library.")
+    SET(QT_QTUITOOLS_LIBRARY_RELEASE  "-framework QtUiTools"  CACHE STRING "The QtUiTools library.")
+    SET(QT_QTUITOOLS_LIBRARY_DEBUG    "-framework QtUiTools"  CACHE STRING "The QtUiTools library.")
+    SET(QT_QTTEST_LIBRARY_RELEASE     "-framework QtTest"     CACHE STRING "The QtTest library.")
+    SET(QT_QTTEST_LIBRARY_DEBUG       "-framework QtTest"     CACHE STRING "The QtTest library.")
 
-
-    # WTF?  why don't we have frameworks?  :P
-    SET(QT_QTUITOOLS_LIBRARY_RELEASE      "-L${QT_LIBRARY_DIR} -lQtUiTools"      CACHE STRING "The QtUiTools library.")
-    SET(QT_QTUITOOLS_LIBRARY_DEBUG      "-L${QT_LIBRARY_DIR} -lQtUiTools"      CACHE STRING "The QtUiTools library.")
-    SET(QT_QTTEST_LIBRARY_RELEASE "-L${QT_LIBRARY_DIR} -lQtTest" CACHE STRING "The QtTest library.")
-    SET(QT_QTTEST_LIBRARY_DEBUG   "-L${QT_LIBRARY_DIR} -lQtTest_debug" CACHE STRING "The QtTest library.")
     MARK_AS_ADVANCED(QT_QT3SUPPORT_LIBRARY QT_QTGUI_LIBRARY )
 
   ELSE (QT_USE_FRAMEWORKS)
