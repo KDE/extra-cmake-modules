@@ -506,7 +506,9 @@ if (UNIX)
    set( _KDE4_PLATFORM_INCLUDE_DIRS /usr/local/include )
 
    # the rest is RPATH handling
-
+   # here the defaults are set
+   # which are partly overwritten in kde4_handle_rpath_for_library() 
+   # and kde4_handle_rpath_for_executable(), both located in KDE4Macros.cmake, Alex
    if (APPLE)
       set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
    else (APPLE)
