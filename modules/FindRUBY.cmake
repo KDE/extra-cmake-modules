@@ -13,36 +13,37 @@
 
 
 if(RUBY_LIBRARY AND RUBY_INCLUDE_PATH)
-	# Already in cache, be silent
-	set(RUBY_FIND_QUIETLY TRUE)
+   # Already in cache, be silent
+   set(RUBY_FIND_QUIETLY TRUE)
 endif (RUBY_LIBRARY AND RUBY_INCLUDE_PATH)		
 
-SET(RUBY_POSSIBLE_INCLUDE_PATHS
-  /usr/lib/ruby/1.8/i586-linux-gnu/
-  )
+#   RUBY_ARCHDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"archdir"@:>@)'`
+#   RUBY_SITEARCHDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"sitearchdir"@:>@)'`
+#   RUBY_SITEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"sitelibdir"@:>@)'`
+#   RUBY_LIBDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"libdir"@:>@)'`
+#   RUBY_LIBRUBYARG=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"LIBRUBYARG_SHARED"@:>@)'`
 
-SET(RUBY_POSSIBLE_LIB_PATHS
-  /usr/lib
-  )
+FIND_PROGRAM(RUBY_EXECUTABLE NAMES ruby ruby1.8 ruby18 )
 
-FIND_PATH(RUBY_INCLUDE_PATH ruby.h
-  ${RUBY_POSSIBLE_INCLUDE_PATHS})
+EXEC_PROGRAM(${RUBY_EXECUTABLE} ARGS -r rbconfig -e 'puts Config::CONFIG[\"archdir\"]'
+   OUTPUT_VARIABLE RUBY_ARCH_DIR)
+
+EXEC_PROGRAM(${RUBY_EXECUTABLE} ARGS -r rbconfig -e 'puts Config::CONFIG["libdir"]'
+   OUTPUT_VARIABLE RUBY_POSSIBLE_LIB_PATH)
+
+FIND_PATH(RUBY_INCLUDE_PATH 
+   NAMES ruby.h
+   PATHS 
+   ${RUBY_ARCH_DIR}
+  /usr/lib/ruby/1.8/i586-linux-gnu/ )
 
 FIND_LIBRARY(RUBY_LIBRARY
   NAMES ruby
-  PATHS ${RUBY_POSSIBLE_LIB_PATHS}
+  PATHS ${RUBY_POSSIBLE_LIB_PATH}
   )
-
-FIND_PROGRAM(RUBY_EXECUTABLE
-  NAMES ruby
-  PATHS
-  /usr/bin
-  /usr/local/bin
-)
 
 MARK_AS_ADVANCED(
   RUBY_EXECUTABLE
   RUBY_LIBRARY
   RUBY_INCLUDE_PATH
   )
-
