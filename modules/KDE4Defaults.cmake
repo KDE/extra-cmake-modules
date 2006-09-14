@@ -1,7 +1,10 @@
 
-# support for Dart: http://public.kitware.com/dashboard.php?name=kde
 enable_testing()
-include(CTest)
+
+# support for Dart: http://public.kitware.com/dashboard.php?name=kde
+if (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
+   include(CTest)
+endif (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
 
 # Always include srcdir and builddir in include path
 # This saves typing ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY} in about every subdir
