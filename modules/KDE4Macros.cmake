@@ -45,7 +45,7 @@ macro (KDE4_ADD_KCFG_FILES _sources )
        if(_kcfg_generatemoc)
          qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
          set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
-         macro_add_file_dependencies(${_src_FILE} ${_moc_FILE} )
+         list(APPEND ${_sources} ${_moc_FILE})
        endif(_kcfg_generatemoc)
 
        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
@@ -86,9 +86,9 @@ endmacro (KDE4_ADD_UI_FILES)
 
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE4_ADD_UI3_FILES(foo_SRCS ${ui_files})
-MACRO (KDE4_ADD_UI3_FILES _sources )
+macro (KDE4_ADD_UI3_FILES _sources )
 
-   QT4_GET_MOC_INC_DIRS(_moc_INCS)
+   qt4_get_moc_inc_dirs(_moc_INCS)
 
    foreach (_current_FILE ${ARGN})
 
@@ -126,7 +126,7 @@ MACRO (KDE4_ADD_UI3_FILES _sources )
          MAIN_DEPENDENCY ${_header}
       )
 
-      ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
+      add_custom_command(OUTPUT ${_moc}
          COMMAND ${QT_MOC_EXECUTABLE}
          ARGS ${_moc_INCS} ${_header} -o ${_moc}
          MAIN_DEPENDENCY ${_header}
@@ -134,11 +134,11 @@ MACRO (KDE4_ADD_UI3_FILES _sources )
       list(APPEND ${_sources} ${_src} ${_moc} )
 
    endforeach (_current_FILE)
-ENDMACRO (KDE4_ADD_UI3_FILES)
+endmacro (KDE4_ADD_UI3_FILES)
 
 
-MACRO (KDE4_AUTOMOC)
-   QT4_GET_MOC_INC_DIRS(_moc_INCS)
+macro (KDE4_AUTOMOC)
+   qt4_get_moc_inc_dirs(_moc_INCS)
 
    set(_matching_FILES )
    foreach (_current_FILE ${ARGN})
@@ -222,26 +222,26 @@ MACRO (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NA
 ENDMACRO (_KDE4_ADD_ICON_INSTALL_RULE)
 
 
-MACRO (KDE4_INSTALL_ICONS _defaultpath )
+macro (KDE4_INSTALL_ICONS _defaultpath )
 
    # first the png icons
-   FILE(GLOB _icons *.png)
+   file(GLOB _icons *.png)
    foreach (_current_ICON ${_icons} )
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\1" _type  "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _size  "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _group "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\4" _name  "${_current_ICON}")
-      SET(_theme_GROUP "nogroup")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\1" _type  "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _size  "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _group "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\4" _name  "${_current_ICON}")
+      set(_theme_GROUP "nogroup")
       if( ${_type} STREQUAL "cr" )
-	SET(_theme_GROUP  "crystalsvg")	
+	set(_theme_GROUP  "crystalsvg")	
       endif(${_type} STREQUAL "cr" )
 
       if( ${_type} STREQUAL "lo" )
-      	SET(_theme_GROUP  "locolor")
+      	set(_theme_GROUP  "locolor")
       endif(${_type} STREQUAL "lo" )
 
       if( ${_type} STREQUAL "hi" )
- 	SET(_theme_GROUP  "hicolor")
+ 	set(_theme_GROUP  "hicolor")
       endif(${_type} STREQUAL "hi" )
       
       if( NOT ${_theme_GROUP} STREQUAL "nogroup")
@@ -250,10 +250,10 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath )
                     ${_group} ${_current_ICON} ${_name})
       endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
 
-   ENDforeach (_current_ICON)
+   endforeach (_current_ICON)
 
    # mng icons
-   FILE(GLOB _icons *.mng)
+   file(GLOB _icons *.mng)
    foreach (_current_ICON ${_icons} )
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\1" _type  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\2" _size  "${_current_ICON}")
@@ -265,11 +265,11 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath )
       endif(${_type} STREQUAL "cr" )
       
       if( ${_type} STREQUAL "lo" )
-        SET(_theme_GROUP  "locolor")
+        set(_theme_GROUP  "locolor")
       endif(${_type} STREQUAL "lo" )
 
       if( ${_type} STREQUAL "hi" )
-        SET(_theme_GROUP  "hicolor")
+        set(_theme_GROUP  "hicolor")
       endif(${_type} STREQUAL "hi" )
 
       if( NOT ${_theme_GROUP} STREQUAL "nogroup")
@@ -278,11 +278,11 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath )
                 ${_group} ${_current_ICON} ${_name})
       endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
 
-   ENDforeach (_current_ICON)
+   endforeach (_current_ICON)
 
 
    # and now the svg icons
-   FILE(GLOB _icons *.svgz)
+   file(GLOB _icons *.svgz)
    foreach (_current_ICON ${_icons} )
 	    STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _type "${_current_ICON}")
             STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _group "${_current_ICON}")
@@ -307,9 +307,9 @@ MACRO (KDE4_INSTALL_ICONS _defaultpath )
                                  ${_group} ${_current_ICON} ${_name})
             endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
 
-   ENDforeach (_current_ICON)
+   endforeach (_current_ICON)
 
-ENDMACRO (KDE4_INSTALL_ICONS)
+endmacro (KDE4_INSTALL_ICONS)
 
 
 MACRO (KDE4_INSTALL_LIBTOOL_FILE _subdir _target)
@@ -446,7 +446,7 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
 endmacro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE)
 
 
-MACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
+macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
    if (${_with_PREFIX} STREQUAL "WITH_PREFIX")
       set(_first_SRC)
@@ -474,7 +474,7 @@ MACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    endif (WIN32)
 
-ENDMACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
+endmacro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 
 # this macro checks is intended to check whether a list of source
@@ -487,7 +487,7 @@ ENDMACRO (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 # if "RUN_UNINSTALLED" is in the list of files, the _uninst argument is set to 
 # "RUN_UNINSTALLED" (which evaluates to TRUE in cmake), otherwise it is set empty
 # (which evaluates to FALSE in cmake)
-MACRO(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
+macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
    set(${_nogui})  
    set(${_uninst})
    set(${_output_LIST} ${ARGN})
@@ -526,7 +526,7 @@ MACRO(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
       list(REMOVE_AT ${_output_LIST} ${remove})
    endif (NOT "${remove}" STREQUAL "NOTFOUND")
 
-ENDMACRO(KDE4_CHECK_EXECUTABLE_PARAMS)
+endmacro(KDE4_CHECK_EXECUTABLE_PARAMS)
 
 
 macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
@@ -631,29 +631,28 @@ MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 ENDMACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 
-MACRO (KDE4_ADD_WIDGET_FILES _sources)
-   FOREACH (_current_FILE ${ARGN})
+macro (KDE4_ADD_WIDGET_FILES _sources)
+   foreach (_current_FILE ${ARGN})
 
-      GET_FILENAME_COMPONENT(_input ${_current_FILE} ABSOLUTE)
-      GET_FILENAME_COMPONENT(_basename ${_input} NAME_WE)
-      SET(_source ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.cpp)
-      SET(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.moc)
+      get_filename_component(_input ${_current_FILE} ABSOLUTE)
+      get_filename_component(_basename ${_input} NAME_WE)
+      set(_source ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.cpp)
+      set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.moc)
 
       # create source file from the .widgets file
-      ADD_CUSTOM_COMMAND(OUTPUT ${_source}
+      add_custom_command(OUTPUT ${_source}
         COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE}
         ARGS -o ${_source} ${_input}
         MAIN_DEPENDENCY ${_input} DEPENDS ${_KDE4_MAKEKDEWIDGETS_DEP})
 
       # create moc file
-      QT4_GENERATE_MOC(${_source} ${_moc} )
-      MACRO_ADD_FILE_DEPENDENCIES(${_source} ${_moc})
+      qt4_generate_moc(${_source} ${_moc} )
 
-      list(APPEND ${_sources} ${_source})
+      list(APPEND ${_sources} ${_source} ${_moc})
 
-   ENDFOREACH (_current_FILE)
+   endforeach (_current_FILE)
 
-ENDMACRO (KDE4_ADD_WIDGET_FILES)
+endmacro (KDE4_ADD_WIDGET_FILES)
 
 MACRO(KDE4_ADD_DCOP_SKELS)
    MESSAGE(FATAL_ERROR "There is a call to KDE4_ADD_DCOP_SKELS() in the CMakeLists.txt for '${ARGV0}', but DCOP is no longer supported by KDE4.
