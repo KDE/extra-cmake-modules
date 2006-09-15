@@ -25,11 +25,21 @@ endif (RUBY_LIBRARY AND RUBY_INCLUDE_PATH)
 
 FIND_PROGRAM(RUBY_EXECUTABLE NAMES ruby ruby1.8 ruby18 )
 
-EXEC_PROGRAM(${RUBY_EXECUTABLE} ARGS -r rbconfig -e 'puts Config::CONFIG[\"archdir\"]'
+EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts Config::CONFIG['archdir']"
    OUTPUT_VARIABLE RUBY_ARCH_DIR)
 
-EXEC_PROGRAM(${RUBY_EXECUTABLE} ARGS -r rbconfig -e 'puts Config::CONFIG["libdir"]'
+
+EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts Config::CONFIG['libdir']"
    OUTPUT_VARIABLE RUBY_POSSIBLE_LIB_PATH)
+
+EXECUTE_PROCESS(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "puts Config::CONFIG['rubylibdir']"
+   OUTPUT_VARIABLE RUBY_RUBY_LIB_PATH)
+
+# remove the new lines from the output by replacing them with empty strings
+STRING(REPLACE "\n" "" RUBY_ARCH_DIR "${RUBY_ARCH_DIR}")
+STRING(REPLACE "\n" "" RUBY_POSSIBLE_LIB_PATH "${RUBY_POSSIBLE_LIB_PATH}")
+STRING(REPLACE "\n" "" RUBY_RUBY_LIB_PATH "${RUBY_RUBY_LIB_PATH}")
+
 
 FIND_PATH(RUBY_INCLUDE_PATH 
    NAMES ruby.h
