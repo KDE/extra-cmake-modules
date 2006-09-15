@@ -8,18 +8,18 @@ install( FILES  kde4init_dummy.cpp.in kde4_cmake_uninstall.cmake.in ${cmakeFiles
 
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
 set(FILES_TO_REMOVE
- ${module_install_dir}/FindQtDBus.cmake
- ${module_install_dir}/QtDBusMacros.cmake
- ${module_install_dir}/MacroGetenvWinPath.cmake
- ${module_install_dir}/FindKDE4.cmake
- ${module_install_dir}/UsePkgconfig.cmake
+ ${module_install_dir}/CheckTypeSize.cmake
  ${module_install_dir}/FindKDE3.cmake
+ ${module_install_dir}/FindKDE4.cmake
+ ${module_install_dir}/FindQtDBus.cmake
+ ${module_install_dir}/FindZLIB.cmake
  ${module_install_dir}/KDE3Macros.cmake
+ ${module_install_dir}/MacroGetenvWinPath.cmake
+ ${module_install_dir}/QtDBusMacros.cmake
+ ${module_install_dir}/UsePkgconfig.cmake
  ${module_install_dir}/kde3uic.cmake
- ${module_install_dir}/kde3init_dummy.cpp.in )
-
-# remove the following files once we depend on cmake >= 2.4.3
-# FindZLIB.cmake
+ ${module_install_dir}/kde3init_dummy.cpp.in
+)
 
 install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/remove_files.cmake )
 
