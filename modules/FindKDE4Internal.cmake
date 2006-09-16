@@ -320,7 +320,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       macro_ensure_version( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_OK )
    
    else (KDEVERSION)
-      message(FATAL_ERROR "Couldn't parse KDE version string from the kde-config output:\n${kdeconfig_output}")
+      message(FATAL_ERROR "Couldn't parse KDE version string from the kde4-config output:\n${kdeconfig_output}")
    endif (KDEVERSION)
 
 
