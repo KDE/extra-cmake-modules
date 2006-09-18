@@ -1,9 +1,9 @@
-# - Check whether the compiler supports a given flag.
+# - Check whether the CXX compiler supports a given flag.
 # CHECK_CXX_COMPILER_FLAG(FLAG VARIABLE)
 #
 #  FLAG - the compiler flag
 #  VARIABLE - variable to store the result
-#
+
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
