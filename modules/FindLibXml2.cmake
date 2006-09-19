@@ -8,53 +8,52 @@
 #
 # Copyright (c) 2006, Alexander Neundorf <neundorf@kde.org>
 # This code is available under the BSD license, see licenses/BSD for details.
-#
+
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
+IF (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
+   # in cache already
+   SET(LibXml2_FIND_QUIETLY TRUE)
+ENDIF (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
 
-    # in cache already
-    SET(LIBXML2_FOUND TRUE)
+IF (NOT WIN32)
+   # use pkg-config to get the directories and then use these values
+   # in the FIND_PATH() and FIND_LIBRARY() calls
+   INCLUDE(UsePkgConfig)
+   PKGCONFIG(libxml-2.0 _LibXml2IncDir _LibXml2LinkDir _LibXml2LinkFlags _LibXml2Cflags)
+   SET(LIBXML2_DEFINITIONS ${_LibXml2Cflags})
+ENDIF (NOT WIN32)
 
-else (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
+FIND_PATH(LIBXML2_INCLUDE_DIR libxml/xpath.h
+   PATHS
+   ${_LibXml2IncDir}
+   PATH_SUFFIXES libxml2
+   )
 
-    IF (NOT WIN32)
-        # use pkg-config to get the directories and then use these values
-        # in the FIND_PATH() and FIND_LIBRARY() calls
-        INCLUDE(UsePkgConfig)
-        PKGCONFIG(libxml-2.0 _LibXml2IncDir _LibXml2LinkDir _LibXml2LinkFlags _LibXml2Cflags)
-        set(LIBXML2_DEFINITIONS ${_LibXml2Cflags})
-    ENDIF (NOT WIN32)
+FIND_LIBRARY(LIBXML2_LIBRARIES NAMES xml2 libxml2
+   PATHS
+   ${_LibXml2LinkDir}
+   )
 
-    FIND_PATH(LIBXML2_INCLUDE_DIR libxml/xpath.h
-      PATHS
-     ${_LibXml2IncDir}
-      PATH_SUFFIXES libxml2
-    )
+IF (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
+   SET(LIBXML2_FOUND TRUE)
+ELSE (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
+   SET(LIBXML2_FOUND FALSE)
+ENDIF (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
 
-    FIND_LIBRARY(LIBXML2_LIBRARIES NAMES xml2 libxml2
-      PATHS
-      ${_LibXml2LinkDir}
-    )
+IF (LIBXML2_FOUND)
+   IF (NOT LibXml2_FIND_QUIETLY)
+      MESSAGE(STATUS "Found LibXml2: ${LIBXML2_LIBRARIES}")
+   ENDIF (NOT LibXml2_FIND_QUIETLY)
+ELSE (LIBXML2_FOUND)
+   IF (LibXml2_FIND_REQUIRED)
+      MESSAGE(SEND_ERROR "Could NOT find LibXml2")
+   ENDIF (LibXml2_FIND_REQUIRED)
+ENDIF (LIBXML2_FOUND)
 
-    if (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
-       set(LIBXML2_FOUND TRUE)
-    endif (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
+MARK_AS_ADVANCED(LIBXML2_INCLUDE_DIR LIBXML2_LIBRARIES)
 
-    if (LIBXML2_FOUND)
-      if (NOT LibXml2_FIND_QUIETLY)
-        message(STATUS "Found LibXml2: ${LIBXML2_LIBRARIES}")
-      endif (NOT LibXml2_FIND_QUIETLY)
-    else (LIBXML2_FOUND)
-      if (LibXml2_FIND_REQUIRED)
-        message(SEND_ERROR "Could NOT find LibXml2")
-      endif (LibXml2_FIND_REQUIRED)
-    endif (LIBXML2_FOUND)
-
-    MARK_AS_ADVANCED(LIBXML2_INCLUDE_DIR LIBXML2_LIBRARIES)
-
-endif (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
