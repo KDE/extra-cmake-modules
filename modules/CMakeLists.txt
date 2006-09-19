@@ -23,6 +23,14 @@ set(FILES_TO_REMOVE
 
 # can be removed once we require cmake 2.4.4 or newer:
 # CheckCXXCompilerFlag.cmake
+# FindBZip2.cmake
+# FindJasper.cmake
+# FindLibXml2.cmake
+# FindLibXslt.cmake
+# FindOpenSSL.cmake
+# FindASPELL.cmake
+# FindHSPELL.cmake
+
 
 install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/remove_files.cmake )
 
