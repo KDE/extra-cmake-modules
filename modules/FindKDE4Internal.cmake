@@ -38,6 +38,7 @@
 # KDE4_PHONONCORE_LIBRARY  - the phononcore library
 # KDE4_PHONONUI_LIBRARY    - the phononui library
 # KDE4_KDEFX_LIBRARY       - the kdefx library
+# KDE4_THREADWEAVER_LIBRARY- the threadweaver library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -60,6 +61,7 @@
 # KDE4_PHONONCORE_LIBS       - the phononcore library and all depending librairies
 # KDE4_PHONONUI_LIBS         - the phononui library and all depending librairies
 # KDE4_KDEFX_LIBS            - the kdefx library and all depending librairies
+# KDE4_THREADWEAVER_LIBS     - the threadweaver library and all depending libraries
 #
 # This module defines a bunch of variables used as locations
 # for install directories. They are all interpreted relative
@@ -383,6 +385,8 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    find_library(KDE4_PHONONUI_LIBRARY NAMES phononui PATHS ${KDE4_LIB_INSTALL_DIR} )
    set(KDE4_PHONONUI_LIBRARIES ${phononui_LIB_DEPENDS} ${KDE4_PHONONUI_LIBRARY} )
 
+   find_library(KDE4_THREADWEAVER_LIBRARY NAMES threadweaver PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_THREADWEAVER_LIBRARIES $(threadweaver_LIB_DEPENDS} ${KDE4_THREADWEAVER_LIBRARY} )
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
