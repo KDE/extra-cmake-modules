@@ -11,8 +11,6 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-#KDE_CHECK_HEADER(taglib/mpcfile.h, have_taglib_mpc=yes, have_taglib_mpc=no)
-
 FIND_PROGRAM(TAGLIBCONFIG_EXECUTABLE NAMES taglib-config PATHS
    /usr/bin
    /usr/local/bin
