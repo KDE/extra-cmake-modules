@@ -1,6 +1,10 @@
 # This macro compares version numbers of the form "x.y.z"
-# MACRO_ENSURE_VERSION( ${FOO_MIN_VERSION} ${FOO_VERSION_FOUND} FOO_VERSION_OK)
+# MACRO_ENSURE_VERSION( FOO_MIN_VERSION FOO_VERSION_FOUND FOO_VERSION_OK)
 # will set FOO_VERSIN_OK to true if FOO_VERSION_FOUND >= FOO_MIN_VERSION
+# where both have to be in a 3-part-version format, leading and trailing
+# text is ok, e.g.
+# MACRO_ENSURE_VERSION( "2.5.31" "flex 2.5.4a" VERSION_OK)
+# which means 2.5.31 is required and "flex 2.5.4a" is what was found on the system
 
 # Copyright (c) 2006, David Faure, <faure@kde.org>
 #
@@ -13,11 +17,11 @@ MACRO(MACRO_ENSURE_VERSION requested_version found_version var_too_old)
     STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+" "\\1" req_major_vers "${requested_version}")
     STRING(REGEX REPLACE "[0-9]+\\.([0-9]+)\\.[0-9]+" "\\1" req_minor_vers "${requested_version}")
     STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" req_patch_vers "${requested_version}")
-   
+
     STRING(REGEX REPLACE "([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" found_major_vers "${found_version}")
     STRING(REGEX REPLACE "[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" found_minor_vers "${found_version}")
     STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" found_patch_vers "${found_version}")
-   
+
     # compute an overall version number which can be compared at once
     MATH(EXPR req_vers_num "${req_major_vers}*10000 + ${req_minor_vers}*100 + ${req_patch_vers}")
     MATH(EXPR found_vers_num "${found_major_vers}*10000 + ${found_minor_vers}*100 + ${found_patch_vers}")
