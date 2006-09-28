@@ -22,11 +22,6 @@ MACRO(MACRO_ENSURE_VERSION requested_version found_version var_too_old)
     STRING(REGEX REPLACE "[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" found_minor_vers "${found_version}")
     STRING(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" found_patch_vers "${found_version}")
 
-    # Necessary to multiply by 10 otherwise 2.5.4 is inferior to 2.5.31
-    if( req_patch_vers GREATER "9" AND found_patch_vers LESS "10")
-        MATH(EXPR found_patch_vers "${found_patch_vers}*10")
-    endif(req_patch_vers GREATER "9" AND found_patch_vers LESS "10")
-    
     # compute an overall version number which can be compared at once
     MATH(EXPR req_vers_num "${req_major_vers}*10000 + ${req_minor_vers}*100 + ${req_patch_vers}")
     MATH(EXPR found_vers_num "${found_major_vers}*10000 + ${found_minor_vers}*100 + ${found_patch_vers}")
