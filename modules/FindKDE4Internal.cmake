@@ -201,44 +201,69 @@ include (CheckCXXCompilerFlag)
 #add some KDE specific stuff
 
 # the following are directories where stuff will be installed to
- set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
- set(SHARE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/share CACHE PATH "Base directory for files which go to share/")
- set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}       CACHE PATH  "Base directory for executables and libraries")
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 
- set(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"                  CACHE PATH "The install dir for executables (default prefix/bin)")
- set(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"                 CACHE PATH "The install dir for system executables (default prefix/sbin)")
- set(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}"     CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib${LIB_SUFFIX})")
 
- set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib/kde4/libexec)")
- set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                     CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+# this macro implements some very special logic how to deal with the cache
+# by default the various install locations inherit their value from theit "parent" variable
+# so if you set CMAKE_INSTALL_PREFIX, then EXEC_INSTALL_PREFIX, PLUGIN_INSTALL_DIR will
+# calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX
+# this would work completely without using the cache.
+# but if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into 
+# the cache, otherwise it will be forgotten on the next cmake run.
+# Once a variable is in the cache, it doesn't depend on its "parent" variables
+# anymore and you can only change it by editing it directly.
+# this macro helps in this regard, because as long as you don't set one of the 
+# variables explicitely to some location, it will always calculate its value from its 
+# parents. So modifying CMAKE_INSTALL_PREFIX later on will have the desired effect.
+# But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
+# this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
+macro(_SET_FANCY _var _value _comment)
+   if (NOT DEFINED ${_var})
+      set(${_var} ${_value})
+   else (NOT DEFINED ${_var})
+      set(${_var} "${${_var}}" CACHE PATH "${_comment}")
+   endif (NOT DEFINED ${_var})
+endmacro(_SET_FANCY)
 
- set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"             CACHE PATH "The subdirectory to the header prefix")
- set(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"              CACHE PATH "The config file install dir")
- set(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"                CACHE PATH "The parent directory where applications can install their data")
- set(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"            CACHE PATH "The HTML install dir for documentation")
- set(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"               CACHE PATH "The icon install dir (default prefix/share/icons/)")
- set(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"         CACHE PATH "The install dir for kconfig files")
- set(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"              CACHE PATH "The install dir for translations")
- set(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"             CACHE PATH "The install dir for the mimetype desktop files")
- set(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/services"            CACHE PATH "The install dir for service (desktop, protocol, ...) files")
- set(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/servicetypes"        CACHE PATH "The install dir for servicestypes desktop files")
- set(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"              CACHE PATH "The install dir for sound files")
- set(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"           CACHE PATH "The install dir for templates (Create new file...)") 
- set(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"          CACHE PATH "The install dir for wallpapers")
- set(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"            CACHE PATH "The kconf_update install dir")
+
+_set_fancy(SHARE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/share              "Base directory for files which go to share/")
+_set_fancy(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX}                    "Base directory for executables and libraries")
+
+_set_fancy(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"           "The install dir for executables (default prefix/bin)")
+_set_fancy(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"          "The install dir for system executables (default prefix/sbin)")
+_set_fancy(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" "The subdirectory relative to the install prefix where libraries will be installed (default is /lib${LIB_SUFFIX})")
+
+_set_fancy(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"      "The subdirectory relative to the install prefix where libraries will be installed (default is /lib/kde4/libexec)")
+_set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"              "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+
+_set_fancy(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"      "The subdirectory to the header prefix")
+_set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"       "The config file install dir")
+_set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"         "The parent directory where applications can install their data")
+_set_fancy(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"     "The HTML install dir for documentation")
+_set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"        "The icon install dir (default prefix/share/icons/)")
+_set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"  "The install dir for kconfig files")
+_set_fancy(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"       "The install dir for translations")
+_set_fancy(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"      "The install dir for the mimetype desktop files")
+_set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/services"     "The install dir for service (desktop, protocol, ...) files")
+_set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/servicetypes" "The install dir for servicestypes desktop files")
+_set_fancy(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"       "The install dir for sound files")
+_set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"    "The install dir for templates (Create new file...)") 
+_set_fancy(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"   "The install dir for wallpapers")
+_set_fancy(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"     "The kconf_update install dir")
  # this one shouldn't be used anymore
- set(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/applnk"              CACHE PATH "Is this still used ?")
- set(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"           CACHE PATH "The install dir for autostart files")
- 
- set(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde"    CACHE PATH "The XDG apps dir")
- set(XDG_DIRECTORY_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories" CACHE PATH "The XDG directory")
- 
- set(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"                 CACHE PATH "The kde sysconfig install dir (default /etc)")
- set(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"                 CACHE PATH "The kde man install dir (default prefix/man/)")
- set(INFO_INSTALL_DIR         "${CMAKE_INSTALL_PREFIX}/info"                CACHE PATH "The kde info install dir (default prefix/info)")
-# set(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"             CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
-# set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4/modules"             CACHE PATH "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
-# 
+_set_fancy(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/applnk"       "Is this still used ?")
+_set_fancy(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"    "The install dir for autostart files")
+
+_set_fancy(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde"    "The XDG apps dir")
+_set_fancy(XDG_DIRECTORY_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories" "The XDG directory")
+
+_set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"          "The kde sysconfig install dir (default /etc)")
+_set_fancy(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"          "The kde man install dir (default prefix/man/)")
+_set_fancy(INFO_INSTALL_DIR         "${CMAKE_INSTALL_PREFIX}/info"         "The kde info install dir (default prefix/info)")
+# _set_fancy(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"           "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
+# _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4/modules"           "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
+
 
 #################################
 
