@@ -40,6 +40,8 @@
 # KDE4_KDEFX_LIBRARY       - the kdefx library
 # KDE4_THREADWEAVER_LIBRARY- the threadweaver library
 # KDE4_SOLID_LIBRARY       - the solid library
+# KDE4_SOLIDIFACES_LIBRARY - the solidiface library
+# KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -64,6 +66,8 @@
 # KDE4_KDEFX_LIBS            - the kdefx library and all depending librairies
 # KDE4_THREADWEAVER_LIBRARIES- the threadweaver library and all depending libraries
 # KDE4_SOLID_LIBS            - the solid library and all depending libraries
+# KDE4_SOLIDIFACES_LIBS      - the solid iface library and all depending libraries
+# KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
 #
 # This module defines a bunch of variables used as locations
 # for install directories. They are all interpreted relative
@@ -415,8 +419,15 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
    find_library(KDE4_SOLID_LIBRARY NAMES solid PATHS ${KDE4_LIB_INSTALL_DIR} )
    set(KDE4_SOLID_LIBS ${solid_LIB_DEPENDS} ${KDE4_SOLID_LIBRARY} )
 
+   find_library(KDE4_SOLIDIFACES_LIBRARY NAMES solidifaces PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_SOLIDIFACES_LIBS ${solidifaces_LIB_DEPENDS} ${KDE4_SOLIDIFACES_LIBRARY} )
+
    find_library(KDE4_THREADWEAVER_LIBRARY NAMES threadweaver PATHS ${KDE4_LIB_INSTALL_DIR} )
    set(KDE4_THREADWEAVER_LIBRARIES ${threadweaver_LIB_DEPENDS} ${KDE4_THREADWEAVER_LIBRARY} )
+
+   find_library(KDE4_KNOTIFYCONFIG_LIBRARY NAMES knotifyconfig PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KNOTIFYCONFIG_LIBS ${knotifyconfig_LIB_DEPENDS} ${KDE4_KNOTIFYCONFIG_LIBRARY} )
+
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
