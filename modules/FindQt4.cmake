@@ -57,6 +57,7 @@
 #  QT_QTASSISTANT_FOUND   True if QtAssistant was found.
 #  QT_QTDBUS_FOUND        True if QtDBus was found.
 #  QT_QTDESIGNER_FOUND    True if QtDesigner was found.
+#  QT_QTDESIGNERCOMPONENTS True if QtDesignerComponents was found.
 #  QT_QTMOTIF_FOUND       True if QtMotif was found.
 #  QT_QTNETWORK_FOUND     True if QtNetwork was found.
 #  QT_QTNSPLUGIN_FOUND    True if QtNsPlugin was found.
@@ -80,6 +81,7 @@
 #  QT_QTASSISTANT_INCLUDE_DIR  Path to "include/QtAssistant" 
 #  QT_QTCORE_INCLUDE_DIR       Path to "include/QtCore"         
 #  QT_QTDESIGNER_INCLUDE_DIR   Path to "include/QtDesigner" 
+#  QT_QTDESIGNERCOMPONENTS_INCLUDE_DIR   Path to "include/QtDesigner"
 #  QT_QTDBUS_INCLUDE_DIR       Path to "include/QtDBus" 
 #  QT_QTGUI_INCLUDE_DIR        Path to "include/QtGui" 
 #  QT_QTMOTIF_INCLUDE_DIR      Path to "include/QtMotif" 
@@ -118,6 +120,10 @@
 # The QtDesigner library:     QT_QTDESIGNER_LIBRARY
 #                             QT_QTDESIGNER_LIBRARY_RELEASE
 #                             QT_QTDESIGNER_LIBRARY_DEBUG
+#
+# The QtDesignerComponents library:     QT_QTDESIGNERCOMPONENTS_LIBRARY
+#                             QT_QTDESIGNERCOMPONENTS_LIBRARY_RELEASE
+#                             QT_QTDESIGNERCOMPONENTS_LIBRARY_DEBUG
 #
 # The QtGui library:          QT_QTGUI_LIBRARY
 #                             QT_QTGUI_LIBRARY_RELEASE
@@ -494,6 +500,15 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
+  # Set QT_QTDESIGNER_INCLUDE_DIR
+  FIND_PATH(QT_QTDESIGNERCOMPONENTS_INCLUDE_DIR QDesignerComponents
+    PATHS
+    ${QT_INCLUDE_DIR}/QtDesigner
+    ${QT_HEADERS_DIR}/QtDesigner
+    NO_DEFAULT_PATH
+    )
+
+
   # Set QT_QTDBUS_INCLUDE_DIR
   FIND_PATH(QT_QTDBUS_INCLUDE_DIR QtDBus
     PATHS
@@ -618,6 +633,11 @@ IF (QT4_QMAKE_FOUND)
   FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_RELEASE NAMES QtDesigner QtDesigner4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
   FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_DEBUG   NAMES QtDesigner_debug QtDesignerd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
+ # Set QT_QTDESIGNER_LIBRARY
+  FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_RELEASE NAMES QtDesignerComponents QtDesignerComponents4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+  FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_DEBUG   NAMES QtDesignerComponents_debug QtDesignerComponentsd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
+
   ############################################
   #
   # Check the existence of the libraries.
@@ -674,6 +694,7 @@ IF (QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QT3SUPPORT)
   _QT4_ADJUST_LIB_VARS(QTASSISTANT)
   _QT4_ADJUST_LIB_VARS(QTDESIGNER)
+  _QT4_ADJUST_LIB_VARS(QTDESIGNERCOMPONENTS)
   IF(Q_WS_X11)
     _QT4_ADJUST_LIB_VARS(QTMOTIF)
   ENDIF(Q_WS_X11)
