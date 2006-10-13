@@ -16,10 +16,10 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-macro (KDE4_ADD_KCFG_FILES _sources )
-   IF( ${ARGV1} STREQUAL "GENERATE_MOC" )
+macro (KDE4_ADD_KCFG_FILES _target_NAME _sources )
+   IF( ${ARGV2} STREQUAL "GENERATE_MOC" )
       SET(_kcfg_generatemoc TRUE)
-   ENDIF( ${ARGV1} STREQUAL "GENERATE_MOC" )
+   ENDIF( ${ARGV2} STREQUAL "GENERATE_MOC" )
 
    foreach (_current_FILE ${ARGN})
 
@@ -46,6 +46,11 @@ macro (KDE4_ADD_KCFG_FILES _sources )
          set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
          list(APPEND ${_sources} ${_moc_FILE})
        endif(_kcfg_generatemoc)
+
+       if (KDE4_ENABLE_FINAL)
+          kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _c_files ${ARGN})
+          macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_src_FILE})
+       endif (KDE4_ENABLE_FINAL)
 
        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
      endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
