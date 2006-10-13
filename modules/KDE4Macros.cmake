@@ -1,4 +1,3 @@
-
 # for documentation look at FindKDE4Internal.cmake
 #
 # this file contains the following macros:
@@ -137,7 +136,7 @@ macro (KDE4_ADD_UI3_FILES _sources )
 endmacro (KDE4_ADD_UI3_FILES)
 
 
-macro (KDE4_AUTOMOC)
+macro (KDE4_AUTOMOC  _target_NAME)
    qt4_get_moc_inc_dirs(_moc_INCS)
 
    set(_matching_FILES )
@@ -156,14 +155,12 @@ macro (KDE4_AUTOMOC)
       if (EXISTS ${_abs_FILE} AND NOT _skip)
 
          file(READ ${_abs_FILE} _contents)
-
          get_filename_component(_abs_PATH ${_abs_FILE} PATH)
 
          string(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
          if (_match)
             foreach (_current_MOC_INC ${_match})
                string(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
-
                get_filename_component(_basename ${_current_MOC} NAME_WE)
                set(_header ${_abs_PATH}/${_basename}.h)
                set(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
@@ -177,15 +174,19 @@ macro (KDE4_AUTOMOC)
                   ARGS ${_moc_INCS} ${_header} -o ${_moc}
                   MAIN_DEPENDENCY ${_header}
                )
-
-               macro_add_file_dependencies(${_abs_FILE} ${_moc})
+             if (KDE4_ENABLE_FINAL)
+		 #kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _c_files ${_SRCS})
+                macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_moc})
+             else (KDE4_ENABLE_FINAL)
+                macro_add_file_dependencies(${_abs_FILE} ${_moc})
+             endif (KDE4_ENABLE_FINAL)
 
             endforeach (_current_MOC_INC)
          endif (_match)
 
       endif (EXISTS ${_abs_FILE} AND NOT _skip)
    endforeach (_current_FILE)
-endmacro (KDE4_AUTOMOC)
+endmacro (KDE4_AUTOMOC _target_NAME)
 
 
 # only used internally by KDE4_INSTALL_ICONS
