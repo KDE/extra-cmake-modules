@@ -926,17 +926,17 @@ IF (QT4_QMAKE_FOUND)
     SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
     SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
 	
-	IF(_optionalClassName)
+    IF(_optionalClassName)
        ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
           COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -a ${_basename} -c ${_optionalClassName} -i ${_include} -l ${_parentClass} ${_infile}
           DEPENDS ${_infile}
         )			
-	ELSE(_optionalClassName)
+    ELSE(_optionalClassName)
        ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
           COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -a ${_basename} -i ${_include} -l ${_parentClass} ${_infile}
           DEPENDS ${_infile}
         )
-	ENDIF(_optionalClassName)
+    ENDIF(_optionalClassName)
 
     QT4_GENERATE_MOC(${_header} ${_moc})
     SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
