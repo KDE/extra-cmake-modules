@@ -922,7 +922,7 @@ IF (QT4_QMAKE_FOUND)
     ENDIF (_optionalBasename)
 
     SET(_optionalClassName "${ARGV5}")
-	SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+    SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
     SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
     SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
 	
