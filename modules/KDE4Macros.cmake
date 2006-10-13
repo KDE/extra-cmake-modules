@@ -2,6 +2,7 @@
 #
 # this file contains the following macros:
 # KDE4_ADD_UI_FILES
+# KDE4_ADD_UI3_FILES
 # KDE4_ADD_KCFG_FILES
 # KDE4_AUTOMOC
 # KDE4_INSTALL_LIBTOOL_FILE
@@ -9,6 +10,8 @@
 # KDE4_ADD_KDEINIT_EXECUTABLE
 # KDE4_ADD_EXECUTABLE
 # KDE4_ADD_WIDGET_FILES
+# KDE4_INSTALL_ICONS
+# KDE4_REMOVE_OBSOLETE_CMAKE_FILES
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
