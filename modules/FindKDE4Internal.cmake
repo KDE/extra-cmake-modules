@@ -203,7 +203,6 @@ find_package(Perl REQUIRED)
 include (MacroLibrary)
 include (CheckCXXCompilerFlag)
 
-
 #add some KDE specific stuff
 
 # the following are directories where stuff will be installed to
@@ -282,6 +281,10 @@ get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
+
+if( KDE4_ENABLE_FINAL)
+	add_definitions(-DKDE_USE_FINAL)
+endif(KDE4_ENABLE_FINAL)	
 
 #Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable 
 #which is something between a shared library and a normal executable. 
