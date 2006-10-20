@@ -509,13 +509,6 @@ if (WIN32)
    
    set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES} ${GNUWIN32_INCLUDE_DIR})
 
-   # for the zlib-library. we define it direct rather then using FindZLIB.cmake
-   # here cause currently we are using the kdewin32-directory as location where
-   # they should be stored. without those additional definitions cmake with
-   # mingw breaks compiling.
-   set(ZLIB_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-   set(ZLIB_LIBRARY "${KDEWIN32_LIBRARIES}/zlib.lib")
-
    # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely, 
    # otherwise they come from KDELibsDependencies.cmake, Alex
    if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
@@ -524,7 +517,27 @@ if (WIN32)
      
    # windows, mingw
    if(MINGW)
-   #hmmm, something special to do here ?
+      # FindZLIB.cmake
+      set(ZLIB_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      set(ZLIB_LIBRARY "${KDEWIN32_LIBRARIES}/zlib.lib")
+      # FindPCRE.cmake
+      set(PCRE_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      set(PCRE_LIBRARIES "${KDEWIN32_LIBRARIES}/pcre.lib")
+      # FindLibXml2.cmake   
+      set(LIBXML2_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      set(LIBXML2_LIBRARIES "${KDEWIN32_LIBRARIES}/libxml2.lib")
+      # FindLibXslt.cmake   
+      set(LIBXSLT_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      set(LIBXSLT_LIBRARIES "${KDEWIN32_LIBRARIES}/libxslt.lib")
+      # FindJPEG.cmake   
+      set(JPEG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      set(JPEG_LIBRARY "${KDEWIN32_LIBRARIES}/jpeg.lib")
+      # FindGIF.cmake   
+      set(GIF_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      set(GIF_LIBRARIES "${KDEWIN32_LIBRARIES}/giflib.lib")
+      # FindPNG.cmake   
+      set(PNG_PNG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      set(PNG_LIBRARY "${KDEWIN32_LIBRARIES}/libpng.lib")
    endif(MINGW)
    
    # windows, microsoft compiler
