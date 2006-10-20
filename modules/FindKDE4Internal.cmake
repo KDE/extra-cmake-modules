@@ -517,6 +517,11 @@ if (WIN32)
      
    # windows, mingw
    if(MINGW)
+      #TODO use find_library + move such things either to FindKDEWIN32.cmake since it works with
+      #the kdewin32-package only anyway or have it direct with the Find*.cmake files (what could
+      #provide a problem for e.g. FindJPEG.cmake since I am pretty sure cmake.org does not like
+      #to take over our propably temporary workarounds).
+   
       # FindZLIB.cmake
       set(ZLIB_INCLUDE_DIR ${KDEWIN32_INCLUDES})
       set(ZLIB_LIBRARY "${KDEWIN32_LIBRARIES}/zlib.lib")
