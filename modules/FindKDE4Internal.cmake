@@ -504,7 +504,9 @@ if (WIN32)
    endif(CYGWIN)
 
    find_package(KDEWIN32 REQUIRED)
-   
+
+   # is GnuWin32 required or does e.g. Visual Studio provide an own implementation?
+   #find_package(GNUWIN32 REQUIRED)
    find_package(GNUWIN32)
    
    set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES} ${GNUWIN32_INCLUDE_DIR})

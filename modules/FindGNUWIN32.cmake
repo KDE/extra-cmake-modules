@@ -15,7 +15,7 @@ if(NOT GNUWIN32_DIR)
 	if(NOT GNUWIN32_DIR)
 		# search in the default program install folder
 		file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
-		find_file(GNUWIN32_DIR_tmp gnuwin32 win32libs 
+		find_file(GNUWIN32_DIR_tmp gnuwin32 kdewin32 win32libs 
    			PATHS
    			"${_progFiles}"
    			"C:/" "D:/" "E:/" "F:/" "G:/"
@@ -41,7 +41,7 @@ if (GNUWIN32_FOUND)
   endif (NOT GNUWIN32_FIND_QUIETLY)
 else (GNUWIN32_FOUND)
   if (GNUWIN32_FIND_REQUIRED)
-    message(SEND_ERROR "Could NOT find GNUWIN32")
+    message(FATAL_ERROR "Could NOT find GNUWIN32")
   endif (GNUWIN32_FIND_REQUIRED)
 endif (GNUWIN32_FOUND)
 
