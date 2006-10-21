@@ -192,11 +192,10 @@ set(QT_MIN_VERSION "4.2.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)                                      
 
-if (NOT WIN32)
-   if (NOT QT_DBUSXML2CPP_EXECUTABLE)
-      message(FATAL_ERROR "Qt4 qdbusxml2cpp was not found. Make sure it has been built and installed by Qt")
-   endif (NOT QT_DBUSXML2CPP_EXECUTABLE)
-endif (NOT WIN32)
+if (NOT QT_DBUSXML2CPP_EXECUTABLE)
+    message(FATAL_ERROR "Qt4 qdbusxml2cpp was not found. Make sure it has been built and installed by Qt")
+endif (NOT QT_DBUSXML2CPP_EXECUTABLE)
+
 
 # Perl is required for building KDE software,
 find_package(Perl REQUIRED)
