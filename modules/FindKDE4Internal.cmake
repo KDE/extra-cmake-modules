@@ -517,32 +517,32 @@ if (WIN32)
      
    # windows, mingw
    if(MINGW)
-      #TODO use find_library + move such things either to FindKDEWIN32.cmake since it works with
+      #TODO move such things either to FindKDEWIN32.cmake since it works with
       #the kdewin32-package only anyway or have it direct with the Find*.cmake files (what could
       #provide a problem for e.g. FindJPEG.cmake since I am pretty sure cmake.org does not like
       #to take over our propably temporary workarounds).
    
       # FindZLIB.cmake
       set(ZLIB_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      set(ZLIB_LIBRARY "${KDEWIN32_LIBRARIES}/zlib.lib")
+      find_library(ZLIB_LIBRARY NAMES zlib PATHS ${KDEWIN32_LIBRARY_PATH})
       # FindPCRE.cmake
       set(PCRE_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      set(PCRE_LIBRARIES "${KDEWIN32_LIBRARIES}/pcre.lib")
+      find_library(PCRE_LIBRARIES NAMES pcre PATHS ${KDEWIN32_LIBRARY_PATH})
       # FindLibXml2.cmake   
       set(LIBXML2_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      set(LIBXML2_LIBRARIES "${KDEWIN32_LIBRARIES}/libxml2.lib")
+      find_library(LIBXML2_LIBRARIES NAMES libxml2 PATHS ${KDEWIN32_LIBRARY_PATH})
       # FindLibXslt.cmake   
       set(LIBXSLT_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      set(LIBXSLT_LIBRARIES "${KDEWIN32_LIBRARIES}/libxslt.lib")
+      find_library(LIBXSLT_LIBRARIES NAMES libxslt PATHS ${KDEWIN32_LIBRARY_PATH})
       # FindJPEG.cmake   
       set(JPEG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      set(JPEG_LIBRARY "${KDEWIN32_LIBRARIES}/jpeg.lib")
+      find_library(JPEG_LIBRARY NAMES jpeg PATHS ${KDEWIN32_LIBRARY_PATH})
       # FindGIF.cmake   
       set(GIF_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      set(GIF_LIBRARIES "${KDEWIN32_LIBRARIES}/giflib.lib")
+      find_library(GIF_LIBRARIES NAMES giflib PATHS ${KDEWIN32_LIBRARY_PATH})
       # FindPNG.cmake   
       set(PNG_PNG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      set(PNG_LIBRARY "${KDEWIN32_LIBRARIES}/libpng.lib")
+      find_library(PNG_LIBRARY NAMES libpng PATHS ${KDEWIN32_LIBRARY_PATH})
    endif(MINGW)
    
    # windows, microsoft compiler

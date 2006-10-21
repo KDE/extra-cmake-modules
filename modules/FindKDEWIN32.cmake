@@ -27,9 +27,10 @@ find_path(KDEWIN32_INCLUDE_DIR winposix_export.h
 # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
 # search for kdewin32 in the default install directory for applications (default of (n)make install)
 
+set(KDEWIN32_LIBRARY_PATH ${_program_FILES_DIR}/kdewin32/lib)
 find_library(KDEWIN32_LIBRARY_RELEASE NAMES kdewin32
    PATHS 
-   ${_program_FILES_DIR}/kdewin32/lib
+   ${KDEWIN32_LIBRARY_PATH}
 )
 
 # msvc makes a difference between debug and release
