@@ -518,32 +518,31 @@ if (WIN32)
      
    # windows, mingw
    if(MINGW)
-      #TODO move such things either to FindKDEWIN32.cmake since it works with
-      #the kdewin32-package only anyway or have it direct with the Find*.cmake files (what could
-      #provide a problem for e.g. FindJPEG.cmake since I am pretty sure cmake.org does not like
-      #to take over our propably temporary workarounds).
+      #TODO: why does it break Qt 4.1.x? + move such code to FindKDEWIN32.cmake
+      #following is needed to get it compiling with Qt 4.2.1
+      #see http://www.kdelibs.com/wiki/index.php/Building_KDElibs_4_using_GCC_and_MinGW_with_Qt_4.2
    
       # FindZLIB.cmake
-      set(ZLIB_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      find_library(ZLIB_LIBRARY NAMES zlib PATHS ${KDEWIN32_LIBRARY_PATH})
+      #set(ZLIB_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      #set(ZLIB_LIBRARY ${KDEWIN32_LIBRARY_PATH}/zlib)
       # FindPCRE.cmake
-      set(PCRE_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      find_library(PCRE_LIBRARIES NAMES pcre PATHS ${KDEWIN32_LIBRARY_PATH})
+      #set(PCRE_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      #set(PCRE_LIBRARIES ${KDEWIN32_LIBRARY_PATH}/pcre)
       # FindLibXml2.cmake   
-      set(LIBXML2_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      find_library(LIBXML2_LIBRARIES NAMES libxml2 PATHS ${KDEWIN32_LIBRARY_PATH})
+      #set(LIBXML2_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      #set(LIBXML2_LIBRARIES ${KDEWIN32_LIBRARY_PATH}/libxml2)
       # FindLibXslt.cmake   
-      set(LIBXSLT_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      find_library(LIBXSLT_LIBRARIES NAMES libxslt PATHS ${KDEWIN32_LIBRARY_PATH})
+      #set(LIBXSLT_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      #set(LIBXSLT_LIBRARIES ${KDEWIN32_LIBRARY_PATH}/libxslt)
       # FindJPEG.cmake   
-      set(JPEG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      find_library(JPEG_LIBRARY NAMES jpeg PATHS ${KDEWIN32_LIBRARY_PATH})
+      #set(JPEG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      #set(JPEG_LIBRARY ${KDEWIN32_LIBRARY_PATH}/jpeg)
       # FindGIF.cmake   
-      set(GIF_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      find_library(GIF_LIBRARIES NAMES giflib PATHS ${KDEWIN32_LIBRARY_PATH})
+      #set(GIF_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      #set(GIF_LIBRARIES ${KDEWIN32_LIBRARY_PATH}/giflib)
       # FindPNG.cmake   
-      set(PNG_PNG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      find_library(PNG_LIBRARY NAMES libpng PATHS ${KDEWIN32_LIBRARY_PATH})
+      #set(PNG_PNG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
+      #set(PNG_LIBRARY ${KDEWIN32_LIBRARY_PATH}/libpng)
    endif(MINGW)
    
    # windows, microsoft compiler
