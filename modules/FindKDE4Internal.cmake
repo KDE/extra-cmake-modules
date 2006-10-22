@@ -518,31 +518,7 @@ if (WIN32)
      
    # windows, mingw
    if(MINGW)
-      #TODO: why does it break Qt 4.1.x? + move such code to FindKDEWIN32.cmake
-      #following is needed to get it compiling with Qt 4.2.1
-      #see http://www.kdelibs.com/wiki/index.php/Building_KDElibs_4_using_GCC_and_MinGW_with_Qt_4.2
-   
-      # FindZLIB.cmake
-      #set(ZLIB_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      #set(ZLIB_LIBRARY ${KDEWIN32_LIBRARY_PATH}/zlib)
-      # FindPCRE.cmake
-      #set(PCRE_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      #set(PCRE_LIBRARIES ${KDEWIN32_LIBRARY_PATH}/pcre)
-      # FindLibXml2.cmake   
-      #set(LIBXML2_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      #set(LIBXML2_LIBRARIES ${KDEWIN32_LIBRARY_PATH}/libxml2)
-      # FindLibXslt.cmake   
-      #set(LIBXSLT_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      #set(LIBXSLT_LIBRARIES ${KDEWIN32_LIBRARY_PATH}/libxslt)
-      # FindJPEG.cmake   
-      #set(JPEG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      #set(JPEG_LIBRARY ${KDEWIN32_LIBRARY_PATH}/jpeg)
-      # FindGIF.cmake   
-      #set(GIF_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      #set(GIF_LIBRARIES ${KDEWIN32_LIBRARY_PATH}/giflib)
-      # FindPNG.cmake   
-      #set(PNG_PNG_INCLUDE_DIR ${KDEWIN32_INCLUDES})
-      #set(PNG_LIBRARY ${KDEWIN32_LIBRARY_PATH}/libpng)
+      #hmmm, something special to do here ?
    endif(MINGW)
    
    # windows, microsoft compiler
