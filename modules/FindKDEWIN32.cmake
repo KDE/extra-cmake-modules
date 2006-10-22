@@ -64,11 +64,8 @@ endif(MSVC)
 # eventually it will be moved out from kdelibs/
 if (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
    set(KDEWIN32_FOUND TRUE)
-   # add the winsock2 library
-   #find_library(WIN32_USER32_LIBRARY NAMES user32 PATHS $ENV{WINDIR}/system32)
-   #find_library(WIN32_SHELL32_LIBRARY NAMES shell32 PATHS $ENV{WINDIR}/system32)
-   #find_library(WIN32_WS2_LIBRARY NAMES ws2_32 PATHS $ENV{WINDIR}/system32)
-   #set(KDEWIN32_LIBRARIES "${KDEWIN32_LIBRARY} ${WIN32_USER32_LIBRARY} ${WIN32_SHELL32_LIBRARY} ${WIN32_WS2_LIBRARY}")
+   # add needed system libs
+   set(KDEWIN32_LIBRARIES ${KDEWIN32_LIBRARY} user32 shell32 ws2_32)
 
    if (MINGW)
       #mingw compiler
