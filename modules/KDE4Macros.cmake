@@ -19,10 +19,10 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-macro (KDE4_ADD_KCFG_FILES _target_NAME _sources )
-   IF( ${ARGV2} STREQUAL "GENERATE_MOC" )
-      SET(_kcfg_generatemoc TRUE)
-   ENDIF( ${ARGV2} STREQUAL "GENERATE_MOC" )
+macro (KDE4_ADD_KCFG_FILES _sources )
+   if( ${ARGV1} STREQUAL "GENERATE_MOC" )
+      set(_kcfg_generatemoc TRUE)
+   endif( ${ARGV1} STREQUAL "GENERATE_MOC" )
 
    foreach (_current_FILE ${ARGN})
 
@@ -50,10 +50,10 @@ macro (KDE4_ADD_KCFG_FILES _target_NAME _sources )
          list(APPEND ${_sources} ${_moc_FILE})
        endif(_kcfg_generatemoc)
 
-       if (KDE4_ENABLE_FINAL)
-          kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _c_files ${ARGN})
-          macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_src_FILE})
-       endif (KDE4_ENABLE_FINAL)
+#       if (KDE4_ENABLE_FINAL)
+#          kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${ARGN})
+#          macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_src_FILE})
+#       endif (KDE4_ENABLE_FINAL)
 
        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
      endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
@@ -144,10 +144,10 @@ macro (KDE4_ADD_UI3_FILES _sources )
 endmacro (KDE4_ADD_UI3_FILES)
 
 
-macro (KDE4_AUTOMOC  _target_NAME)
+macro (KDE4_AUTOMOC)
    qt4_get_moc_inc_dirs(_moc_INCS)
 
-   set(_matching_FILES )
+   # iterate over all  files
    foreach (_current_FILE ${ARGN})
 
       get_filename_component(_abs_FILE ${_current_FILE} ABSOLUTE)
@@ -160,7 +160,13 @@ macro (KDE4_AUTOMOC  _target_NAME)
       # different rules for the same moc file
       get_source_file_property(_skip ${_abs_FILE} SKIP_AUTOMOC)
 
+      # if the file exists and should not be skipped read it completely into memory
+      # and grep for all include <foo.moc> lines
+      # for each found moc file generate a custom_target and collect
+      # the generated moc files in a list which will be set as a source files property
+      # and later be queried in kde4_add_library/executable/plugin()
       if (EXISTS ${_abs_FILE} AND NOT _skip)
+         set(_moc_FILES_PROPERTY)
 
          file(READ ${_abs_FILE} _contents)
          get_filename_component(_abs_PATH ${_abs_FILE} PATH)
@@ -182,19 +188,40 @@ macro (KDE4_AUTOMOC  _target_NAME)
                   ARGS ${_moc_INCS} ${_header} -o ${_moc}
                   MAIN_DEPENDENCY ${_header}
                )
-             if (KDE4_ENABLE_FINAL)
-	        kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _c_files ${ARGN})
-                macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_moc})
-             else (KDE4_ENABLE_FINAL)
-                macro_add_file_dependencies(${_abs_FILE} ${_moc})
-             endif (KDE4_ENABLE_FINAL)
+
+               list(APPEND _moc_FILES_PROPERTY ${_moc})
+
+#             if (KDE4_ENABLE_FINAL)
+#	        kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${ARGN})
+#                macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_moc})
+#             else (KDE4_ENABLE_FINAL)
+#                macro_add_file_dependencies(${_abs_FILE} ${_moc})
+#             endif (KDE4_ENABLE_FINAL)
 
             endforeach (_current_MOC_INC)
          endif (_match)
 
+         set_source_files_properties(${_abs_FILE} PROPERTIES AUTOMOC_FILES "${_moc_FILES_PROPERTY}")
+	 #message(STATUS "mocs for ${_abs_FILE}: ${_moc_FILES_PROPERTY}")
       endif (EXISTS ${_abs_FILE} AND NOT _skip)
    endforeach (_current_FILE)
-endmacro (KDE4_AUTOMOC _target_NAME)
+endmacro (KDE4_AUTOMOC)
+
+
+macro(KDE4_GET_AUTOMOC_FILES _list)
+   set(${_list})
+   foreach (_current_FILE ${ARGN})
+	   #message(STATUS "Checking ${_current_FILE}")
+      set(_automoc_FILES_PROPERTY)
+      get_source_file_property(_automoc_FILES_PROPERTY ${_current_FILE} AUTOMOC_FILES)
+      if (_automoc_FILES_PROPERTY)
+         foreach (_current_MOC_FILE ${_automoc_FILES_PROPERTY})
+            list(APPEND ${_list} ${_current_MOC_FILE})
+	    #message(STATUS "MOC  ${_current_MOC_FILE}")
+         endforeach (_current_MOC_FILE)
+      endif (_automoc_FILES_PROPERTY)
+   endforeach (_current_FILE)
+endmacro(KDE4_GET_AUTOMOC_FILES)
 
 
 # only used internally by KDE4_INSTALL_ICONS
@@ -354,16 +381,26 @@ ENDMACRO (KDE4_INSTALL_LIBTOOL_FILE)
 # This is not done for the C sources, they are just gathered in a separate list
 # because they are usually not written by KDE and as such not intended to be 
 # compiled all-in-one.
-macro (KDE4_CREATE_FINAL_FILES _filenameCPP _filesC )
-   set(${_filesC})
+macro (KDE4_CREATE_FINAL_FILES _filenameCPP _filesExcludedFromFinalFile )
+   set(${_filesExcludedFromFinalFile})
    file(WRITE ${_filenameCPP} "//autogenerated file\n")
    foreach (_current_FILE ${ARGN})
-      string(REGEX MATCH ".+\\.c$" _isCFile ${_current_FILE})
-      if (_isCFile)
-         list(APPEND ${_filesC} ${_current_FILE})
-      else (_isCFile)
-         file(APPEND ${_filenameCPP} "#include \"${_current_FILE}\"\n")
-      endif (_isCFile)
+      get_filename_component(_abs_FILE ${_current_FILE} ABSOLUTE)
+      # don't include any generated files in the final-file
+      # because then cmake will not know the dependencies
+      get_source_file_property(_isGenerated ${_abs_FILE} GENERATED)
+      if (_isGenerated)
+         list(APPEND ${_filesExcludedFromFinalFile} ${_abs_FILE})
+      else (_isGenerated)
+         # don't include c-files in the final-file, because they usually come 
+         # from a 3rd party and as such are not intended to be compiled all-in-one
+         string(REGEX MATCH ".+\\.c$" _isCFile ${_abs_FILE})
+         if (_isCFile)
+            list(APPEND ${_filesExcludedFromFinalFile} ${_abs_FILE})
+         else (_isCFile)
+            file(APPEND ${_filenameCPP} "#include \"${_abs_FILE}\"\n")
+         endif (_isCFile)
+      endif (_isGenerated)
    endforeach (_current_FILE)
 
 endmacro (KDE4_CREATE_FINAL_FILES)
@@ -463,11 +500,13 @@ macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
       set(_first_SRC ${_with_PREFIX})
    endif (${_with_PREFIX} STREQUAL "WITH_PREFIX")
 
+   kde4_get_automoc_files(_automoc_FILES ${_first_SRC} ${ARGN})
+
    if (KDE4_ENABLE_FINAL)
-      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _c_files ${_first_SRC} ${ARGN})
-      add_library(${_target_NAME} MODULE  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_c_files})
+      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_first_SRC} ${ARGN})
+      add_library(${_target_NAME} MODULE  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files} ${_automoc_FILES})
    else (KDE4_ENABLE_FINAL)
-      add_library(${_target_NAME} MODULE ${_first_SRC} ${ARGN})
+      add_library(${_target_NAME} MODULE ${_first_SRC} ${ARGN} ${_automoc_FILES})
    endif (KDE4_ENABLE_FINAL)
 
    if (_first_SRC)
@@ -549,12 +588,14 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 #      KDE4_ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${ARGN} )
 #   else (WIN32)
       # under UNIX, create a shared library and a small executable, which links to this library
-   if (KDE4_ENABLE_FINAL)
-      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _c_files ${_SRCS})
-      add_library(kdeinit_${_target_NAME} SHARED  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_c_files})
+   kde4_get_automoc_files(_automoc_FILES ${ARGN})
 
+   if (KDE4_ENABLE_FINAL)
+      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_file ${_SRCS})
+      add_library(kdeinit_${_target_NAME} SHARED  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files} ${_automoc_FILES} ${_SRCS})
+      MESSAGE(STATUS "${_target_NAME} : <${_separate_files}> automoc <${_automoc_FILES} srrc <${_SRCS}>")
    else (KDE4_ENABLE_FINAL)
-      add_library(kdeinit_${_target_NAME} SHARED ${_SRCS} )
+      add_library(kdeinit_${_target_NAME} SHARED ${_SRCS} ${_automoc_FILES})
    endif (KDE4_ENABLE_FINAL)
 
    kde4_handle_rpath_for_library(kdeinit_${_target_NAME})
@@ -590,11 +631,13 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
       set(_type "RUN_UNINSTALLED")
    endif (_uninst)
 
+   kde4_get_automoc_files(_automoc_FILES ${_SRCS})
+
    if (KDE4_ENABLE_FINAL)
-      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _c_files ${_SRCS})
-      add_executable(${_target_NAME} ${_add_executable_param} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_c_files})
+      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
+      add_executable(${_target_NAME} ${_add_executable_param} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files} ${_automoc_FILES})
    else (KDE4_ENABLE_FINAL)
-      add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS} )
+      add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS} ${_automoc_FILES})
    endif (KDE4_ENABLE_FINAL)
 
    kde4_handle_rpath_for_executable(${_target_NAME} ${_type})
@@ -621,11 +664,13 @@ MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
       set(_add_lib_param MODULE)
    endif (${_lib_TYPE} STREQUAL "MODULE")
 
+   kde4_get_automoc_files(_automoc_FILES ${_first_SRC} ${ARGN})
+
    if (KDE4_ENABLE_FINAL)
-      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _c_files ${_first_SRC} ${ARGN})
-      add_library(${_target_NAME} ${_add_lib_param}  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_c_files})
+      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_first_SRC} ${ARGN})
+      add_library(${_target_NAME} ${_add_lib_param}  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files} ${_automoc_FILES})
    else (KDE4_ENABLE_FINAL)
-      add_library(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN})
+      add_library(${_target_NAME} ${_add_lib_param} ${_first_SRC} ${ARGN} ${_automoc_FILES})
    endif (KDE4_ENABLE_FINAL)
 
    kde4_handle_rpath_for_library(${_target_NAME})
