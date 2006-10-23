@@ -733,7 +733,7 @@ ENDMACRO(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
 MACRO(KDE4_NO_ENABLE_FINAL _project_name)
    if(KDE4_ENABLE_FINAL)
 	set(KDE4_ENABLE_FINAL OFF)
-	MESSAGE(STATUS "You used enable-final argument but \"${_project_name}\" doesn't support it. Try to fix compile it and remobe KDE4_NO_ENABLE_FINAL macro. Thanks")
+	MESSAGE(STATUS "You used enable-final argument but \"${_project_name}\" doesn't support it. Try to fix compile it and remove KDE4_NO_ENABLE_FINAL macro. Thanks")
    endif(KDE4_ENABLE_FINAL)
 ENDMACRO(KDE4_NO_ENABLE_FINAL _project_name)
 
