@@ -3,8 +3,9 @@
 # and libraries are. It also determines what the name of the library is. This
 # code sets the following variables:
 #
+#  RUBY_LIBRARY      = full path+file to the ruby library
 #  RUBY_INCLUDE_PATH = path to where ruby.h can be found
-#  RUBY_EXECUTABLE   = full path to the ruby binary
+#  RUBY_EXECUTABLE   = full path+file to the ruby binary
 #
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
