@@ -13,9 +13,6 @@
 
 if (WIN32)
 
-# temporary information
-message("NOTE: first try to 'cmake -G \"MinGW Makefiles\" ..\\kdelibs\\' will fail with an error in FindZLIB.cmake. Just retry and it works. The bug got reported and will hopefully be fixed in >cmake 2.4.3")
-
 file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
 
 if(NOT QT4_FOUND)
