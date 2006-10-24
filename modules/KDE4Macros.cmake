@@ -577,19 +577,17 @@ endmacro(KDE4_CHECK_EXECUTABLE_PARAMS)
 macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    kde4_check_executable_params(_SRCS _nogui _uninst ${ARGN})
-   configure_file(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
-   #MACRO_ADDITIONAL_CLEAN_FILES(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
 
 #   if (WIN32)
 #      # under windows, just build a normal executable
 #      KDE4_ADD_EXECUTABLE(${_target_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${ARGN} )
 #   else (WIN32)
       # under UNIX, create a shared library and a small executable, which links to this library
-   kde4_get_automoc_files(_automoc_FILES ${ARGN})
+   kde4_get_automoc_files(_automoc_FILES ${_SRCS})
 
    if (KDE4_ENABLE_FINAL)
-      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
-      add_library(kdeinit_${_target_NAME} SHARED  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files} ${_automoc_FILES})
+      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
+      add_library(kdeinit_${_target_NAME} SHARED  ${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp ${_separate_files} ${_automoc_FILES})
 
    else (KDE4_ENABLE_FINAL)
       add_library(kdeinit_${_target_NAME} SHARED ${_SRCS} ${_automoc_FILES})
@@ -597,6 +595,8 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    kde4_handle_rpath_for_library(kdeinit_${_target_NAME})
 
+
+   configure_file(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
    kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
    target_link_libraries(${_target_NAME} kdeinit_${_target_NAME})
 #   endif (WIN32)
