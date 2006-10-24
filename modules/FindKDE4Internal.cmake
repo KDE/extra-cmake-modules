@@ -200,6 +200,7 @@ endif (NOT QT_DBUSXML2CPP_EXECUTABLE)
 # Perl is required for building KDE software,
 find_package(Perl REQUIRED)
 
+# remove once we require cmake >= 2.4.4, then the REQUIRED flag is honored by FindPerl.cmake, Alex
 if(NOT PERL_FOUND)
     message(FATAL_ERROR "Perl was not found. Make sure it has installed on your system")
 endif(NOT PERL_FOUND)
