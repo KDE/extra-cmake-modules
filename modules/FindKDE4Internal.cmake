@@ -200,6 +200,10 @@ endif (NOT QT_DBUSXML2CPP_EXECUTABLE)
 # Perl is required for building KDE software,
 find_package(Perl REQUIRED)
 
+if(NOT PERL_FOUND)
+    message(FATAL_ERROR "Perl was not found. Make sure it has installed on your system")
+endif(NOT PERL_FOUND)
+
 include (MacroLibrary)
 include (CheckCXXCompilerFlag)
 
