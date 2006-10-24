@@ -195,7 +195,7 @@ macro (KDE4_AUTOMOC)
 #	        kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${ARGN})
 #                macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_moc})
 #             else (KDE4_ENABLE_FINAL)
-#                macro_add_file_dependencies(${_abs_FILE} ${_moc})
+                macro_add_file_dependencies(${_abs_FILE} ${_moc})
 #             endif (KDE4_ENABLE_FINAL)
 
             endforeach (_current_MOC_INC)
