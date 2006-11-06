@@ -31,17 +31,17 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 IF (NOT _macroLogFeatureAlreadyIncluded)
-   SET(_file ${CMAKE_BINARY_DIR}/MissingRequirements.txt )
+   SET(_file ${CMAKE_BINARY_DIR}/MissingRequirements.txt)
    IF (EXISTS ${_file})
       FILE(REMOVE ${_file})
    ENDIF (EXISTS ${_file})
 
-   SET(_file ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
+   SET(_file ${CMAKE_BINARY_DIR}/EnabledFeatures.txt)
    IF (EXISTS ${_file})
       FILE(REMOVE ${_file})
    ENDIF (EXISTS ${_file})
 
-   SET(_file ${CMAKE_BINARY_DIR}/DisabledFeatures.txt )
+   SET(_file ${CMAKE_BINARY_DIR}/DisabledFeatures.txt)
    IF (EXISTS ${_file})
       FILE(REMOVE ${_file})
   ENDIF (EXISTS ${_file})
@@ -57,7 +57,7 @@ MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _
    SET(_comments "${ARGV6}")
 
    IF (${_var})
-     SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
+     SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/EnabledFeatures.txt)
    ELSE (${_var})
      IF (${_required} MATCHES "[Tt][Rr][Uu][Ee]")
        SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/MissingRequirements.txt)
@@ -66,42 +66,46 @@ MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _
      ENDIF (${_required} MATCHES "[Tt][Rr][Uu][Ee]")
    ENDIF (${_var})
 
-   SET(_logtext " ${_package}:\t ${_description}; ${_url};")
+   SET(_logtext "> ${_package}")
 
    IF (${_minvers} MATCHES ".*")
-     SET(_logtext "${_logtext} ${_minvers};")
+     SET(_logtext "${_logtext}, ${_minvers}")
    ENDIF (${_minvers} MATCHES ".*")
+   SET(_logtext "${_logtext}: ${_description}; ${_url};")
    IF (${_comments} MATCHES ".*")
-     SET(_logtext "${_logtext} ${_comments};")
+     SET(_logtext "${_logtext}\n${_comments}")
    ENDIF (${_comments} MATCHES ".*")
-   FILE(APPEND "${_LOGFILENAME}" "${_logtext}\n")
+   FILE(APPEND "${_LOGFILENAME}" "${_logtext}\n\n")
  
 ENDMACRO(MACRO_LOG_FEATURE)
 
 
 MACRO(MACRO_DISPLAY_FEATURE_LOG)
 
-   SET(_file ${CMAKE_BINARY_DIR}/MissingRequirements.txt )
+   SET(_file ${CMAKE_BINARY_DIR}/MissingRequirements.txt)
    IF (EXISTS ${_file})
       FILE(READ ${_file} _requirements)
-      MESSAGE(STATUS "MISSING REQUIREMENTS\n${_requirements}\n")
+      MESSAGE(STATUS "\n----------------------------------------------------------------------------------\n-- The following list of REQUIRED packages could not be located on your system. --\n-- Please install them before continuing with this software installation.       --\n----------------------------------------------------------------------------------\n${_requirements}----------------------------------------------------------------------------------")
+#      MESSAGE(STATUS "MISSING REQUIREMENTS\n${_requirements}\n")
       FILE(REMOVE ${_file})
       MESSAGE(FATAL_ERROR "Exiting: Missing Requirements")
    ENDIF (EXISTS ${_file})
 
-   SET(_summary "\nFEATURE SUMMARY\n----------------\n")
-   SET(_file ${CMAKE_BINARY_DIR}/EnabledFeatures.txt )
+   SET(_summary "\n")
+   SET(_file ${CMAKE_BINARY_DIR}/EnabledFeatures.txt)
    IF (EXISTS ${_file})
       FILE(READ ${_file} _enabled)
       FILE(REMOVE ${_file})
-      SET(_summary "${_summary}\nEnabled Features:\n${_enabled}")
+      SET(_summary "${_summary}----------------------------------------------------------------------------------\n-- The following list of OPTIONAL packages were located on your system.         --\n-- You will have all the following features available from this software.       --\n----------------------------------------------------------------------------------\n${_enabled}")
+#      SET(_summary "${_summary}Enabled Features:\n${_enabled}")
    ENDIF (EXISTS ${_file})
 
-   SET(_file ${CMAKE_BINARY_DIR}/DisabledFeatures.txt )
+   SET(_file ${CMAKE_BINARY_DIR}/DisabledFeatures.txt)
    IF (EXISTS ${_file})
       FILE(READ ${_file} _disabled)
       FILE(REMOVE ${_file})
-      SET(_summary "${_summary}\nDisabled Features:\n${_disabled}")
+      SET(_summary "${_summary}----------------------------------------------------------------------------------\n-- The following list of OPTIONAL packages could not be located on your system. --\n-- Please consider installing them to enable more features of this software.    --\n----------------------------------------------------------------------------------\n${_disabled}")
+#      SET(_summary "${_summary}Disabled Features:\n${_disabled}")
    ENDIF (EXISTS ${_file})
    MESSAGE(STATUS "${_summary}")
 
