@@ -6,8 +6,8 @@
 #
 # KDE4_DEFINITIONS         - compiler definitions required for compiling KDE software
 # KDE4_INCLUDE_DIR         - the KDE 4 include directory
-# KDE4_INCLUDES            - all include directories required for KDE, i.e. 
-#                            KDE4_INCLUDE_DIR, but also the Qt4 include directories 
+# KDE4_INCLUDES            - all include directories required for KDE, i.e.
+#                            KDE4_INCLUDE_DIR, but also the Qt4 include directories
 #                            and other platform specific include directories
 # KDE4_LIB_DIR             - the directory where the KDE libraries are installed,
 #                            intended to be used with LINK_DIRECTORIES()
@@ -34,7 +34,7 @@
 # KDE4_KNEWSTUFF_LIBRARY   - the knewstuff library
 # KDE4_KDEPRINT_LIBRARY    - the kdeprint library
 # KDE4_KSPELL2_LIBRARY     - the kspell2 library
-# KDE4_KDNSSD_LIBRARY      - the kdnssd library 
+# KDE4_KDNSSD_LIBRARY      - the kdnssd library
 # KDE4_PHONONCORE_LIBRARY  - the phononcore library
 # KDE4_PHONONUI_LIBRARY    - the phononui library
 # KDE4_KDEFX_LIBRARY       - the kdefx library
@@ -101,7 +101,7 @@
 #
 # KDE4_ENABLE_FINAL - enable KDE-style enable-final all-in-one-compilation
 # KDE4_BUILD_TESTS  - enable this to build the testcases
-# KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature 
+# KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature
 #
 # It also adds the following macros (from KDE4Macros.cmake)
 # KDE4_ADD_UI_FILES (SRCS_VAR file1.ui ... fileN.ui)
@@ -129,7 +129,7 @@
 #    but require more manual work.
 #
 # KDE4_INSTALL_LIBTOOL_FILE ( subdir target )
-#    This will create and install a simple libtool file for the 
+#    This will create and install a simple libtool file for the
 #    given target. This might be required for other software.
 #    The libtool file will be install in subdir, relative to CMAKE_INSTALL_PREFIX .
 #
@@ -157,7 +157,7 @@
 #
 # KDE4_ADD_EXECUTABLE (name [NOGUI] [RUN_UNINSTALLED] file1 ... fileN)
 #    Equivalent to ADD_EXECUTABLE(), but additionally adds support for KDE4_ENABLE_FINAL.
-#    If you don't need support for KDE4_ENABLE_FINAL, you can just use the 
+#    If you don't need support for KDE4_ENABLE_FINAL, you can just use the
 #    normal ADD_EXECUTABLE().
 #    If the executable has to be run from the buildtree (e.g. unit tests and code generators
 #    used later on when compiling), set the option RUN_UNINSTALLED.
@@ -190,7 +190,7 @@ cmake_minimum_required(VERSION 2.4.3 FATAL_ERROR)
 
 set(QT_MIN_VERSION "4.2.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
-find_package(Qt4 REQUIRED)                                      
+find_package(Qt4 REQUIRED)
 
 if (NOT QT_DBUSXML2CPP_EXECUTABLE)
     message(FATAL_ERROR "Qt4 qdbusxml2cpp was not found. Make sure it has been built and installed by Qt")
@@ -219,12 +219,12 @@ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 # so if you set CMAKE_INSTALL_PREFIX, then EXEC_INSTALL_PREFIX, PLUGIN_INSTALL_DIR will
 # calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX
 # this would work completely without using the cache.
-# but if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into 
+# but if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
 # the cache, otherwise it will be forgotten on the next cmake run.
 # Once a variable is in the cache, it doesn't depend on its "parent" variables
 # anymore and you can only change it by editing it directly.
-# this macro helps in this regard, because as long as you don't set one of the 
-# variables explicitely to some location, it will always calculate its value from its 
+# this macro helps in this regard, because as long as you don't set one of the
+# variables explicitely to some location, it will always calculate its value from its
 # parents. So modifying CMAKE_INSTALL_PREFIX later on will have the desired effect.
 # But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
 # this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
@@ -258,7 +258,7 @@ _set_fancy(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"      "The 
 _set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/services"     "The install dir for service (desktop, protocol, ...) files")
 _set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/servicetypes" "The install dir for servicestypes desktop files")
 _set_fancy(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"       "The install dir for sound files")
-_set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"    "The install dir for templates (Create new file...)") 
+_set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"    "The install dir for templates (Create new file...)")
 _set_fancy(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"   "The install dir for wallpapers")
 _set_fancy(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"     "The kconf_update install dir")
  # this one shouldn't be used anymore
@@ -289,10 +289,10 @@ option(KDE4_BUILD_TESTS  "Build the tests")
 
 if( KDE4_ENABLE_FINAL)
 	add_definitions(-DKDE_USE_FINAL)
-endif(KDE4_ENABLE_FINAL)	
+endif(KDE4_ENABLE_FINAL)
 
-#Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable 
-#which is something between a shared library and a normal executable. 
+#Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
+#which is something between a shared library and a normal executable.
 #Programs compiled with these features appear as ?shared object? with the file command.
 #info from "http://www.linuxfromscratch.org/hlfs/view/unstable/glibc/chapter02/pie.html"
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
@@ -315,7 +315,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
 
    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
-  
+
    if (WIN32)
       set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
       # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
@@ -323,20 +323,20 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
-      set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib ) 
+      set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.shell )
       set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.shell )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
    endif (WIN32)
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
-  
+
    # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
-  
+
    set(KDE4_INSTALLED_VERSION_OK TRUE)
-  
+
 else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
   # ... but NOT otherwise
@@ -355,11 +355,11 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       if (NOT KDE_MIN_VERSION)
          set(KDE_MIN_VERSION "3.9.0")
       endif (NOT KDE_MIN_VERSION)
-   
+
       #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
 
       macro_ensure_version( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_OK )
-   
+
    else (KDEVERSION)
       message(FATAL_ERROR "Couldn't parse KDE version string from the kde4-config output:\n${kdeconfig_output}")
    endif (KDEVERSION)
@@ -372,7 +372,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    find_library(KDE4_KDECORE_LIBRARY NAMES kdecore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDECORE_LIBS ${kdecore_LIB_DEPENDS} ${KDE4_KDECORE_LIBRARY} )
-   
+
    find_library(KDE4_KDEFX_LIBRARY NAMES kdefx PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDEFX_LIBS ${kdefx_LIB_DEPENDS} ${KDE4_KDEFX_LIBRARY} )
 
@@ -512,20 +512,20 @@ if (WIN32)
    # is GnuWin32 required or does e.g. Visual Studio provide an own implementation?
    #find_package(GNUWIN32 REQUIRED)
    find_package(GNUWIN32)
-   
+
    set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES} ${GNUWIN32_INCLUDE_DIR})
 
-   # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely, 
+   # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely,
    # otherwise they come from KDELibsDependencies.cmake, Alex
    if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
       set( KDE4_KDECORE_LIBS ${KDE4_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
    endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-     
+
    # windows, mingw
    if(MINGW)
       #hmmm, something special to do here ?
    endif(MINGW)
-   
+
    # windows, microsoft compiler
    if(MSVC)
       set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN -DUNICODE )
@@ -562,7 +562,7 @@ if (UNIX)
 
    # the rest is RPATH handling
    # here the defaults are set
-   # which are partly overwritten in kde4_handle_rpath_for_library() 
+   # which are partly overwritten in kde4_handle_rpath_for_library()
    # and kde4_handle_rpath_for_executable(), both located in KDE4Macros.cmake, Alex
    if (APPLE)
       set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
@@ -678,10 +678,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    endif(KDE4_ENABLE_FPIE)
    # visibility support
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
-   
+
    # get the gcc version
    exec_program(${CMAKE_C_COMPILER} ARGS --version OUTPUT_VARIABLE _gcc_version_info)
-   
+
    string (REGEX MATCH " [34]\\.[0-9]\\.[0-9]" _gcc_version "${_gcc_version_info}")
    # gcc on mac just reports: "gcc (GCC) 3.3 20030304 ..." without the patch level, handle this here:
    if (NOT _gcc_version)
@@ -689,13 +689,13 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    endif (NOT _gcc_version)
 
    macro_ensure_version("4.1.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_1)
-   
-   if (GCC_IS_NEWER_THAN_4_1)  
+
+   if (GCC_IS_NEWER_THAN_4_1)
       exec_program(${CMAKE_C_COMPILER} ARGS -v OUTPUT_VARIABLE _gcc_alloc_info)
       string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
-   else (GCC_IS_NEWER_THAN_4_1)  
+   else (GCC_IS_NEWER_THAN_4_1)
       set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
-   endif (GCC_IS_NEWER_THAN_4_1)  
+   endif (GCC_IS_NEWER_THAN_4_1)
 
    if (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_AT_LEAST_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
@@ -760,7 +760,7 @@ macro (KDE4_PRINT_RESULTS)
           message(STATUS "Didn't find KDE4 core library")
        endif(KDE4_LIB_DIR)
    endif(NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
-  
+
    if(KDE4_KCFGC_EXECUTABLE)
       message(STATUS "Found KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
    else(KDE4_KCFGC_EXECUTABLE)
@@ -785,7 +785,8 @@ if (NOT KDE4Internal_FIND_QUIETLY)
 endif (NOT KDE4Internal_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
-set(KDE4_INCLUDES ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
+#the ${KDE4_INCLUDE_DIR}/KDE directory is for forwarding includes, eg. #include <KMainWindow>
+set(KDE4_INCLUDES ${QT_INCLUDES} ${KDE4_INCLUDE_DIR} ${KDE4_INCLUDE_DIR}/KDE ${_KDE4_PLATFORM_INCLUDE_DIRS} )
 
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DKDE_DEPRECATED_WARNINGS )
 
