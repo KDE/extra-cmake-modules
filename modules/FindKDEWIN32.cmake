@@ -20,7 +20,7 @@ if(NOT QT4_FOUND)
 endif(NOT QT4_FOUND)
 
 find_path(KDEWIN32_INCLUDE_DIR winposix_export.h
-   ${_program_FILES_DIR}/kdewin32/include
+   ${_program_FILES_DIR}/kdewin32/include ${CMAKE_INSTALL_PREFIX}/include
 )
 
 
@@ -30,14 +30,14 @@ find_path(KDEWIN32_INCLUDE_DIR winposix_export.h
 set(KDEWIN32_LIBRARY_PATH ${_program_FILES_DIR}/kdewin32/lib)
 find_library(KDEWIN32_LIBRARY_RELEASE NAMES kdewin32
    PATHS 
-   ${KDEWIN32_LIBRARY_PATH}
+   ${KDEWIN32_LIBRARY_PATH} ${CMAKE_INSTALL_PREFIX}/lib
 )
 
 # msvc makes a difference between debug and release
 if(MSVC)
 	find_library(KDEWIN32_LIBRARY_DEBUG NAMES kdewin32d
 	   PATHS 
-	   ${_program_FILES_DIR}/kdewin32/lib
+	   ${_program_FILES_DIR}/kdewin32/lib ${CMAKE_INSTALL_PREFIX}/lib
 	)
 	if(MSVC_IDE)
 		# the ide needs	the debug and release version
