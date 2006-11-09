@@ -727,7 +727,7 @@ if (CMAKE_C_COMPILER MATCHES "icc")
 
 endif (CMAKE_C_COMPILER MATCHES "icc")
 
-# it seems we prefer not to use a different postfix for debug libs outside of Windows
+# we prefer to use a different postfix for debug libs only on Windows
 if (WIN32)
    SET(CMAKE_DEBUG_POSTFIX "d")
 endif (WIN32)
