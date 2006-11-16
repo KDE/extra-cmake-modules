@@ -12,6 +12,7 @@
 # KDE4_ADD_WIDGET_FILES
 # KDE4_INSTALL_ICONS
 # KDE4_REMOVE_OBSOLETE_CMAKE_FILES
+# KDE4_NO_ENABLE_FINAL
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
