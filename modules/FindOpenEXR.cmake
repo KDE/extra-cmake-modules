@@ -16,13 +16,13 @@ if (OPENEXR_INCLUDE_DIR AND OPENEXR_LIBRARIES)
   SET(OPENEXR_FOUND TRUE)
 
 else (OPENEXR_INCLUDE_DIR AND OPENEXR_LIBRARIES)
-
+IF (NOT WIN32)
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
   INCLUDE(UsePkgConfig)
   
   PKGCONFIG(OpenEXR _OpenEXRIncDir _OpenEXRLinkDir _OpenEXRLinkFlags _OpenEXRCflags)
-  
+ENDIF (NOT WIN32)  
   FIND_PATH(OPENEXR_INCLUDE_DIR ImfRgbaFile.h
      ${_OpenEXRIncDir}
      ${_OpenEXRIncDir}/OpenEXR/

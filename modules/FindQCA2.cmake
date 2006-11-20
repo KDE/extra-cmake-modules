@@ -17,14 +17,14 @@
 
 
 INCLUDE(UsePkgConfig)
-
+IF (NOT WIN32)
 PKGCONFIG(qca _Qca2IncDir _Qca2LinkDir _Qca2LinkFlags _Qca2Cflags)
 
 MESSAGE(STATUS "pkg-config returned ${_Qca2IncDir} for QCA 2 includes")
 set(QCA2_DEFINITIONS ${_Qca2Cflags})
 
 set(QCA2_INCLUDE_DIR ${_Qca2IncDir})
-
+ENDIF (NOT WIN32)
 #FIND_PATH(QCA2_INCLUDE_DIR QtCrypto
 #  PATHS
 # ${_Qca2IncDir}

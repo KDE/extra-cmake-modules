@@ -17,7 +17,7 @@ if (FONTCONFIG_LIBRARIES AND FONTCONFIG_DEFINITIONS)
   set(FONTCONFIG_FOUND TRUE)
 
 else (FONTCONFIG_LIBRARIES AND FONTCONFIG_DEFINITIONS)
-
+IF (NOT WIN32)
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
   INCLUDE(UsePkgConfig)
@@ -25,7 +25,7 @@ else (FONTCONFIG_LIBRARIES AND FONTCONFIG_DEFINITIONS)
   PKGCONFIG(fontconfig _FONTCONFIGIncDir _FONTCONFIGLinkDir _FONTCONFIGLinkFlags _FONTCONFIGCflags)
 
   set(FONTCONFIG_DEFINITIONS ${_FONTCONFIGCflags} CACHE INTERNAL "The compilation flags for fontconfig")
-
+ENDIF (NOT WIN32)
   find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h
     PATHS
     ${_FONTCONFIGIncDir}

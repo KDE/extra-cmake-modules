@@ -17,13 +17,13 @@ if (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
   set(LIBUSB_FOUND TRUE)
 
 else (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
-
+IF (NOT WIN32)
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
   INCLUDE(UsePkgConfig)
 
   PKGCONFIG(libUSB _libUSBIncDir _libUSBLinkDir _libUSBLinkFlags _libUSBCflags)
-
+ENDIF(NOT WIN32)
   FIND_PATH(LIBUSB_INCLUDE_DIR usb.h
     /usr/include
     /usr/local/include
