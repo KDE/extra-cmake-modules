@@ -14,6 +14,7 @@ INCLUDE(UsePkgConfig)
 PKGCONFIG(glib-2.0 _LibGLIB2IncDir _LibGLIB2LinkDir _LibGLIB2LinkFlags _LibGLIB2Cflags)
 
 FIND_PATH(GLIB2_INCLUDE_DIR glib.h
+   ${_LibGLIB2IncDir}
    /usr/include/glib-2.0
    /usr/include
    /usr/local/include/glib-2.0
@@ -22,7 +23,7 @@ FIND_PATH(GLIB2_INCLUDE_DIR glib.h
 
 FIND_LIBRARY(GLIB2_LIBRARIES NAMES glib-2.0
     PATHS
-    ${_libGLIB2LinkDir}
+    ${_LibGLIB2LinkDir}
     /usr/lib
     /usr/local/lib
 )
