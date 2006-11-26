@@ -1,5 +1,4 @@
-# - MACRO_ADD_FILE_DEPENDENCIES(<_file> depend_files...)
-# MACRO_OPTIONAL_FIND_PACKAGE( <name> [QUIT] )
+# MACRO_ADD_FILE_DEPENDENCIES(<_file> depend_files...)
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
