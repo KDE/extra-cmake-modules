@@ -410,7 +410,7 @@ endmacro (KDE4_CREATE_FINAL_FILES)
 # the hope that the RPATH which is compiled into the executable is good enough.
 macro (KDE4_HANDLE_RPATH_FOR_LIBRARY _target_NAME)
    if (NOT CMAKE_SKIP_RPATH)
-       set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "")
+       set_target_properties(${_target_NAME} PROPERTIES INSTALL_RPATH_USE_LINK_PATH FALSE SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "")
    endif (NOT CMAKE_SKIP_RPATH)
 endmacro (KDE4_HANDLE_RPATH_FOR_LIBRARY)
 

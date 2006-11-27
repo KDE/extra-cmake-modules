@@ -73,13 +73,15 @@
 # for install directories. They are all interpreted relative
 # to CMAKE_INSTALL_PREFIX
 #
+# BIN_INSTALL_DIR          - the directory where executables be installed (default is prefix/bin)
+# SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
+# LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
 # CONFIG_INSTALL_DIR       - the config file install dir
 # DATA_INSTALL_DIR         - the parent directory where applications can install their data
 # HTML_INSTALL_DIR         - the HTML install dir for documentation
 # ICON_INSTALL_DIR         - the icon install dir (default prefix/share/icons/)
 # INFO_INSTALL_DIR         - the kde info install dir (default prefix/info)
 # KCFG_INSTALL_DIR         - the install dir for kconfig files
-# LIB_INSTALL_DIR          - the subdirectory relative to the install prefix where libraries will be installed (default is /lib)
 # LOCALE_INSTALL_DIR       - the install dir for translations
 # MAN_INSTALL_DIR          - the kde man page install dir (default prefix/man/)
 # MIME_INSTALL_DIR         - the install dir for the mimetype desktop files
