@@ -42,6 +42,7 @@
 # KDE4_SOLID_LIBRARY       - the solid library
 # KDE4_SOLIDIFACES_LIBRARY - the solidiface library
 # KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
+# KDE4_KROSSCORE_LIBRARY- the krosscore library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -68,6 +69,7 @@
 # KDE4_SOLID_LIBS            - the solid library and all depending libraries
 # KDE4_SOLIDIFACES_LIBS      - the solid iface library and all depending libraries
 # KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
+# KDE4_KROSSCORE_LIBS        - the kross core library and all depending libraries
 #
 # This module defines a bunch of variables used as locations
 # for install directories. They are all interpreted relative
@@ -437,6 +439,10 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kglobal.h)
 
    find_library(KDE4_KNOTIFYCONFIG_LIBRARY NAMES knotifyconfig PATHS ${KDE4_LIB_INSTALL_DIR} )
    set(KDE4_KNOTIFYCONFIG_LIBS ${knotifyconfig_LIB_DEPENDS} ${KDE4_KNOTIFYCONFIG_LIBRARY} )
+
+   find_library(KDE4_KROSSCORE_LIBRARY NAMES krosscore PATHS ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_KROSSCORE_LIBS ${krosscore_LIB_DEPENDS} ${KDE4_KROSSCORE_LIBRARY} )
+
 
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
