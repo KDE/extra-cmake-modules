@@ -17,24 +17,18 @@ if (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
   set(LIBUSB_FOUND TRUE)
 
 else (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
-IF (NOT WIN32)
-  # use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  INCLUDE(UsePkgConfig)
+  IF (NOT WIN32)
+    # use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    INCLUDE(UsePkgConfig)
 
-  PKGCONFIG(libUSB _libUSBIncDir _libUSBLinkDir _libUSBLinkFlags _libUSBCflags)
-ENDIF(NOT WIN32)
-  FIND_PATH(LIBUSB_INCLUDE_DIR usb.h
-    /usr/include
-    /usr/local/include
-  )
+    PKGCONFIG(libUSB _libUSBIncDir _libUSBLinkDir _libUSBLinkFlags _libUSBCflags)
+  ENDIF(NOT WIN32)
+
+  FIND_PATH(LIBUSB_INCLUDE_DIR usb.h )
 
   FIND_LIBRARY(LIBUSB_LIBRARY NAMES usb 
-    PATHS
-    ${_libUSBLinkDir}
-    /usr/lib
-    /usr/local/lib
-  )
+    PATHS ${_libUSBLinkDir} )
 
   set( LIBUSB_LIBRARIES ${LIBUSB_LIBRARY} CACHE INTERNAL "The libraries for libusb" )
 
@@ -43,13 +37,13 @@ ENDIF(NOT WIN32)
   endif (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
 
   if (LIBUSB_FOUND)
-    if (NOT libUSB_FIND_QUIETLY)
+    if (NOT USB_FIND_QUIETLY)
       message(STATUS "Found LIBUSB: ${LIBUSB_LIBRARIES}")
-    endif (NOT libUSB_FIND_QUIETLY)
+    endif (NOT USB_FIND_QUIETLY)
   else (LIBUSB_FOUND)
-    if (libUSB_FIND_REQUIRED)
+    if (USB_FIND_REQUIRED)
       message(FATAL_ERROR "Could NOT find LIBUSB")
-    endif (libUSB_FIND_REQUIRED)
+    endif (USB_FIND_REQUIRED)
   endif (LIBUSB_FOUND)
 
   MARK_AS_ADVANCED(
