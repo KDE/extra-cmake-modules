@@ -26,3 +26,13 @@ set(CMAKE_COLOR_MAKEFILE ON)
 set(GENERIC_LIB_VERSION "4.0.0")
 set(GENERIC_LIB_SOVERSION "4")
 
+# windows does not support LD_LIBRARY_PATH or similar
+# all searchable directories has to be defined by the PATH environment var
+# to reduce the number of required pathes executables are placed into
+# the build bin dir 
+# note: dll's should go also in bin dir and import libraries should go into lib,
+# but this seems not possible with recent cmake release
+if (WIN32)
+ set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+# set (LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+endif(WIN32) 
