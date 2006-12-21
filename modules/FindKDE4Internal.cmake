@@ -681,7 +681,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 
    if (CMAKE_SYSTEM_NAME MATCHES Linux)
      set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -ansi -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -fno-check-new -fno-common")
+     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -fno-exceptions -fno-check-new -fno-common")
    endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
 
@@ -700,7 +700,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    # get the gcc version
    exec_program(${CMAKE_C_COMPILER} ARGS --version OUTPUT_VARIABLE _gcc_version_info)
 
-   string (REGEX MATCH "[345]\\.[0-9]\\.[0-9]" _gcc_version "${_gcc_version_info}")
+   string (REGEX MATCH " [34]\\.[0-9]\\.[0-9]" _gcc_version "${_gcc_version_info}")
    # gcc on mac just reports: "gcc (GCC) 3.3 20030304 ..." without the patch level, handle this here:
    if (NOT _gcc_version)
       string (REGEX REPLACE ".*\\(GCC\\).* ([34]\\.[0-9]) .*" "\\1.0" _gcc_version "${_gcc_version_info}")
@@ -708,19 +708,16 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 
    macro_ensure_version("4.1.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_1)
 
-   set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
    if (GCC_IS_NEWER_THAN_4_1)
       exec_program(${CMAKE_C_COMPILER} ARGS -v OUTPUT_VARIABLE _gcc_alloc_info)
       string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
-      string(LENGTH _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_GCC_COMPILED_WITH_BAD_ALLOCATOR}")
+   else (GCC_IS_NEWER_THAN_4_1)
+      set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
    endif (GCC_IS_NEWER_THAN_4_1)
 
-   # disabled right now because it totally breaks the build.. prefix "32" added to every target ??!
-   if (0 AND __KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
+   if (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_AT_LEAST_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-   else (0 AND __KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
-      set (__KDE_HAVE_GCC_VISIBILITY 0)
-   endif (0 AND __KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
+   endif (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_AT_LEAST_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
 
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
