@@ -98,6 +98,7 @@
 # KCONF_UPDATE_INSTALL_DIR - the kconf_update install dir
 # XDG_APPS_DIR             - the XDG apps dir
 # XDG_DIRECTORY_DIR        - the XDG directory
+# DBUS_INTERFACES_DIR      - the directory where dbus interfaces be installed (default is prefix/share/dbus-1/interfaces
 #
 # The following variables are provided, but are seem to be unused:
 # LIBS_HTML_INSTALL_DIR    /share/doc/HTML            CACHE STRING "Is this still used ?")
@@ -277,6 +278,7 @@ _set_fancy(XDG_DIRECTORY_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories
 _set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"          "The kde sysconfig install dir (default /etc)")
 _set_fancy(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"          "The kde man install dir (default ${CMAKE_INSTALL_PREFIX}/man/)")
 _set_fancy(INFO_INSTALL_DIR         "${CMAKE_INSTALL_PREFIX}/info"         "The kde info install dir (default ${CMAKE_INSTALL_PREFIX}/info)")
+_set_fancy(DBUS_INTERFACES_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces" "The kde dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
 # _set_fancy(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"           "The subdirectory relative to the install prefix where libraries will be installed (default is /lib)")
 # _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4/modules"           "The subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)")
 
