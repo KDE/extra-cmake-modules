@@ -15,6 +15,7 @@ PKGCONFIG(glib-2.0 _LibGLIB2IncDir _LibGLIB2LinkDir _LibGLIB2LinkFlags _LibGLIB2
 
 FIND_PATH(GLIB2_INCLUDE_DIR glib.h
    ${_LibGLIB2IncDir}
+   ${_LibGLIB2IncDir}/glib-2.0
    /usr/include/glib-2.0
    /usr/include
    /usr/local/include/glib-2.0
