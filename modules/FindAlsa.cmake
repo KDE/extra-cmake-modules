@@ -1,5 +1,9 @@
 # Alsa check, based on libkmid/configure.in.in.
 # Only the support for Alsa >= 0.9.x was included; 0.5.x was dropped (but feel free to re-add it if you need it)
+# It defines ...
+# It offers the following macros:
+# ALSA_CONFIGURE_FILE(config_header) - generate a config.h, typical usage: 
+#                                      ALSA_CONFIGURE_FILE(${CMAKE_BINARY_DIR}/config-alsa.h)
 
 # Copyright (c) 2006, David Faure, <faure@kde.org>
 #
@@ -35,4 +39,10 @@ else(HAVE_LIBASOUND2)
     message(STATUS "ALSA not found")
 endif(HAVE_LIBASOUND2)
 
-configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/config-alsa.h.cmake ${CMAKE_BINARY_DIR}/config-alsa.h )
+set(ALSA_FOUND HAVE_LIBASOUND2)
+
+get_filename_component(_FIND_ALSA_MODULE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+
+macro(ALSA_CONFIGURE_FILE _destFile)
+   configure_file(${_FIND_ALSA_MODULE_DIR}/config-alsa.h.cmake ${_destFile} )
+endmacro(ALSA_CONFIGURE_FILE _destFile)
