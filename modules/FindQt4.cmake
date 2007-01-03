@@ -19,6 +19,10 @@
 #                    QT_USE_QTOPENGL
 #                    QT_USE_QTSQL
 #                    QT_USE_QTXML
+#                    QT_USE_QTSVG
+#                    QT_USE_QTTEST
+#                    QT_USE_QTUITOOLS
+#
 # All the libraries required are stored in a variable called QT_LIBRARIES.  
 # Add this variable to your TARGET_LINK_LIBRARIES.
 #  
@@ -66,6 +70,7 @@
 #  QT_QTXML_FOUND         True if QtXml was found.
 #  QT_QTSVG_FOUND         True if QtSvg was found.
 #  QT_QTTEST_FOUND        True if QtTest was found.
+#  QT_QTUITOOLS_FOUND     True if QtUiTools was found.
 #                      
 #  QT_DEFINITIONS   Definitions to use when compiling code that uses Qt.
 #                  
@@ -94,6 +99,8 @@
 #  QT_QTTEST_INCLUDE_DIR       Path to "include/QtTest"
 #                            
 #  QT_LIBRARY_DIR              Path to "lib" of Qt4
+# 
+#  QT_PLUGINS_DIR              Path to "plugins" for Qt4
 #                            
 # For every library of Qt, a QT_QTFOO_LIBRARY variable is defined, with the full path to the library.
 #
@@ -243,7 +250,7 @@ IF (QT4_QMAKE_FOUND)
       SET(QT_LIBRARY_DIR ${QT_LIBRARY_DIR_TMP} CACHE PATH "Qt library dir")
     ELSE(EXISTS "${QT_LIBRARY_DIR_TMP}")
       MESSAGE("Warning: QT_QMAKE_EXECUTABLE reported QT_INSTALL_LIBS as ${QT_LIBRARY_DIR_TMP}")
-       MESSAGE("Warning: ${QT_LIBRARY_DIR_TMP} does NOT exist, Qt must NOT be installed correctly.")
+      MESSAGE("Warning: ${QT_LIBRARY_DIR_TMP} does NOT exist, Qt must NOT be installed correctly.")
     ENDIF(EXISTS "${QT_LIBRARY_DIR_TMP}")
   ENDIF(NOT QT_LIBRARY_DIR)
   
@@ -292,6 +299,13 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_MKSPECS_DIR ${qt_mkspecs_dir} CACHE PATH "The location of the Qt mkspecs")
   ENDIF (NOT QT_MKSPECS_DIR)
 
+  # ask qmake for the plugins directory
+  IF (NOT QT_PLUGINS_DIR)
+    EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
+      ARGS "-query QT_INSTALL_PLUGINS"
+      OUTPUT_VARIABLE qt_plugins_dir )
+    SET(QT_PLUGINS_DIR ${qt_plugins_dir} CACHE PATH "The location of the Qt plugins")
+  ENDIF (NOT QT_PLUGINS_DIR)
   ########################################
   #
   #       Setting the INCLUDE-Variables
@@ -594,7 +608,7 @@ IF (QT4_QMAKE_FOUND)
   IF(WIN32)
     FIND_LIBRARY(QT_QTMAIN_LIBRARY NAMES qtmain PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
   ENDIF(WIN32)
-  
+
   ############################################
   #
   # Check the existence of the libraries.
