@@ -49,8 +49,11 @@
 #        parentclassname. The name of the generated files will be
 #        <basename>adaptor.{cpp,h} where basename is the basename of the xml file.
 #
-#  macro QT4_GENERATE_DBUS_INTERFACE( header)
-#        generate the xml interface file from the given header
+#  macro QT4_GENERATE_DBUS_INTERFACE( header <interfacename> )
+#        generate the xml interface file from the given header.
+#        If the optional argument interfacename is omitted, the name of the 
+#        interface file is constructed from the basename of the header with
+#        the suffix .xml appended.
 #
 #  QT_FOUND         If false, don't try to use Qt.
 #  QT4_FOUND        If false, don't try to use Qt 4.
@@ -829,16 +832,25 @@ IF (QT4_QMAKE_FOUND)
     FOREACH (it ${ARGN})
       GET_FILENAME_COMPONENT(outfilename ${it} NAME_WE)
       GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
+      GET_FILENAME_COMPONENT(rc_path ${infile} PATH)
       SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/qrc_${outfilename}.cxx)
+      #  parse file for dependencies
+      FILE(READ "${infile}" _RC_FILE_CONTENTS)
+      STRING(REGEX MATCHALL "<file>[^<]*" _RC_FILES "${_RC_FILE_CONTENTS}")
+      SET(_RC_DEPENDS)
+      FOREACH(_RC_FILE ${_RC_FILES})
+        STRING(REGEX REPLACE "^<file>" "" _RC_FILE "${_RC_FILE}")
+        SET(_RC_DEPENDS ${_RC_DEPENDS} "${rc_path}/${_RC_FILE}")
+      ENDFOREACH(_RC_FILE)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_RCC_EXECUTABLE}
         ARGS -name ${outfilename} -o ${outfile} ${infile}
-        MAIN_DEPENDENCY ${infile} )
+        MAIN_DEPENDENCY ${infile}
+        DEPENDS ${_RC_DEPENDS})
       SET(${outfiles} ${${outfiles}} ${outfile})
     ENDFOREACH (it)
 
   ENDMACRO (QT4_ADD_RESOURCES)
-
 
   MACRO(QT4_ADD_DBUS_INTERFACE _sources _interface _basename)
     GET_FILENAME_COMPONENT(_infile ${_interface} ABSOLUTE)
@@ -873,10 +885,16 @@ IF (QT4_QMAKE_FOUND)
   ENDMACRO(QT4_ADD_DBUS_INTERFACES)
   
   
-  MACRO(QT4_GENERATE_DBUS_INTERFACE _header)
+  MACRO(QT4_GENERATE_DBUS_INTERFACE _header) # _customName )
+    SET(_customName "${ARGV1}")
     GET_FILENAME_COMPONENT(_in_file ${_header} ABSOLUTE)
     GET_FILENAME_COMPONENT(_basename ${_header} NAME_WE)
-    SET(_target ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.xml)
+    
+    IF (_customName)
+      SET(_target ${CMAKE_CURRENT_BINARY_DIR}/${_customName})
+    ELSE (_customName)
+      SET(_target ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.xml)
+    ENDIF (_customName)
   
     ADD_CUSTOM_COMMAND(OUTPUT ${_target}
         COMMAND ${QT_DBUSCPP2XML_EXECUTABLE} ${_in_file} > ${_target}
