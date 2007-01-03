@@ -49,7 +49,7 @@
 #        parentclassname. The name of the generated files will be
 #        <basename>adaptor.{cpp,h} where basename is the basename of the xml file.
 #
-#  macro QT4_GENERATE_DBUS_INTERFACE( header <interfacename> )
+#  macro QT4_GENERATE_DBUS_INTERFACE( header [interfacename] )
 #        generate the xml interface file from the given header.
 #        If the optional argument interfacename is omitted, the name of the 
 #        interface file is constructed from the basename of the header with
@@ -903,7 +903,7 @@ IF (QT4_QMAKE_FOUND)
   ENDMACRO(QT4_GENERATE_DBUS_INTERFACE)
   
   
-  MACRO(QT4_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass)
+  MACRO(QT4_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass) # _optionalBasename )
     GET_FILENAME_COMPONENT(_infile ${_xml_file} ABSOLUTE)
     
     SET(_optionalBasename "${ARGV4}")
@@ -937,10 +937,6 @@ IF (QT4_QMAKE_FOUND)
 
     SET(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
   ENDMACRO(QT4_ADD_DBUS_ADAPTOR)
-
-  MACRO(QT4_ADD_DBUS_ADAPTORS _sources)
-    message(FATAL_ERROR "There is a call to QT4_ADD_DBUS_ADAPTORS() in the CMakeLists.txt for '${ARGV0}', but this macro has been removed, please use QT4_ADD_DBUS_ADAPTOR and specify the include file and classname for the parent object implementing the code")
-  ENDMACRO(QT4_ADD_DBUS_ADAPTORS _sources)
 
    MACRO(QT4_AUTOMOC)
       QT4_GET_MOC_INC_DIRS(_moc_INCS)
