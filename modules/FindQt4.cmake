@@ -329,12 +329,10 @@ IF (QT4_QMAKE_FOUND)
   ########################################
 
   FIND_PATH(QT_QTCORE_INCLUDE_DIR QtGlobal
-    "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/include/QtCore"
     ${QT_HEADERS_DIR}/QtCore
     ${QT_LIBRARY_DIR}/QtCore.framework/Headers
-    $ENV{QTDIR}/include/QtCore
-    "$ENV{ProgramFiles}/qt/include/Qt"
-   )
+    NO_DEFAULT_PATH
+    )
 
   # Set QT_INCLUDE_DIR by removine "/QtCore" in the string ${QT_QTCORE_INCLUDE_DIR}
   IF( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
