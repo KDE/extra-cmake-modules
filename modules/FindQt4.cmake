@@ -181,13 +181,6 @@ IF (WIN32)
   SET(QT_DEFINITIONS -DQT_DLL)
 ENDIF(WIN32)
 
-# check for qmake
-FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake4 qmake qmake-qt4 PATHS
-  "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
-  "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
-  $ENV{QTDIR}/bin
-)
-
 SET(QT4_INSTALLED_VERSION_TOO_OLD FALSE)
 
 #  macro for asking qmake to process pro files
@@ -207,12 +200,32 @@ MACRO(QT_QUERY_QMAKE outvar invar)
   STRING(REGEX REPLACE ".*CMAKE_MESSAGE<([^>]*).*" "\\1" ${outvar} "${_qmake_query_output}")
 ENDMACRO(QT_QUERY_QMAKE)
 
+# check for qmake
+FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake qmake4 qmake-qt4 PATHS
+  "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
+  "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
+  $ENV{QTDIR}/bin
+)
 
 IF (QT_QMAKE_EXECUTABLE)
 
   SET(QT4_QMAKE_FOUND FALSE)
+  
+  EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_VERSION" OUTPUT_VARIABLE QTVERSION)
 
-   EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_VERSION" OUTPUT_VARIABLE QTVERSION)
+  # check for qt3 qmake and then try and find qmake4 or qmake-qt4 in the path
+  IF("${QTVERSION}" MATCHES "Unknown")
+    SET(QT_QMAKE_EXECUTABLE NOTFOUND CACHE FILEPATH "" FORCE)
+    FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake4 qmake-qt4 PATHS
+      "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
+      "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
+      $ENV{QTDIR}/bin
+      )
+    IF(QT_QMAKE_EXECUTABLE)
+      EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} 
+        ARGS "-query QT_VERSION" OUTPUT_VARIABLE QTVERSION)
+    ENDIF(QT_QMAKE_EXECUTABLE)
+  ENDIF("${QTVERSION}" MATCHES "Unknown")
 
   # check that we found the Qt4 qmake, Qt3 qmake output won't match here
   STRING(REGEX MATCH "^[0-9]+\\.[0-9]+\\.[0-9]+" qt_version_tmp "${QTVERSION}")
@@ -918,12 +931,12 @@ IF (QT4_QMAKE_FOUND)
     SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
     SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
     SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
-	
+
     IF(_optionalClassName)
        ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
           COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -a ${_basename} -c ${_optionalClassName} -i ${_include} -l ${_parentClass} ${_infile}
           DEPENDS ${_infile}
-        )			
+        )
     ELSE(_optionalClassName)
        ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
           COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -a ${_basename} -i ${_include} -l ${_parentClass} ${_infile}
