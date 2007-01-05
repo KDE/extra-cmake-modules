@@ -19,11 +19,15 @@ FIND_PATH(DNSSD_INCLUDE_DIR dns_sd.h
   /usr/include/avahi-compat-libdns_sd/
 )
 
-FIND_LIBRARY(DNSSD_LIBRARIES NAMES dns_sd
-  PATHS
-  /usr/lib
-  /usr/local/lib
-)
+if (APPLE)
+  set(DNSSD_LIBRARIES "/usr/lib/libSystem.dylib")
+else (APPLE)
+  FIND_LIBRARY(DNSSD_LIBRARIES NAMES dns_sd
+    PATHS
+    /usr/lib
+    /usr/local/lib
+  )
+endif (APPLE)
 
 if (DNSSD_INCLUDE_DIR AND DNSSD_LIBRARIES)
    set(DNSSD_FOUND TRUE)
