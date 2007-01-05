@@ -7,7 +7,7 @@
 #  DNSSD_DEFINITIONS - Compiler switches required for using DNSSD
 #
 # need more test: look at into dnssd/configure.in.in
-#
+
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
@@ -22,11 +22,7 @@ FIND_PATH(DNSSD_INCLUDE_DIR dns_sd.h
 if (APPLE)
   set(DNSSD_LIBRARIES "/usr/lib/libSystem.dylib")
 else (APPLE)
-  FIND_LIBRARY(DNSSD_LIBRARIES NAMES dns_sd
-    PATHS
-    /usr/lib
-    /usr/local/lib
-  )
+  FIND_LIBRARY(DNSSD_LIBRARIES NAMES dns_sd )
 endif (APPLE)
 
 if (DNSSD_INCLUDE_DIR AND DNSSD_LIBRARIES)
@@ -38,7 +34,7 @@ if (DNSSD_FOUND)
     message(STATUS "Found DNSSD: ${DNSSD_LIBRARIES}")
   endif (NOT DNSSD_FIND_QUIETLY)
 else (DNSSD_FOUND)
-  set(DNSSD_INCLUDE_DIR "")
+  set(DNSSD_INCLUDE_DIR "")   # this is not good, leaving it on "NOTFOUND" is better, why was it changed ? Alex
   set(DNSSD_LIBRARIES "")
   if (DNSSD_FIND_REQUIRED)
     message(FATAL_ERROR "Could NOT find DNSSD")
