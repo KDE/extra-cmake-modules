@@ -6,10 +6,16 @@
 
 
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+# Copyright (c) 2006, Ralf Habacker, <ralf.habacker@freenet.de>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+if (WIN32)
+		file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
+		set (KDE4_INCLUDE_DIR ${KDE4_INCLUDE_DIR} ${_progFiles}/kdepimlibs/include)
+		set (KDE4_LIB_DIR ${KDE4_LIB_DIR} ${_progFiles}/kdepimlibs/lib)
+endif (WIN32)
 
 find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal.h
   ${KDE4_INCLUDE_DIR}
@@ -17,15 +23,17 @@ find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal.h
 
 if( KDEPIMLIBS_INCLUDE_DIR )
   set(KDEPIMLIBS_FOUND TRUE)
-  set(KDE4_EMAILFUNCTIONS_LIBS emailfunctions)
-  set(KDE4_KABC_LIBS kabc)
+  find_library(KDE4_EMAILFUNCTIONS_LIBS emailfunctions ${KDE4_LIB_DIR})
+  find_library(KDE4_KABC_LIBS kabc ${KDE4_LIB_DIR})
 
-  set(KDE4_KCAL_LIBS kcal)
-  set(KDE4_KTNEF_LIBS ktnef)
-  set(KDE4_KRESOURCES_LIBS kresources)
-  set(KDE4_SYNDICATION_LIBS syndication)
-  set(KDE4_KLDAP_LIBS kldap)
-  set(KDE4_KMIME_LIBS kmime)
+  find_library(KDE4_KCAL_LIBS kcal ${KDE4_LIB_DIR})
+  find_library(KDE4_KTNEF_LIBS ktnef ${KDE4_LIB_DIR})
+  find_library(KDE4_KRESOURCES_LIBS kresources ${KDE4_LIB_DIR})
+  find_library(KDE4_SYNDICATION_LIBS syndication ${KDE4_LIB_DIR})
+  find_library(KDE4_KLDAP_LIBS kldap ${KDE4_LIB_DIR})
+  find_library(KDE4_KMIME_LIBS kmime ${KDE4_LIB_DIR})
+  # setup global used KDE include 
+  set (KDE4_INCLUDES ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR})
 else( KDEPIMLIBS_INCLUDE_DIR )
   set(KDEPIMLIBS_FOUND FALSE)  
   message(FATAL_ERROR "Could NOT find a kdepimlibs installation.\nPlease build and install kdepimlibs first.")
