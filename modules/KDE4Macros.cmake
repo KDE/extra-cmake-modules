@@ -267,6 +267,11 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _group "${_current_ICON}")
       string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\4" _name  "${_current_ICON}")
       set(_theme_GROUP "nogroup")
+
+      if( ${_type} STREQUAL "ox" )
+	set(_theme_GROUP  "oxygen")	
+      endif(${_type} STREQUAL "ox" )
+
       if( ${_type} STREQUAL "cr" )
 	set(_theme_GROUP  "crystalsvg")	
       endif(${_type} STREQUAL "cr" )
@@ -295,6 +300,11 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\3" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\4" _name  "${_current_ICON}")
       SET(_theme_GROUP "nogroup")
+
+      if( ${_type} STREQUAL "ox" )
+	SET(_theme_GROUP  "oxygen")
+      endif(${_type} STREQUAL "ox" )
+      
       if( ${_type} STREQUAL "cr" )
 	SET(_theme_GROUP  "crystalsvg")
       endif(${_type} STREQUAL "cr" )
@@ -324,10 +334,10 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
             STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\3" _name "${_current_ICON}")
 	    SET(_theme_GROUP "nogroup")
 
-	    if(${_type} STREQUAL "lo" )
-		SET(_theme_GROUP  "locolor")
-	    endif(${_type} STREQUAL "lo" )
-
+            if(${_type} STREQUAL "ox" )
+		SET(_theme_GROUP  "oxygen")
+            endif(${_type} STREQUAL "ox" )
+            
             if(${_type} STREQUAL "cr" )
 		SET(_theme_GROUP  "crystalsvg")
             endif(${_type} STREQUAL "cr" )
@@ -335,6 +345,10 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
             if(${_type} STREQUAL "hi" )
                 SET(_theme_GROUP  "hicolor")
             endif(${_type} STREQUAL "hi" )
+
+	    if(${_type} STREQUAL "lo" )
+		SET(_theme_GROUP  "locolor")
+	    endif(${_type} STREQUAL "lo" )
 
             if( NOT ${_theme_GROUP} STREQUAL "nogroup")
                 	_KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
