@@ -31,6 +31,9 @@ set(FILES_TO_REMOVE
 # FindASPELL.cmake
 # FindHSPELL.cmake
 
+# can be removed once we require cmake 2.4.6 or newer:
+# FindPkgConfig.cmake
+
 
 install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/remove_files.cmake )
 
