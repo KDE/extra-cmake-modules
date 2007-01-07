@@ -23,15 +23,15 @@ find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal.h
 
 if( KDEPIMLIBS_INCLUDE_DIR )
   set(KDEPIMLIBS_FOUND TRUE)
-  find_library(KDE4_EMAILFUNCTIONS_LIBS emailfunctions ${KDE4_LIB_DIR})
-  find_library(KDE4_KABC_LIBS kabc ${KDE4_LIB_DIR})
+  find_library(KDE4_EMAILFUNCTIONS_LIBS emailfunctions PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(KDE4_KABC_LIBS kabc PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
 
-  find_library(KDE4_KCAL_LIBS kcal ${KDE4_LIB_DIR})
-  find_library(KDE4_KTNEF_LIBS ktnef ${KDE4_LIB_DIR})
-  find_library(KDE4_KRESOURCES_LIBS kresources ${KDE4_LIB_DIR})
-  find_library(KDE4_SYNDICATION_LIBS syndication ${KDE4_LIB_DIR})
-  find_library(KDE4_KLDAP_LIBS kldap ${KDE4_LIB_DIR})
-  find_library(KDE4_KMIME_LIBS kmime ${KDE4_LIB_DIR})
+  find_library(KDE4_KCAL_LIBS kcal PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(KDE4_KTNEF_LIBS ktnef PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(KDE4_KRESOURCES_LIBS kresources PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(KDE4_SYNDICATION_LIBS syndication PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(KDE4_KLDAP_LIBS kldap PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
+  find_library(KDE4_KMIME_LIBS kmime PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
   # setup global used KDE include 
   set (KDE4_INCLUDES ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR})
 else( KDEPIMLIBS_INCLUDE_DIR )
