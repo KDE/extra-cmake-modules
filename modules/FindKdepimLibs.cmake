@@ -32,11 +32,11 @@ if( KDEPIMLIBS_INCLUDE_DIR )
   find_library(KDE4_SYNDICATION_LIBS syndication PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
   find_library(KDE4_KLDAP_LIBS kldap PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
   find_library(KDE4_KMIME_LIBS kmime PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH)
-  # setup global used KDE include 
+  # setup global used KDE include
   set (KDE4_INCLUDES ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR})
 else( KDEPIMLIBS_INCLUDE_DIR )
-  set(KDEPIMLIBS_FOUND FALSE)  
-  message(FATAL_ERROR "Could NOT find a kdepimlibs installation.\nPlease build and install kdepimlibs first.")
+  set(KDEPIMLIBS_FOUND FALSE)
+  message(FATAL_ERROR "Could NOT find a kdepimlibs installation in ${KDE4_INCLUDE_DIR}.\nPlease build and install kdepimlibs first.")
 endif( KDEPIMLIBS_INCLUDE_DIR )
 
 if (KDEPIMLIBS_FOUND)
