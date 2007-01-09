@@ -4,7 +4,7 @@
 #  FONTCONFIG_FOUND - system has Fontconfig
 #  FONTCONFIG_LIBRARIES - Link these to use FONTCONFIG
 #  FONTCONFIG_DEFINITIONS - Compiler switches required for using FONTCONFIG
-#
+
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
@@ -17,28 +17,26 @@ if (FONTCONFIG_LIBRARIES AND FONTCONFIG_DEFINITIONS)
   set(FONTCONFIG_FOUND TRUE)
 
 else (FONTCONFIG_LIBRARIES AND FONTCONFIG_DEFINITIONS)
-IF (NOT WIN32)
-  # use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  INCLUDE(UsePkgConfig)
-  
-  PKGCONFIG(fontconfig _FONTCONFIGIncDir _FONTCONFIGLinkDir _FONTCONFIGLinkFlags _FONTCONFIGCflags)
 
-  set(FONTCONFIG_DEFINITIONS ${_FONTCONFIGCflags} CACHE INTERNAL "The compilation flags for fontconfig")
-ENDIF (NOT WIN32)
+  if (NOT WIN32)
+    # use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    include(UsePkgConfig)
+
+    pkgconfig(fontconfig _FONTCONFIGIncDir _FONTCONFIGLinkDir _FONTCONFIGLinkFlags _FONTCONFIGCflags)
+
+    set(FONTCONFIG_DEFINITIONS ${_FONTCONFIGCflags} CACHE INTERNAL "The compilation flags for fontconfig")
+  endif (NOT WIN32)
+
   find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h
     PATHS
     ${_FONTCONFIGIncDir}
-    /usr/include
-    /usr/local/include
     /usr/X11/include
   )
 
   find_library(FONTCONFIG_LIBRARIES NAMES fontconfig
     PATHS
     ${_FONTCONFIGLinkDir}
-    /usr/lib
-    /usr/local/lib
   )
 
   if (FONTCONFIG_LIBRARIES)
@@ -55,6 +53,6 @@ ENDIF (NOT WIN32)
     endif (FONTCONFIG_FIND_REQUIRED)
   endif (FONTCONFIG_FOUND)
 
-  MARK_AS_ADVANCED(FONTCONFIG_LIBRARIES)
+  mark_as_advanced(FONTCONFIG_LIBRARIES)
 
 endif (FONTCONFIG_LIBRARIES AND FONTCONFIG_DEFINITIONS)
