@@ -627,19 +627,21 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    set(_type "GUI")
 
    # determine additional parameters for add_executable()
+   # for GUI apps, create a bundle on OSX
    if (APPLE)
       set(_add_executable_param MACOSX_BUNDLE)
    endif (APPLE)
 
+   # for GUI apps, this disables the additional console under Windows
+   if (WIN32)
+      set(_add_executable_param WIN32)
+   endif (WIN32)
+
    if (_nogui)
       set(_type "NOGUI")
       set(_add_executable_param)
-   else (_nogui)
-     if (WIN32)
-       set(_add_executable_param WIN32)
-     endif (WIN32)
    endif (_nogui)
-   
+
    if (_uninst)
       set(_type "RUN_UNINSTALLED")
    endif (_uninst)
