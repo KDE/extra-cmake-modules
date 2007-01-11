@@ -630,14 +630,14 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    if (APPLE)
       set(_add_executable_param MACOSX_BUNDLE)
    endif (APPLE)
-# should this be enabled on windows ? Alex
-#   if (WIN32)
-#      set(_add_executable_param WIN32)
-#   endif (WIN32)
 
    if (_nogui)
       set(_type "NOGUI")
       set(_add_executable_param)
+   else (_nogui)
+     if (WIN32)
+       set(_add_executable_param WIN32)
+     endif (WIN32)
    endif (_nogui)
    
    if (_uninst)
