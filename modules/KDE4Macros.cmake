@@ -617,6 +617,10 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
    target_link_libraries(${_target_NAME} kdeinit_${_target_NAME})
 #   endif (WIN32)
 
+   if (WIN32)
+      target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARIES})
+   endif (WIN32)
+
 endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
@@ -656,6 +660,10 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    endif (KDE4_ENABLE_FINAL)
 
    kde4_handle_rpath_for_executable(${_target_NAME} ${_type})
+
+   if (WIN32)
+      target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARIES})
+   endif (WIN32)
 
 endmacro (KDE4_ADD_EXECUTABLE)
 
