@@ -37,7 +37,7 @@
 # KDE4_KDNSSD_LIBRARY      - the kdnssd library
 # KDE4_PHONONCORE_LIBRARY  - the phononcore library
 # KDE4_PHONONUI_LIBRARY    - the phononui library
-# KDE4_KALSADEVICELIST_LIBRARY - the kalsadevicelist library
+# KDE4_KAUDIODEVICELIST_LIBRARY - the kaudiodevicelist library
 # KDE4_KDEFX_LIBRARY       - the kdefx library
 # KDE4_THREADWEAVER_LIBRARY- the threadweaver library
 # KDE4_SOLID_LIBRARY       - the solid library
@@ -433,8 +433,8 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
    find_library(KDE4_PHONONUI_LIBRARY NAMES phononui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_PHONONUI_LIBS ${phononui_LIB_DEPENDS} ${KDE4_PHONONUI_LIBRARY} )
 
-   find_library(KDE4_KALSADEVICELIST_LIBRARY NAMES kalsadevicelist PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KALSADEVICELIST_LIBS ${kalsadevicelist_LIB_DEPENDS} ${KDE4_KALSADEVICELIST_LIBRARY} )
+   find_library(KDE4_KAUDIODEVICELIST_LIBRARY NAMES kaudiodevicelist PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KAUDIODEVICELIST_LIBS ${kaudiodevicelist_LIB_DEPENDS} ${KDE4_KAUDIODEVICELIST_LIBRARY} )
 
    find_library(KDE4_SOLID_LIBRARY NAMES solid PATHS ${KDE4_LIB_INSTALL_DIR} )
    set(KDE4_SOLID_LIBS ${solid_LIB_DEPENDS} ${KDE4_SOLID_LIBRARY} )
