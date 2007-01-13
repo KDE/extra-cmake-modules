@@ -16,8 +16,8 @@
 
 if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
-  # in cache allready
-  set(QCA2_FOUND TRUE)  
+  # in cache already
+  set(QCA2_FOUND TRUE)
 
 else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
@@ -26,7 +26,6 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
   IF (NOT WIN32)
     PKGCONFIG(qca _Qca2IncDir _Qca2LinkDir _Qca2LinkFlags _Qca2Cflags)
 
-    MESSAGE(STATUS "pkg-config returned ${_Qca2IncDir} for QCA 2 includes")
     set(QCA2_DEFINITIONS ${_Qca2Cflags})
   ENDIF (NOT WIN32)
 
@@ -35,27 +34,25 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
     ${_Qca2IncDir}
     )
 
-  MESSAGE(STATUS "QCA2_INCLUDE_DIR has value ${QCA2_INCLUDE_DIR}" )
-
   FIND_LIBRARY(QCA2_LIBRARIES NAMES qca
     PATHS
-    ${_Qca2LinkDir} 
-    NO_DEFAULT_PATH 
+    ${_Qca2LinkDir}
+    NO_DEFAULT_PATH
   )
 
   if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
     set(QCA2_FOUND TRUE)
-  endif (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
-
-  if (QCA2_FOUND)
-    if (NOT QCA2_FIND_QUIETLY)
-      message(STATUS "Found QCA2: ${QCA2_LIBRARIES}")
-    endif (NOT QCA2_FIND_QUIETLY)
-  else (QCA2_FOUND)
+  else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
+    if (NOT QCA2_INCLUDE_DIR)
+      message(STATUS "Could NOT find QCA2 includes in ${_Qca2IncDir}")
+    endif (NOT QCA2_INCLUDE_DIR)
+    if (NOT QCA2_LIBRARIES)
+      message(STATUS "Could not find QCA2 libraries in ${_Qca2LinkDir}")
+    endif (NOT QCA2_LIBRARIES)
     if (QCA2_FIND_REQUIRED)
       message(SEND_ERROR "Could NOT find QCA2")
     endif (QCA2_FIND_REQUIRED)
-  endif (QCA2_FOUND)
+  endif (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
   MARK_AS_ADVANCED(QCA2_INCLUDE_DIR QCA2_LIBRARIES)
 
