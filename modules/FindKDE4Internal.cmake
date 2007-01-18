@@ -181,6 +181,9 @@
 #    Installs all png and svgz files in the current directory to the icon
 #    directoy given in path, in the subdirectory for the given icon theme.
 #
+# KDE4_CREATE_HTML_HANDBOOK( <docbookfile1> ... <docbookfileN>
+#   Create the HTML documentation using meinproc from the listed docbook files
+#
 # _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
 #
@@ -343,6 +346,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
    # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
+   set( _KDE4_MEINPROC_EXECUTABLE_DEP meinproc)
 
    set(KDE4_INSTALLED_VERSION_OK TRUE)
 
@@ -351,6 +355,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
   # ... but NOT otherwise
    set( _KDE4_KCONFIG_COMPILER_DEP)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
+   set( _KDE4_MEINPROC_EXECUTABLE_DEP)
 
    # Check the version of kde. KDE4_KDECONFIG_EXECUTABLE was set by FindKDE4
    exec_program(${KDE4_KDECONFIG_EXECUTABLE} ARGS "--version" OUTPUT_VARIABLE kdeconfig_output )
@@ -477,10 +482,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
      /opt/kde4/bin
       NO_DEFAULT_PATH
    )
-
-   if (NOT KDE4_KCFGC_EXECUTABLE)
-      find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
-   endif (NOT KDE4_KCFGC_EXECUTABLE)
+   find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
 
    find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc PATHS
      ${KDE4_BIN_INSTALL_DIR}
@@ -489,10 +491,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
      /opt/kde4/bin
       NO_DEFAULT_PATH
    )
-
-   if (NOT KDE4_MEINPROC_EXECUTABLE)
-      find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc )
-   endif (NOT KDE4_MEINPROC_EXECUTABLE)
+   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc )
 
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets PATHS
      ${KDE4_BIN_INSTALL_DIR}
@@ -501,10 +500,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
      /opt/kde4/bin
       NO_DEFAULT_PATH
    )
-
-   if (NOT KDE4_MAKEKDEWIDGETS_EXECUTABLE)
-      find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
-   endif (NOT KDE4_MAKEKDEWIDGETS_EXECUTABLE)
+   find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
 
 endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
 

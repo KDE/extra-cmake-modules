@@ -231,7 +231,7 @@ macro (KDE4_CREATE_HTML_HANDBOOK)
       add_custom_command(OUTPUT ${_doc}
          COMMAND ${KDE4_MEINPROC_EXECUTABLE}
          ARGS -o ${_doc} ${_input}
-         DEPENDS ${_input}
+         DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP}
       )
    endforeach (_current_FILE)
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
