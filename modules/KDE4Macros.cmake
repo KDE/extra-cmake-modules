@@ -223,6 +223,20 @@ macro(KDE4_GET_AUTOMOC_FILES _list)
 endmacro(KDE4_GET_AUTOMOC_FILES)
 
 
+macro (KDE4_CREATE_HTML_HANDBOOK)
+   # iterate over all  files
+   foreach (_current_FILE ${ARGN})
+      get_filename_component(_input ${_current_FILE} ABSOLUTE)
+      set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.html)
+      add_custom_command(OUTPUT ${_doc}
+         COMMAND ${KDE4_MEINPROC_EXECUTABLE}
+         ARGS -o ${_doc} ${_input}
+         DEPENDS ${_input}
+      )
+   endforeach (_current_FILE)
+endmacro (KDE4_CREATE_HTML_HANDBOOK)
+
+
 # only used internally by KDE4_INSTALL_ICONS
 MACRO (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME)
 
