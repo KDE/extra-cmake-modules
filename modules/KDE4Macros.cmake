@@ -224,16 +224,18 @@ endmacro(KDE4_GET_AUTOMOC_FILES)
 
 
 macro (KDE4_CREATE_HTML_HANDBOOK)
+   set(_htmlOutputFiles)
    # iterate over all  files
    foreach (_current_FILE ${ARGN})
       get_filename_component(_input ${_current_FILE} ABSOLUTE)
       set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.html)
       add_custom_command(OUTPUT ${_doc}
-         COMMAND ${KDE4_MEINPROC_EXECUTABLE}
-         ARGS -o ${_doc} ${_input}
+         COMMAND ${KDE4_MEINPROC_EXECUTABLE} -o ${_doc} ${_input}
          DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP}
       )
+      list(APPEND _htmlOutputFiles ${_doc})
    endforeach (_current_FILE)
+   add_custom_target(htmlhandbook ALL DEPENDS ${_htmlOutputFiles} )
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
@@ -283,11 +285,11 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       set(_theme_GROUP "nogroup")
 
       if( ${_type} STREQUAL "ox" )
-	set(_theme_GROUP  "oxygen")	
+	set(_theme_GROUP  "oxygen")
       endif(${_type} STREQUAL "ox" )
 
       if( ${_type} STREQUAL "cr" )
-	set(_theme_GROUP  "crystalsvg")	
+	set(_theme_GROUP  "crystalsvg")
       endif(${_type} STREQUAL "cr" )
 
       if( ${_type} STREQUAL "lo" )
@@ -297,7 +299,7 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       if( ${_type} STREQUAL "hi" )
  	set(_theme_GROUP  "hicolor")
       endif(${_type} STREQUAL "hi" )
-      
+
       if( NOT ${_theme_GROUP} STREQUAL "nogroup")
       		_KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                     ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
@@ -318,11 +320,11 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       if( ${_type} STREQUAL "ox" )
 	SET(_theme_GROUP  "oxygen")
       endif(${_type} STREQUAL "ox" )
-      
+
       if( ${_type} STREQUAL "cr" )
 	SET(_theme_GROUP  "crystalsvg")
       endif(${_type} STREQUAL "cr" )
-      
+
       if( ${_type} STREQUAL "lo" )
         set(_theme_GROUP  "locolor")
       endif(${_type} STREQUAL "lo" )
@@ -351,11 +353,11 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
             if(${_type} STREQUAL "ox" )
 		SET(_theme_GROUP  "oxygen")
             endif(${_type} STREQUAL "ox" )
-            
+
             if(${_type} STREQUAL "cr" )
 		SET(_theme_GROUP  "crystalsvg")
             endif(${_type} STREQUAL "cr" )
-            
+
             if(${_type} STREQUAL "hi" )
                 SET(_theme_GROUP  "hicolor")
             endif(${_type} STREQUAL "hi" )
@@ -406,7 +408,7 @@ ENDMACRO (KDE4_INSTALL_LIBTOOL_FILE)
 # For all C++ sources a big source file which includes all the files
 # is created.
 # This is not done for the C sources, they are just gathered in a separate list
-# because they are usually not written by KDE and as such not intended to be 
+# because they are usually not written by KDE and as such not intended to be
 # compiled all-in-one.
 macro (KDE4_CREATE_FINAL_FILES _filenameCPP _filesExcludedFromFinalFile )
    set(${_filesExcludedFromFinalFile})
@@ -419,7 +421,7 @@ macro (KDE4_CREATE_FINAL_FILES _filenameCPP _filesExcludedFromFinalFile )
       if (_isGenerated)
          list(APPEND ${_filesExcludedFromFinalFile} ${_abs_FILE})
       else (_isGenerated)
-         # don't include c-files in the final-file, because they usually come 
+         # don't include c-files in the final-file, because they usually come
          # from a 3rd party and as such are not intended to be compiled all-in-one
          string(REGEX MATCH ".+\\.c$" _isCFile ${_abs_FILE})
          if (_isCFile)
@@ -434,7 +436,7 @@ endmacro (KDE4_CREATE_FINAL_FILES)
 
 # This macro sets the RPATH related options for libraries, plugins and kdeinit executables.
 # It overrides the defaults set in FindKDE4Internal.cmake.
-# If RPATH is not explicitely disabled, libraries and plugins are built without RPATH, in 
+# If RPATH is not explicitely disabled, libraries and plugins are built without RPATH, in
 # the hope that the RPATH which is compiled into the executable is good enough.
 macro (KDE4_HANDLE_RPATH_FOR_LIBRARY _target_NAME)
    if (NOT CMAKE_SKIP_RPATH AND NOT KDE4_USE_ALWAYS_FULL_RPATH)
@@ -446,7 +448,7 @@ endmacro (KDE4_HANDLE_RPATH_FOR_LIBRARY)
 # and creates wrapper shell scripts for the executables.
 # It overrides the defaults set in FindKDE4Internal.cmake.
 # For every executable a wrapper script is created, which sets the appropriate
-# environment variable for the platform (LD_LIBRARY_PATH on most UNIX systems, 
+# environment variable for the platform (LD_LIBRARY_PATH on most UNIX systems,
 # DYLD_LIBRARY_PATH on OS X and PATH in Windows) so  that it points to the built
 # but not yet installed versions of the libraries. So if RPATH is disabled, the executables
 # can be run via these scripts from the build tree and will find the correct libraries.
@@ -465,11 +467,11 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
          if (${_type} STREQUAL "GUI")
             set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
          endif (${_type} STREQUAL "GUI")
-      
+
          if (${_type} STREQUAL "NOGUI")
             set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
          endif (${_type} STREQUAL "NOGUI")
-      
+
          if (${_type} STREQUAL "RUN_UNINSTALLED")
             set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
          endif (${_type} STREQUAL "RUN_UNINSTALLED")
@@ -503,10 +505,10 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
       # maybe later this will change to a generated batch file (for setting the PATH so that the Qt libs are found)
       get_target_property(_executable ${_target_NAME} LOCATION )
       set_target_properties(${_target_NAME} PROPERTIES WRAPPER_SCRIPT ${_executable})
-      
+
       set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/;${LIB_INSTALL_DIR};${KDE4_LIB_DIR};${QT_LIBRARY_DIR}")
       get_target_property(_executable ${_target_NAME} LOCATION )
-      
+
        # use add_custom_target() to have the batch-file-wrapper generated during build time instead of cmake time
       add_custom_command(TARGET ${_target_NAME} POST_BUILD
          COMMAND ${CMAKE_COMMAND}
@@ -514,7 +516,7 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
          -D_ld_library_path="${_ld_library_path}" -D_executable="${_executable}"
          -P ${KDE4_MODULE_DIR}/kde4_exec_via_sh.cmake
          )
-      
+
    endif (UNIX)
 endmacro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE)
 
@@ -556,14 +558,14 @@ endmacro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 # files has the "NOGUI" or "RUN_UNINSTALLED" keywords at the beginning
 # in _output_LIST the list of source files is returned with the "NOGUI"
 # and "RUN_UNINSTALLED" keywords removed
-# if "NOGUI" is in the list of files, the _nogui argument is set to 
+# if "NOGUI" is in the list of files, the _nogui argument is set to
 # "NOGUI" (which evaluates to TRUE in cmake), otherwise it is set empty
 # (which evaluates to FALSE in cmake)
-# if "RUN_UNINSTALLED" is in the list of files, the _uninst argument is set to 
+# if "RUN_UNINSTALLED" is in the list of files, the _uninst argument is set to
 # "RUN_UNINSTALLED" (which evaluates to TRUE in cmake), otherwise it is set empty
 # (which evaluates to FALSE in cmake)
 macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
-   set(${_nogui})  
+   set(${_nogui})
    set(${_uninst})
    set(${_output_LIST} ${ARGN})
    list(LENGTH ${_output_LIST} count)
@@ -589,7 +591,7 @@ macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
 
    if (${first_PARAM} STREQUAL "RUN_UNINSTALLED")
       set(${_uninst} "RUN_UNINSTALLED")
-      set(remove 0)   
+      set(remove 0)
    endif (${first_PARAM} STREQUAL "RUN_UNINSTALLED")
 
    if (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
