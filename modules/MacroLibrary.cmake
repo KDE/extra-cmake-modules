@@ -7,6 +7,7 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 INCLUDE(MacroOptionalFindPackage)
+INCLUDE(MacroOptionalAddSubdirectory)
 INCLUDE(MacroAdditionalCleanFiles)
 INCLUDE(MacroAddFileDependencies)
 INCLUDE(MacroAddCompileFlags)
