@@ -181,8 +181,14 @@
 #    Installs all png and svgz files in the current directory to the icon
 #    directoy given in path, in the subdirectory for the given icon theme.
 #
-# KDE4_CREATE_HTML_HANDBOOK( <docbookfile1> ... <docbookfileN>
-#   Create the HTML documentation using meinproc from the listed docbook files
+# KDE4_CREATE_HANDBOOK( docbookfile )
+#   Create the handbook from the docbookfile (using meinproc)
+#
+# KDE4_INSTALL_HANDBOOK()
+#   Install the handbook documentation
+#
+# KDE4_CREATE_HTML_HANDBOOK( docbookfile )
+#   Create HTML version of the handbook from the docbookfile (using meinproc)
 #
 # _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 # _KDE4_PLATFORM_DEFINITIONS is used only internally

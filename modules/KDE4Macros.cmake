@@ -222,22 +222,43 @@ macro(KDE4_GET_AUTOMOC_FILES _list)
    endforeach (_current_FILE)
 endmacro(KDE4_GET_AUTOMOC_FILES)
 
+macro (KDE4_INSTALL_HANDBOOK)
+   get_filename_component(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
+   get_filename_component(_basename ${_tmp_FILE} NAME_WE)
+   file(GLOB _books *.docbook)
+   file(GLOB _images *.png)
+   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2 ${_books} ${_images} DESTINATION ${HTML_INSTALL_DIR}/en/${_basename})
+   # TODO symlinks on non-unix platforms
+   if (UNIX)
+      ADD_CUSTOM_COMMAND(OUTPUT  "${HTML_INSTALL_DIR}/en/${_basename}/common"
+                         DEPENDS "${HTML_INSTALL_DIR}/en/common"
+                         COMMAND /bin/ln
+                         ARGS -s "${HTML_INSTALL_DIR}/en/common" "${HTML_INSTALL_DIR}/en/${_basename}/common"
+                         COMMENT "Symlink")
+      FILE(MAKE_DIRECTORY ${HTML_INSTALL_DIR}/en/${_basename})
+      ADD_CUSTOM_TARGET(CreateSymlinks ALL DEPENDS ${HTML_INSTALL_DIR}/en/${_basename}/common)
+   endif (UNIX)
+endmacro (KDE4_INSTALL_HANDBOOK)
 
-macro (KDE4_CREATE_HTML_HANDBOOK)
-   set(_htmlOutputFiles)
-   # iterate over all  files
-   foreach (_current_FILE ${ARGN})
-      get_filename_component(_input ${_current_FILE} ABSOLUTE)
-      set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.html)
-      add_custom_command(OUTPUT ${_doc}
-         COMMAND ${KDE4_MEINPROC_EXECUTABLE} -o ${_doc} ${_input}
-         DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP}
-      )
-      list(APPEND _htmlOutputFiles ${_doc})
-   endforeach (_current_FILE)
-   add_custom_target(htmlhandbook ALL DEPENDS ${_htmlOutputFiles} )
+macro (KDE4_CREATE_HANDBOOK _docbook)
+   get_filename_component(_input ${_docbook} ABSOLUTE)
+   set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2)
+   add_custom_command(OUTPUT ${_doc}
+      COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check --cache ${_doc} ${_input}
+      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP}
+   )
+   add_custom_target(handbook ALL DEPENDS ${_doc})
+endmacro (KDE4_CREATE_HANDBOOK)
+
+macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
+   get_filename_component(_input ${_docbook} ABSOLUTE)
+   set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
+   add_custom_command(OUTPUT ${_doc}
+      COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check -o ${_doc} ${_input}
+      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP}
+   )
+   add_custom_target(htmlhandbook ALL DEPENDS ${_doc})
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
-
 
 # only used internally by KDE4_INSTALL_ICONS
 MACRO (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME)
