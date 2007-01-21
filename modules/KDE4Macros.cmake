@@ -243,9 +243,10 @@ endmacro (KDE4_INSTALL_HANDBOOK)
 macro (KDE4_CREATE_HANDBOOK _docbook)
    get_filename_component(_input ${_docbook} ABSOLUTE)
    set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2)
+   set(_ssheet ${DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl)
    add_custom_command(OUTPUT ${_doc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check --cache ${_doc} ${_input}
-      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP}
+      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
    )
    add_custom_target(handbook ALL DEPENDS ${_doc})
 endmacro (KDE4_CREATE_HANDBOOK)
@@ -253,9 +254,10 @@ endmacro (KDE4_CREATE_HANDBOOK)
 macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
    get_filename_component(_input ${_docbook} ABSOLUTE)
    set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
+   set(_ssheet ${DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl)
    add_custom_command(OUTPUT ${_doc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check -o ${_doc} ${_input}
-      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP}
+      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
    )
    add_custom_target(htmlhandbook ALL DEPENDS ${_doc})
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
