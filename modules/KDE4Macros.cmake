@@ -227,6 +227,7 @@ macro (KDE4_INSTALL_HANDBOOK)
    get_filename_component(_basename ${_tmp_FILE} NAME_WE)
    file(GLOB _books *.docbook)
    file(GLOB _images *.png)
+   FILE(MAKE_DIRECTORY ${HTML_INSTALL_DIR}/en/${_basename})
    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2 ${_books} ${_images} DESTINATION ${HTML_INSTALL_DIR}/en/${_basename})
    # TODO symlinks on non-unix platforms
    if (UNIX)
@@ -235,7 +236,6 @@ macro (KDE4_INSTALL_HANDBOOK)
                          COMMAND /bin/ln
                          ARGS -s "${HTML_INSTALL_DIR}/en/common" "${HTML_INSTALL_DIR}/en/${_basename}/common"
                          COMMENT "Symlink")
-      FILE(MAKE_DIRECTORY ${HTML_INSTALL_DIR}/en/${_basename})
       ADD_CUSTOM_TARGET(CreateSymlinks ALL DEPENDS ${HTML_INSTALL_DIR}/en/${_basename}/common)
    endif (UNIX)
 endmacro (KDE4_INSTALL_HANDBOOK)
