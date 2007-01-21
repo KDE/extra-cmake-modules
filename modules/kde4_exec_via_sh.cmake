@@ -20,10 +20,11 @@ exec_program(chmod ARGS ug+x \"${_filename}\" OUTPUT_VARIABLE _dummy )
 
 else (UNIX)
 
-file(TO_NATIVE_PATH ${_ld_library_path} win_path)
+file(TO_NATIVE_PATH "${_ld_library_path}" win_path)
+
 file(WRITE "${_filename}" 
 "
-set PATH=${win_path};${PATH}
+set PATH=${win_path};$ENV{PATH}
 \"${_executable}\" %*
 ")
 
