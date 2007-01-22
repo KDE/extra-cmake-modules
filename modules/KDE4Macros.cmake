@@ -237,8 +237,7 @@ macro (KDE4_INSTALL_HANDBOOK)
    if (UNIX)
        # write a cmake script file which creates the symlink
        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/make_doc_symlink.cmake "exec_program(${CMAKE_COMMAND} ARGS -E create_symlink ${HTML_INSTALL_DIR}/en/common  ${HTML_INSTALL_DIR}/en/${dirname}/common )\n")
-   # and add it as post-install script to any of the installed targets, so it will be executed during "make install"
-       ADD_CUSTOM_TARGET(CreateSymlinks POST_INSTALL_SCRIPT ALL DEPENDS ${HTML_INSTALL_DIR}/en/${dirname}/common)
+       install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/make_doc_symlink.cmake)
    endif (UNIX)
 endmacro (KDE4_INSTALL_HANDBOOK )
 
