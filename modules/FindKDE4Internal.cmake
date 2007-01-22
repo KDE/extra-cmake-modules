@@ -228,6 +228,7 @@ endif(NOT PERL_FOUND)
 
 include (MacroLibrary)
 include (CheckCXXCompilerFlag)
+include (CheckCXXSourceCompiles)
 
 #add some KDE specific stuff
 
@@ -733,8 +734,24 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    endif (GCC_IS_NEWER_THAN_4_1)
 
    if (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden")
-      set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+      set (KDE4_C_FLAGS "-fvisibility=hidden")
+
+      macro_push_required_vars()
+      set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} -shared -fPIC -O0 -fvisibility-inlines-hidden")
+      check_cxx_source_compiles("/* http://gcc.gnu.org/bugzilla/show_bug.cgi?id=19664 */
+	  #include <string>
+          int some_function( void ) __attribute__ ((visibility(\"default\")));
+          int some_function( void )
+          {
+	    std::string s(\"blafasel\");
+            return 0;
+          }" GCC_VISIBILITY_INLINES_HIDDEN_BUG)
+      macro_pop_required_vars()
+
+      if (NOT GCC_VISIBILITY_INLINES_HIDDEN_BUG)
+          set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
+      endif (NOT GCC_VISIBILITY_INLINES_HIDDEN_BUG)
    else (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
       set (__KDE_HAVE_GCC_VISIBILITY 0)
    endif (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
