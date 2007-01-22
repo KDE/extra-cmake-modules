@@ -235,13 +235,10 @@ macro (KDE4_INSTALL_HANDBOOK)
    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2 ${_books} ${_images} DESTINATION ${HTML_INSTALL_DIR}/en/${dirname})
    # TODO symlinks on non-unix platforms
    if (UNIX)
-      install(DIRECTORY /var/lib/empty/ DESTINATION ${HTML_INSTALL_DIR}/en/${dirname})
-      ADD_CUSTOM_COMMAND(OUTPUT  "${HTML_INSTALL_DIR}/en/${dirname}/common"
-                         DEPENDS "${HTML_INSTALL_DIR}/en/common"
-                         COMMAND /bin/ln
-                         ARGS -s "${HTML_INSTALL_DIR}/en/common" "${HTML_INSTALL_DIR}/en/${dirname}/common"
-                         COMMENT "Symlink")
-      ADD_CUSTOM_TARGET(CreateSymlinks ALL DEPENDS ${HTML_INSTALL_DIR}/en/${dirname}/common)
+       # write a cmake script file which creates the symlink
+       file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/make_doc_symlink.cmake "exec_program(${CMAKE_COMMAND} ARGS -E create_symlink ${HTML_INSTALL_DIR}/en/common  ${HTML_INSTALL_DIR}/en/${dirname}/common )\n")
+   # and add it as post-install script to any of the installed targets, so it will be executed during "make install"
+       ADD_CUSTOM_TARGET(CreateSymlinks POST_INSTALL_SCRIPT ALL DEPENDS ${HTML_INSTALL_DIR}/en/${dirname}/common)
    endif (UNIX)
 endmacro (KDE4_INSTALL_HANDBOOK )
 
