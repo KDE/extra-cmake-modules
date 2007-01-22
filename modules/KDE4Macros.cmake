@@ -13,9 +13,12 @@
 # KDE4_INSTALL_ICONS
 # KDE4_REMOVE_OBSOLETE_CMAKE_FILES
 # KDE4_NO_ENABLE_FINAL
+# KDE4_CREATE_HANDBOOK
+# KDE4_CREATE_HTML_HANDBOOK
+# KDE4_INSTALL_HANDBOOK
 
-# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
-# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+# Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
+# Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
