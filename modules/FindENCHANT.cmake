@@ -27,10 +27,12 @@ IF (NOT WIN32)
   
   set(ENCHANT_DEFINITIONS ${_ENCHANTCflags})
 ENDIF (NOT WIN32)  
-  FIND_PATH(ENCHANT_INCLUDE_DIR enchant/enchant.h
+  FIND_PATH(ENCHANT_INCLUDE_DIR enchant++.h
     ${_ENCHANTIncDir}
     /usr/include
+    /usr/include/enchant
     /usr/local/include
+    /usr/local/include/enchant
   )
   
   FIND_LIBRARY(ENCHANT_LIBRARIES NAMES enchant
