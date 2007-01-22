@@ -225,17 +225,17 @@ macro(KDE4_GET_AUTOMOC_FILES _list)
    endforeach (_current_FILE)
 endmacro(KDE4_GET_AUTOMOC_FILES)
 
-macro (KDE4_INSTALL_HANDBOOK )
+macro (KDE4_INSTALL_HANDBOOK)
    get_filename_component(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
    get_filename_component(_basename ${_tmp_FILE} NAME_WE)
    file(GLOB _books *.docbook)
    file(GLOB _images *.png)
    set(relative ${ARGV0})
    set( dirname ${relative}/${_basename})
-   FILE(MAKE_DIRECTORY ${HTML_INSTALL_DIR}/en/${dirname})
    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2 ${_books} ${_images} DESTINATION ${HTML_INSTALL_DIR}/en/${dirname})
    # TODO symlinks on non-unix platforms
    if (UNIX)
+      install(DIRECTORY /var/lib/empty/ DESTINATION ${HTML_INSTALL_DIR}/en/${dirname})
       ADD_CUSTOM_COMMAND(OUTPUT  "${HTML_INSTALL_DIR}/en/${dirname}/common"
                          DEPENDS "${HTML_INSTALL_DIR}/en/common"
                          COMMAND /bin/ln
