@@ -335,7 +335,8 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
    set(KDE4_KPARTS_LIBS ${KDE4_KIO_LIBS} kparts)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
    set(KDE4_KDEFX_LIBS ${KDE4_KDEFX_LIBS} kdefx)
-
+   set(KDE4_SONNETCORE_LIBS ${KDE4_KDECORE_LIBS} sonnetcore)
+   set(KDE4_SONNETUI_LIBS ${KDE4_KDEUI_LIBS} sonnetui)
 
    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
 
