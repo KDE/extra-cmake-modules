@@ -713,6 +713,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
         MESSAGE(STATUS "Your compiler doesn't support PIE flag")
        endif(HAVE_FPIE_SUPPORT)
    endif(KDE4_ENABLE_FPIE)
+   # save a little by making local statics not threadsafe
+   check_cxx_compiler_flag(-fno-threadsafe-statics __KDE_HAVE_NO_THREADSAFE_STATICS)
+   if (__KDE_HAVE_NO_THREADSAFE_STATICS)
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
+   endif (__KDE_HAVE_NO_THREADSAFE_STATICS)
+
    # visibility support
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
 
