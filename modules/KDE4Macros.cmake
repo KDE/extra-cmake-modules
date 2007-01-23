@@ -663,6 +663,39 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
 endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
+macro (KDE4_ADD_TEST _target_NAME)
+
+   MATH(EXPR cmake_version "${CMAKE_MAJOR_VERSION} * 10000 + ${CMAKE_MINOR_VERSION} * 100 + ${CMAKE_PATCH_VERSION}")
+
+   set(_add_executable_param)
+   set(_go)
+   if (KDE4_BUILD_TESTS)
+       set(_go TRUE)
+   else (KDE4_BUILD_TESTS)
+      if (cmake_version GREATER 20403)
+          set(_go TRUE)
+	  set(_add_executable_param EXCLUDE_FROM_ALL)
+      endif (cmake_version GREATER 20403)
+   endif (KDE4_BUILD_TESTS)
+
+   if (_go)
+       kde4_get_automoc_files(_automoc_FILES ${ARGN})
+
+       add_executable(${_target_NAME} ${_add_executable_param} ${ARGN} ${_automoc_FILES})
+
+       set_target_properties(${_target_NAME} PROPERTIES
+			     EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}
+			     DEFINITIONS -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\"
+			     SKIP_BUILD_RPATH FALSE
+			     BUILD_WITH_INSTALL_RPATH FALSE)
+
+       if (WIN32)
+       	  target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
+       endif (WIN32)
+
+    endif (_go)
+endmacro (KDE4_ADD_TEST)
+
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
    kde4_check_executable_params( _SRCS _nogui _uninst ${ARGN})
