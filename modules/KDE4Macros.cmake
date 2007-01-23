@@ -794,12 +794,24 @@ MACRO(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
 
 ENDMACRO(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
 
+
 MACRO(KDE4_NO_ENABLE_FINAL _project_name)
    if(KDE4_ENABLE_FINAL)
-	set(KDE4_ENABLE_FINAL OFF)
-	REMOVE_DEFINITIONS(-DKDE_USE_FINAL)
-	MESSAGE(STATUS "You used enable-final argument but \"${_project_name}\" doesn't support it. Try to fix compile it and remove KDE4_NO_ENABLE_FINAL macro. Thanks")
+      set(KDE4_ENABLE_FINAL OFF)
+      remove_definitions(-DKDE_USE_FINAL)
+      message(STATUS "You used enable-final argument but \"${_project_name}\" doesn't support it. Try to fix compile it and remove KDE4_NO_ENABLE_FINAL macro. Thanks")
 
    endif(KDE4_ENABLE_FINAL)
 ENDMACRO(KDE4_NO_ENABLE_FINAL _project_name)
 
+
+macro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
+   string(TOUPPER ${_libName} _libNameUpperCase)
+    # the next line is is required, because in CMake arguments to macros are not real
+   # variables, but handled differently. The next line create a real CMake variable,
+   # so configure_file() will replace it correctly.
+   set(_libName ${_libName})
+   # compared to write(FILE) configure_file() only really writes the file if the
+   # contents have changed. Otherwise we would have a lot of recompiles.
+   configure_file(${KDE4_MODULE_DIR}/kde4exportsheader.h.in ${_outputFile})
+endmacro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
