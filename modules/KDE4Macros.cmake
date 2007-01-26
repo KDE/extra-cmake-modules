@@ -54,11 +54,6 @@ macro (KDE4_ADD_KCFG_FILES _sources )
          list(APPEND ${_sources} ${_moc_FILE})
        endif(_kcfg_generatemoc)
 
-#       if (KDE4_ENABLE_FINAL)
-#          kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${ARGN})
-#          macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_src_FILE})
-#       endif (KDE4_ENABLE_FINAL)
-
        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
      endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
    endforeach (_current_FILE)
@@ -194,13 +189,6 @@ macro (KDE4_AUTOMOC)
                )
 
                list(APPEND _moc_FILES_PROPERTY ${_moc})
-
-#             if (KDE4_ENABLE_FINAL)
-#	        kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${ARGN})
-#                macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_moc})
-#             else (KDE4_ENABLE_FINAL)
-#                macro_add_file_dependencies(${_abs_FILE} ${_moc})
-#             endif (KDE4_ENABLE_FINAL)
 
             endforeach (_current_MOC_INC)
          endif (_match)
