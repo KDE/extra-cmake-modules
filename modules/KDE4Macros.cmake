@@ -224,9 +224,8 @@ macro (KDE4_INSTALL_HANDBOOK)
    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2 ${_books} ${_images} DESTINATION ${HTML_INSTALL_DIR}/en/${dirname})
    # TODO symlinks on non-unix platforms
    if (UNIX)
-       # write a cmake script file which creates the symlink
-       file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/make_doc_symlink.cmake "exec_program(${CMAKE_COMMAND} ARGS -E create_symlink ${HTML_INSTALL_DIR}/en/common  ${HTML_INSTALL_DIR}/en/${dirname}/common )\n")
-       install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/make_doc_symlink.cmake)
+       # execute some cmake code on make install which creates the symlink
+       install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${HTML_INSTALL_DIR}/en/common\"  \"${HTML_INSTALL_DIR}/en/${dirname}/common\" )" )
    endif (UNIX)
 endmacro (KDE4_INSTALL_HANDBOOK )
 
