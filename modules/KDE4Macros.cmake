@@ -225,6 +225,7 @@ macro(KDE4_GET_AUTOMOC_FILES _list)
    endforeach (_current_FILE)
 endmacro(KDE4_GET_AUTOMOC_FILES)
 
+
 macro (KDE4_INSTALL_HANDBOOK)
    get_filename_component(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
    get_filename_component(_basename ${_tmp_FILE} NAME_WE)
@@ -240,6 +241,7 @@ macro (KDE4_INSTALL_HANDBOOK)
        install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/make_doc_symlink.cmake)
    endif (UNIX)
 endmacro (KDE4_INSTALL_HANDBOOK )
+
 
 macro (KDE4_CREATE_HANDBOOK _docbook)
    get_filename_component(_input ${_docbook} ABSOLUTE)
@@ -824,15 +826,6 @@ macro (KDE4_ADD_WIDGET_FILES _sources)
 
 endmacro (KDE4_ADD_WIDGET_FILES)
 
-MACRO(KDE4_ADD_DCOP_SKELS)
-   MESSAGE(FATAL_ERROR "There is a call to KDE4_ADD_DCOP_SKELS() in the CMakeLists.txt for '${ARGV0}', but DCOP is no longer supported by KDE4.
- Please remove it and port to DBUS.")
-ENDMACRO(KDE4_ADD_DCOP_SKELS)
-
-MACRO(KDE4_ADD_DCOP_STUBS)
-   MESSAGE(FATAL_ERROR "There is a call to KDE4_ADD_DCOP_STUBS() in the CMakeLists.txt for '${ARGV0}', but DCOP is no longer supported by KDE4.
- Please remove it and port to DBUS.")
-ENDMACRO(KDE4_ADD_DCOP_STUBS)
 
 MACRO(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
