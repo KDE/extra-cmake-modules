@@ -311,7 +311,7 @@ option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 
 if( KDE4_ENABLE_FINAL)
-	add_definitions(-DKDE_USE_FINAL)
+   add_definitions(-DKDE_USE_FINAL)
 endif(KDE4_ENABLE_FINAL)
 
 #Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
@@ -325,9 +325,14 @@ option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 #are we trying to compile kdelibs ?
 #then enter bootstrap mode
 if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
-
+   set(_kdeBootStrapping TRUE)
    message(STATUS "Building kdelibs...")
+else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   set(_kdeBootStrapping FALSE)
+endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
 
+
+if (_kdeBootStrapping)
    set(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
    set(KDE4_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
    set(KDE4_KDEUI_LIBS ${KDE4_KDECORE_LIBS} kdeui)
@@ -362,7 +367,7 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
 
    set(KDE4_INSTALLED_VERSION_OK TRUE)
 
-else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+else (_kdeBootStrapping)
 
   # ... but NOT otherwise
    set( _KDE4_KCONFIG_COMPILER_DEP)
@@ -520,7 +525,7 @@ else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
    )
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
 
-endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+endif (_kdeBootStrapping)
 
 
 #####################  and now the platform specific stuff  ############################
@@ -548,9 +553,9 @@ if (WIN32)
 
    # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely,
    # otherwise they come from KDELibsDependencies.cmake, Alex
-   if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   if (_kdeBootStrapping)
       set( KDE4_KDECORE_LIBS ${KDE4_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
-   endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   endif (_kdeBootStrapping)
 
    # windows, mingw
    if(MINGW)
@@ -812,7 +817,7 @@ endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND KDE4_INST
 macro (KDE4_PRINT_RESULTS)
 
    # inside kdelibs the include dir and lib dir are internal, not "found"
-   if(NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   if (NOT _kdeBootStrapping)
        if(KDE4_INCLUDE_DIR)
           message(STATUS "Found KDE4 include dir: ${KDE4_INCLUDE_DIR}")
        else(KDE4_INCLUDE_DIR)
@@ -824,7 +829,7 @@ macro (KDE4_PRINT_RESULTS)
        else(KDE4_LIB_DIR)
           message(STATUS "Didn't find KDE4 core library")
        endif(KDE4_LIB_DIR)
-   endif(NOT EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   endif (NOT _kdeBootStrapping)
 
    if(KDE4_KCFGC_EXECUTABLE)
       message(STATUS "Found KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")

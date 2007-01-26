@@ -245,14 +245,14 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
    get_filename_component(_input ${_docbook} ABSOLUTE)
    set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2)
 
-   set(_bootstrapOption)
    #Boostrap
-   if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)	
+   if (_kdeBootStrapping)
       set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/customization/kde-chunk.xsl)
       set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
-   else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   else (_kdeBootStrapping)
       set(_ssheet ${DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl)
-   endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+      set(_bootstrapOption)
+   endif (_kdeBootStrapping)
    
    add_custom_command(OUTPUT ${_doc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} --cache ${_doc} ${_input}
@@ -261,18 +261,19 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
    add_custom_target(handbook ALL DEPENDS ${_doc})
 endmacro (KDE4_CREATE_HANDBOOK)
 
+
 macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
    get_filename_component(_input ${_docbook} ABSOLUTE)
    set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
    
    set(_bootstrapOption)
    #Boostrap
-   if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   if (_kdeBootStrapping)
       set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/customization/kde-chunk.xsl)
       set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
-   else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   else (_kdeBootStrapping)
       set(_ssheet ${DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl)
-   endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   endif (_kdeBootStrapping)
 
    add_custom_command(OUTPUT ${_doc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} -o ${_doc} ${_input}
@@ -550,7 +551,7 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
 
       set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}\;${LIB_INSTALL_DIR}\;${KDE4_LIB_DIR}\;${QT_LIBRARY_DIR}")
       get_target_property(_executable ${_target_NAME} LOCATION )
-      
+
       # use add_custom_target() to have the batch-file-wrapper generated during build time instead of cmake time
       add_custom_command(TARGET ${_target_NAME} POST_BUILD
          COMMAND ${CMAKE_COMMAND}
@@ -596,7 +597,7 @@ macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 endmacro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
 
-# this macro checks is intended to check whether a list of source
+# this macro is intended to check whether a list of source
 # files has the "NOGUI" or "RUN_UNINSTALLED" keywords at the beginning
 # in _output_LIST the list of source files is returned with the "NOGUI"
 # and "RUN_UNINSTALLED" keywords removed
@@ -692,7 +693,7 @@ macro (KDE4_ADD_TEST _target_NAME)
    else (KDE4_BUILD_TESTS)
       if (cmake_version GREATER 20403)
           set(_go TRUE)
-	  set(_add_executable_param EXCLUDE_FROM_ALL)
+          set(_add_executable_param EXCLUDE_FROM_ALL)
       endif (cmake_version GREATER 20403)
    endif (KDE4_BUILD_TESTS)
 
@@ -702,17 +703,18 @@ macro (KDE4_ADD_TEST _target_NAME)
        add_executable(${_target_NAME} ${_add_executable_param} ${ARGN} ${_automoc_FILES})
 
        set_target_properties(${_target_NAME} PROPERTIES
-			     EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}
-			     DEFINITIONS -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\"
-			     SKIP_BUILD_RPATH FALSE
-			     BUILD_WITH_INSTALL_RPATH FALSE)
+                             EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}
+                             DEFINITIONS -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\"
+                             SKIP_BUILD_RPATH FALSE
+                             BUILD_WITH_INSTALL_RPATH FALSE)
 
        if (WIN32)
-       	  target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
+          target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
        endif (WIN32)
 
     endif (_go)
 endmacro (KDE4_ADD_TEST)
+
 
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
@@ -759,7 +761,7 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
 endmacro (KDE4_ADD_EXECUTABLE)
 
 
-MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
+macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 #is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
 
    set(_first_SRC ${_lib_TYPE})
@@ -796,7 +798,7 @@ MACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    endif (WIN32)
 
-ENDMACRO (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
+endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 
 macro (KDE4_ADD_WIDGET_FILES _sources)
