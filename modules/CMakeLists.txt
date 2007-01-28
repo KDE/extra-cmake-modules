@@ -19,12 +19,6 @@ set(FILES_TO_REMOVE
  ${module_install_dir}/UsePkgconfig.cmake
  ${module_install_dir}/kde3uic.cmake
  ${module_install_dir}/kde3init_dummy.cpp.in
- ${module_install_dir}/FindASPELL.cmake
- ${module_install_dir}/FindLibXml2.cmake
- ${module_install_dir}/FindHSPELL.cmake
- ${module_install_dir}/FindJasper.cmake
- ${module_install_dir}/CheckCXXCompilerFlag.cmake
- ${module_install_dir}/FindBZip2.cmake
 )
 
 # can be removed once we require merge into cmake
