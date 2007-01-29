@@ -671,24 +671,32 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
 endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
-macro (KDE4_ADD_TEST _target_NAME)
 
-   message(STATUS "temporarily compiling test ${_target_NAME} unconditionally, will be fixed soon")
+# add an test executable
+# it will be built with RPATH poiting to the build dir
+# with CMake 2.4.3, the executable is built only if the option
+# KDE4_BUILD_TESTS is enabled, otherwise a ADD_CUSTOM_TARGET() is created
+# so that the TARGET_LINK_LIBRARIES() commands don't produce errors
+# With cmake > 2.4.3 the targets are always created, but only built for the "all"
+# target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
+# are created but not built by default. You can build them by manually building the target.
+macro (KDE4_ADD_TEST _target_NAME)
 
    math(EXPR cmake_version "${CMAKE_MAJOR_VERSION} * 10000 + ${CMAKE_MINOR_VERSION} * 100 + ${CMAKE_PATCH_VERSION}")
 
    set(_add_executable_param)
-#   set(_go)
-#   if (KDE4_BUILD_TESTS)
-#       set(_go TRUE)
-#   else (KDE4_BUILD_TESTS)
+   set(_go)
+   
+   if (KDE4_BUILD_TESTS)
+      set(_go TRUE)
+   else (KDE4_BUILD_TESTS)
       if (cmake_version GREATER 20403)
-#          set(_go TRUE)
-          set(_add_executable_param EXCLUDE_FROM_ALL)
+         set(_go TRUE)
+         set(_add_executable_param EXCLUDE_FROM_ALL)
       endif (cmake_version GREATER 20403)
-#   endif (KDE4_BUILD_TESTS)
+   endif (KDE4_BUILD_TESTS)
 
-#   if (_go)
+   if (_go)
        kde4_get_automoc_files(_automoc_FILES ${ARGN})
 
        add_executable(${_target_NAME} ${_add_executable_param} ${ARGN} ${_automoc_FILES})
@@ -703,7 +711,11 @@ macro (KDE4_ADD_TEST _target_NAME)
           target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
        endif (WIN32)
 
-#    endif (_go)
+    else (_go)
+    
+      add_custom_target(${_target_NAME} COMMAND echo "This is just a dummy target, enable the option KDE4_BUILD_TEST to build the actual ${_target_NAME} test")
+    
+    endif (_go)
 
 endmacro (KDE4_ADD_TEST)
 
