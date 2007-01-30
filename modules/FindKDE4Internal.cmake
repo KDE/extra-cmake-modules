@@ -168,9 +168,10 @@
 #    are created. Currently it doesn't have any effect on other platforms.
 #
 # KDE4_ADD_EXECUTABLE (name [NOGUI] [RUN_UNINSTALLED] file1 ... fileN)
-#    Equivalent to ADD_EXECUTABLE(), but additionally adds support for KDE4_ENABLE_FINAL.
-#    If you don't need support for KDE4_ENABLE_FINAL, you can just use the
-#    normal ADD_EXECUTABLE().
+#    Equivalent to ADD_EXECUTABLE(), but additionally adds some more features:
+#    -support for KDE4_ENABLE_FINAL
+#    -support for automoc
+#    -automatic RPATH handling
 #    If the executable has to be run from the buildtree (e.g. unit tests and code generators
 #    used later on when compiling), set the option RUN_UNINSTALLED.
 #    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
@@ -484,45 +485,16 @@ else (_kdeBootStrapping)
    
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
-
-   # at first the KDE include direcory
    # kpassworddialog.h is new with KDE4
-   find_path(KDE4_INCLUDE_DIR kpassworddialog.h
-      ${KDE4_INCLUDE_INSTALL_DIR}
-      $ENV{KDEDIR}/include
-      /opt/kde/include
-      /opt/kde4/include
-      /usr/local/include
-      /usr/include/
-      /usr/include/kde
-      /usr/local/include/kde
-    )
+   find_path(KDE4_INCLUDE_DIR kpassworddialog.h ${KDE4_INCLUDE_INSTALL_DIR} NO_DEFAULT_PATH )
 
-   find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS
-     ${KDE4_BIN_INSTALL_DIR}
-     $ENV{KDEDIR}/bin
-     /opt/kde/bin
-     /opt/kde4/bin
-      NO_DEFAULT_PATH
-   )
+   find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
 
-   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc PATHS
-     ${KDE4_BIN_INSTALL_DIR}
-     $ENV{KDEDIR}/bin
-     /opt/kde/bin
-     /opt/kde4/bin
-      NO_DEFAULT_PATH
-   )
+   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc )
 
-   find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets PATHS
-     ${KDE4_BIN_INSTALL_DIR}
-     $ENV{KDEDIR}/bin
-     /opt/kde/bin
-     /opt/kde4/bin
-      NO_DEFAULT_PATH
-   )
+   find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
 
 endif (_kdeBootStrapping)
