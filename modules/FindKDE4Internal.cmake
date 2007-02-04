@@ -343,6 +343,9 @@ if (_kdeBootStrapping)
    set(KDE4_KDEFX_LIBS ${KDE4_KDEFX_LIBS} kdefx)
    set(KDE4_SONNETCORE_LIBS ${KDE4_KDECORE_LIBS} sonnetcore)
    set(KDE4_SONNETUI_LIBS ${KDE4_KDEUI_LIBS} sonnetui)
+   set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solidifaces solid)
+   set(KDE4_PHONONCORE_LIBS ${KDE4_KIO_LIBS} phononcore)
+   set(KDE4_KAUDIODEVICELIST_LIBS ${KDE4_SOLID_LIBS} kaudiodevicelist)
 
    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
 
