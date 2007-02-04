@@ -278,12 +278,13 @@ MACRO (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NA
    IF (NOT ${_group} STREQUAL ${_install_NAME} )
       SET(_icon_GROUP "actions")
 
+      # KDE 3 compatibility
       IF (${_group} STREQUAL "mime")
          SET(_icon_GROUP  "mimetypes")
       ENDIF (${_group} STREQUAL "mime")
 
       IF (${_group} STREQUAL "filesys")
-         SET(_icon_GROUP  "filesystems")
+         SET(_icon_GROUP  "places")
       ENDIF (${_group} STREQUAL "filesys")
 
       IF (${_group} STREQUAL "device")
@@ -297,6 +298,35 @@ MACRO (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NA
       IF (${_group} STREQUAL "action")
          SET(_icon_GROUP  "actions")
       ENDIF (${_group} STREQUAL "action")
+
+      # KDE 4
+      IF (${_group} STREQUAL "mimetypes")
+         SET(_icon_GROUP  "mimetypes")
+      ENDIF (${_group} STREQUAL "mimetypes")
+
+      IF (${_group} STREQUAL "places")
+         SET(_icon_GROUP  "places")
+      ENDIF (${_group} STREQUAL "places")
+
+      IF (${_group} STREQUAL "devices")
+         SET(_icon_GROUP  "devices")
+      ENDIF (${_group} STREQUAL "devices")
+
+      IF (${_group} STREQUAL "apps")
+         SET(_icon_GROUP  "apps")
+      ENDIF (${_group} STREQUAL "apps")
+
+      IF (${_group} STREQUAL "actions")
+         SET(_icon_GROUP  "actions")
+      ENDIF (${_group} STREQUAL "actions")
+
+      IF (${_group} STREQUAL "categories")
+         SET(_icon_GROUP  "categories")
+      ENDIF (${_group} STREQUAL "categories")
+
+      IF (${_group} STREQUAL "emblems")
+         SET(_icon_GROUP  "emblems")
+      ENDIF (${_group} STREQUAL "emblems")
 
 #      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
    INSTALL(FILES ${_orig_NAME} DESTINATION ${_install_PATH}/${_icon_GROUP}/ RENAME ${_install_NAME} )
