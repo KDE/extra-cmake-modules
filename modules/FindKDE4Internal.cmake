@@ -288,7 +288,7 @@ _set_fancy(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"     "The 
 _set_fancy(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/applnk"       "Is this still used ?")
 _set_fancy(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"    "The install dir for autostart files")
 
-_set_fancy(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde"    "The XDG apps dir")
+_set_fancy(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde4"    "The XDG apps dir")
 _set_fancy(XDG_DIRECTORY_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories" "The XDG directory")
 
 _set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"          "The kde sysconfig install dir (default /etc)")
