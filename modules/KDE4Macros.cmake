@@ -545,7 +545,14 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
          set(_library_path_variable "LD_LIBRARY_PATH")
       endif (APPLE)
 
-      set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
+      if (APPLE)
+         # DYLD_LIBRARY_PATH does not work like LD_LIBRARY_PATH
+         # OSX already has the RPATH in libraries and executables, putting runtime directories in
+         # DYLD_LIBRARY_PATH actually breaks things
+         set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${KDE4_LIB_DIR}")
+      else (APPLE)
+         set(_ld_library_path "${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/:${LIB_INSTALL_DIR}:${KDE4_LIB_DIR}:${QT_LIBRARY_DIR}")
+      endif (APPLE)
       get_target_property(_executable ${_target_NAME} LOCATION )
 
       # use add_custom_target() to have the sh-wrapper generated during build time instead of cmake time
