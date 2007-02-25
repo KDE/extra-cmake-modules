@@ -12,28 +12,32 @@
 
 # on win32 we additional need to link to libeay32.lib
 MACRO(OPENSSL_ADD_LIB_EAY_LIBS)
-   # /MD and /MDd are the standard values - if somone wants to use
-   # others, the libnames have to change here too
-   # use also eay and libeay32 in debug as fallback for openssl < 0.9.8b
+   IF(MSVC)
+      # /MD and /MDd are the standard values - if somone wants to use
+      # others, the libnames have to change here too
+      # use also eay and libeay32 in debug as fallback for openssl < 0.9.8b
 
-   FIND_LIBRARY(LIB_EAY_DEBUG NAMES libeay32MDd eay libeay libeay32)
-   FIND_LIBRARY(LIB_EAY_RELEASE NAMES libeay32MD eay libeay libeay32)
+      FIND_LIBRARY(LIB_EAY_DEBUG NAMES libeay32MDd eay libeay libeay32)
+      FIND_LIBRARY(LIB_EAY_RELEASE NAMES libeay32MD eay libeay libeay32)
 
-   IF(MSVC_IDE)
-      IF(LIB_EAY_DEBUG AND LIB_EAY_RELEASE)
-         SET(OPENSSL_EAY_LIBRARIES optimized ${LIB_EAY_RELEASE} debug ${LIB_EAY_DEBUG})
-      ELSE(LIB_EAY_DEBUG AND LIB_EAY_RELEASE)
-         MESSAGE(FATAL_ERROR "Could not find the debug and release version of openssl (libeay)")
-      ENDIF(LIB_EAY_DEBUG AND LIB_EAY_RELEASE)
-   ELSE(MSVC_IDE)
-      STRING(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_TOLOWER)
-      IF(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
-         SET(OPENSSL_EAY_LIBRARIES ${LIB_EAY_DEBUG})
-      ELSE(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
-         SET(OPENSSL_EAY_LIBRARIES ${LIB_EAY_RELEASE})
-      ENDIF(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
-   ENDIF(MSVC_IDE)
-   MARK_AS_ADVANCED(LIB_EAY_DEBUG LIB_EAY_RELEASE)
+      IF(MSVC_IDE)
+         IF(LIB_EAY_DEBUG AND LIB_EAY_RELEASE)
+            SET(OPENSSL_EAY_LIBRARIES optimized ${LIB_EAY_RELEASE} debug ${LIB_EAY_DEBUG})
+         ELSE(LIB_EAY_DEBUG AND LIB_EAY_RELEASE)
+            MESSAGE(FATAL_ERROR "Could not find the debug and release version of openssl (libeay)")
+         ENDIF(LIB_EAY_DEBUG AND LIB_EAY_RELEASE)
+      ELSE(MSVC_IDE)
+         STRING(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_TOLOWER)
+         IF(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
+            SET(OPENSSL_EAY_LIBRARIES ${LIB_EAY_DEBUG})
+         ELSE(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
+            SET(OPENSSL_EAY_LIBRARIES ${LIB_EAY_RELEASE})
+         ENDIF(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
+      ENDIF(MSVC_IDE)
+      MARK_AS_ADVANCED(LIB_EAY_DEBUG LIB_EAY_RELEASE)
+   ELSE(MSVC)
+       FIND_LIBRARY(OPENSSL_EAY_LIBRARIES NAMES eay libeay libeay32 )
+   ENDIF(MSVC)
 ENDMACRO(OPENSSL_ADD_LIB_EAY_LIBS)
 
 IF(OPENSSL_LIBRARIES)
