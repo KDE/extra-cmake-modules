@@ -766,9 +766,9 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
    # determine additional parameters for add_executable()
    # for GUI apps, create a bundle on OSX
-   if (APPLE)
+   if (Q_WS_MAC)
       set(_add_executable_param MACOSX_BUNDLE)
-   endif (APPLE)
+   endif (Q_WS_MAC)
 
    # for GUI apps, this disables the additional console under Windows
    if (WIN32)

@@ -590,13 +590,12 @@ if (UNIX)
 endif (UNIX)
 
 
-# UNIX, except OS X
-if (UNIX AND NOT APPLE)
+if (Q_WS_X11)
    # Done by FindQt4.cmake already
    #find_package(X11 REQUIRED)
    # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
    set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
-endif (UNIX AND NOT APPLE)
+endif (Q_WS_X11)
 
 
 # This will need to be modified later to support either Qt/X11 or Qt/Mac builds
