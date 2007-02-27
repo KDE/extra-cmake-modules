@@ -73,6 +73,7 @@
 #  QT_QTSQL_FOUND         True if QtSql was found.
 #  QT_QTXML_FOUND         True if QtXml was found.
 #  QT_QTSVG_FOUND         True if QtSvg was found.
+#  QT_QTSCRIPT_FOUND      True if QtScript was found.
 #  QT_QTTEST_FOUND        True if QtTest was found.
 #  QT_QTUITOOLS_FOUND     True if QtUiTools was found.
 #                      
@@ -100,6 +101,7 @@
 #  QT_QTSQL_INCLUDE_DIR        Path to "include/QtSql" 
 #  QT_QTXML_INCLUDE_DIR        Path to "include/QtXml" 
 #  QT_QTSVG_INCLUDE_DIR        Path to "include/QtSvg"
+#  QT_QTSCRIPT_INCLUDE_DIR     Path to "include/QtScript"
 #  QT_QTTEST_INCLUDE_DIR       Path to "include/QtTest"
 #                            
 #  QT_LIBRARY_DIR              Path to "lib" of Qt4
@@ -136,6 +138,8 @@
 # The QtXml library:          QT_QTXML_LIBRARY
 #
 # The QtSvg library:          QT_QTSVG_LIBRARY
+#
+# The QtScript library:       QT_QTSCRIPT_LIBRARY
 #
 # The QtTest library:         QT_QTTEST_LIBRARY
 #
@@ -429,6 +433,14 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
+  # Set QT_QTSVG_INCLUDE_DIR
+  FIND_PATH(QT_QTSCRIPT_INCLUDE_DIR QtScript
+    PATHS
+    ${QT_INCLUDE_DIR}/QtScript
+    ${QT_LIBRARY_DIR}/QtScript.framework/Headers
+    NO_DEFAULT_PATH
+    )
+
   # Set QT_QTTEST_INCLUDE_DIR
   FIND_PATH(QT_QTTEST_INCLUDE_DIR QtTest
     PATHS
@@ -549,6 +561,7 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_QTSQL_LIBRARY      "-framework QtSql"      CACHE STRING "The QtSql library.")
     SET(QT_QTXML_LIBRARY      "-framework QtXml"      CACHE STRING "The QtXml library.")
     SET(QT_QTSVG_LIBRARY      "-framework QtSvg"      CACHE STRING "The QtSvg library.")
+    SET(QT_QTSCRIPT_LIBRARY   "-framework QtScript"   CACHE STRING "The QtScript library.")
     SET(QT_QTDBUS_LIBRARY     "-framework QtDBus"     CACHE STRING "The QtDBus library.")
     SET(QT_QTTEST_LIBRARY     "-framework QtTest"     CACHE STRING "The QtTest library.")
 
@@ -589,6 +602,9 @@ IF (QT4_QMAKE_FOUND)
     # Set QT_QTSVG_LIBRARY
     FIND_LIBRARY(QT_QTSVG_LIBRARY NAMES QtSvg QtSvg4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
 
+    # Set QT_QTSCRIPT_LIBRARY
+    FIND_LIBRARY(QT_QTSCRIPT_LIBRARY NAMES QtScript QtScript4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
+
     # Set QT_QTUITOOLS_LIBRARY
     FIND_LIBRARY(QT_QTUITOOLS_LIBRARY NAMES QtUiTools QtUiTools4 PATHS ${QT_LIBRARY_DIR}        NO_DEFAULT_PATH)
 
@@ -606,6 +622,7 @@ IF (QT4_QMAKE_FOUND)
       FIND_LIBRARY(QT_QTSQL_LIBRARY_DEBUG       NAMES QtSqld4             PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTXML_LIBRARY_DEBUG       NAMES QtXmld4             PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTSVG_LIBRARY_DEBUG       NAMES QtSvgd4             PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+      FIND_LIBRARY(QT_QTSCRIPT_LIBRARY_DEBUG    NAMES QtScriptd4          PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTUITOOLS_LIBRARY_DEBUG   NAMES QtUiToolsd QtUiToolsd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTTEST_LIBRARY_DEBUG      NAMES QtTestd4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTDBUS_LIBRARY_DEBUG      NAMES QtDBusd4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -693,6 +710,7 @@ IF (QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QTSQL)
   _QT4_ADJUST_LIB_VARS(QTXML)
   _QT4_ADJUST_LIB_VARS(QTSVG)
+  _QT4_ADJUST_LIB_VARS(QTSCRIPT)
   _QT4_ADJUST_LIB_VARS(QTUITOOLS)
   _QT4_ADJUST_LIB_VARS(QTTEST)
   _QT4_ADJUST_LIB_VARS(QTDBUS)
@@ -705,7 +723,10 @@ IF (QT4_QMAKE_FOUND)
   IF(WIN32)
     _QT4_ADJUST_LIB_VARS(QTMAIN)
   ENDIF(WIN32)
-  
+
+  IF(QT_QTSCRIPT_LIBRARY AND QT_QTUITOOLS_LIBRARY)
+    SET(QT_QTUITOOLS_LIBRARY      "-L${QT_LIBRARY_DIR} -lQtUiTools -lQtScript"      CACHE STRING "The QtUiTools library.")
+  ENDIF(QT_QTSCRIPT_LIBRARY AND QT_QTUITOOLS_LIBRARY)
 
   #######################################
   #
