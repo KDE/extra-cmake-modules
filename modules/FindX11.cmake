@@ -24,16 +24,20 @@ if (UNIX)
   set(X11_FOUND 0)
 
   set(X11_INC_SEARCH_PATH
-    /usr/X11R6/include 
+    /usr/local/include
+    /usr/include
+    /usr/X11R6/include
     /usr/include/X11
-    /usr/openwin/include 
-    /usr/openwin/share/include 
+    /usr/openwin/include
+    /usr/openwin/share/include
     /opt/graphics/OpenGL/include
   )
 
   set(X11_LIB_SEARCH_PATH
+    /usr/local/lib
+    /usr/lib
     /usr/X11R6/lib
-    /usr/openwin/lib 
+    /usr/openwin/lib
   )
 
   FIND_PATH(X11_X11_INCLUDE_PATH X11/X.h                             ${X11_INC_SEARCH_PATH})
