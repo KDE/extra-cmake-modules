@@ -561,12 +561,12 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_QTSQL_LIBRARY      "-framework QtSql"      CACHE STRING "The QtSql library.")
     SET(QT_QTXML_LIBRARY      "-framework QtXml"      CACHE STRING "The QtXml library.")
     SET(QT_QTSVG_LIBRARY      "-framework QtSvg"      CACHE STRING "The QtSvg library.")
-    SET(QT_QTSCRIPT_LIBRARY   "-framework QtScript"   CACHE STRING "The QtScript library.")
     SET(QT_QTDBUS_LIBRARY     "-framework QtDBus"     CACHE STRING "The QtDBus library.")
     SET(QT_QTTEST_LIBRARY     "-framework QtTest"     CACHE STRING "The QtTest library.")
 
     # WTF?  why don't we have frameworks?  :P
     SET(QT_QTUITOOLS_LIBRARY      "-L${QT_LIBRARY_DIR} -lQtUiTools"      CACHE STRING "The QtUiTools library.")
+    SET(QT_QTSCRIPT_LIBRARY   "-L${QT_LIBRARY_DIR} -lQtScript"   CACHE STRING "The QtScript library.")
 
   ELSE (QT_USE_FRAMEWORKS)
     
