@@ -48,6 +48,9 @@ if( KDEPIMLIBS_INCLUDE_DIR )
     find_library(KDE4_KMIME_LIBRARY NAMES kmime PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
     set(KDE4_KMIME_LIBS ${kmime_LIB_DEPENDS} ${KDE4_KMIME_LIBRARY} )
 
+    find_library(KDE4_KIMAP_LIBRARY NAMES kimap PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
+    set(KDE4_KIMAP_LIBS ${kimap_LIB_DEPENDS} ${KDE4_KIMAP_LIBRARY} )
+
   else (WIN32)
     set(KDE4_EMAILFUNCTIONS_LIBS emailfunctions)
     set(KDE4_KABC_LIBS kabc)
@@ -57,6 +60,7 @@ if( KDEPIMLIBS_INCLUDE_DIR )
     set(KDE4_SYNDICATION_LIBS syndication)
     set(KDE4_KLDAP_LIBS kldap)
     set(KDE4_KMIME_LIBS kmime)
+    set(KDE4_KIMAP_LIBS kimap)
   endif(WIN32)
 
   # setup global used KDE include
