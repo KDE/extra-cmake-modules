@@ -6,12 +6,17 @@
 #  STREAMINDEXER_LIBRARY - Link these to use Strigi streamindexer
 #
 
+if (WIN32)
+  file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
+endif(WIN32)
+
 FIND_PATH(STRIGI_INCLUDE_DIR strigi/streamindexer.h
   PATHS
   /usr/include
   /usr/local/include
   $ENV{STRIGI_HOME}/include
   ${CMAKE_INSTALL_PREFIX}/include
+  ${_program_FILES_DIR}/strigi/include
 )
 FIND_LIBRARY(STREAMINDEXER_LIBRARY NAMES streamindexer
   PATHS
@@ -19,6 +24,7 @@ FIND_LIBRARY(STREAMINDEXER_LIBRARY NAMES streamindexer
   /usr/local/lib
   $ENV{STRIGI_HOME}/lib
   ${CMAKE_INSTALL_PREFIX}/lib
+  ${_program_FILES_DIR}/strigi/lib
 )
 
 IF(STRIGI_INCLUDE_DIR AND STREAMINDEXER_LIBRARY)
