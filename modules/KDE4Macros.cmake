@@ -16,6 +16,8 @@
 # KDE4_CREATE_HANDBOOK
 # KDE4_CREATE_HTML_HANDBOOK
 # KDE4_INSTALL_HANDBOOK
+# KDE4_CREATE_PO_FILES
+# KDE4_INSTALL_PO_FILES
 
 # Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
@@ -213,6 +215,28 @@ macro(KDE4_GET_AUTOMOC_FILES _list)
    endforeach (_current_FILE)
 endmacro(KDE4_GET_AUTOMOC_FILES)
 
+macro(KDE4_CREATE_PO_FILES)
+   set(_list_gmo)
+   file(GLOB _po_files *.po)
+   foreach(_current_PO_FILES ${_po_files})
+        get_filename_component(_basename ${_current_PO_FILES} NAME_WE)
+	set(_gmo_file ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.gmo)
+   	add_custom_command(OUTPUT ${_gmo_file}
+      		COMMAND ${MSGFMT_EXECUTABLE} -o ${_gmo_file} ${_current_PO_FILES}
+      		DEPENDS ${_current_PO_FILES}
+   		)
+	SET(_list_gmo ${_list_gmo} ${_gmo_file})
+   endforeach(_current_PO_FILES)
+   add_custom_target(filepo ALL DEPENDS ${_list_gmo})
+endmacro(KDE4_CREATE_PO_FILES)
+
+macro(KDE4_INSTALL_PO_FILES _lang)
+   file(GLOB _po_files ${CMAKE_CURRENT_BINARY_DIR}/*.gmo)
+   foreach(_current_PO_FILES ${_po_files})
+	get_filename_component(_basename ${_current_PO_FILES} NAME_WE)
+   	install(FILES ${_current_PO_FILES} DESTINATION ${LOCALE_INSTALL_DIR}/${_lang}/LC_MESSAGES/ RENAME ${_basename}.mo)
+   endforeach(_current_PO_FILES)
+endmacro(KDE4_INSTALL_PO_FILES)
 
 macro (KDE4_INSTALL_HANDBOOK)
    get_filename_component(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
