@@ -934,12 +934,10 @@ macro (INSTALL_XDG_MIMETYPES _path )
        install(FILES ${_current_FILE} DESTINATION ${_path}/share/mime/packages)
 
        install(CODE "
-#message(STATUS \"DESTDIR: <\$ENV{DESTDIR}>\")
-set(MYFOO \"\$ENV{DESTDIR}\")
-#message(STATUS \"MYFOO: <\${MYFOO}>\")
-if (NOT MYFOO)
+set(DESTDIR_VALUE \"\$ENV{DESTDIR}\")
+if (NOT DESTDIR_VALUE)
   exec_program(update-mime-database ARGS ${_path}/share/mime/)
-endif (NOT MYFOO)
+endif (NOT DESTDIR_VALUE)
 ")
 
    endforeach (_current_FILE)
