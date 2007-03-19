@@ -267,7 +267,7 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
       set(_ssheet ${KDE4_DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl)
       set(_bootstrapOption)
    endif (_kdeBootStrapping)
-   
+
    add_custom_command(OUTPUT ${_doc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} --cache ${_doc} ${_input}
       DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
@@ -279,7 +279,7 @@ endmacro (KDE4_CREATE_HANDBOOK)
 macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
    get_filename_component(_input ${_docbook} ABSOLUTE)
    set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
-   
+
    set(_bootstrapOption)
    #Boostrap
    if (_kdeBootStrapping)
@@ -744,40 +744,25 @@ endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 # are created but not built by default. You can build them by manually building the target.
 macro (KDE4_ADD_TEST _target_NAME)
 
-   math(EXPR cmake_version "${CMAKE_MAJOR_VERSION} * 10000 + ${CMAKE_MINOR_VERSION} * 100 + ${CMAKE_PATCH_VERSION}")
-
    set(_add_executable_param)
-   set(_go)
-   
-   if (KDE4_BUILD_TESTS)
-      set(_go TRUE)
-   else (KDE4_BUILD_TESTS)
-      if (cmake_version GREATER 20403)
-         set(_go TRUE)
-         set(_add_executable_param EXCLUDE_FROM_ALL)
-      endif (cmake_version GREATER 20403)
-   endif (KDE4_BUILD_TESTS)
 
-   if (_go)
-       kde4_get_automoc_files(_automoc_FILES ${ARGN})
+   if (NOT KDE4_BUILD_TESTS)
+      set(_add_executable_param EXCLUDE_FROM_ALL)
+   endif (NOT KDE4_BUILD_TESTS)
 
-       add_executable(${_target_NAME} ${_add_executable_param} ${ARGN} ${_automoc_FILES})
+   kde4_get_automoc_files(_automoc_FILES ${ARGN})
 
-       set_target_properties(${_target_NAME} PROPERTIES
-                             EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}
-                             DEFINITIONS -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\"
-                             SKIP_BUILD_RPATH FALSE
-                             BUILD_WITH_INSTALL_RPATH FALSE)
+   add_executable(${_target_NAME} ${_add_executable_param} ${ARGN} ${_automoc_FILES})
 
-       if (WIN32)
-          target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
-       endif (WIN32)
+   set_target_properties(${_target_NAME} PROPERTIES
+                         EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}
+                         DEFINITIONS -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\"
+                         SKIP_BUILD_RPATH FALSE
+                         BUILD_WITH_INSTALL_RPATH FALSE)
 
-    else (_go)
-    
-      add_custom_target(${_target_NAME} COMMAND echo "This is just a dummy target, enable the option KDE4_BUILD_TEST to build the actual ${_target_NAME} test")
-    
-    endif (_go)
+   if (WIN32)
+      target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
+   endif (WIN32)
 
 endmacro (KDE4_ADD_TEST)
 
