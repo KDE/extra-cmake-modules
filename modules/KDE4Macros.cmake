@@ -18,6 +18,7 @@
 # KDE4_INSTALL_HANDBOOK
 # KDE4_CREATE_PO_FILES
 # KDE4_INSTALL_PO_FILES
+# KDE4_INSTALL_XDG_MIMETYPES
 
 # Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
@@ -924,3 +925,29 @@ macro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
    # contents have changed. Otherwise we would have a lot of recompiles.
    configure_file(${KDE4_MODULE_DIR}/kde4exportsheader.h.in ${_outputFile})
 endmacro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
+
+
+macro (INSTALL_XDG_MIMETYPES _path )
+
+   foreach (_current_FILE ${ARGN})
+
+       install(FILES ${_current_FILE} DESTINATION ${_path}/share/mime/packages)
+
+       install(CODE "
+#message(STATUS \"DESTDIR: <\$ENV{DESTDIR}>\")
+set(MYFOO \"\$ENV{DESTDIR}\")
+#message(STATUS \"MYFOO: <\${MYFOO}>\")
+if (NOT MYFOO)
+  exec_program(update-mime-database ARGS ${_path}/share/mime/)
+endif (NOT MYFOO)
+")
+
+   endforeach (_current_FILE)
+
+endmacro (INSTALL_XDG_MIMETYPES)
+
+macro (KDE4_INSTALL_XDG_MIMETYPES)
+
+    install_xdg_mimetypes(${CMAKE_INSTALL_PREFIX} ${ARGN})
+
+endmacro (KDE4_INSTALL_XDG_MIMETYPES)
