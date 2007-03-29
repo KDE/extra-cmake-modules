@@ -28,7 +28,6 @@
 # KDE4_KPARTS_LIBRARY      - the kparts library
 # KDE4_KUTILS_LIBRARY      - the kutils library
 # KDE4_KDE3SUPPORT_LIBRARY - the kde3support library
-# KDE4_KXMLCORE_LIBRARY    - the kxmlcore library
 # KDE4_KHTML_LIBRARY       - the khtml library
 # KDE4_KJS_LIBRARY         - the kjs library
 # KDE4_KNEWSTUFF_LIBRARY   - the knewstuff library
@@ -58,7 +57,6 @@
 # KDE4_KPARTS_LIBS           - the kparts library and all depending libraries
 # KDE4_KUTILS_LIBS           - the kutils library and all depending libraries
 # KDE4_KDE3SUPPORT_LIBS      - the kde3support library and all depending libraries
-# KDE4_KXMLCORE_LIBS         - the kxmlcore library and all depending libraries
 # KDE4_KHTML_LIBS            - the khtml library and all depending libraries
 # KDE4_KJS_LIBS              - the kjs library and all depending libraries
 # KDE4_KNEWSTUFF_LIBS        - the knewstuff library and all depending libraries
@@ -448,10 +446,6 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KDNSSD_LIBRARY NAMES kdnssd PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDNSSD_LIBS ${kdnssd_LIB_DEPENDS} ${KDE4_KDNSSD_LIBRARY} )
-
-   # now the KDE library directory, kxmlcore is new with KDE4
-   find_library(KDE4_KXMLCORE_LIBRARY NAMES kxmlcore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KXMLCORE_LIBRARIES ${kxmlcore_LIB_DEPENDS} ${KDE4_KXMLCORE_LIBRARY} )
 
    find_library(KDE4_PHONONCORE_LIBRARY NAMES phononcore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_PHONONCORE_LIBS ${phononcore_LIB_DEPENDS} ${KDE4_PHONONCORE_LIBRARY} )
