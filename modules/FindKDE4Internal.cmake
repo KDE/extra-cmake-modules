@@ -271,8 +271,15 @@ _set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"        "The 
 _set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"  "The install dir for kconfig files")
 _set_fancy(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"       "The install dir for translations")
 _set_fancy(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"      "The install dir for the mimetype desktop files")
-_set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/services"     "The install dir for service (desktop, protocol, ...) files")
-_set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/servicetypes" "The install dir for servicestypes desktop files")
+
+# To help with the migration issue, this uses set instead of _set_fancy, temporarily.
+# (Otherwise all modules would keep installing into the old dirs)
+# This can be reverted starting from May 2007
+set(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services")
+set(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes")
+#_set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services"     "The install dir for service (desktop, protocol, ...) files")
+#_set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes" "The install dir for servicestypes desktop files")
+
 _set_fancy(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"       "The install dir for sound files")
 _set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"    "The install dir for templates (Create new file...)")
 _set_fancy(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"   "The install dir for wallpapers")
