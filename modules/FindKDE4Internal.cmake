@@ -32,8 +32,6 @@
 # KDE4_KJS_LIBRARY         - the kjs library
 # KDE4_KNEWSTUFF_LIBRARY   - the knewstuff library
 # KDE4_KDEPRINT_LIBRARY    - the kdeprint library
-# KDE4_SONNETCORE_LIBRARY  - the sonnetcore library
-# KDE4_SONNETUI_LIBRARY    - the sonnetui library
 # KDE4_KDNSSD_LIBRARY      - the kdnssd library
 # KDE4_PHONONCORE_LIBRARY  - the phononcore library
 # KDE4_PHONONUI_LIBRARY    - the phononui library
@@ -61,8 +59,6 @@
 # KDE4_KJS_LIBS              - the kjs library and all depending libraries
 # KDE4_KNEWSTUFF_LIBS        - the knewstuff library and all depending libraries
 # KDE4_KDEPRINT_LIBS         - the kdeprint library and all depending libraries
-# KDE4_SONNETCORE_LIBS       - the sonnetcore library and all depending libraries
-# KDE4_SONNETUI_LIBS         - the sonnetui library and all depending libraries
 # KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 # KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
 # KDE4_PHONONCORE_LIBS       - the phononcore library and all depending librairies
@@ -339,8 +335,6 @@ if (_kdeBootStrapping)
    set(KDE4_KPARTS_LIBS ${KDE4_KIO_LIBS} kparts)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
    set(KDE4_KDEFX_LIBS ${KDE4_KDEFX_LIBS} kdefx)
-   set(KDE4_SONNETCORE_LIBS ${KDE4_KDECORE_LIBS} sonnetcore)
-   set(KDE4_SONNETUI_LIBS ${KDE4_KDEUI_LIBS} sonnetui)
    set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solidifaces solid)
    set(KDE4_PHONONCORE_LIBS ${KDE4_KDECORE_LIBS} phononcore)
    set(KDE4_PHONONUI_LIBS ${KDE4_KIO_LIBS} ${KDE4_PHONONCORE_LIBS} phononui)
@@ -439,12 +433,6 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KDEPRINT_LIBRARY NAMES kdeprint PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDEPRINT_LIBS ${kdeprint_LIB_DEPENDS} ${KDE4_KDEPRINT_LIBRARY} )
-
-   find_library(KDE4_SONNETCORE_LIBRARY NAMES sonnetcore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_SONNETCORE_LIBS ${sonnetcore_LIB_DEPENDS} ${KDE4_SONNETCORE_LIBRARY} )
-
-   find_library(KDE4_SONNETUI_LIBRARY NAMES sonnetui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_SONNETUI_LIBS ${sonnetui_LIB_DEPENDS} ${KDE4_SONNETUI_LIBRARY} )
 
    if (UNIX)
       find_library(KDE4_KDESU_LIBRARY NAMES kdesu PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
