@@ -28,6 +28,7 @@
 # KDE4_KPARTS_LIBRARY      - the kparts library
 # KDE4_KUTILS_LIBRARY      - the kutils library
 # KDE4_KDE3SUPPORT_LIBRARY - the kde3support library
+# KDE4_KFILE_LIBRARY       - the kfile library
 # KDE4_KHTML_LIBRARY       - the khtml library
 # KDE4_KJS_LIBRARY         - the kjs library
 # KDE4_KNEWSTUFF_LIBRARY   - the knewstuff library
@@ -55,6 +56,7 @@
 # KDE4_KPARTS_LIBS           - the kparts library and all depending libraries
 # KDE4_KUTILS_LIBS           - the kutils library and all depending libraries
 # KDE4_KDE3SUPPORT_LIBS      - the kde3support library and all depending libraries
+# KDE4_KFILE_LIBS            - the kfile library and all depending libraries
 # KDE4_KHTML_LIBS            - the khtml library and all depending libraries
 # KDE4_KJS_LIBS              - the kjs library and all depending libraries
 # KDE4_KNEWSTUFF_LIBS        - the knewstuff library and all depending libraries
@@ -334,11 +336,13 @@ if (_kdeBootStrapping)
    set(KDE4_KIO_LIBS ${KDE4_KDEUI_LIBS} kio)
    set(KDE4_KPARTS_LIBS ${KDE4_KIO_LIBS} kparts)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
+   set(KDE4_KDE3SUPPORT_LIBS ${KDE4_KIO_LIBS} kde3support)
    set(KDE4_KDEFX_LIBS ${KDE4_KDEFX_LIBS} kdefx)
    set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solidifaces solid)
    set(KDE4_PHONONCORE_LIBS ${KDE4_KDECORE_LIBS} phononcore)
    set(KDE4_PHONONUI_LIBS ${KDE4_KIO_LIBS} ${KDE4_PHONONCORE_LIBS} phononui)
    set(KDE4_KAUDIODEVICELIST_LIBS ${KDE4_SOLID_LIBS} kaudiodevicelist)
+   set(KDE4_KFILE_LIBS ${KDE4_KDE3SUPPORT_LIBS} kfile)
 
    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
 
@@ -421,6 +425,9 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KDE3SUPPORT_LIBRARY NAMES kde3support PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDE3SUPPORT_LIBS ${kde3support_LIB_DEPENDS} ${KDE4_KDE3SUPPORT_LIBRARY} )
+
+   find_library(KDE4_KFILE_LIBRARY NAMES kfile PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KFILE_LIBS ${kfile_LIB_DEPENDS} ${KDE4_KFILE_LIBRARY} )
 
    find_library(KDE4_KHTML_LIBRARY NAMES khtml PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KHTML_LIBS ${khtml_LIB_DEPENDS} ${KDE4_KHTML_LIBRARY} )
