@@ -31,7 +31,7 @@
 # KDE4_KFILE_LIBRARY       - the kfile library
 # KDE4_KHTML_LIBRARY       - the khtml library
 # KDE4_KJS_LIBRARY         - the kjs library
-# KDE4_KNEWSTUFF_LIBRARY   - the knewstuff library
+# KDE4_KNEWSTUFF2_LIBRARY  - the knewstuff2 library
 # KDE4_KDEPRINT_LIBRARY    - the kdeprint library
 # KDE4_KDNSSD_LIBRARY      - the kdnssd library
 # KDE4_PHONONCORE_LIBRARY  - the phononcore library
@@ -59,7 +59,7 @@
 # KDE4_KFILE_LIBS            - the kfile library and all depending libraries
 # KDE4_KHTML_LIBS            - the khtml library and all depending libraries
 # KDE4_KJS_LIBS              - the kjs library and all depending libraries
-# KDE4_KNEWSTUFF_LIBS        - the knewstuff library and all depending libraries
+# KDE4_KNEWSTUFF2_LIBS       - the knewstuff2 library and all depending libraries
 # KDE4_KDEPRINT_LIBS         - the kdeprint library and all depending libraries
 # KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 # KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
@@ -435,8 +435,8 @@ else (_kdeBootStrapping)
    find_library(KDE4_KJS_LIBRARY NAMES kjs PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KJS_LIBS ${kjs_LIB_DEPENDS} ${KDE4_KJS_LIBRARY} )
 
-   find_library(KDE4_KNEWSTUFF_LIBRARY NAMES knewstuff PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KNEWSTUFF_LIBS ${knewstuff_LIB_DEPENDS} ${KDE4_KNEWSTUFF_LIBRARY} )
+   find_library(KDE4_KNEWSTUFF2_LIBRARY NAMES knewstuff2 PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KNEWSTUFF2_LIBS ${knewstuff2_LIB_DEPENDS} ${KDE4_KNEWSTUFF2_LIBRARY} )
 
    find_library(KDE4_KDEPRINT_LIBRARY NAMES kdeprint PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDEPRINT_LIBS ${kdeprint_LIB_DEPENDS} ${KDE4_KDEPRINT_LIBRARY} )
