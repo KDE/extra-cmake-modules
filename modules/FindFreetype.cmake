@@ -1,8 +1,8 @@
 # - Try to find the freetype library
 # Once done this will define
 #
-#  FREETYPE_FOUND - system has Fontconfig
-#  FREETYPE_INCLUDE_DIR - the FONTCONFIG include directory
+#  FREETYPE_FOUND - system has Freetype
+#  FREETYPE_INCLUDE_DIR - the FREETYPE include directory
 #  FREETYPE_LIBRARIES - Link these to use FREETYPE
 #
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
