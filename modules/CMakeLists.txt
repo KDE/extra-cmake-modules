@@ -24,6 +24,7 @@ set(FILES_TO_REMOVE
  ${module_install_dir}/FindJasper.cmake
  ${module_install_dir}/CheckCXXCompilerFlag.cmake
  ${module_install_dir}/FindBZip2.cmake
+ ${module_install_dir}/CheckCSourceRuns.cmake
 )
 
 # can be removed once we require merge into cmake
