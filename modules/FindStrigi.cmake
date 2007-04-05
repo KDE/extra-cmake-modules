@@ -16,19 +16,19 @@ endif(WIN32)
 FIND_PATH(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h
   PATHS
   $ENV{STRIGI_HOME}/include
-  ${CMAKE_INSTALL_PREFIX}/include
+  ${INCLUDE_INSTALL_DIR}
   ${_program_FILES_DIR}/strigi/include
 )
 FIND_LIBRARY(STRIGI_STREAMANALYZER_LIBRARY NAMES streamanalyzer
   PATHS
   $ENV{STRIGI_HOME}/lib
-  ${CMAKE_INSTALL_PREFIX}/lib
+  ${LIB_INSTALL_DIR}
   ${_program_FILES_DIR}/strigi/lib
 )
 FIND_LIBRARY(STRIGI_STREAMS_LIBRARY NAMES streams
   PATHS
   $ENV{STRIGI_HOME}/lib
-  ${CMAKE_INSTALL_PREFIX}/lib
+  ${LIB_INSTALL_DIR}
   ${_program_FILES_DIR}/strigi/lib
 )
 
