@@ -20,7 +20,10 @@ IF(FLEX_EXECUTABLE)
     string (REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" FLEX_VERSION "${_FLEX_VERSION}")
 ENDIF(FLEX_EXECUTABLE)
 
-FIND_PATH(FLEX_INCLUDE_DIR FlexLexer.h)
+FIND_PATH(FLEX_INCLUDE_DIR FlexLexer.h 
+    /usr/include 
+    /usr/local/include
+    )
 FIND_LIBRARY(FLEX_LIBRARY fl)
 
 IF(FLEX_FOUND)
