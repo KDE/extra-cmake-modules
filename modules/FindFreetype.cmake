@@ -33,12 +33,18 @@ else (FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
 
     EXEC_PROGRAM(${FREETYPECONFIG_EXECUTABLE} ARGS --libs RETURN_VALUE _return_VALUE OUTPUT_VARIABLE FREETYPE_LIBRARIES)
 
-    EXEC_PROGRAM(${FREETYPECONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE FREETYPE_INCLUDE_DIR)
-    if(FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
+    EXEC_PROGRAM(${FREETYPECONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _freetype_pkgconfig_output)
+    if(FREETYPE_LIBRARIES AND _freetype_pkgconfig_output)
       set(FREETYPE_FOUND TRUE)
-      #message(STATUS "Found freetype: ${FREETYPE_LIBRARIES}")
-      STRING(REGEX REPLACE "-I(.+)" "\\1" FREETYPE_INCLUDE_DIR "${FREETYPE_INCLUDE_DIR}")
-    endif(FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
+
+      # freetype-config can print out more than one -I, so we need to chop it up
+      # into a list and process each entry separately
+      SEPARATE_ARGUMENTS(_freetype_pkgconfig_output)
+      FOREACH(value ${_freetype_pkgconfig_output})
+        STRING(REGEX REPLACE "-I(.+)" "\\1" value "${value}")
+        set(FREETYPE_INCLUDE_DIR ${FREETYPE_INCLUDE_DIR} ${value})
+      ENDFOREACH(value)
+    endif(FREETYPE_LIBRARIES AND _freetype_pkgconfig_output)
 
     MARK_AS_ADVANCED(FREETYPE_LIBRARIES FREETYPE_INCLUDE_DIR)
 
