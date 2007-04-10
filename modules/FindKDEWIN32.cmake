@@ -1,4 +1,5 @@
-# - Try to find the KDEWIN32 library
+# - Try to find the directory in which the kdewin32 library and other win32 related libraries lives
+# 
 # Once done this will define
 #
 #  KDEWIN32_FOUND - system has KDEWIN32
@@ -13,31 +14,45 @@
 
 if (WIN32)
 
-  file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
+  if (NOT KDEWIN32_DIR)
+    if(NOT QT4_FOUND)
+      find_package(Qt4 REQUIRED)
+    endif(NOT QT4_FOUND)
 
-  if(NOT QT4_FOUND)
-     find_package(Qt4 REQUIRED)
-  endif(NOT QT4_FOUND)
+    # check for enviroment variable first
+    file(TO_CMAKE_PATH "$ENV{KDEWIN32_DIR}" KDEWIN32_DIR)
+
+    # then check default installation dir
+    if (NOT KDEWIN32_DIR)
+      file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
+      find_file(KDEWIN32_DIR_tmp kdewin32
+        PATHS
+          "${_progFiles}"
+      )
+      set (KDEWIN32_DIR ${KDEWIN32_DIR_tmp})
+    endif (NOT KDEWIN32_DIR)
+  endif (NOT KDEWIN32_DIR)
 
   find_path(KDEWIN32_INCLUDE_DIR winposix_export.h
-    ${_program_FILES_DIR}/kdewin32/include ${CMAKE_INSTALL_PREFIX}/include
+    ${KDEWIN32_DIR}/include 
+    ${CMAKE_INSTALL_PREFIX}/include
   )
-
 
   # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
   # search for kdewin32 in the default install directory for applications (default of (n)make install)
 
-  set(KDEWIN32_LIBRARY_PATH ${_program_FILES_DIR}/kdewin32/lib)
   find_library(KDEWIN32_LIBRARY_RELEASE NAMES kdewin32
     PATHS 
-    ${KDEWIN32_LIBRARY_PATH} ${CMAKE_INSTALL_PREFIX}/lib
+    ${KDEWIN32_DIR}/lib
+    ${CMAKE_INSTALL_PREFIX}/lib
   )
 
   # msvc makes a difference between debug and release
   if(MSVC)
     find_library(KDEWIN32_LIBRARY_DEBUG NAMES kdewin32d
       PATHS 
-        ${_program_FILES_DIR}/kdewin32/lib ${CMAKE_INSTALL_PREFIX}/lib
+        ${KDEWIN32_DIR}/lib 
+        ${CMAKE_INSTALL_PREFIX}/lib
     )
     if(MSVC_IDE)
       # the ide needs the debug and release version
@@ -82,9 +97,14 @@ if (WIN32)
     endif (NOT KDEWIN32_FIND_QUIETLY)
   else (KDEWIN32_FOUND)
     if (KDEWIN32_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find KDEWIN32 library\nPlease build and install kdelibs/win/ first")
+      message(FATAL_ERROR "Could NOT find KDEWIN32 library\nPlease install it first")
     endif (KDEWIN32_FIND_REQUIRED)
   endif (KDEWIN32_FOUND)
+
+  # add include path and library to all targets, this is required because 
+  # cmake's 2.4.6 FindZLib.cmake does not use CMAKE_REQUIRED... vars
+  set(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} ${KDEWIN32_INCLUDES})
+  set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${KDEWIN32_DIR}/lib)
 
   set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${KDEWIN32_INCLUDES})
   set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${KDEWIN32_LIBRARIES})
