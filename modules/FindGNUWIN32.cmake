@@ -7,6 +7,11 @@
 
 if (WIN32)
 
+  IF (GNUWIN32_INCLUDE_DIR)
+    # Already in cache, be silent
+    SET(GNUWIN32_FIND_QUIETLY TRUE)
+  ENDIF (GNUWIN32_INCLUDE_DIR)
+
 # check if GNUWIN32_DIR is already set 
 # (e.g. by command line argument or the calling script)
 if(NOT GNUWIN32_DIR)
