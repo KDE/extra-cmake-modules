@@ -24,6 +24,7 @@ if (UNIX)
   set(X11_FOUND 0)
 
   set(X11_INC_SEARCH_PATH
+    /usr/pkg/xorg/include
     /usr/local/include
     /usr/include
     /usr/X11R6/include
@@ -34,6 +35,7 @@ if (UNIX)
   )
 
   set(X11_LIB_SEARCH_PATH
+    /usr/pkg/xorg/lib
     /usr/local/lib
     /usr/lib
     /usr/X11R6/lib
