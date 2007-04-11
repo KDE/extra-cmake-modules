@@ -15,11 +15,6 @@
 /* Define to 1 if you have the <awe_voice.h> header file. */
 #cmakedefine HAVE_AWE_VOICE_H 1
 
-
-
-/* Define if you have libasound.so.1 (for ALSA 0.5.x support - disabled now) */
-/* #undef HAVE_LIBASOUND */
-
 /* Define if you have libasound.so.2 (required for ALSA 0.9.x support) */
 #cmakedefine HAVE_LIBASOUND2 1
 
@@ -32,3 +27,8 @@
 /* Define to 1 if you have the <sys/asoundlib.h> header file. */
 #cmakedefine HAVE_SYS_ASOUNDLIB_H 1
 
+/* Define to 1 if you have the <sys/soundcard.h> header file. */
+#cmakedefine HAVE_SYS_SOUNDCARD_H 1
+
+/* Define to 1 if you have the <machine/soundcard.h> header file. */
+#cmakedefine HAVE_MACHINE_SOUNDCARD_H 1
