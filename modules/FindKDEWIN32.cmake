@@ -43,8 +43,9 @@ if (WIN32)
 
   find_library(KDEWIN32_LIBRARY_RELEASE NAMES kdewin32
     PATHS 
-    ${KDEWIN32_DIR}/lib
-    ${CMAKE_INSTALL_PREFIX}/lib
+      ${KDEWIN32_DIR}/lib
+      ${CMAKE_INSTALL_PREFIX}/lib
+    NO_SYSTEM_ENVIRONMENT_PATH
   )
 
   # msvc makes a difference between debug and release
@@ -53,6 +54,7 @@ if (WIN32)
       PATHS 
         ${KDEWIN32_DIR}/lib 
         ${CMAKE_INSTALL_PREFIX}/lib
+      NO_SYSTEM_ENVIRONMENT_PATH
     )
     if(MSVC_IDE)
       # the ide needs the debug and release version
