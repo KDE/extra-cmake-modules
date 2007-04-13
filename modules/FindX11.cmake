@@ -25,6 +25,7 @@ if (UNIX)
 
   set(X11_INC_SEARCH_PATH
     /usr/pkg/xorg/include
+    /usr/pkg/include
     /usr/local/include
     /usr/include
     /usr/X11R6/include
@@ -36,6 +37,7 @@ if (UNIX)
 
   set(X11_LIB_SEARCH_PATH
     /usr/pkg/xorg/lib
+    /usr/pkg/lib
     /usr/local/lib
     /usr/lib
     /usr/X11R6/lib
