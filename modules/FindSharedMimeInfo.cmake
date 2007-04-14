@@ -45,7 +45,7 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
         endif (NOT SharedMimeInfo_FIND_QUIETLY)
     else (SHARED_MIME_INFO_FOUND)
         if (SharedMimeInfo_FIND_REQUIRED)
-            message(FATAL_ERROR "Could NOT find shared-mime-info")
+            message(FATAL_ERROR "Could NOT find shared-mime-info. See http://freedesktop.org/wiki/Software/shared-mime-info.")
         endif (SharedMimeInfo_FIND_REQUIRED)
     endif (SHARED_MIME_INFO_FOUND)
 
