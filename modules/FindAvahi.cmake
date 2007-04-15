@@ -6,6 +6,12 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
+if (AVAHI_INCLUDE_DIR)
+  # Already in cache, be silent
+  set(Avahi_FIND_QUIETLY TRUE)
+endif (AVAHI_INCLUDE_DIR)
+
+
 FIND_PATH(AVAHI_INCLUDE_DIR avahi-common/defs.h
 	/usr/include
 	/usr/local/include
@@ -13,10 +19,18 @@ FIND_PATH(AVAHI_INCLUDE_DIR avahi-common/defs.h
 
 if(AVAHI_INCLUDE_DIR)
    set(AVAHI_FOUND TRUE)
-   MESSAGE( STATUS "Avahi common includes found in ${AVAHI_INCLUDE_DIR}")
-else(AVAHI_INCLUDE_DIR)
-   MESSAGE( STATUS "Avahi not found")
 endif(AVAHI_INCLUDE_DIR)
+
+
+if(AVAHI_FOUND)
+   if(NOT Avahi_FIND_QUIETLY)
+   	MESSAGE( STATUS "Avahi common includes found in ${AVAHI_INCLUDE_DIR}")
+   endif(NOT Avahi_FIND_QUIETLY)
+else(AVAHI_FOUND)
+   if(Avahi_FIND_REQUIRED)
+        MESSAGE( FATAL_ERROR "Avahi not found")
+   endif(Avahi_FIND_REQUIRED)
+endif(AVAHI_FOUND)
 
 MARK_AS_ADVANCED(AVAHI_INCLUDE_DIR)
 
