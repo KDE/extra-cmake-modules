@@ -71,6 +71,7 @@
 # KDE4_SOLIDIFACES_LIBS      - the solid iface library and all depending libraries
 # KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
 # KDE4_KROSSCORE_LIBS        - the kross core library and all depending libraries
+# KDE4_KROSSUI_LIBRARY       - the kross ui library which includes core and all depending libraries
 # KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
 # KDE4_KWALLETCLIENT_LIBS    - the kwallet client library and all depending libraries
 #
@@ -473,6 +474,8 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KROSSCORE_LIBRARY NAMES krosscore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KROSSCORE_LIBS ${krosscore_LIB_DEPENDS} ${KDE4_KROSSCORE_LIBRARY} )
+   find_library(KDE4_KROSSUI_LIBRARY NAMES krossui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KROSSUI_LIBS ${krossui_LIB_DEPENDS} ${KDE4_KROSSCORE_LIBS} ${KDE4_KROSSUI_LIBRARY} )
 
    find_library(KDE4_KTEXTEDITOR_LIBRARY NAMES ktexteditor PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KTEXTEDITOR_LIBS ${ktexteditor_LIB_DEPENDS} ${KDE4_KTEXTEDITOR_LIBRARY} )
