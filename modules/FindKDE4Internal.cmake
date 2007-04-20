@@ -486,7 +486,7 @@ else (_kdeBootStrapping)
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
    # kpassworddialog.h is new with KDE4
-   find_path(KDE4_INCLUDE_DIR kpassworddialog.h ${KDE4_INCLUDE_INSTALL_DIR} NO_DEFAULT_PATH )
+   find_path(KDE4_INCLUDE_DIR kpassworddialog.h ${INCLUDE_INSTALL_DIR} NO_DEFAULT_PATH )
 
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
