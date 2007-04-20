@@ -41,13 +41,20 @@ if (WIN32)
   # at first find the kdewin32 library, this has to be compiled and installed before kdelibs/
   # search for kdewin32 in the default install directory for applications (default of (n)make install)
 
-  find_library(KDEWIN32_LIBRARY_RELEASE NAMES kdewin32
+  find_library(KDEWIN32_LIBRARY_DEBUG NAMES kdewin32d
     PATHS 
       ${KDEWIN32_DIR}/lib
       ${CMAKE_INSTALL_PREFIX}/lib
     NO_SYSTEM_ENVIRONMENT_PATH
   )
 
+  find_library(KDEWIN32_LIBRARY_RELEASE NAMES kdewin32
+    PATHS 
+      ${KDEWIN32_DIR}/lib
+      ${CMAKE_INSTALL_PREFIX}/lib
+    NO_SYSTEM_ENVIRONMENT_PATH
+  )
+  
   # msvc makes a difference between debug and release
   if(MSVC)
     find_library(KDEWIN32_LIBRARY_DEBUG NAMES kdewin32d
@@ -71,7 +78,11 @@ if (WIN32)
       endif(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
     endif(MSVC_IDE) 
   else(MSVC)
-    set(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY_RELEASE})
+    if(KDEWIN32_LIBRARY_RELEASE)
+	  set(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY_RELEASE})
+	else(KDEWIN32_LIBRARY_RELEASE)
+	  set(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY_DEBUG})
+	endif(KDEWIN32_LIBRARY_RELEASE)
   endif(MSVC)
 
   # kdelibs/win/ has to be built before the rest of kdelibs/
