@@ -20,7 +20,7 @@ if(NOT GNUWIN32_DIR)
 	if(NOT GNUWIN32_DIR)
 		# search in the default program install folder
 		file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
-		find_file(GNUWIN32_DIR_tmp gnuwin32 win32libs 
+		find_file(GNUWIN32_DIR_tmp win32libs gnuwin32 
    			PATHS
    			"${_progFiles}"
    			"C:/" "D:/" "E:/" "F:/" "G:/"
