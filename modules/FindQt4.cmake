@@ -43,6 +43,16 @@
 #        for all listed interface xml files
 #        the name will be automatically determined from the name of the xml file
 #
+#  macro QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE(outfiles interface basename)
+#        create a the interface without namespace header and implementation files with the
+#        given basename from the given interface xml file and add it to
+#        the list of sources
+#
+#  macro QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE(outfiles inputfile ... )
+#        create the interface header without namespace and implementation files
+#        for all listed interface xml files
+#        the name will be automatically determined from the name of the xml file
+#
 #  macro QT4_ADD_DBUS_ADAPTOR(outfiles xmlfile parentheader parentclassname [basename] )
 #        create a dbus adaptor (header and implementation file) from the xml file
 #        describing the interface, and add it to the list of sources. The adaptor
@@ -956,11 +966,18 @@ IF (QT4_QMAKE_FOUND)
     SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
     SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
     SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
-  
-    ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
-        COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} -m -p ${_basename} ${_infile}
+
+    GET_SOURCE_FILE_PROPERTY(_nonamespace ${_infile} NO_NAMESPACE)
+    IF ( _nonamespace )
+        SET(_params -N -m -p)
+    ELSE ( _nonamespace )
+        SET(_params -m -p)
+    ENDIF ( _nonamespace )
+
+     ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
+        COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} ${_params} ${_basename} ${_infile}
         DEPENDS ${_infile})
-  
+
     SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
     
     QT4_GENERATE_MOC(${_header} ${_moc})
@@ -969,20 +986,33 @@ IF (QT4_QMAKE_FOUND)
     MACRO_ADD_FILE_DEPENDENCIES(${_impl} ${_moc})
   
   ENDMACRO(QT4_ADD_DBUS_INTERFACE)
-  
-  
-  MACRO(QT4_ADD_DBUS_INTERFACES _sources)
-     FOREACH (_current_FILE ${ARGN})
-        GET_FILENAME_COMPONENT(_infile ${_current_FILE} ABSOLUTE)
-  
-  # get the part before the ".xml" suffix
+ 
+  MACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE _sources _interface _basename)
+    SET_SOURCE_FILES_PROPERTIES(${_interface} PROPERTIES NO_NAMESPACE TRUE)
+    QT4_ADD_DBUS_INTERFACE(${_sources} ${_interface} ${_basename})
+  ENDMACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE)
+
+  # Internal (avoid to duplicate code between QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE and QT4_ADD_DBUS_INTERFACES 
+  MACRO(_QT4_ADD_DBUS_INTERFACES _sources _filename)
+        GET_FILENAME_COMPONENT(_infile ${_filename} ABSOLUTE)
+        # get the part before the ".xml" suffix
         STRING(REGEX REPLACE "(.*[/\\.])?([^\\.]+)\\.xml" "\\2" _basename ${_current_FILE})
         STRING(TOLOWER ${_basename} _basename)
-  
-        QT4_ADD_DBUS_INTERFACE(${_sources} ${_infile} ${_basename}interface)
+        QT4_ADD_DBUS_INTERFACE(${_sources} ${_infile} ${_basename}interface)     
+  ENDMACRO(_QT4_ADD_DBUS_INTERFACES)
+
+  MACRO(QT4_ADD_DBUS_INTERFACES _sources)
+     FOREACH (_current_FILE ${ARGN})
+        _QT4_ADD_DBUS_INTERFACES(${_sources} ${_current_FILE})
      ENDFOREACH (_current_FILE)
   ENDMACRO(QT4_ADD_DBUS_INTERFACES)
-  
+
+  MACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE _sources)
+    FOREACH (_current_FILE ${ARGN})
+	SET_SOURCE_FILES_PROPERTIES(${_current_FILE} PROPERTIES NO_NAMESPACE TRUE)
+        _QT4_ADD_DBUS_INTERFACES(${_sources} ${_current_FILE})
+    ENDFOREACH (_current_FILE)
+  ENDMACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE)
   
   MACRO(QT4_GENERATE_DBUS_INTERFACE _header) # _customName )
     SET(_customName "${ARGV1}")
