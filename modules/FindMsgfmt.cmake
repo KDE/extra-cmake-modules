@@ -8,6 +8,8 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+### TODO: KDE4 needs msgfmt of version 0.15 or greater (cf. msgfmt --version )
+
 if(MSGFMT_EXECUTABLE)
   set(MSGFMT_FOUND TRUE)
 else(MSGFMT_EXECUTABLE)
