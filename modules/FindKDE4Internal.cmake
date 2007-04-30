@@ -44,7 +44,6 @@
 # KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
 # KDE4_KROSSCORE_LIBRARY   - the krosscore library
 # KDE4_KTEXTEDITOR_LIBRARY - the ktexteditor library
-# KDE4_KWALLETCLIENT_LIBRARY   - the kwalletclient library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -73,7 +72,6 @@
 # KDE4_KROSSCORE_LIBS        - the kross core library and all depending libraries
 # KDE4_KROSSUI_LIBRARY       - the kross ui library which includes core and all depending libraries
 # KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
-# KDE4_KWALLETCLIENT_LIBS    - the kwallet client library and all depending libraries
 #
 # This module defines a bunch of variables used as locations
 # for install directories. They are all interpreted relative
@@ -479,9 +477,6 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KTEXTEDITOR_LIBRARY NAMES ktexteditor PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KTEXTEDITOR_LIBS ${ktexteditor_LIB_DEPENDS} ${KDE4_KTEXTEDITOR_LIBRARY} )
-
-   find_library(KDE4_KWALLETCLIENT_LIBRARY NAMES kwalletclient PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KWALLETCLIENT_LIBS ${kwalletclient_LIB_DEPENDS} ${KDE4_KWALLETCLIENT_LIBRARY} )
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
