@@ -34,13 +34,11 @@
 # KDE4_KNEWSTUFF2_LIBRARY  - the knewstuff2 library
 # KDE4_KDEPRINT_LIBRARY    - the kdeprint library
 # KDE4_KDNSSD_LIBRARY      - the kdnssd library
-# KDE4_PHONONCORE_LIBRARY  - the phononcore library
-# KDE4_PHONONUI_LIBRARY    - the phononui library
+# KDE4_PHONON_LIBRARY      - the phonon library
 # KDE4_KAUDIODEVICELIST_LIBRARY - the kaudiodevicelist library
 # KDE4_KDEFX_LIBRARY       - the kdefx library
 # KDE4_THREADWEAVER_LIBRARY- the threadweaver library
 # KDE4_SOLID_LIBRARY       - the solid library
-# KDE4_SOLIDIFACES_LIBRARY - the solidiface library
 # KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
 # KDE4_KROSSCORE_LIBRARY   - the krosscore library
 # KDE4_KTEXTEDITOR_LIBRARY - the ktexteditor library
@@ -62,12 +60,10 @@
 # KDE4_KDEPRINT_LIBS         - the kdeprint library and all depending libraries
 # KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 # KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
-# KDE4_PHONONCORE_LIBS       - the phononcore library and all depending librairies
-# KDE4_PHONONUI_LIBRARIES    - the phononui library and all depending librairies
+# KDE4_PHONON_LIBS           - the phonon library and all depending librairies
 # KDE4_KDEFX_LIBS            - the kdefx library and all depending librairies
 # KDE4_THREADWEAVER_LIBRARIES- the threadweaver library and all depending libraries
 # KDE4_SOLID_LIBS            - the solid library and all depending libraries
-# KDE4_SOLIDIFACES_LIBS      - the solid iface library and all depending libraries
 # KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
 # KDE4_KROSSCORE_LIBS        - the kross core library and all depending libraries
 # KDE4_KROSSUI_LIBRARY       - the kross ui library which includes core and all depending libraries
@@ -337,9 +333,8 @@ if (_kdeBootStrapping)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
    set(KDE4_KDE3SUPPORT_LIBS ${KDE4_KIO_LIBS} kde3support)
    set(KDE4_KDEFX_LIBS ${KDE4_KDEFX_LIBS} kdefx)
-   set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solidifaces solid)
-   set(KDE4_PHONONCORE_LIBS ${KDE4_KDECORE_LIBS} phononcore)
-   set(KDE4_PHONONUI_LIBS ${KDE4_KIO_LIBS} ${KDE4_PHONONCORE_LIBS} phononui)
+   set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solid)
+   set(KDE4_PHONON_LIBS ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} phonon)
    set(KDE4_KAUDIODEVICELIST_LIBS ${KDE4_SOLID_LIBS} kaudiodevicelist)
    set(KDE4_KFILE_LIBS ${KDE4_KDE3SUPPORT_LIBS} kfile)
    set(KDE4_KHTML_LIBS ${KDE4_KPARTS_LIBS} khtml)
@@ -449,20 +444,14 @@ else (_kdeBootStrapping)
    find_library(KDE4_KDNSSD_LIBRARY NAMES kdnssd PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDNSSD_LIBS ${kdnssd_LIB_DEPENDS} ${KDE4_KDNSSD_LIBRARY} )
 
-   find_library(KDE4_PHONONCORE_LIBRARY NAMES phononcore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_PHONONCORE_LIBS ${phononcore_LIB_DEPENDS} ${KDE4_PHONONCORE_LIBRARY} )
-
-   find_library(KDE4_PHONONUI_LIBRARY NAMES phononui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_PHONONUI_LIBS ${phononui_LIB_DEPENDS} ${KDE4_PHONONUI_LIBRARY} )
+   find_library(KDE4_PHONON_LIBRARY NAMES phonon PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_PHONON_LIBS ${phonon_LIB_DEPENDS} ${KDE4_PHONON_LIBRARY} )
 
    find_library(KDE4_KAUDIODEVICELIST_LIBRARY NAMES kaudiodevicelist PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KAUDIODEVICELIST_LIBS ${kaudiodevicelist_LIB_DEPENDS} ${KDE4_KAUDIODEVICELIST_LIBRARY} )
 
    find_library(KDE4_SOLID_LIBRARY NAMES solid PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_SOLID_LIBS ${solid_LIB_DEPENDS} ${KDE4_SOLID_LIBRARY} )
-
-   find_library(KDE4_SOLIDIFACES_LIBRARY NAMES solidifaces PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_SOLIDIFACES_LIBS ${solidifaces_LIB_DEPENDS} ${KDE4_SOLIDIFACES_LIBRARY} )
 
    find_library(KDE4_THREADWEAVER_LIBRARY NAMES threadweaver PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_THREADWEAVER_LIBRARIES ${threadweaver_LIB_DEPENDS} ${KDE4_THREADWEAVER_LIBRARY} )
