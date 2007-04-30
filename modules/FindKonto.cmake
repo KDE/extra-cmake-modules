@@ -5,6 +5,12 @@
 #  KONTO_LIBRARIES - Link these to use libKonto
 #
 
+if(KONTO_INCLUDES AND KONTO_LIBRARIES)
+  # Already in cache, be silent
+  set(Konto_FIND_QUIETLY TRUE)
+endif(KONTO_INCLUDES AND KONTO_LIBRARIES
+
+
 FIND_PATH(KONTO_INCLUDES 
   NAMES
   konto/class.h
@@ -25,11 +31,18 @@ FIND_LIBRARY(KONTO_LIBRARIES
   ${LIB_INSTALL_DIR}
 )
 
+
 if(KONTO_INCLUDES AND KONTO_LIBRARIES)
-   set(Konto_FOUND TRUE)
-   message(STATUS "Found Konto: ${KONTO_LIBRARIES}")
-else(KONTO_INCLUDES AND KONTO_LIBRARIES)
+  set(KONTO_FOUND TRUE)
+endif(KONTO_INCLUDES AND KONTO_LIBRARIES)
+
+if(KONTO_FOUND)
+   if (NOT Konto_FIND_QUIETLY)
+      message(STATUS "Found Konto: ${KONTO_LIBRARIES}")
+   endif (NOT Konto_FIND_QUIETLY)
+else(KONTO_FOUND)
   if(Konto_FIND_REQUIRED)
     message(FATAL_ERROR "Could not find Konto library.")
   endif(Konto_FIND_REQUIRED)
-endif(KONTO_INCLUDES AND KONTO_LIBRARIES)
+endif(KONTO_FOUND)
+
