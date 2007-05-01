@@ -42,6 +42,8 @@
 # KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
 # KDE4_KROSSCORE_LIBRARY   - the krosscore library
 # KDE4_KTEXTEDITOR_LIBRARY - the ktexteditor library
+# KDE4_KNEPOMUK_LIBRARY    - the knepomuk library
+# KDE4_KMETADATA_LIBRARY   - the kmetadata library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -68,6 +70,8 @@
 # KDE4_KROSSCORE_LIBS        - the kross core library and all depending libraries
 # KDE4_KROSSUI_LIBRARY       - the kross ui library which includes core and all depending libraries
 # KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
+# KDE4_KNEPOMUK_LIBS         - the knepomuk library and all depending libraries
+# KDE4_KMETADATA_LIBS        - the kmetadata library and all depending libraries
 #
 # This module defines a bunch of variables used as locations
 # for install directories. They are all interpreted relative
@@ -466,6 +470,12 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KTEXTEDITOR_LIBRARY NAMES ktexteditor PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KTEXTEDITOR_LIBS ${ktexteditor_LIB_DEPENDS} ${KDE4_KTEXTEDITOR_LIBRARY} )
+
+   find_library(KDE4_KNEPOMUK_LIBRARY NAMES knepomuk PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KNEPOMUK_LIBS ${knepomuk_LIB_DEPENDS} ${KDE4_KNEPOMUK_LIBRARY} )
+
+   find_library(KDE4_KMETADATA_LIBRARY NAMES kmetadata PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KMETADATA_LIBS ${kmetadata_LIB_DEPENDS} ${KDE4_KMETADATA_LIBRARY} )
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
