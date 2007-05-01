@@ -19,6 +19,7 @@ FIND_PATH(KMETADATA_INCLUDE_DIR
 FIND_LIBRARY(KMETADATA_LIBRARIES 
   NAMES
   kmetadata
+  kmetadatatools
   PATHS
   /usr/lib
   /usr/local/lib
