@@ -472,11 +472,13 @@ else (_kdeBootStrapping)
    find_library(KDE4_KTEXTEDITOR_LIBRARY NAMES ktexteditor PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KTEXTEDITOR_LIBS ${ktexteditor_LIB_DEPENDS} ${KDE4_KTEXTEDITOR_LIBRARY} )
 
-   find_library(KDE4_KNEPOMUK_LIBRARY NAMES knepomuk PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KNEPOMUK_LIBS ${knepomuk_LIB_DEPENDS} ${KDE4_KNEPOMUK_LIBRARY} )
+   # Can't do that, it's not always compiled.
+   #find_library(KDE4_KNEPOMUK_LIBRARY NAMES knepomuk PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   #set(KDE4_KNEPOMUK_LIBS ${knepomuk_LIB_DEPENDS} ${KDE4_KNEPOMUK_LIBRARY} )
 
-   find_library(KDE4_KMETADATA_LIBRARY NAMES kmetadata PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KMETADATA_LIBS ${kmetadata_LIB_DEPENDS} ${KDE4_KMETADATA_LIBRARY} )
+   # Can't do that, it's not always compiled. See FindKMetaData.cmake
+   #find_library(KDE4_KMETADATA_LIBRARY NAMES kmetadata PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   #set(KDE4_KMETADATA_LIBS ${kmetadata_LIB_DEPENDS} ${KDE4_KMETADATA_LIBRARY} )
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
