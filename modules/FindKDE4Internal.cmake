@@ -68,7 +68,7 @@
 # KDE4_SOLID_LIBS            - the solid library and all depending libraries
 # KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
 # KDE4_KROSSCORE_LIBS        - the kross core library and all depending libraries
-# KDE4_KROSSUI_LIBRARY       - the kross ui library which includes core and all depending libraries
+# KDE4_KROSSUI_LIBS          - the kross ui library which includes core and all depending libraries
 # KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
 # KDE4_KNEPOMUK_LIBS         - the knepomuk library and all depending libraries
 # KDE4_KMETADATA_LIBS        - the kmetadata library and all depending libraries
