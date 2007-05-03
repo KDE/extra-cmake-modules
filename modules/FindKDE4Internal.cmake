@@ -692,7 +692,8 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    check_cxx_compiler_flag(-fno-threadsafe-statics __KDE_HAVE_NO_THREADSAFE_STATICS)
    if (__KDE_HAVE_NO_THREADSAFE_STATICS)
        # currently disabled for Alpha1 due to what appears
-       # to be a compiler bug (investigating - dirk)
+       # to be a compiler bug
+       # see http://gcc.gnu.org/bugzilla/show_bug.cgi?id=31806
        #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
    endif (__KDE_HAVE_NO_THREADSAFE_STATICS)
 
