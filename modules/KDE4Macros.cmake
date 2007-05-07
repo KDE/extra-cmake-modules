@@ -720,7 +720,7 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
    endif (KDE4_ENABLE_FINAL)
 
    kde4_handle_rpath_for_library(kdeinit_${_target_NAME})
-
+   set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
 
    configure_file(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
    kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
