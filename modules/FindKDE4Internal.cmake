@@ -16,7 +16,7 @@
 # compile KDE software:
 #
 # KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
-# KDE4_MEINPROC_EXECUTABLE - the meinproc executable
+# KDE4_MEINPROC_EXECUTABLE - the meinproc4 executable
 # KDE4_MAKEKDEWIDGETS_EXECUTABLE - the makekdewidgets executable
 #
 # The following variables point to the location of the KDE libraries,
@@ -350,12 +350,12 @@ if (_kdeBootStrapping)
       set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
       # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
       set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.shell )
-      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc.shell )
+      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4.shell )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
    endif (WIN32)
 
@@ -364,7 +364,7 @@ if (_kdeBootStrapping)
    # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
-   set( _KDE4_MEINPROC_EXECUTABLE_DEP meinproc)
+   set( _KDE4_MEINPROC_EXECUTABLE_DEP meinproc4)
 
    set(KDE4_INSTALLED_VERSION_OK TRUE)
 
@@ -488,8 +488,8 @@ else (_kdeBootStrapping)
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
 
-   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
-   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc )
+   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
+   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 )
 
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
