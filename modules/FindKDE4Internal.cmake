@@ -486,8 +486,10 @@ else (_kdeBootStrapping)
    #  ###### TODO: this is the wrong path to look into. We need the KDE4 include dir, not the one where the current module will be installed
    find_path(KDE4_INCLUDE_DIR kpassworddialog.h ${INCLUDE_INSTALL_DIR} NO_DEFAULT_PATH )
 
+   # at first look in LIBEXEC_INSTALL_DIR and no default paths,
+   # if this didn't succeed, the second call makes cmake search again, but in the standard paths
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS ${LIBEXEC_INSTALL_DIR} NO_DEFAULT_PATH )
-   find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler ) # Why do it again?
+   find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
 
    find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 )
