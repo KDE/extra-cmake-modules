@@ -258,7 +258,11 @@ _set_fancy(BIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/bin"           "The 
 _set_fancy(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"          "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
 _set_fancy(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
 
+if(WIN32)
+_set_fancy(LIBEXEC_INSTALL_DIR      "${BIN_INSTALL_DIR}"      "The subdirectory relative to the install prefix where libraries will be installed (default is ${BIN_INSTALL_DIR})")
+else(WIN32)
 _set_fancy(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"      "The subdirectory relative to the install prefix where libraries will be installed (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
+endif(WIN32)
 _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"              "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
 
 _set_fancy(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"      "The subdirectory to the header prefix")
