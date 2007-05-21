@@ -487,8 +487,8 @@ else (_kdeBootStrapping)
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
    # kpassworddialog.h is new with KDE4
-   #  ###### TODO: this is the wrong path to look into. We need the KDE4 include dir, not the one where the current module will be installed
-   find_path(KDE4_INCLUDE_DIR kpassworddialog.h ${INCLUDE_INSTALL_DIR} NO_DEFAULT_PATH )
+   # KDE4_INCLUDE_INSTALL_DIR is defined by KDELibsDependencies.cmake
+   find_path(KDE4_INCLUDE_DIR kpassworddialog.h ${KDE4_INCLUDE_INSTALL_DIR} NO_DEFAULT_PATH )
 
    # at first look in LIBEXEC_INSTALL_DIR and no default paths,
    # if this didn't succeed, the second call makes cmake search again, but in the standard paths
