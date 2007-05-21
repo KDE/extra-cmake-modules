@@ -786,15 +786,15 @@ macro (KDE4_PRINT_RESULTS)
    # inside kdelibs the include dir and lib dir are internal, not "found"
    if (NOT _kdeBootStrapping)
        if(KDE4_INCLUDE_DIR)
-          message(STATUS "Found KDE4 include dir: ${KDE4_INCLUDE_DIR}")
+          message(STATUS "Found KDE 4.0 include dir: ${KDE4_INCLUDE_DIR}")
        else(KDE4_INCLUDE_DIR)
-          message(STATUS "Didn't find KDE4 headers")
+          message(STATUS "ERROR: unable to find KDE 4 headers")
        endif(KDE4_INCLUDE_DIR)
 
        if(KDE4_LIB_DIR)
-          message(STATUS "Found KDE4 library dir: ${KDE4_LIB_DIR}")
+          message(STATUS "Found KDE 4 library dir: ${KDE4_LIB_DIR}")
        else(KDE4_LIB_DIR)
-          message(STATUS "Didn't find KDE4 core library")
+          message(STATUS "ERROR: unable to find KDE 4 core library")
        endif(KDE4_LIB_DIR)
    endif (NOT _kdeBootStrapping)
 
@@ -811,9 +811,13 @@ if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
    kde4_print_results()
    if (NOT KDE4_INSTALLED_VERSION_OK)
      message(FATAL_ERROR "ERROR: the installed kdelibs version ${KDEVERSION} is too old, at least version ${KDE_MIN_VERSION} is required")
-   else (NOT KDE4_INSTALLED_VERSION_OK)
-     message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
    endif (NOT KDE4_INSTALLED_VERSION_OK)
+
+   if (NOT KDE4_KCFGC_EXECUTABLE)
+     message(FATAL_ERROR "ERROR: could not detect a usable kconfig-compiler")
+   endif (NOT KDE4_KCFGC_EXECUTABLE)
+
+   message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
 endif (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
 
 
