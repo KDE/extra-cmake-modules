@@ -310,6 +310,7 @@ get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
+option(KDE4_BUILD_TESTREGRESSION "Build KHTML's testregression. Note: this disables hidden visibility")
 
 if( KDE4_ENABLE_FINAL)
    add_definitions(-DKDE_USE_FINAL)
@@ -706,6 +707,11 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 
    # visibility support
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
+
+   # Disable it if testregression is built..
+   if (KDE4_BUILD_TESTREGRESSION)
+      set (__KDE_HAVE_GCC_VISIBILITY 0)
+   endif (KDE4_BUILD_TESTREGRESSION)
 
    # get the gcc version
    exec_program(${CMAKE_C_COMPILER} ARGS --version OUTPUT_VARIABLE _gcc_version_info)
