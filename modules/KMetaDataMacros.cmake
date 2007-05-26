@@ -28,22 +28,22 @@ macro(KMETADATA_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_source
   FILE(TO_NATIVE_PATH ${RCGEN} RCGEN)
 
   execute_process(
-    COMMAND ${RCGEN} --listheaders --prefix ${targetdir}/ ${ontofile}
+    COMMAND ${RCGEN} --listheaders --prefix ${targetdir}/ --ontologies ${ontofile}
     OUTPUT_VARIABLE ${out_headers}
     )
   
   execute_process(
-    COMMAND ${RCGEN} --listsources --prefix ${targetdir}/ ${ontofile}
+    COMMAND ${RCGEN} --listsources --prefix ${targetdir}/ --ontologies ${ontofile}
     OUTPUT_VARIABLE ${out_sources}
     )
   
   execute_process(
-    COMMAND ${RCGEN} --listincludes ${ontofile}
+    COMMAND ${RCGEN} --listincludes --ontologies ${ontofile}
     OUTPUT_VARIABLE ${out_includes}
     )
 
   execute_process(
-    COMMAND ${RCGEN} --writeall --templates ${ARGN} ${targetdir}/ ${ontofile}
+    COMMAND ${RCGEN} --writeall --templates ${ARGN} --target ${targetdir}/ --ontologies ${ontofile}
     )
   
 endmacro(KMETADATA_GENERATE_FROM_ONTOLOGY)
