@@ -227,6 +227,23 @@ include (CheckCXXSourceCompiles)
 # the following are directories where stuff will be installed to
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 
+#are we trying to compile kdelibs ?
+#then enter bootstrap mode
+if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   set(_kdeBootStrapping TRUE)
+   message(STATUS "Building kdelibs...")
+else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+   set(_kdeBootStrapping FALSE)
+endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
+
+# get the directory of the current file, used later on in the file
+get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
+
+
+if (NOT _kdeBootStrapping)
+  # this file contains all dependencies of all libraries of kdelibs, Alex
+  include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
+endif (NOT _kdeBootStrapping)
 
 # this macro implements some very special logic how to deal with the cache
 # by default the various install locations inherit their value from theit "parent" variable
@@ -243,8 +260,14 @@ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 # But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
 # this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
 macro(_SET_FANCY _var _value _comment)
+   if (NOT DEFINED KDE4_${_var})
+      set(predefinedvalue ${_value})
+   else (NOT DEFINED KDE4_${_var})
+      set(predefinedvalue ${KDE4_${_var}})
+   endif(NOT DEFINED KDE4_${_var})
+
    if (NOT DEFINED ${_var})
-      set(${_var} ${_value})
+      set(${_var} ${predefinedvalue})
    else (NOT DEFINED ${_var})
       set(${_var} "${${_var}}" CACHE PATH "${_comment}")
    endif (NOT DEFINED ${_var})
@@ -302,9 +325,6 @@ _set_fancy(DBUS_SERVICES_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services" "The
 #################################
 
 
-# get the directory of the current file, used later on in the file
-get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
-
 # the following are directories where stuff will be installed to
 
 
@@ -323,16 +343,6 @@ endif(KDE4_ENABLE_FINAL)
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 #now try to find some kde stuff
-
-#are we trying to compile kdelibs ?
-#then enter bootstrap mode
-if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
-   set(_kdeBootStrapping TRUE)
-   message(STATUS "Building kdelibs...")
-else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
-   set(_kdeBootStrapping FALSE)
-endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
-
 
 if (_kdeBootStrapping)
    set(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
