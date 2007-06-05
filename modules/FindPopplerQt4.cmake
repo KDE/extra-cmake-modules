@@ -17,25 +17,23 @@
 
 
 if(NOT WIN32)
-INCLUDE(UsePkgConfig)
-  
-PKGCONFIG(poppler-qt4 _PopplerQt4IncDir _PopplerQt4LinkDir _PopplerQt4LinkFlags _PopplerQt4Cflags)
-  
-set(POPPLER_QT4_DEFINITIONS ${_PopplerQt4Cflags})
+   include(UsePkgConfig)
+
+   pkgconfig(poppler-qt4 _PopplerQt4IncDir _PopplerQt4LinkDir _PopplerQt4LinkFlags _PopplerQt4Cflags)
+
+   set(POPPLER_QT4_DEFINITIONS ${_PopplerQt4Cflags})
 endif(NOT WIN32)
 
-FIND_PATH(POPPLER_QT4_INCLUDE_DIR poppler-qt4.h
-  ${_PopplerQt4IncDir}/poppler
-  /usr/include/poppler
-  /usr/local/include/poppler
-) 
- 
-FIND_LIBRARY(POPPLER_QT4_LIBRARIES poppler-qt4
-  ${_PopplerQt4LinkDir}
-  /usr/lib
-  /usr/local/lib
+find_path(POPPLER_QT4_INCLUDE_DIR 
+  NAMES poppler-qt4.h
+  PATH_SUFFIXES poppler
+  PATHS ${_PopplerQt4IncDir}
 )
-  
+
+find_library(POPPLER_QT4_LIBRARIES poppler-qt4
+  ${_PopplerQt4LinkDir}
+)
+
 if (POPPLER_QT4_INCLUDE_DIR AND POPPLER_QT4_LIBRARIES)
   set(POPPLER_QT4_FOUND TRUE)
 else (POPPLER_QT4_INCLUDE_DIR AND POPPLER_QT4_LIBRARIES)
@@ -52,4 +50,4 @@ else (POPPLER_QT4_FOUND)
   endif (PopplerQt4_FIND_REQUIRED)
 endif (POPPLER_QT4_FOUND)
   
-MARK_AS_ADVANCED(POPPLER_QT4_INCLUDE_DIR POPPLER_QT4_LIBRARIES)
+mark_as_advanced(POPPLER_QT4_INCLUDE_DIR POPPLER_QT4_LIBRARIES)
