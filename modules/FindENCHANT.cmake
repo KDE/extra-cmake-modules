@@ -18,17 +18,18 @@ if (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
   set(ENCHANT_FOUND TRUE)
 
 else (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
-  IF (NOT WIN32)
+  if (NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
-    INCLUDE(UsePkgConfig)
+    include(UsePkgConfig)
 
-    PKGCONFIG(enchant _ENCHANTIncDir _ENCHANTLinkDir _ENCHANTLinkFlags _ENCHANTCflags)
+    pkgconfig(enchant _ENCHANTIncDir _ENCHANTLinkDir _ENCHANTLinkFlags _ENCHANTCflags)
 
     set(ENCHANT_DEFINITIONS ${_ENCHANTCflags})
-  ENDIF (NOT WIN32)
+  endif (NOT WIN32)
 
-  find_path(ENCHANT_INCLUDE_DIR enchant++.h
+  find_path(ENCHANT_INCLUDE_DIR 
+    NAMES enchant++.h
     PATH_SUFFIXES enchant
     PATHS ${_ENCHANTIncDir} )
 
