@@ -10,8 +10,6 @@ FIND_PATH(KMETADATA_INCLUDE_DIR
   NAMES
   kmetadata/kmetadata.h
   PATHS
-  /usr/include
-  /usr/local/include
   ${KDE4_INCLUDE_DIR}
   ${INCLUDE_INSTALL_DIR}
 )
@@ -21,8 +19,6 @@ FIND_LIBRARY(KMETADATA_LIBRARIES
   kmetadata
   kmetadatatools
   PATHS
-  /usr/lib
-  /usr/local/lib
   ${KDE4_LIB_DIR}
   ${LIB_INSTALL_DIR}
 )

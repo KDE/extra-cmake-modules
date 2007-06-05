@@ -20,8 +20,6 @@ IF(GSSAPI_LIBS AND GSSAPI_FLAVOR)
 ELSE(GSSAPI_LIBS AND GSSAPI_FLAVOR)
 
   FIND_PROGRAM(KRB5_CONFIG NAMES krb5-config PATHS
-     /usr/bin
-     /usr/local/bin
      /opt/local/bin
   )
   

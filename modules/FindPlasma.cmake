@@ -14,18 +14,14 @@ if (PLASMA_INCLUDE_DIR)
 endif (PLASMA_INCLUDE_DIR)
 
 
-FIND_PATH(PLASMA_INCLUDE_DIR NAMES plasma/kpanelapplet.h
-	PATHS
-	${INCLUDE_INSTALL_DIR}
-	/usr/include
-	/usr/local/include
+find_path(PLASMA_INCLUDE_DIR NAMES plasma/kpanelapplet.h
+        PATHS
+        ${INCLUDE_INSTALL_DIR}
 )
 
-FIND_LIBRARY(PLASMA_LIBRARIES NAMES plasma
-	PATHS
-	${LIB_INSTALL_DIR}
-	/usr/lib
-	/usr/local/lib
+find_library(PLASMA_LIBRARIES NAMES plasma
+        PATHS
+        ${LIB_INSTALL_DIR}
 )
 if (PLASMA_LIBRARIES AND PLASMA_INCLUDE_DIR)
     set(PLASMA_FOUND TRUE)
@@ -41,4 +37,4 @@ else (PLASMA_FOUND)
     endif (Plasma_FIND_REQUIRED)
 endif (PLASMA_FOUND)
 
-MARK_AS_ADVANCED(PLASMA_INCLUDE_DIR PLASMA_LIBRARIES)
+mark_as_advanced(PLASMA_INCLUDE_DIR PLASMA_LIBRARIES)

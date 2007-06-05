@@ -15,33 +15,26 @@
 if (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
 
   # in cache already
-  SET(ENCHANT_FOUND TRUE)
+  set(ENCHANT_FOUND TRUE)
 
 else (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
-IF (NOT WIN32)
-  # use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  INCLUDE(UsePkgConfig)
-  
-  PKGCONFIG(enchant _ENCHANTIncDir _ENCHANTLinkDir _ENCHANTLinkFlags _ENCHANTCflags)
-  
-  set(ENCHANT_DEFINITIONS ${_ENCHANTCflags})
-ENDIF (NOT WIN32)  
-  FIND_PATH(ENCHANT_INCLUDE_DIR enchant++.h
-    ${_ENCHANTIncDir}
-    /usr/include
-    /usr/include/enchant
-    /usr/local/include
-    /usr/local/include/enchant
-  )
-  
-  FIND_LIBRARY(ENCHANT_LIBRARIES NAMES enchant
-    PATHS
-    ${_ENCHANTLinkDir}
-    /usr/lib
-    /usr/local/lib
-  )
-  
+  IF (NOT WIN32)
+    # use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    INCLUDE(UsePkgConfig)
+
+    PKGCONFIG(enchant _ENCHANTIncDir _ENCHANTLinkDir _ENCHANTLinkFlags _ENCHANTCflags)
+
+    set(ENCHANT_DEFINITIONS ${_ENCHANTCflags})
+  ENDIF (NOT WIN32)
+
+  find_path(ENCHANT_INCLUDE_DIR enchant++.h
+    PATH_SUFFIXES enchant
+    PATHS ${_ENCHANTIncDir} )
+
+  find_library(ENCHANT_LIBRARIES NAMES enchant
+               PATHS    ${_ENCHANTLinkDir} )
+
   if (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
      set(ENCHANT_FOUND TRUE)
   endif (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
@@ -56,6 +49,6 @@ ENDIF (NOT WIN32)
     endif (ENCHANT_FIND_REQUIRED)
   endif (ENCHANT_FOUND)
   
-  MARK_AS_ADVANCED(ENCHANT_INCLUDE_DIR ENCHANT_LIBRARIES)
+  mark_as_advanced(ENCHANT_INCLUDE_DIR ENCHANT_LIBRARIES)
   
 endif (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)

@@ -15,8 +15,6 @@ FIND_PATH(KONTO_INCLUDES
   NAMES
   konto/class.h
   PATHS
-  /usr/include
-  /usr/local/include
   ${KDE4_INCLUDE_DIR}
   ${INCLUDE_INSTALL_DIR}
 )
@@ -25,8 +23,6 @@ FIND_LIBRARY(KONTO_LIBRARIES
   NAMES 
   konto
   PATHS
-  /usr/lib
-  /usr/local/lib
   ${KDE4_LIB_DIR}
   ${LIB_INSTALL_DIR}
 )
