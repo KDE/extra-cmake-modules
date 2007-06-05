@@ -17,7 +17,7 @@ if (WIN32)
   set (KDE4_LIB_DIR ${KDE4_LIB_DIR} ${_progFiles}/kdepimlibs/lib)
 endif (WIN32)
 
-find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal.h
+find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal_export.h
   ${KDE4_INCLUDE_DIR}
 )
 
