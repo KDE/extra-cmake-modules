@@ -744,10 +744,7 @@ endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
 # add an test executable
 # it will be built with RPATH poiting to the build dir
-# with CMake 2.4.3, the executable is built only if the option
-# KDE4_BUILD_TESTS is enabled, otherwise a ADD_CUSTOM_TARGET() is created
-# so that the TARGET_LINK_LIBRARIES() commands don't produce errors
-# With cmake > 2.4.3 the targets are always created, but only built for the "all"
+# The targets are always created, but only built for the "all"
 # target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
 # are created but not built by default. You can build them by manually building the target.
 macro (KDE4_ADD_TEST _target_NAME)
