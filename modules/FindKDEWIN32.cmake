@@ -44,7 +44,7 @@ if (WIN32)
     if(MSVC)
       find_library(KDEWIN32_LIBRARY_DEBUG NAMES kdewin32d
         PATHS 
-          ${CMAKE_LIBRARY_PATH
+          ${CMAKE_LIBRARY_PATH}
           ${CMAKE_INSTALL_PREFIX}/lib
         NO_SYSTEM_ENVIRONMENT_PATH
       )
