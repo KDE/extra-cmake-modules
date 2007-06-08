@@ -533,11 +533,7 @@ if (WIN32)
 
    find_package(KDEWIN32 REQUIRED)
 
-   # is GnuWin32 required or does e.g. Visual Studio provide an own implementation?
-   #find_package(GNUWIN32 REQUIRED)
-   find_package(GNUWIN32)
-
-   set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES} ${GNUWIN32_INCLUDE_DIR})
+   set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
 
    # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely,
    # otherwise they come from KDELibsDependencies.cmake, Alex
@@ -777,7 +773,7 @@ endif (CMAKE_C_COMPILER MATCHES "icc")
 # we prefer to use a different postfix for debug libs only on Windows
 # does not work atm
 if (WIN32)
-   SET(CMAKE_DEBUG_POSTFIX "")
+   SET(CMAKE_DEBUG_POSTFIX "d")
 endif (WIN32)
 
 ###########    end of platform specific stuff  ##########################
