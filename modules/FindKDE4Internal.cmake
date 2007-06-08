@@ -773,7 +773,7 @@ endif (CMAKE_C_COMPILER MATCHES "icc")
 # we prefer to use a different postfix for debug libs only on Windows
 # does not work atm
 if (WIN32)
-   SET(CMAKE_DEBUG_POSTFIX "d")
+   SET(CMAKE_DEBUG_POSTFIX "")
 endif (WIN32)
 
 ###########    end of platform specific stuff  ##########################
