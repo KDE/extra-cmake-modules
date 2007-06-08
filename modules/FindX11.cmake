@@ -371,6 +371,7 @@ IF (UNIX)
     X11_X11_LIB
     X11_Xext_LIB
     X11_Xau_LIB
+    X11_Xau_INCLUDE_PATH
     X11_Xlib_INCLUDE_PATH
     X11_Xutil_INCLUDE_PATH
     X11_Xcomposite_INCLUDE_PATH
