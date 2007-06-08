@@ -259,12 +259,14 @@ endif (NOT _kdeBootStrapping)
 # parents. So modifying CMAKE_INSTALL_PREFIX later on will have the desired effect.
 # But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
 # this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
+#
+# additionally if installing to the same location as kdelibs, the other install
+# directories are reused from the installed kdelibs
 macro(_SET_FANCY _var _value _comment)
-   if (NOT DEFINED KDE4_${_var})
-      set(predefinedvalue ${_value})
-   else (NOT DEFINED KDE4_${_var})
-      set(predefinedvalue ${KDE4_${_var}})
-   endif(NOT DEFINED KDE4_${_var})
+   set(predefinedvalue "${_value}")
+   if ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
+      set(predefinedvalue "${KDE4_${_var}}")
+   endif ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
 
    if (NOT DEFINED ${_var})
       set(${_var} ${predefinedvalue})
@@ -282,9 +284,9 @@ _set_fancy(SBIN_INSTALL_DIR         "${EXEC_INSTALL_PREFIX}/sbin"          "The 
 _set_fancy(LIB_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
 
 if(WIN32)
-_set_fancy(LIBEXEC_INSTALL_DIR      "${BIN_INSTALL_DIR}"      "The subdirectory relative to the install prefix where libraries will be installed (default is ${BIN_INSTALL_DIR})")
+   _set_fancy(LIBEXEC_INSTALL_DIR   "${BIN_INSTALL_DIR}"                   "The subdirectory relative to the install prefix where libraries will be installed (default is ${BIN_INSTALL_DIR})")
 else(WIN32)
-_set_fancy(LIBEXEC_INSTALL_DIR      "${LIB_INSTALL_DIR}/kde4/libexec"      "The subdirectory relative to the install prefix where libraries will be installed (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
+   _set_fancy(LIBEXEC_INSTALL_DIR   "${LIB_INSTALL_DIR}/kde4/libexec"      "The subdirectory relative to the install prefix where libraries will be installed (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
 endif(WIN32)
 _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"              "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
 
