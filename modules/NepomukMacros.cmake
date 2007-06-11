@@ -1,11 +1,11 @@
 # This file contains the following macros:
 #
-# KMETADATA_GENERATE_FROM_ONTOLOGY
+# NEPOMUK_GENERATE_FROM_ONTOLOGY
 #
 
 
 #
-# KMETADATA_GENERATE_FROM_ONTOLOGY
+# NEPOMUK_GENERATE_FROM_ONTOLOGY
 # (C) 2007 Sebastian Trueg <trueg@kde.org>
 #
 # Parameters:
@@ -18,9 +18,9 @@
 #
 # In addition to the parameters an arbitrary number of template filenames can be set as arguments
 #
-macro(KMETADATA_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_sources out_includes)
+macro(NEPOMUK_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_sources out_includes)
 
-  FIND_PROGRAM(RCGEN kmetadata_rcgen PATHS ${BIN_INSTALL_DIR})
+  FIND_PROGRAM(RCGEN nepomuk-rcgen PATHS ${BIN_INSTALL_DIR})
   if(RCGEN-NOTFOUND)
     message( FATAL_ERROR "Failed to find the KMetaData source generator" )
   endif(RCGEN-NOTFOUND)
@@ -46,4 +46,4 @@ macro(KMETADATA_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_source
     COMMAND ${RCGEN} --writeall --templates ${ARGN} --target ${targetdir}/ --ontologies ${ontofile}
     )
   
-endmacro(KMETADATA_GENERATE_FROM_ONTOLOGY)
+endmacro(NEPOMUK_GENERATE_FROM_ONTOLOGY)
