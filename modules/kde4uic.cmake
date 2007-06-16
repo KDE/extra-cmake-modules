@@ -7,7 +7,7 @@
 if (KDE3_IMPL)
 
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
-    -nounload -tr tr2i18n
+    -nounload
     -impl ${KDE_UIC_H_FILE}
     ${KDE_UIC_FILE}
     OUTPUT_VARIABLE _uic_CONTENTS
@@ -19,7 +19,7 @@ endif (KDE3_IMPL)
 if (KDE3_HEADER)
 
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
-    -nounload -tr tr2i18n
+    -nounload
     ${KDE_UIC_FILE}
     OUTPUT_VARIABLE _uic_CONTENTS
     ERROR_QUIET
@@ -31,7 +31,6 @@ endif (KDE3_HEADER)
 if (KDE4_HEADER)
 
   EXECUTE_PROCESS(COMMAND ${KDE_UIC_EXECUTABLE}
-    -tr tr2i18n
     ${KDE_UIC_FILE}
     OUTPUT_VARIABLE _uic_CONTENTS
     ERROR_QUIET
@@ -41,9 +40,6 @@ if (KDE4_HEADER)
 endif (KDE4_HEADER)
 
 
-#replace tr218n("") with QString::null to avoid warning from KLocale
-STRING(REGEX REPLACE "tr2i18n\\(\"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
-STRING(REGEX REPLACE "tr2i18n\\(\"\", \"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
 #replace image15_data with img15_filename to make enable_final work
 STRING(REGEX REPLACE "image([0-9]+)_data" "img\\1_${KDE_UIC_BASENAME}" _uic_CONTENTS "${_uic_CONTENTS}")
 #fixup include guard
