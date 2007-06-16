@@ -649,6 +649,7 @@ macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
    if (WIN32)
       # for shared libraries/plugins a -DMAKE_target_LIB is required
       string(TOUPPER ${_target_NAME} _symbol)
+      string(REPLACE "-" "_" _symbol ${_symbol})
       set(_symbol "MAKE_${_symbol}_LIB")
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    endif (WIN32)
@@ -850,6 +851,7 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    if (WIN32)
       # for shared libraries a -DMAKE_target_LIB is required
       string(TOUPPER ${_target_NAME} _symbol)
+      string(REPLACE "-" "_" _symbol ${_symbol})
       set(_symbol "MAKE_${_symbol}_LIB")
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    endif (WIN32)
@@ -907,7 +909,8 @@ ENDMACRO(KDE4_NO_ENABLE_FINAL _project_name)
 
 macro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
    string(TOUPPER ${_libName} _libNameUpperCase)
-    # the next line is is required, because in CMake arguments to macros are not real
+   string(REPLACE "-" "_" _libNameUpperCase ${_libNameUpperCase})
+   # the next line is is required, because in CMake arguments to macros are not real
    # variables, but handled differently. The next line create a real CMake variable,
    # so configure_file() will replace it correctly.
    set(_libName ${_libName})
