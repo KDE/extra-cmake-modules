@@ -742,13 +742,31 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
 endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
+# add a unit test, which is executed when running make test
+# it will be built with RPATH poiting to the build dir
+# The targets are always created, but only built for the "all"
+# target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
+# are created but not built by default. You can build them by manually building the target.
+# The name of the target can be specified using TESTNAME <testname>, if it is not given
+# the macro will default to the <name>
+macro (KDE4_ADD_UNIT_TEST _test_NAME)
+    set(_srcList ${ARGN})
+    set(_targetName ${_test_NAME})
+    if( ${ARGV1} STREQUAL "TESTNAME" )
+        set(_targetName ${ARGV2})
+	LIST(REMOVE_AT _srcList 0 1)
+    endif( ${ARGV1} STREQUAL "TESTNAME" )
+    kde4_add_test_executable( ${_test_NAME} ${_srcList} )
+    get_target_property(_target_OUTPUT_PATH ${_test_NAME} EXECUTABLE_OUTPUT_PATH)
+    add_test( ${_targetName} ${_target_OUTPUT_PATH}/${_test_NAME} )
+endmacro (KDE4_ADD_UNIT_TEST)
 
 # add an test executable
 # it will be built with RPATH poiting to the build dir
 # The targets are always created, but only built for the "all"
 # target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
 # are created but not built by default. You can build them by manually building the target.
-macro (KDE4_ADD_TEST _target_NAME)
+macro (KDE4_ADD_TEST_EXECUTABLE _target_NAME)
 
    set(_add_executable_param)
 
@@ -770,7 +788,7 @@ macro (KDE4_ADD_TEST _target_NAME)
       target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
    endif (WIN32)
 
-endmacro (KDE4_ADD_TEST)
+endmacro (KDE4_ADD_TEST_EXECUTABLE)
 
 
 macro (KDE4_ADD_EXECUTABLE _target_NAME)

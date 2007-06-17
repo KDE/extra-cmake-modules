@@ -178,6 +178,21 @@
 #    Equivalent to ADD_LIBRARY(), but additionally it supports KDE4_ENABLE_FINAL
 #    and under Windows it adds a -DMAKE_<name>_LIB definition to the compilation.
 #
+# KDE4_ADD_UNIT_TEST (testname [TESTNAME targetname] file1 ... fileN)
+#    add a unit test, which is executed when running make test
+#    it will be built with RPATH poiting to the build dir
+#    The targets are always created, but only built for the "all"
+#    target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
+#    are created but not built by default. You can build them by manually building the target.
+#    The name of the target can be specified using TESTNAME <targetname>, if it is not given
+#    the macro will default to the <testname>
+#
+# KDE4_ADD_TEST_EXECUTABLE (name file1 ... fileN)
+#    add an test executable
+#    it will be built with RPATH poiting to the build dir
+#    The targets are always created, but only built for the "all"
+#    target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
+#    are created but not built by default. You can build them by manually building the target.
 # KDE4_INSTALL_ICONS( path theme)
 #    Installs all png and svgz files in the current directory to the icon
 #    directoy given in path, in the subdirectory for the given icon theme.
