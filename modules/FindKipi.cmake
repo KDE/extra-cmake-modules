@@ -33,15 +33,16 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
 
   else(KIPI_LOCAL_FOUND)
 
-    message(STATUS "Check Kipi library using pkg-config...")
+    if(NOT WIN32) 
+      message(STATUS "Check Kipi library using pkg-config...")
 
-    # use pkg-config to get the directories and then use these values
-    # in the FIND_PATH() and FIND_LIBRARY() calls
-    INCLUDE(UsePkgConfig)
+      # use pkg-config to get the directories and then use these values
+      # in the FIND_PATH() and FIND_LIBRARY() calls
+      INCLUDE(UsePkgConfig)
     
-    PKGCONFIG(libkipi _KIPIIncDir _KIPILinkDir _KIPILinkFlags _KIPICflags)
+      PKGCONFIG(libkipi _KIPIIncDir _KIPILinkDir _KIPILinkFlags _KIPICflags)
     
-    if(_KIPILinkFlags)
+      if(_KIPILinkFlags)
         # query pkg-config asking for a libkipi >= 0.2.0
         EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=0.2.0 libkipi RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
         if(_return_VALUE STREQUAL "0")
@@ -50,12 +51,14 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
         else(_return_VALUE STREQUAL "0")
             message(FATAL_ERROR "Found libkipi release < 0.2.0")
         endif(_return_VALUE STREQUAL "0")
-    else(_KIPILinkFlags)
+      else(_KIPILinkFlags)
         set(KIPI_VERSION_GOOD_FOUND FALSE)
         set(KIPI_FOUND FALSE)
         message(FATAL_ERROR "Could NOT find libkipi library!")
-    endif(_KIPILinkFlags)
-    
+      endif(_KIPILinkFlags)
+    else(NOT WIN32)
+	set(KIPI_VERSION_GOOD_FOUND TRUE)
+    endif(NOT WIN32)
     if(KIPI_VERSION_GOOD_FOUND)
         set(KIPI_DEFINITIONS ${_KIPICflags})
     

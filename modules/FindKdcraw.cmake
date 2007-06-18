@@ -34,14 +34,14 @@ else (KDCRAW_INCLUDE_DIR AND KDCRAW_LIBRARIES)
   else(KDCRAW_LOCAL_FOUND)
 
     message(STATUS "Check Kdcraw library using pkg-config...")
-
-    # use pkg-config to get the directories and then use these values
-    # in the FIND_PATH() and FIND_LIBRARY() calls
-    INCLUDE(UsePkgConfig)
+    if(NOT WIN32)
+      # use pkg-config to get the directories and then use these values
+      # in the FIND_PATH() and FIND_LIBRARY() calls
+      INCLUDE(UsePkgConfig)
     
-    PKGCONFIG(libkdcraw _KDCRAWIncDir _KDCRAWLinkDir _KDCRAWLinkFlags _KDCRAWCflags)
+      PKGCONFIG(libkdcraw _KDCRAWIncDir _KDCRAWLinkDir _KDCRAWLinkFlags _KDCRAWCflags)
     
-    if(_KDCRAWLinkFlags)
+      if(_KDCRAWLinkFlags)
         # query pkg-config asking for a libkdcraw >= 0.2.0
         EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=0.2.0 libkdcraw RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
         if(_return_VALUE STREQUAL "0")
@@ -50,12 +50,15 @@ else (KDCRAW_INCLUDE_DIR AND KDCRAW_LIBRARIES)
         else(_return_VALUE STREQUAL "0")
             message(FATAL_ERROR "Found libkdcaw release < 0.2.0")
         endif(_return_VALUE STREQUAL "0")
-    else(_KDCRAWLinkFlags)
+      else(_KDCRAWLinkFlags)
         set(KDCRAW_VERSION_GOOD_FOUND FALSE)
         set(KDCRAW_FOUND FALSE)
         message(FATAL_ERROR "Could NOT find libkdcraw library!")
-    endif(_KDCRAWLinkFlags)
-    
+      endif(_KDCRAWLinkFlags)
+    ELSE(NOT WIN32)
+      set(KDCRAW_VERSION_GOOD_FOUND TRUE)
+    ENDif(NOT WIN32)
+
     if(KDCRAW_VERSION_GOOD_FOUND)
         set(KDCRAW_DEFINITIONS ${_KDCRAWCflags})
     

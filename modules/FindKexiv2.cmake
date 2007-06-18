@@ -32,16 +32,16 @@ else (KEXIV2_INCLUDE_DIR AND KEXIV2_LIBRARIES)
     MARK_AS_ADVANCED(KEXIV2_INCLUDE_DIR KEXIV2_LIBRARIES)
 
   else(KEXIV2_LOCAL_FOUND)
+    if(NOT WIN32) 
+      message(STATUS "Check Kexiv2 library using pkg-config...")
 
-    message(STATUS "Check Kexiv2 library using pkg-config...")
-
-    # use pkg-config to get the directories and then use these values
-    # in the FIND_PATH() and FIND_LIBRARY() calls
-    INCLUDE(UsePkgConfig)
+      # use pkg-config to get the directories and then use these values
+      # in the FIND_PATH() and FIND_LIBRARY() calls
+      INCLUDE(UsePkgConfig)
     
-    PKGCONFIG(libkexiv2 _KEXIV2IncDir _KEXIV2LinkDir _KEXIV2LinkFlags _KEXIV2Cflags)
+      PKGCONFIG(libkexiv2 _KEXIV2IncDir _KEXIV2LinkDir _KEXIV2LinkFlags _KEXIV2Cflags)
     
-    if(_KEXIV2LinkFlags)
+      if(_KEXIV2LinkFlags)
         # query pkg-config asking for a libkexiv2 >= 0.2.0
         EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=0.2.0 libkexiv2 RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
         if(_return_VALUE STREQUAL "0")
@@ -50,12 +50,15 @@ else (KEXIV2_INCLUDE_DIR AND KEXIV2_LIBRARIES)
         else(_return_VALUE STREQUAL "0")
             message(FATAL_ERROR "Found libkexiv2 release < 0.2.0")
         endif(_return_VALUE STREQUAL "0")
-    else(_KEXIV2LinkFlags)
+      else(_KEXIV2LinkFlags)
         set(KEXIV2_VERSION_GOOD_FOUND FALSE)
         set(KEXIV2_FOUND FALSE)
         message(FATAL_ERROR "Could NOT find libkexiv2 library!")
-    endif(_KEXIV2LinkFlags)
-    
+      endif(_KEXIV2LinkFlags)
+    else(NOT WIN32)
+      set(KEXIV2_VERSION_GOOD_FOUND TRUE)
+    endif(NOT WIN32)
+
     if(KEXIV2_VERSION_GOOD_FOUND)
         set(KEXIV2_DEFINITIONS ${_KEXIV2Cflags})
     
