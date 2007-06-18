@@ -23,7 +23,7 @@ else (SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES)
     set(SQLITE_DEFINITIONS ${_SQLITECflags})
   ENDIF (NOT WIN32)
 
-  FIND_PATH(SQLITE_INCLUDE_DIR qlite3.h
+  FIND_PATH(SQLITE_INCLUDE_DIR sqlite3.h
     ${_SQLITEIncDir}
     /usr/include
     /usr/local/include
