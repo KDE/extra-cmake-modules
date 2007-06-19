@@ -43,7 +43,7 @@ macro(PARSE_ONE_FILE _filename _moc_mark_FILE)
 endmacro(PARSE_ONE_FILE)
 
 foreach( _current_FILE ${MOC_FILES})
-   message(STATUS "Automoc: Checking ${_current_FILE}...")
+#   message(STATUS "Automoc: Checking ${_current_FILE}...")
 
    get_filename_component(_basename ${_current_FILE} NAME)
    set(_moc_mark_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_automoc.mark)
