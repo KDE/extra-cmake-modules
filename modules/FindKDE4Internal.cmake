@@ -548,6 +548,18 @@ if (WIN32)
 
    find_package(KDEWIN32 REQUIRED)
 
+   # limit win32 packaging to kdelibs at now 
+   # don't know if package name, version and notes are always available 
+   if(_kdeBootStrapping)
+      find_package(KDEWIN_Packager)
+	  if (KDEWIN_PACKAGER_FOUND)
+         KDEWIN_PACKAGER("kdelibs" "${KDE_VERSION}" "KDE base library" "")
+      endif (KDEWIN_PACKAGER_FOUND)
+
+      include(Win32Macros)
+      addExplorerWrapper("kdelibs")
+   endif(_kdeBootStrapping)
+
    set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
 
    # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely,
