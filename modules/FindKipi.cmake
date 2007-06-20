@@ -26,7 +26,7 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
 
     set(KIPI_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libkipi)
     set(KIPI_DEFINITIONS -I${KIPI_INCLUDE_DIR})
-    set(KIPI_LIBRARIES ${CMAKE_BINARY_DIR}/lib/libkipi.so)
+    set(KIPI_LIBRARIES kipi)
     message(STATUS "Found Kipi library in local sub-folder: ${KIPI_LIBRARIES}")
     set(KIPI_FOUND TRUE)
     MARK_AS_ADVANCED(KIPI_INCLUDE_DIR KIPI_LIBRARIES)
