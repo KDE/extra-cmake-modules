@@ -267,7 +267,7 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
    get_filename_component(_input ${_docbook} ABSOLUTE)
    set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2)
 
-   #Boostrap
+   #Bootsrap
    if (_kdeBootStrapping)
       set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/customization/kde-chunk.xsl)
       set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
@@ -289,7 +289,7 @@ macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
    set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
 
    set(_bootstrapOption)
-   #Boostrap
+   #Bootsrap
    if (_kdeBootStrapping)
       set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/customization/kde-chunk.xsl)
       set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
