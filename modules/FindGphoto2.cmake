@@ -32,10 +32,24 @@ if (KDE4_GPHOTO2 )
 			EXEC_PROGRAM(${GHOTO2PORTCONFIG_EXECUTABLE} ARGS --libs RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPHOTO2PORT_LIBRARY)
 			EXEC_PROGRAM(${GHOTO2CONFIG_EXECUTABLE} ARGS --libs RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPHOTO2_LIBRARY)
 			
-            EXEC_PROGRAM(${GHOTO2PORTCONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPHOTO2PORT_INCLUDE_DIR)
-            EXEC_PROGRAM(${GHOTO2CONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPHOTO2_INCLUDE_DIR)
+            		EXEC_PROGRAM(${GHOTO2PORTCONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _GPHOTO2PORT_RESULT_INCLUDE_DIR)
+            		EXEC_PROGRAM(${GHOTO2CONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _GPHOTO2_RESULT_INCLUDE_DIR)
 
 			set(GPHOTO2_LIBRARIES ${GPHOTO2PORT_LIBRARY} ${GPHOTO2_LIBRARY})
+  			# the cflags for poppler-qt4 can contain more than one include path
+    			separate_arguments(_GPHOTO2_RESULT_INCLUDE_DIR)
+      			foreach(_includedir ${_GPHOTO2_RESULT_INCLUDE_DIR})
+	          		string(REGEX REPLACE "-I(.+)" "\\1" _includedir "${_includedir}")
+		      		set(GPHOTO2_INCLUDE_DIR ${GPHOTO2_INCLUDE_DIR} ${_includedir})
+		        endforeach(_includedir)
+                        separate_arguments(_GPHOTO2PORT_RESULT_INCLUDE_DIR)
+                        foreach(_includedir ${_GPHOTO2PORT_RESULT_INCLUDE_DIR})
+                                string(REGEX REPLACE "-I(.+)" "\\1" _includedir "${_includedir}")
+                                set(GPHOTO2PORT_INCLUDE_DIR ${GPHOTO2PORT_INCLUDE_DIR} ${_includedir})
+                        endforeach(_includedir)
+
+			
+
 			set(GPHOTO2_INCLUDE_DIRS ${GPHOTO2PORT_INCLUDE_DIR} ${GPHOTO2_INCLUDE_DIR} )
 		endif(GHOTO2PORTCONFIG_EXECUTABLE AND GHOTO2CONFIG_EXECUTABLE)
 
