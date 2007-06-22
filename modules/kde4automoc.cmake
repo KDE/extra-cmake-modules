@@ -18,23 +18,28 @@ macro(PARSE_ONE_FILE _filename _moc_mark_FILE)
 
       set(_mocs_PER_FILE)
 
-      string(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
+      string(REGEX MATCHALL "#include +([\"<]moc_[^ ]+\\.cpp|[^ ]+\\.moc)[\">]" _match "${_contents}")
       if (_match)
          foreach (_current_MOC_INC ${_match})
             string(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
+            if(_current_MOC)
+               get_filename_component(_basename ${_current_MOC} NAME_WE)
+            else(_current_MOC)
+               string(REGEX MATCH "moc_[^ <\"]+\\.cpp" _current_MOC "${_current_MOC_INC}")
+               get_filename_component(_basename ${_current_MOC} NAME_WE)
+               string(REPLACE "moc_" "" _basename "${_basename}")
+            endif(_current_MOC)
 
-            get_filename_component(_basename ${_current_MOC} NAME_WE)
             set(_header ${_abs_PATH}/${_basename}.h)
             set(_moc    ${KDE4_CURRENT_BINARY_DIR}/${_current_MOC})
+
+            if (NOT EXISTS ${_header})
+               message(FATAL_ERROR "In the file \"${_filename}\" the moc file \"${_current_MOC}\" is included, but \"${_header}\" doesn't exist.")
+            endif (NOT EXISTS ${_header})
 
             list(APPEND _mocs_PER_FILE ${_basename})
             file(APPEND ${_moc_mark_FILE} "set( ${_basename}_MOC ${_moc})\n")
             file(APPEND ${_moc_mark_FILE} "set( ${_basename}_HEADER ${_header})\n")
-
-            if (NOT EXISTS ${_abs_PATH}/${_basename}.h)
-               message(FATAL_ERROR "In the file \"${_filename}\" the moc file \"${_current_MOC}\" is included, but \"${_abs_PATH}/${_basename}.h\" doesn't exist.")
-            endif (NOT EXISTS ${_abs_PATH}/${_basename}.h)
-
          endforeach (_current_MOC_INC)
       endif (_match)
       file(APPEND ${_moc_mark_FILE} "set(mocs ${_mocs_PER_FILE})\n")
