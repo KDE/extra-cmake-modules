@@ -769,6 +769,21 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    if (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
       set (KDE4_C_FLAGS "-fvisibility=hidden")
+      # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
+      # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
+      set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifdef QT_VISIBILITY_AVAILABLE \n return 0;\n #else \n return 1; \n #endif \n }\n")
+      set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
+      file(WRITE "${_source_file}" "${_source}")
+      set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
+
+      try_run(_run_result _compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}")
+
+      if(NOT _compile_result)
+         message(FATAL_ERROR "Could not compile simple test program:\n ${_source}")
+      endif(NOT _compile_result)
+      if(_run_result)
+         message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation.")
+      endif(_run_result)
 
       if (GCC_IS_NEWER_THAN_4_2)
           set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
