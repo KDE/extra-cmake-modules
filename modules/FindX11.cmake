@@ -33,6 +33,7 @@
 #                X11_Xt_INCLUDE_PATH,           X11_Xt_LIB,         X11_Xt_FOUND
 #                X11_Xutil_INCLUDE_PATH,                            X11_Xutil_FOUND
 #                X11_Xv_INCLUDE_PATH,           X11_Xv_LIB,         X11_Xv_FOUND
+#                X11_XSync_INCLUDE_PATH,        (in X11_Xext_LIB),  X11_XSync_FOUND
 
 # Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
 # See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
@@ -98,6 +99,7 @@ IF (UNIX)
   FIND_PATH(X11_Xutil_INCLUDE_PATH X11/Xutil.h                       ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xt_INCLUDE_PATH X11/Intrinsic.h                      ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xv_INCLUDE_PATH X11/extensions/Xvlib.h               ${X11_INC_SEARCH_PATH})
+  FIND_PATH(X11_XSync_INCLUDE_PATH X11/extensions/sync.h             ${X11_INC_SEARCH_PATH})
 
 
   FIND_LIBRARY(X11_X11_LIB X11               ${X11_LIB_SEARCH_PATH} NO_SYSTEM_PATH)
@@ -271,6 +273,11 @@ IF (UNIX)
      SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xinput_INCLUDE_PATH})
   ENDIF (X11_Xinput_INCLUDE_PATH AND X11_Xinput_LIB)
 
+  IF (X11_XSync_INCLUDE_PATH)
+     SET(X11_XSync_FOUND TRUE)
+     SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_XSync_INCLUDE_PATH})
+  ENDIF (X11_XSync_INCLUDE_PATH)
+
   IF(X11_ICE_LIB AND X11_ICE_INCLUDE_PATH)
      SET(X11_ICE_FOUND TRUE)
   ENDIF(X11_ICE_LIB AND X11_ICE_INCLUDE_PATH)
@@ -419,6 +426,7 @@ IF (UNIX)
     X11_XShm_INCLUDE_PATH
     X11_ICE_LIB
     X11_ICE_INCLUDE_PATH
+    X11_XSync_INCLUDE_PATH
   )
   SET(CMAKE_FIND_FRAMEWORK ${CMAKE_FIND_FRAMEWORK_SAVE})
 ENDIF (UNIX)
