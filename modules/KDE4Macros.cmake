@@ -766,6 +766,9 @@ endmacro (KDE4_ADD_UNIT_TEST)
 # The targets are always created, but only built for the "all"
 # target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
 # are created but not built by default. You can build them by manually building the target.
+# KDESRCDIR is set to the source directory of the test, this can be used with
+# KGlobal::dirs()->addResourceDir( "data", KDESRCDIR ); to be able to use xmlgui
+# and other things in the test, that normally require installation
 macro (KDE4_ADD_TEST_EXECUTABLE _target_NAME)
 
    set(_add_executable_param)
@@ -774,13 +777,14 @@ macro (KDE4_ADD_TEST_EXECUTABLE _target_NAME)
       set(_add_executable_param EXCLUDE_FROM_ALL)
    endif (NOT KDE4_BUILD_TESTS)
 
+   set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+
    kde4_get_automoc_files(_automoc_FILES ${ARGN})
 
    add_executable(${_target_NAME} ${_add_executable_param} ${ARGN} ${_automoc_FILES})
 
    set_target_properties(${_target_NAME} PROPERTIES
-                         EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}
-                         DEFINITIONS -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\"
+                         COMPILE_FLAGS -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\"
                          SKIP_BUILD_RPATH FALSE
                          BUILD_WITH_INSTALL_RPATH FALSE)
 

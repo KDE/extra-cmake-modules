@@ -193,6 +193,10 @@
 #    The targets are always created, but only built for the "all"
 #    target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
 #    are created but not built by default. You can build them by manually building the target.
+#    KDESRCDIR is set to the source directory of the test, this can be used with
+#    KGlobal::dirs()->addResourceDir( "data", KDESRCDIR ); to be able to use xmlgui
+#    and other things in the test, that normally require installation
+#
 # KDE4_INSTALL_ICONS( path theme)
 #    Installs all png and svgz files in the current directory to the icon
 #    directoy given in path, in the subdirectory for the given icon theme.
