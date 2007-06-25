@@ -757,8 +757,7 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 	LIST(REMOVE_AT _srcList 0 1)
     endif( ${ARGV1} STREQUAL "TESTNAME" )
     kde4_add_test_executable( ${_test_NAME} ${_srcList} )
-    get_target_property(_target_OUTPUT_PATH ${_test_NAME} EXECUTABLE_OUTPUT_PATH)
-    add_test( ${_targetName} ${_target_OUTPUT_PATH}/${_test_NAME} )
+    add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} )
 endmacro (KDE4_ADD_UNIT_TEST)
 
 # add an test executable
