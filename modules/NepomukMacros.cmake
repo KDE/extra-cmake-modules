@@ -21,9 +21,9 @@
 macro(NEPOMUK_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_sources out_includes)
 
   FIND_PROGRAM(RCGEN nepomuk-rcgen PATHS ${BIN_INSTALL_DIR})
-  if(RCGEN-NOTFOUND)
+  if(NOT RCGEN)
     message( FATAL_ERROR "Failed to find the KMetaData source generator" )
-  endif(RCGEN-NOTFOUND)
+  endif(NOT RCGEN)
 
   FILE(TO_NATIVE_PATH ${RCGEN} RCGEN)
 
