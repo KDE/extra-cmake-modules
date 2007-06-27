@@ -8,6 +8,8 @@
 # KDE4_INSTALL_LIBTOOL_FILE
 # KDE4_CREATE_FINAL_FILES
 # KDE4_ADD_KDEINIT_EXECUTABLE
+# KDE4_ADD_UNIT_TEST
+# KDE4_ADD_TEST_EXECUTABLE
 # KDE4_ADD_EXECUTABLE
 # KDE4_ADD_WIDGET_FILES
 # KDE4_INSTALL_ICONS
@@ -53,7 +55,7 @@ macro (KDE4_ADD_KCFG_FILES _sources )
 
        if(_kcfg_generatemoc)
          qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
-         set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
+         set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # don't run automoc on this file
          list(APPEND ${_sources} ${_moc_FILE})
        endif(_kcfg_generatemoc)
 
@@ -531,7 +533,7 @@ endmacro (KDE4_CREATE_FINAL_FILES)
 
 # This macro sets the RPATH related options for libraries, plugins and kdeinit executables.
 # It overrides the defaults set in FindKDE4Internal.cmake.
-# If RPATH is not explicitely disabled, libraries and plugins are built without RPATH, in
+# If RPATH is not explicitly disabled, libraries and plugins are built without RPATH, in
 # the hope that the RPATH which is compiled into the executable is good enough.
 macro (KDE4_HANDLE_RPATH_FOR_LIBRARY _target_NAME)
    if (NOT CMAKE_SKIP_RPATH AND NOT KDE4_USE_ALWAYS_FULL_RPATH)
@@ -743,7 +745,7 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
 # add a unit test, which is executed when running make test
-# it will be built with RPATH poiting to the build dir
+# it will be built with RPATH pointing to the build dir
 # The targets are always created, but only built for the "all"
 # target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
 # are created but not built by default. You can build them by manually building the target.
@@ -761,7 +763,7 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 endmacro (KDE4_ADD_UNIT_TEST)
 
 # add an test executable
-# it will be built with RPATH poiting to the build dir
+# it will be built with RPATH pointing to the build dir
 # The targets are always created, but only built for the "all"
 # target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
 # are created but not built by default. You can build them by manually building the target.
