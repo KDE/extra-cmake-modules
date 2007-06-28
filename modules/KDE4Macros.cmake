@@ -756,7 +756,7 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
     set(_targetName ${_test_NAME})
     if( ${ARGV1} STREQUAL "TESTNAME" )
         set(_targetName ${ARGV2})
-	LIST(REMOVE_AT _srcList 0 1)
+        LIST(REMOVE_AT _srcList 0 1)
     endif( ${ARGV1} STREQUAL "TESTNAME" )
     kde4_add_test_executable( ${_test_NAME} ${_srcList} )
     add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} )
@@ -785,7 +785,7 @@ macro (KDE4_ADD_TEST_EXECUTABLE _target_NAME)
    add_executable(${_target_NAME} ${_add_executable_param} ${ARGN} ${_automoc_FILES})
 
    set_target_properties(${_target_NAME} PROPERTIES
-                         COMPILE_FLAGS -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\"
+                         COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\""
                          SKIP_BUILD_RPATH FALSE
                          BUILD_WITH_INSTALL_RPATH FALSE)
 
