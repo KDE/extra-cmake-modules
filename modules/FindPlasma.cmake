@@ -8,10 +8,10 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (PLASMA_INCLUDE_DIR)
+if (PLASMA_INCLUDE_DIR AND PLASMA_LIBRARIES)
     # Already in cache, be silent
-    set(PLASMA_FOUND TRUE)
-endif (PLASMA_INCLUDE_DIR)
+    set(Plasma_FIND_QUIETLY TRUE)
+endif (PLASMA_INCLUDE_DIR AND PLASMA_LIBRARIES)
 
 
 find_path(PLASMA_INCLUDE_DIR NAMES plasma/kpanelapplet.h
