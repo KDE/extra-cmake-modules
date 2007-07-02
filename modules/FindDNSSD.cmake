@@ -42,8 +42,6 @@ if (DNSSD_FOUND)
     message(STATUS "Found DNSSD: ${DNSSD_LIBRARIES}")
   endif (NOT DNSSD_FIND_QUIETLY)
 else (DNSSD_FOUND)
-  set(DNSSD_INCLUDE_DIR "")   # this is not good, leaving it on "NOTFOUND" is better, why was it changed ? Alex
-  set(DNSSD_LIBRARIES "")
   if (DNSSD_FIND_REQUIRED)
     message(FATAL_ERROR "Could NOT find DNSSD")
   endif (DNSSD_FIND_REQUIRED)
