@@ -12,9 +12,14 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 if (WIN32)
-  file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
-  set (KDE4_INCLUDE_DIR ${KDE4_INCLUDE_DIR} ${_progFiles}/kdepimlibs/include)
-  set (KDE4_LIB_DIR ${KDE4_LIB_DIR} ${_progFiles}/kdepimlibs/lib)
+  if (KDEPIMLIBS_DIR)
+      set (KDE4_INCLUDE_DIR ${KDE4_INCLUDE_DIR} ${KDEPIMLIBS_DIR}/include)
+      set (KDE4_LIB_DIR ${KDE4_LIB_DIR}  ${KDEPIMLIBS_DIR}/lib)
+  else (KDEPIMLIBS_DIR)
+      file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
+      set (KDE4_INCLUDE_DIR ${KDE4_INCLUDE_DIR} ${_progFiles}/kdepimlibs/include)
+      set (KDE4_LIB_DIR ${KDE4_LIB_DIR} ${_progFiles}/kdepimlibs/lib)
+  endif (KDEPIMLIBS_DIR)
 endif (WIN32)
 
 find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal_export.h
