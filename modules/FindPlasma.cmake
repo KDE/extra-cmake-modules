@@ -14,7 +14,7 @@ if (PLASMA_INCLUDE_DIR AND PLASMA_LIBRARIES)
 endif (PLASMA_INCLUDE_DIR AND PLASMA_LIBRARIES)
 
 
-find_path(PLASMA_INCLUDE_DIR NAMES plasma/kpanelapplet.h
+find_path(PLASMA_INCLUDE_DIR NAMES plasma/plasma.h
         PATHS
         ${INCLUDE_INSTALL_DIR}
 )
