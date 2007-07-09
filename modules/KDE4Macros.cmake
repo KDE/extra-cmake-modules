@@ -223,7 +223,7 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
       ${CMAKE_CURRENT_SOURCE_DIR}
       ${CMAKE_CURRENT_BINARY_DIR}
       ${QT_MOC_EXECUTABLE}
-      DEPENDS ${${_SRCS}} ${_moc_headers} ${_automoc_source}.files ${_KDE4_AUTOMOC_EXECUTABLE_DEP}
+      DEPENDS ${${_SRCS}} ${_moc_headers} ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt ${_KDE4_AUTOMOC_EXECUTABLE_DEP}
       )
    # the OBJECT_DEPENDS is only necessary when a new moc file has to be generated that is included in a source file
    # problem: the whole target is recompiled when the automoc.cpp file is touched
