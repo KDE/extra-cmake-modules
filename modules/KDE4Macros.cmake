@@ -8,7 +8,6 @@
 # KDE4_SET_CUSTOM_TARGET_PROPERTY
 # KDE4_GET_CUSTOM_TARGET_PROPERTY
 # KDE4_MOC_HEADERS
-# KDE4_APPEND_MOC_FILES
 # KDE4_HANDLE_AUTOMOC
 # KDE4_INSTALL_LIBTOOL_FILE
 # KDE4_CREATE_FINAL_FILES
@@ -184,25 +183,21 @@ macro (KDE4_MOC_HEADERS _target_NAME)
    endif(_headers_to_moc)
 endmacro (KDE4_MOC_HEADERS)
 
-macro(KDE4_APPEND_MOC_FILES _target_name _SRCS)
-   KDE4_GET_CUSTOM_TARGET_PROPERTY(_headers_to_moc ${_target_name} AUTOMOC_HEADERS)
-   if(NOT _headers_to_moc STREQUAL "NOTFOUND")
-      qt4_get_moc_inc_dirs(_moc_INCS)
-      foreach (_current_FILE ${_headers_to_moc})
-         get_filename_component(_basename "${_current_FILE}" NAME_WE)
-         set(_moc "${CMAKE_CURRENT_BINARY_DIR}/moc_${_basename}.cpp")
-         set_source_files_properties(${_moc} PROPERTIES GENERATED TRUE)
-         set(${_SRCS} ${${_SRCS}} ${_moc})
-         add_custom_command(OUTPUT ${_moc} COMMAND ${QT_MOC_EXECUTABLE} ${_moc_INCS} ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE} -o ${_moc}
-            DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_current_FILE})
-      endforeach (_current_FILE)
-   endif(NOT _headers_to_moc STREQUAL "NOTFOUND")
-endmacro(KDE4_APPEND_MOC_FILES)
-
 macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
-   set(_mark_file "${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}.automoc")
    set(_moc_files)
    set(_moc_headers)
+
+   # first list all explicitly set headers
+   KDE4_GET_CUSTOM_TARGET_PROPERTY(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
+   if(NOT _headers_to_moc STREQUAL "NOTFOUND")
+      foreach(_header_to_moc ${_headers_to_moc})
+         get_filename_component(_abs_header ${_header_to_moc} ABSOLUTE)
+         set(_moc_files ${_moc_files} ${_abs_header})
+         set(_moc_headers ${_moc_headers} ${_abs_header})
+      endforeach(_header_to_moc)
+   endif(NOT _headers_to_moc STREQUAL "NOTFOUND")
+
+   # now add all the sources for the automoc
    foreach (_current_FILE ${${_SRCS}})
       get_filename_component(_abs_current_FILE "${_current_FILE}" ABSOLUTE)
       get_source_file_property(_skip "${_abs_current_FILE}" SKIP_AUTOMOC)
@@ -215,28 +210,25 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
          if(EXISTS "${_header}")
             set(_moc_headers ${_moc_headers} ${_header})
          endif(EXISTS "${_header}")
-         #macro_additional_clean_files("${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc")
-         #macro_additional_clean_files("${CMAKE_CURRENT_BINARY_DIR}/moc_${_basename}.cpp")
-         set(_moc_files "${_moc_files}\;${_abs_current_FILE}")
+         set(_moc_files ${_moc_files} ${_abs_current_FILE})
       endif(NOT _generated AND NOT _skip)
    endforeach (_current_FILE)
 
-   set(_moc_incs)
-   GET_DIRECTORY_PROPERTY(_inc_DIRS INCLUDE_DIRECTORIES)
-   FOREACH(_current ${_inc_DIRS})
-      SET(_moc_incs "${_moc_incs}\;-I\;${_current}")
-   ENDFOREACH(_current)
-   add_custom_command(OUTPUT ${_mark_file}
-      COMMAND ${CMAKE_COMMAND}
-      -DKDE4_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
-      -DQT_MOC_EXECUTABLE=${QT_MOC_EXECUTABLE}
-      -DQT_MOC_INCS="${_moc_incs}"
-      -DMOC_FILES="${_moc_files}"
-      -DMARK_FILE="${_mark_file}"
-      -P ${KDE4_MODULE_DIR}/kde4automoc.cmake
-      DEPENDS ${${_SRCS}} ${_moc_headers}
+   set(_automoc_source "${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_automoc.cpp")
+   GET_DIRECTORY_PROPERTY(_moc_incs INCLUDE_DIRECTORIES)
+   FILE(WRITE ${_automoc_source}.files "MOC_INCLUDES:\n${_moc_incs}\nSOURCES:\n${_moc_files}")
+   add_custom_command(OUTPUT ${_automoc_source}
+      COMMAND ${KDE4_AUTOMOC_EXECUTABLE}
+      ${_automoc_source}
+      ${CMAKE_CURRENT_SOURCE_DIR}
+      ${CMAKE_CURRENT_BINARY_DIR}
+      ${QT_MOC_EXECUTABLE}
+      DEPENDS ${${_SRCS}} ${_moc_headers} ${_automoc_source}.files ${_KDE4_AUTOMOC_EXECUTABLE_DEP}
       )
-   set(${_SRCS} ${${_SRCS}} ${_mark_file})
+   # the OBJECT_DEPENDS is only necessary when a new moc file has to be generated that is included in a source file
+   # problem: the whole target is recompiled when the automoc.cpp file is touched
+   # set_source_files_properties(${${_SRCS}} PROPERTIES OBJECT_DEPENDS ${_automoc_source})
+   set(${_SRCS} ${_automoc_source} ${${_SRCS}})
 endmacro(KDE4_HANDLE_AUTOMOC)
 
 macro(KDE4_CREATE_PO_FILES)
@@ -655,7 +647,6 @@ macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
    endif (${_with_PREFIX} STREQUAL "WITH_PREFIX")
 
    set(_SRCS ${_first_SRC} ${ARGN})
-   kde4_append_moc_files(${_target_NAME} _SRCS)
    kde4_handle_automoc(${_target_NAME} _SRCS)
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
@@ -743,7 +734,6 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 #   else (WIN32)
       # under UNIX, create a shared library and a small executable, which links to this library
 
-   kde4_append_moc_files(${_target_NAME} _SRCS)
    kde4_handle_automoc(kdeinit_${_target_NAME} _SRCS)
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
@@ -804,7 +794,6 @@ macro (KDE4_ADD_TEST_EXECUTABLE _target_NAME)
    set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
    set(_SRCS ${ARGN})
-   kde4_append_moc_files(${_target_NAME} _SRCS)
    kde4_handle_automoc(${_target_NAME} _SRCS)
    add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS})
 
@@ -847,7 +836,6 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
       set(_type "RUN_UNINSTALLED")
    endif (_uninst)
 
-   kde4_append_moc_files(${_target_NAME} _SRCS)
    kde4_handle_automoc(${_target_NAME} _SRCS)
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
@@ -885,7 +873,6 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    endif (${_lib_TYPE} STREQUAL "MODULE")
 
    set(_SRCS ${_first_SRC} ${ARGN})
-   kde4_append_moc_files(${_target_NAME} _SRCS)
    kde4_handle_automoc(${_target_NAME} _SRCS)
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})

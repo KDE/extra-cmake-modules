@@ -16,6 +16,7 @@
 # compile KDE software:
 #
 # KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
+# KDE4_AUTOMOC_EXECUTABLE  - the kde4automoc executable
 # KDE4_MEINPROC_EXECUTABLE - the meinproc4 executable
 # KDE4_MAKEKDEWIDGETS_EXECUTABLE - the makekdewidgets executable
 #
@@ -389,11 +390,13 @@ if (_kdeBootStrapping)
       set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
       # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+      set(KDE4_AUTOMOC_EXECUTABLE     ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc )
       set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
       set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
       set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.shell )
+      set(KDE4_AUTOMOC_EXECUTABLE     ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc.shell )
       set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4.shell )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
    endif (WIN32)
@@ -402,6 +405,7 @@ if (_kdeBootStrapping)
 
    # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
+   set( _KDE4_AUTOMOC_EXECUTABLE_DEP kde4automoc)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
    set( _KDE4_MEINPROC_EXECUTABLE_DEP meinproc4)
 
@@ -411,6 +415,7 @@ else (_kdeBootStrapping)
 
   # ... but NOT otherwise
    set( _KDE4_KCONFIG_COMPILER_DEP)
+   set( _KDE4_AUTOMOC_EXECUTABLE_DEP)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
    set( _KDE4_MEINPROC_EXECUTABLE_DEP)
 
@@ -529,6 +534,9 @@ else (_kdeBootStrapping)
    # if this didn't succeed, the second call makes cmake search again, but in the standard paths
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
+
+   find_program(KDE4_AUTOMOC_EXECUTABLE NAME kde4automoc PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
+   find_program(KDE4_AUTOMOC_EXECUTABLE NAME kde4automoc )
 
    find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 )
@@ -864,6 +872,12 @@ macro (KDE4_PRINT_RESULTS)
    else(KDE4_KCFGC_EXECUTABLE)
       message(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
    endif(KDE4_KCFGC_EXECUTABLE)
+
+   if(KDE4_AUTOMOC_EXECUTABLE)
+      message(STATUS "Found KDE4 automoc: ${KDE4_AUTOMOC_EXECUTABLE}")
+   else(KDE4_AUTOMOC_EXECUTABLE)
+      message(STATUS "Didn't find the KDE4 automoc")
+   endif(KDE4_AUTOMOC_EXECUTABLE)
 endmacro (KDE4_PRINT_RESULTS)
 
 
