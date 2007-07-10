@@ -11,21 +11,14 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (IW_INCLUDE_DIR)
+IF (IW_INCLUDE_DIR)
   # Already in cache, be silent
-  set(IW_FIND_QUIETLY TRUE)
-endif (IW_INCLUDE_DIR)
+  SET(IW_FIND_QUIETLY TRUE)
+ENDIF (IW_INCLUDE_DIR)
 
-FIND_PATH(IW_INCLUDE_DIR iwlib.h
-  /usr/include
-  /usr/local/include
-)
+FIND_PATH(IW_INCLUDE_DIR iwlib.h)
 
-FIND_LIBRARY(IW_LIBRARIES NAMES iw
-  PATHS
-  /usr/lib
-  /usr/local/lib
-)
+FIND_LIBRARY(IW_LIBRARIES NAMES iw)
 
 IF(IW_INCLUDE_DIR AND IW_LIBRARIES)
    SET(IW_FOUND TRUE)
