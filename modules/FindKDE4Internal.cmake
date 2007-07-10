@@ -263,6 +263,28 @@ get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 if (NOT _kdeBootStrapping)
   # this file contains all dependencies of all libraries of kdelibs, Alex
   include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
+ 
+  # allow searching cmake modules in all given kde install locations (KDEDIRS based)
+  exec_program(kde4-config ARGS --path data OUTPUT_VARIABLE _data_DIR)
+  file(TO_CMAKE_PATH "${_data_DIR}" _data_DIR)
+  foreach(dir ${_data_DIR})
+    set (apath ${dir}/cmake/modules)
+    if (EXISTS ${apath})
+        set (included 0)
+        STRING(TOLOWER ${apath} _apath)
+        # ignore already added pathes, case insensitive
+        foreach(adir ${CMAKE_MODULE_PATH})
+            STRING(TOLOWER ${adir} _adir)
+            if (${_adir} STREQUAL ${_apath})
+                set (included 1)
+            endif (${_adir} STREQUAL ${_apath})
+        endforeach(adir)            
+        if (NOT included)
+            message(STATUS "Adding ${dir}/cmake/modules to CMAKE_MODULE_PATH")
+            set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${dir}/cmake/modules) 
+        endif (NOT included)
+    endif (EXISTS ${apath})
+  endforeach(dir)
 endif (NOT _kdeBootStrapping)
 
 # this macro implements some very special logic how to deal with the cache
