@@ -4,7 +4,6 @@
 # KDE4_ADD_UI_FILES
 # KDE4_ADD_UI3_FILES
 # KDE4_ADD_KCFG_FILES
-# KDE4_AUTOMOC
 # KDE4_SET_CUSTOM_TARGET_PROPERTY
 # KDE4_GET_CUSTOM_TARGET_PROPERTY
 # KDE4_MOC_HEADERS
@@ -151,10 +150,6 @@ macro (KDE4_ADD_UI3_FILES _sources )
 
    endforeach (_current_FILE)
 endmacro (KDE4_ADD_UI3_FILES)
-
-# keep it here until it is removed everywhere
-macro (KDE4_AUTOMOC)
-endmacro (KDE4_AUTOMOC)
 
 macro (KDE4_SET_CUSTOM_TARGET_PROPERTY _target_name _property_name _property)
    string(REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
