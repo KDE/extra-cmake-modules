@@ -127,21 +127,6 @@
 #    Use this to add widget description files for the makekdewidgets code generator
 #    for Qt Designer plugins.
 #
-# KDE4_AUTOMOC(file1 ... fileN)
-#    Call this if you want to have automatic moc file handling.
-#    This means if you include "foo.moc" in the source file foo.cpp
-#    a moc file for the header foo.h will be created automatically.
-#    You can set the property SKIP_AUTOMAKE using SET_SOURCE_FILES_PROPERTIES()
-#    to exclude some files in the list from being processed.
-#    If you don't want automoc, you can also use QT4_WRAP_CPP() or QT4_GENERATE_MOC()
-#    from FindQt4.cmake to have the moc files generated. This will be faster
-#    but require more manual work.
-#
-# KDE4_INSTALL_LIBTOOL_FILE ( subdir target )
-#    This will create and install a simple libtool file for the
-#    given target. This might be required for other software.
-#    The libtool file will be install in subdir, relative to CMAKE_INSTALL_PREFIX .
-#
 # KDE4_CREATE_FINAL_FILES (filename_CXX filename_C file1 ... fileN)
 #    This macro is intended mainly for internal uses.
 #    It is used for enable-final. It will generate two source files,
