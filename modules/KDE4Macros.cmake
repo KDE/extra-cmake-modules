@@ -283,7 +283,7 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
    get_filename_component(_input ${_docbook} ABSOLUTE)
    set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2)
 
-   #Bootsrap
+   #Bootstrap
    if (_kdeBootStrapping)
       set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/customization/kde-chunk.xsl)
       set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
@@ -305,7 +305,7 @@ macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
    set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
 
    set(_bootstrapOption)
-   #Bootsrap
+   #Bootstrap
    if (_kdeBootStrapping)
       set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/customization/kde-chunk.xsl)
       set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
@@ -320,68 +320,45 @@ macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
    add_custom_target(htmlhandbook ALL DEPENDS ${_doc})
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
+
+# a "map" of short type names to the directories
+# unknown names should give empty results
+# KDE 3 compatibility
+set(_KDE4_ICON_GROUP_mime       "mimetypes")
+set(_KDE4_ICON_GROUP_filesys    "places")
+set(_KDE4_ICON_GROUP_device     "devices")
+set(_KDE4_ICON_GROUP_app        "apps")
+set(_KDE4_ICON_GROUP_action     "actions")
+# KDE 4 compatibility
+set(_KDE4_ICON_GROUP_mimetypes  "mimetypes")
+set(_KDE4_ICON_GROUP_places     "places")
+set(_KDE4_ICON_GROUP_devices    "devices")
+set(_KDE4_ICON_GROUP_apps       "apps")
+set(_KDE4_ICON_GROUP_actions    "actions")
+set(_KDE4_ICON_GROUP_categories "categories")
+set(_KDE4_ICON_GROUP_emblems    "emblems")
+
+# a "map" of short theme names to the theme directory
+set(_KDE4_ICON_THEME_ox "oxygen")
+set(_KDE4_ICON_THEME_cr "crystalsvg")
+set(_KDE4_ICON_THEME_lo "locolor")
+set(_KDE4_ICON_THEME_hi "hicolor")
+
+
 # only used internally by KDE4_INSTALL_ICONS
-MACRO (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME)
+macro (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME)
 
    # if the string doesn't match the pattern, the result is the full string, so all three have the same content
-   IF (NOT ${_group} STREQUAL ${_install_NAME} )
-      SET(_icon_GROUP "actions")
-
-      # KDE 3 compatibility
-      IF (${_group} STREQUAL "mime")
-         SET(_icon_GROUP  "mimetypes")
-      ENDIF (${_group} STREQUAL "mime")
-
-      IF (${_group} STREQUAL "filesys")
-         SET(_icon_GROUP  "places")
-      ENDIF (${_group} STREQUAL "filesys")
-
-      IF (${_group} STREQUAL "device")
-         SET(_icon_GROUP  "devices")
-      ENDIF (${_group} STREQUAL "device")
-
-      IF (${_group} STREQUAL "app")
-         SET(_icon_GROUP  "apps")
-      ENDIF (${_group} STREQUAL "app")
-
-      IF (${_group} STREQUAL "action")
-         SET(_icon_GROUP  "actions")
-      ENDIF (${_group} STREQUAL "action")
-
-      # KDE 4
-      IF (${_group} STREQUAL "mimetypes")
-         SET(_icon_GROUP  "mimetypes")
-      ENDIF (${_group} STREQUAL "mimetypes")
-
-      IF (${_group} STREQUAL "places")
-         SET(_icon_GROUP  "places")
-      ENDIF (${_group} STREQUAL "places")
-
-      IF (${_group} STREQUAL "devices")
-         SET(_icon_GROUP  "devices")
-      ENDIF (${_group} STREQUAL "devices")
-
-      IF (${_group} STREQUAL "apps")
-         SET(_icon_GROUP  "apps")
-      ENDIF (${_group} STREQUAL "apps")
-
-      IF (${_group} STREQUAL "actions")
-         SET(_icon_GROUP  "actions")
-      ENDIF (${_group} STREQUAL "actions")
-
-      IF (${_group} STREQUAL "categories")
-         SET(_icon_GROUP  "categories")
-      ENDIF (${_group} STREQUAL "categories")
-
-      IF (${_group} STREQUAL "emblems")
-         SET(_icon_GROUP  "emblems")
-      ENDIF (${_group} STREQUAL "emblems")
-
+   if (NOT ${_group} STREQUAL ${_install_NAME} )
+      set(_icon_GROUP  ${_KDE4_ICON_GROUP_${_group}})
+      if(NOT _icon_GROUP)
+         set(_icon_GROUP "actions")
+      endif(NOT _icon_GROUP)
 #      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
-   INSTALL(FILES ${_orig_NAME} DESTINATION ${_install_PATH}/${_icon_GROUP}/ RENAME ${_install_NAME} )
-   ENDIF (NOT ${_group} STREQUAL ${_install_NAME} )
+      install(FILES ${_orig_NAME} DESTINATION ${_install_PATH}/${_icon_GROUP}/ RENAME ${_install_NAME} )
+   endif (NOT ${_group} STREQUAL ${_install_NAME} )
 
-ENDMACRO (_KDE4_ADD_ICON_INSTALL_RULE)
+endmacro (_KDE4_ADD_ICON_INSTALL_RULE)
 
 
 macro (KDE4_INSTALL_ICONS _defaultpath )
@@ -393,30 +370,13 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _size  "${_current_ICON}")
       string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _group "${_current_ICON}")
       string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\4" _name  "${_current_ICON}")
-      set(_theme_GROUP "nogroup")
 
-      if( ${_type} STREQUAL "ox" )
-	set(_theme_GROUP  "oxygen")
-      endif(${_type} STREQUAL "ox" )
-
-      if( ${_type} STREQUAL "cr" )
-	set(_theme_GROUP  "crystalsvg")
-      endif(${_type} STREQUAL "cr" )
-
-      if( ${_type} STREQUAL "lo" )
-      	set(_theme_GROUP  "locolor")
-      endif(${_type} STREQUAL "lo" )
-
-      if( ${_type} STREQUAL "hi" )
- 	set(_theme_GROUP  "hicolor")
-      endif(${_type} STREQUAL "hi" )
-
-      if( NOT ${_theme_GROUP} STREQUAL "nogroup")
-      		_KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+      set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
+      if( _theme_GROUP)
+         _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                     ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
                     ${_group} ${_current_ICON} ${_name})
-      endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
-
+      endif( _theme_GROUP)
    endforeach (_current_ICON)
 
    # mng icons
@@ -426,63 +386,28 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\2" _size  "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\3" _group "${_current_ICON}")
       STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\4" _name  "${_current_ICON}")
-      SET(_theme_GROUP "nogroup")
 
-      if( ${_type} STREQUAL "ox" )
-	SET(_theme_GROUP  "oxygen")
-      endif(${_type} STREQUAL "ox" )
-
-      if( ${_type} STREQUAL "cr" )
-	SET(_theme_GROUP  "crystalsvg")
-      endif(${_type} STREQUAL "cr" )
-
-      if( ${_type} STREQUAL "lo" )
-        set(_theme_GROUP  "locolor")
-      endif(${_type} STREQUAL "lo" )
-
-      if( ${_type} STREQUAL "hi" )
-        set(_theme_GROUP  "hicolor")
-      endif(${_type} STREQUAL "hi" )
-
-      if( NOT ${_theme_GROUP} STREQUAL "nogroup")
-        	_KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+      set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
+      if( _theme_GROUP)
+         _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                 ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
                 ${_group} ${_current_ICON} ${_name})
-      endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
-
+      endif( _theme_GROUP)
    endforeach (_current_ICON)
-
 
    # and now the svg icons
    file(GLOB _icons *.svgz)
    foreach (_current_ICON ${_icons} )
-	    STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _type "${_current_ICON}")
-            STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _group "${_current_ICON}")
-            STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\3" _name "${_current_ICON}")
-	    SET(_theme_GROUP "nogroup")
+      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _type "${_current_ICON}")
+      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _group "${_current_ICON}")
+      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\3" _name "${_current_ICON}")
 
-            if(${_type} STREQUAL "ox" )
-		SET(_theme_GROUP  "oxygen")
-            endif(${_type} STREQUAL "ox" )
-
-            if(${_type} STREQUAL "cr" )
-		SET(_theme_GROUP  "crystalsvg")
-            endif(${_type} STREQUAL "cr" )
-
-            if(${_type} STREQUAL "hi" )
-                SET(_theme_GROUP  "hicolor")
-            endif(${_type} STREQUAL "hi" )
-
-	    if(${_type} STREQUAL "lo" )
-		SET(_theme_GROUP  "locolor")
-	    endif(${_type} STREQUAL "lo" )
-
-            if( NOT ${_theme_GROUP} STREQUAL "nogroup")
-                	_KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
-                                 ${_defaultpath}/${_theme_GROUP}/scalable
-                                 ${_group} ${_current_ICON} ${_name})
-            endif( NOT ${_theme_GROUP} STREQUAL "nogroup")
-
+      set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
+      if( _theme_GROUP)
+          _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
+                            ${_defaultpath}/${_theme_GROUP}/scalable
+                            ${_group} ${_current_ICON} ${_name})
+      endif( _theme_GROUP)
    endforeach (_current_ICON)
 
 endmacro (KDE4_INSTALL_ICONS)
