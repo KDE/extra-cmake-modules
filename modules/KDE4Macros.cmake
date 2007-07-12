@@ -203,6 +203,7 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
       get_source_file_property(_skip "${_abs_current_FILE}" SKIP_AUTOMOC)
       get_source_file_property(_generated "${_abs_current_FILE}" GENERATED)
 
+      # TODO: skip every source file that's not C++
       if(NOT _generated AND NOT _skip)
          get_filename_component(_basename "${_current_FILE}" NAME_WE)
          get_filename_component(_abs_path "${_abs_current_FILE}" PATH)
@@ -216,14 +217,14 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
 
    set(_automoc_source "${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_automoc.cpp")
    GET_DIRECTORY_PROPERTY(_moc_incs INCLUDE_DIRECTORIES)
-   FILE(WRITE ${_automoc_source}.files "MOC_INCLUDES:\n${_moc_incs}\nSOURCES:\n${_moc_files}")
+   CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4automoc.files.in ${_automoc_source}.files)
    add_custom_command(OUTPUT ${_automoc_source}
       COMMAND ${KDE4_AUTOMOC_EXECUTABLE}
       ${_automoc_source}
       ${CMAKE_CURRENT_SOURCE_DIR}
       ${CMAKE_CURRENT_BINARY_DIR}
       ${QT_MOC_EXECUTABLE}
-      DEPENDS ${${_SRCS}} ${_moc_headers} ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt ${_KDE4_AUTOMOC_EXECUTABLE_DEP}
+      DEPENDS ${${_SRCS}} ${_moc_headers} ${_automoc_source}.files ${_KDE4_AUTOMOC_EXECUTABLE_DEP}
       )
    # the OBJECT_DEPENDS is only necessary when a new moc file has to be generated that is included in a source file
    # problem: the whole target is recompiled when the automoc.cpp file is touched
