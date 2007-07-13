@@ -50,7 +50,7 @@ class AutoMoc
             processes.enqueue(cmakeEcho);
         }
 
-        QString bindir;
+        QString builddir;
         QString mocExe;
         QStringList mocIncludes;
         QStringList cmakeEchoColorArgs;
@@ -62,7 +62,7 @@ class AutoMoc
 
 void AutoMoc::usage(const QString &path)
 {
-    cout << "usage: " << path << " <outfile> <srcdir> <bindir> <moc executable>" << endl;
+    cout << "usage: " << path << " <outfile> <srcdir> <builddir> <moc executable>" << endl;
     ::exit(EXIT_FAILURE);
 }
 
@@ -95,9 +95,9 @@ void AutoMoc::run()
     if (!srcdir.endsWith('/')) {
         srcdir += '/';
     }
-    bindir = args[3];
-    if (!bindir.endsWith('/')) {
-        bindir += '/';
+    builddir = args[3];
+    if (!builddir.endsWith('/')) {
+        builddir += '/';
     }
     mocExe = args[4];
 
@@ -128,7 +128,7 @@ void AutoMoc::run()
     QRegExp qObjectRegExp("[\n]\\s*Q_OBJECT\\b");
     foreach (const QString &absFilename, sourceFiles) {
         //qDebug() << absFilename;
-        const QFileInfo absFilenameInfo(absFilename);
+        const QFileInfo sourceFileInfo(absFilename);
         if (absFilename.endsWith(".cpp") || absFilename.endsWith(".cc") ||
                 absFilename.endsWith(".cxx") || absFilename.endsWith(".C")) {
             //qDebug() << "check .cpp file";
@@ -140,13 +140,13 @@ void AutoMoc::run()
                 continue;
             }
             const QString contentsString = QString::fromUtf8(contents);
-            const QString absPath = absFilenameInfo.absolutePath() + '/';
+            const QString absPath = sourceFileInfo.absolutePath() + '/';
             Q_ASSERT(absPath.endsWith('/'));
             int matchOffset = mocIncludeRegExp.indexIn(contentsString);
             if (matchOffset < 0) {
                 // no moc #include, look whether we need to create a moc from the .h nevertheless
                 //qDebug() << "no moc #include in the .cpp file";
-                const QString basename = absFilenameInfo.completeBaseName();
+                const QString basename = sourceFileInfo.completeBaseName();
                 const QString headername = absPath + basename + ".h";
                 if (QFile::exists(headername) && !includedMocs.contains(headername) &&
                         !notIncludedMocs.contains(headername)) {
@@ -194,7 +194,7 @@ void AutoMoc::run()
                 // automoc the moc is run unconditionally on the header and the resulting file is
                 // included in the _automoc.cpp file (unless there's a .cpp file later on that
                 // includes the moc from this header)
-                const QString currentMoc = "moc_" + absFilenameInfo.completeBaseName() + ".cpp";
+                const QString currentMoc = "moc_" + sourceFileInfo.completeBaseName() + ".cpp";
                 notIncludedMocs.insert(absFilename, currentMoc);
             }
         } else {
@@ -241,7 +241,7 @@ AutoMoc::~AutoMoc()
 void AutoMoc::generateMoc(const QString &sourceFile, const QString &mocFileName)
 {
     //qDebug() << Q_FUNC_INFO << sourceFile << mocFileName;
-    const QString mocFilePath = bindir + mocFileName;
+    const QString mocFilePath = builddir + mocFileName;
     if (QFileInfo(mocFilePath).lastModified() < QFileInfo(sourceFile).lastModified()) {
         if (verbose) {
             echoColor("Generating " + mocFilePath + " from " + sourceFile);
