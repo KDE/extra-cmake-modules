@@ -9,6 +9,7 @@
 # KDE4_MOC_HEADERS
 # KDE4_HANDLE_AUTOMOC
 # KDE4_CREATE_FINAL_FILES
+# KDE4_ADD_PLUGIN
 # KDE4_ADD_KDEINIT_EXECUTABLE
 # KDE4_ADD_UNIT_TEST
 # KDE4_ADD_TEST_EXECUTABLE
@@ -203,15 +204,18 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
       get_source_file_property(_skip "${_abs_current_FILE}" SKIP_AUTOMOC)
       get_source_file_property(_generated "${_abs_current_FILE}" GENERATED)
 
-      # TODO: skip every source file that's not C++
       if(NOT _generated AND NOT _skip)
-         get_filename_component(_basename "${_current_FILE}" NAME_WE)
-         get_filename_component(_abs_path "${_abs_current_FILE}" PATH)
-         set(_header "${_abs_path}/${_basename}.h")
-         if(EXISTS "${_header}")
-            set(_moc_headers ${_moc_headers} ${_header})
-         endif(EXISTS "${_header}")
-         set(_moc_files ${_moc_files} ${_abs_current_FILE})
+         get_filename_component(_suffix "${_current_FILE}" EXT)
+         # skip every source file that's not C++
+         if(_suffix STREQUAL ".cpp" OR _suffix STREQUAL ".cc" OR _suffix STREQUAL ".cxx" OR _suffix STREQUAL ".C")
+            get_filename_component(_basename "${_current_FILE}" NAME_WE)
+            get_filename_component(_abs_path "${_abs_current_FILE}" PATH)
+            set(_header "${_abs_path}/${_basename}.h")
+            if(EXISTS "${_header}")
+               set(_moc_headers ${_moc_headers} ${_header})
+            endif(EXISTS "${_header}")
+            set(_moc_files ${_moc_files} ${_abs_current_FILE})
+         endif(_suffix STREQUAL ".cpp" OR _suffix STREQUAL ".cc" OR _suffix STREQUAL ".cxx" OR _suffix STREQUAL ".C")
       endif(NOT _generated AND NOT _skip)
    endforeach (_current_FILE)
 
