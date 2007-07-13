@@ -42,11 +42,12 @@ class AutoMoc
         void usage(const QString &);
         void echoColor(const QString &msg)
         {
-            QProcess cmakeEcho;
-            cmakeEcho.setProcessChannelMode(QProcess::ForwardedChannels);
+            QProcess *cmakeEcho = new QProcess;
+            cmakeEcho->setProcessChannelMode(QProcess::ForwardedChannels);
             QStringList args(cmakeEchoColorArgs);
             args << msg;
-            cmakeEcho.startDetached("cmake", args);
+            cmakeEcho->start("cmake", args, QIODevice::NotOpen);
+            processes.enqueue(cmakeEcho);
         }
 
         QString bindir;
@@ -56,7 +57,7 @@ class AutoMoc
         const bool verbose;
         QTextStream cerr;
         QTextStream cout;
-        QQueue<QProcess *> mocProcesses;
+        QQueue<QProcess *> processes;
 };
 
 void AutoMoc::usage(const QString &path)
@@ -228,12 +229,12 @@ void AutoMoc::run()
 AutoMoc::~AutoMoc()
 {
     // let all remaining moc processes finish
-    while (!mocProcesses.isEmpty()) {
-        QProcess *mocProc = mocProcesses.dequeue();
-        if (!mocProc->waitForFinished()) {
-            cerr << "kde4automoc: moc failed: " << mocProc->errorString() << endl;
+    while (!processes.isEmpty()) {
+        QProcess *proc = processes.dequeue();
+        if (!proc->waitForFinished()) {
+            cerr << "kde4automoc: process failed: " << proc->errorString() << endl;
         }
-        delete mocProc;
+        delete proc;
     }
 }
 
@@ -243,19 +244,19 @@ void AutoMoc::generateMoc(const QString &sourceFile, const QString &mocFileName)
     const QString mocFilePath = bindir + mocFileName;
     if (QFileInfo(mocFilePath).lastModified() < QFileInfo(sourceFile).lastModified()) {
         if (verbose) {
-            echoColor("Generating " + mocFileName);
-        } else {
             echoColor("Generating " + mocFilePath + " from " + sourceFile);
+        } else {
+            echoColor("Generating " + mocFileName);
         }
 
         // we don't want too many child processes
-        if (mocProcesses.size() > 10) {
-            while (!mocProcesses.isEmpty()) {
-                QProcess *mocProc = mocProcesses.dequeue();
-                if (!mocProc->waitForFinished()) {
-                    cerr << "kde4automoc: moc failed: " << mocProc->errorString() << endl;
+        if (processes.size() > 10) {
+            while (!processes.isEmpty()) {
+                QProcess *proc = processes.dequeue();
+                if (!proc->waitForFinished()) {
+                    cerr << "kde4automoc: process failed: " << proc->errorString() << endl;
                 }
-                delete mocProc;
+                delete proc;
             }
         }
 
@@ -265,6 +266,6 @@ void AutoMoc::generateMoc(const QString &sourceFile, const QString &mocFileName)
         args << "-o" << mocFilePath << sourceFile;
         //qDebug() << "executing: " << mocExe << args;
         mocProc->start(mocExe, args, QIODevice::NotOpen);
-        mocProcesses.enqueue(mocProc);
+        processes.enqueue(mocProc);
     }
 }
