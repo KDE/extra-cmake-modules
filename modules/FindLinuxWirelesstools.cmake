@@ -13,7 +13,7 @@
 
 IF (IW_INCLUDE_DIR)
   # Already in cache, be silent
-  SET(IW_FIND_QUIETLY TRUE)
+  SET(LinuxWirelesstools_FIND_QUIETLY TRUE)
 ENDIF (IW_INCLUDE_DIR)
 
 FIND_PATH(IW_INCLUDE_DIR iwlib.h)
@@ -25,13 +25,13 @@ IF(IW_INCLUDE_DIR AND IW_LIBRARIES)
 ENDIF(IW_INCLUDE_DIR AND IW_LIBRARIES)
 
 IF(IW_FOUND)
-  IF(NOT IW_FIND_QUIETLY)
-    MESSAGE(STATUS "Found IW: ${IW_LIBRARIES}")
-  ENDIF(NOT IW_FIND_QUIETLY)
+  IF(NOT LinuxWirelesstools_FIND_QUIETLY)
+    MESSAGE(STATUS "Found Linux Wirelesstools lib : ${IW_LIBRARIES}")
+  ENDIF(NOT LinuxWirelesstools_FIND_QUIETLY)
 ELSE(IW_FOUND)
-  IF(IW_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could not find IW")
-  ENDIF(IW_FIND_REQUIRED)
+  IF(LinuxWirelesstools_FIND_REQUIRED)
+    MESSAGE(FATAL_ERROR "Could not find Linux Wirelesstools (libIW)")
+  ENDIF(LinuxWirelesstools_FIND_REQUIRED)
 ENDIF(IW_FOUND)
 
 # show the IW_INCLUDE_DIR and IW_LIBRARIES variables only in the advanced view
