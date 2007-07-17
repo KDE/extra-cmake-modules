@@ -30,7 +30,7 @@ if( KDEPIMLIBS_INCLUDE_DIR )
   set(KDEPIMLIBS_FOUND TRUE)
 
   # this file contains all dependencies of all libraries of kdepimlibs, Alex
-  include(${kde_cmake_module_dir}/KDEPimLibsDependencies.cmake)
+  include(KDEPimLibsDependencies)
   
   find_library(KDE4_GPGMEPP_LIBRARY NAMES gpgmepp PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
   set(KDE4_GPGMEPP_LIBS ${gpgmepp_LIB_DEPENDS} ${KDE4_GPGMEPP_LIBRARY} )
