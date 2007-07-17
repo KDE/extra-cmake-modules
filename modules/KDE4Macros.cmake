@@ -790,13 +790,11 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
    kde4_handle_rpath_for_library(${_target_NAME})
 
-   if (WIN32)
-      # for shared libraries a -DMAKE_target_LIB is required
-      string(TOUPPER ${_target_NAME} _symbol)
-      string(REPLACE "-" "_" _symbol ${_symbol})
-      set(_symbol "MAKE_${_symbol}_LIB")
-      set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
-   endif (WIN32)
+   # for shared libraries a -DMAKE_target_LIB is required
+   string(TOUPPER ${_target_NAME} _symbol)
+   string(REPLACE "-" "_" _symbol ${_symbol})
+   set(_symbol "MAKE_${_symbol}_LIB")
+   set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
 
 endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
