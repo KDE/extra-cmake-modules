@@ -1,4 +1,4 @@
-# - Try to find the directory in which the kdewin32 library and other win32 related libraries lives
+# - Try to find the KDEWIN32 library
 # 
 # Once done this will define
 #

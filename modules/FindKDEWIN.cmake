@@ -1,4 +1,4 @@
-# - Try to find the KDEWIN library
+# - Try to find the directory in which the kdewin32 library and other win32 related libraries lives
 # 
 # used environment vars 
 #  KDEWIN_DIR  - kdewin root dir 
@@ -25,7 +25,7 @@ if (WIN32)
       endif (MINGW)
       
       # search in the default program install folder
-      find_file(KDEWIN_DIR_tmp ${DIR} kdewin kdewin32 gnuwin32
+      find_file(KDEWIN_DIR_tmp ${DIR} kdewin kdewin32 win32libs gnuwin32
       PATHS
         "${_progFiles}"
       )
@@ -50,7 +50,9 @@ if (WIN32)
                     "\t\t<ProgramFiles>/${DIR}\n"
                     "\t\t<ProgramFiles>/kdewin\n" 
                     "\t\t<ProgramFiles>/kdewin32\n" 
-                    "\t\t<ProgramFiles>/gnuwin32\n")
+                    "\t\t<ProgramFiles>/win32libs\n"
+                    "\t\t<ProgramFiles>/gnuwin32\n"
+    )
    endif(KDEWIN_DIR)
   
 endif (WIN32)
