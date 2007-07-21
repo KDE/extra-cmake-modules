@@ -902,10 +902,21 @@ IF (QT4_QMAKE_FOUND)
 
      GET_FILENAME_COMPONENT(abs_infile ${infile} ABSOLUTE)
 
-     ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
-        COMMAND ${QT_MOC_EXECUTABLE}
-        ARGS ${moc_includes} -o ${outfile} ${abs_infile}
-        DEPENDS ${abs_infile})
+     IF (MSVC_IDE)
+        SET (_moc_parameter_file ${outfile}_parameters)
+        SET (_moc_param "${moc_includes} \n-o${outfile} \n${abs_infile}")
+        STRING(REGEX REPLACE ";-I;" "\\n-I" _moc_param "${_moc_param}")
+        FILE (WRITE ${_moc_parameter_file} "${_moc_param}")
+        ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
+          COMMAND ${QT_MOC_EXECUTABLE}
+          ARGS @"${_moc_parameter_file}"
+          DEPENDS ${abs_infile})
+     ELSE (MSVC_IDE)     
+     	ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
+        	COMMAND ${QT_MOC_EXECUTABLE}
+        	ARGS ${moc_includes} -o ${outfile} ${abs_infile}
+        	DEPENDS ${abs_infile})     
+     ENDIF (MSVC_IDE)
 
      SET_SOURCE_FILES_PROPERTIES(${outfile} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
 
