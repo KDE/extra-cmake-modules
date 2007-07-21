@@ -912,10 +912,10 @@ IF (QT4_QMAKE_FOUND)
           ARGS @"${_moc_parameter_file}"
           DEPENDS ${abs_infile})
      ELSE (MSVC_IDE)     
-     	ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
-        	COMMAND ${QT_MOC_EXECUTABLE}
-        	ARGS ${moc_includes} -o ${outfile} ${abs_infile}
-        	DEPENDS ${abs_infile})     
+        ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
+           COMMAND ${QT_MOC_EXECUTABLE}
+           ARGS ${moc_includes} -o ${outfile} ${abs_infile}
+           DEPENDS ${abs_infile})     
      ENDIF (MSVC_IDE)
 
      SET_SOURCE_FILES_PROPERTIES(${outfile} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
@@ -1041,7 +1041,7 @@ IF (QT4_QMAKE_FOUND)
 
   MACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE _sources)
     FOREACH (_current_FILE ${ARGN})
-	SET_SOURCE_FILES_PROPERTIES(${_current_FILE} PROPERTIES NO_NAMESPACE TRUE)
+        SET_SOURCE_FILES_PROPERTIES(${_current_FILE} PROPERTIES NO_NAMESPACE TRUE)
         _QT4_ADD_DBUS_INTERFACES(${_sources} ${_current_FILE})
     ENDFOREACH (_current_FILE)
   ENDMACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE)
@@ -1166,10 +1166,10 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_QMAKE_EXECUTABLE "${QT_QMAKE_EXECUTABLE}-NOTFOUND" CACHE FILEPATH "Invalid qmake found" FORCE)
     IF( Qt4_FIND_REQUIRED)
       IF ( NOT QT_LIBRARY_DIR )
-	MESSAGE(STATUS "Qt libraries NOT found!")
+        MESSAGE(STATUS "Qt libraries NOT found!")
       ENDIF(NOT QT_LIBRARY_DIR )
       IF ( NOT QT_INCLUDE_DIR )
-	MESSAGE(STATUS "Qt includes NOT found!")
+        MESSAGE(STATUS "Qt includes NOT found!")
       ENDIF( NOT QT_INCLUDE_DIR )
       IF ( NOT QT_MOC_EXECUTABLE )
         MESSAGE(STATUS "Qt's moc NOT found!")
