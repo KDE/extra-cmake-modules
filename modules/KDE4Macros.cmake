@@ -564,7 +564,7 @@ macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
    if (WIN32)
       # for shared libraries/plugins a -DMAKE_target_LIB is required
       string(TOUPPER ${_target_NAME} _symbol)
-      string(REPLACE "[^_A-Za-z0-9]" "_" _symbol ${_symbol})
+      string(REGEX REPLACE "[^_A-Za-z0-9]" "_" _symbol ${_symbol})
       set(_symbol "MAKE_${_symbol}_LIB")
       set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
    endif (WIN32)
@@ -785,7 +785,7 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
    # for shared libraries a -DMAKE_target_LIB is required
    string(TOUPPER ${_target_NAME} _symbol)
-   string(REPLACE "[^_A-Za-z0-9]" "_" _symbol ${_symbol})
+   string(REGEX REPLACE "[^_A-Za-z0-9]" "_" _symbol ${_symbol})
    set(_symbol "MAKE_${_symbol}_LIB")
    set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
 
