@@ -3,7 +3,7 @@
 #
 #  SHARED_MIME_INFO_FOUND - system has the shared-mime-info package
 #  UPDATE_MIME_DATABASE_EXECUTABLE - the update-mime-database executable
-#
+
 # Copyright (c) 2007, Pino Toscano, <toscano.pino@tiscali.it>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
@@ -49,7 +49,19 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
         endif (SharedMimeInfo_FIND_REQUIRED)
     endif (SHARED_MIME_INFO_FOUND)
 
-    # ensure that they are cached
-    set(UPDATE_MIME_DATABASE_EXECUTABLE ${UPDATE_MIME_DATABASE_EXECUTABLE} CACHE INTERNAL "The update-mime-database executable")
-
 endif (UPDATE_MIME_DATABASE_EXECUTABLE)
+
+macro(UPDATE_XDG_MIMETYPES _path)
+   get_filename_component(_xdgmimeDir "${_path}" NAME)
+   if("${_xdgmimeDir}" STREQUAL packages )
+      get_filename_component(_xdgmimeDir "${_path}" PATH)
+   else("${_xdgmimeDir}" STREQUAL packages )
+      set(_xdgmimeDir "${_path}")
+   endif("${_xdgmimeDir}" STREQUAL packages )
+   install(CODE "
+set(DESTDIR_VALUE \"\$ENV{DESTDIR}\")
+if (NOT DESTDIR_VALUE)
+  execute_process(COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} ${_xdgmimeDir})
+endif (NOT DESTDIR_VALUE)
+")
+endmacro (UPDATE_XDG_MIMETYPES)

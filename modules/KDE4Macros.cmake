@@ -23,7 +23,6 @@
 # KDE4_INSTALL_HANDBOOK
 # KDE4_CREATE_PO_FILES
 # KDE4_INSTALL_PO_FILES
-# KDE4_INSTALL_XDG_MIMETYPES
 
 # Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
@@ -150,10 +149,6 @@ macro (KDE4_ADD_UI3_FILES _sources )
 
    endforeach (_current_FILE)
 endmacro (KDE4_ADD_UI3_FILES)
-
-macro (KDE4_AUTOMOC)
-   message(SEND_ERROR "KDE4_AUTOMOC() is not required anymore for automoc, please remove it")
-endmacro (KDE4_AUTOMOC)
 
 macro (KDE4_SET_CUSTOM_TARGET_PROPERTY _target_name _property_name _property)
    string(REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -418,11 +413,6 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
    endforeach (_current_ICON)
 
 endmacro (KDE4_INSTALL_ICONS)
-
-
-MACRO (KDE4_INSTALL_LIBTOOL_FILE)
-   message(SEND_ERROR "KDE4_INSTALL_LIBTOOL_FILE() is deprecated, please remove it")
-ENDMACRO (KDE4_INSTALL_LIBTOOL_FILE)
 
 
 # For all C++ sources a big source file which includes all the files
@@ -863,25 +853,16 @@ macro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
 endmacro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
 
 
-macro (INSTALL_XDG_MIMETYPES _path )
-
-   foreach (_current_FILE ${ARGN})
-
-       install(FILES ${_current_FILE} DESTINATION ${_path}/share/mime/packages)
-
-       install(CODE "
-set(DESTDIR_VALUE \"\$ENV{DESTDIR}\")
-if (NOT DESTDIR_VALUE)
-  exec_program(update-mime-database ARGS ${_path}/share/mime/)
-endif (NOT DESTDIR_VALUE)
-")
-
-   endforeach (_current_FILE)
-
-endmacro (INSTALL_XDG_MIMETYPES)
-
 macro (KDE4_INSTALL_XDG_MIMETYPES)
-
-    install_xdg_mimetypes(${CMAKE_INSTALL_PREFIX} ${ARGN})
-
+   message(SEND_ERROR "KDE4_INSTALL_XDG_MIMETYPES() is deprecated, see kdelibs/mimetypes/CMakeLists.txt for an example")
 endmacro (KDE4_INSTALL_XDG_MIMETYPES)
+
+macro (KDE4_AUTOMOC)
+   message(SEND_ERROR "KDE4_AUTOMOC() is not required anymore for automoc, please remove it")
+endmacro (KDE4_AUTOMOC)
+
+MACRO (KDE4_INSTALL_LIBTOOL_FILE)
+   message(SEND_ERROR "KDE4_INSTALL_LIBTOOL_FILE() is deprecated, please remove it")
+ENDMACRO (KDE4_INSTALL_LIBTOOL_FILE)
+
+

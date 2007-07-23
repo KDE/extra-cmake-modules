@@ -99,6 +99,7 @@
 # KCONF_UPDATE_INSTALL_DIR - the kconf_update install dir
 # XDG_APPS_DIR             - the XDG apps dir
 # XDG_DIRECTORY_DIR        - the XDG directory
+# XDG_MIME_INSTALL_DIR     - the XDG mimetypes install dir
 # DBUS_INTERFACES_DIR      - the directory where dbus interfaces be installed (default is prefix/share/dbus-1/interfaces)
 # DBUS_SERVICES_DIR        - the directory where dbus services be installed (default is prefix/share/dbus-1/services )
 #
@@ -346,8 +347,9 @@ _set_fancy(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"     "The 
 _set_fancy(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/applnk"       "Is this still used ?")
 _set_fancy(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"    "The install dir for autostart files")
 
-_set_fancy(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde4"    "The XDG apps dir")
+_set_fancy(XDG_APPS_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde4"   "The XDG apps dir")
 _set_fancy(XDG_DIRECTORY_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories" "The XDG directory")
+_set_fancy(XDG_MIME_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/mime/packages" "The install dir for the xdg mimetypes")
 
 _set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"          "The kde sysconfig install dir (default /etc)")
 _set_fancy(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"          "The kde man install dir (default ${CMAKE_INSTALL_PREFIX}/man/)")
