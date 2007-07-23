@@ -306,7 +306,7 @@ endmacro(_SET_FANCY)
 if (WIN32)
     # use relative install prefix to avoid hardcoded install pathes in cmake_install.cmake files
    _set_fancy(EXEC_INSTALL_PREFIX  ""                                        "Base directory for executables and libraries")
-   _set_fancy(SHARE_INSTALL_PREFIX "share"                                   "Base directory for files which go to share/")
+   _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
    _set_fancy(BIN_INSTALL_DIR      "bin"                                     "The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)")
    _set_fancy(SBIN_INSTALL_DIR     "sbin"                                    "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
    _set_fancy(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}"                        "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
