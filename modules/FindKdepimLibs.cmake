@@ -32,7 +32,7 @@ if( KDEPIMLIBS_INCLUDE_DIR )
   # this file contains all dependencies of all libraries of kdepimlibs, Alex
   include(KDEPimLibsDependencies)
   
-  find_library(KDE4_GPGMEPP_LIBRARY NAMES gpgmepp PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
+  find_library(KDE4_GPGMEPP_LIBRARY NAMES gpgme++ PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
   set(KDE4_GPGMEPP_LIBS ${gpgmepp_LIB_DEPENDS} ${KDE4_GPGMEPP_LIBRARY} )
 
   find_library(KDE4_KABC_LIBRARY NAMES kabc PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
