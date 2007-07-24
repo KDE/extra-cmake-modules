@@ -184,6 +184,10 @@
 #    KGlobal::dirs()->addResourceDir( "data", KDESRCDIR ); to be able to use xmlgui
 #    and other things in the test, that normally require installation
 #
+# KDE4_UPDATE_ICONCACHE()
+#    Notifies the icon cache that new icons have been installed by updating
+#    mtime of ${ICON_INSTALL_DIR}/hicolor directory.
+#
 # KDE4_INSTALL_ICONS( path theme)
 #    Installs all png and svgz files in the current directory to the icon
 #    directoy given in path, in the subdirectory for the given icon theme.

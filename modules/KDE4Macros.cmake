@@ -15,6 +15,7 @@
 # KDE4_ADD_TEST_EXECUTABLE
 # KDE4_ADD_EXECUTABLE
 # KDE4_ADD_WIDGET_FILES
+# KDE4_UPDATE_ICONCACHE
 # KDE4_INSTALL_ICONS
 # KDE4_REMOVE_OBSOLETE_CMAKE_FILES
 # KDE4_NO_ENABLE_FINAL
@@ -323,6 +324,14 @@ macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
+macro (KDE4_UPDATE_ICONCACHE)
+    # Update mtime of hicolor icon theme dir.
+    # We don't always have touch command (e.g. on Windows), so instead create
+    #  and delete a temporary file in the theme dir.
+    install(CODE "file(WRITE \"${ICON_INSTALL_DIR}/hicolor/temp.txt\" \"update\")")
+    install(CODE "file(REMOVE \"${ICON_INSTALL_DIR}/hicolor/temp.txt\")")
+endmacro (KDE4_UPDATE_ICONCACHE)
+
 # a "map" of short type names to the directories
 # unknown names should give empty results
 # KDE 3 compatibility
@@ -411,6 +420,8 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
                             ${_group} ${_current_ICON} ${_name})
       endif( _theme_GROUP)
    endforeach (_current_ICON)
+
+   KDE4_UPDATE_ICONCACHE()
 
 endmacro (KDE4_INSTALL_ICONS)
 
