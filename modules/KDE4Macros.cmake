@@ -151,13 +151,13 @@ macro (KDE4_ADD_UI3_FILES _sources )
 endmacro (KDE4_ADD_UI3_FILES)
 
 macro (KDE4_SET_CUSTOM_TARGET_PROPERTY _target_name _property_name _property)
-   string(REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
+   string(REGEX REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
    set(_kde4_${_dir}_${_target_name}_${_property_name} "${_property}")
 endmacro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
 
 
 macro (KDE4_GET_CUSTOM_TARGET_PROPERTY _var _target_name _property_name)
-   string(REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
+   string(REGEX REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
    set(${_var} "${_kde4_${_dir}_${_target_name}_${_property_name}}")
 endmacro (KDE4_GET_CUSTOM_TARGET_PROPERTY)
 
@@ -842,7 +842,7 @@ ENDMACRO(KDE4_NO_ENABLE_FINAL _project_name)
 
 macro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
    string(TOUPPER ${_libName} _libNameUpperCase)
-   string(REPLACE "[^_A-Za-z0-9]" "_" _libNameUpperCase ${_libNameUpperCase})
+   string(REGEX REPLACE "[^_A-Za-z0-9]" "_" _libNameUpperCase ${_libNameUpperCase})
    # the next line is is required, because in CMake arguments to macros are not real
    # variables, but handled differently. The next line create a real CMake variable,
    # so configure_file() will replace it correctly.
