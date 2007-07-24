@@ -328,8 +328,13 @@ macro (KDE4_UPDATE_ICONCACHE)
     # Update mtime of hicolor icon theme dir.
     # We don't always have touch command (e.g. on Windows), so instead create
     #  and delete a temporary file in the theme dir.
-    install(CODE "file(WRITE \"${ICON_INSTALL_DIR}/hicolor/temp.txt\" \"update\")")
-    install(CODE "file(REMOVE \"${ICON_INSTALL_DIR}/hicolor/temp.txt\")")
+   install(CODE "
+    set(DESTDIR_VALUE \"\$ENV{DESTDIR}\")
+    if (NOT DESTDIR_VALUE)
+        file(WRITE \"${ICON_INSTALL_DIR}/hicolor/temp.txt\" \"update\")
+        file(REMOVE \"${ICON_INSTALL_DIR}/hicolor/temp.txt\")
+    endif (NOT DESTDIR_VALUE)
+    ")
 endmacro (KDE4_UPDATE_ICONCACHE)
 
 # a "map" of short type names to the directories
