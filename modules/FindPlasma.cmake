@@ -25,6 +25,10 @@ find_library(PLASMA_LIBS NAMES plasma
 )
 if (PLASMA_LIBS AND PLASMA_INCLUDE_DIR)
     set(PLASMA_FOUND TRUE)
+
+    find_file(PLASMA_OPENGL_FOUND glapplet.h
+              PATHS ${PLASMA_INCLUDE_DIR}
+              NO_DEFAULT_PATH)
 endif (PLASMA_LIBS AND PLASMA_INCLUDE_DIR)
 
 if (PLASMA_FOUND)
