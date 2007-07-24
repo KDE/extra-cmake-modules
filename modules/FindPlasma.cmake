@@ -8,10 +8,10 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (PLASMA_INCLUDE_DIR AND PLASMA_LIBRARIES)
+if (PLASMA_INCLUDE_DIR AND PLASMA_LIBS)
     # Already in cache, be silent
     set(Plasma_FIND_QUIETLY TRUE)
-endif (PLASMA_INCLUDE_DIR AND PLASMA_LIBRARIES)
+endif (PLASMA_INCLUDE_DIR AND PLASMA_LIBS)
 
 
 find_path(PLASMA_INCLUDE_DIR NAMES plasma/plasma.h
@@ -19,17 +19,17 @@ find_path(PLASMA_INCLUDE_DIR NAMES plasma/plasma.h
         ${INCLUDE_INSTALL_DIR}
 )
 
-find_library(PLASMA_LIBRARIES NAMES plasma
+find_library(PLASMA_LIBS NAMES plasma
         PATHS
         ${LIB_INSTALL_DIR}
 )
-if (PLASMA_LIBRARIES AND PLASMA_INCLUDE_DIR)
+if (PLASMA_LIBS AND PLASMA_INCLUDE_DIR)
     set(PLASMA_FOUND TRUE)
-endif (PLASMA_LIBRARIES AND PLASMA_INCLUDE_DIR)
+endif (PLASMA_LIBS AND PLASMA_INCLUDE_DIR)
 
 if (PLASMA_FOUND)
     if (NOT Plasma_FIND_QUIETLY)
-    message(STATUS "Found Plasma: ${PLASMA_LIBRARIES}")
+    message(STATUS "Found Plasma: ${PLASMA_LIBS}")
     endif (NOT Plasma_FIND_QUIETLY)
 else (PLASMA_FOUND)
     if (Plasma_FIND_REQUIRED)
@@ -37,4 +37,4 @@ else (PLASMA_FOUND)
     endif (Plasma_FIND_REQUIRED)
 endif (PLASMA_FOUND)
 
-mark_as_advanced(PLASMA_INCLUDE_DIR PLASMA_LIBRARIES)
+mark_as_advanced(PLASMA_INCLUDE_DIR PLASMA_LIBS)
