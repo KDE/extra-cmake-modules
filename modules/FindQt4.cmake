@@ -53,12 +53,14 @@
 #        for all listed interface xml files
 #        the name will be automatically determined from the name of the xml file
 #
-#  macro QT4_ADD_DBUS_ADAPTOR(outfiles xmlfile parentheader parentclassname [basename] )
+#  macro QT4_ADD_DBUS_ADAPTOR(outfiles xmlfile parentheader parentclassname [basename] [classname])
 #        create a dbus adaptor (header and implementation file) from the xml file
 #        describing the interface, and add it to the list of sources. The adaptor
 #        forwards the calls to a parent class, defined in parentheader and named
 #        parentclassname. The name of the generated files will be
-#        <basename>adaptor.{cpp,h} where basename is the basename of the xml file.
+#        <basename>adaptor.{cpp,h} where basename defaults to the basename of the xml file.
+#        If <classname> is provided, then it will be used as the classname of the
+#        adaptor itself.
 #
 #  macro QT4_GENERATE_DBUS_INTERFACE( header [interfacename] )
 #        generate the xml interface file from the given header.
@@ -1064,7 +1066,7 @@ IF (QT4_QMAKE_FOUND)
   ENDMACRO(QT4_GENERATE_DBUS_INTERFACE)
   
   
-  MACRO(QT4_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass) # _optionalBasename )
+  MACRO(QT4_ADD_DBUS_ADAPTOR _sources _xml_file _include _parentClass) # _optionalBasename _optionalClassName)
     GET_FILENAME_COMPONENT(_infile ${_xml_file} ABSOLUTE)
     
     SET(_optionalBasename "${ARGV4}")
