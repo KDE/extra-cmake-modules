@@ -28,6 +28,7 @@ if (NOT WIN32)
       libstreamanalyzer RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
 
    if(NOT _return_VALUE STREQUAL "0")
+      message(STATUS "pkg-config query failed. did you set $PKG_CONFIG_PATH to the directory where strigi is installed?")
       message(FATAL_ERROR "Didn't find strigi >= ${STRIGI_MIN_VERSION}")
    else(NOT _return_VALUE STREQUAL "0")
      if(NOT Strigi_FIND_QUIETLY)
