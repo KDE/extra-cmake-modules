@@ -8,6 +8,7 @@
 #  STRIGI_LIBRARIES - Link these to use both Strigi libraries
 
 
+set(STRIGI_MIN_VERSION "0.5.3")
 
 if (WIN32)
   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
@@ -19,6 +20,22 @@ FIND_PATH(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h
   ${CMAKE_INSTALL_PREFIX}/include
   ${_program_FILES_DIR}/strigi/include
 )
+
+if (NOT WIN32)
+   include(UsePkgConfig)
+
+   EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${STRIGI_MIN_VERSION}
+      libstreamanalyzer RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
+
+   if(NOT _return_VALUE STREQUAL "0")
+      message(FATAL_ERROR "Didn't find strigi >= ${STRIGI_MIN_VERSION}")
+   else(NOT _return_VALUE STREQUAL "0")
+     if(NOT Strigi_FIND_QUIETLY)
+       message(STATUS "Found Strigi >= ${STRIGI_MIN_VERSION}")
+     endif(NOT Strigi_FIND_QUIETLY)
+   endif(NOT _return_VALUE STREQUAL "0")
+endif (NOT WIN32)
+
 FIND_LIBRARY(STRIGI_STREAMANALYZER_LIBRARY NAMES streamanalyzer
   PATHS
   $ENV{STRIGI_HOME}/lib
@@ -38,11 +55,9 @@ ENDIF(STRIGI_INCLUDE_DIR AND STRIGI_STREAMANALYZER_LIBRARY AND STRIGI_STREAMS_LI
 
 IF(STRIGI_FOUND)
   SET(STRIGI_LIBRARIES ${STRIGI_STREAMANALYZER_LIBRARY} ${STRIGI_STREAMS_LIBRARY})
+
   IF(NOT Strigi_FIND_QUIETLY)
-    MESSAGE(STATUS "Found Strigi: ${STRIGI_STREAMANALYZER_LIBRARY}")
-    MESSAGE(STATUS "Found Strigi: ${STRIGI_STREAMS_LIBRARY}")
-    MESSAGE(STATUS "Make sure Strigi is a recent SVN version!")
-    MESSAGE(STATUS "** svn://anonsvn.kde.org/home/kde/trunk/kdesupport/strigi")
+    MESSAGE(STATUS "Found Strigi: ${STRIGI_STREAMANALYZER_LIBRARY} ${STRIGI_STREAMS_LIBRARY} ")
   ENDIF(NOT Strigi_FIND_QUIETLY)
 ELSE(STRIGI_FOUND)
   IF(Strigi_FIND_REQUIRED)
