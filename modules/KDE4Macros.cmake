@@ -324,6 +324,27 @@ macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
+macro (KDE4_CREATE_MANPAGE _docbook)
+   get_filename_component(_input ${_docbook} ABSOLUTE)
+   set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.1)
+
+   set(_bootstrapOption)
+   #Bootstrap
+   if (_kdeBootStrapping)
+      set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/docbook/xsl/manpages/docbook.xsl)
+      set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
+   else (_kdeBootStrapping)
+      set(_ssheet ${DATA_INSTALL_DIR}/ksgmltools2/docbook/xsl/manpages/docbook.xsl)
+   endif (_kdeBootStrapping)
+
+   add_custom_command(OUTPUT ${_doc}
+      COMMAND ${KDE4_MEINPROC_EXECUTABLE} --stylesheet ${_ssheet} --check ${_bootstrapOption} -o ${_doc} ${_input}
+      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
+   )
+   add_custom_target(manpage ALL DEPENDS ${_doc})
+endmacro (KDE4_CREATE_MANPAGE)
+
+
 macro (KDE4_UPDATE_ICONCACHE)
     # Update mtime of hicolor icon theme dir.
     # We don't always have touch command (e.g. on Windows), so instead create
