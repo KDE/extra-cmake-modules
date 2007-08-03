@@ -552,6 +552,8 @@ _set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/servic
 ##############  add some more default search paths  ###############
 # always search in the directory where cmake is installed 
 # and in the current installation prefix
+# the KDE4_xxx_INSTALL_DIR variables are empty when building kdelibs itself
+# and otherwise point to the kde4 install dirs
 # they will be set by default starting with cmake 2.6.0, maybe already 2.4.8
 
 # also add the install directory of the running cmake to the search directories
@@ -560,14 +562,17 @@ get_filename_component(_CMAKE_INSTALL_DIR "${CMAKE_ROOT}" PATH)
 get_filename_component(_CMAKE_INSTALL_DIR "${_CMAKE_INSTALL_DIR}" PATH)
 
 set(CMAKE_SYSTEM_INCLUDE_PATH ${CMAKE_SYSTEM_INCLUDE_PATH}
+                              "${KDE4_INCLUDE_INSTALL_DIR}"
                               "${_CMAKE_INSTALL_DIR}/include"
                               "${CMAKE_INSTALL_PREFIX}/include" )
 
 set(CMAKE_SYSTEM_PROGRAM_PATH ${CMAKE_SYSTEM_PROGRAM_PATH}
+                              "${KDE4_BIN_INSTALL_DIR}"
                               "${_CMAKE_INSTALL_DIR}/bin"
                               "${CMAKE_INSTALL_PREFIX}/bin" )
 
 set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH} 
+                              "${KDE4_LIB_INSTALL_DIR}"
                               "${_CMAKE_INSTALL_DIR}/lib" 
                               "${CMAKE_INSTALL_PREFIX}/lib" )
 
