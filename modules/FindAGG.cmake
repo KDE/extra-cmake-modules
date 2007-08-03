@@ -28,15 +28,11 @@ IF (NOT WIN32)
 ENDIF (NOT WIN32)  
   FIND_PATH(AGG_INCLUDE_DIR agg2/agg_pixfmt_gray.h
     ${_AGGIncDir}
-    /usr/include
-    /usr/local/include
   )
   
   FIND_LIBRARY(AGG_LIBRARIES NAMES agg
     PATHS
     ${_AGGLinkDir}
-    /usr/lib
-    /usr/local/lib
   )
   
   if (AGG_INCLUDE_DIR AND AGG_LIBRARIES)

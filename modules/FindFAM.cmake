@@ -16,16 +16,9 @@ if (FAM_INCLUDE_DIR)
   set(FAM_FIND_QUIETLY TRUE)
 endif (FAM_INCLUDE_DIR)
 
-FIND_PATH(FAM_INCLUDE_DIR fam.h
-   /usr/include
-   /usr/local/include
-)
+FIND_PATH(FAM_INCLUDE_DIR fam.h)
 
-FIND_LIBRARY(FAM_LIBRARIES NAMES fam
-   PATHS
-   /usr/lib
-   /usr/local/lib
-)
+FIND_LIBRARY(FAM_LIBRARIES NAMES fam )
 
 
 if (FAM_INCLUDE_DIR AND FAM_LIBRARIES)

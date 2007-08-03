@@ -12,16 +12,11 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 FIND_PATH(BERKELEY_DB_INCLUDE_DIR db.h
-  /usr/include/
   /usr/include/db4
   /usr/local/include/db4
 )
 
-FIND_LIBRARY(BERKELEY_DB_LIBRARIES NAMES db
-  PATHS
-  /usr/lib
-  /usr/local/lib
-)
+FIND_LIBRARY(BERKELEY_DB_LIBRARIES NAMES db )
 
 IF(BERKELEY_DB_INCLUDE_DIR AND BERKELEY_DB_LIBRARIES)
    SET(BERKELEY_DB_FOUND TRUE)

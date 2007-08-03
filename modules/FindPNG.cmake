@@ -21,15 +21,12 @@ SET(PNG_FOUND "NO")
 
 IF(ZLIB_FOUND)
   FIND_PATH(PNG_PNG_INCLUDE_DIR png.h
-  /usr/local/include
-  /usr/include
   /usr/local/include/libpng             # OpenBSD
   )
 
   SET(PNG_NAMES ${PNG_NAMES} png libpng)
   FIND_LIBRARY(PNG_LIBRARY
     NAMES ${PNG_NAMES}
-    PATHS /usr/lib /usr/local/lib
   )
 
   IF (PNG_LIBRARY AND PNG_PNG_INCLUDE_DIR)

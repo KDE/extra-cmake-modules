@@ -19,8 +19,6 @@ if (FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
 else (FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
 
   FIND_PROGRAM(FREETYPECONFIG_EXECUTABLE NAMES freetype-config PATHS
-     /usr/bin
-     /usr/local/bin
      /opt/local/bin
   )
 
