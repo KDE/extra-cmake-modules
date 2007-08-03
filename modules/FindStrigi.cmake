@@ -61,5 +61,5 @@ endif (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Strigi  
-                                  "Couldn't find Strigi streams library in $ENV{STRIGI_HOME}/lib, ${CMAKE_INSTALL_PREFIX}/lib, ${_program_FILES_DIR}/strigi/lib"  
+                                  "Couldn't find Strigi streams library in $STRIGI_HOME/lib, ${CMAKE_INSTALL_PREFIX}/lib, ${_program_FILES_DIR}/strigi/lib"  
                                   STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
