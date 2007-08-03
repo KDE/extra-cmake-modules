@@ -12,7 +12,7 @@
 
 
 
-FIND_PROGRAM(PKGCONFIG_EXECUTABLE NAMES pkg-config PATHS /usr/local/bin )
+FIND_PROGRAM(PKGCONFIG_EXECUTABLE NAMES pkg-config )
 
 MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
 # reset the variables at the beginning
