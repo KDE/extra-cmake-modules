@@ -232,158 +232,24 @@ include (MacroLibrary)
 include (CheckCXXCompilerFlag)
 include (CheckCXXSourceCompiles)
 
-#add some KDE specific stuff
-
-# the following are directories where stuff will be installed to
-set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
-
-#are we trying to compile kdelibs ?
-#then enter bootstrap mode
-if(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
-   set(_kdeBootStrapping TRUE)
-   message(STATUS "Building kdelibs...")
-else(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
-   set(_kdeBootStrapping FALSE)
-endif(EXISTS ${CMAKE_SOURCE_DIR}/kdecore/kernel/kglobal.h)
 
 # get the directory of the current file, used later on in the file
 get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
+# are we trying to compile kdelibs ? kdelibs_SOURCE_DIR comes from "project(kdelibs)" in kdelibs/CMakeLists.txt
+# then enter bootstrap mode
 
-if (NOT _kdeBootStrapping)
-  # this file contains all dependencies of all libraries of kdelibs, Alex
-  include("${kde_cmake_module_dir}/KDELibsDependencies.cmake")
+if(kdelibs_SOURCE_DIR)
+   set(_kdeBootStrapping TRUE)
+   message(STATUS "Building kdelibs...")
+else(kdelibs_SOURCE_DIR)
+   set(_kdeBootStrapping FALSE)
+endif(kdelibs_SOURCE_DIR)
 
-  # allow searching cmake modules in all given kde install locations (KDEDIRS based)
-  execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path data OUTPUT_VARIABLE _data_DIR ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-  file(TO_CMAKE_PATH "${_data_DIR}" _data_DIR)
-  foreach(dir ${_data_DIR})
-    set (apath "${dir}/cmake/modules")
-    if (EXISTS "${apath}")
-        set (included 0)
-        string(TOLOWER "${apath}" _apath)
-        # ignore already added pathes, case insensitive
-        foreach(adir ${CMAKE_MODULE_PATH})
-            string(TOLOWER "${adir}" _adir)
-            if ("${_adir}" STREQUAL "${_apath}")
-                set (included 1)
-            endif ("${_adir}" STREQUAL "${_apath}")
-        endforeach(adir)
-        if (NOT included)
-            message(STATUS "Adding ${apath} to CMAKE_MODULE_PATH")
-            set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${apath}")
-        endif (NOT included)
-    endif (EXISTS "${apath}")
-  endforeach(dir)
-endif (NOT _kdeBootStrapping)
-
-# this macro implements some very special logic how to deal with the cache
-# by default the various install locations inherit their value from theit "parent" variable
-# so if you set CMAKE_INSTALL_PREFIX, then EXEC_INSTALL_PREFIX, PLUGIN_INSTALL_DIR will
-# calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX
-# this would work completely without using the cache.
-# but if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
-# the cache, otherwise it will be forgotten on the next cmake run.
-# Once a variable is in the cache, it doesn't depend on its "parent" variables
-# anymore and you can only change it by editing it directly.
-# this macro helps in this regard, because as long as you don't set one of the
-# variables explicitely to some location, it will always calculate its value from its
-# parents. So modifying CMAKE_INSTALL_PREFIX later on will have the desired effect.
-# But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
-# this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
-#
-# additionally if installing to the same location as kdelibs, the other install
-# directories are reused from the installed kdelibs
-macro(_SET_FANCY _var _value _comment)
-   set(predefinedvalue "${_value}")
-   if ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
-      set(predefinedvalue "${KDE4_${_var}}")
-   endif ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
-
-   if (NOT DEFINED ${_var})
-      set(${_var} ${predefinedvalue})
-   else (NOT DEFINED ${_var})
-      set(${_var} "${${_var}}" CACHE PATH "${_comment}")
-   endif (NOT DEFINED ${_var})
-endmacro(_SET_FANCY)
-
-if (WIN32)
-    # use relative install prefix to avoid hardcoded install pathes in cmake_install.cmake files
-   _set_fancy(EXEC_INSTALL_PREFIX  ""                                        "Base directory for executables and libraries")
-   _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
-   _set_fancy(BIN_INSTALL_DIR      "bin"                                     "The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)")
-   _set_fancy(SBIN_INSTALL_DIR     "sbin"                                    "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
-   _set_fancy(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}"                        "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
-   _set_fancy(LIBEXEC_INSTALL_DIR  "${BIN_INSTALL_DIR}"                      "The subdirectory relative to the install prefix where libraries will be installed (default is ${BIN_INSTALL_DIR})")
-   _set_fancy(INCLUDE_INSTALL_DIR  "include"                                 "The subdirectory to the header prefix")
-else (WIN32)
-   _set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}"                 "Base directory for executables and libraries")
-   _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
-   _set_fancy(BIN_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/bin"              "The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)")
-   _set_fancy(SBIN_INSTALL_DIR     "${EXEC_INSTALL_PREFIX}/sbin"             "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
-   _set_fancy(LIB_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
-   _set_fancy(LIBEXEC_INSTALL_DIR  "${LIB_INSTALL_DIR}/kde4/libexec"         "The subdirectory relative to the install prefix where libraries will be installed (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
-   _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include"         "The subdirectory to the header prefix")
-endif (WIN32)
-
-_set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"              "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
-_set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"       "The config file install dir")
-_set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"         "The parent directory where applications can install their data")
-_set_fancy(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"     "The HTML install dir for documentation")
-_set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"        "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
-_set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"  "The install dir for kconfig files")
-_set_fancy(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"       "The install dir for translations")
-_set_fancy(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"      "The install dir for the mimetype desktop files")
-
-# To help with the migration issue, this uses set instead of _set_fancy, temporarily.
-# (Otherwise all modules would keep installing into the old dirs)
-# This can be reverted starting from May 2007
-set(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services")
-set(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes")
-#_set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services"     "The install dir for service (desktop, protocol, ...) files")
-#_set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes" "The install dir for servicestypes desktop files")
-
-_set_fancy(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"       "The install dir for sound files")
-_set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"    "The install dir for templates (Create new file...)")
-_set_fancy(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"   "The install dir for wallpapers")
-_set_fancy(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"     "The kconf_update install dir")
- # this one shouldn't be used anymore
-_set_fancy(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/applnk"       "Is this still used ?")
-_set_fancy(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"    "The install dir for autostart files")
-
-_set_fancy(XDG_APPS_INSTALL_DIR             "${SHARE_INSTALL_PREFIX}/applications/kde4"   "The XDG apps dir")
-_set_fancy(XDG_DIRECTORY_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/desktop-directories" "The XDG directory")
-_set_fancy(XDG_MIME_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/mime/packages" "The install dir for the xdg mimetypes")
-
-_set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"          "The kde sysconfig install dir (default /etc)")
-_set_fancy(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"          "The kde man install dir (default ${CMAKE_INSTALL_PREFIX}/man/)")
-_set_fancy(INFO_INSTALL_DIR         "${CMAKE_INSTALL_PREFIX}/info"         "The kde info install dir (default ${CMAKE_INSTALL_PREFIX}/info)")
-_set_fancy(DBUS_INTERFACES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces" "The kde dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
-_set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services" "The kde dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
-
-#################################
-
-
-# the following are directories where stuff will be installed to
-
-
-option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
-option(KDE4_BUILD_TESTS  "Build the tests")
-
-if( KDE4_ENABLE_FINAL)
-   add_definitions(-DKDE_USE_FINAL)
-endif(KDE4_ENABLE_FINAL)
-
-#Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
-#which is something between a shared library and a normal executable.
-#Programs compiled with these features appear as ?shared object? with the file command.
-#info from "http://www.linuxfromscratch.org/hlfs/view/unstable/glibc/chapter02/pie.html"
-option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
-
-#now try to find some kde stuff
+#######################  #now try to find some kde stuff  ################################
 
 if (_kdeBootStrapping)
-   set(KDE4_INCLUDE_DIR ${CMAKE_SOURCE_DIR})
+   set(KDE4_INCLUDE_DIR ${kdelibs_SOURCE_DIR})
    set(KDE4_KDECORE_LIBS ${QT_QTCORE_LIBRARY} kdecore)
    set(KDE4_KDEUI_LIBS ${KDE4_KDECORE_LIBS} kdeui)
    set(KDE4_KIO_LIBS ${KDE4_KDEUI_LIBS} kio)
@@ -397,21 +263,21 @@ if (_kdeBootStrapping)
    set(KDE4_KFILE_LIBS ${KDE4_KDE3SUPPORT_LIBS} kfile)
    set(KDE4_KHTML_LIBS ${KDE4_KPARTS_LIBS} khtml)
 
-   set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin )
+   set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
 
    if (WIN32)
-      set(LIBRARY_OUTPUT_PATH  ${EXECUTABLE_OUTPUT_PATH} )
+      set(LIBRARY_OUTPUT_PATH            ${EXECUTABLE_OUTPUT_PATH} )
       # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-      set(KDE4_AUTOMOC_EXECUTABLE     ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc )
-      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
+      set(KDE4_KCFGC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+      set(KDE4_AUTOMOC_EXECUTABLE        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc )
+      set(KDE4_MEINPROC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
+      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
-      set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
-      set(KDE4_KCFGC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.shell )
-      set(KDE4_AUTOMOC_EXECUTABLE     ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc.shell )
-      set(KDE4_MEINPROC_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4.shell )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
+      set(LIBRARY_OUTPUT_PATH            ${CMAKE_BINARY_DIR}/lib )
+      set(KDE4_KCFGC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.shell )
+      set(KDE4_AUTOMOC_EXECUTABLE        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc.shell )
+      set(KDE4_MEINPROC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4.shell )
+      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
    endif (WIN32)
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
@@ -446,7 +312,6 @@ else (_kdeBootStrapping)
       endif (NOT KDE_MIN_VERSION)
 
       #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
-
       macro_ensure_version( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_OK )
 
    else (KDEVERSION)
@@ -523,6 +388,7 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KROSSCORE_LIBRARY NAMES krosscore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KROSSCORE_LIBS ${krosscore_LIB_DEPENDS} ${KDE4_KROSSCORE_LIBRARY} )
+
    find_library(KDE4_KROSSUI_LIBRARY NAMES krossui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KROSSUI_LIBS ${krossui_LIB_DEPENDS} ${KDE4_KROSSCORE_LIBS} ${KDE4_KROSSUI_LIBRARY} )
 
@@ -557,7 +423,130 @@ else (_kdeBootStrapping)
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
 
+  # allow searching cmake modules in all given kde install locations (KDEDIRS based)
+  execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path data OUTPUT_VARIABLE _data_DIR ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+  file(TO_CMAKE_PATH "${_data_DIR}" _data_DIR)
+  foreach(dir ${_data_DIR})
+    set (apath "${dir}/cmake/modules")
+    if (EXISTS "${apath}")
+        set (included 0)
+        string(TOLOWER "${apath}" _apath)
+        # ignore already added pathes, case insensitive
+        foreach(adir ${CMAKE_MODULE_PATH})
+            string(TOLOWER "${adir}" _adir)
+            if ("${_adir}" STREQUAL "${_apath}")
+                set (included 1)
+            endif ("${_adir}" STREQUAL "${_apath}")
+        endforeach(adir)
+        if (NOT included)
+            message(STATUS "Adding ${apath} to CMAKE_MODULE_PATH")
+            set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${apath}")
+        endif (NOT included)
+    endif (EXISTS "${apath}")
+  endforeach(dir)
+
 endif (_kdeBootStrapping)
+
+
+#####################  provide some options   ##########################################
+
+option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
+option(KDE4_BUILD_TESTS  "Build the tests")
+
+if( KDE4_ENABLE_FINAL)
+   add_definitions(-DKDE_USE_FINAL)
+endif(KDE4_ENABLE_FINAL)
+
+#Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
+#which is something between a shared library and a normal executable.
+#Programs compiled with these features appear as ?shared object? with the file command.
+#info from "http://www.linuxfromscratch.org/hlfs/view/unstable/glibc/chapter02/pie.html"
+option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
+
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
+
+########## the following are directories where stuff will be installed to  ###########
+#
+# this has to be after find_xxx() block above, since there KDELibsDependencies.cmake is included
+# which contains the install dirs from kdelibs, which are reused below
+
+# this macro implements some very special logic how to deal with the cache
+# by default the various install locations inherit their value from theit "parent" variable
+# so if you set CMAKE_INSTALL_PREFIX, then EXEC_INSTALL_PREFIX, PLUGIN_INSTALL_DIR will
+# calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX
+# this would work completely without using the cache.
+# but if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
+# the cache, otherwise it will be forgotten on the next cmake run.
+# Once a variable is in the cache, it doesn't depend on its "parent" variables
+# anymore and you can only change it by editing it directly.
+# this macro helps in this regard, because as long as you don't set one of the
+# variables explicitely to some location, it will always calculate its value from its
+# parents. So modifying CMAKE_INSTALL_PREFIX later on will have the desired effect.
+# But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
+# this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
+#
+# additionally if installing to the same location as kdelibs, the other install
+# directories are reused from the installed kdelibs
+macro(_SET_FANCY _var _value _comment)
+   set(predefinedvalue "${_value}")
+   if ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
+      set(predefinedvalue "${KDE4_${_var}}")
+   endif ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
+
+   if (NOT DEFINED ${_var})
+      set(${_var} ${predefinedvalue})
+   else (NOT DEFINED ${_var})
+      set(${_var} "${${_var}}" CACHE PATH "${_comment}")
+   endif (NOT DEFINED ${_var})
+endmacro(_SET_FANCY)
+
+
+if (WIN32)
+# use relative install prefix to avoid hardcoded install pathes in cmake_install.cmake files
+   _set_fancy(EXEC_INSTALL_PREFIX  ""                                        "Base directory for executables and libraries")
+   _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
+   _set_fancy(BIN_INSTALL_DIR      "bin"                                     "The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)")
+   _set_fancy(SBIN_INSTALL_DIR     "sbin"                                    "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
+   _set_fancy(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}"                        "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
+   _set_fancy(LIBEXEC_INSTALL_DIR  "${BIN_INSTALL_DIR}"                      "The subdirectory relative to the install prefix where libraries will be installed (default is ${BIN_INSTALL_DIR})")
+   _set_fancy(INCLUDE_INSTALL_DIR  "include"                                 "The subdirectory to the header prefix")
+else (WIN32)
+   _set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}"                 "Base directory for executables and libraries")
+   _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
+   _set_fancy(BIN_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/bin"              "The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)")
+   _set_fancy(SBIN_INSTALL_DIR     "${EXEC_INSTALL_PREFIX}/sbin"             "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
+   _set_fancy(LIB_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
+   _set_fancy(LIBEXEC_INSTALL_DIR  "${LIB_INSTALL_DIR}/kde4/libexec"         "The subdirectory relative to the install prefix where libraries will be installed (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
+   _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include"         "The subdirectory to the header prefix")
+endif (WIN32)
+
+_set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
+_set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"         "The config file install dir")
+_set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"           "The parent directory where applications can install their data")
+_set_fancy(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"       "The HTML install dir for documentation")
+_set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"          "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
+_set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"    "The install dir for kconfig files")
+_set_fancy(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"         "The install dir for translations")
+_set_fancy(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"        "The install dir for the mimetype desktop files")
+_set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services"  "The install dir for service (desktop, protocol, ...) files")
+_set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes" "The install dir for servicestypes desktop files")
+_set_fancy(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"         "The install dir for sound files")
+_set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"      "The install dir for templates (Create new file...)")
+_set_fancy(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"     "The install dir for wallpapers")
+_set_fancy(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"       "The kconf_update install dir")
+# this one shouldn't be used anymore
+_set_fancy(APPLNK_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/applnk"         "Is this still used ?")
+_set_fancy(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"      "The install dir for autostart files")
+
+_set_fancy(XDG_APPS_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/applications/kde4"         "The XDG apps dir")
+_set_fancy(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories"      "The XDG directory")
+_set_fancy(XDG_MIME_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/mime/packages"  "The install dir for the xdg mimetypes")
+
+_set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"            "The kde sysconfig install dir (default /etc)")
+_set_fancy(MAN_INSTALL_DIR          "${CMAKE_INSTALL_PREFIX}/man"            "The kde man install dir (default ${CMAKE_INSTALL_PREFIX}/man/)")
+_set_fancy(INFO_INSTALL_DIR         "${CMAKE_INSTALL_PREFIX}/info"           "The kde info install dir (default ${CMAKE_INSTALL_PREFIX}/info)")
+_set_fancy(DBUS_INTERFACES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces" "The kde dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
+_set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services"     "The kde dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
 
 
 #####################  and now the platform specific stuff  ############################
@@ -572,7 +561,7 @@ endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 if (WIN32)
 
    if(CYGWIN)
-      message(FATAL_ERROR "Support for Cygwin NOT yet implemented, please edit FindKDE4.cmake to enable it")
+      message(FATAL_ERROR "Cygwin NOT supported, please edit FindKDE4.cmake to enable it")
    endif(CYGWIN)
 
    find_package(KDEWIN32 REQUIRED)
@@ -581,8 +570,8 @@ if (WIN32)
    # don't know if package name, version and notes are always available 
    if(_kdeBootStrapping)
       find_package(KDEWIN_Packager)
-	  if (KDEWIN_PACKAGER_FOUND)
-         KDEWIN_PACKAGER("kdelibs" "${KDE_VERSION}" "KDE base library" "")
+      if (KDEWIN_PACKAGER_FOUND)
+         kdewin_packager("kdelibs" "${KDE_VERSION}" "KDE base library" "")
       endif (KDEWIN_PACKAGER_FOUND)
 
       include(Win32Macros)
@@ -714,6 +703,7 @@ if (CMAKE_SYSTEM_NAME MATCHES Linux)
    endif (CMAKE_C_COMPILER MATCHES "icc")
 endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
+
 if (CMAKE_SYSTEM_NAME MATCHES BSD)
    set ( _KDE4_PLATFORM_DEFINITIONS -D_GNU_SOURCE )
    set ( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lc")
@@ -726,10 +716,12 @@ if (MSVC)
    set (KDE4_ENABLE_EXCEPTIONS -EHsc)
 endif(MSVC)
 
+
 if (MINGW)
    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
    set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
 endif (MINGW)
+
 
 if (CMAKE_COMPILER_IS_GNUCXX)
    set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
@@ -758,9 +750,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
         set (KDE4_CXX_FPIE_FLAGS "-fPIE")
         set (KDE4_PIE_LDFLAGS "-pie")
        else(HAVE_FPIE_SUPPORT)
-        MESSAGE(STATUS "Your compiler doesn't support PIE flag")
+        message(STATUS "Your compiler doesn't support PIE flag")
        endif(HAVE_FPIE_SUPPORT)
    endif(KDE4_ENABLE_FPIE)
+
    # save a little by making local statics not threadsafe
    check_cxx_compiler_flag(-fno-threadsafe-statics __KDE_HAVE_NO_THREADSAFE_STATICS)
    if (__KDE_HAVE_NO_THREADSAFE_STATICS)
@@ -818,6 +811,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    endif (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
 
 endif (CMAKE_COMPILER_IS_GNUCXX)
+
 
 if (CMAKE_C_COMPILER MATCHES "icc")
    set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
