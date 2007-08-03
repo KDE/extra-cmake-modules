@@ -549,6 +549,36 @@ _set_fancy(DBUS_INTERFACES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/inte
 _set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services"     "The kde dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
 
 
+##############  add some more default search paths  ###############
+# always search in the directory where cmake is installed 
+# and in the current installation prefix
+# they will be set by default starting with cmake 2.6.0, maybe already 2.4.8
+
+# also add the install directory of the running cmake to the search directories
+# CMAKE_ROOT is CMAKE_INSTALL_PREFIX/share/cmake, so we need to go two levels up
+get_filename_component(_CMAKE_INSTALL_DIR "${CMAKE_ROOT}" PATH)
+get_filename_component(_CMAKE_INSTALL_DIR "${_CMAKE_INSTALL_DIR}" PATH)
+
+set(CMAKE_SYSTEM_INCLUDE_PATH ${CMAKE_SYSTEM_INCLUDE_PATH}
+                              "${_CMAKE_INSTALL_DIR}/include"
+                              "${CMAKE_INSTALL_PREFIX}/include" )
+
+set(CMAKE_SYSTEM_PROGRAM_PATH ${CMAKE_SYSTEM_PROGRAM_PATH}
+                              "${_CMAKE_INSTALL_DIR}/bin"
+                              "${CMAKE_INSTALL_PREFIX}/bin" )
+
+set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH} 
+                              "${_CMAKE_INSTALL_DIR}/lib" 
+                              "${CMAKE_INSTALL_PREFIX}/lib" )
+
+# under Windows dlls may be also installed in bin/
+if(WIN32)
+  set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH} 
+                                "${_CMAKE_INSTALL_DIR}/bin" 
+                                "${CMAKE_INSTALL_PREFIX}/bin" )
+endif(WIN32)
+
+
 #####################  and now the platform specific stuff  ############################
 
 # Set a default build type for single-configuration
