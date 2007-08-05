@@ -258,16 +258,21 @@ void AutoMoc::waitForProcesses()
 {
     while (!processes.isEmpty()) {
         Process proc = processes.dequeue();
-        if (!proc.qproc->waitForFinished()) {
-            cerr << "kde4automoc: process failed: " << proc.qproc->errorString() << endl;
-            failed = true;
-            if (!proc.mocFilePath.isEmpty()) {
-                QFile::remove(proc.mocFilePath);
-            }
-        } else if (proc.qproc->exitCode() != 0) {
-            failed = true;
-            if (!proc.mocFilePath.isEmpty()) {
-                QFile::remove(proc.mocFilePath);
+        
+        bool result = proc.qproc->waitForFinished();
+        //ignore errors from the cmake echo process
+        if (!proc.mocFilePath.isEmpty()) {
+            if (!result) {
+                cerr << "kde4automoc: process failed: " << proc.qproc->errorString() << endl;
+                failed = true;
+                if (!proc.mocFilePath.isEmpty()) {
+                    QFile::remove(proc.mocFilePath);
+                }
+            } else if (proc.qproc->exitCode() != 0) {
+                failed = true;
+                if (!proc.mocFilePath.isEmpty()) {
+                    QFile::remove(proc.mocFilePath);
+                }
             }
         }
         delete proc.qproc;
