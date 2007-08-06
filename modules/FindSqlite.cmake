@@ -25,15 +25,11 @@ else (SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES)
 
   FIND_PATH(SQLITE_INCLUDE_DIR sqlite3.h
     ${_SQLITEIncDir}
-    /usr/include
-    /usr/local/include
   )
   
   FIND_LIBRARY(SQLITE_LIBRARIES NAMES sqlite3
     PATHS
     ${_SQLITELinkDir}
-    /usr/lib
-    /usr/local/lib
   )
   
   if (SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES)

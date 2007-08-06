@@ -18,16 +18,12 @@ FIND_PATH(GLIB2_INCLUDE_DIR glib.h
    ${_LibGLIB2IncDir}
    ${_LibGLIB2IncDir}/glib-2.0
    /usr/include/glib-2.0
-   /usr/include
    /usr/local/include/glib-2.0
-   /usr/local/include
 )
 
 FIND_LIBRARY(GLIB2_LIBRARIES NAMES glib-2.0
     PATHS
     ${_LibGLIB2LinkDir}
-    /usr/lib
-    /usr/local/lib
 )
 
 if(GLIB2_INCLUDE_DIR AND GLIB2_LIBRARIES)
