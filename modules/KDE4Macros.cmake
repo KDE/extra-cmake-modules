@@ -711,15 +711,17 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
     kde4_add_test_executable( ${_test_NAME} ${_srcList} )
     add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} )
 
-    # if the tests are EXCLUDE_FROM_ALL, add a target "buildtests" to build all tests
-    if (NOT KDE4_BUILD_TESTS)
-       get_directory_property(_buildtestsAdded BUILDTESTS_ADDED)
-       if(NOT _buildtestsAdded)
-          add_custom_target(buildtests)
-          set_directory_properties(PROPERTIES BUILDTESTS_ADDED TRUE)
-       endif(NOT _buildtestsAdded)
-       add_dependencies(buildtests ${_test_NAME})
-    endif (NOT KDE4_BUILD_TESTS)
+    if (NOT MSVC_IDE)   #not needed for the ide
+        # if the tests are EXCLUDE_FROM_ALL, add a target "buildtests" to build all tests
+        if (NOT KDE4_BUILD_TESTS)
+           get_directory_property(_buildtestsAdded BUILDTESTS_ADDED)
+           if(NOT _buildtestsAdded)
+              add_custom_target(buildtests)
+              set_directory_properties(PROPERTIES BUILDTESTS_ADDED TRUE)
+           endif(NOT _buildtestsAdded)
+           add_dependencies(buildtests ${_test_NAME})
+        endif (NOT KDE4_BUILD_TESTS)
+    endif (NOT MSVC_IDE)
 
 endmacro (KDE4_ADD_UNIT_TEST)
 
