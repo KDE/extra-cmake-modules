@@ -37,8 +37,6 @@ else (LIBART_INCLUDE_DIR AND LIBART_LIBRARIES)
   FIND_LIBRARY(LIBART_LIBRARIES NAMES art_lgpl_2
      PATHS
      ${_libArtLinkDir}
-     /usr/lib
-     /usr/local/lib
   )
   
   

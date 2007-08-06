@@ -63,15 +63,11 @@ else (KDCRAW_INCLUDE_DIR AND KDCRAW_LIBRARIES)
     
         FIND_PATH(KDCRAW_INCLUDE_DIR libkdcraw/version.h
         ${_KDCRAWIncDir}
-        /usr/include
-        /usr/local/include
         )
     
         FIND_LIBRARY(KDCRAW_LIBRARIES NAMES kdcraw
         PATHS
         ${_KDCRAWLinkDir}
-        /usr/lib
-        /usr/local/lib
         )
     
         if (KDCRAW_INCLUDE_DIR AND KDCRAW_LIBRARIES)

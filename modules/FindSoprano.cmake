@@ -11,8 +11,6 @@ else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
     NAMES
     soprano/soprano.h
     PATHS 
-    /usr/include
-    /usr/local/include
     ${KDE4_INCLUDE_DIR}
     ${INCLUDE_INSTALL_DIR}
     )
@@ -21,8 +19,6 @@ else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
     NAMES
     soprano
     PATHS
-    /usr/lib
-    /usr/local/lib
     ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
     )
@@ -35,8 +31,6 @@ else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
       NAMES
       sopranod
       PATHS
-      /usr/lib
-      /usr/local/lib
       ${KDE4_LIB_DIR}
       ${LIB_INSTALL_DIR}
       )
