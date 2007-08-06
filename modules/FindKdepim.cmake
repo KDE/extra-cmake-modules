@@ -17,15 +17,11 @@ endif (KDEPIM_INCLUDE_DIR)
 FIND_PATH(KDEPIM_INCLUDE_DIR NAMES kdepimprotocols.h
 	PATHS
 	${INCLUDE_INSTALL_DIR}
-	/usr/include
-	/usr/local/include
 )
 
 FIND_LIBRARY(KDEPIM_LIBRARIES NAMES kdepim
 	PATHS
 	${LIB_INSTALL_DIR}
-	/usr/lib
-	/usr/local/lib
 )
 
 if (KDEPIM_LIBRARIES AND KDEPIM_INCLUDE_DIR)

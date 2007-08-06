@@ -38,11 +38,8 @@ else (LIBC_HAS_DGETTEXT OR LIBINTL_HAS_DGETTEXT)
         set(GETTEXT_SOURCE "built in libc")
         set(GETTEXT_FOUND TRUE)
      else (LIBC_HAS_DGETTEXT)
-        FIND_LIBRARY(LIBINTL_LIBRARY NAMES intl libintl
-           PATHS
-           /usr/lib
-           /usr/local/lib
-        )
+        FIND_LIBRARY(LIBINTL_LIBRARY NAMES intl libintl )
+
         CHECK_LIBRARY_EXISTS(${LIBINTL_LIBRARY} "dgettext" "" LIBINTL_HAS_DGETTEXT)
         if (LIBINTL_HAS_DGETTEXT)
            set(GETTEXT_SOURCE "in ${LIBINTL_LIBRARY}")

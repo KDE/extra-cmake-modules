@@ -63,15 +63,11 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
     
         FIND_PATH(KIPI_INCLUDE_DIR libkipi/version.h
         ${_KIPIIncDir}
-        /usr/include
-        /usr/local/include
         )
     
         FIND_LIBRARY(KIPI_LIBRARIES NAMES kipi
         PATHS
         ${_KIPILinkDir}
-        /usr/lib
-        /usr/local/lib
         )
     
         if (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)

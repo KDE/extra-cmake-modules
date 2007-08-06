@@ -26,38 +26,28 @@ ENDIF (NOT WIN32)
   FIND_PATH(OPENEXR_INCLUDE_DIR ImfRgbaFile.h
      ${_OpenEXRIncDir}
      ${_OpenEXRIncDir}/OpenEXR/
-     /usr/include
-     /usr/local/include
   )
   
   FIND_LIBRARY(OPENEXR_HALF_LIBRARY NAMES Half
     PATHS
     ${_OPENEXRLinkDir}
-    /usr/lib
-    /usr/local/lib
   )
   
   
   FIND_LIBRARY(OPENEXR_IEX_LIBRARY NAMES Iex
     PATHS
     ${_OPENEXRLinkDir}
-    /usr/lib
-    /usr/local/lib
   )
   
   FIND_LIBRARY(OPENEXR_IMATH_LIBRARY NAMES Imath
     PATHS
     ${_OPENEXRLinkDir}
-    /usr/lib
-    /usr/local/lib
   )
   
   
   FIND_LIBRARY(OPENEXR_ILMIMF_LIBRARY NAMES IlmImf 
     PATHS
     ${_OPENEXRLinkDir}
-    /usr/lib
-    /usr/local/lib
   )
   
   if (OPENEXR_INCLUDE_DIR AND OPENEXR_IMATH_LIBRARY AND OPENEXR_ILMIMF_LIBRARY AND OPENEXR_IEX_LIBRARY AND OPENEXR_HALF_LIBRARY)

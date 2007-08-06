@@ -70,8 +70,6 @@ else (KEXIV2_INCLUDE_DIR AND KEXIV2_LIBRARIES)
         FIND_LIBRARY(KEXIV2_LIBRARIES NAMES kexiv2
         PATHS
         ${_KEXIV2LinkDir}
-        /usr/lib
-        /usr/local/lib
         )
     
         if (KEXIV2_INCLUDE_DIR AND KEXIV2_LIBRARIES)

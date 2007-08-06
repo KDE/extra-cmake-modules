@@ -45,15 +45,11 @@ else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
  
      FIND_PATH(EXIV2_INCLUDE_DIR exiv2/exif.hpp
        ${_EXIV2IncDir}
-       /usr/include
-       /usr/local/include
      )
   
      FIND_LIBRARY(EXIV2_LIBRARIES NAMES exiv2 libexiv2
        PATHS
        ${_EXIV2LinkDir}
-       /usr/lib
-       /usr/local/lib
      )
   
      if (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)

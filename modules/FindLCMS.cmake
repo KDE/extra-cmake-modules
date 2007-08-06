@@ -17,10 +17,8 @@ endif(NOT WIN32)
 find_path(LCMS_INCLUDE_DIR lcms.h
    ${_LcmsIncDir}
    ${CMAKE_INSTALL_PREFIX}/include
-   /usr/include
    /usr/include/lcms
    /usr/include/liblcms1
-   /usr/local/include
    /usr/local/include/lcms
    NO_DEFAULT_PATH
 )
@@ -31,9 +29,7 @@ find_library(LCMS_LIBRARIES NAMES lcms liblcms
    PATHS     
    ${_LcmsLinkDir}     
    ${CMAKE_INSTALL_PREFIX}/lib
-   /usr/lib
    /usr/lib/lcms
-   /usr/local/lib
    /usr/local/lib/lcms
    NO_DEFAULT_PATH
 )
