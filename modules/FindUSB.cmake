@@ -22,7 +22,7 @@ else (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
     # in the FIND_PATH() and FIND_LIBRARY() calls
     INCLUDE(UsePkgConfig)
 
-    PKGCONFIG(libUSB _libUSBIncDir _libUSBLinkDir _libUSBLinkFlags _libUSBCflags)
+    PKGCONFIG(libusb _libUSBIncDir _libUSBLinkDir _libUSBLinkFlags _libUSBCflags)
   ENDIF(NOT WIN32)
 
   FIND_PATH(LIBUSB_INCLUDE_DIR usb.h )
