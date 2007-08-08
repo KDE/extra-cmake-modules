@@ -5,7 +5,7 @@
 #  SASL2_INCLUDE_DIR - the SASL2 include directory
 #  SASL2_LIBRARIES - The libraries needed to use SASL2
 #
-# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+# Copyright (c) 2006, 2007 Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -22,21 +22,8 @@ FIND_PATH(SASL2_INCLUDE_DIR sasl/sasl.h
 FIND_LIBRARY(SASL2_LIBRARIES NAMES sasl2
 )
 
-
-if (SASL2_INCLUDE_DIR AND SASL2_LIBRARIES)
-   set(SASL2_FOUND TRUE)
-endif (SASL2_INCLUDE_DIR AND SASL2_LIBRARIES)
-
-
-if (SASL2_FOUND)
-   if (NOT Sasl2_FIND_QUIETLY)
-      message(STATUS "Found sasl2: ${SASL2_LIBRARIES}")
-   endif (NOT Sasl2_FIND_QUIETLY)
-else(SASL2_FOUND)
-   if (Sasl2_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find sals2 library")
-   endif (Sasl2_FIND_REQUIRED)
-endif (SASL2_FOUND)
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Sasl2 DEFAULT_MSG SASL2_INCLUDE_DIR SASL2_LIBRARIES)
 
 MARK_AS_ADVANCED(SASL2_INCLUDE_DIR SASL2_LIBRARIES)
 
