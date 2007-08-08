@@ -55,7 +55,7 @@ else (LIBC_HAS_DGETTEXT OR LIBINTL_HAS_DGETTEXT)
      endif (NOT Gettext_FIND_QUIETLY)
   else (GETTEXT_FOUND)
      if (Gettext_FIND_REQUIRED)
-        message(STATUS "Could NOT find Gettext")
+        message(FATAL_ERROR "Could NOT find Gettext")
      endif (Gettext_FIND_REQUIRED)
   endif (GETTEXT_FOUND)
   
