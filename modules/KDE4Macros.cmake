@@ -241,18 +241,18 @@ macro(KDE4_INSTALL_TS_FILES _lang _sdir)
    endforeach(_current_TS_FILES)
 endmacro(KDE4_INSTALL_TS_FILES)
 
-macro (KDE4_INSTALL_HANDBOOK)
+macro (KDE4_INSTALL_HANDBOOK _lang)
    get_filename_component(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
    get_filename_component(_basename ${_tmp_FILE} NAME_WE)
    file(GLOB _books *.docbook)
    file(GLOB _images *.png)
-   set(relative ${ARGV0})
+   set(relative ${ARGV1})
    set( dirname ${relative}/${_basename})
-   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2 ${_books} ${_images} DESTINATION ${HTML_INSTALL_DIR}/en/${dirname})
+   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2 ${_books} ${_images} DESTINATION ${HTML_INSTALL_DIR}/${_lang}/${dirname})
    # TODO symlinks on non-unix platforms
    if (UNIX)
        # execute some cmake code on make install which creates the symlink
-       install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${HTML_INSTALL_DIR}/en/common\"  \"${HTML_INSTALL_DIR}/en/${dirname}/common\" )" )
+       install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${HTML_INSTALL_DIR}/${_lang}/common\"  \"${HTML_INSTALL_DIR}/${_lang}/${dirname}/common\" )" )
    endif (UNIX)
 endmacro (KDE4_INSTALL_HANDBOOK )
 
