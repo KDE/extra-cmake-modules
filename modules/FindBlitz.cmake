@@ -30,18 +30,8 @@ FIND_LIBRARY(BLITZ_LIBRARIES
  ${LIB_INSTALL_DIR}
 )
 
-if(BLITZ_INCLUDES AND BLITZ_LIBRARIES)
-  set(BLITZ_FOUND TRUE)
-endif(BLITZ_INCLUDES AND BLITZ_LIBRARIES)
-
-if(BLITZ_FOUND)
-  if(NOT Blitz_FIND_QUIETLY)
-    message(STATUS "Found Blitz: ${BLITZ_INCLUDES}")
-  endif(NOT Blitz_FIND_QUIETLY)
-else(BLITZ_FOUND)
-  if(Blitz_FIND_REQUIRED)
-    message(FATAL_ERROR "Could NOT find Blitz")
-  endif(Blitz_FIND_REQUIRED)
-endif(BLITZ_FOUND)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Blitz DEFAULT_MSG 
+                                  BLITZ_INCLUDES BLITZ_LIBRARIES)
 
 mark_as_advanced(BLITZ_INCLUDES BLITZ_LIBRARIES)
