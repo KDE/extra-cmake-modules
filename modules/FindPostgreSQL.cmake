@@ -24,10 +24,6 @@ find_path(POSTGRESQL_INCLUDE_DIR libpq-fe.h
 
 find_library(POSTGRESQL_LIBRARIES NAMES pq)
 
-if(POSTGRESQL_INCLUDE_DIR AND POSTGRESQL_LIBRARIES)
-   set(POSTGRESQL_FOUND TRUE)
-endif(POSTGRESQL_INCLUDE_DIR AND POSTGRESQL_LIBRARIES)
-
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(PostgreSQL DEFAULT_MSG
                                   POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES )

@@ -14,8 +14,6 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 FIND_PATH(DNSSD_INCLUDE_DIR dns_sd.h
-  /usr/include
-  /usr/local/include
   /usr/include/avahi-compat-libdns_sd/
 )
 

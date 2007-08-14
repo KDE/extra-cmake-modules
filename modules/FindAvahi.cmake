@@ -12,25 +12,11 @@ if (AVAHI_INCLUDE_DIR)
 endif (AVAHI_INCLUDE_DIR)
 
 
-FIND_PATH(AVAHI_INCLUDE_DIR avahi-common/defs.h
-	/usr/include
-	/usr/local/include
-	)
+FIND_PATH(AVAHI_INCLUDE_DIR avahi-common/defs.h)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Avahi DEFAULT_MSG
+                                  AVAHI_INCLUDE_DIR)
 
-if(AVAHI_INCLUDE_DIR)
-   set(AVAHI_FOUND TRUE)
-endif(AVAHI_INCLUDE_DIR)
-
-
-if(AVAHI_FOUND)
-   if(NOT Avahi_FIND_QUIETLY)
-   	MESSAGE( STATUS "Avahi common includes found in ${AVAHI_INCLUDE_DIR}")
-   endif(NOT Avahi_FIND_QUIETLY)
-else(AVAHI_FOUND)
-   if(Avahi_FIND_REQUIRED)
-        MESSAGE( FATAL_ERROR "Avahi not found")
-   endif(Avahi_FIND_REQUIRED)
-endif(AVAHI_FOUND)
 
 MARK_AS_ADVANCED(AVAHI_INCLUDE_DIR)
 
