@@ -22,25 +22,15 @@ find_path(POSTGRESQL_INCLUDE_DIR libpq-fe.h
    /usr/local/include/pgsql
 )
 
-find_library(POSTGRESQL_LIBRARIES NAMES pq
-   PATHS
-   /usr/lib
-   /usr/local/lib
-)
+find_library(POSTGRESQL_LIBRARIES NAMES pq)
 
 if(POSTGRESQL_INCLUDE_DIR AND POSTGRESQL_LIBRARIES)
    set(POSTGRESQL_FOUND TRUE)
 endif(POSTGRESQL_INCLUDE_DIR AND POSTGRESQL_LIBRARIES)
 
-if(POSTGRESQL_FOUND)
-   if (NOT PostgreSQL_FIND_QUIETLY)
-   	message(STATUS "Found PostgreSQL: ${POSTGRESQL_INCLUDE_DIR}, ${POSTGRESQL_LIBRARIES}")
-   endif(NOT PostgreSQL_FIND_QUIETLY)
-else(POSTGRESQL_FOUND)
-   if (PostgreSQL_FIND_REQUIRED)
-	message(FATAL_ERROR "PostgreSQL not found.")
-   endif(PostgreSQL_FIND_REQUIRED)
-endif(POSTGRESQL_FOUND)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(PostgreSQL DEFAULT_MSG
+                                  POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES )
 
 mark_as_advanced(POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES)
 
