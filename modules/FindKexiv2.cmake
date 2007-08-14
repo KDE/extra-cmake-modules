@@ -63,8 +63,6 @@ else (KEXIV2_INCLUDE_DIR AND KEXIV2_LIBRARIES)
     
         FIND_PATH(KEXIV2_INCLUDE_DIR libkexiv2/version.h
         ${_KEXIV2IncDir}
-        /usr/include
-        /usr/local/include
         )
     
         FIND_LIBRARY(KEXIV2_LIBRARIES NAMES kexiv2

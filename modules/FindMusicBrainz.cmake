@@ -6,17 +6,10 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-FIND_PATH(MUSICBRAINZ_INCLUDE_DIR musicbrainz/musicbrainz.h
-	/usr/include
-	/usr/local/include
-	)
-
-if(MUSICBRAINZ_INCLUDE_DIR)
-   set(MUSICBRAINZ_FOUND TRUE)
-   MESSAGE( STATUS "music brainz found in <${MUSICBRAINZ_INCLUDE_DIR}>")
-else(MUSICBRAINZ_INCLUDE_DIR)
-   MESSAGE( STATUS "music brainz not found")
-endif(MUSICBRAINZ_INCLUDE_DIR)
+FIND_PATH(MUSICBRAINZ_INCLUDE_DIR musicbrainz/musicbrainz.h)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args( MusicBrainz DEFAULT_MSG
+                                   MUSICBRAINZ_INCLUDE_DIR)
 
 MARK_AS_ADVANCED(MUSICBRAINZ_INCLUDE_DIR)
 
