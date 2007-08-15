@@ -275,6 +275,38 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
       DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
    )
    add_custom_target(handbook ALL DEPENDS ${_doc})
+
+# kde4_create_handbook(<docbook file> [INSTALL_DESTINATION <dir>] [SUBDIR <subdir>] )
+# e.g. kde4_create_handbook(index.docbook)
+#      kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en )
+#      kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en SUBDIR kinfocenter/dma)
+
+#   set(_args ${ARGN})
+#
+#   set(_installDest)
+#   list(GET _args 0 _tmp)
+#   if("${_tmp}" STREQUAL "INSTALL_DESTINATION")
+#      list(GET _args 1 _installDest )
+#      list(REMOVE_AT _args 0 1)
+#   endif("${_tmp}" STREQUAL "INSTALL_DESTINATION")
+#
+#   get_filename_component(dirname ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+#   list(GET _args 0 _tmp)
+#   if("${_tmp}" STREQUAL "SUBDIR")
+#      list(GET _args 1 dirname )
+#      list(REMOVE_AT _args 0 1)
+#   endif("${_tmp}" STREQUAL "SUBDIR")
+#
+#   if(_installDest)
+#      file(GLOB _images *.png)
+#      install(FILES ${_doc} ${_input} ${_images} DESTINATION ${_installDest}/${dirname})
+#      # TODO symlinks on non-unix platforms
+#      if (UNIX)
+#         # execute some cmake code on make install which creates the symlink
+#         install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${_installDest}/common\"  \"${_installDest}/${dirname}/common\" )" )
+#      endif (UNIX)
+#   endif(_installDest)
+   
 endmacro (KDE4_CREATE_HANDBOOK)
 
 
