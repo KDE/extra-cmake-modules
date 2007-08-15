@@ -276,6 +276,15 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
    )
    add_custom_target(handbook ALL DEPENDS ${_doc})
 
+   if(KDE4_ENABLE_HTMLHANDBOOK)
+      set(_htmlDoc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
+      add_custom_command(OUTPUT ${_doc}
+         COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} -o ${_doc} ${_input}
+         DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
+         )
+      add_custom_target(htmlhandbook DEPENDS ${_doc})
+   endif(KDE4_ENABLE_HTMLHANDBOOK)
+
 # kde4_create_handbook(<docbook file> [INSTALL_DESTINATION <dir>] [SUBDIR <subdir>] )
 # e.g. kde4_create_handbook(index.docbook)
 #      kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en )
@@ -308,27 +317,6 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
 #   endif(_installDest)
    
 endmacro (KDE4_CREATE_HANDBOOK)
-
-
-macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
-   get_filename_component(_input ${_docbook} ABSOLUTE)
-   set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
-
-   set(_bootstrapOption)
-   #Bootstrap
-   if (_kdeBootStrapping)
-      set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/customization/kde-chunk.xsl)
-      set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
-   else (_kdeBootStrapping)
-      set(_ssheet ${DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl)
-   endif (_kdeBootStrapping)
-
-   add_custom_command(OUTPUT ${_doc}
-      COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} -o ${_doc} ${_input}
-      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
-   )
-   add_custom_target(htmlhandbook ALL DEPENDS ${_doc})
-endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
 macro (KDE4_CREATE_MANPAGE _docbook)
@@ -910,16 +898,8 @@ macro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
 endmacro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
 
 
-macro (KDE4_INSTALL_XDG_MIMETYPES)
-   message(SEND_ERROR "KDE4_INSTALL_XDG_MIMETYPES() is deprecated, see kdelibs/mimetypes/CMakeLists.txt for an example")
-endmacro (KDE4_INSTALL_XDG_MIMETYPES)
-
-macro (KDE4_AUTOMOC)
-   message(SEND_ERROR "KDE4_AUTOMOC() is not required anymore for automoc, please remove it")
-endmacro (KDE4_AUTOMOC)
-
-MACRO (KDE4_INSTALL_LIBTOOL_FILE)
-   message(SEND_ERROR "KDE4_INSTALL_LIBTOOL_FILE() is deprecated, please remove it")
-ENDMACRO (KDE4_INSTALL_LIBTOOL_FILE)
+macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
+   message(STATUS "KDE4_CREATE_HTML_HANDBOOK() is deprecated. Enable the option KDE4_ENABLE_HTMLHANDBOOK instead, this will give you targets htmlhandbook for creating the html help.")
+endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
