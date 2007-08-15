@@ -1,13 +1,9 @@
-# Try to find Gettext functionality
+# Try to find Libintl functionality
 # Once done this will define
 #
-#  GETTEXT_FOUND - system has Gettext
-#  GETTEXT_INCLUDE_DIR - Gettext include directory
-#  GETTEXT_LIBRARIES - Libraries needed to use Gettext
-#
-# HAVE_LIBINTL_H
-# LIBC_HAS_DGETTEXT
-# LIBINTL_HAS_DGETTEXT
+#  LIBINTL_FOUND - system has Libintl
+#  LIBINTL_INCLUDE_DIR - Libintl include directory
+#  LIBINTL_LIBRARIES - Libraries needed to use Libintl
 #
 # TODO: This will enable translations only if Gettext functionality is
 # present in libc. Must have more robust system for release, where Gettext
