@@ -301,6 +301,7 @@ void AutoMoc::generateMoc(const QString &sourceFile, const QString &mocFileName)
         args << "-o" << mocFilePath << sourceFile;
         //qDebug() << "executing: " << mocExe << args;
         mocProc->start(mocExe, args, QIODevice::NotOpen);
+        mocProc->waitForStarted();
         processes.enqueue(Process(mocProc, mocFilePath));
     }
 }
