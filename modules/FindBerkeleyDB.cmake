@@ -19,7 +19,7 @@ FIND_PATH(BERKELEY_DB_INCLUDE_DIR db.h
 FIND_LIBRARY(BERKELEY_DB_LIBRARIES NAMES db )
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Berkeley "Could not find Berkeley DB >= 4.1" BERKELEY_DB_INCLUDE_DIR BERKELEY_DB_LIBRARIES
+find_package_handle_standard_args(Berkeley "Could not find Berkeley DB >= 4.1" BERKELEY_DB_INCLUDE_DIR BERKELEY_DB_LIBRARIE
 # show the BERKELEY_DB_INCLUDE_DIR and BERKELEY_DB_LIBRARIES variables only in the advanced view
 MARK_AS_ADVANCED(BERKELEY_DB_INCLUDE_DIR BERKELEY_DB_LIBRARIES )
 
