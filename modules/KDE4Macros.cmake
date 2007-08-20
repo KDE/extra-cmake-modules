@@ -242,18 +242,7 @@ macro(KDE4_INSTALL_TS_FILES _lang _sdir)
 endmacro(KDE4_INSTALL_TS_FILES)
 
 macro (KDE4_INSTALL_HANDBOOK _lang)
-   get_filename_component(_tmp_FILE ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
-   get_filename_component(_basename ${_tmp_FILE} NAME_WE)
-   file(GLOB _books *.docbook)
-   file(GLOB _images *.png)
-   set(relative ${ARGV1})
-   set( dirname ${relative}/${_basename})
-   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/index.cache.bz2 ${_books} ${_images} DESTINATION ${HTML_INSTALL_DIR}/${_lang}/${dirname})
-   # TODO symlinks on non-unix platforms
-   if (UNIX)
-       # execute some cmake code on make install which creates the symlink
-       install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${HTML_INSTALL_DIR}/${_lang}/common\"  \"${HTML_INSTALL_DIR}/${_lang}/${dirname}/common\" )" )
-   endif (UNIX)
+   message(STATUS "KDE4_INSTALL_HANDBOOK() is deprecated. Remove it please. Now all is done in KDE4_CREATE_HANDBOOK.")
 endmacro (KDE4_INSTALL_HANDBOOK )
 
 
@@ -290,35 +279,35 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
 #      kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en )
 #      kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en SUBDIR kinfocenter/dma)
 
-#   set(_args ${ARGN})
-#
-#   set(_installDest)
-#   if(_args)
-#      list(GET _args 0 _tmp)
-#      if("${_tmp}" STREQUAL "INSTALL_DESTINATION")
-#         list(GET _args 1 _installDest )
-#         list(REMOVE_AT _args 0 1)
-#      endif("${_tmp}" STREQUAL "INSTALL_DESTINATION")
-#   endif(_args)
-#
-#   get_filename_component(dirname ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
-#   if(_args)
-#      list(GET _args 0 _tmp)
-#      if("${_tmp}" STREQUAL "SUBDIR")
-#         list(GET _args 1 dirname )
-#         list(REMOVE_AT _args 0 1)
-#      endif("${_tmp}" STREQUAL "SUBDIR")
-#   endif(_args)
-#
-#   if(_installDest)
-#      file(GLOB _images *.png)
-#      install(FILES ${_doc} ${_input} ${_images} DESTINATION ${_installDest}/${dirname})
-#      # TODO symlinks on non-unix platforms
-#      if (UNIX)
-#         # execute some cmake code on make install which creates the symlink
-#         install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${_installDest}/common\"  \"${_installDest}/${dirname}/common\" )" )
-#      endif (UNIX)
-#   endif(_installDest)
+   set(_args ${ARGN})
+
+   set(_installDest)
+   if(_args)
+      list(GET _args 0 _tmp)
+      if("${_tmp}" STREQUAL "INSTALL_DESTINATION")
+         list(GET _args 1 _installDest )
+         list(REMOVE_AT _args 0 1)
+      endif("${_tmp}" STREQUAL "INSTALL_DESTINATION")
+   endif(_args)
+
+   get_filename_component(dirname ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+   if(_args)
+      list(GET _args 0 _tmp)
+      if("${_tmp}" STREQUAL "SUBDIR")
+         list(GET _args 1 dirname )
+         list(REMOVE_AT _args 0 1)
+      endif("${_tmp}" STREQUAL "SUBDIR")
+   endif(_args)
+
+   if(_installDest)
+      file(GLOB _images *.png)
+      install(FILES ${_doc} ${_input} ${_images} DESTINATION ${_installDest}/${dirname})
+      # TODO symlinks on non-unix platforms
+      if (UNIX)
+         # execute some cmake code on make install which creates the symlink
+         install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${_installDest}/common\"  \"${_installDest}/${dirname}/common\" )" )
+      endif (UNIX)
+   endif(_installDest)
    
 endmacro (KDE4_CREATE_HANDBOOK)
 
