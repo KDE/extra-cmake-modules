@@ -53,6 +53,18 @@ if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
         message(STATUS "Found Strigi >= ${STRIGI_MIN_VERSION}")
       endif(NOT Strigi_FIND_QUIETLY)
     endif(NOT _return_VALUE STREQUAL "0")
+    if (NOT STRIGI_STREAMANALYZER_LIBRARY)
+      find_library(STRIGI_STREAMANALYZER_LIBRARY NAMES streamanalyzer
+	PATHS ${_dummyLinkDir})
+    endif(NOT STRIGI_STREAMANALYZER_LIBRARY)
+    if (NOT STRIGI_STREAMS_LIBRARY)
+      find_library(STRIGI_STREAMS_LIBRARY NAMES streams
+	PATHS ${_dummyLinkDir})
+    endif(NOT STRIGI_STREAMS_LIBRARY)
+    if (NOT STRIGI_INCLUDE_DIR)
+      find_path(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h
+        PATHS ${_dummyIncDir})
+    endif(NOT STRIGI_INCLUDE_DIR)
   else(_dummyLinkFlags)
     message(STATUS "pkgconfig didn't find strigi, couldn't check strigi version")
   endif(_dummyLinkFlags)
@@ -62,3 +74,4 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Strigi  
                                   "Couldn't find Strigi streams library in $STRIGI_HOME/lib, ${CMAKE_INSTALL_PREFIX}/lib, ${_program_FILES_DIR}/strigi/lib"  
                                   STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
+
