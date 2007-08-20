@@ -198,9 +198,6 @@
 # KDE4_INSTALL_HANDBOOK()
 #   Install the handbook documentation
 #
-# KDE4_CREATE_HTML_HANDBOOK( docbookfile )
-#   Create HTML version of the handbook from the docbookfile (using meinproc)
-#
 # _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 # _KDE4_PLATFORM_DEFINITIONS is used only internally
 #

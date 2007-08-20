@@ -3,7 +3,7 @@
 #
 #  NETWORKMANAGER_FOUND - system has NetworkManager
 #  NETWORKMANAGER_INCLUDE_DIR - the NetworkManager include directory
-#  NETWORKMANAGER_LIBRARIES - the libraries needed to use NetworkManager
+#  NETWORKMANAGER_LIBRARY - the libraries needed to use NetworkManager
 #  NETWORKMANAGER_DEFINITIONS - Compiler switches required for using NetworkManager
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>

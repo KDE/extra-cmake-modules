@@ -5,7 +5,7 @@
 #  FONTCONFIG_LIBRARIES - Link these to use FONTCONFIG
 #  FONTCONFIG_DEFINITIONS - Compiler switches required for using FONTCONFIG
 
-# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+# Copyright (c) 2006,2007 Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -39,20 +39,9 @@ else (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)
     ${_FONTCONFIGLinkDir}
   )
 
-  if (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)
-     set(FONTCONFIG_FOUND TRUE)
-  endif (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)
-
-  if (FONTCONFIG_FOUND)
-    if (NOT Fontconfig_FIND_QUIETLY)
-      message(STATUS "Found FONTCONFIG: ${FONTCONFIG_LIBRARIES}")
-    endif (NOT Fontconfig_FIND_QUIETLY)
-  else (FONTCONFIG_FOUND)
-    if (Fontconfig_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find FONTCONFIG")
-    endif (Fontconfig_FIND_REQUIRED)
-  endif (FONTCONFIG_FOUND)
-
-  mark_as_advanced(FONTCONFIG_LIBRARIES)
+  include(FindPackageHandleStandardArgs)
+  FIND_PACKAGE_HANDLE_STANDARD_ARGS(Fontconfig DEFAULT_MSG FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR )
+  
+  mark_as_advanced(FONTCONFIG_LIBRARIES FONTCONFIG_INCLUDE_DIR)
 
 endif (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)

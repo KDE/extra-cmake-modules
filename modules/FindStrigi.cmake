@@ -5,7 +5,6 @@
 #  STRIGI_INCLUDE_DIR - the Strigi include directory
 #  STRIGI_STREAMANALYZER_LIBRARY - Link these to use Strigi streamanalyzer
 #  STRIGI_STREAMS_LIBRARY - Link these to use Strigi streams
-#  STRIGI_LIBRARIES - Link these to use both Strigi libraries
 
 
 set(STRIGI_MIN_VERSION "0.5.3")
