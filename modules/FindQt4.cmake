@@ -23,6 +23,7 @@
 #                    QT_USE_QTTEST
 #                    QT_USE_QTUITOOLS
 #                    QT_USE_QTDBUS
+#                    QT_USE_QTSCRIPT
 #
 # All the libraries required are stored in a variable called QT_LIBRARIES.  
 # Add this variable to your TARGET_LINK_LIBRARIES.
@@ -451,7 +452,7 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
-  # Set QT_QTSVG_INCLUDE_DIR
+  # Set QT_QTSCRIPT_INCLUDE_DIR
   FIND_PATH(QT_QTSCRIPT_INCLUDE_DIR QtScript
     PATHS
     ${QT_INCLUDE_DIR}/QtScript
