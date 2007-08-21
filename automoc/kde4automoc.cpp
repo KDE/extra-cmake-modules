@@ -242,6 +242,7 @@ bool AutoMoc::run()
     if (failed) {
         // if any moc process failed we don't want to touch the _automoc.cpp file so that
         // kde4automoc is rerun until the issue is fixed
+        cerr << "returning failed.."<< endl;
         return false;
     }
     outStream.flush();
@@ -258,21 +259,17 @@ void AutoMoc::waitForProcesses()
 {
     while (!processes.isEmpty()) {
         Process proc = processes.dequeue();
-        
+
         bool result = proc.qproc->waitForFinished();
         //ignore errors from the cmake echo process
         if (!proc.mocFilePath.isEmpty()) {
-            if (!result) {
-                cerr << "kde4automoc: process failed: " << proc.qproc->errorString() << endl;
+            if (!result || proc.qproc->exitCode()) {
+                cerr << "kde4automoc: process for " << proc.mocFilePath
+                     << " failed: " << proc.qproc->errorString() << endl;
+                cerr << "pid to wait for: " << proc.qproc->pid() << endl;
+                system("/bin/ps ux");
                 failed = true;
-                if (!proc.mocFilePath.isEmpty()) {
-                    QFile::remove(proc.mocFilePath);
-                }
-            } else if (proc.qproc->exitCode() != 0) {
-                failed = true;
-                if (!proc.mocFilePath.isEmpty()) {
-                    QFile::remove(proc.mocFilePath);
-                }
+                QFile::remove(proc.mocFilePath);
             }
         }
         delete proc.qproc;
@@ -301,7 +298,13 @@ void AutoMoc::generateMoc(const QString &sourceFile, const QString &mocFileName)
         args << "-o" << mocFilePath << sourceFile;
         //qDebug() << "executing: " << mocExe << args;
         mocProc->start(mocExe, args, QIODevice::NotOpen);
-        mocProc->waitForStarted();
-        processes.enqueue(Process(mocProc, mocFilePath));
+        if (mocProc->waitForStarted())
+            processes.enqueue(Process(mocProc, mocFilePath));
+        else {
+            cerr << "kde4automoc: process for " << mocFilePath << "failed to start: " 
+                 << mocProc->errorString() << endl;
+            failed = true;
+            delete mocProc;
+        }
     }
 }
