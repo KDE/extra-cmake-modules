@@ -260,14 +260,14 @@ void AutoMoc::waitForProcesses()
     while (!processes.isEmpty()) {
         Process proc = processes.dequeue();
 
-        bool result = proc.qproc->waitForFinished();
+        bool result = proc.qproc->waitForFinished(-1);
         //ignore errors from the cmake echo process
         if (!proc.mocFilePath.isEmpty()) {
             if (!result || proc.qproc->exitCode()) {
                 cerr << "kde4automoc: process for " << proc.mocFilePath
                      << " failed: " << proc.qproc->errorString() << endl;
                 cerr << "pid to wait for: " << proc.qproc->pid() << endl;
-                system("/bin/ps ux");
+                cerr << "processes in queue: " << processes.size() << endl;
                 failed = true;
                 QFile::remove(proc.mocFilePath);
             }
