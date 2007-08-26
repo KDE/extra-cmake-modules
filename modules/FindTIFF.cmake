@@ -10,10 +10,10 @@
 # Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
 # See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-if (TIFF_INCLUDE_DIR)
+if (TIFF_INCLUDE_DIR AND TIFF_LIBRARY)
   # Already in cache, be silent
   set(TIFF_FIND_QUIETLY TRUE)
-endif (TIFF_INCLUDE_DIR)
+endif (TIFF_INCLUDE_DIR AND TIFF_LIBRARY)
 
 find_path(TIFF_INCLUDE_DIR NAMES tiff.h )
 

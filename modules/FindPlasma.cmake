@@ -23,22 +23,14 @@ find_library(PLASMA_LIBS NAMES plasma
         PATHS
         ${LIB_INSTALL_DIR}
 )
-if (PLASMA_LIBS AND PLASMA_INCLUDE_DIR)
-    set(PLASMA_FOUND TRUE)
 
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Plasma DEFAULT_MSG PLASMA_LIBS PLASMA_INCLUDE_DIR )
+
+if (PLASMA_FOUND)
     find_file(PLASMA_OPENGL_FOUND glapplet.h
               PATHS ${PLASMA_INCLUDE_DIR}
               NO_DEFAULT_PATH)
-endif (PLASMA_LIBS AND PLASMA_INCLUDE_DIR)
-
-if (PLASMA_FOUND)
-    if (NOT Plasma_FIND_QUIETLY)
-    message(STATUS "Found Plasma: ${PLASMA_LIBS}")
-    endif (NOT Plasma_FIND_QUIETLY)
-else (PLASMA_FOUND)
-    if (Plasma_FIND_REQUIRED)
-    message(FATAL_ERROR "Could NOT find Plasma")
-    endif (Plasma_FIND_REQUIRED)
 endif (PLASMA_FOUND)
 
 mark_as_advanced(PLASMA_INCLUDE_DIR PLASMA_LIBS)

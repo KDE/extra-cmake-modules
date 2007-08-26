@@ -4,7 +4,7 @@
 #  EIGEN_FOUND - system has eigen lib
 #  EIGEN_INCLUDE_DIR - the eigen include directory
 #
-# Copyright (c) 2006, Montel Laurent, <montel@kde.org>
+# Copyright (c) 2006, 2007 Montel Laurent, <montel@kde.org>
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
@@ -20,19 +20,9 @@ find_path(EIGEN_INCLUDE_DIR NAMES eigen/matrix.h
      ${INCLUDE_INSTALL_DIR}
    )
 
-if(EIGEN_INCLUDE_DIR)
-  set(EIGEN_FOUND TRUE)
-endif(EIGEN_INCLUDE_DIR)
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Eigen DEFAULT_MSG EIGEN_INCLUDE_DIR )
 
-if(EIGEN_FOUND)
-   if(NOT Eigen_FIND_QUIETLY)
-      message(STATUS "Found Eigen: ${EIGEN_INCLUDE_DIR}")
-   endif(NOT Eigen_FIND_QUIETLY)
-else(EIGEN_FOUND)
-   if(Eigen_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find Eigen")
-   endif(Eigen_FIND_REQUIRED)
-endif(EIGEN_FOUND)
 
 mark_as_advanced(EIGEN_INCLUDE_DIR)
 

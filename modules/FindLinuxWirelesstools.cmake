@@ -20,19 +20,9 @@ FIND_PATH(IW_INCLUDE_DIR iwlib.h)
 
 FIND_LIBRARY(IW_LIBRARIES NAMES iw)
 
-IF(IW_INCLUDE_DIR AND IW_LIBRARIES)
-   SET(IW_FOUND TRUE)
-ENDIF(IW_INCLUDE_DIR AND IW_LIBRARIES)
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(IW "Could not find Linux Wirelesstools (libIW)" IW_INCLUDE_DIR IW_LIBRARIES )
 
-IF(IW_FOUND)
-  IF(NOT LinuxWirelesstools_FIND_QUIETLY)
-    MESSAGE(STATUS "Found Linux Wirelesstools lib : ${IW_LIBRARIES}")
-  ENDIF(NOT LinuxWirelesstools_FIND_QUIETLY)
-ELSE(IW_FOUND)
-  IF(LinuxWirelesstools_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could not find Linux Wirelesstools (libIW)")
-  ENDIF(LinuxWirelesstools_FIND_REQUIRED)
-ENDIF(IW_FOUND)
 
 # show the IW_INCLUDE_DIR and IW_LIBRARIES variables only in the advanced view
 MARK_AS_ADVANCED(IW_INCLUDE_DIR IW_LIBRARIES )
