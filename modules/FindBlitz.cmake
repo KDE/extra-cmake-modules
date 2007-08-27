@@ -16,7 +16,7 @@ endif (BLITZ_INCLUDES AND BLITZ_LIBRARIES)
 
 find_path(BLITZ_INCLUDES
   NAMES
-  blitz.h
+  qimageblitz.h
   PATH_SUFFIXES blitz
   PATHS
   ${KDE4_INCLUDE_DIR}
@@ -25,7 +25,7 @@ find_path(BLITZ_INCLUDES
 
 FIND_LIBRARY(BLITZ_LIBRARIES
  NAMES
- blitz
+ qimageblitz
  PATHS
  ${KDE4_LIB_DIR}
  ${LIB_INSTALL_DIR}
