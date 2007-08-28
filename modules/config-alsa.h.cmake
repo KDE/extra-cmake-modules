@@ -6,11 +6,11 @@
 
 /* Define to 1 if you have the </usr/src/sys/gnu/i386/isa/sound/awe_voice.h>
    header file. */
-#cmakedefine HAVE__USR_SRC_SYS_GNU_I386_ISA_SOUND_AWE_VOICE_H
+#cmakedefine HAVE__USR_SRC_SYS_GNU_I386_ISA_SOUND_AWE_VOICE_H 1
 
 /* Define to 1 if you have the </usr/src/sys/i386/isa/sound/awe_voice.h>
    header file. */
-#cmakedefine HAVE__USR_SRC_SYS_I386_ISA_SOUND_AWE_VOICE_H
+#cmakedefine HAVE__USR_SRC_SYS_I386_ISA_SOUND_AWE_VOICE_H 1
 
 /* Define to 1 if you have the <awe_voice.h> header file. */
 #cmakedefine HAVE_AWE_VOICE_H 1
