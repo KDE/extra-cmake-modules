@@ -295,7 +295,10 @@ void AutoMoc::generateMoc(const QString &sourceFile, const QString &mocFileName)
         QProcess *mocProc = new QProcess;
         mocProc->setProcessChannelMode(QProcess::ForwardedChannels);
         QStringList args(mocIncludes);
-        args << "-o" << mocFilePath << sourceFile;
+#ifdef Q_OS_WIN
+	args << "-DWIN32";
+#endif
+	args << "-o" << mocFilePath << sourceFile;
         //qDebug() << "executing: " << mocExe << args;
         mocProc->start(mocExe, args, QIODevice::NotOpen);
         if (mocProc->waitForStarted())
