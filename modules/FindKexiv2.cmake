@@ -20,7 +20,7 @@ else (KEXIV2_INCLUDE_DIR AND KEXIV2_LIBRARIES)
 
   # Check if library is not in local sub-folder
   
-  FIND_FILE(KEXIV2_LOCAL_FOUND libkexiv2/version.h ${CMAKE_SOURCE_DIR}/libkexiv2 NO_DEFAULT_PATH)
+  FIND_FILE(KEXIV2_LOCAL_FOUND libkexiv2/version.h.cmake ${CMAKE_SOURCE_DIR}/libkexiv2 NO_DEFAULT_PATH)
 
   if (KEXIV2_LOCAL_FOUND)
 

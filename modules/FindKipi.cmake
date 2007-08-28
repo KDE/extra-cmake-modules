@@ -20,7 +20,7 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
 
   # Check if library is not in local sub-folder
   
-  FIND_FILE(KIPI_LOCAL_FOUND libkipi/version.h ${CMAKE_SOURCE_DIR}/libkipi NO_DEFAULT_PATH)
+  FIND_FILE(KIPI_LOCAL_FOUND libkipi/version.h.cmake ${CMAKE_SOURCE_DIR}/libkipi NO_DEFAULT_PATH)
 
   if (KIPI_LOCAL_FOUND)
 
