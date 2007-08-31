@@ -15,15 +15,30 @@ if (NOT WIN32)
    pkgconfig(glib-2.0 _LibGLIB2IncDir _LibGLIB2LinkDir _LibGLIB2LinkFlags _LibGLIB2Cflags)
 endif(NOT WIN32)
 
-find_path(GLIB2_INCLUDE_DIR glib.h
+find_path(GLIB2_MAIN_INCLUDE_DIR glib.h
           PATH_SUFFIXES glib-2.0
           PATHS ${_LibGLIB2IncDir} )
 
+# search the glibconfig.h include dir under the same root where the library is found
 find_library(GLIB2_LIBRARIES 
              NAMES glib-2.0 
              PATHS ${_LibGLIB2LinkDir} )
 
+get_filename_component(glib2LibDir "${GLIB2_LIBRARIES}" PATH)
+
+find_path(GLIB2_INTERNAL_INCLUDE_DIR glibconfig.h
+          PATH_SUFFIXES glib-2.0/include
+          PATHS ${_LibGLIB2IncDir} "${glib2LibDir}" )
+
+set(GLIB2_INCLUDE_DIR "${GLIB2_MAIN_INCLUDE_DIR}")
+
+# not sure if this include dir is optional or required
+# for now it is optional
+if(GLIB2_INTERNAL_INCLUDE_DIR)
+  set(GLIB2_INCLUDE_DIR ${GLIB2_INCLUDE_DIR} "${GLIB2_INTERNAL_INCLUDE_DIR}")
+endif(GLIB2_INTERNAL_INCLUDE_DIR)
+
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(GLIB2  DEFAULT_MSG  GLIB2_LIBRARIES GLIB2_INCLUDE_DIR)
+find_package_handle_standard_args(GLIB2  DEFAULT_MSG  GLIB2_LIBRARIES GLIB2_MAIN_INCLUDE_DIR)
 
 mark_as_advanced(GLIB2_INCLUDE_DIR GLIB2_LIBRARIES)
