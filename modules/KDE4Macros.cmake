@@ -695,7 +695,22 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
         list(REMOVE_AT _srcList 0 1)
     endif( ${ARGV1} STREQUAL "TESTNAME" )
     kde4_add_test_executable( ${_test_NAME} ${_srcList} )
-    add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} )
+
+    SET(using_qtest "")
+    FOREACH(_filename ${_srcList})
+        IF(NOT using_qtest)
+            FILE(READ ${_filename} file_CONTENT)
+            STRING(REGEX MATCH "QTEST_(KDE)?MAIN" using_qtest "${file_CONTENT}")
+        ENDIF(NOT using_qtest)
+    ENDFOREACH(_filename)
+
+    if (using_qtest)
+        #MESSAGE(STATUS "${_targetName} : Using QTestLib, can produce XML report.")
+        add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} -xml -o ${_targetName}.tml)
+    else (using_qtest)
+        #MESSAGE(STATUS "${_targetName} : NOT using QTestLib, can't produce XML report, please use QTestLib to write your unit tests.")
+        add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} )
+    endif (using_qtest)
 
     if (NOT MSVC_IDE)   #not needed for the ide
         # if the tests are EXCLUDE_FROM_ALL, add a target "buildtests" to build all tests
