@@ -24,7 +24,7 @@ IF(ZLIB_FOUND)
   /usr/local/include/libpng             # OpenBSD
   )
 
-  SET(PNG_NAMES ${PNG_NAMES} png libpng)
+  SET(PNG_NAMES ${PNG_NAMES} png libpng png12 libpng12)
   FIND_LIBRARY(PNG_LIBRARY
     NAMES ${PNG_NAMES}
   )
