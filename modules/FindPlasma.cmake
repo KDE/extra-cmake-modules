@@ -28,7 +28,7 @@ include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(Plasma DEFAULT_MSG PLASMA_LIBS PLASMA_INCLUDE_DIR )
 
 if (PLASMA_FOUND)
-    find_file(PLASMA_OPENGL_FOUND glapplet.h
+    find_file(PLASMA_OPENGL_FOUND plasma/glapplet.h
               PATHS ${PLASMA_INCLUDE_DIR}
               NO_DEFAULT_PATH)
 endif (PLASMA_FOUND)
