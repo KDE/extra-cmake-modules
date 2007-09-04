@@ -26,6 +26,7 @@ find_path(BLITZ_INCLUDES
 FIND_LIBRARY(BLITZ_LIBRARIES
  NAMES
  qimageblitz
+ qimageblitzd
  PATHS
  ${KDE4_LIB_DIR}
  ${LIB_INSTALL_DIR}
