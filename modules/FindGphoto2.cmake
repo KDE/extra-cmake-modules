@@ -3,7 +3,7 @@
 #  GPHOTO2_INCLUDE_DIR - the GPHOTO2 include directory
 #  GPHOTO2_LIBRARIES - The libraries needed to use GPHOTO2
 
-# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+# Copyright (c) 2006, 2007 Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -16,14 +16,10 @@ if (KDE4_GPHOTO2 )
   		SET(GPHOTO2_FOUND TRUE)
 	ELSE (GPHOTO2_LIBRARIES AND GPHOTO2_INCLUDE_DIR)
 	
-  		FIND_PROGRAM(GHOTO2CONFIG_EXECUTABLE NAMES gphoto2-config PATHS
-     		/usr/bin
-     		/usr/local/bin
+  		FIND_PROGRAM(GHOTO2CONFIG_EXECUTABLE NAMES gphoto2-config 
   		)
 
-  		FIND_PROGRAM(GHOTO2PORTCONFIG_EXECUTABLE NAMES gphoto2-port-config PATHS
-     		/usr/bin
-     		/usr/local/bin
+  		FIND_PROGRAM(GHOTO2PORTCONFIG_EXECUTABLE NAMES gphoto2-port-config
   		)
  		set(GPHOTO2_LIBRARIES)
 		set(GPHOTO2_INCLUDE_DIRS)
