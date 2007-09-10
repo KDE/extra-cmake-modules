@@ -19,6 +19,7 @@ find_path(BLITZ_INCLUDES
   qimageblitz.h
   PATH_SUFFIXES qimageblitz
   PATHS
+  $ENV{QIMAGEBLITZDIR}/include
   ${KDE4_INCLUDE_DIR}
   ${INCLUDE_INSTALL_DIR}
 )
@@ -28,6 +29,7 @@ FIND_LIBRARY(BLITZ_LIBRARIES
  qimageblitz
  qimageblitzd
  PATHS
+ $ENV{QIMAGEBLITZDIR}/lib
  ${KDE4_LIB_DIR}
  ${LIB_INSTALL_DIR}
 )
