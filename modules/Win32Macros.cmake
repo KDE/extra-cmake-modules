@@ -11,7 +11,7 @@ if (WIN32)
     # addExplorerWrapper creates batch files for fast access 
     # to the build environment from the win32 explorer. 
     # 
-    # For mingw and nmake projects it's opens a command shell,
+    # For mingw and nmake projects it opens a command shell,
     # for Visual Studio IDE's (at least tested with VS 8 2005) it
     # opens the related .sln file with paths setting specified at 
     # configure time. 
