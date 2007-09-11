@@ -894,3 +894,31 @@ macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
+#
+# add application icon to a set of source files 
+#
+macro (KDE4_ADD_APP_ICON outfiles)
+    if (WIN32)
+        FOREACH (it ${ARGN})
+            GET_FILENAME_COMPONENT(_name ${it} NAME_WE)
+            set (_icons ${_icons} ${it})
+        ENDFOREACH (it)
+        set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${_name})
+        add_custom_command(OUTPUT ${_outfilename}.ico
+            COMMAND png2ico 
+            ARGS ${_outfilename}.ico ${_icons} 
+            DEPENDS ${_icons}
+        )
+        file(WRITE ${_outfilename}.rc "IDI_ICON1        ICON        DISCARDABLE    \"${_outfilename}.ico\"\n")
+        if (MINGW)
+            add_custom_command(OUTPUT ${_outfilename}_res.o
+                COMMAND windres 
+                ARGS -i ${_outfilename}.rc -o ${_outfilename}_res.o --include-dir=${CMAKE_CURRENT_SOURCE_DIR}
+                DEPENDS ${_outfilename}.ico ${_outfilename}.rc
+            )
+            list(APPEND ${outfiles} ${_outfilename}_res.o)
+        else(MINGW)
+            list(APPEND ${outfiles} ${_outfilename}.rc)
+        endif(MINGW)
+    endif(WIN32)
+endmacro (KDE4_ADD_APP_ICON)
