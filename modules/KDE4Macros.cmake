@@ -320,7 +320,7 @@ macro (KDE4_CREATE_MANPAGE _docbook)
       set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/docbook/xsl/manpages/docbook.xsl)
       set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
    else (_kdeBootStrapping)
-      set(_ssheet ${DATA_INSTALL_DIR}/ksgmltools2/docbook/xsl/manpages/docbook.xsl)
+      set(_ssheet ${KDE4_DATA_INSTALL_DIR}/ksgmltools2/docbook/xsl/manpages/docbook.xsl)
    endif (_kdeBootStrapping)
 
    add_custom_command(OUTPUT ${_doc}
