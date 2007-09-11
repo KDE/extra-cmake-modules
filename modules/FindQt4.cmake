@@ -294,8 +294,8 @@ IF (QT4_QMAKE_FOUND)
   if (WIN32)
     # get qt install dir 
     get_filename_component(_DIR ${QT_QMAKE_EXECUTABLE} PATH )
-    get_filename_component(QT4_INSTALL_DIR ${_DIR} PATH )
-  endif (WIN32)
+    get_filename_component(QT_INSTALL_DIR ${_DIR} PATH )
+  endif (WIN32
 
   # ask qmake for the library dir
   # Set QT_LIBRARY_DIR
