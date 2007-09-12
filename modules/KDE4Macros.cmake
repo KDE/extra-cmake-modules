@@ -695,7 +695,31 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
         list(REMOVE_AT _srcList 0 1)
     endif( ${ARGV1} STREQUAL "TESTNAME" )
     kde4_add_test_executable( ${_test_NAME} ${_srcList} )
-    add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} )   
+
+    if(NOT KDE4_TEST_OUTPUT)
+        set(KDE4_TEST_OUTPUT plaintext)
+    endif(NOT KDE4_TEST_OUTPUT)
+    set(KDE4_TEST_OUTPUT ${KDE4_TEST_OUTPUT} CACHE STRING "The output to generate when running the QTest unit tests")
+
+    set(using_qtest "")
+    foreach(_filename ${_srcList})
+        if(NOT using_qtest)
+            if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${_filename}")
+                file(READ ${_filename} file_CONTENT)
+                string(REGEX MATCH "QTEST_(KDE)?MAIN" using_qtest "${file_CONTENT}")
+            endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${_filename}")
+        endif(NOT using_qtest)
+    endforeach(_filename)
+
+    if (using_qtest AND KDE4_TEST_OUTPUT STREQUAL "xml")
+        #MESSAGE(STATUS "${_targetName} : Using QTestLib, can produce XML report.")
+        add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} -xml -o ${_targetName}.tml)
+    else (using_qtest AND KDE4_TEST_OUTPUT STREQUAL "xml")
+        #MESSAGE(STATUS "${_targetName} : NOT using QTestLib, can't produce XML report, please use QTestLib to write your unit tests.")
+        add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} )
+    endif (using_qtest AND KDE4_TEST_OUTPUT STREQUAL "xml")
+
+#    add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} -xml -o ${_test_NAME}.tml ) 
 
     if (NOT MSVC_IDE)   #not needed for the ide
         # if the tests are EXCLUDE_FROM_ALL, add a target "buildtests" to build all tests
