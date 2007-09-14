@@ -943,7 +943,7 @@ if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
    endif (NOT KDE4_INSTALLED_VERSION_OK)
 
    if (NOT KDE4_KCFGC_EXECUTABLE)
-     message(FATAL_ERROR "ERROR: could not detect a usable kconfig-compiler")
+     message(FATAL_ERROR "ERROR: could not detect a usable kconfig_compiler")
    endif (NOT KDE4_KCFGC_EXECUTABLE)
 
    message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
