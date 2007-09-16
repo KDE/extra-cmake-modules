@@ -20,6 +20,8 @@
 # KDE4_REMOVE_OBSOLETE_CMAKE_FILES
 # KDE4_NO_ENABLE_FINAL
 # KDE4_CREATE_HANDBOOK
+# KDE4_ADD_APP_ICON (Use on Win32)
+# KDE4_CREATE_MANPAGE
 
 # Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
