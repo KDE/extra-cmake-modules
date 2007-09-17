@@ -25,7 +25,7 @@ find_path(LCMS_INCLUDE_DIR lcms.h
 find_path(LCMS_INCLUDE_DIR lcms.h
 )
 
-find_library(LCMS_LIBRARIES NAMES lcms liblcms
+find_library(LCMS_LIBRARIES NAMES lcms liblcms lcms-1 liblcms-1
    PATHS     
    ${_LcmsLinkDir}     
    ${CMAKE_INSTALL_PREFIX}/lib
@@ -33,7 +33,7 @@ find_library(LCMS_LIBRARIES NAMES lcms liblcms
    /usr/local/lib/lcms
    NO_DEFAULT_PATH
 )
-find_library(LCMS_LIBRARIES NAMES lcms liblcms
+find_library(LCMS_LIBRARIES NAMES lcms liblcms lcms-1 liblcms-1
 )
 
 if(LCMS_INCLUDE_DIR AND LCMS_LIBRARIES)
