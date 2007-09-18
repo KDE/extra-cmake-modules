@@ -10,13 +10,13 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-
-FIND_PROGRAM(TAGLIBCONFIG_EXECUTABLE NAMES taglib-config PATHS
-   /usr/bin
-   /usr/local/bin
-   ${BIN_INSTALL_DIR}
-)
-
+IF(NOT WIN32)
+    FIND_PROGRAM(TAGLIBCONFIG_EXECUTABLE NAMES taglib-config PATHS
+       /usr/bin
+       /usr/local/bin
+       ${BIN_INSTALL_DIR}
+    )
+ENDIF(NOT WIN32)
 #reset vars
 set(TAGLIB_LIBRARIES)
 set(TAGLIB_CFLAGS)
@@ -34,13 +34,34 @@ IF(TAGLIBCONFIG_EXECUTABLE)
   ENDIF(TAGLIB_LIBRARIES AND TAGLIB_CFLAGS)
 
   MARK_AS_ADVANCED(TAGLIB_CFLAGS TAGLIB_LIBRARIES)
+ELSE(TAGLIBCONFIG_EXECUTABLE)
+  find_path(TAGLIB_INCLUDES
+    NAMES
+    tag.h
+    PATH_SUFFIXES taglib
+    PATHS
+    ${KDE4_INCLUDE_DIR}
+    ${INCLUDE_INSTALL_DIR}
+  )
 
+  FIND_LIBRARY(TAGLIB_LIBRARIES
+  NAMES
+   tag
+   PATHS
+   ${KDE4_LIB_DIR}
+   ${LIB_INSTALL_DIR}
+  )
+  
+  INCLUDE(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(Taglib DEFAULT_MSG 
+                                    TAGLIB_INCLUDES TAGLIB_LIBRARIES)
 ENDIF(TAGLIBCONFIG_EXECUTABLE)
 
+
 if(TAGLIB_FOUND)
-  IF(NOT Taglib_FIND_QUIETLY)
+  IF(NOT Taglib_FIND_QUIETLY AND TAGLIBCONFIG_EXECUTABLE)
     MESSAGE(STATUS "Taglib found: ${TAGLIB_LIBRARIES}")
-  ENDIF(NOT Taglib_FIND_QUIETLY)
+  ENDIF(NOT Taglib_FIND_QUIETLY AND TAGLIBCONFIG_EXECUTABLE)
 ELSE(TAGLIB_FOUND)
   IF(Taglib_FIND_REQUIRED)
     MESSAGE(FATAL_ERROR "Could not find Taglib")
