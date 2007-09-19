@@ -207,16 +207,25 @@ MACRO(QT_QUERY_QMAKE outvar invar)
   FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmpQmake/tmp.pro
     "message(CMAKE_MESSAGE<$$${invar}>)")
 
+  # Invoke qmake with the tmp.pro program to get the desired
+  # information.  Use the same variable for both stdout and stderr
+  # to make sure we get the output on all platforms.
   EXECUTE_PROCESS(COMMAND ${QT_QMAKE_EXECUTABLE}
     WORKING_DIRECTORY  
     ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmpQmake
     OUTPUT_VARIABLE _qmake_query_output
+    RESULT_VARIABLE _qmake_result
     ERROR_VARIABLE _qmake_query_output )
-
+  
   FILE(REMOVE_RECURSE 
     "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmpQmake")
 
-  STRING(REGEX REPLACE ".*CMAKE_MESSAGE<([^>]*).*" "\\1" ${outvar} "${_qmake_query_output}")
+  IF(_qmake_result)
+    MESSAGE(WARNING " querying qmake for ${invar}.  qmake reported:\n${_qmake_query_output}")
+  ELSE(_qmake_result)
+    STRING(REGEX REPLACE ".*CMAKE_MESSAGE<([^>]*).*" "\\1" ${outvar} "${_qmake_query_output}")
+  ENDIF(_qmake_result)
+
 ENDMACRO(QT_QUERY_QMAKE)
 
 # check for qmake
@@ -830,6 +839,7 @@ IF (QT4_QMAKE_FOUND)
   IF(WIN32)
     _QT4_ADJUST_LIB_VARS(QTMAIN)
   ENDIF(WIN32)
+  
 
   #######################################
   #
@@ -983,14 +993,18 @@ IF (QT4_QMAKE_FOUND)
       GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
       GET_FILENAME_COMPONENT(rc_path ${infile} PATH)
       SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/qrc_${outfilename}.cxx)
-      #  parse file for dependencies
+      #  parse file for dependencies 
+      #  all files are absolute paths or relative to the location of the qrc file
       FILE(READ "${infile}" _RC_FILE_CONTENTS)
       STRING(REGEX MATCHALL "<file[^<]+" _RC_FILES "${_RC_FILE_CONTENTS}")
-      
       SET(_RC_DEPENDS)
       FOREACH(_RC_FILE ${_RC_FILES})
         STRING(REGEX REPLACE "^<file[^>]*>" "" _RC_FILE "${_RC_FILE}")
-        SET(_RC_DEPENDS ${_RC_DEPENDS} "${rc_path}/${_RC_FILE}")
+        STRING(REGEX MATCH "^/|([A-Za-z]:/)" _ABS_PATH_INDICATOR "${_RC_FILE}")
+        IF(NOT _ABS_PATH_INDICATOR)
+          SET(_RC_FILE "${rc_path}/${_RC_FILE}")
+        ENDIF(NOT _ABS_PATH_INDICATOR)
+        SET(_RC_DEPENDS ${_RC_DEPENDS} "${_RC_FILE}")
       ENDFOREACH(_RC_FILE)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_RCC_EXECUTABLE}
@@ -1018,7 +1032,7 @@ IF (QT4_QMAKE_FOUND)
      ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
         COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} ${_params} ${_basename} ${_infile}
         DEPENDS ${_infile})
-
+  
     SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
     
     QT4_GENERATE_MOC(${_header} ${_moc})
