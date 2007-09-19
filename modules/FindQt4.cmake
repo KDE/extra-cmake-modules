@@ -1047,26 +1047,19 @@ IF (QT4_QMAKE_FOUND)
     QT4_ADD_DBUS_INTERFACE(${_sources} ${_interface} ${_basename})
   ENDMACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE)
 
-  # Internal (avoid to duplicate code between QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE and QT4_ADD_DBUS_INTERFACES 
-  MACRO(_QT4_ADD_DBUS_INTERFACES _sources _filename)
-        GET_FILENAME_COMPONENT(_infile ${_filename} ABSOLUTE)
+  MACRO(QT4_ADD_DBUS_INTERFACES _sources)
+     FOREACH (_current_FILE ${ARGN})
+        GET_FILENAME_COMPONENT(_infile ${_current_FILE} ABSOLUTE)
         # get the part before the ".xml" suffix
         STRING(REGEX REPLACE "(.*[/\\.])?([^\\.]+)\\.xml" "\\2" _basename ${_current_FILE})
         STRING(TOLOWER ${_basename} _basename)
-        QT4_ADD_DBUS_INTERFACE(${_sources} ${_infile} ${_basename}interface)     
+        QT4_ADD_DBUS_INTERFACE(${_sources} ${_infile} ${_basename}interface)
+     ENDFOREACH (_current_FILE)
   ENDMACRO(_QT4_ADD_DBUS_INTERFACES)
 
-  MACRO(QT4_ADD_DBUS_INTERFACES _sources)
-     FOREACH (_current_FILE ${ARGN})
-        _QT4_ADD_DBUS_INTERFACES(${_sources} ${_current_FILE})
-     ENDFOREACH (_current_FILE)
-  ENDMACRO(QT4_ADD_DBUS_INTERFACES)
-
   MACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE _sources)
-    FOREACH (_current_FILE ${ARGN})
-        SET_SOURCE_FILES_PROPERTIES(${_current_FILE} PROPERTIES NO_NAMESPACE TRUE)
-        _QT4_ADD_DBUS_INTERFACES(${_sources} ${_current_FILE})
-    ENDFOREACH (_current_FILE)
+    SET_SOURCE_FILES_PROPERTIES(${ARGN} PROPERTIES NO_NAMESPACE TRUE)
+    QT4_ADD_DBUS_INTERFACES(${_sources} ${ARGN})
   ENDMACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE)
   
   MACRO(QT4_GENERATE_DBUS_INTERFACE _header) # _customName )
