@@ -25,7 +25,7 @@ MACRO(FIND_LIBRARY_EX var_name win32_dbg_postfix_name dgb_postfix libname)
    IF(NOT WIN32)
      # on non-win32 we don't need to take care about WIN32_DEBUG_POSTFIX
 
-     FIND_LIBRARY(var_name ${libname} ${ARGN})
+     FIND_LIBRARY(${var_name} ${libname} ${ARGN})
 
    ELSE(NOT WIN32)
 
