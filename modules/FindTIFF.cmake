@@ -17,7 +17,7 @@ endif (TIFF_INCLUDE_DIR AND TIFF_LIBRARY)
 
 find_path(TIFF_INCLUDE_DIR NAMES tiff.h )
 
-set(TIFF_NAMES ${TIFF_NAMES} tiff libtiff)
+set(TIFF_NAMES ${TIFF_NAMES} tiff libtiff libtiff3)
 find_library(TIFF_LIBRARY NAMES ${TIFF_NAMES} )
 
 include(FindPackageHandleStandardArgs)
