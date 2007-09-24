@@ -1,11 +1,11 @@
 
 
-if(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
+if(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES)
 
   # read from cache
   set(Soprano_FOUND TRUE)
 
-else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
+else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES)
 
   FIND_PATH(SOPRANO_INCLUDE_DIR 
     NAMES
@@ -23,13 +23,46 @@ else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
     ${LIB_INSTALL_DIR}
   )
 
+
+  FIND_LIBRARY(SOPRANO_INDEX_LIBRARIES 
+    NAMES
+    sopranoindex
+    PATHS
+    /usr/lib
+    /usr/local/lib
+    ${KDE4_LIB_DIR}
+    ${LIB_INSTALL_DIR}
+    )
+
+  FIND_LIBRARY(SOPRANO_CLIENT_LIBRARIES 
+    NAMES
+    sopranoclient
+    PATHS
+    /usr/lib
+    /usr/local/lib
+    ${KDE4_LIB_DIR}
+    ${LIB_INSTALL_DIR}
+    )
+
   if(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
     set(Soprano_FOUND TRUE)
+    if(SOPRANO_INDEX_LIBRARIES)
+      set(SopranoIndex_FOUND TRUE)
+    endif(SOPRANO_INDEX_LIBRARIES)
+    if(SOPRANO_CLIENT_LIBRARIES)
+      set(SopranoClient_FOUND TRUE)
+    endif(SOPRANO_CLIENT_LIBRARIES)
   endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
   
   if(Soprano_FOUND)
     if(NOT Soprano_FIND_QUIETLY)
       message(STATUS "Found Soprano: ${SOPRANO_LIBRARIES}")
+      if(SopranoIndex_FOUND)
+        message(STATUS "Found Soprano Index: ${SOPRANO_INDEX_LIBRARIES}")
+      endif(SopranoIndex_FOUND)
+      if(SopranoClient_FOUND)
+        message(STATUS "Found Soprano Client: ${SOPRANO_INDEX_LIBRARIES}")
+      endif(SopranoClient_FOUND)
     endif(NOT Soprano_FIND_QUIETLY)
   else(Soprano_FOUND)
     if(Soprano_FIND_REQUIRED)
@@ -49,4 +82,4 @@ else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
     endif(Soprano_FIND_REQUIRED)
   endif(Soprano_FOUND)
 
-endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
+endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES)
