@@ -747,7 +747,7 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 endmacro (KDE4_ADD_UNIT_TEST)
 
 macro (KDE4_ADD_TEST_EXECUTABLE _target_NAME)
-   MESSAGE(SEND_ERROR "KDE4_ADD_TEST_EXECUTABLE is deprecated use KDE4_ADD_EXECUTABLE(<target> TEST <files> instead")
+   MESSAGE(SEND_ERROR "KDE4_ADD_TEST_EXECUTABLE is deprecated use KDE4_ADD_EXECUTABLE(<target> TEST <files>) instead")
 endmacro (KDE4_ADD_TEST_EXECUTABLE)
 
 
