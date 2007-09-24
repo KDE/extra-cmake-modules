@@ -37,22 +37,16 @@
 #  macro QT4_ADD_DBUS_INTERFACE(outfiles interface basename)
 #        create a the interface header and implementation files with the 
 #        given basename from the given interface xml file and add it to 
-#        the list of sources
+#        the list of sources.
+#        To disable generating a namespace header, set the source file property 
+#        NO_NAMESPACE to TRUE on the interface file.
 #
 #  macro QT4_ADD_DBUS_INTERFACES(outfiles inputfile ... )
 #        create the interface header and implementation files 
 #        for all listed interface xml files
 #        the name will be automatically determined from the name of the xml file
-#
-#  macro QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE(outfiles interface basename)
-#        create a the interface without namespace header and implementation files with the
-#        given basename from the given interface xml file and add it to
-#        the list of sources
-#
-#  macro QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE(outfiles inputfile ... )
-#        create the interface header without namespace and implementation files
-#        for all listed interface xml files
-#        the name will be automatically determined from the name of the xml file
+#        To disable generating namespace headers, set the source file property 
+#        NO_NAMESPACE to TRUE for these inputfiles.
 #
 #  macro QT4_ADD_DBUS_ADAPTOR(outfiles xmlfile parentheader parentclassname [basename] [classname])
 #        create a dbus adaptor (header and implementation file) from the xml file
@@ -1042,11 +1036,6 @@ IF (QT4_QMAKE_FOUND)
   
   ENDMACRO(QT4_ADD_DBUS_INTERFACE)
  
-  MACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE _sources _interface _basename)
-    SET_SOURCE_FILES_PROPERTIES(${_interface} PROPERTIES NO_NAMESPACE TRUE)
-    QT4_ADD_DBUS_INTERFACE(${_sources} ${_interface} ${_basename})
-  ENDMACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE)
-
   MACRO(QT4_ADD_DBUS_INTERFACES _sources)
      FOREACH (_current_FILE ${ARGN})
         GET_FILENAME_COMPONENT(_infile ${_current_FILE} ABSOLUTE)
@@ -1057,9 +1046,16 @@ IF (QT4_QMAKE_FOUND)
      ENDFOREACH (_current_FILE)
   ENDMACRO(QT4_ADD_DBUS_INTERFACES)
 
+  MACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE _sources _interface _basename)
+    MESSAGE(SEND_ERROR "QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE() is deprecated. Use the following instead:
+SET_SOURCE_FILES_PROPERTIES(<interface> PROPERTIES NO_NAMESPACE TRUE)
+QT4_ADD_DBUS_INTERFACE(<srcList> <interface> <basename>)\n")
+  ENDMACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE)
+
   MACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE _sources)
-    SET_SOURCE_FILES_PROPERTIES(${ARGN} PROPERTIES NO_NAMESPACE TRUE)
-    QT4_ADD_DBUS_INTERFACES(${_sources} ${ARGN})
+    MESSAGE(SEND_ERROR "QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE() is deprecated. Use the following instead:
+SET_SOURCE_FILES_PROPERTIES(<files> PROPERTIES NO_NAMESPACE TRUE)
+QT4_ADD_DBUS_INTERFACES(<srcList> <files>)\n")
   ENDMACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE)
   
   MACRO(QT4_GENERATE_DBUS_INTERFACE _header) # _customName )

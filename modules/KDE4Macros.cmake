@@ -12,7 +12,6 @@
 # KDE4_ADD_PLUGIN
 # KDE4_ADD_KDEINIT_EXECUTABLE
 # KDE4_ADD_UNIT_TEST
-# KDE4_ADD_TEST_EXECUTABLE
 # KDE4_ADD_EXECUTABLE
 # KDE4_ADD_WIDGET_FILES
 # KDE4_UPDATE_ICONCACHE
@@ -607,9 +606,13 @@ endmacro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 # if "RUN_UNINSTALLED" is in the list of files, the _uninst argument is set to
 # "RUN_UNINSTALLED" (which evaluates to TRUE in cmake), otherwise it is set empty
 # (which evaluates to FALSE in cmake)
-macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
+# if "TEST" is in the list of files, the _test argument is set to
+# "TEST" (which evaluates to TRUE in cmake), otherwise it is set empty
+# (which evaluates to FALSE in cmake)
+macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst _test)
    set(${_nogui})
    set(${_uninst})
+   set(${_test})
    set(${_output_LIST} ${ARGN})
    list(LENGTH ${_output_LIST} count)
 
@@ -642,6 +645,12 @@ macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst)
       set(remove 0;1)
    endif (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
 
+   if (${first_PARAM} STREQUAL "TEST")
+      set(${_test} "TEST")
+      set(remove 0)
+   endif (${first_PARAM} STREQUAL "TEST")
+
+
    if (NOT "${remove}" STREQUAL "NOTFOUND")
       list(REMOVE_AT ${_output_LIST} ${remove})
    endif (NOT "${remove}" STREQUAL "NOTFOUND")
@@ -651,7 +660,7 @@ endmacro(KDE4_CHECK_EXECUTABLE_PARAMS)
 
 macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
-   kde4_check_executable_params(_SRCS _nogui _uninst ${ARGN})
+   kde4_check_executable_params(_SRCS _nogui _uninst _test ${ARGN})
 
 #   if (WIN32)
 #      # under windows, just build a normal executable
@@ -696,7 +705,7 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
         set(_targetName ${ARGV2})
         list(REMOVE_AT _srcList 0 1)
     endif( ${ARGV1} STREQUAL "TESTNAME" )
-    kde4_add_test_executable( ${_test_NAME} ${_srcList} )
+    kde4_add_executable( ${_test_NAME} TEST ${_srcList} )
 
     if(NOT KDE4_TEST_OUTPUT)
         set(KDE4_TEST_OUTPUT plaintext)
@@ -737,43 +746,14 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 
 endmacro (KDE4_ADD_UNIT_TEST)
 
-# add an test executable
-# it will be built with RPATH pointing to the build dir
-# The targets are always created, but only built for the "all"
-# target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
-# are created but not built by default. You can build them by manually building the target.
-# KDESRCDIR is set to the source directory of the test, this can be used with
-# KGlobal::dirs()->addResourceDir( "data", KDESRCDIR ); to be able to use xmlgui
-# and other things in the test, that normally require installation
 macro (KDE4_ADD_TEST_EXECUTABLE _target_NAME)
-
-   set(_add_executable_param)
-
-   if (NOT KDE4_BUILD_TESTS)
-      set(_add_executable_param EXCLUDE_FROM_ALL)
-   endif (NOT KDE4_BUILD_TESTS)
-
-   set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
-   set(_SRCS ${ARGN})
-   kde4_handle_automoc(${_target_NAME} _SRCS)
-   add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS})
-
-   set_target_properties(${_target_NAME} PROPERTIES
-                         COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\""
-                         SKIP_BUILD_RPATH FALSE
-                         BUILD_WITH_INSTALL_RPATH FALSE)
-
-   if (WIN32)
-      target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
-   endif (WIN32)
-
+   MESSAGE(SEND_ERROR "KDE4_ADD_TEST_EXECUTABLE is deprecated use KDE4_ADD_EXECUTABLE(<target> TEST <files> instead")
 endmacro (KDE4_ADD_TEST_EXECUTABLE)
 
 
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
-   kde4_check_executable_params( _SRCS _nogui _uninst ${ARGN})
+   kde4_check_executable_params( _SRCS _nogui _uninst _test ${ARGN})
 
    set(_add_executable_param)
    set(_type "GUI")
@@ -794,9 +774,13 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
       set(_add_executable_param)
    endif (_nogui)
 
-   if (_uninst)
+   if (_uninst OR _test)
       set(_type "RUN_UNINSTALLED")
-   endif (_uninst)
+   endif (_uninst OR _test)
+
+   if (_test AND NOT KDE4_BUILD_TESTS)
+      set(_add_executable_param ${_add_executable_param} EXCLUDE_FROM_ALL)
+   endif (_test AND NOT KDE4_BUILD_TESTS)
 
    kde4_handle_automoc(${_target_NAME} _SRCS)
    if (KDE4_ENABLE_FINAL)
@@ -805,6 +789,10 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    else (KDE4_ENABLE_FINAL)
       add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
+
+   if (_test)
+      set_target_properties(${_target_NAME} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
+   endif (_test)
 
    kde4_handle_rpath_for_executable(${_target_NAME} ${_type})
 
