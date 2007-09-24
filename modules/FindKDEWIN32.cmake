@@ -42,7 +42,7 @@ if (WIN32)
     if (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
       set(KDEWIN32_FOUND TRUE)
       # add needed system libs
-      set(KDEWIN32_LIBRARIES ${KDEWIN32_LIBRARY} user32 shell32 ws2_32)
+      set(KDEWIN32_LIBRARIES ${KDEWIN32_LIBRARY} user32 shell32 ws2_32 netapi32 userenv)
   
       if (MINGW)
         #mingw compiler
