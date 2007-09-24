@@ -168,6 +168,18 @@ bool AutoMoc::run()
                         notIncludedMocs.insert(headername, currentMoc);
                     }
                 }
+                const QString privateHeaderName = absPath + basename + "_p.h";
+                if (QFile::exists(privateHeaderName) && !includedMocs.contains(privateHeaderName) &&
+                        !notIncludedMocs.contains(privateHeaderName)) {
+                    const QString currentMoc = "moc_" + basename + "_p.cpp";
+                    QFile header(privateHeaderName);
+                    header.open(QIODevice::ReadOnly);
+                    const QByteArray contents = header.readAll();
+                    if (qObjectRegExp.indexIn(QString::fromUtf8(contents)) >= 0) {
+                        //qDebug() << "header contains Q_OBJECT macro";
+                        notIncludedMocs.insert(privateHeaderName, currentMoc);
+                    }
+                }
             } else {
                 do { // call this for every moc include in the file
                     const QString currentMoc = mocIncludeRegExp.cap(1);
