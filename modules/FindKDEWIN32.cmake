@@ -14,6 +14,8 @@
 
 
 if (WIN32)
+  include(FindLibraryEx)
+
   if (NOT KDEWIN32_DIR)
     if(NOT KDEWIN_FOUND)
       find_package(KDEWIN REQUIRED)
@@ -26,50 +28,15 @@ if (WIN32)
  
     # search for kdewin32 in the default install directory for applications (default of (n)make install)
 
-    find_library(KDEWIN32_LIBRARY_DEBUG NAMES kdewin32d
+    find_library_ex(KDEWIN32_LIBRARY
+      WIN32_DEBUG_POSTFIX d
+      NAMES kdewin32
       PATHS 
         ${CMAKE_LIBRARY_PATH}
         ${CMAKE_INSTALL_PREFIX}/lib
       NO_SYSTEM_ENVIRONMENT_PATH
     )
 
-    find_library(KDEWIN32_LIBRARY_RELEASE NAMES kdewin32
-      PATHS 
-        ${CMAKE_LIBRARY_PATH}
-        ${CMAKE_INSTALL_PREFIX}/lib
-      NO_SYSTEM_ENVIRONMENT_PATH
-    )
-    
-    # msvc makes a difference between debug and release
-    if(MSVC)
-      find_library(KDEWIN32_LIBRARY_DEBUG NAMES kdewin32d
-        PATHS 
-          ${CMAKE_LIBRARY_PATH}
-          ${CMAKE_INSTALL_PREFIX}/lib
-        NO_SYSTEM_ENVIRONMENT_PATH
-      )
-      if(MSVC_IDE)
-        # the ide needs the debug and release version
-        if( NOT KDEWIN32_LIBRARY_DEBUG OR NOT KDEWIN32_LIBRARY_RELEASE)
-          message(FATAL_ERROR "\nCould NOT find the debug AND release version of the KDEWIN32 library.\nYou need to have both to use MSVC projects.\nPlease build and install both kdelibs/win/ libraries first.\n")
-        endif( NOT KDEWIN32_LIBRARY_DEBUG OR NOT KDEWIN32_LIBRARY_RELEASE)
-        SET(KDEWIN32_LIBRARY optimized ${KDEWIN32_LIBRARY_RELEASE} debug ${KDEWIN32_LIBRARY_DEBUG})
-      else(MSVC_IDE)
-        string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_TOLOWER)
-        if(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
-          set(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY_DEBUG})
-        else(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
-          set(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY_RELEASE})
-        endif(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
-      endif(MSVC_IDE) 
-    else(MSVC)
-      if(KDEWIN32_LIBRARY_RELEASE)
-  	  set(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY_RELEASE})
-  	else(KDEWIN32_LIBRARY_RELEASE)
-  	  set(KDEWIN32_LIBRARY ${KDEWIN32_LIBRARY_DEBUG})
-  	endif(KDEWIN32_LIBRARY_RELEASE)
-    endif(MSVC)
-  
     # kdelibs/win/ has to be built before the rest of kdelibs/
     # eventually it will be moved out from kdelibs/
     if (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)

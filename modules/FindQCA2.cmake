@@ -14,6 +14,8 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+include(FindLibraryEx)
+
 if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
   # in cache already
@@ -34,21 +36,9 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
       NO_DEFAULT_PATH
     )
   ELSE (NOT WIN32)
-    FIND_LIBRARY(QCA2_LIBRARIES_DEBUG NAMES qcad)
-    FIND_LIBRARY(QCA2_LIBRARIES_RELEASE NAMES qca)
-
-    if(QCA2_LIBRARIES_DEBUG AND QCA2_LIBRARIES_RELEASE)
-      set(QCA2_LIBRARIES optimized ${QCA2_LIBRARIES_RELEASE}
-                          debug ${QCA2_LIBRARIES_DEBUG})
-    else(QCA2_LIBRARIES_DEBUG AND QCA2_LIBRARIES_RELEASE)
-      if(QCA2_LIBRARIES_DEBUG)
-        set(QCA2_LIBRARIES ${QCA2_LIBRARIES_DEBUG})
-      else(QCA2_LIBRARIES_DEBUG)
-        if(QCA2_LIBRARIES_RELEASE)
-          set(QCA2_LIBRARIES ${QCA2_LIBRARIES_RELEASE})
-        endif(QCA2_LIBRARIES_RELEASE)
-      endif(QCA2_LIBRARIES_DEBUG)
-    endif(QCA2_LIBRARIES_DEBUG AND QCA2_LIBRARIES_RELEASE)
+    FIND_LIBRARY_EX(QCA2_LIBRARIES
+                    WIN32_DEBUG_POSTFIX d
+                    NAMES qca)
 
     FIND_PATH(QCA2_INCLUDE_DIR QtCrypto/qca.h)
     IF(QCA2_INCLUDE_DIR)

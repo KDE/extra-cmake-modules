@@ -10,6 +10,8 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+include(FindLibraryEx)
+
 IF(NOT WIN32)
     FIND_PROGRAM(TAGLIBCONFIG_EXECUTABLE NAMES taglib-config PATHS
        /usr/bin
@@ -44,12 +46,12 @@ ELSE(TAGLIBCONFIG_EXECUTABLE)
     ${INCLUDE_INSTALL_DIR}
   )
 
-  FIND_LIBRARY(TAGLIB_LIBRARIES
-  NAMES
-   tag
-   PATHS
-   ${KDE4_LIB_DIR}
-   ${LIB_INSTALL_DIR}
+  FIND_LIBRARY_EX(TAGLIB_LIBRARIES
+    WIN32_DEBUG_POSTFIX d
+    NAMES tag
+    PATHS
+    ${KDE4_LIB_DIR}
+    ${LIB_INSTALL_DIR}
   )
   
   INCLUDE(FindPackageHandleStandardArgs)
