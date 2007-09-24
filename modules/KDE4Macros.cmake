@@ -654,6 +654,12 @@ macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst _test)
       set(remove 0)
    endif (${first_PARAM} STREQUAL "TEST")
 
+   if (${second_PARAM} STREQUAL "TEST")
+      set(${_test} "TEST")
+      set(remove 0;1)
+   endif (${second_PARAM} STREQUAL "TEST")
+
+
 
    if (NOT "${remove}" STREQUAL "NOTFOUND")
       list(REMOVE_AT ${_output_LIST} ${remove})
