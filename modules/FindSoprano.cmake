@@ -28,8 +28,6 @@ else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES)
     NAMES
     sopranoindex
     PATHS
-    /usr/lib
-    /usr/local/lib
     ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
     )
@@ -38,8 +36,6 @@ else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES)
     NAMES
     sopranoclient
     PATHS
-    /usr/lib
-    /usr/local/lib
     ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
     )
