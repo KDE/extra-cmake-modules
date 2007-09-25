@@ -39,6 +39,16 @@ find_library_ex(STRIGI_STREAMS_LIBRARY
   ${_program_FILES_DIR}/strigi/lib
 )
 
+find_library_ex(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
+  WIN32_DEBUG_POSTFIX d
+  NAMES strigiqtdbusclient
+  PATHS
+  $ENV{STRIGI_HOME}/lib
+  ${CMAKE_INSTALL_PREFIX}/lib
+  ${_program_FILES_DIR}/strigi/lib
+)
+
+
 if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
   include(UsePkgConfig)
   pkgconfig(libstreamanalyzer _dummyIncDir _dummyLinkDir _dummyLinkFlags _dummyCflags)
@@ -62,6 +72,10 @@ if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
       find_library(STRIGI_STREAMANALYZER_LIBRARY NAMES streamanalyzer
 	PATHS ${_dummyLinkDir})
     endif(NOT STRIGI_STREAMANALYZER_LIBRARY)
+    if( NOT STRIGI_STRIGIQTDBUSCLIENT_LIBRARY)
+       find_library(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY NAMES strigiqtdbusclient
+        PATHS ${_dummyLinkDir})
+    endif(NOT STRIGI_STRIGIQTDBUSCLIENT_LIBRARY)
     if (NOT STRIGI_STREAMS_LIBRARY)
       find_library(STRIGI_STREAMS_LIBRARY NAMES streams
 	PATHS ${_dummyLinkDir})
