@@ -315,15 +315,11 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
 endmacro (KDE4_CREATE_HANDBOOK)
 
 
-macro (KDE4_CREATE_MANPAGE _docbook) # _section
+macro (KDE4_CREATE_MANPAGE _docbook _section)
    get_filename_component(_input ${_docbook} ABSOLUTE)
    get_filename_component(_base ${_input} NAME_WE)
 
-   set(_section "${ARGV1}")
-   if (NOT ${_section})
-      set(_section "1")
-   endif(NOT ${_section})
-   set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/${_base}.${_section})
+   set(_doc ${CMAKE_CURRENT_BINARY_DIR}/${_base}.${_section})
 
    #Bootstrap
    if (_kdeBootStrapping)
@@ -339,6 +335,30 @@ macro (KDE4_CREATE_MANPAGE _docbook) # _section
       DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
    )
    add_custom_target(manpage ALL DEPENDS ${_doc})
+
+   set(_args ${ARGN})
+
+   set(_installDest)
+   if(_args)
+      list(GET _args 0 _tmp)
+      if("${_tmp}" STREQUAL "INSTALL_DESTINATION")
+         list(GET _args 1 _installDest )
+         list(REMOVE_AT _args 0 1)
+      endif("${_tmp}" STREQUAL "INSTALL_DESTINATION")
+   endif(_args)
+
+   get_filename_component(dirname ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+   if(_args)
+      list(GET _args 0 _tmp)
+      if("${_tmp}" STREQUAL "SUBDIR")
+         list(GET _args 1 dirname )
+         list(REMOVE_AT _args 0 1)
+      endif("${_tmp}" STREQUAL "SUBDIR")
+   endif(_args)
+
+   if(_installDest)
+      install(FILES ${_doc} DESTINATION ${_installDest}/man${_section})
+   endif(_installDest)
 endmacro (KDE4_CREATE_MANPAGE)
 
 
