@@ -277,11 +277,6 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
       add_custom_target(htmlhandbook DEPENDS ${_htmlDoc})
    endif(KDE4_ENABLE_HTMLHANDBOOK)
 
-# kde4_create_handbook(<docbook file> [INSTALL_DESTINATION <dir>] [SUBDIR <subdir>] )
-# e.g. kde4_create_handbook(index.docbook)
-#      kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en )
-#      kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en SUBDIR kinfocenter/dma)
-
    set(_args ${ARGN})
 
    set(_installDest)
@@ -320,6 +315,8 @@ macro (KDE4_CREATE_MANPAGE _docbook _section)
    get_filename_component(_base ${_input} NAME_WE)
 
    set(_doc ${CMAKE_CURRENT_BINARY_DIR}/${_base}.${_section})
+   # sometimes we have "man-" prepended
+   string(REGEX REPLACE "/man-" "/" _outdoc ${_doc})
 
    #Bootstrap
    if (_kdeBootStrapping)
@@ -330,11 +327,11 @@ macro (KDE4_CREATE_MANPAGE _docbook _section)
       set(_bootstrapOption)
    endif (_kdeBootStrapping)
 
-   add_custom_command(OUTPUT ${_doc}
-      COMMAND ${KDE4_MEINPROC_EXECUTABLE} --stylesheet ${_ssheet} --check ${_bootstrapOption} -o ${_doc} ${_input}
+   add_custom_command(OUTPUT ${_outdoc}
+      COMMAND ${KDE4_MEINPROC_EXECUTABLE} --stylesheet ${_ssheet} --check ${_bootstrapOption} ${_input}
       DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
    )
-   add_custom_target(manpage ALL DEPENDS ${_doc})
+   add_custom_target(manpage ALL DEPENDS ${_outdoc})
 
    set(_args ${ARGN})
 
@@ -357,7 +354,7 @@ macro (KDE4_CREATE_MANPAGE _docbook _section)
    endif(_args)
 
    if(_installDest)
-      install(FILES ${_doc} DESTINATION ${_installDest}/man${_section})
+      install(FILES ${_outdoc} DESTINATION ${_installDest}/man${_section})
    endif(_installDest)
 endmacro (KDE4_CREATE_MANPAGE)
 
