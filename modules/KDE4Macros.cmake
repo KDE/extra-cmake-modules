@@ -315,17 +315,23 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
 endmacro (KDE4_CREATE_HANDBOOK)
 
 
-macro (KDE4_CREATE_MANPAGE _docbook)
+macro (KDE4_CREATE_MANPAGE _docbook) # _section
    get_filename_component(_input ${_docbook} ABSOLUTE)
-   set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/index.1)
+   get_filename_component(_base ${_input} NAME_WE)
 
-   set(_bootstrapOption)
+   set(_section "${ARGV1}")
+   if (NOT ${_section})
+      set(_section "1")
+   endif(NOT ${_section})
+   set(_doc ${CMAKE_CURRENT_SOURCE_DIR}/${_base}.${_section})
+
    #Bootstrap
    if (_kdeBootStrapping)
       set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/docbook/xsl/manpages/docbook.xsl)
       set(_bootstrapOption "--srcdir=${CMAKE_SOURCE_DIR}/kdoctools/")
    else (_kdeBootStrapping)
       set(_ssheet ${KDE4_DATA_INSTALL_DIR}/ksgmltools2/docbook/xsl/manpages/docbook.xsl)
+      set(_bootstrapOption)
    endif (_kdeBootStrapping)
 
    add_custom_command(OUTPUT ${_doc}
