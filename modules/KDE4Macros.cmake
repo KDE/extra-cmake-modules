@@ -944,7 +944,7 @@ endmacro (KDE4_CREATE_HTML_HANDBOOK)
 #
 # add application icon to a set of source files 
 #
-macro (KDE4_ADD_APP_ICON outfiles)
+macro (KDE4_ADD_WIN32_APP_ICON outfiles)
     if (WIN32)
         FOREACH (it ${ARGN})
             GET_FILENAME_COMPONENT(_name ${it} NAME_WE)
@@ -968,4 +968,4 @@ macro (KDE4_ADD_APP_ICON outfiles)
             list(APPEND ${outfiles} ${_outfilename}.rc)
         endif(MINGW)
     endif(WIN32)
-endmacro (KDE4_ADD_APP_ICON)
+endmacro (KDE4_ADD_WIN32_APP_ICON)
