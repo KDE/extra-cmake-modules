@@ -6,7 +6,7 @@
 #  STRIGI_STREAMANALYZER_LIBRARY - Link these to use Strigi streamanalyzer
 #  STRIGI_STREAMS_LIBRARY - Link these to use Strigi streams
 
-include(FindLibraryEx)
+include(FindLibraryWithDebug)
 
 set(STRIGI_MIN_VERSION "0.5.3")
 
@@ -22,7 +22,7 @@ find_path(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h
   NO_DEFAULT_PATH
 )
 
-find_library_ex(STRIGI_STREAMANALYZER_LIBRARY
+find_library_with_debug(STRIGI_STREAMANALYZER_LIBRARY
   WIN32_DEBUG_POSTFIX d
   NAMES streamanalyzer
   PATHS
@@ -31,7 +31,7 @@ find_library_ex(STRIGI_STREAMANALYZER_LIBRARY
   ${_program_FILES_DIR}/strigi/lib
 )
 
-find_library_ex(STRIGI_STREAMS_LIBRARY
+find_library_with_debug(STRIGI_STREAMS_LIBRARY
   WIN32_DEBUG_POSTFIX d
   NAMES streams
   PATHS
@@ -40,7 +40,7 @@ find_library_ex(STRIGI_STREAMS_LIBRARY
   ${_program_FILES_DIR}/strigi/lib
 )
 
-find_library_ex(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
+find_library_with_debug(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
   WIN32_DEBUG_POSTFIX d
   NAMES strigiqtdbusclient
   PATHS

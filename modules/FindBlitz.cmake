@@ -10,7 +10,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(FindLibraryEx)
+include(FindLibraryWithDebug)
 
 if (BLITZ_INCLUDES AND BLITZ_LIBRARIES)
   set(Blitz_FIND_QUIETLY TRUE)
@@ -26,7 +26,7 @@ find_path(BLITZ_INCLUDES
   ${INCLUDE_INSTALL_DIR}
 )
 
-FIND_LIBRARY_EX(BLITZ_LIBRARIES
+find_library_with_debug(BLITZ_LIBRARIES
   WIN32_DEBUG_POSTFIX d
   qimageblitz
   PATHS

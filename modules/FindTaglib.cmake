@@ -10,8 +10,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(FindLibraryEx)
-
 IF(NOT WIN32)
     FIND_PROGRAM(TAGLIBCONFIG_EXECUTABLE NAMES taglib-config PATHS
        /usr/bin
@@ -37,6 +35,9 @@ IF(TAGLIBCONFIG_EXECUTABLE)
 
   MARK_AS_ADVANCED(TAGLIB_CFLAGS TAGLIB_LIBRARIES)
 ELSE(TAGLIBCONFIG_EXECUTABLE)
+  include(FindLibraryWithDebug)
+  include(FindPackageHandleStandardArgs)
+
   find_path(TAGLIB_INCLUDES
     NAMES
     tag.h
@@ -46,7 +47,7 @@ ELSE(TAGLIBCONFIG_EXECUTABLE)
     ${INCLUDE_INSTALL_DIR}
   )
 
-  FIND_LIBRARY_EX(TAGLIB_LIBRARIES
+  find_library_with_debug(TAGLIB_LIBRARIES
     WIN32_DEBUG_POSTFIX d
     NAMES tag
     PATHS
@@ -54,7 +55,6 @@ ELSE(TAGLIBCONFIG_EXECUTABLE)
     ${LIB_INSTALL_DIR}
   )
   
-  INCLUDE(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(Taglib DEFAULT_MSG 
                                     TAGLIB_INCLUDES TAGLIB_LIBRARIES)
 ENDIF(TAGLIBCONFIG_EXECUTABLE)

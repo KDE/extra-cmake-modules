@@ -14,7 +14,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(FindLibraryEx)
+include(FindLibraryWithDebug)
 
 if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
@@ -36,7 +36,7 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
       NO_DEFAULT_PATH
     )
   ELSE (NOT WIN32)
-    FIND_LIBRARY_EX(QCA2_LIBRARIES
+    FIND_LIBRARY_WITH_DEBUG(QCA2_LIBRARIES
                     WIN32_DEBUG_POSTFIX d
                     NAMES qca)
 

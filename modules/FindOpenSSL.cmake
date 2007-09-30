@@ -10,11 +10,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(FindLibraryEx)
+INCLUDE(FindLibraryWithDebug)
 
 # on win32 we additional need to link to libeay32.lib
 MACRO(OPENSSL_ADD_LIB_EAY_LIBS)
-   FIND_LIBRARY_EX(OPENSSL_EAY_LIBRARIES
+   FIND_LIBRARY_WITH_DEBUG(OPENSSL_EAY_LIBRARIES
                    WIN32_DEBUG_POSTFIX d
                    NAMES eay libeay libeay32 libeay32MD)
 ENDMACRO(OPENSSL_ADD_LIB_EAY_LIBS)
@@ -29,7 +29,7 @@ ENDIF(SSL_EAY_DEBUG AND SSL_EAY_RELEASE)
 
 FIND_PATH(OPENSSL_INCLUDE_DIR openssl/ssl.h )
 
-FIND_LIBRARY_EX(OPENSSL_LIBRARIES
+FIND_LIBRARY_WITH_DEBUG(OPENSSL_LIBRARIES
                 WIN32_DEBUG_POSTFIX d
                 NAMES ssl ssleay ssleay32 ssleay32MD)
 

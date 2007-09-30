@@ -1,14 +1,15 @@
 #
-#  FIND_LIBRARY_EX - enhanced FIND_LIBRARY to allow the search for an
-#                    optional debug library with a WIN32_DEBUG_POSTFIX similar
-#                    to CMAKE_DEBUG_POSTFIX when creating a shared lib
-#                    it has to be the second and third argument
+#  FIND_LIBRARY_WITH_DEBUG
+#  -> enhanced FIND_LIBRARY to allow the search for an
+#     optional debug library with a WIN32_DEBUG_POSTFIX similar
+#     to CMAKE_DEBUG_POSTFIX when creating a shared lib
+#     it has to be the second and third argument
 #
 # Copyright (c) 2007, Christian Ehrlicher, <ch.ehrlicher@gmx.de>
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-MACRO(FIND_LIBRARY_EX var_name win32_dbg_postfix_name dgb_postfix libname)
+MACRO(FIND_LIBRARY_WITH_DEBUG var_name win32_dbg_postfix_name dgb_postfix libname)
 
   IF(NOT ${win32_dbg_postfix_name} STREQUAL "WIN32_DEBUG_POSTFIX")
 
@@ -66,7 +67,7 @@ MACRO(FIND_LIBRARY_EX var_name win32_dbg_postfix_name dgb_postfix libname)
        SET(newargs ${args})
 
      ENDIF("${libname}" STREQUAL "NAMES")
-     
+
      # search the release lib
      FIND_LIBRARY(${var_name}_RELEASE
                   NAMES ${libnames_release}
@@ -108,4 +109,4 @@ MACRO(FIND_LIBRARY_EX var_name win32_dbg_postfix_name dgb_postfix libname)
 
   ENDIF(NOT ${win32_dbg_postfix_name} STREQUAL "WIN32_DEBUG_POSTFIX")
 
-ENDMACRO(FIND_LIBRARY_EX)
+ENDMACRO(FIND_LIBRARY_WITH_DEBUG)

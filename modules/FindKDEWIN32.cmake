@@ -14,21 +14,21 @@
 
 
 if (WIN32)
-  include(FindLibraryEx)
+  include(FindLibraryWithDebug)
 
   if (NOT KDEWIN32_DIR)
     if(NOT KDEWIN_FOUND)
       find_package(KDEWIN REQUIRED)
     endif(NOT KDEWIN_FOUND)
 
-  	find_path(KDEWIN32_INCLUDE_DIR winposix_export.h
+    find_path(KDEWIN32_INCLUDE_DIR winposix_export.h
       ${CMAKE_INCLUDE_PATH}
       ${CMAKE_INSTALL_PREFIX}/include
     )
  
     # search for kdewin32 in the default install directory for applications (default of (n)make install)
 
-    find_library_ex(KDEWIN32_LIBRARY
+    find_library_with_debug(KDEWIN32_LIBRARY
       WIN32_DEBUG_POSTFIX d
       NAMES kdewin32
       PATHS 
