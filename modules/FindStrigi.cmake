@@ -19,6 +19,7 @@ find_path(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h
   $ENV{STRIGI_HOME}/include
   ${CMAKE_INSTALL_PREFIX}/include
   ${_program_FILES_DIR}/strigi/include
+  NO_DEFAULT_PATH
 )
 
 find_library_ex(STRIGI_STREAMANALYZER_LIBRARY
