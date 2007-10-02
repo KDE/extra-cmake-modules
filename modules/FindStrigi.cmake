@@ -29,6 +29,7 @@ find_library_with_debug(STRIGI_STREAMANALYZER_LIBRARY
   $ENV{STRIGI_HOME}/lib
   ${CMAKE_INSTALL_PREFIX}/lib
   ${_program_FILES_DIR}/strigi/lib
+  NO_DEFAULT_PATH
 )
 
 find_library_with_debug(STRIGI_STREAMS_LIBRARY
@@ -38,6 +39,7 @@ find_library_with_debug(STRIGI_STREAMS_LIBRARY
   $ENV{STRIGI_HOME}/lib
   ${CMAKE_INSTALL_PREFIX}/lib
   ${_program_FILES_DIR}/strigi/lib
+  NO_DEFAULT_PATH
 )
 
 find_library_with_debug(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
@@ -47,6 +49,7 @@ find_library_with_debug(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
   $ENV{STRIGI_HOME}/lib
   ${CMAKE_INSTALL_PREFIX}/lib
   ${_program_FILES_DIR}/strigi/lib
+  NO_DEFAULT_PATH
 )
 
 
