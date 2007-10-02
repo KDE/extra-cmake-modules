@@ -62,6 +62,7 @@
 # KDE4_KDEPRINT_LIBS         - the kdeprint library and all depending libraries
 # KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 # KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
+# KDE4_KPTY_LIBS             - the kpty library and all depending libraries
 # KDE4_PHONON_LIBS           - the phonon library and all depending librairies
 # KDE4_THREADWEAVER_LIBRARIES- the threadweaver library and all depending libraries
 # KDE4_SOLID_LIBS            - the solid library and all depending libraries
@@ -254,6 +255,9 @@ if (_kdeBootStrapping)
    set(KDE4_KDEUI_LIBS ${KDE4_KDECORE_LIBS} kdeui)
    set(KDE4_KIO_LIBS ${KDE4_KDEUI_LIBS} kio)
    set(KDE4_KPARTS_LIBS ${KDE4_KIO_LIBS} kparts)
+   if (UNIX)
+      set(KDE4_KPTY_LIBS ${KDE4_KDECORE_LIBS} kpty)
+   endif (UNIX)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
    set(KDE4_KDE3SUPPORT_LIBS ${KDE4_KIO_LIBS} kde3support)
    set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solid)
@@ -374,6 +378,9 @@ else (_kdeBootStrapping)
    set(KDE4_KDEPRINT_LIBS ${kdeprint_LIB_DEPENDS} ${KDE4_KDEPRINT_LIBRARY} )
 
    if (UNIX)
+      find_library(KDE4_KPTY_LIBRARY NAMES kpty PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+      set(KDE4_KPTY_LIBS ${kpty_LIB_DEPENDS} ${KDE4_KPTY_LIBRARY} )
+
       find_library(KDE4_KDESU_LIBRARY NAMES kdesu PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
       set(KDE4_KDESU_LIBS ${kdesu_LIB_DEPENDS} ${KDE4_KDESU_LIBRARY} )
    endif (UNIX)
