@@ -37,7 +37,6 @@
 # KDE4_KDNSSD_LIBRARY      - the kdnssd library
 # KDE4_PHONON_LIBRARY      - the phonon library
 # KDE4_KAUDIODEVICELIST_LIBRARY - the kaudiodevicelist library
-# KDE4_KDEFX_LIBRARY       - the kdefx library
 # KDE4_THREADWEAVER_LIBRARY- the threadweaver library
 # KDE4_SOLID_LIBRARY       - the solid library
 # KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
@@ -64,7 +63,6 @@
 # KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 # KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
 # KDE4_PHONON_LIBS           - the phonon library and all depending librairies
-# KDE4_KDEFX_LIBS            - the kdefx library and all depending librairies
 # KDE4_THREADWEAVER_LIBRARIES- the threadweaver library and all depending libraries
 # KDE4_SOLID_LIBS            - the solid library and all depending libraries
 # KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
@@ -258,7 +256,6 @@ if (_kdeBootStrapping)
    set(KDE4_KPARTS_LIBS ${KDE4_KIO_LIBS} kparts)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
    set(KDE4_KDE3SUPPORT_LIBS ${KDE4_KIO_LIBS} kde3support)
-   set(KDE4_KDEFX_LIBS ${KDE4_KDEFX_LIBS} kdefx)
    set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solid)
    set(KDE4_PHONON_LIBS ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} phonon)
    set(KDE4_KAUDIODEVICELIST_LIBS ${KDE4_SOLID_LIBS} kaudiodevicelist)
@@ -345,9 +342,6 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KDECORE_LIBRARY NAMES kdecore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDECORE_LIBS ${kdecore_LIB_DEPENDS} ${KDE4_KDECORE_LIBRARY} )
-
-   find_library(KDE4_KDEFX_LIBRARY NAMES kdefx PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KDEFX_LIBS ${kdefx_LIB_DEPENDS} ${KDE4_KDEFX_LIBRARY} )
 
    find_library(KDE4_KDEUI_LIBRARY NAMES kdeui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDEUI_LIBS ${kdeui_LIB_DEPENDS} ${KDE4_KDEUI_LIBRARY} )
