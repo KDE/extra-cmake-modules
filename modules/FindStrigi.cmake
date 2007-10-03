@@ -8,7 +8,7 @@
 
 include(FindLibraryWithDebug)
 
-set(STRIGI_MIN_VERSION "0.5.3")
+set(STRIGI_MIN_VERSION "0.5.5")
 
 if (WIN32)
   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
