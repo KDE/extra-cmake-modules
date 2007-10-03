@@ -19,7 +19,7 @@
 # KDE4_REMOVE_OBSOLETE_CMAKE_FILES
 # KDE4_NO_ENABLE_FINAL
 # KDE4_CREATE_HANDBOOK
-# KDE4_ADD_APP_ICON (Use on Win32)
+# KDE4_ADD_WIN32_APP_ICON (Use on Win32)
 # KDE4_CREATE_MANPAGE
 
 # Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
@@ -941,21 +941,38 @@ macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
-#
-# add application icon to a set of source files 
-#
-macro (KDE4_ADD_WIN32_APP_ICON outfiles)
+# adds application icon to target source list 
+# 'outfiles' - specifies the list of source files 
+# 'pattern'  - regular expression for searching application icons 
+# example: KDE4_ADD_WIN32_APP_ICON(myapp_sources "pics/cr*-myapp.png")
+
+macro (KDE4_ADD_WIN32_APP_ICON outfiles pattern)
     if (WIN32)
-        FOREACH (it ${ARGN})
+        #if (NOT PNG2ICO_EXECUTABLE)
+        #    find_executable(PNG2ICO_EXECUTABLE 
+        #endif (NOT PNG2ICO_EXECUTABLE)
+        file(GLOB files  "${pattern}")
+        MESSAGE(${files})
+        FOREACH (it ${files})
             GET_FILENAME_COMPONENT(_name ${it} NAME_WE)
-            set (_icons ${_icons} ${it})
+            #exclude 22'er icons, they does not fix into ico format 
+            if (it MATCHES ".*22-.*")
+            else(it MATCHES ".*22-.*")
+                set (_icons "${_icons} ${it}")
+            endif (it MATCHES ".*22-.*")
         ENDFOREACH (it)
         set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${_name})
-        add_custom_command(OUTPUT ${_outfilename}.ico
-            COMMAND png2ico 
-            ARGS ${_outfilename}.ico ${_icons} 
-            DEPENDS ${_icons}
+        # png2ico is located in the recommended kdewin32 package
+        MESSAGE("png2ico ${_outfilename}.ico ${_icons}")
+        EXEC_PROGRAM(png2ico
+                 ARGS ${_outfilename}.ico ${_icons} 
         )
+#        does not work for unkwown reason
+#        add_custom_command(OUTPUT ${_outfilename}.ico
+#            COMMAND c:/Programme/kdewin-msvc/bin/png2ico.exe
+#            ARGS ${_outfilename}.ico ${_icons} 
+#            DEPENDS ${_icons}
+#        )
         file(WRITE ${_outfilename}.rc "IDI_ICON1        ICON        DISCARDABLE    \"${_outfilename}.ico\"\n")
         if (MINGW)
             add_custom_command(OUTPUT ${_outfilename}_res.o
