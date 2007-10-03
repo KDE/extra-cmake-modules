@@ -32,6 +32,7 @@ MACRO(FIND_LIBRARY_WITH_DEBUG var_name win32_dbg_postfix_name dgb_postfix libnam
 
      # 1. get all possible libnames
      SET(args ${ARGN})
+     SET(newargs "")
      SET(libnames_release "")
      SET(libnames_debug "")
 
