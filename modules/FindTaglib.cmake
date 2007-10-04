@@ -12,8 +12,6 @@
 
 IF(NOT WIN32)
     FIND_PROGRAM(TAGLIBCONFIG_EXECUTABLE NAMES taglib-config PATHS
-       /usr/bin
-       /usr/local/bin
        ${BIN_INSTALL_DIR}
     )
 ENDIF(NOT WIN32)

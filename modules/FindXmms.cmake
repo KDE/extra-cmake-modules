@@ -1,6 +1,6 @@
 # Search xmms
 #
-# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+# Copyright (c) 2006, 2007 Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -9,9 +9,7 @@
 OPTION(KDE4_XMMS  "enable support for XMMS")
 
 if(KDE4_XMMS)
-	FIND_PROGRAM(XMMSCONFIG_EXECUTABLE NAMES xmms-config PATHS
-   		/usr/bin
-   		/usr/local/bin
+	FIND_PROGRAM(XMMSCONFIG_EXECUTABLE NAMES xmms-config
 	)
 	#reset vars
 	set(XMMS_LIBRARIES)
