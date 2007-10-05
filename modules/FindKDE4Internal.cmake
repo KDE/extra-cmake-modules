@@ -212,6 +212,9 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+if(KDE4_FOUND)
+  # Already found in this cmake run, nothing more to do
+else(KDE4_FOUND)
 
 include (MacroEnsureVersion)
 
@@ -972,3 +975,6 @@ if (NOT _kde4_uninstall_rule_created)
    add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake")
 
 endif (NOT _kde4_uninstall_rule_created)
+
+endif(KDE4_FOUND)
+

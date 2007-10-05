@@ -181,6 +181,10 @@
 # Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
 # See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
+if (QT4_QMAKE_FOUND)
+   # Check already done in this cmake run, nothing more to do
+
+else (QT4_QMAKE_FOUND)
 
 INCLUDE(CheckSymbolExists)
 INCLUDE(MacroAddFileDependencies)
@@ -1240,5 +1244,6 @@ ELSE(QT4_QMAKE_FOUND)
       ENDIF(QT4_INSTALLED_VERSION_TOO_OLD AND NOT Qt4_FIND_QUIETLY)
    ENDIF(Qt4_FIND_REQUIRED)
  
+ENDIF (QT4_QMAKE_FOUND)
 ENDIF (QT4_QMAKE_FOUND)
 
