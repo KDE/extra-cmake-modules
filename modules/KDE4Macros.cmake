@@ -262,9 +262,10 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
       set(_bootstrapOption)
    endif (_kdeBootStrapping)
 
+   file(GLOB _docs *.docbook)
    add_custom_command(OUTPUT ${_doc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} --cache ${_doc} ${_input}
-      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
+      DEPENDS ${_docs} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
    )
    add_custom_target(handbook ALL DEPENDS ${_doc})
 
@@ -299,7 +300,6 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
 
    if(_installDest)
       file(GLOB _images *.png)
-      file(GLOB _docs *.docbook)
       install(FILES ${_docs} ${_images} DESTINATION ${_installDest}/${dirname})
       # TODO symlinks on non-unix platforms
       if (UNIX)
