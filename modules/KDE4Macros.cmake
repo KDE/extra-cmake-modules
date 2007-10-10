@@ -300,7 +300,7 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
 
    if(_installDest)
       file(GLOB _images *.png)
-      install(FILES ${_docs} ${_images} DESTINATION ${_installDest}/${dirname})
+      install(FILES ${_doc} ${_docs} ${_images} DESTINATION ${_installDest}/${dirname})
       # TODO symlinks on non-unix platforms
       if (UNIX)
          # execute some cmake code on make install which creates the symlink
