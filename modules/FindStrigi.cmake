@@ -14,14 +14,18 @@ endif(NOT STRIGI_MIN_VERSION)
 
 if (WIN32)
   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
+  string(REPLACE "\\" "/" _program_FILES_DIR ${_program_FILES_DIR})
   set(STRIGI_NO_DEF_PATH "")
 else(WIN32)
   set(STRIGI_NO_DEF_PATH NO_DEFAULT_PATH)
 endif(WIN32)
 
+string(REPLACE "\\" "/" strigi_home $ENV{STRIGI_HOME})
+message(STATUS "strigi_home:  ${strigi_home}")
+
 find_path(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h
   PATHS
-  $ENV{STRIGI_HOME}/include
+  ${strigi_home}/include
   ${CMAKE_INSTALL_PREFIX}/include
   ${_program_FILES_DIR}/strigi/include
   ${STRIGI_NO_DEF_PATH}
@@ -31,7 +35,7 @@ find_library_with_debug(STRIGI_STREAMANALYZER_LIBRARY
   WIN32_DEBUG_POSTFIX d
   NAMES streamanalyzer
   PATHS
-  $ENV{STRIGI_HOME}/lib
+  ${strigi_home}/lib
   ${CMAKE_INSTALL_PREFIX}/lib
   ${_program_FILES_DIR}/strigi/lib
   ${STRIGI_NO_DEF_PATH}
@@ -41,7 +45,7 @@ find_library_with_debug(STRIGI_STREAMS_LIBRARY
   WIN32_DEBUG_POSTFIX d
   NAMES streams
   PATHS
-  $ENV{STRIGI_HOME}/lib
+  ${strigi_home}/lib
   ${CMAKE_INSTALL_PREFIX}/lib
   ${_program_FILES_DIR}/strigi/lib
   ${STRIGI_NO_DEF_PATH}
@@ -51,7 +55,7 @@ find_library_with_debug(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
   WIN32_DEBUG_POSTFIX d
   NAMES strigiqtdbusclient
   PATHS
-  $ENV{STRIGI_HOME}/lib
+  ${strigi_home}/lib
   ${CMAKE_INSTALL_PREFIX}/lib
   ${_program_FILES_DIR}/strigi/lib
   ${STRIGI_NO_DEF_PATH}
