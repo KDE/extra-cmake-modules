@@ -26,7 +26,7 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
   INCLUDE(UsePkgConfig)
 
   IF (NOT WIN32)
-    PKGCONFIG(qca QCA2_INCLUDE_DIR _Qca2LinkDir _Qca2LinkFlags _Qca2Cflags)
+    PKGCONFIG(qca2 QCA2_INCLUDE_DIR _Qca2LinkDir _Qca2LinkFlags _Qca2Cflags)
 
     set(QCA2_DEFINITIONS ${_Qca2Cflags})
 
