@@ -19,8 +19,8 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
   message(STATUS "Check Kipi library in local sub-folder...")
 
   # Check if library is not in local sub-folder
-  
-  FIND_FILE(KIPI_LOCAL_FOUND libkipi/version.h.cmake ${CMAKE_SOURCE_DIR}/libkipi ${CMAKE_SOURCE_DIR}/libs/libkipi NO_DEFAULT_PATH)
+
+  find_file (KIPI_LOCAL_FOUND libkipi/version.h.cmake ${CMAKE_SOURCE_DIR}/libkipi ${CMAKE_SOURCE_DIR}/libs/libkipi NO_DEFAULT_PATH)
 
   if (KIPI_LOCAL_FOUND)
 
@@ -29,22 +29,22 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
     set(KIPI_LIBRARIES kipi)
     message(STATUS "Found Kipi library in local sub-folder: ${KIPI_LIBRARIES}")
     set(KIPI_FOUND TRUE)
-    MARK_AS_ADVANCED(KIPI_INCLUDE_DIR KIPI_LIBRARIES)
+    mark_as_advanced(KIPI_INCLUDE_DIR KIPI_LIBRARIES)
 
   else(KIPI_LOCAL_FOUND)
 
-    if(NOT WIN32) 
+    if(NOT WIN32)
       message(STATUS "Check Kipi library using pkg-config...")
 
       # use pkg-config to get the directories and then use these values
       # in the FIND_PATH() and FIND_LIBRARY() calls
       INCLUDE(UsePkgConfig)
-    
+
       PKGCONFIG(libkipi _KIPIIncDir _KIPILinkDir _KIPILinkFlags _KIPICflags)
-    
+
       if(_KIPILinkFlags)
         # query pkg-config asking for a libkipi >= 0.2.0
-        EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=0.2.0 libkipi RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
+        exec_program(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=0.2.0 libkipi RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
         if(_return_VALUE STREQUAL "0")
             message(STATUS "Found libkipi release >= 0.2.0")
             set(KIPI_VERSION_GOOD_FOUND TRUE)
@@ -58,20 +58,14 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
         set(KIPI_FOUND FALSE)
       endif(_KIPILinkFlags)
     else(NOT WIN32)
-	set(KIPI_VERSION_GOOD_FOUND TRUE)
+      set(KIPI_VERSION_GOOD_FOUND TRUE)
     endif(NOT WIN32)
     if(KIPI_VERSION_GOOD_FOUND)
         set(KIPI_DEFINITIONS ${_KIPICflags})
-    
-        FIND_PATH(KIPI_INCLUDE_DIR libkipi/version.h
-        ${_KIPIIncDir}
-        )
-    
-        FIND_LIBRARY(KIPI_LIBRARIES NAMES kipi
-        PATHS
-        ${_KIPILinkDir}
-        )
-    
+
+        find_path(KIPI_INCLUDE_DIR NAMES libkipi/version.h PATHS ${KDE4_INCLUDE_DIR} ${_KIPIIncDir})
+        find_library(KIPI_LIBRARIES NAMES kipi PATHS ${KDE4_LIB_DIR} ${_KIPILinkDir})
+
         if (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
             set(KIPI_FOUND TRUE)
         endif (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
