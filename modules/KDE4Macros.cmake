@@ -486,11 +486,12 @@ macro (KDE4_CREATE_FINAL_FILES _filenameCPP _filesExcludedFromFinalFile )
          # don't include c-files in the final-file, because they usually come
          # from a 3rd party and as such are not intended to be compiled all-in-one
          string(REGEX MATCH ".+\\.c$" _isCFile ${_abs_FILE})
-         if (_isCFile)
+         string(REGEX MATCH ".+\\.h$" _isHFile ${_abs_FILE})
+         if (_isCFile OR _isHFile)
             list(APPEND ${_filesExcludedFromFinalFile} ${_abs_FILE})
-         else (_isCFile)
+         else (_isCFile OR _isHFile)
             file(APPEND ${_filenameCPP} "#include \"${_abs_FILE}\"\n")
-         endif (_isCFile)
+         endif (_isCFile OR _isHFile)
       endif (_isGenerated)
    endforeach (_current_FILE)
 
