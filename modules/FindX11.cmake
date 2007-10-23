@@ -25,6 +25,7 @@
 #                X11_Xinput_INCLUDE_PATH,       X11_Xinput_LIB,     X11_Xinput_FOUND
 #                X11_Xkb_INCLUDE_PATH,                              X11_Xkb_FOUND
 #                X11_Xkblib_INCLUDE_PATH,                           X11_Xkb_FOUND
+#                X11_Xkbfile_INCLUDE_PATH,      X11_Xkbfile_LIB,    X11_Xkbfile_FOUND
 #                X11_Xpm_INCLUDE_PATH,          X11_Xpm_LIB,        X11_Xpm_FOUND
 #                X11_XTest_INCLUDE_PATH,        X11_XTest_LIB,      X11_XTest_FOUND
 #                X11_Xrandr_INCLUDE_PATH,       X11_Xrandr_LIB,     X11_Xrandr_FOUND
@@ -85,6 +86,7 @@ IF (UNIX)
   FIND_PATH(X11_Xinput_INCLUDE_PATH X11/extensions/XInput.h          ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xkb_INCLUDE_PATH X11/extensions/XKB.h                ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xkblib_INCLUDE_PATH X11/XKBlib.h                     ${X11_INC_SEARCH_PATH})
+  FIND_PATH(X11_Xkbfile_INCLUDE_PATH X11/extensions/XKBfile.h        ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xpm_INCLUDE_PATH X11/xpm.h                           ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_XTest_INCLUDE_PATH X11/extensions/XTest.h            ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_XShm_INCLUDE_PATH X11/extensions/XShm.h              ${X11_INC_SEARCH_PATH})
@@ -112,6 +114,7 @@ IF (UNIX)
   FIND_LIBRARY(X11_Xft_LIB Xft               ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xinerama_LIB Xinerama     ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xinput_LIB Xi             ${X11_LIB_SEARCH_PATH})
+  FIND_LIBRARY(X11_Xkbfile_LIB xkbfile       ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xpm_LIB Xpm               ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xrandr_LIB Xrandr         ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xrender_LIB Xrender       ${X11_LIB_SEARCH_PATH})
@@ -264,6 +267,11 @@ IF (UNIX)
      SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xkb_INCLUDE_PATH} )
   ENDIF (X11_Xkb_INCLUDE_PATH AND X11_Xkblib_INCLUDE_PATH AND X11_Xlib_INCLUDE_PATH)
 
+  IF (X11_Xkbfile_INCLUDE_PATH AND X11_Xkbfile_LIB AND X11_Xlib_INCLUDE_PATH)
+     SET(X11_Xkbfile_FOUND TRUE)
+     SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xkbfile_INCLUDE_PATH} )
+  ENDIF (X11_Xkbfile_INCLUDE_PATH AND X11_Xkbfile_LIB AND X11_Xlib_INCLUDE_PATH)
+
   IF (X11_Xinput_INCLUDE_PATH AND X11_Xinput_LIB)
      SET(X11_Xinput_FOUND TRUE)
      SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xinput_INCLUDE_PATH})
@@ -408,6 +416,8 @@ IF (UNIX)
     X11_Xf86misc_INCLUDE_PATH
     X11_Xkb_INCLUDE_PATH
     X11_Xkblib_INCLUDE_PATH
+    X11_Xkbfile_INCLUDE_PATH
+    X11_Xkbfile_LIB
     X11_Xscreensaver_INCLUDE_PATH
     X11_Xscreensaver_LIB
     X11_Xpm_INCLUDE_PATH
