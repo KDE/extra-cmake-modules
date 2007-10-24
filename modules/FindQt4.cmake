@@ -1020,15 +1020,20 @@ IF (QT4_QMAKE_FOUND)
     SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
     SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
 
-    GET_SOURCE_FILE_PROPERTY(_nonamespace ${_infile} NO_NAMESPACE)
+    GET_SOURCE_FILE_PROPERTY(_nonamespace ${_interface} NO_NAMESPACE)
     IF ( _nonamespace )
-        SET(_params -N -m -p)
+        SET(_params -N -m)
     ELSE ( _nonamespace )
-        SET(_params -m -p)
+        SET(_params -m)
     ENDIF ( _nonamespace )
 
-     ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
-        COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} ${_params} ${_basename} ${_infile}
+    GET_SOURCE_FILE_PROPERTY(_include ${_interface} INCLUDE)
+    IF ( _include )
+        SET(_params ${_params} -i ${_include})
+    ENDIF ( _include )
+
+    ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
+        COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} ${_params} -p ${_basename} ${_infile}
         DEPENDS ${_infile})
   
     SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
