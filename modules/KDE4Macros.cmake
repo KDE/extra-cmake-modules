@@ -951,19 +951,18 @@ macro (KDE4_ADD_WIN32_APP_ICON outfiles pattern)
         #    find_executable(PNG2ICO_EXECUTABLE
         #endif (NOT PNG2ICO_EXECUTABLE)
         file(GLOB files  "${pattern}")
-        MESSAGE(${files})
-        FOREACH (it ${files})
-            GET_FILENAME_COMPONENT(_name ${it} NAME_WE)
-            #exclude 22'er icons, they does not fix into ico format
-            if (it MATCHES ".*22-.*")
-            else(it MATCHES ".*22-.*")
+#        message(${files})
+        foreach (it ${files})
+            get_filename_component(_name ${it} NAME_WE)
+            #exclude 22'er icons, they do not fit into ico format
+            if (NOT it MATCHES ".*22-.*")
                 set (_icons "${_icons} ${it}")
-            endif (it MATCHES ".*22-.*")
-        ENDFOREACH (it)
+            endif (NOT it MATCHES ".*22-.*")
+        endforeach (it)
         set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${_name})
         # png2ico is located in the recommended kdewin32 package
-        MESSAGE("png2ico ${_outfilename}.ico ${_icons}")
-        EXEC_PROGRAM(png2ico
+        message("png2ico ${_outfilename}.ico ${_icons}")
+        exec_program(png2ico
                  ARGS ${_outfilename}.ico ${_icons}
         )
 #        does not work for unkwown reason
