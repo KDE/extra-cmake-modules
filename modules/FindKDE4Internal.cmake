@@ -675,8 +675,7 @@ endif (WIN32)
 if (UNIX)
    option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." OFF)
 
-   link_directories(/usr/local/lib)
-   set( _KDE4_PLATFORM_INCLUDE_DIRS /usr/local/include )
+   set( _KDE4_PLATFORM_INCLUDE_DIRS)
 
    # the rest is RPATH handling
    # here the defaults are set
