@@ -189,13 +189,13 @@
 #    directoy given in path, in the subdirectory for the given icon theme.
 #
 # KDE4_CREATE_HANDBOOK( docbookfile [INSTALL_DESTINATION installdest] [SUBDIR subdir])
-#   Create the handbook from the docbookfile (using meinproc)
+#   Create the handbook from the docbookfile (using meinproc4)
 #   The resulting handbook will be installed to <installdest> when using
 #   INSTALL_DESTINATION <installdest>, or to <installdest>/<subdir> if
 #   SUBDIR <subdir> is specified.
 #
 # KDE4_CREATE_MANPAGE( docbookfile section )
-#   Create the manpage for the specified section from the docbookfile (using meinproc)
+#   Create the manpage for the specified section from the docbookfile (using meinproc4)
 #   The resulting manpage will be installed to <installdest> when using
 #   INSTALL_DESTINATION <installdest>, or to <installdest>/<subdir> if
 #   SUBDIR <subdir> is specified.
