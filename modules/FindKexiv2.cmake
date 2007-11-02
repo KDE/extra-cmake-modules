@@ -19,15 +19,20 @@ else (KEXIV2_INCLUDE_DIR AND KEXIV2_LIBRARIES)
   message(STATUS "Check Kexiv2 library in local sub-folder...")
 
   # Check if library is not in local sub-folder
-  
+
   FIND_FILE(KEXIV2_LOCAL_FOUND libkexiv2/version.h.cmake ${CMAKE_SOURCE_DIR}/libkexiv2 ${CMAKE_SOURCE_DIR}/libs/libkexiv2 NO_DEFAULT_PATH)
 
   if (KEXIV2_LOCAL_FOUND)
 
-    set(KEXIV2_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libkexiv2)
+    FIND_FILE(KEXIV2_LOCAL_FOUND_IN_LIBS libkexiv2/version.h.cmake ${CMAKE_SOURCE_DIR}/libs/libkexiv2 NO_DEFAULT_PATH)
+    if (KEXIV2_LOCAL_FOUND_IN_LIBS)
+      set(KEXIV2_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libs/libkexiv2)
+    else (KEXIV2_LOCAL_FOUND_IN_LIBS)
+      set(KEXIV2_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libkexiv2)
+    endif (KEXIV2_LOCAL_FOUND_IN_LIBS)
     set(KEXIV2_DEFINITIONS -I${KEXIV2_INCLUDE_DIR})
     set(KEXIV2_LIBRARIES kexiv2)
-    message(STATUS "Found Kexiv2 library in local sub-folder: ${KEXIV2_LIBRARIES}")
+    message(STATUS "Found Kexiv2 library in local sub-folder: ${KEXIV2_INCLUDE_DIR}")
     set(KEXIV2_FOUND TRUE)
     MARK_AS_ADVANCED(KEXIV2_INCLUDE_DIR KEXIV2_LIBRARIES)
 

@@ -24,10 +24,15 @@ else (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
 
   if (KIPI_LOCAL_FOUND)
 
-    set(KIPI_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libkipi)
+    find_file (KIPI_LOCAL_FOUND_IN_LIBS libkipi/version.h.cmake ${CMAKE_SOURCE_DIR}/libs/libkipi NO_DEFAULT_PATH)
+    if (KIPI_LOCAL_FOUND_IN_LIBS)
+      set(KIPI_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libs/libkipi)
+    else (KIPI_LOCAL_FOUND_IN_LIBS)
+      set(KIPI_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libkipi)
+    endif (KIPI_LOCAL_FOUND_IN_LIBS)
     set(KIPI_DEFINITIONS -I${KIPI_INCLUDE_DIR})
     set(KIPI_LIBRARIES kipi)
-    message(STATUS "Found Kipi library in local sub-folder: ${KIPI_LIBRARIES}")
+    message(STATUS "Found Kipi library in local sub-folder: ${KIPI_INCLUDE_DIR}")
     set(KIPI_FOUND TRUE)
     mark_as_advanced(KIPI_INCLUDE_DIR KIPI_LIBRARIES)
 

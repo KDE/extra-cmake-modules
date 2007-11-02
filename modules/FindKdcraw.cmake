@@ -24,10 +24,16 @@ else (KDCRAW_INCLUDE_DIR AND KDCRAW_LIBRARIES)
 
   if (KDCRAW_LOCAL_FOUND)
 
-    set(KDCRAW_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libkdcraw)
+    # Was it found in libkdcraw/ or in libs/libkdcraw?
+    FIND_FILE(KDCRAW_LOCAL_FOUND_IN_LIBS libkdcraw/version.h ${CMAKE_BINARY_DIR}/libs/libkdcraw NO_DEFAULT_PATH)
+    if (KDCRAW_LOCAL_FOUND_IN_LIBS)
+      set(KDCRAW_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libs/libkdcraw)
+    else (KDCRAW_LOCAL_FOUND_IN_LIBS)
+      set(KDCRAW_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libkdcraw)
+    endif (KDCRAW_LOCAL_FOUND_IN_LIBS)
     set(KDCRAW_DEFINITIONS -I${KDCRAW_INCLUDE_DIR})
     set(KDCRAW_LIBRARIES kdcraw)
-    message(STATUS "Found Kdcraw library in local sub-folder: ${KDCRAW_LIBRARIES}")
+    message(STATUS "Found Kdcraw library in local sub-folder: ${KDCRAW_INCLUDE_DIR}")
     set(KDCRAW_FOUND TRUE)
     MARK_AS_ADVANCED(KDCRAW_INCLUDE_DIR KDCRAW_LIBRARIES)
 
