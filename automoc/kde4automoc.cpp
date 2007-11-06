@@ -1,9 +1,10 @@
 /*  This file is part of the KDE project
     Copyright (C) 2007 Matthias Kretz <kretz@kde.org>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2
-    as published by the Free Software Foundation.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation; either version 2 of
+    the License, or (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -117,7 +118,9 @@ bool AutoMoc::run()
     line = dotFiles.readLine().trimmed();
     const QStringList incPaths = QString::fromUtf8(line).split(';');
     foreach (const QString &path, incPaths) {
-        mocIncludes << "-I" + path;
+        if (!path.isEmpty()) {
+            mocIncludes << "-I" + path;
+        }
     }
     line = dotFiles.readLine();
     Q_ASSERT(line == "SOURCES:\n");
