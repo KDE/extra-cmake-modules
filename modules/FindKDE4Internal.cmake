@@ -667,6 +667,16 @@ if (WIN32)
      set(CMAKE_MSVCIDE_RUN_PATH "${PERL_PATH_WINDOWS}\;${QT_BIN_DIR_WINDOWS}"
        CACHE STATIC "MSVC IDE Run path" FORCE)
    endif(MSVC_IDE)
+   
+   # christian:
+   # don't know where to add this -> FindQt4.cmake is only executed once and
+   # because somehow those values are not saved in the cache, I have to set them
+   # new on every cmake run
+   # http://www.cmake.org/pipermail/cmake/2007-November/017541.html
+   # set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} -DQT_DEBUG")
+   set(CMAKE_CXX_FLAGS_MINSIZEREL     "${CMAKE_CXX_FLAGS_MINSIZEREL} -DQT_NO_DEBUG")
+   set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} -DQT_NO_DEBUG")
+   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -DQT_NO_DEBUG")
 
 endif (WIN32)
 
