@@ -942,10 +942,11 @@ endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 # adds application icon to target source list
 #'appname' - an application name
+# 'appsources' - the sources of the application
 # 'pngfiles' - specifies the list of icon files
 # example: KDE4_ADD_WIN32_APP_ICON(myapp "pics/cr16-myapp.png;pics/cr32-myapp.png")
 
-macro (KDE4_ADD_WIN32_APP_ICON appname pngfiles)
+macro (KDE4_ADD_WIN32_APP_ICON appname appsources pngfiles)
     if (WIN32)
         if (NOT PNG2ICO_EXECUTABLE)
             find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
@@ -965,6 +966,9 @@ macro (KDE4_ADD_WIN32_APP_ICON appname pngfiles)
             if (MINGW)
                 exec_program(windres
                     ARGS "-i ${_outfilename}.rc -o ${_outfilename}_res.o --include-dir=${CMAKE_CURRENT_SOURCE_DIR}")
+                list(APPEND ${appsources} ${CMAKE_CURRENT_BINARY_DIR}/${appname}_res.o)
+            else(MINGW)
+                list(APPEND ${appsources} ${CMAKE_CURRENT_BINARY_DIR}/${appname}.rc)
             endif(MINGW)
         endif(PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
     endif(WIN32)
