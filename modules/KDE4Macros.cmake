@@ -947,40 +947,38 @@ endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 macro (KDE4_ADD_WIN32_APP_ICON outfiles pattern)
     if (WIN32)
-        #if (NOT PNG2ICO_EXECUTABLE)
-        #    find_executable(PNG2ICO_EXECUTABLE
-        #endif (NOT PNG2ICO_EXECUTABLE)
-        file(GLOB files  "${pattern}")
-#        message(${files})
-        foreach (it ${files})
-            get_filename_component(_name ${it} NAME_WE)
-            #exclude 22'er icons, they do not fit into ico format
-            if (NOT it MATCHES ".*22-.*")
+        if (NOT PNG2ICO_EXECUTABLE)
+            find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
+        endif (NOT PNG2ICO_EXECUTABLE)
+        if (PNG2ICO_EXECUTABLE)
+            file(GLOB files "${pattern}")
+            foreach (it ${files})
+                get_filename_component(_name ${it} NAME_WE)
+                ##exclude 22'er icons, they do not fit into ico format - not needed anymore - you have to use the icons from kdebase / oxygen
+                #if (NOT it MATCHES ".*22-.*")
                 set (_icons "${_icons} ${it}")
-            endif (NOT it MATCHES ".*22-.*")
-        endforeach (it)
-        set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${_name})
-        # png2ico is located in the recommended kdewin32 package
-        message("png2ico ${_outfilename}.ico ${_icons}")
-        exec_program(png2ico
-                 ARGS ${_outfilename}.ico ${_icons}
-        )
-#        does not work for unkwown reason
-#        add_custom_command(OUTPUT ${_outfilename}.ico
-#            COMMAND c:/Programme/kdewin-msvc/bin/png2ico.exe
-#            ARGS ${_outfilename}.ico ${_icons}
-#            DEPENDS ${_icons}
-#        )
-        file(WRITE ${_outfilename}.rc "IDI_ICON1        ICON        DISCARDABLE    \"${_outfilename}.ico\"\n")
-        if (MINGW)
-            add_custom_command(OUTPUT ${_outfilename}_res.o
-                COMMAND windres
-                ARGS -i ${_outfilename}.rc -o ${_outfilename}_res.o --include-dir=${CMAKE_CURRENT_SOURCE_DIR}
-                DEPENDS ${_outfilename}.ico ${_outfilename}.rc
-            )
-            list(APPEND ${outfiles} ${_outfilename}_res.o)
-        else(MINGW)
-            list(APPEND ${outfiles} ${_outfilename}.rc)
-        endif(MINGW)
+                #endif (NOT it MATCHES ".*22-.*")
+            endforeach (it)
+
+            set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${_name})
+
+            # png2ico is found by the above find_program
+            message("png2ico ${_outfilename}.ico ${_icons}")
+            exec_program(png2ico ARGS ${_outfilename}.ico ${_icons})
+
+            # now make rc file for adding it to the sources
+            file(WRITE ${_outfilename}.rc "IDI_ICON1        ICON        DISCARDABLE    \"${_outfilename}.ico\"\n")
+            if (MINGW)
+                add_custom_command(OUTPUT ${_outfilename}_res.o
+                    COMMAND windres
+                    ARGS -i ${_outfilename}.rc -o ${_outfilename}_res.o --include-dir=${CMAKE_CURRENT_SOURCE_DIR}
+                    DEPENDS ${_outfilename}.ico ${_outfilename}.rc
+                )
+                list(APPEND ${outfiles} ${_outfilename}_res.o)
+            else(MINGW)
+                list(APPEND ${outfiles} ${_outfilename}.rc)
+            endif(MINGW)
+        endif(PNG2ICO_EXECUTABLE)
     endif(WIN32)
 endmacro (KDE4_ADD_WIN32_APP_ICON)
+

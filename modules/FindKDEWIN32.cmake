@@ -71,29 +71,4 @@ if (WIN32)
       message(FATAL_ERROR "Could NOT find KDEWIN32 library\nPlease install it first")
     endif (KDEWIN32_FIND_REQUIRED)
   endif (KDEWIN32_FOUND)
-  MACRO (KDE_ADD_RESOURCES2 outfiles )
-
-    FOREACH (it ${ARGN})
-      GET_FILENAME_COMPONENT(outfilename ${it} NAME_WE)
-      GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
-      GET_FILENAME_COMPONENT(rc_path ${infile} PATH)
-      SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/${outfilename}_res.o)
-      #  parse file for dependencies
-      FILE(READ "${infile}" _RC_FILE_CONTENTS)
-      STRING(REGEX MATCHALL "<file>[^<]*" _RC_FILES "${_RC_FILE_CONTENTS}")
-      SET(_RC_DEPENDS)
-      FOREACH(_RC_FILE ${_RC_FILES})
-        STRING(REGEX REPLACE "^<file>" "" _RC_FILE "${_RC_FILE}")
-        SET(_RC_DEPENDS ${_RC_DEPENDS} "${rc_path}/${_RC_FILE}")
-      ENDFOREACH(_RC_FILE)
-      ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
-        COMMAND windres
-        ARGS -i ${infile} -o ${outfile} --include-dir=${CMAKE_CURRENT_SOURCE_DIR}
-        MAIN_DEPENDENCY ${infile}
-        DEPENDS ${_RC_DEPENDS})
-      SET(${outfiles} ${${outfiles}} ${outfile})
-    ENDFOREACH (it)
-
-  ENDMACRO (KDE_ADD_RESOURCES2)
-
 endif (WIN32)
