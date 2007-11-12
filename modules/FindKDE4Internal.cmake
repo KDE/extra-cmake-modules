@@ -322,23 +322,21 @@ else (_kdeBootStrapping)
       message(FATAL_ERROR "Couldn't parse KDE version string from the kde4-config output:\n${kdeconfig_output}")
    endif (KDEVERSION)
 
+   set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+
    if (WIN32)
-      # we don't want to be forced to set two pathes into the build tree 
-	  set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/bin )
-   else (WIN32)
-	  set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+      # we don't want to be forced to set two paths into the build tree 
+      set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/bin )
+
+      # on win32 the install dir is determined on runtime not install time
+      # KDELIBS_INSTALL_DIR and QT_INSTALL_DIR are used in KDELibsDependencies.cmake to setup 
+      # kde install paths and library dependencies
+      get_filename_component(_DIR ${KDE4_KDECONFIG_EXECUTABLE} PATH )
+      get_filename_component(KDE4_INSTALL_DIR ${_DIR} PATH )
+      get_filename_component(_DIR ${QT_QMAKE_EXECUTABLE} PATH )
+      get_filename_component(QT_INSTALL_DIR ${_DIR} PATH )
    endif (WIN32)
-   
-   if (WIN32)
-	# on win32 the install dir is determined on runtime not install time
-	# KDELIBS_INSTALL_DIR and QT_INSTALL_DIR are used in KDELibsDependencies.cmake to setup 
-    # kde install pathes and library dependencies
-	get_filename_component(_DIR ${KDE4_KDECONFIG_EXECUTABLE} PATH )
-	get_filename_component(KDE4_INSTALL_DIR ${_DIR} PATH )
-	get_filename_component(_DIR ${QT_QMAKE_EXECUTABLE} PATH )
-	get_filename_component(QT_INSTALL_DIR ${_DIR} PATH )
-   endif (WIN32)
-  
+
    # this file contains all dependencies of all libraries of kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
 
