@@ -608,7 +608,7 @@ endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 if (WIN32)
 
    if(CYGWIN)
-      message(FATAL_ERROR "Cygwin NOT supported, please edit FindKDE4.cmake to enable it")
+      message(FATAL_ERROR "Cygwin is NOT supported, use mingw or MSVC to build KDE4.")
    endif(CYGWIN)
 
    find_package(KDEWIN32 REQUIRED)
