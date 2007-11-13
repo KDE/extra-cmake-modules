@@ -941,28 +941,24 @@ endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
 # adds application icon to target source list
-#'appname' - an application name
 # 'appsources' - the sources of the application
 # 'pngfiles' - specifies the list of icon files
-# example: KDE4_ADD_WIN32_APP_ICON(myapp "pics/cr16-myapp.png;pics/cr32-myapp.png")
+# example: KDE4_ADD_WIN32_APP_ICON(myapp_SRCS "pics/cr16-myapp.png;pics/cr32-myapp.png")
 
-macro (KDE4_ADD_WIN32_APP_ICON appname appsources pngfiles)
+macro (KDE4_ADD_WIN32_APP_ICON appsources)
     if (WIN32)
-        if (NOT PNG2ICO_EXECUTABLE)
-            find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
-        endif (NOT PNG2ICO_EXECUTABLE)
-        if (NOT WINDRES_EXECUTABLE)
-            find_program(WINDRES_EXECUTABLE NAMES windres)
-        endif (NOT WINDRES_EXECUTABLE)
+        find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
+        find_program(WINDRES_EXECUTABLE NAMES windres)
         if(MSVC)
-            set(WINDRES_EXECUTABLE true)
+            set(WINDRES_EXECUTABLE TRUE)
         endif(MSVC)
+        STRING(REPLACE _SRCS "" appname ${appsources})
         if (PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
             set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${appname})
 
             # png2ico is found by the above find_program
-            message("png2ico ${_outfilename}.ico ${pngfiles}")
-            exec_program(png2ico ARGS ${_outfilename}.ico ${pngfiles})
+#            message("png2ico ${_outfilename}.ico ${ARGN}")
+            exec_program(png2ico ARGS ${_outfilename}.ico ${ARGN})
 
             # now make rc file for adding it to the sources
             file(WRITE ${_outfilename}.rc "IDI_ICON1        ICON        DISCARDABLE    \"${_outfilename}.ico\"\n")
