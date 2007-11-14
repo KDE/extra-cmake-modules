@@ -32,6 +32,7 @@
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoclient
+    PATHS
     ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
     )
