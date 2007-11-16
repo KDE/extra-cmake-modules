@@ -858,6 +858,11 @@ if (CMAKE_COMPILER_IS_GNUCXX)
        #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
    endif (__KDE_HAVE_NO_THREADSAFE_STATICS)
 
+   check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
+   if(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
+       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
+   endif(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
+
    # visibility support
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
    set( __KDE_HAVE_GCC_VISIBILITY ${__KDE_HAVE_GCC_VISIBILITY} CACHE BOOL "GCC support for hidden visibility")
