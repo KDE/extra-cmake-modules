@@ -214,6 +214,7 @@ MACRO(GETTEXT_PROCESS_PO_FILES _lang)
       SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.gmo)
       add_custom_command(OUTPUT ${_gmoFile}
             COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_gmoFile} ${_current_PO_FILE}
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             DEPENDS ${_current_PO_FILE}
          )
 
