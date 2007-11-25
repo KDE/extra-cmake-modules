@@ -658,25 +658,25 @@ macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst _test)
       set(remove 0)
    endif (${first_PARAM} STREQUAL "NOGUI")
 
-   if (${second_PARAM} STREQUAL "NOGUI")
-      set(${_nogui} "NOGUI")
-      set(remove 0;1)
-   endif (${second_PARAM} STREQUAL "NOGUI")
-
    if (${first_PARAM} STREQUAL "RUN_UNINSTALLED")
       set(${_uninst} "RUN_UNINSTALLED")
       set(remove 0)
    endif (${first_PARAM} STREQUAL "RUN_UNINSTALLED")
 
-   if (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
-      set(${_uninst} "RUN_UNINSTALLED")
-      set(remove 0;1)
-   endif (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
-
    if (${first_PARAM} STREQUAL "TEST")
       set(${_test} "TEST")
       set(remove 0)
    endif (${first_PARAM} STREQUAL "TEST")
+
+   if (${second_PARAM} STREQUAL "NOGUI")
+      set(${_nogui} "NOGUI")
+      set(remove 0;1)
+   endif (${second_PARAM} STREQUAL "NOGUI")
+
+   if (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
+      set(${_uninst} "RUN_UNINSTALLED")
+      set(remove 0;1)
+   endif (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
 
    if (${second_PARAM} STREQUAL "TEST")
       set(${_test} "TEST")
@@ -809,7 +809,7 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    endif (_nogui)
 
    if (_uninst OR _test)
-      set(_type "RUN_UNINSTALLED")
+      set(_type "RUN_UNINSTALLED ${_type}")
    endif (_uninst OR _test)
 
    if (_test AND NOT KDE4_BUILD_TESTS)
