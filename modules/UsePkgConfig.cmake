@@ -37,14 +37,29 @@ MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
       EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --cflags OUTPUT_VARIABLE ${_cflags} )
 
     ELSE( NOT _return_VALUE)
-     
-      MESSAGE(STATUS "PKGCONFIG macro signal that ${_package} is not installed on your computer.")
-      MESSAGE(STATUS "Install package which contains ${_package}.pc if you want to support this feature.")	    
+
+      MESSAGE(STATUS "KDE CMake PKGCONFIG macro indicates that ${_package} is not installed on your computer.")
+      MESSAGE(STATUS "Install the package which contains ${_package}.pc if you want to support this feature.")	    
 
     ENDIF(NOT _return_VALUE)
 
   ENDIF(PKGCONFIG_EXECUTABLE)
 
 ENDMACRO(PKGCONFIG _include_DIR _link_DIR _link_FLAGS _cflags)
+
+MACRO(PKGCONFIG_VERSION _package _include_DIR _link_DIR _link_FLAGS _cflags _found_version)
+   #reset variable
+   SET(${_found_version})
+   IF(PKGCONFIG_EXECUTABLE)
+      #call PKGCONFIG
+      PKGCONFIG(${_package} ${_include_DIR} ${_link_DIR} ${_link_FLAGS} ${_cflags})
+      IF(${_include_DIR})
+         EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --modversion OUTPUT_VARIABLE ${_found_version})
+         IF(NOT ${_found_version})
+            MESSAGE(FATAL_ERROR "UsePkgConfig.cmake: No version found for ${_package}")
+         ENDIF(NOT ${_found_version})
+      ENDIF(${_include_DIR})
+   ENDIF(PKGCONFIG_EXECUTABLE)
+ENDMACRO(PKGCONFIG_VERSION _package _include_DIR _link_DIR _link_FLAGS _cflags _found_version)
 
 MARK_AS_ADVANCED(PKGCONFIG_EXECUTABLE)
