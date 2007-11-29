@@ -5,6 +5,7 @@
 #  NETWORKMANAGER_INCLUDE_DIR - the NetworkManager include directory
 #  NETWORKMANAGER_LIBRARY - the libraries needed to use NetworkManager
 #  NETWORKMANAGER_DEFINITIONS - Compiler switches required for using NetworkManager
+#  NETWORKMANAGER_VERSION - version number of NetworkManager
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2007, Will Stephenson, <wstephenson@kde.org>
@@ -22,13 +23,14 @@ IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
    INCLUDE(UsePkgConfig)
-   PKGCONFIG(NetworkManager _NetworkManagerIncDir _NetworkManagerLinkDir _NetworkManagerLinkFlags _NetworkManagerCflags)
+   SET(NETWORKMANAGER_VERSION)
+   PKGCONFIG_VERSION(NetworkManager _NetworkManagerIncDir _NetworkManagerLinkDir _NetworkManagerLinkFlags _NetworkManagerCflags NETWORKMANAGER_VERSION)
    SET(NETWORKMANAGER_DEFINITIONS ${_NetworkManagerCflags})
    PKGCONFIG(libnm-util _libnm-utilIncDir _libnm-utilLinkDir _libnm-utilLinkFlags _libnm-utilCflags)
    SET(NM-UTILS_DEFINITIONS ${_libnm-utilCflags})
 ENDIF (NOT WIN32)
 
-MESSAGE(STATUS "Found NetworkManager: ${_NetworkManagerLinkFlags}")
+MESSAGE(STATUS "Found NetworkManager ${NETWORKMANAGER_VERSION}: ${_NetworkManagerLinkFlags}")
 FIND_PATH(NETWORKMANAGER_INCLUDE_DIR NetworkManager/NetworkManager.h
    PATHS
    ${_NetworkManagerIncDir}
