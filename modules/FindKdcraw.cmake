@@ -31,7 +31,7 @@ else (KDCRAW_INCLUDE_DIR AND KDCRAW_LIBRARIES)
     else (KDCRAW_LOCAL_FOUND_IN_LIBS)
       set(KDCRAW_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/libkdcraw)
     endif (KDCRAW_LOCAL_FOUND_IN_LIBS)
-    set(KDCRAW_DEFINITIONS -I${KDCRAW_INCLUDE_DIR})
+    set(KDCRAW_DEFINITIONS "-I${KDCRAW_INCLUDE_DIR}")
     set(KDCRAW_LIBRARIES kdcraw)
     message(STATUS "Found Kdcraw library in local sub-folder: ${KDCRAW_INCLUDE_DIR}")
     set(KDCRAW_FOUND TRUE)
@@ -67,7 +67,7 @@ else (KDCRAW_INCLUDE_DIR AND KDCRAW_LIBRARIES)
     ENDif(NOT WIN32)
 
     if(KDCRAW_VERSION_GOOD_FOUND)
-        set(KDCRAW_DEFINITIONS ${_KDCRAWCflags})
+        set(KDCRAW_DEFINITIONS "${_KDCRAWCflags}")
     
         FIND_PATH(KDCRAW_INCLUDE_DIR libkdcraw/version.h
         ${_KDCRAWIncDir}

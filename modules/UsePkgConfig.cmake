@@ -1,3 +1,6 @@
+
+# THIS IS A SLIGHTLY ENHANCED COPY OVER THE ONE OF CMAKE 2.4.7. DO NOT MODIFY IT FURTHER
+
 # - pkg-config module for CMake
 #
 # Defines the following macros:
@@ -10,9 +13,7 @@
 # variable will be empty when the function returns, otherwise they will contain the respective information
 #
 
-
-
-FIND_PROGRAM(PKGCONFIG_EXECUTABLE NAMES pkg-config )
+FIND_PROGRAM(PKGCONFIG_EXECUTABLE NAMES pkg-config PATHS /usr/local/bin )
 
 MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
 # reset the variables at the beginning
@@ -20,6 +21,7 @@ MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
   SET(${_link_DIR})
   SET(${_link_FLAGS})
   SET(${_cflags})
+
   # if pkg-config has been found
   IF(PKGCONFIG_EXECUTABLE)
 
@@ -28,13 +30,22 @@ MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
     # and if the package of interest also exists for pkg-config, then get the information
     IF(NOT _return_VALUE)
 
-      EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --variable=includedir OUTPUT_VARIABLE ${_include_DIR} )
+      EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --variable=includedir 
+        OUTPUT_VARIABLE ${_include_DIR} )
+      string(REGEX REPLACE "[\r\n]" " " ${_include_DIR} "${${_include_DIR}}")
+    
 
-      EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --variable=libdir OUTPUT_VARIABLE ${_link_DIR} )
+      EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --variable=libdir 
+        OUTPUT_VARIABLE ${_link_DIR} )
+      string(REGEX REPLACE "[\r\n]" " " ${_link_DIR} "${${_link_DIR}}")
 
-      EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --libs OUTPUT_VARIABLE ${_link_FLAGS} )
+      EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --libs 
+        OUTPUT_VARIABLE ${_link_FLAGS} )
+      string(REGEX REPLACE "[\r\n]" " " ${_link_FLAGS} "${${_link_FLAGS}}")
 
-      EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --cflags OUTPUT_VARIABLE ${_cflags} )
+      EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --cflags 
+        OUTPUT_VARIABLE ${_cflags} )
+      string(REGEX REPLACE "[\r\n]" " " ${_cflags} "${${_cflags}}")
 
     ELSE( NOT _return_VALUE)
 
@@ -46,20 +57,5 @@ MACRO(PKGCONFIG _package _include_DIR _link_DIR _link_FLAGS _cflags)
   ENDIF(PKGCONFIG_EXECUTABLE)
 
 ENDMACRO(PKGCONFIG _include_DIR _link_DIR _link_FLAGS _cflags)
-
-MACRO(PKGCONFIG_VERSION _package _include_DIR _link_DIR _link_FLAGS _cflags _found_version)
-   #reset variable
-   SET(${_found_version})
-   IF(PKGCONFIG_EXECUTABLE)
-      #call PKGCONFIG
-      PKGCONFIG(${_package} ${_include_DIR} ${_link_DIR} ${_link_FLAGS} ${_cflags})
-      IF(${_include_DIR})
-         EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS ${_package} --modversion OUTPUT_VARIABLE ${_found_version})
-         IF(NOT ${_found_version})
-            MESSAGE(FATAL_ERROR "UsePkgConfig.cmake: No version found for ${_package}")
-         ENDIF(NOT ${_found_version})
-      ENDIF(${_include_DIR})
-   ENDIF(PKGCONFIG_EXECUTABLE)
-ENDMACRO(PKGCONFIG_VERSION _package _include_DIR _link_DIR _link_FLAGS _cflags _found_version)
 
 MARK_AS_ADVANCED(PKGCONFIG_EXECUTABLE)
