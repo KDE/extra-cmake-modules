@@ -27,17 +27,15 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
 
         exec_program (${UPDATE_MIME_DATABASE_EXECUTABLE} ARGS -v RETURN_VALUE _null OUTPUT_VARIABLE _smiVersionRaw)
 
-        string(REGEX REPLACE "update-mime-database \\(shared-mime-info\\) ([0-9]\\.[0-9]+).*"
+        string(REGEX REPLACE "update-mime-database \\([a-zA-Z\\-]+\\) ([0-9]\\.[0-9]+).*"
                "\\1" smiVersion "${_smiVersionRaw}")
-
         set (SHARED_MIME_INFO_FOUND TRUE)
     endif (UPDATE_MIME_DATABASE_EXECUTABLE)
 
     if (SHARED_MIME_INFO_FOUND)
         if (NOT SharedMimeInfo_FIND_QUIETLY)
             message(STATUS "Found shared-mime-info version: ${smiVersion}")
-
-            macro_ensure_version2(${SHARED_MIME_INFO_MINIMUM_VERSION} ${smiVersion} _smiVersion_OK)
+            macro_ensure_version(${SHARED_MIME_INFO_MINIMUM_VERSION} ${smiVersion} _smiVersion_OK)
             if (NOT _smiVersion_OK)
                 message(STATUS "WARNING: the found version of shared-mime-info (${smiVersion}) is below the minimum required (${SHARED_MIME_INFO_MINIMUM_VERSION})")
             endif (NOT _smiVersion_OK)
