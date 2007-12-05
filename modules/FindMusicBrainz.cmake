@@ -1,6 +1,6 @@
 # Option for build or not MusicBrainz
 #
-# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+# Copyright (c) 2006,2007 Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
