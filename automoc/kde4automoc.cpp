@@ -138,6 +138,8 @@ bool AutoMoc::run()
 
     QRegExp mocIncludeRegExp("[\n]\\s*#\\s*include\\s+[\"<](moc_[^ \">]+\\.cpp|[^ \">]+\\.moc)[\">]");
     QRegExp qObjectRegExp("[\n]\\s*Q_OBJECT\\b");
+    QStringList headerExtensions;
+    headerExtensions << ".h" << ".hpp" << ".hxx" << ".H";
     foreach (const QString &absFilename, sourceFiles) {
         //qDebug() << absFilename;
         const QFileInfo sourceFileInfo(absFilename);
@@ -193,15 +195,23 @@ bool AutoMoc::run()
                         if (moc_style) {
                             basename = basename.right(basename.length() - 4);
                         }
-                        const QString sourceFilePath = absPath + basename + ".h";
-                        if (!QFile::exists(sourceFilePath)) {
-                            cerr << "kde4automoc: The file \"" << absFilename <<
-                                "\" includes the moc file \"" << currentMoc << "\", but \"" <<
-                                sourceFilePath << "\" does not exist." << endl;
-                            ::exit(EXIT_FAILURE);
+                        bool headerFound = false;
+                        foreach (QString ext, headerExtensions) {
+                            QString sourceFilePath = absPath + basename + ext;
+                            if (QFile::exists(sourceFilePath)) {
+                                headerFound = true;
+                                includedMocs.insert(sourceFilePath, currentMoc);
+                                notIncludedMocs.remove(sourceFilePath);
+                                break;
+                            }
                         }
-                        includedMocs.insert(sourceFilePath, currentMoc);
-                        notIncludedMocs.remove(sourceFilePath);
+                        if (!headerFound) {
+                                cerr << "kde4automoc: The file \"" << absFilename <<
+                                    "\" includes the moc file \"" << currentMoc << "\", but \"" <<
+                                    absPath + basename + "{" + headerExtensions.join(",") + "}" <<
+                                    "\" do not exist." << endl;
+                                ::exit(EXIT_FAILURE);
+                        }
                     } else {
                         includedMocs.insert(absFilename, currentMoc);
                         notIncludedMocs.remove(absFilename);
