@@ -186,6 +186,17 @@ if (QT4_QMAKE_FOUND)
 
 else (QT4_QMAKE_FOUND)
 
+# check that QT_NO_DEBUG is defined for release configurations
+MACRO(QT_CHECK_FLAG_EXISTS FLAG VAR DOC)
+  IF(NOT ${VAR} MATCHES "${FLAG}")
+    SET(${VAR} "${${VAR}} ${FLAG}" 
+      CACHE STRING "Flags used by the compiler during ${DOC} builds." FORCE)
+  ENDIF(NOT ${VAR} MATCHES "${FLAG}")
+ENDMACRO(QT_CHECK_FLAG_EXISTS FLAG VAR)
+QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_RELWITHDEBINFO "Release with Debug Info")
+QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_RELEASE "release")
+QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_MINSIZEREL "release minsize")
+
 INCLUDE(CheckSymbolExists)
 INCLUDE(MacroAddFileDependencies)
 INCLUDE(MacroPushRequiredVars)
