@@ -84,9 +84,9 @@ int main(int argc, char **argv)
 }
 
 AutoMoc::AutoMoc()
-    : verbose(!QByteArray(getenv("VERBOSE")).isEmpty()), cerr(stderr), cout(stdout), failed(false)
+    : verbose(!qgetenv("VERBOSE").isEmpty()), cerr(stderr), cout(stdout), failed(false)
 {
-    const QByteArray colorEnv = getenv("COLOR");
+    const QByteArray colorEnv = qgetenv("COLOR");
     cmakeEchoColorArgs << "-E" << "cmake_echo_color" << QString("--switch=") + colorEnv << "--blue"
         << "--bold";
 }
