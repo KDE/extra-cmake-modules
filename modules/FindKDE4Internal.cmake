@@ -828,9 +828,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
    if (WIN32)
-	  # qt is always compiled with QT_NO_DEBUG under mingw, 
-	  # so we need to compile stuff linked against it
-	  # the same or otherwise QPluginLoader rejects plugins
+      # we always link against the release version of QT with mingw
+      # (even for debug builds). So we need to define QT_NO_DEBUG
+      # or else QPluginLoader rejects plugins because it thinks
+      # they're built against the wrong QT.
       add_definitions(-DQT_NO_DEBUG)
    endif (WIN32)
 
