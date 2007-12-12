@@ -827,6 +827,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
      add_definitions (-D_BSD_SOURCE)
    endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
+   if (WIN32)
+	  # qt is always compiled with QT_NO_DEBUG under mingw, 
+	  # so we need to compile stuff linked against it
+	  # the same or otherwise QPluginLoader rejects plugins
+      add_definitions(-DQT_NO_DEBUG)
+   endif (WIN32)
 
    check_cxx_compiler_flag(-fPIE HAVE_FPIE_SUPPORT)
    if(KDE4_ENABLE_FPIE)
