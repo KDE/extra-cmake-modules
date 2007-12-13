@@ -197,6 +197,13 @@ QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_RELWITHDEBINFO "Release with 
 QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_RELEASE "release")
 QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_MINSIZEREL "release minsize")
 
+if (MSVC80)
+	# need to set this option for MSVC 2005+ or else
+	# QString::fromWCharArray will result in an unresolved external
+	# see http://www.qtcentre.org/forum/f-installation-5/t-wchar-to-qstring-giving-error-in-vs2005-4625.html
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:wchar_t-")
+endif (MSVC80)
+
 INCLUDE(CheckSymbolExists)
 INCLUDE(MacroAddFileDependencies)
 INCLUDE(MacroPushRequiredVars)
