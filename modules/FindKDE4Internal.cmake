@@ -798,6 +798,8 @@ endif (CMAKE_SYSTEM_NAME MATCHES BSD)
 
 if (MSVC)
    set (KDE4_ENABLE_EXCEPTIONS -EHsc)
+   # make sure that no header adds libcmt by default using #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
+   set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt")
 endif(MSVC)
 
 
