@@ -798,11 +798,19 @@ endif (CMAKE_SYSTEM_NAME MATCHES BSD)
 
 if (MSVC)
    set (KDE4_ENABLE_EXCEPTIONS -EHsc)
+   # check if release mode
+   if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "ReleaseWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL  "MinSizeRel")
+    set (releaseMode 1)
+   else (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "ReleaseWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL  "MinSizeRel")
+    set (releaseMode 0)
+   endif (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "ReleaseWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL  "MinSizeRel")
+
    # make sure that no header adds libcmt by default using #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
-   set (CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt")
-   set (CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt")
-   set (CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd")
-   set (CMAKE_EXE_LINKER_FLAGS_DEBUG_FULL "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd")
+   if (releaseMode)
+       set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt")
+   else (releaseMode)
+      set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd")
+   endif (releaseMode)
 endif(MSVC)
 
 
