@@ -1,5 +1,4 @@
 # - include MacroLibrary offers a collection of macros which extend the built-in cmake commands
-# OPTIONAL_FIND_PACKAGE( <name> [QUIT] )
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
@@ -12,6 +11,7 @@ INCLUDE(MacroAdditionalCleanFiles)
 INCLUDE(MacroAddFileDependencies)
 INCLUDE(MacroAddCompileFlags)
 INCLUDE(MacroAddLinkFlags)
+INCLUDE(MacroAppendIf)
 INCLUDE(MacroEnsureOutOfSourceBuild)
 INCLUDE(MacroBoolTo01)
 INCLUDE(MacroPushRequiredVars)
