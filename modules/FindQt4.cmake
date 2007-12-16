@@ -237,10 +237,12 @@ MACRO(QT_QUERY_QMAKE outvar invar)
 
 ENDMACRO(QT_QUERY_QMAKE)
 
+GET_FILENAME_COMPONENT(qt_install_version "[HKEY_CURRENT_USER\\Software\\trolltech\\Versions;DefaultQtVersion]" NAME)
 # check for qmake
 FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake qmake4 qmake-qt4 PATHS
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
+  "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\${qt_install_version};InstallDir]/bin"
   $ENV{QTDIR}/bin
 )
 
@@ -370,8 +372,11 @@ IF (QT4_QMAKE_FOUND)
   IF (NOT QT_MKSPECS_DIR)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QMAKE_MKSPECS"
-      OUTPUT_VARIABLE qt_mkspecs_dir )
-    SET(QT_MKSPECS_DIR ${qt_mkspecs_dir} CACHE PATH "The location of the Qt mkspecs")
+      OUTPUT_VARIABLE qt_mkspecs_dirs )
+    STRING(REPLACE ":" ";" qt_mkspecs_dirs "${qt_mkspecs_dirs}")
+    FIND_PATH(QT_MKSPECS_DIR qconfig.pri PATHS ${qt_mkspecs_dirs}
+      DOC "The location of the Qt mkspecs containing qconfig.pri"
+      NO_DEFAULT_PATH )
   ENDIF (NOT QT_MKSPECS_DIR)
 
   # ask qmake for the plugins directory
@@ -552,6 +557,7 @@ IF (QT4_QMAKE_FOUND)
     PATHS
     ${QT_INCLUDE_DIR}/QtAssistant
     ${QT_HEADERS_DIR}/QtAssistant
+    ${QT_LIBRARY_DIR}/QtAssistant.framework/Headers
     NO_DEFAULT_PATH
     )
 
@@ -559,7 +565,8 @@ IF (QT4_QMAKE_FOUND)
   FIND_PATH(QT_QTDESIGNER_INCLUDE_DIR QDesignerComponents
     PATHS
     ${QT_INCLUDE_DIR}/QtDesigner
-    ${QT_HEADERS_DIR}/QtDesigner
+    ${QT_HEADERS_DIR}/QtDesigner 
+    ${QT_LIBRARY_DIR}/QtDesigner.framework/Headers
     NO_DEFAULT_PATH
     )
 
@@ -755,7 +762,7 @@ IF (QT4_QMAKE_FOUND)
 
   IF( NOT QT_QTCORE_LIBRARY )
     IF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
-      MESSAGE( FATAL_ERROR "Could NOT find QtCore. Check CMakeFiles/CMakeError.log for more details.")
+      MESSAGE( FATAL_ERROR "Could NOT find QtCore. Check ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log for more details.")
     ENDIF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
   ENDIF( NOT QT_QTCORE_LIBRARY )
 
@@ -839,8 +846,7 @@ IF (QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QTUITOOLS)
   _QT4_ADJUST_LIB_VARS(QTTEST)
   _QT4_ADJUST_LIB_VARS(QTDBUS)
-  
-  
+
   # platform dependent libraries
   IF(Q_WS_X11)
     _QT4_ADJUST_LIB_VARS(QTMOTIF)
@@ -921,6 +927,7 @@ IF (QT4_QMAKE_FOUND)
      FOREACH(_current ${_inc_DIRS})
         SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-I" ${_current})
      ENDFOREACH(_current ${_inc_DIRS})
+
   ENDMACRO(QT4_GET_MOC_INC_DIRS)
 
 
@@ -1055,7 +1062,8 @@ IF (QT4_QMAKE_FOUND)
     MACRO_ADD_FILE_DEPENDENCIES(${_impl} ${_moc})
   
   ENDMACRO(QT4_ADD_DBUS_INTERFACE)
- 
+  
+  
   MACRO(QT4_ADD_DBUS_INTERFACES _sources)
      FOREACH (_current_FILE ${ARGN})
         GET_FILENAME_COMPONENT(_infile ${_current_FILE} ABSOLUTE)
@@ -1066,17 +1074,6 @@ IF (QT4_QMAKE_FOUND)
      ENDFOREACH (_current_FILE)
   ENDMACRO(QT4_ADD_DBUS_INTERFACES)
 
-  MACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE _sources _interface _basename)
-    MESSAGE(SEND_ERROR "QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE() is deprecated. Use the following instead:
-SET_SOURCE_FILES_PROPERTIES(<interface> PROPERTIES NO_NAMESPACE TRUE)
-QT4_ADD_DBUS_INTERFACE(<srcList> <interface> <basename>)\n")
-  ENDMACRO(QT4_ADD_DBUS_INTERFACE_NO_NAMESPACE)
-
-  MACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE _sources)
-    MESSAGE(SEND_ERROR "QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE() is deprecated. Use the following instead:
-SET_SOURCE_FILES_PROPERTIES(<files> PROPERTIES NO_NAMESPACE TRUE)
-QT4_ADD_DBUS_INTERFACES(<srcList> <files>)\n")
-  ENDMACRO(QT4_ADD_DBUS_INTERFACES_NO_NAMESPACE)
   
   MACRO(QT4_GENERATE_DBUS_INTERFACE _header) # _customName )
     SET(_customName "${ARGV1}")
