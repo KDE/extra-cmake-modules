@@ -709,7 +709,7 @@ endif (WIN32)
 
 # also use /usr/local by default under UNIX, including Mac OS X
 if (UNIX)
-   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." OFF)
+   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." ON)
 
    set( _KDE4_PLATFORM_INCLUDE_DIRS)
 
