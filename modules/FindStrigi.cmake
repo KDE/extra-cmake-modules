@@ -81,7 +81,7 @@ if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
   if(_dummyLinkFlags)
 
     exec_program(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${STRIGI_MIN_VERSION}
-        libstreamanalyzer RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
+                 libstreamanalyzer RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
 
     if(NOT _return_VALUE STREQUAL "0")
       message(STATUS "pkg-config query failed. did you set $PKG_CONFIG_PATH to the directory where strigi libstreamanalyzer.pc is installed?")
@@ -94,19 +94,19 @@ if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
     endif(NOT _return_VALUE STREQUAL "0")
     if (NOT STRIGI_STREAMANALYZER_LIBRARY)
       find_library(STRIGI_STREAMANALYZER_LIBRARY NAMES streamanalyzer
-	PATHS ${_dummyLinkDir})
+                   PATHS ${_dummyLinkDir})
     endif(NOT STRIGI_STREAMANALYZER_LIBRARY)
     if( NOT STRIGI_STRIGIQTDBUSCLIENT_LIBRARY)
        find_library(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY NAMES strigiqtdbusclient
-        PATHS ${_dummyLinkDir})
+                    PATHS ${_dummyLinkDir})
     endif(NOT STRIGI_STRIGIQTDBUSCLIENT_LIBRARY)
     if (NOT STRIGI_STREAMS_LIBRARY)
       find_library(STRIGI_STREAMS_LIBRARY NAMES streams
-	PATHS ${_dummyLinkDir})
+                   PATHS ${_dummyLinkDir})
     endif(NOT STRIGI_STREAMS_LIBRARY)
     if (NOT STRIGI_INCLUDE_DIR)
       find_path(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h
-        PATHS ${_dummyIncDir})
+                PATHS ${_dummyIncDir})
     endif(NOT STRIGI_INCLUDE_DIR)
   else(_dummyLinkFlags)
     message(STATUS "pkgconfig didn't find strigi, couldn't check strigi version")
@@ -118,3 +118,4 @@ find_package_handle_standard_args(Strigi
                                   "Couldn't find Strigi streams library. Set the environment variable STRIGI_HOME (or CMAKE_FIND_PREFIX_PATH if using CMake >=2.5) to the strigi install dir."  
                                   STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
 
+mark_as_advanced(STRIGI_INCLUDE_DIR STRIGI_STREAMANALYZER_LIBRARY STRIGI_STREAMS_LIBRARY STRIGI_STRIGIQTDBUSCLIENT_LIBRARY )

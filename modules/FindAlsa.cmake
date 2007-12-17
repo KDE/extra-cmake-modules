@@ -18,7 +18,7 @@ include(CheckIncludeFileCXX)
 include(CheckLibraryExists)
 
 # Already done by toplevel
-FIND_LIBRARY(ASOUND_LIBRARY asound)
+find_library(ASOUND_LIBRARY asound)
 check_library_exists(asound snd_seq_create_simple_port ${ASOUND_LIBRARY} HAVE_LIBASOUND2)
 if(HAVE_LIBASOUND2)
     message(STATUS "Found ALSA: ${ASOUND_LIBRARY}")
@@ -26,17 +26,19 @@ else(HAVE_LIBASOUND2)
     message(STATUS "ALSA not found")
 endif(HAVE_LIBASOUND2)
 set(ALSA_FOUND ${HAVE_LIBASOUND2})
-FIND_PATH(ALSA_INCLUDES alsa/version.h)
 
-MACRO(ALSA_VERSION_STRING _result)
+find_path(ALSA_INCLUDES alsa/version.h)
+
+macro(ALSA_VERSION_STRING _result)
     # check for version in alsa/version.h
-    IF(ALSA_INCLUDES)
-        FILE(READ "${ALSA_INCLUDES}/alsa/version.h" _ALSA_VERSION_CONTENT)
-        STRING(REGEX REPLACE ".*SND_LIB_VERSION_STR.*\"(.*)\".*" "\\1" ${_result} ${_ALSA_VERSION_CONTENT})
-    ELSE(ALSA_INCLUDES)
-        MESSAGE(STATUS "ALSA version not known. ALSA output will probably not work correctly.")
-    ENDIF(ALSA_INCLUDES)
-ENDMACRO(ALSA_VERSION_STRING _result)
+    if(ALSA_INCLUDES)
+        file(READ "${ALSA_INCLUDES}/alsa/version.h" _ALSA_VERSION_CONTENT)
+        string(REGEX REPLACE ".*SND_LIB_VERSION_STR.*\"(.*)\".*" "\\1" ${_result} ${_ALSA_VERSION_CONTENT})
+    else(ALSA_INCLUDES)
+        message(STATUS "ALSA version not known. ALSA output will probably not work correctly.")
+    endif(ALSA_INCLUDES)
+endmacro(ALSA_VERSION_STRING _result)
+
 
 get_filename_component(_FIND_ALSA_MODULE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 macro(ALSA_CONFIGURE_FILE _destFile)
@@ -58,3 +60,5 @@ macro(ALSA_CONFIGURE_FILE _destFile)
 
     configure_file(${_FIND_ALSA_MODULE_DIR}/config-alsa.h.cmake ${_destFile})
 endmacro(ALSA_CONFIGURE_FILE _destFile)
+
+mark_as_advanced(ALSA_INCLUDES ASOUND_LIBRARY)
