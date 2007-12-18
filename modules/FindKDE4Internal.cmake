@@ -707,7 +707,7 @@ if (WIN32)
 endif (WIN32)
 
 
-# also use /usr/local by default under UNIX, including Mac OS X
+# setup default RPATH/install_name handling, may be overridden by KDE4_HANDLE_RPATH_FOR_[LIBRARY|EXECUTABLE]
 if (UNIX)
    option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." ON)
 
