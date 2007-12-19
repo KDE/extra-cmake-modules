@@ -28,9 +28,21 @@
 # All the libraries required are stored in a variable called QT_LIBRARIES.  
 # Add this variable to your TARGET_LINK_LIBRARIES.
 #  
-#  macro QT4_WRAP_CPP(outfiles inputfile ... )
-#  macro QT4_WRAP_UI(outfiles inputfile ... )
-#  macro QT4_ADD_RESOURCES(outfiles inputfile ... )
+#  macro QT4_WRAP_CPP(outfiles inputfile ... OPTIONS ...)
+#        create moc code from a list of files containing Qt class with
+#        the Q_OBJECT declaration.  Options may be given to moc, such as those found
+#        when executing "moc -help"
+#
+#  macro QT4_WRAP_UI(outfiles inputfile ... OPTIONS ...)
+#        create code from a list of Qt designer ui files.
+#        Options may be given to uic, such as those found
+#        when executing "uic -help"
+#
+#  macro QT4_ADD_RESOURCES(outfiles inputfile ... OPTIONS ...)
+#        create code from a list of Qt resource files.
+#        Options may be given to rcc, such as those found
+#        when executing "rcc -help"
+#
 #  macro QT4_AUTOMOC(inputfile ... )
 #  macro QT4_GENERATE_MOC(inputfile outputfile )
 #
@@ -57,11 +69,12 @@
 #        If <classname> is provided, then it will be used as the classname of the
 #        adaptor itself.
 #
-#  macro QT4_GENERATE_DBUS_INTERFACE( header [interfacename] )
+#  macro QT4_GENERATE_DBUS_INTERFACE( header [interfacename] OPTIONS ...)
 #        generate the xml interface file from the given header.
 #        If the optional argument interfacename is omitted, the name of the 
 #        interface file is constructed from the basename of the header with
 #        the suffix .xml appended.
+#        Options may be given to uic, such as those found when executing "qdbuscpp2xml --help"
 #
 #  QT_FOUND         If false, don't try to use Qt.
 #  QT4_FOUND        If false, don't try to use Qt 4.
@@ -919,6 +932,22 @@ IF (QT4_QMAKE_FOUND)
   #       Macros for building Qt files
   #
   ######################################
+  MACRO (QT4_EXTRACT_OPTIONS _qt4_files _qt4_options)
+    SET(${_qt4_files})
+    SET(${_qt4_options})
+    SET(_QT4_DOING_OPTIONS FALSE)
+    FOREACH(_currentArg ${ARGN})
+       IF ("${_currentArg}" STREQUAL "OPTIONS")
+          SET(_QT4_DOING_OPTIONS TRUE)
+       ELSE ("${_currentArg}" STREQUAL "OPTIONS")
+          IF(_QT4_DOING_OPTIONS)
+             LIST(APPEND ${_qt4_options} "${_currentArg}")
+          ELSE(_QT4_DOING_OPTIONS)
+             LIST(APPEND ${_qt4_files} "${_currentArg}")
+          ENDIF(_QT4_DOING_OPTIONS)
+       ENDIF ("${_currentArg}" STREQUAL "OPTIONS")
+    ENDFOREACH(_currentArg)
+  ENDMACRO (QT4_EXTRACT_OPTIONS)
 
   MACRO (QT4_GET_MOC_INC_DIRS _moc_INC_DIRS)
      SET(${_moc_INC_DIRS})
@@ -965,15 +994,16 @@ IF (QT4_QMAKE_FOUND)
   MACRO (QT4_WRAP_CPP outfiles )
     # get include dirs
     QT4_GET_MOC_INC_DIRS(moc_includes)
+    QT4_EXTRACT_OPTIONS(moc_files moc_options ${ARGN})
 
-    FOREACH (it ${ARGN})
+    FOREACH (it ${moc_files})
       GET_FILENAME_COMPONENT(it ${it} ABSOLUTE)
       GET_FILENAME_COMPONENT(outfile ${it} NAME_WE)
 
       SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/moc_${outfile}.cxx)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_MOC_EXECUTABLE}
-        ARGS ${moc_includes} -o ${outfile} ${it}
+        ARGS ${moc_includes} ${moc_options} -o ${outfile} ${it}
         DEPENDS ${it})
       SET(${outfiles} ${${outfiles}} ${outfile})
     ENDFOREACH(it)
@@ -984,14 +1014,15 @@ IF (QT4_QMAKE_FOUND)
   # QT4_WRAP_UI(outfiles inputfile ... )
 
   MACRO (QT4_WRAP_UI outfiles )
+    QT4_EXTRACT_OPTIONS(ui_files ui_options ${ARGN})
 
-    FOREACH (it ${ARGN})
+    FOREACH (it ${ui_files})
       GET_FILENAME_COMPONENT(outfile ${it} NAME_WE)
       GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
       SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/ui_${outfile}.h)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_UIC_EXECUTABLE}
-        ARGS -o ${outfile} ${infile}
+        ARGS ${ui_options} -o ${outfile} ${infile}
         MAIN_DEPENDENCY ${infile})
       SET(${outfiles} ${${outfiles}} ${outfile})
     ENDFOREACH (it)
@@ -1003,8 +1034,9 @@ IF (QT4_QMAKE_FOUND)
   # TODO  perhaps consider adding support for compression and root options to rcc
 
   MACRO (QT4_ADD_RESOURCES outfiles )
+    QT4_EXTRACT_OPTIONS(rcc_files rcc_options ${ARGN})
 
-    FOREACH (it ${ARGN})
+    FOREACH (it ${rcc_files})
       GET_FILENAME_COMPONENT(outfilename ${it} NAME_WE)
       GET_FILENAME_COMPONENT(infile ${it} ABSOLUTE)
       GET_FILENAME_COMPONENT(rc_path ${infile} PATH)
@@ -1024,7 +1056,7 @@ IF (QT4_QMAKE_FOUND)
       ENDFOREACH(_RC_FILE)
       ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
         COMMAND ${QT_RCC_EXECUTABLE}
-        ARGS -name ${outfilename} -o ${outfile} ${infile}
+        ARGS ${rcc_options} -name ${outfilename} -o ${outfile} ${infile}
         MAIN_DEPENDENCY ${infile}
         DEPENDS ${_RC_DEPENDS})
       SET(${outfiles} ${${outfiles}} ${outfile})
@@ -1073,13 +1105,14 @@ IF (QT4_QMAKE_FOUND)
         QT4_ADD_DBUS_INTERFACE(${_sources} ${_infile} ${_basename}interface)
      ENDFOREACH (_current_FILE)
   ENDMACRO(QT4_ADD_DBUS_INTERFACES)
-
   
-  MACRO(QT4_GENERATE_DBUS_INTERFACE _header) # _customName )
-    SET(_customName "${ARGV1}")
+  
+  MACRO(QT4_GENERATE_DBUS_INTERFACE _header) # _customName OPTIONS -some -options )
+    QT4_EXTRACT_OPTIONS(_customName _qt4_dbus_options ${ARGN})
+
     GET_FILENAME_COMPONENT(_in_file ${_header} ABSOLUTE)
     GET_FILENAME_COMPONENT(_basename ${_header} NAME_WE)
-    
+
     IF (_customName)
       SET(_target ${CMAKE_CURRENT_BINARY_DIR}/${_customName})
     ELSE (_customName)
@@ -1087,7 +1120,7 @@ IF (QT4_QMAKE_FOUND)
     ENDIF (_customName)
   
     ADD_CUSTOM_COMMAND(OUTPUT ${_target}
-        COMMAND ${QT_DBUSCPP2XML_EXECUTABLE} ${_in_file} > ${_target}
+        COMMAND ${QT_DBUSCPP2XML_EXECUTABLE} ${_qt4_dbus_options} ${_in_file} > ${_target}
         DEPENDS ${_in_file}
     )
   ENDMACRO(QT4_GENERATE_DBUS_INTERFACE)
