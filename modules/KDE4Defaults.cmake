@@ -21,6 +21,10 @@ set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
 # since cmake 2.4.0
 set(CMAKE_COLOR_MAKEFILE ON)
 
+# Enable use of chrpath to avoid the need for actually relinking on install
+# since cmake cvs 12/19/2007
+set(CMAKE_USE_CHRPATH ON)
+
 # define the generic version of the libraries here
 # this makes it easy to advance it when the next KDE release comes
 set(GENERIC_LIB_VERSION "4.0.0")
@@ -33,8 +37,6 @@ set(KDE_NON_GENERIC_LIB_SOVERSION "5")
 # all searchable directories has to be defined by the PATH environment var
 # to reduce the number of required pathes executables are placed into
 # the build bin dir 
-# note: dll's should go also in bin dir and import libraries should go into lib,
-# but this seems not possible with recent cmake release
 if (WIN32)
  set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 # set (LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)

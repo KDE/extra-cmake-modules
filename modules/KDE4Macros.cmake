@@ -501,9 +501,13 @@ endmacro (KDE4_CREATE_FINAL_FILES)
 # If RPATH is not explicitly disabled, libraries and plugins are built without RPATH, in
 # the hope that the RPATH which is compiled into the executable is good enough.
 macro (KDE4_HANDLE_RPATH_FOR_LIBRARY _target_NAME)
-   if (NOT CMAKE_SKIP_RPATH AND NOT KDE4_USE_ALWAYS_FULL_RPATH)
-       set_target_properties(${_target_NAME} PROPERTIES INSTALL_RPATH_USE_LINK_PATH FALSE SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH "")
-   endif (NOT CMAKE_SKIP_RPATH AND NOT KDE4_USE_ALWAYS_FULL_RPATH)
+   if (NOT CMAKE_SKIP_RPATH)
+      if(KDE4_USE_ALWAYS_FULL_RPATH)
+         set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH FALSE  BUILD_WITH_INSTALL_RPATH FALSE)
+      else(KDE4_USE_ALWAYS_FULL_RPATH)
+         set_target_properties(${_target_NAME} PROPERTIES  INSTALL_RPATH_USE_LINK_PATH FALSE  SKIP_BUILD_RPATH TRUE  BUILD_WITH_INSTALL_RPATH TRUE  INSTALL_RPATH "")
+      endif(KDE4_USE_ALWAYS_FULL_RPATH)
+   endif (NOT CMAKE_SKIP_RPATH)
 endmacro (KDE4_HANDLE_RPATH_FOR_LIBRARY)
 
 # This macro sets the RPATH related options for executables
