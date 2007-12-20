@@ -49,9 +49,7 @@ else (FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
     set( FREETYPE_LIBRARIES ${FREETYPE_LIBRARIES} CACHE INTERNAL "The libraries for freetype" )
 
   else(FREETYPECONFIG_EXECUTABLE)
-	find_path (FREETYPE_INCLUDE_DIR freetype/freetype.h
-        ${CMAKE_INCLUDE_PATH}/freetype2
-	)
+	find_path (FREETYPE_INCLUDE_DIR freetype2/freetype/freetype.h)
     find_library(FREETYPE_LIBRARIES freetype)
     if(FREETYPE_INCLUDE_DIR AND FREETYPE_LIBRARIES)
         set(FREETYPE_FOUND TRUE)
