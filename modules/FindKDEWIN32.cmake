@@ -27,12 +27,12 @@ if (WIN32)
     )
  
     # search for kdewin32 in the default install directory for applications (default of (n)make install)
-
+    FILE(TO_CMAKE_PATH "${CMAKE_LIBRARY_PATH}" _cmakeLibraryPathCmakeStyle)
     find_library_with_debug(KDEWIN32_LIBRARY
       WIN32_DEBUG_POSTFIX d
       NAMES kdewin32
       PATHS 
-        ${CMAKE_LIBRARY_PATH}
+        ${_cmakeLibraryPathCmakeStyle}
         ${CMAKE_INSTALL_PREFIX}/lib
       NO_SYSTEM_ENVIRONMENT_PATH
     )
