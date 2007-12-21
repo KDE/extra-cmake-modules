@@ -44,15 +44,21 @@ if (WIN32)
     set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ${KDEWIN_DIR}/lib)
      
     set (KDEWIN_FOUND 1)
+    if (NOT KDEWIN_FIND_QUIETLY)
+      message(STATUS "Found kdewin32 library: ${KDEWIN32_LIBRARY}")
+    endif (NOT KDEWIN_FIND_QUIETLY)
+
   else(KDEWIN_DIR)
-    message(STATUS "Could not find the location of the windows supplementary packages which is \n"
-                    "\t\tenvironment variable KDEWIN_DIR\n"
-                    "\t\t<ProgramFiles>/${DIR}\n"
-                    "\t\t<ProgramFiles>/kdewin\n" 
-                    "\t\t<ProgramFiles>/kdewin32\n" 
-                    "\t\t<ProgramFiles>/win32libs\n"
-                    "\t\t<ProgramFiles>/gnuwin32\n"
-    )
+    if( KDEWIN_FIND_REQUIRED )
+      message(FATAL_ERROR "Could not find the location of the windows supplementary packages which is \n"
+                      "\t\tenvironment variable KDEWIN_DIR\n"
+                      "\t\t<ProgramFiles>/${DIR}\n"
+                      "\t\t<ProgramFiles>/kdewin\n" 
+                      "\t\t<ProgramFiles>/kdewin32\n" 
+                      "\t\t<ProgramFiles>/win32libs\n"
+                      "\t\t<ProgramFiles>/gnuwin32\n"
+      )
+    endif( KDEWIN_FIND_REQUIRED )
    endif(KDEWIN_DIR)
   
 endif (WIN32)
