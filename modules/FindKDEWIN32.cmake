@@ -18,7 +18,7 @@ if (WIN32)
 
   if (NOT KDEWIN32_DIR)
     if(NOT KDEWIN_FOUND)
-      find_package(KDEWIN REQUIRED)
+      find_package(KDEWIN)
     endif(NOT KDEWIN_FOUND)
 
     find_path(KDEWIN32_INCLUDE_DIR winposix_export.h
