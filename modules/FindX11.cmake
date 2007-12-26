@@ -49,6 +49,7 @@ IF (UNIX)
     /usr/pkg/xorg/include
     /usr/pkg/include
     /usr/X11R6/include 
+    /usr/X11R7/include 
     /usr/include/X11
     /usr/openwin/include 
     /usr/openwin/share/include 
@@ -59,6 +60,7 @@ IF (UNIX)
     /usr/pkg/xorg/lib
     /usr/pkg/lib
     /usr/X11R6/lib
+    /usr/X11R7/lib
     /usr/openwin/lib 
   )
 
