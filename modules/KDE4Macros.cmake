@@ -987,11 +987,11 @@ endmacro (KDE4_ADD_WIN32_APP_ICON)
 # win32 notes: the application icon(s) are compiled into the application 
 # parameters: 
 # 'appsources'  - specifies the list of source files 
-# 'pngfiles' - specifies the list of icon files
-# example: KDE4_ADD_APP_ICON( myapp_sources myapp_icons)
-#          where blinken_icons is a list of png icons
+# 'pattern'     - regular expression for searching application icons 
+# example: KDE4_ADD_APP_ICON( myapp_sources "pics/cr*-myapp.png")
+# example: KDE4_ADD_APP_ICON( myapp_sources "icons/oxygen/*/apps/myapp.png")
 
-macro (KDE4_ADD_APP_ICON appsources )
+macro (KDE4_ADD_APP_ICON appsources pattern)
     STRING(REPLACE _SRCS "" target ${appsources})
     if (WIN32)
         find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
@@ -1000,23 +1000,42 @@ macro (KDE4_ADD_APP_ICON appsources )
             set(WINDRES_EXECUTABLE TRUE)
         endif(MSVC)        
         if (PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
-            set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
-            # requires kdewin32 >= 0.3.4
-            ADD_CUSTOM_COMMAND(OUTPUT ${_outfilename}.ico ${_outfilename}.rc
-                               COMMAND ${PNG2ICO_EXECUTABLE} ARGS --rcfile ${_outfilename}.rc ${_outfilename}.ico ${ARGN}
-                               DEPENDS ${PNG2ICO_EXECUTABLE} ${ARGN}
-                               WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                              )
-            if (MINGW)
-                ADD_CUSTOM_COMMAND(OUTPUT ${_outfilename}_res.o
-                                   COMMAND ${WINDRES_EXECUTABLE} ARGS -i ${_outfilename}.rc -o ${_outfilename}_res.o --include-dir=${CMAKE_CURRENT_SOURCE_DIR}
-                                   DEPENDS ${WINDRES_EXECUTABLE} ${_outfilename}.rc
+            file(GLOB_RECURSE files  "${pattern}")
+            FOREACH (it ${files})
+                GET_FILENAME_COMPONENT(_name ${it} NAME_WE)
+                if (it MATCHES ".*16.*" )
+                    list (APPEND _icons ${it})
+                endif (it MATCHES ".*16.*")
+                if (it MATCHES ".*32.*" )
+                    list (APPEND _icons ${it})
+                endif (it MATCHES ".*32.*")
+                if (it MATCHES ".*48.*" )
+                    list (APPEND _icons ${it})
+                endif (it MATCHES ".*48.*")
+                if (it MATCHES ".*64.*" )
+                    list (APPEND _icons ${it})
+                endif (it MATCHES ".*64.*")
+            ENDFOREACH (it)
+            if (_icons)
+                set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
+                ADD_CUSTOM_COMMAND(OUTPUT ${_outfilename}.ico ${_outfilename}.rc
+                                   COMMAND ${PNG2ICO_EXECUTABLE} ARGS --rcfile ${_outfilename}.rc ${_outfilename}.ico ${_icons}
+                                   DEPENDS ${PNG2ICO_EXECUTABLE} ${_icons}
                                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                                   )
-                list(APPEND ${appsources} ${_outfilename}_res.o)
-            else(MINGW)
-                list(APPEND ${appsources} ${_outfilename}.rc)
-            endif(MINGW)
+                if (MINGW)
+                    ADD_CUSTOM_COMMAND(OUTPUT ${_outfilename}_res.o
+                                       COMMAND ${WINDRES_EXECUTABLE} ARGS -i ${_outfilename}.rc -o ${_outfilename}_res.o --include-dir=${CMAKE_CURRENT_SOURCE_DIR}
+                                       DEPENDS ${WINDRES_EXECUTABLE} ${_outfilename}.rc
+                                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                                      )
+                    list(APPEND ${appsources} ${_outfilename}_res.o)
+                else(MINGW)
+                    list(APPEND ${appsources} ${_outfilename}.rc)
+                endif(MINGW)
+            else(_icons)
+                message(STATUS "Unable to find a related icon for target ${target} - application will not have an application icon!")
+            endif(_icons)
         else(PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
             message(STATUS "Unable to find the png2ico or windres utilities - application will not have an application icon!")
         endif(PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
@@ -1024,16 +1043,15 @@ macro (KDE4_ADD_APP_ICON appsources )
     if (Q_WS_MAC)
         # first convert image to a tiff using the Mac OS X "sips" utility,
         # then use tiff2icns to convert to an icon
-        
         find_program(SIPS_EXECUTABLE NAMES sips)
         find_program(TIFF2ICNS_EXECUTABLE NAMES tiff2icns)
         if (SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
-            file(GLOB files  "${pattern}")
+            file(GLOB_RECURSE files  "${pattern}")
             # we can only test for the 128-icon like that - we don't use patterns anymore
-            FOREACH (it ${ARGN})
-                if (it MATCHES ".*128-.*" )
+            FOREACH (it ${files})
+                if (it MATCHES ".*128.*" )
                     set (_icon ${it})
-                endif (it MATCHES ".*128-.*")
+                endif (it MATCHES ".*128.*")
             ENDFOREACH (it)
             set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
 
