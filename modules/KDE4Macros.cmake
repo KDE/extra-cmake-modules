@@ -268,6 +268,7 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
    add_custom_command(OUTPUT ${_doc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} --cache ${_doc} ${_input}
       DEPENDS ${_docs} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
    )
    add_custom_target(handbook ALL DEPENDS ${_doc})
 
@@ -276,7 +277,8 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
       add_custom_command(OUTPUT ${_htmlDoc}
          COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} -o ${_htmlDoc} ${_input}
          DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
-         )
+         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      )
       add_custom_target(htmlhandbook DEPENDS ${_htmlDoc})
    endif(KDE4_ENABLE_HTMLHANDBOOK)
 
