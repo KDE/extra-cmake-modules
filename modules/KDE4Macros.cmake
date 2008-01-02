@@ -385,14 +385,18 @@ set(_KDE4_ICON_GROUP_filesys    "places")
 set(_KDE4_ICON_GROUP_device     "devices")
 set(_KDE4_ICON_GROUP_app        "apps")
 set(_KDE4_ICON_GROUP_action     "actions")
-# KDE 4 compatibility
+# KDE 4 / icon naming specification compatibility
 set(_KDE4_ICON_GROUP_mimetypes  "mimetypes")
 set(_KDE4_ICON_GROUP_places     "places")
 set(_KDE4_ICON_GROUP_devices    "devices")
 set(_KDE4_ICON_GROUP_apps       "apps")
 set(_KDE4_ICON_GROUP_actions    "actions")
 set(_KDE4_ICON_GROUP_categories "categories")
+set(_KDE4_ICON_GROUP_status     "status")
 set(_KDE4_ICON_GROUP_emblems    "emblems")
+set(_KDE4_ICON_GROUP_emotes     "emotes")
+set(_KDE4_ICON_GROUP_animations "animations")
+set(_KDE4_ICON_GROUP_intl       "intl")
 
 # a "map" of short theme names to the theme directory
 set(_KDE4_ICON_THEME_ox "oxygen")
