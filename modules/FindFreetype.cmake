@@ -2,9 +2,10 @@
 # Once done this will define
 #
 #  FREETYPE_FOUND - system has Freetype
-#  FREETYPE_INCLUDE_DIR - the FREETYPE include directory
+#  FREETYPE_INCLUDE_DIRS - the FREETYPE include directories
 #  FREETYPE_LIBRARIES - Link these to use FREETYPE
-#
+#  FREETYPE_INCLUDE_DIR is internal and deprecated for use
+
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
@@ -69,3 +70,5 @@ else (FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
   ENDIF (FREETYPE_FOUND)
 
 endif (FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
+
+set(FREETYPE_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIR})
