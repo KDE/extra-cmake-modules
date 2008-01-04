@@ -415,7 +415,6 @@ IF (UNIX)
     X11_Xaccessrules_INCLUDE_PATH
     X11_Xaccessstr_INCLUDE_PATH
     X11_Xdmcp_INCLUDE_PATH
-    X11_xf86misc_INCLUDE_PATH
     X11_Xkb_INCLUDE_PATH
     X11_Xkblib_INCLUDE_PATH
     X11_Xkbfile_INCLUDE_PATH
