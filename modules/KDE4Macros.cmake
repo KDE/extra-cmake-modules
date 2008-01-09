@@ -308,7 +308,7 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
       # TODO symlinks on non-unix platforms
       if (UNIX)
          # execute some cmake code on make install which creates the symlink
-         install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"\$ENV{DESTDIR}${_installDest}/common\"  \"\$ENV{DESTDIR}${_installDest}/${dirname}/common\" )" )
+         install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${_installDest}/common\"  \"\$ENV{DESTDIR}${_installDest}/${dirname}/common\" )" )
       endif (UNIX)
    endif(_installDest)
 
