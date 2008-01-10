@@ -749,6 +749,13 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
         set(_targetName ${ARGV2})
         list(REMOVE_AT _srcList 0 1)
     endif( ${ARGV1} STREQUAL "TESTNAME" )
+    
+    set(_nogui)
+    list(GET ${_srcList} 0 first_PARAM)
+    if( ${first_PARAM} STREQUAL "NOGUI" )
+        set(_nogui "NOGUI")
+    endif( ${first_PARAM} STREQUAL "NOGUI" )
+
     kde4_add_executable( ${_test_NAME} TEST ${_srcList} )
 
     if(NOT KDE4_TEST_OUTPUT)
@@ -766,12 +773,17 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
         endif(NOT using_qtest)
     endforeach(_filename)
 
+    set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME})
+    if (Q_WS_MAC AND NOT _nogui)
+        set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME}.app/Contents/MacOS/${_test_NAME})
+    endif (Q_WS_MAC AND NOT _nogui)
+    
     if (using_qtest AND KDE4_TEST_OUTPUT STREQUAL "xml")
         #MESSAGE(STATUS "${_targetName} : Using QTestLib, can produce XML report.")
-        add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} -xml -o ${_targetName}.tml)
+        add_test( ${_targetName} ${_executable} -xml -o ${_targetName}.tml)
     else (using_qtest AND KDE4_TEST_OUTPUT STREQUAL "xml")
         #MESSAGE(STATUS "${_targetName} : NOT using QTestLib, can't produce XML report, please use QTestLib to write your unit tests.")
-        add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} )
+        add_test( ${_targetName} ${_executable} )
     endif (using_qtest AND KDE4_TEST_OUTPUT STREQUAL "xml")
 
 #    add_test( ${_targetName} ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME} -xml -o ${_test_NAME}.tml )
