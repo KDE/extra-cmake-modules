@@ -940,8 +940,8 @@ if (CMAKE_C_COMPILER MATCHES "icc")
    set(CMAKE_C_FLAGS_DEBUG            "-O2 -g -Ob0 -noalign")
    set(CMAKE_C_FLAGS_DEBUGFULL        "-g -Ob0 -noalign")
 
-   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wall -Wpointer-arith -fno-common")
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wall -Wpointer-arith -fno-exceptions -fno-common")
+   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wall -w1 -Wpointer-arith -fno-common")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wall -w1 -Wpointer-arith -fno-exceptions -fno-common")
 
    # visibility support
    set(__KDE_HAVE_ICC_VISIBILITY)
