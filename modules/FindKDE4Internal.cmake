@@ -710,7 +710,13 @@ endif (WIN32)
 # setup default RPATH/install_name handling, may be overridden by KDE4_HANDLE_RPATH_FOR_[LIBRARY|EXECUTABLE]
 # default is to build with RPATH for the install dir, so it doesn't need to relink
 if (UNIX)
-   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." ON)
+   if (NOT APPLE)
+     set( _KDE4_DEFAULT_USE_FULL_RPATH ON )
+   else (NOT APPLE)
+     set( _KDE4_DEFAULT_USE_FULL_RPATH OFF )
+   endif (NOT APPLE)
+
+   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." _KDE4_DEFAULT_USE_FULL_RPATH)
 
    set( _KDE4_PLATFORM_INCLUDE_DIRS)
 
