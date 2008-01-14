@@ -983,7 +983,7 @@ macro (KDE4_PRINT_RESULTS)
    # inside kdelibs the include dir and lib dir are internal, not "found"
    if (NOT _kdeBootStrapping)
        if(KDE4_INCLUDE_DIR)
-          message(STATUS "Found KDE 4.0 include dir: ${KDE4_INCLUDE_DIR}")
+          message(STATUS "Found KDE 4 include dir: ${KDE4_INCLUDE_DIR}")
        else(KDE4_INCLUDE_DIR)
           message(STATUS "ERROR: unable to find KDE 4 headers")
        endif(KDE4_INCLUDE_DIR)
