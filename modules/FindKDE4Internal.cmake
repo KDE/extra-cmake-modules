@@ -716,7 +716,7 @@ if (UNIX)
      set( _KDE4_DEFAULT_USE_FULL_RPATH OFF )
    endif (NOT APPLE)
 
-   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." _KDE4_DEFAULT_USE_FULL_RPATH)
+   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." ${_KDE4_DEFAULT_USE_FULL_RPATH} )
 
    set( _KDE4_PLATFORM_INCLUDE_DIRS)
 
