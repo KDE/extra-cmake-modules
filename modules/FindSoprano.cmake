@@ -79,10 +79,10 @@
     STRING(REGEX MATCH "SOPRANO_VERSION_STRING \".*\"\n" SOPRANO_VERSION_MATCH ${SOPRANO_VERSION_CONTENT})
     IF (SOPRANO_VERSION_MATCH)
       STRING(REGEX REPLACE "SOPRANO_VERSION_STRING \"(.*)\"\n" "\\1" SOPRANO_VERSION ${SOPRANO_VERSION_MATCH})
-      if(SOPRANO_VERSION STRLESS "1.99")
+      if(SOPRANO_VERSION STRLESS "2.0")
         set(Soprano_FOUND FALSE)
-        message(FATAL_ERROR "Soprano version ${SOPRANO_VERSION} is too old. Please install 1.99 or newer")
-      endif(SOPRANO_VERSION STRLESS "1.99")
+        message(FATAL_ERROR "Soprano version ${SOPRANO_VERSION} is too old. Please install 2.0 or newer")
+      endif(SOPRANO_VERSION STRLESS "2.0")
     ENDIF (SOPRANO_VERSION_MATCH)
   endif(Soprano_FOUND)
   
