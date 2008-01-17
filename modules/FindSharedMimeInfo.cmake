@@ -10,7 +10,7 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 # the minimum version of shared-mime-database we require
-set(SHARED_MIME_INFO_MINIMUM_VERSION "0.18")
+set(SHARED_MIME_INFO_MINIMUM_VERSION "0.20")
 
 if (UPDATE_MIME_DATABASE_EXECUTABLE)
 
