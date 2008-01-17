@@ -10,7 +10,7 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 # the minimum version of shared-mime-database we require
-set(SHARED_MIME_INFO_MINIMUM_VERSION "0.18")
+set(SHARED_MIME_INFO_MINIMUM_VERSION "0.20")
 
 if (UPDATE_MIME_DATABASE_EXECUTABLE)
 
@@ -37,7 +37,7 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
             message(STATUS "Found shared-mime-info version: ${smiVersion}")
             macro_ensure_version(${SHARED_MIME_INFO_MINIMUM_VERSION} ${smiVersion} _smiVersion_OK)
             if (NOT _smiVersion_OK)
-                message(STATUS "WARNING: the found version of shared-mime-info (${smiVersion}) is below the minimum required (${SHARED_MIME_INFO_MINIMUM_VERSION})")
+                message(FATAL_ERROR "The found version of shared-mime-info (${smiVersion}) is below the minimum required (${SHARED_MIME_INFO_MINIMUM_VERSION})")
             endif (NOT _smiVersion_OK)
 
         endif (NOT SharedMimeInfo_FIND_QUIETLY)
