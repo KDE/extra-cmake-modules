@@ -27,10 +27,10 @@ set(CMAKE_USE_CHRPATH ON)
 
 # define the generic version of the libraries here
 # this makes it easy to advance it when the next KDE release comes
-set(GENERIC_LIB_VERSION "4.0.0")
+set(GENERIC_LIB_VERSION "4.1.0")
 set(GENERIC_LIB_SOVERSION "4")
 
-set(KDE_NON_GENERIC_LIB_VERSION "5.0.0")
+set(KDE_NON_GENERIC_LIB_VERSION "5.1.0")
 set(KDE_NON_GENERIC_LIB_SOVERSION "5")
 
 # windows does not support LD_LIBRARY_PATH or similar
