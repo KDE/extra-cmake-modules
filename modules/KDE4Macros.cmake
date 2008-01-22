@@ -776,6 +776,11 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
     set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME})
     if (Q_WS_MAC AND NOT _nogui)
         set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME}.app/Contents/MacOS/${_test_NAME})
+    else (Q_WS_MAC AND NOT _nogui)
+        # Use .shell wrapper where available, to use uninstalled libs.
+        if (UNIX)
+            set(_executable ${_executable}.shell)
+        endif (UNIX)
     endif (Q_WS_MAC AND NOT _nogui)
     
     if (using_qtest AND KDE4_TEST_OUTPUT STREQUAL "xml")
