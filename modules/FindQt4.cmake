@@ -604,7 +604,7 @@ IF (QT4_QMAKE_FOUND)
   MARK_AS_ADVANCED( QT_LIBRARY_DIR QT_INCLUDE_DIR QT_QT_INCLUDE_DIR QT_DOC_DIR QT_MKSPECS_DIR QT_PLUGINS_DIR)
 
   # Set QT_INCLUDES
-  SET( QT_INCLUDES ${QT_INCLUDE_DIR} ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default )
+  SET( QT_INCLUDES ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default ${QT_INCLUDE_DIR})
 
 
   ########################################
@@ -833,7 +833,7 @@ IF (QT4_QMAKE_FOUND)
     
     IF (QT_${basename}_INCLUDE_DIR)
       #add the include directory to QT_INCLUDES
-      SET(QT_INCLUDES ${QT_INCLUDES} "${QT_${basename}_INCLUDE_DIR}")
+      SET(QT_INCLUDES "${QT_${basename}_INCLUDE_DIR}" ${QT_INCLUDES})
     ENDIF (QT_${basename}_INCLUDE_DIR)
 
     # Make variables changeble to the advanced user
