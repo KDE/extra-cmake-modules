@@ -406,7 +406,7 @@ set(_KDE4_ICON_THEME_hi "hicolor")
 
 
 # only used internally by KDE4_INSTALL_ICONS
-macro (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME)
+macro (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME _l10n_SUBDIR)
 
    # if the string doesn't match the pattern, the result is the full string, so all three have the same content
    if (NOT ${_group} STREQUAL ${_install_NAME} )
@@ -414,14 +414,22 @@ macro (_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NA
       if(NOT _icon_GROUP)
          set(_icon_GROUP "actions")
       endif(NOT _icon_GROUP)
-#      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name}" )
-      install(FILES ${_orig_NAME} DESTINATION ${_install_PATH}/${_icon_GROUP}/ RENAME ${_install_NAME} )
+#      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name} l10n: ${_l10n_SUBDIR}")
+      install(FILES ${_orig_NAME} DESTINATION ${_install_PATH}/${_icon_GROUP}/${_l10n_SUBDIR}/ RENAME ${_install_NAME} )
    endif (NOT ${_group} STREQUAL ${_install_NAME} )
 
 endmacro (_KDE4_ADD_ICON_INSTALL_RULE)
 
 
 macro (KDE4_INSTALL_ICONS _defaultpath )
+
+   # the l10n-subdir if language given as second argument (localized icon)
+   set(_lang ${ARGV1})
+   if(_lang)
+      set(_l10n_SUBDIR l10n/${_lang})
+   else(_lang)
+      set(_l10n_SUBDIR ".")
+   endif(_lang)
 
    # first the png icons
    file(GLOB _icons *.png)
@@ -435,7 +443,7 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       if( _theme_GROUP)
          _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                     ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
-                    ${_group} ${_current_ICON} ${_name})
+                    ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
       endif( _theme_GROUP)
    endforeach (_current_ICON)
 
@@ -451,7 +459,7 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       if( _theme_GROUP)
          _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                 ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
-                ${_group} ${_current_ICON} ${_name})
+                ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
       endif( _theme_GROUP)
    endforeach (_current_ICON)
 
@@ -466,7 +474,7 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       if( _theme_GROUP)
           _KDE4_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                             ${_defaultpath}/${_theme_GROUP}/scalable
-                            ${_group} ${_current_ICON} ${_name})
+                            ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
       endif( _theme_GROUP)
    endforeach (_current_ICON)
 
