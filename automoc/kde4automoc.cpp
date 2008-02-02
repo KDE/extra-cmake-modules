@@ -314,7 +314,7 @@ void AutoMoc::generateMoc(const QString &sourceFile, const QString &mocFileName)
 
         // we don't want too many child processes
 #ifdef Q_OS_FREEBSD
-	static const int max_processes = 1;
+	static const int max_processes = 0;
 #else
 	static const int max_processes = 10;
 #endif
