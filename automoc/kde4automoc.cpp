@@ -196,7 +196,7 @@ bool AutoMoc::run()
                             basename = basename.right(basename.length() - 4);
                         }
                         bool headerFound = false;
-                        foreach (QString ext, headerExtensions) {
+                        foreach (const QString &ext, headerExtensions) {
                             QString sourceFilePath = absPath + basename + ext;
                             if (QFile::exists(sourceFilePath)) {
                                 headerFound = true;
