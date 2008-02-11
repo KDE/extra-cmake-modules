@@ -18,32 +18,54 @@
 #
 # In addition to the parameters an arbitrary number of template filenames can be set as arguments
 #
+# In case of success NEPOMUK_RESOURCES_GENERATED is true, otherwise false
+#
 macro(NEPOMUK_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_sources out_includes)
 
+  # init
+  set(NEPOMUK_RESOURCES_GENERATED false)
+
   FIND_PROGRAM(RCGEN nepomuk-rcgen PATHS ${BIN_INSTALL_DIR})
+
   if(NOT RCGEN)
-    message( FATAL_ERROR "Failed to find the KMetaData source generator" )
+
+    message(STATUS "Failed to find the Nepomuk source generator" )
+
+  else(NOT RCGEN)
+
+    FILE(TO_NATIVE_PATH ${RCGEN} RCGEN)
+
+    execute_process(
+      COMMAND ${RCGEN} --listheaders --prefix ${targetdir}/ --ontologies ${ontofile}
+      OUTPUT_VARIABLE ${out_headers}
+      RESULT_VARIABLE rcgen_result
+      )
+
+    # If the first call succeeds it is very very likely that the rest will, too
+    if(${rcgen_result} EQUAL 0)
+
+      execute_process(
+        COMMAND ${RCGEN} --listsources --prefix ${targetdir}/ --ontologies ${ontofile}
+        OUTPUT_VARIABLE ${out_sources}
+        )
+      
+      execute_process(
+        COMMAND ${RCGEN} --listincludes --ontologies ${ontofile}
+        OUTPUT_VARIABLE ${out_includes}
+        )
+
+      execute_process(
+        COMMAND ${RCGEN} --writeall --templates ${ARGN} --target ${targetdir}/ --ontologies ${ontofile}
+        )
+
+      set(NEPOMUK_RESOURCES_GENERATED true)
+
+    else(${rcgen_result} EQUAL 0)
+
+      message(STATUS "Failed to generate Nepomuk resource classes.")
+
+    endif(${rcgen_result} EQUAL 0)
+
   endif(NOT RCGEN)
-
-  FILE(TO_NATIVE_PATH ${RCGEN} RCGEN)
-
-  execute_process(
-    COMMAND ${RCGEN} --listheaders --prefix ${targetdir}/ --ontologies ${ontofile}
-    OUTPUT_VARIABLE ${out_headers}
-    )
-  
-  execute_process(
-    COMMAND ${RCGEN} --listsources --prefix ${targetdir}/ --ontologies ${ontofile}
-    OUTPUT_VARIABLE ${out_sources}
-    )
-  
-  execute_process(
-    COMMAND ${RCGEN} --listincludes --ontologies ${ontofile}
-    OUTPUT_VARIABLE ${out_includes}
-    )
-
-  execute_process(
-    COMMAND ${RCGEN} --writeall --templates ${ARGN} --target ${targetdir}/ --ontologies ${ontofile}
-    )
   
 endmacro(NEPOMUK_GENERATE_FROM_ONTOLOGY)
