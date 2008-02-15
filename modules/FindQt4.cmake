@@ -24,6 +24,11 @@
 #                    QT_USE_QTUITOOLS
 #                    QT_USE_QTDBUS
 #                    QT_USE_QTSCRIPT
+#                    QT_USE_QTCLUCENE
+#                    QT_USE_QTASSISTANTCLIENT
+#                    QT_USE_QTHELP
+#                    QT_USE_QTWEBKIT
+#                    QT_USE_QTXMLPATTERNS
 #
 # All the libraries required are stored in a variable called QT_LIBRARIES.  
 # Add this variable to your TARGET_LINK_LIBRARIES.
@@ -96,6 +101,11 @@
 #  QT_QTSCRIPT_FOUND      True if QtScript was found.
 #  QT_QTTEST_FOUND        True if QtTest was found.
 #  QT_QTUITOOLS_FOUND     True if QtUiTools was found.
+#  QT_QTCLUCENE_FOUND     True if QtClucene was found.
+#  QT_QTASSISTANTCLIENT_FOUND         True if QtAssistantClient was found.
+#  QT_QTHELP_FOUND      True if QtHelp was found.
+#  QT_QTWEBKIT_FOUND        True if QtWebKit was found.
+#  QT_QTXMLPATTERNS_FOUND     True if QtXmlPatterns was found.
 #                      
 #  QT_DEFINITIONS   Definitions to use when compiling code that uses Qt.
 #                  
@@ -123,6 +133,11 @@
 #  QT_QTSVG_INCLUDE_DIR        Path to "include/QtSvg"
 #  QT_QTSCRIPT_INCLUDE_DIR     Path to "include/QtScript"
 #  QT_QTTEST_INCLUDE_DIR       Path to "include/QtTest"
+#  QT_QTCLUCENE_INCLUDE_DIR        Path to "include/QtClucene" 
+#  QT_QTASSISTANTCLIENT_INCLUDE_DIR Path to "include/QtAssistant"
+#  QT_QTHELP_INCLUDE_DIR        Path to "include/QtHelp"
+#  QT_QTWEBKIT_INCLUDE_DIR     Path to "include/QtWebKit"
+#  QT_QTXMLPATTERNS_INCLUDE_DIR       Path to "include/QtXmlPatterns"
 #                            
 #  QT_LIBRARY_DIR              Path to "lib" of Qt4
 # 
@@ -166,6 +181,20 @@
 # The qtmain library for Windows QT_QTMAIN_LIBRARY
 #
 # The QtUiTools library:      QT_QTUITOOLS_LIBRARY
+
+#
+# The QtClucene library:          QT_QTCLUCENE_LIBRARY
+#
+# The QtAssistantClient library:  QT_QTASSISTANTCLIENT_LIBRARY
+#
+# The QtHelp library:             QT_QTHELP_LIBRARY
+#
+# The QtWebKit library:           QT_QTWEBKIT_LIBRARY
+#
+# The QtXmlPatterns library:      QT_QTXMLPATTERNS_LIBRARY
+
+
+
 #  
 # also defined, but NOT for general use are
 #  QT_MOC_EXECUTABLE          Where to find the moc tool.
@@ -600,6 +629,41 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
+  # Set QT_QTDBUS_CLUCENE_DIR
+  FIND_PATH(QT_QTCLUCENE_INCLUDE_DIR QtClucene
+    PATHS
+    ${QT_INCLUDE_DIR}/QtClucene
+    ${QT_HEADERS_DIR}/QtClucene
+    NO_DEFAULT_PATH
+    )
+  # Set QT_QTASSISTANTCLIENT_INCLUDE_DIR
+  FIND_PATH(QT_QTASSISTANTCLIENT_INCLUDE_DIR QtAssistantClient
+    PATHS
+    ${QT_INCLUDE_DIR}/QtAssistant
+    ${QT_HEADERS_DIR}/QtAssistant
+    NO_DEFAULT_PATH
+    )
+  # Set QT_QTHELP_INCLUDE_DIR
+  FIND_PATH(QT_QTHELP_INCLUDE_DIR QtHelp
+    PATHS
+    ${QT_INCLUDE_DIR}/QtHelp
+    ${QT_HEADERS_DIR}/QtHelp
+    NO_DEFAULT_PATH
+    )
+  # Set QT_QTWEBKIT_INCLUDE_DIR
+  FIND_PATH(QT_QTWEBKIT_INCLUDE_DIR QtWebKit
+    PATHS
+    ${QT_INCLUDE_DIR}/QtWebKit
+    ${QT_HEADERS_DIR}/QtWebKit
+    NO_DEFAULT_PATH
+    )
+  # Set QT_QTXMLPATTERNS_INCLUDE_DIR
+  FIND_PATH(QT_QTXMLPATTERNS_INCLUDE_DIR QtXmlPatterns
+    PATHS
+    ${QT_INCLUDE_DIR}/QtXmlPatterns
+    ${QT_HEADERS_DIR}/QtXmlPatterns
+    NO_DEFAULT_PATH
+    )
   # Make variables changeble to the advanced user
   MARK_AS_ADVANCED( QT_LIBRARY_DIR QT_INCLUDE_DIR QT_QT_INCLUDE_DIR QT_DOC_DIR QT_MKSPECS_DIR QT_PLUGINS_DIR)
 
@@ -686,6 +750,35 @@ IF (QT4_QMAKE_FOUND)
       SET(QT_QTTEST_FOUND FALSE)
     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
 
+    IF(EXISTS ${QT_LIBRARY_DIR}/QtClucene.framework)
+      SET(QT_QTCLUCENE_FOUND TRUE)
+      SET(QT_QTCLUCENE_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtClucene" CACHE STRING "The QtClucene library.")
+    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtClucene.framework)
+      SET(QT_QTCLUCENE_FOUND FALSE)
+    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtClucene.framework)
+
+    IF(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
+      SET(QT_QTASSISTANTCLIENT_FOUND TRUE)
+      SET(QT_QTASSISTANTCLIENT_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtAssistantClient" CACHE STRING "The QtAssistantClient library.")
+    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
+      SET(QT_QTASSISTANTCLIENT_FOUND FALSE)
+    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
+
+    IF(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
+      SET(QT_QTWEBKIT_FOUND TRUE)
+      SET(QT_QTWEBKIT_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtWebKit" CACHE STRING "The QtWebKit library.")
+    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
+      SET(QT_QTWEBKIT_FOUND FALSE)
+    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
+
+    IF(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
+      SET(QT_QTXMLPATTERNS_FOUND TRUE)
+      SET(QT_QTXMLPATTERNS_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtXmlPatterns" CACHE STRING "The QtXmlPatterns library.")
+    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
+      SET(QT_QTXMLPATTERNS_FOUND FALSE)
+    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
+
+
     # WTF?  why don't we have frameworks?  :P
     # Set QT_QTUITOOLS_LIBRARY
     FIND_LIBRARY(QT_QTUITOOLS_LIBRARY NAMES QtUiTools QtUiTools4 PATHS ${QT_LIBRARY_DIR} )
@@ -736,6 +829,17 @@ IF (QT4_QMAKE_FOUND)
     FIND_LIBRARY(QT_QTTEST_LIBRARY NAMES QtTest QtTest4 QtTestd4          PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     FIND_LIBRARY(QT_QTDBUS_LIBRARY NAMES QtDBus QtDBus4 QtDBusd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
+    FIND_LIBRARY(QT_QTCLUCENE_LIBRARY NAMES QtClucene QtClucene4 QtClucened4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
+    FIND_LIBRARY(QT_QTASSISTANTCLIENT_LIBRARY NAMES QtAssistantClient QtAssistantClient4 QtAssistantClientd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
+    FIND_LIBRARY(QT_QTHELP_LIBRARY NAMES QtHelp QtHelp4 QtHelpd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
+    FIND_LIBRARY(QT_QTWEBKIT_LIBRARY NAMES QtWebKit QtWebKit4 QtWebKitd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
+    FIND_LIBRARY(QT_QTXMLPATTERNS_LIBRARY NAMES QtXmlPatterns QtXmlPatterns4 QtXmlPatternsd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
 
     IF(MSVC)
       FIND_LIBRARY(QT_QTCORE_LIBRARY_RELEASE    NAMES QtCore4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
