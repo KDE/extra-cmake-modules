@@ -24,7 +24,6 @@
 #                    QT_USE_QTUITOOLS
 #                    QT_USE_QTDBUS
 #                    QT_USE_QTSCRIPT
-#                    QT_USE_QTCLUCENE
 #                    QT_USE_QTASSISTANTCLIENT
 #                    QT_USE_QTHELP
 #                    QT_USE_QTWEBKIT
@@ -101,7 +100,6 @@
 #  QT_QTSCRIPT_FOUND      True if QtScript was found.
 #  QT_QTTEST_FOUND        True if QtTest was found.
 #  QT_QTUITOOLS_FOUND     True if QtUiTools was found.
-#  QT_QTCLUCENE_FOUND     True if QtClucene was found.
 #  QT_QTASSISTANTCLIENT_FOUND         True if QtAssistantClient was found.
 #  QT_QTHELP_FOUND      True if QtHelp was found.
 #  QT_QTWEBKIT_FOUND        True if QtWebKit was found.
@@ -133,7 +131,6 @@
 #  QT_QTSVG_INCLUDE_DIR        Path to "include/QtSvg"
 #  QT_QTSCRIPT_INCLUDE_DIR     Path to "include/QtScript"
 #  QT_QTTEST_INCLUDE_DIR       Path to "include/QtTest"
-#  QT_QTCLUCENE_INCLUDE_DIR        Path to "include/QtClucene" 
 #  QT_QTASSISTANTCLIENT_INCLUDE_DIR Path to "include/QtAssistant"
 #  QT_QTHELP_INCLUDE_DIR        Path to "include/QtHelp"
 #  QT_QTWEBKIT_INCLUDE_DIR     Path to "include/QtWebKit"
@@ -182,8 +179,6 @@
 #
 # The QtUiTools library:      QT_QTUITOOLS_LIBRARY
 
-#
-# The QtClucene library:          QT_QTCLUCENE_LIBRARY
 #
 # The QtAssistantClient library:  QT_QTASSISTANTCLIENT_LIBRARY
 #
@@ -628,14 +623,6 @@ IF (QT4_QMAKE_FOUND)
     ${QT_HEADERS_DIR}/QtDBus
     NO_DEFAULT_PATH
     )
-
-  # Set QT_QTDBUS_CLUCENE_DIR
-  FIND_PATH(QT_QTCLUCENE_INCLUDE_DIR QtClucene
-    PATHS
-    ${QT_INCLUDE_DIR}/QtClucene
-    ${QT_HEADERS_DIR}/QtClucene
-    NO_DEFAULT_PATH
-    )
   # Set QT_QTASSISTANTCLIENT_INCLUDE_DIR
   FIND_PATH(QT_QTASSISTANTCLIENT_INCLUDE_DIR QtAssistantClient
     PATHS
@@ -750,13 +737,6 @@ IF (QT4_QMAKE_FOUND)
       SET(QT_QTTEST_FOUND FALSE)
     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
 
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtClucene.framework)
-      SET(QT_QTCLUCENE_FOUND TRUE)
-      SET(QT_QTCLUCENE_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtClucene" CACHE STRING "The QtClucene library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtClucene.framework)
-      SET(QT_QTCLUCENE_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtClucene.framework)
-
     IF(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
       SET(QT_QTASSISTANTCLIENT_FOUND TRUE)
       SET(QT_QTASSISTANTCLIENT_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtAssistantClient" CACHE STRING "The QtAssistantClient library.")
@@ -829,8 +809,6 @@ IF (QT4_QMAKE_FOUND)
     FIND_LIBRARY(QT_QTTEST_LIBRARY NAMES QtTest QtTest4 QtTestd4          PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     FIND_LIBRARY(QT_QTDBUS_LIBRARY NAMES QtDBus QtDBus4 QtDBusd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
-
-    FIND_LIBRARY(QT_QTCLUCENE_LIBRARY NAMES QtClucene QtClucene4 QtClucened4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     FIND_LIBRARY(QT_QTASSISTANTCLIENT_LIBRARY NAMES QtAssistantClient QtAssistantClient4 QtAssistantClientd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
