@@ -756,7 +756,7 @@ IF (QT4_QMAKE_FOUND)
       SET(QT_QTXMLPATTERNS_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtXmlPatterns" CACHE STRING "The QtXmlPatterns library.")
     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
       SET(QT_QTXMLPATTERNS_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
+    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
 
 
     # WTF?  why don't we have frameworks?  :P
