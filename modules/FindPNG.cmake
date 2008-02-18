@@ -1,6 +1,5 @@
 # - Find the native PNG includes and library
 #
-
 # This module defines
 #  PNG_INCLUDE_DIR, where to find png.h, etc.
 #  PNG_LIBRARIES, the libraries to link against to use PNG.
@@ -10,7 +9,7 @@
 #  PNG_LIBRARY, where to find the PNG library.
 # None of the above will be defined unles zlib can be found.
 # PNG depends on Zlib
-#
+
 # Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
 # See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 

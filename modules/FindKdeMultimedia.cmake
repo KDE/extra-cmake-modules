@@ -1,4 +1,11 @@
-# cmake macro to see if we have kdemultimedia installed
+# Module to see if we have KDE4 kdemultimedia installed
+#
+# This module defines
+#  KDEMULTIMEDIA_INCLUDE_DIR - the include dir
+#  KCDDB_LIBRARY - the kcddb library
+#  KCOMPACTDISC_LIBRARY - the kcompactdisk library
+#  KDEMULTIMEDIA_LIBRARIES - all of the KDE multimedia libraries together
+#  KDEMULTIMEDIA_FOUND - true if the above have been found
 
 # KDEMULTIMEDIA_INCLUDE_DIR
 # KDEMULTIMEDIA_FOUND

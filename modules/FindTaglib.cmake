@@ -4,7 +4,7 @@
 #  TAGLIB_FOUND - system has the taglib library
 #  TAGLIB_CFLAGS - the taglib cflags
 #  TAGLIB_LIBRARIES - The libraries needed to use taglib
-#
+
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

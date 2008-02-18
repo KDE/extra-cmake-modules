@@ -2,7 +2,7 @@
 # Once done this will define
 #
 #  MSGFMT_FOUND - system has msgfmt
-#
+
 # Copyright (c) 2007, Montel Laurent <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

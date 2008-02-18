@@ -5,7 +5,7 @@
 #  ENCHANT_INCLUDE_DIR - the ENCHANT include directory
 #  ENCHANT_LIBRARIES - Link these to use ENCHANT
 #  ENCHANT_DEFINITIONS - Compiler switches required for using ENCHANT
-#
+
 # Copyright (c) 2006, Zack Rusin, <zack@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

@@ -3,7 +3,7 @@
 #
 #  ACL_FOUND - system has the ACL library
 #  ACL_LIBS - The libraries needed to use ACL
-#
+
 # Copyright (c) 2006, Pino Toscano, <toscano.pino@tiscali.it>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

@@ -9,7 +9,7 @@
 # present in libc. Must have more robust system for release, where Gettext
 # functionality can also reside in standalone Gettext library, or the one
 # embedded within kdelibs (cf. gettext.m4 from Gettext source).
-#
+
 # Copyright (c) 2006, Chusslove Illich, <caslav.ilic@gmx.net>
 # Copyright (c) 2007, Alexander Neundorf, <neundorf@kde.org>
 #

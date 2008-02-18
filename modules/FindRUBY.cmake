@@ -7,7 +7,7 @@
 #  RUBY_INCLUDE_PATH = path to where ruby.h can be found
 #  RUBY_EXECUTABLE   = full path+file to the ruby binary
 #  RUBY_FOUND        = Ruby was found under system.
-#
+
 # Copyright (c) 2006,2007 Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

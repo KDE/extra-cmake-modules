@@ -6,7 +6,7 @@
 #  MYSQL_EMBEDDED_LIBRARIES, the libraries needed to use MySQL Embedded.
 #  MYSQL_FOUND, If false, do not try to use MySQL.
 #  MYSQL_EMBEDDED_FOUND, If false, do not try to use MySQL Embedded.
-#
+
 # Copyright (c) 2006, Jaroslaw Staniek, <js@iidea.pl>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

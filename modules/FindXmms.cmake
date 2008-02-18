@@ -4,7 +4,7 @@
 #  XMMS_FOUND        - system has xmms
 #  XMMS_INCLUDE_DIRS - the xmms include directory
 #  XMMS_LDFLAGS      - Link these to use xmms
-#
+
 # Copyright (c) 2006, 2007 Laurent Montel, <montel@kde.org>
 # Copyright (c) 2007 Allen Winter <winter@kde.org>
 #

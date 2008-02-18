@@ -4,7 +4,6 @@
 #  FLEX_FOUND - system has Flex
 #  FLEX_EXECUTABLE - path of the flex executable
 #  FLEX_VERSION - the version string, like "2.5.31"
-#
 
 
 FIND_PROGRAM(FLEX_EXECUTABLE NAMES flex)

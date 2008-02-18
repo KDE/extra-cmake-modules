@@ -1,20 +1,23 @@
+# win32 macros
 #
-# win32 macros 
+# ADDEXPLORERWRAPPER(project)
+#
+# Exists only under Win32 !
+#
+# addExplorerWrapper creates batch files for fast access 
+# to the build environment from the win32 explorer. 
 # 
+# For mingw and nmake projects it opens a command shell,
+# for Visual Studio IDE's (at least tested with VS 8 2005) it
+# opens the related .sln file with paths setting specified at 
+# configure time. 
+
 # Copyright (c) 2006-2007, Ralf Habacker
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
-#
+
 
 if (WIN32)
-    #
-    # addExplorerWrapper creates batch files for fast access 
-    # to the build environment from the win32 explorer. 
-    # 
-    # For mingw and nmake projects it opens a command shell,
-    # for Visual Studio IDE's (at least tested with VS 8 2005) it
-    # opens the related .sln file with paths setting specified at 
-    # configure time. 
     #
     MACRO (addExplorerWrapper _projectname)
         # write explorer wrappers

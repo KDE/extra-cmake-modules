@@ -6,7 +6,7 @@
 #  TIFF_FOUND, If false, do NOT try to use TIFF.
 # also defined, but NOT for general use are
 #  TIFF_LIBRARY, where to find the TIFF library.
-#
+
 # Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
 # See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 

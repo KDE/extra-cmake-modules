@@ -5,7 +5,7 @@
 #  AGG_INCLUDE_DIR - the AGG include directory
 #  AGG_LIBRARIES - Link these to use AGG
 #  AGG_DEFINITIONS - Compiler switches required for using AGG
-#
+
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

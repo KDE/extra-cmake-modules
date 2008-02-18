@@ -4,7 +4,7 @@
 #  PCRE_FOUND - system has the PCRE library
 #  PCRE_INCLUDE_DIR - the PCRE include directory
 #  PCRE_LIBRARIES - The libraries needed to use PCRE
-#
+
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

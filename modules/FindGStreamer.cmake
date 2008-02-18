@@ -5,7 +5,7 @@
 #  GSTREAMER_INCLUDE_DIR - the GStreamer include directory
 #  GSTREAMER_LIBRARIES - the libraries needed to use GStreamer
 #  GSTREAMER_DEFINITIONS - Compiler switches required for using GStreamer
-#
+
 #  (c)2006, Tim Beaulen <tbscope@gmail.com>
 
 # TODO: Other versions --> GSTREAMER_X_Y_FOUND (Example: GSTREAMER_0_8_FOUND and GSTREAMER_0_10_FOUND etc)

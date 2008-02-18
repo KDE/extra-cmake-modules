@@ -1,24 +1,20 @@
 # - Find Korundum - the KDE Ruby bindings
 #
 # This module finds if Korundum is installed.
-#
+# It defines the following variables:
+#  KORUNDUM_PATH - the path to the korundum ruby file
+#  KORUNDUM_FOUND - true if it has been found
+
 # Copyright (c) 2006, Egon Willighagen, <egonw@users.sf.net>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-FIND_PATH(Korumdum_PATH Korundum.rb /usr/lib/ruby/1.8)
+find_path(KORUNDUM_PATH Korundum.rb /usr/lib/ruby/1.8)
 
-IF (Korumdum_PATH)
-   SET(Korumdum_FOUND TRUE)
-ENDIF (Korumdum_PATH)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Korundum  DEFAULT_MSG  KORUNDUM_PATH)
 
-IF (Korumdum_FOUND)
-   IF (NOT Korumdum_FIND_QUIETLY)
-      MESSAGE(STATUS "Found Korumdum: ${Korumdum_PATH}")
-   ENDIF (NOT Korumdum_FIND_QUIETLY)
-ELSE (Korumdum_FOUND)
-   IF (Korumdum_FIND_REQUIRED)
-      MESSAGE(FATAL_ERROR "Could not find Korumdum")
-   ENDIF (Korumdum_FIND_REQUIRED)
-ENDIF (Korumdum_FOUND)
+# just for compat.:
+set(Korumdum_PATH ${KORUNDUM_PATH})
+set(Korumdum_FOUND ${KORUNDUM_FOUND})

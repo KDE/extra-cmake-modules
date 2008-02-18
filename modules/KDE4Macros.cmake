@@ -1,5 +1,5 @@
 # for documentation look at FindKDE4Internal.cmake
-#
+
 # this file contains the following macros:
 # KDE4_ADD_UI_FILES
 # KDE4_ADD_UI3_FILES
@@ -545,15 +545,15 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
       # set the RPATH related properties
       if (NOT CMAKE_SKIP_RPATH)
          if (${_type} STREQUAL "GUI")
-            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
+            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH TRUE  BUILD_WITH_INSTALL_RPATH TRUE)
          endif (${_type} STREQUAL "GUI")
 
          if (${_type} STREQUAL "NOGUI")
-            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
+            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH TRUE  BUILD_WITH_INSTALL_RPATH TRUE)
          endif (${_type} STREQUAL "NOGUI")
 
          if (${_type} STREQUAL "RUN_UNINSTALLED")
-            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
+            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH FALSE  BUILD_WITH_INSTALL_RPATH FALSE)
          endif (${_type} STREQUAL "RUN_UNINSTALLED")
       endif (NOT CMAKE_SKIP_RPATH)
 

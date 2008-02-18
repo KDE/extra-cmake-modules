@@ -2,10 +2,10 @@
 # Only the support for Alsa >= 0.9.x was included; 0.5.x was dropped (but feel free to re-add it if you need it)
 # It defines ...
 # It offers the following macros:
-# ALSA_CONFIGURE_FILE(config_header) - generate a config.h, typical usage: 
-#                                      ALSA_CONFIGURE_FILE(${CMAKE_BINARY_DIR}/config-alsa.h)
-# ALSA_VERSION_STRING(version_string)  looks for alsa/version.h and reads the version string into
-#                                      the first argument passed to the macro
+#  ALSA_CONFIGURE_FILE(config_header) - generate a config.h, typical usage: 
+#                                       ALSA_CONFIGURE_FILE(${CMAKE_BINARY_DIR}/config-alsa.h)
+#  ALSA_VERSION_STRING(version_string)  looks for alsa/version.h and reads the version string into
+#                                       the first argument passed to the macro
 
 # Copyright (c) 2006, David Faure, <faure@kde.org>
 # Copyright (c) 2007, Matthias Kretz <kretz@kde.org>

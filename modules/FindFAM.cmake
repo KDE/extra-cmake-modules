@@ -4,7 +4,7 @@
 #  FAM_FOUND - system has FAM
 #  FAM_INCLUDE_DIR - the FAM include directory
 #  FAM_LIBRARIES - The libraries needed to use FAM
-#
+
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

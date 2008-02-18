@@ -4,7 +4,7 @@
 #  AKODE_FOUND - system has the aKode library
 #  AKODE_INCLUDE_DIR - the aKode include directory
 #  AKODE_LIBRARIES - The libraries needed to use aKode
-#
+
 # Copyright (c) 2006, Pino Toscano, <toscano.pino@tiscali.it>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

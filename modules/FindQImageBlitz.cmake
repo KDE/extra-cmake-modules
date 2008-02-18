@@ -4,7 +4,7 @@
 #  QIMAGEBLITZ_FOUND - system has qimageblitz lib
 #  QIMAGEBLITZ_INCLUDES - the qimageblitz include directory
 #  QIMAGEBLITZ_LIBRARIES - The libraries needed to use qimageblitz
-#
+
 # Copyright (c) 2006, Montel Laurent, <montel@kde.org>
 # Copyright (c) 2007, Allen Winter, <winter@kde.org>
 # Redistribution and use is allowed according to the terms of the BSD license.

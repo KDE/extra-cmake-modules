@@ -1,5 +1,5 @@
 # Find Avahi. Only avahi-common/defs.h is really needed
-#
+
 # Copyright (c) 2007, Jakub Stachowski, <qbast@go2.pl>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

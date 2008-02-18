@@ -6,7 +6,7 @@
 # this will define
 #  KDEWIN_FOUND - system has KDEWIN
 #  KDEWIN_DIR - the KDEWIN root installation dir
-#
+
 # Copyright (c) 2007, Ralf Habacker, <ralf.habacker@freenet.de>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

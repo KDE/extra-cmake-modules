@@ -4,7 +4,7 @@
 #  LIBART_FOUND - system has the LibArt
 #  LIBART_INCLUDE_DIR - the LibArt include directory
 #  LIBART_LIBRARIES - The libraries needed to use LibArt
-#
+
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

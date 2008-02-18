@@ -4,7 +4,7 @@
 #  BLITZ_FOUND - system has blitz lib
 #  BLITZ_INCLUDES - the blitz include directory
 #  BLITZ_LIBRARIES - The libraries needed to use blitz
-#
+
 # Copyright (c) 2006, Montel Laurent, <montel@kde.org>
 # Copyright (c) 2007, Allen Winter, <winter@kde.org>
 # Redistribution and use is allowed according to the terms of the BSD license.

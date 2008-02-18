@@ -5,7 +5,7 @@
 #  KDEWIN32_FOUND - system has KDEWIN32
 #  KDEWIN32_INCLUDES - the KDEWIN32 include directories
 #  KDEWIN32_LIBRARIES - The libraries needed to use KDEWIN32
-#
+
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2007, Ralf Habacker, <ralf.habacker@freenet.de>
 #

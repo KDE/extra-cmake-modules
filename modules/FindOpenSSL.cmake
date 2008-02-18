@@ -5,6 +5,7 @@
 #  OPENSSL_INCLUDE_DIR - the OpenSSL include directory
 #  OPENSSL_LIBRARIES - The libraries needed to use OpenSSL
 #  OPENSSL_EAY_LIBRARIES - The additional libraries needed to use OpenSSL on windows
+
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
