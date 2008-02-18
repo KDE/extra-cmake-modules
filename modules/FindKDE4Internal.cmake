@@ -489,14 +489,7 @@ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 if (WIN32)
 # use relative install prefix to avoid hardcoded install paths in cmake_install.cmake files
 
-# ok, this is more like a hack to get dll's installed into the same directory as the executables
-# without having to use the full syntax of INSTALL(TARGETS ...) everywhere. 
-# LIB_INSTALL_DIR is set to a list of arguments, the first being the "default" destination
-# which is then overridden by the following three specialized destinations
-   set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}"
-                            RUNTIME DESTINATION "bin"
-                            LIBRARY DESTINATION "lib${LIB_SUFFIX}"
-                            ARCHIVE DESTINATION "lib${LIB_SUFFIX}"  ) # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+   set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}" )            # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
 
    set(EXEC_INSTALL_PREFIX  "" )        # Base directory for executables and libraries
    set(SHARE_INSTALL_PREFIX "share" )   # Base directory for files which go to share/
@@ -600,6 +593,31 @@ else (WIN32)
    _set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services"     "The kde dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
 
 endif (WIN32)
+
+
+# The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries are installed.
+# The arguments are also ok for regular executables, i.e. executables which don't go
+# into sbin/ or libexec/, but for installing executables the basic syntax 
+# INSTALL(TARGETS kate DESTINATION "${BIN_INSTALL_DIR}")
+# is enough, so using this variable there doesn't help a lot.
+# The variable must not be used for installing plugins.
+# Usage is like this:
+#    install(TARGETS kdecore kdeui ${INSTALL_TARGETS_DEFAULT_ARGS} )
+#
+# This will install libraries correctly under UNIX, OSX and Windows (i.e. dll's go
+# into bin/.
+# Later on it will be possible to extend this for installing OSX frameworks
+# The COMPONENT Devel argument has the effect that static libraries belong to the 
+# "Devel" install component. If we use this also for all install() commands
+# for header files, it will be possible to install
+#   -everything: make install OR cmake -P cmake_install.cmake
+#   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
+#   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
+# This can then also be used for packaging with cpack.
+
+set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
+                                  LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
+                                  ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
 
 
 ##############  add some more default search paths  ###############
@@ -1046,4 +1064,5 @@ if (NOT _kde4_uninstall_rule_created)
 endif (NOT _kde4_uninstall_rule_created)
 
 endif(KDE4_FOUND)
+
 
