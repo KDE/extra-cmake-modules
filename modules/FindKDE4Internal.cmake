@@ -655,11 +655,15 @@ if(WIN32)
 endif(WIN32)
 
 
-# CMake 2.6 gives errors if there are multiple targets with the same name
-# we use this for the target "buildtests", which is created for the unit tests
-# and which depends on the tests, so building "buildtests" builds all the tests
-# enabling this property disables this check in CMake
 if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
+   if(NOT COMMAND SET_PROPERTY)
+     message(FATAL_ERROR "You are using an old version of CMake from cvs, please update to CMake >= 2.6.0 or cvs at least from Feb 20th, 2008")
+   endif(NOT COMMAND SET_PROPERTY)
+
+   # CMake 2.6 gives errors if there are multiple targets with the same name
+   # we use this for the target "buildtests", which is created for the unit tests
+   # and which depends on the tests, so building "buildtests" builds all the tests
+   # enabling this property disables this check in CMake
    set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS 1)
 endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
 
