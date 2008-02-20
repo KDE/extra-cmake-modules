@@ -487,14 +487,7 @@ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 if (WIN32)
 # use relative install prefix to avoid hardcoded install paths in cmake_install.cmake files
 
-# ok, this is more like a hack to get dll's installed into the same directory as the executables
-# without having to use the full syntax of INSTALL(TARGETS ...) everywhere. 
-# LIB_INSTALL_DIR is set to a list of arguments, the first being the "default" destination
-# which is then overridden by the following three specialized destinations
-   set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}"
-                            RUNTIME DESTINATION "bin"
-                            LIBRARY DESTINATION "lib${LIB_SUFFIX}"
-                            ARCHIVE DESTINATION "lib${LIB_SUFFIX}"  ) # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+   set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}"  ) # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
 
    set(EXEC_INSTALL_PREFIX  "" )        # Base directory for executables and libraries
    set(SHARE_INSTALL_PREFIX "share" )   # Base directory for files which go to share/
@@ -600,6 +593,31 @@ else (WIN32)
 endif (WIN32)
 
 
+# The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries are installed.
+# The arguments are also ok for regular executables, i.e. executables which don't go
+# into sbin/ or libexec/, but for installing executables the basic syntax 
+# INSTALL(TARGETS kate DESTINATION "${BIN_INSTALL_DIR}")
+# is enough, so using this variable there doesn't help a lot.
+# The variable must not be used for installing plugins.
+# Usage is like this:
+#    install(TARGETS kdecore kdeui ${INSTALL_TARGETS_DEFAULT_ARGS} )
+#
+# This will install libraries correctly under UNIX, OSX and Windows (i.e. dll's go
+# into bin/.
+# Later on it will be possible to extend this for installing OSX frameworks
+# The COMPONENT Devel argument has the effect that static libraries belong to the 
+# "Devel" install component. If we use this also for all install() commands
+# for header files, it will be possible to install
+#   -everything: make install OR cmake -P cmake_install.cmake
+#   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
+#   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
+# This can then also be used for packaging with cpack.
+
+set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
+                                  LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
+                                  ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
+
+
 ##############  add some more default search paths  ###############
 # always search in the directory where cmake is installed 
 # and in the current installation prefix
@@ -634,6 +652,23 @@ if(WIN32)
                                 "${CMAKE_INSTALL_PREFIX}/bin" )
 endif(WIN32)
 
+# Differences between CMake 2.4 and 2.6
+if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
+   # CMake 2.6 gives errors if there are multiple targets with the same name
+   # we use this for the target "buildtests", which is created for the unit tests
+   # and which depends on the tests, so building "buildtests" builds all the tests
+   # enabling this property disables this check in CMake
+   set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS 1)
+
+   # CMake 2.6 uses the full file names of the libraries when linking and so 
+   # doesn't use -L anymore to list the link dirs. Now the dependencies created
+   # export_library_dependencies() lists the in-project libraries without 
+   # path, i.e. with only the logical name ("kdecore"), so they don't link
+   # Setting this variable to true has the effect that the link dirs are
+   # listed nevertheless also with CMake 2.6.
+   set(CMAKE_LINK_OLD_PATHS TRUE)
+
+endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
 
 #####################  and now the platform specific stuff  ############################
 
