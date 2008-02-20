@@ -654,6 +654,14 @@ endif(WIN32)
 
 # Differences between CMake 2.4 and 2.6
 if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
+
+   # some developers may be using an cmake cvs version which didn't have set_property() yet
+   # Tell them that a more recent version is required.
+   if(NOT COMMAND SET_PROPERTY)
+      message(FATAL_ERROR "You are using an old version of CMake from cvs, please update to CMake >= 2.6.0 or cvs at least from Feb 20th, 2008")
+   endif(NOT COMMAND SET_PROPERTY)
+
+
    # CMake 2.6 gives errors if there are multiple targets with the same name
    # we use this for the target "buildtests", which is created for the unit tests
    # and which depends on the tests, so building "buildtests" builds all the tests
