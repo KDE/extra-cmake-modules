@@ -306,10 +306,9 @@ else (_kdeBootStrapping)
 
    # Check the version of kde. KDE4_KDECONFIG_EXECUTABLE was set by FindKDE4
    exec_program(${KDE4_KDECONFIG_EXECUTABLE} ARGS "--version" OUTPUT_VARIABLE kdeconfig_output )
-
    string(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
-   if (KDEVERSION)
 
+   if (KDEVERSION)
       string(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
 
       # we need at least this version:
@@ -319,7 +318,6 @@ else (_kdeBootStrapping)
 
       #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
       macro_ensure_version( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_OK )
-
    else (KDEVERSION)
       message(FATAL_ERROR "Couldn't parse KDE version string from the kde4-config output:\n${kdeconfig_output}")
    endif (KDEVERSION)
@@ -655,6 +653,16 @@ if(WIN32)
                                 "${_CMAKE_INSTALL_DIR}/bin" 
                                 "${CMAKE_INSTALL_PREFIX}/bin" )
 endif(WIN32)
+
+
+# CMake 2.6 gives errors if there are multiple targets with the same name
+# we use this for the target "buildtests", which is created for the unit tests
+# and which depends on the tests, so building "buildtests" builds all the tests
+# enabling this property disables this check in CMake
+if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
+   set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS 1)
+endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
+
 
 
 #####################  and now the platform specific stuff  ############################
