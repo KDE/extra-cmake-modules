@@ -270,7 +270,9 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
       DEPENDS ${_docs} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
    )
-   add_custom_target(handbook ALL DEPENDS ${_doc})
+   get_filename_component(_targ ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+   set(_targ "${_targ}-handbook")
+   add_custom_target(${_targ} ALL DEPENDS ${_doc})
 
    if(KDE4_ENABLE_HTMLHANDBOOK)
       set(_htmlDoc ${CMAKE_CURRENT_SOURCE_DIR}/index.html)
@@ -336,7 +338,9 @@ macro (KDE4_CREATE_MANPAGE _docbook _section)
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --stylesheet ${_ssheet} --check ${_bootstrapOption} ${_input}
       DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
    )
-   add_custom_target(manpage ALL DEPENDS "${_outdoc}")
+   get_filename_component(_targ ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+   set(_targ "${_targ}-manpage")
+   add_custom_target(${_targ} ALL DEPENDS "${_outdoc}")
 
    set(_args ${ARGN})
 
