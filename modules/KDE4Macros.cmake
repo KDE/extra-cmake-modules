@@ -1027,18 +1027,18 @@ endmacro (KDE4_ADD_WIN32_APP_ICON)
 # example: KDE4_ADD_APP_ICON( myapp_sources "icons/oxygen/*/apps/myapp.png")
 
 macro (KDE4_ADD_APP_ICON appsources pattern)
-    STRING(REPLACE _SRCS "" target ${appsources})
+    string(REPLACE _SRCS "" target ${appsources})
     if (WIN32)
         find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
         find_program(WINDRES_EXECUTABLE NAMES windres)
         if(MSVC)
             set(WINDRES_EXECUTABLE TRUE)
-        endif(MSVC)        
+        endif(MSVC)
         if (PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
-            STRING(REPLACE "*" "(.*)" pattern_rx "${pattern}")
+            string(REPLACE "*" "(.*)" pattern_rx "${pattern}")
             file(GLOB_RECURSE files  "${pattern}")
-            FOREACH (it ${files})
-                STRING(REGEX REPLACE "${pattern_rx}" "\\1" fn "${it}")
+            foreach (it ${files})
+                string(REGEX REPLACE "${pattern_rx}" "\\1" fn "${it}")
                 if (fn MATCHES ".*16.*" )
                     list (APPEND _icons ${it})
                 endif (fn MATCHES ".*16.*")
@@ -1054,16 +1054,16 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
                 if (fn MATCHES ".*128.*" )
                     list (APPEND _icons ${it})
                 endif (fn MATCHES ".*128.*")
-            ENDFOREACH (it)
+            endforeach (it)
             if (_icons)
                 set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
-                ADD_CUSTOM_COMMAND(OUTPUT ${_outfilename}.ico ${_outfilename}.rc
+                add_custom_command(OUTPUT ${_outfilename}.ico ${_outfilename}.rc
                                    COMMAND ${PNG2ICO_EXECUTABLE} ARGS --rcfile ${_outfilename}.rc ${_outfilename}.ico ${_icons}
                                    DEPENDS ${PNG2ICO_EXECUTABLE} ${_icons}
                                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                                   )
                 if (MINGW)
-                    ADD_CUSTOM_COMMAND(OUTPUT ${_outfilename}_res.o
+                    add_custom_command(OUTPUT ${_outfilename}_res.o
                                        COMMAND ${WINDRES_EXECUTABLE} ARGS -i ${_outfilename}.rc -o ${_outfilename}_res.o --include-dir=${CMAKE_CURRENT_SOURCE_DIR}
                                        DEPENDS ${WINDRES_EXECUTABLE} ${_outfilename}.rc
                                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -1087,11 +1087,11 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
         if (SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
             file(GLOB_RECURSE files  "${pattern}")
             # we can only test for the 128-icon like that - we don't use patterns anymore
-            FOREACH (it ${files})
+            foreach (it ${files})
                 if (it MATCHES ".*128.*" )
                     set (_icon ${it})
                 endif (it MATCHES ".*128.*")
-            ENDFOREACH (it)
+            endforeach (it)
             set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
 
             if (_icon)
