@@ -2,6 +2,11 @@ This is a copy of the file CMake/Modules/readme.txt from cmake cvs.
 Please adhere to the guidelines given below when writing cmake modules
 for KDE.
 
+Some additional guidelines for use in KDE:
+-indent using 2, 3 or 4 spaces, not tabs
+-use all-lower-case for commands, except if the rest of the file uses
+consistently all-upper-case for commands
+
 Alex
 
 ----------------------------------------------------------------------
