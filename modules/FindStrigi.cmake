@@ -5,7 +5,8 @@
 #  STRIGI_INCLUDE_DIR - the Strigi include directory
 #  STRIGI_STREAMANALYZER_LIBRARY - Link these to use Strigi streamanalyzer
 #  STRIGI_STREAMS_LIBRARY - Link these to use Strigi streams
-#  STRIGI_ANALYZER_PREFIX - strigi plugin prefix
+#  STRIGI_LINE_ANALYZER_PREFIX - strigi plugin prefix
+#  STRIGI_THROUGH_ANALYZER_PREFIX - strigi plugin prefix
 
 # at first search only in the specified directories (NO_DEFAULT_PATH)
 # only if it wasn't found there, the second call to FIND_PATH/LIBRARY() 
@@ -122,16 +123,30 @@ find_package_handle_standard_args(Strigi
 if(WIN32)
   # this is needed to have mingw, cygwin and msvc libs installed in one directory
   if(MSVC)
-    set(STRIGI_ANALYZER_PREFIX msvc_strigila_)
+    set(STRIGI_LINE_ANALYZER_PREFIX msvc_strigila_)
   elseif(CYGWIN)
-    set(STRIGI_ANALYZER_PREFIX cyg_strigila_)
+    set(STRIGI_LINE_ANALYZER_PREFIX cyg_strigila_)
   elseif(MINGW)
-    set(STRIGI_ANALYZER_PREFIX mingw_strigila_)
+    set(STRIGI_LINE_ANALYZER_PREFIX mingw_strigila_)
   endif(MSVC)
 else(WIN32)
-  set(STRIGI_ANALYZER_PREFIX strigila_)
+  set(STRIGI_LINE_ANALYZER_PREFIX strigila_)
 endif(WIN32)
 
-mark_as_advanced(STRIGI_INCLUDE_DIR STRIGI_STREAMANALYZER_LIBRARY STRIGI_STREAMS_LIBRARY STRIGI_STRIGIQTDBUSCLIENT_LIBRARY STRIGI_ANALYZER_PREFIX)
+if(WIN32)
+  # this is needed to have mingw, cygwin and msvc libs installed in one directory
+  if(MSVC)
+    set(STRIGI_THROUGH_ANALYZER_PREFIX msvc_strigita_)
+  elseif(CYGWIN)
+    set(STRIGI_THROUGH_ANALYZER_PREFIX cyg_strigita_)
+  elseif(MINGW)
+    set(STRIGI_THROUGH_ANALYZER_PREFIX mingw_strigita_)
+  endif(MSVC)
+else(WIN32)
+  set(STRIGI_THROUGH_ANALYZER_PREFIX strigita_)
+endif(WIN32)
 
-
+mark_as_advanced(STRIGI_INCLUDE_DIR STRIGI_STREAMANALYZER_LIBRARY STRIGI_STREAMS_LIBRARY STRIGI_STRIGIQTDBUSCLIENT_LIBRARY 
+   STRIGI_LINE_ANALYZER_PREFIX
+   STRIGI_THROUGH_ANALYZER_PREFIX
+)
