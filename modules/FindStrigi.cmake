@@ -5,6 +5,7 @@
 #  STRIGI_INCLUDE_DIR - the Strigi include directory
 #  STRIGI_STREAMANALYZER_LIBRARY - Link these to use Strigi streamanalyzer
 #  STRIGI_STREAMS_LIBRARY - Link these to use Strigi streams
+#  STRIGI_ANALYZER_PREFIX - strigi plugin prefix
 
 # at first search only in the specified directories (NO_DEFAULT_PATH)
 # only if it wasn't found there, the second call to FIND_PATH/LIBRARY() 
@@ -118,4 +119,19 @@ find_package_handle_standard_args(Strigi
                                   "Couldn't find Strigi streams and streamanalyzer libraries. Set the environment variable STRIGI_HOME (or CMAKE_FIND_PREFIX_PATH if using CMake >=2.5) to the strigi install dir."  
                                   STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
 
-mark_as_advanced(STRIGI_INCLUDE_DIR STRIGI_STREAMANALYZER_LIBRARY STRIGI_STREAMS_LIBRARY STRIGI_STRIGIQTDBUSCLIENT_LIBRARY )
+if(WIN32)
+  # this is needed to have mingw, cygwin and msvc libs installed in one directory
+  if(MSVC)
+    set(STRIGI_ANALYZER_PREFIX msvc_strigila_)
+  elseif(CYGWIN)
+    set(STRIGI_ANALYZER_PREFIX cyg_strigila_)
+  elseif(MINGW)
+    set(STRIGI_ANALYZER_PREFIX mingw_strigila_)
+  endif(MSVC)
+else(WIN32)
+  set(STRIGI_ANALYZER_PREFIX strigila_)
+endif(WIN32)
+
+mark_as_advanced(STRIGI_INCLUDE_DIR STRIGI_STREAMANALYZER_LIBRARY STRIGI_STREAMS_LIBRARY STRIGI_STRIGIQTDBUSCLIENT_LIBRARY STRIGI_ANALYZER_PREFIX)
+
+
