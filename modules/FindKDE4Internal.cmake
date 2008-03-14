@@ -327,10 +327,7 @@ else (_kdeBootStrapping)
       # on win32 the install dir is determined on runtime not install time
       # KDELIBS_INSTALL_DIR and QT_INSTALL_DIR are used in KDELibsDependencies.cmake to setup 
       # kde install paths and library dependencies
-      # find it relative to the location of this file
-      get_filename_component(_DIR ${kde_cmake_module_dir} PATH )
-      get_filename_component(_DIR ${_DIR} PATH )
-      get_filename_component(_DIR ${_DIR} PATH )
+      get_filename_component(_DIR ${KDE4_KDECONFIG_EXECUTABLE} PATH )
       get_filename_component(KDE4_INSTALL_DIR ${_DIR} PATH )
       get_filename_component(_DIR ${QT_QMAKE_EXECUTABLE} PATH )
       get_filename_component(QT_INSTALL_DIR ${_DIR} PATH )
