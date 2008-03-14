@@ -173,7 +173,7 @@ macro (KDE4_MOC_HEADERS _target_NAME)
    # need to create moc_<filename>.cpp file using kde4automoc.cmake
    # and add it to the target
    if(_headers_to_moc)
-      KDE4_SET_CUSTOM_TARGET_PROPERTY(${_target_NAME} AUTOMOC_HEADERS "${_headers_to_moc}")
+      kde4_set_custom_target_property(${_target_NAME} AUTOMOC_HEADERS "${_headers_to_moc}")
    endif(_headers_to_moc)
 endmacro (KDE4_MOC_HEADERS)
 
@@ -182,7 +182,7 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
    set(_moc_headers)
 
    # first list all explicitly set headers
-   KDE4_GET_CUSTOM_TARGET_PROPERTY(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
+   kde4_get_custom_target_property(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
    if(NOT _headers_to_moc STREQUAL "NOTFOUND")
       foreach(_header_to_moc ${_headers_to_moc})
          get_filename_component(_abs_header ${_header_to_moc} ABSOLUTE)
@@ -218,8 +218,8 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
 
    if(_moc_files)
       set(_automoc_source "${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_automoc.cpp")
-      GET_DIRECTORY_PROPERTY(_moc_incs INCLUDE_DIRECTORIES)
-      CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4automoc.files.in ${_automoc_source}.files)
+      get_directory_property(_moc_incs INCLUDE_DIRECTORIES)
+      configure_file(${KDE4_MODULE_DIR}/kde4automoc.files.in ${_automoc_source}.files)
       add_custom_command(OUTPUT ${_automoc_source}
          COMMAND ${KDE4_AUTOMOC_EXECUTABLE}
          ${_automoc_source}
