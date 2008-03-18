@@ -21,6 +21,7 @@ ELSE(GSSAPI_LIBS AND GSSAPI_FLAVOR)
 
   FIND_PROGRAM(KRB5_CONFIG NAMES krb5-config PATHS
      /opt/local/bin
+     ONLY_CMAKE_FIND_ROOT_PATH               # this is required when cross compiling with cmake 2.6 and ignored with cmake 2.4, Alex
   )
   
   #reset vars
