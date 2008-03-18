@@ -29,9 +29,6 @@
 #                    QT_USE_QTWEBKIT
 #                    QT_USE_QTXMLPATTERNS
 #
-# All the libraries required are stored in a variable called QT_LIBRARIES.  
-# Add this variable to your TARGET_LINK_LIBRARIES.
-#  
 #  macro QT4_WRAP_CPP(outfiles inputfile ... OPTIONS ...)
 #        create moc code from a list of files containing Qt class with
 #        the Q_OBJECT declaration.  Options may be given to moc, such as those found
