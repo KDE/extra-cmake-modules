@@ -29,6 +29,11 @@
 #                    QT_USE_QTWEBKIT
 #                    QT_USE_QTXMLPATTERNS
 #
+# If you are using Qt4 via UseQt4.cmake instead of FIND_PACKAGE(Qt4), all the 
+# libraries required are stored in the variable QT_LIBRARIES.
+# Add this variable to your TARGET_LINK_LIBRARIES.  Includes and definitions
+# needed for compiling Qt code are then already set up by including the QT_USE_FILE.
+#  
 #  macro QT4_WRAP_CPP(outfiles inputfile ... OPTIONS ...)
 #        create moc code from a list of files containing Qt class with
 #        the Q_OBJECT declaration.  Options may be given to moc, such as those found
