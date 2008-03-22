@@ -93,6 +93,7 @@
 #  SOUND_INSTALL_DIR        - the install dir for sound files
 #  TEMPLATES_INSTALL_DIR    - the install dir for templates (Create new file...)
 #  WALLPAPER_INSTALL_DIR    - the install dir for wallpapers
+#  DEMO_INSTALL_DIR         - the install dir for demos
 #  KCONF_UPDATE_INSTALL_DIR - the kconf_update install dir
 #  XDG_APPS_INSTALL_DIR     - the XDG apps dir
 #  XDG_DIRECTORY_INSTALL_DIR- the XDG directory
@@ -508,6 +509,7 @@ if (WIN32)
    set(SOUND_INSTALL_DIR        "share/sounds"            ) # The install dir for sound files
    set(TEMPLATES_INSTALL_DIR    "share/templates"         ) # The install dir for templates (Create new file...)
    set(WALLPAPER_INSTALL_DIR    "share/wallpapers"        ) # The install dir for wallpapers
+   set(DEMO_INSTALL_DIR         "share/demos"             ) # The install dir for demos
    set(KCONF_UPDATE_INSTALL_DIR "share/apps/kconf_update" ) # The kconf_update install dir
    set(AUTOSTART_INSTALL_DIR    "share/autostart"         ) # The install dir for autostart files
 
@@ -575,6 +577,7 @@ else (WIN32)
    _set_fancy(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"         "The install dir for sound files")
    _set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"      "The install dir for templates (Create new file...)")
    _set_fancy(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"     "The install dir for wallpapers")
+   _set_fancy(DEMO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/demos"          "The install dir for demos")
    _set_fancy(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"       "The kconf_update install dir")
    _set_fancy(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"      "The install dir for autostart files")
 
