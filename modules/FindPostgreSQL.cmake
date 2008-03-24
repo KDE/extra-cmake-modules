@@ -18,8 +18,9 @@ endif (POSTGRESQL_INCLUDE_DIR AND POSTGRESQL_LIBRARIES)
 
 
 find_path(POSTGRESQL_INCLUDE_DIR libpq-fe.h
-   /usr/include/pgsql
-   /usr/local/include/pgsql
+   /usr/include/pgsql/
+   /usr/local/include/pgsql/
+   /usr/include/postgresql/
 )
 
 find_library(POSTGRESQL_LIBRARIES NAMES pq)
