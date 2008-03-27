@@ -654,6 +654,16 @@ if(WIN32)
 endif(WIN32)
 
 
+# cmake 2.5, i.e. the cvs version between 2.4 and 2.6, is not supported
+if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
+   message(STATUS "\n***********************************************
+You are using CMake 2.5, which was the unreleased development version between 2.4 and 2.6. This is no longer supported. Please update to CMake 2.6 or current cvs HEAD.
+This message will turn into an error Monday, March 31st.
+...and then self-destruct ! ;-)
+***********************************************\n")
+endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
+
+
 if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
 
    # some developers may be using an cmake cvs version which didn't have set_property() yet
