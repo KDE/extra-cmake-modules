@@ -212,14 +212,14 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
+# this is required now by cmake 2.6 and so must not be skipped by if(KDE4_FOUND) below
+cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
 
 if(KDE4_FOUND)
   # Already found in this cmake run, nothing more to do
 else(KDE4_FOUND)
 
 include (MacroEnsureVersion)
-
-cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
 
 set(QT_MIN_VERSION "4.4.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
