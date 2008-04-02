@@ -656,50 +656,21 @@ endif(WIN32)
 
 # cmake 2.5, i.e. the cvs version between 2.4 and 2.6, is not supported
 if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
-   message(STATUS "\n***********************************************
-You are using CMake 2.5, which was the unreleased development version between 2.4 and 2.6. This is no longer supported. Please update to CMake 2.6 or current cvs HEAD.
-This message will turn into an error Monday, March 31st.
-...and then self-destruct ! ;-)
-***********************************************\n")
+   message(FATAL_ERROR "You are using CMake 2.5, which was the unreleased development version between 2.4 and 2.6. This is no longer supported. Please update to CMake 2.6 or current cvs HEAD.")
 endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
 
+# CMake 2.6, set compatibility behaviour to cmake 2.4
+if(COMMAND CMAKE_POLICY)
+   # CMP0000: don't require cmake_minimum_version() directly in the top level CMakeLists.txt, FindKDE4Internal.cmake is good enough
+   cmake_policy(SET CMP0000 OLD)
+   # CMP0002: in KDE4 we have multiple targets with the same name for the unit tests
+   cmake_policy(SET CMP0002 OLD)
+   # CMP0003: add the link paths to the link command as with cmake 2.4
+   cmake_policy(SET CMP0003 OLD)
+   # CMP0005: keep escaping behaviour for definitions added via add_definitions()
+   cmake_policy(SET CMP0005 OLD)
 
-if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
-
-   # some developers may be using an cmake cvs version which didn't have set_property() yet
-   # Tell them that a more recent version is required.
-   if(NOT COMMAND SET_PROPERTY)
-      message(FATAL_ERROR "You are using an old version of CMake from cvs, please update to CMake >= 2.6.0 or cvs at least from Feb 20th, 2008")
-   endif(NOT COMMAND SET_PROPERTY)
-
-   # CMake 2.6 gives errors if there are multiple targets with the same name
-   # we use this for the target "buildtests", which is created for the unit tests
-   # and which depends on the tests, so building "buildtests" builds all the tests
-   # enabling this property disables this check in CMake
-   set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS TRUE)
-
-   # CMake 2.6 uses the full file names of the libraries when linking and so 
-   # doesn't use -L anymore to list the link dirs. Now the dependencies created
-   # export_library_dependencies() lists the in-project libraries without 
-   # path, i.e. with only the logical name ("kdecore"), so they don't link
-   # Setting this variable to true has the effect that the link dirs are
-   # listed nevertheless also with CMake 2.6.
-   set(CMAKE_LINK_OLD_PATHS TRUE)
-
-
-   # the following link_directories() command could be inserted in the KDELibsDependencies.cmake
-   # file. This should basically also fix the linking problem for libs with just the 
-   # symbolic name (coming from export_library_dependencies()). But this will need
-   # adapting also the other places where export_library_dependencies() is used.
-   # I guess just enabling the compatibility option above is more safe. 
-   # Once we require CMake >= 2.6.0 this will be reworked. Alex
-   #
-   #  # in CMake 2.6 the handling of the link directories has changed, so we need this here
-   #  if(\"\${CMAKE_MAJOR_VERSION}.\${CMAKE_MINOR_VERSION}\" GREATER 2.4)
-   #     link_directories( \"\${KDE4_LIB_INSTALL_DIR}\" )
-   #  endif(\"\${CMAKE_MAJOR_VERSION}.\${CMAKE_MINOR_VERSION}\" GREATER 2.4)
-
-endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
+endif(COMMAND CMAKE_POLICY)
 
 
 
