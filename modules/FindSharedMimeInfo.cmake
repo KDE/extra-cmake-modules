@@ -51,6 +51,9 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
 
 endif (UPDATE_MIME_DATABASE_EXECUTABLE)
 
+mark_as_advanced(UPDATE_MIME_DATABASE_EXECUTABLE)
+
+
 macro(UPDATE_XDG_MIMETYPES _path)
    get_filename_component(_xdgmimeDir "${_path}" NAME)
    if("${_xdgmimeDir}" STREQUAL packages )

@@ -9,7 +9,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-INCLUDE(CheckIncludeFiles)
+include(CheckIncludeFiles)
 
 check_include_files(attr/libattr.h HAVE_ATTR_LIBATTR_H)
 check_include_files(sys/xattr.h HAVE_SYS_XATTR_H)
@@ -21,9 +21,9 @@ if (HAVE_ATTR_LIBATTR_H AND HAVE_SYS_XATTR_H AND HAVE_SYS_ACL_H AND HAVE_ACL_LIB
 endif (HAVE_ATTR_LIBATTR_H AND HAVE_SYS_XATTR_H AND HAVE_SYS_ACL_H AND HAVE_ACL_LIBACL_H)
 
 if (ACL_HEADERS_FOUND)
-   FIND_LIBRARY(ACL_LIBS NAMES acl )
+   find_library(ACL_LIBS NAMES acl )
 
-   FIND_LIBRARY(ATTR_LIBS NAMES attr )
+   find_library(ATTR_LIBS NAMES attr )
 endif (ACL_HEADERS_FOUND)
 
 if (ACL_HEADERS_FOUND AND ACL_LIBS AND ATTR_LIBS)
@@ -32,5 +32,5 @@ if (ACL_HEADERS_FOUND AND ACL_LIBS AND ATTR_LIBS)
    message(STATUS "Found ACL support: ${ACL_LIBS}")
 endif (ACL_HEADERS_FOUND AND ACL_LIBS AND ATTR_LIBS)
 
-MARK_AS_ADVANCED(ACL_LIBS)
+mark_as_advanced(ACL_LIBS  ATTR_LIBS)
 
