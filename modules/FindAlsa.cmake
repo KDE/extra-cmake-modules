@@ -19,10 +19,10 @@ include(CheckLibraryExists)
 
 # Already done by toplevel
 find_library(ASOUND_LIBRARY asound)
-  SET(ASOUND_LIBRARY_DIR "")
-  IF(ASOUND_LIBRARY)
-    GET_FILENAME_COMPONENT(ASOUND_LIBRARY_DIR ${ASOUND_LIBRARY} PATH)
-  ENDIF(ASOUND_LIBRARY)
+set(ASOUND_LIBRARY_DIR "")
+if(ASOUND_LIBRARY)
+   get_filename_component(ASOUND_LIBRARY_DIR ${ASOUND_LIBRARY} PATH)
+endif(ASOUND_LIBRARY)
 
 check_library_exists(asound snd_seq_create_simple_port ${ASOUND_LIBRARY_DIR} HAVE_LIBASOUND2)
 if(HAVE_LIBASOUND2)
