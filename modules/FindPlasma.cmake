@@ -16,11 +16,13 @@ endif (PLASMA_INCLUDE_DIR AND PLASMA_LIBS)
 
 find_path(PLASMA_INCLUDE_DIR NAMES plasma/plasma.h
         PATHS
+	${KDE4_INCLUDE_DIR}
         ${INCLUDE_INSTALL_DIR}
 )
 
 find_library(PLASMA_LIBS NAMES plasma
         PATHS
+	${KDE4_LIB_DIR}
         ${LIB_INSTALL_DIR}
 )
 
