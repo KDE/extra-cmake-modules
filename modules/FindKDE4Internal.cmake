@@ -912,15 +912,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
        endif(HAVE_FPIE_SUPPORT)
    endif(KDE4_ENABLE_FPIE)
 
-   # save a little by making local statics not threadsafe
-   check_cxx_compiler_flag(-fno-threadsafe-statics __KDE_HAVE_NO_THREADSAFE_STATICS)
-   if (__KDE_HAVE_NO_THREADSAFE_STATICS)
-       # currently disabled for Alpha1 due to what appears
-       # to be a compiler bug
-       # see http://gcc.gnu.org/bugzilla/show_bug.cgi?id=31806
-       #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
-   endif (__KDE_HAVE_NO_THREADSAFE_STATICS)
-
    check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
    if(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
@@ -941,6 +932,14 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 
    macro_ensure_version("4.1.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_1)
    macro_ensure_version("4.2.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_2)
+   macro_ensure_version("4.3.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_3)
+
+   # save a little by making local statics not threadsafe
+   # ### do not enable it for older compilers, see
+   # ### http://gcc.gnu.org/bugzilla/show_bug.cgi?id=31806
+   if (GCC_IS_NEWER_THAN_4_3)
+       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
+   endif (GCC_IS_NEWER_THAN_4_3)
 
    set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
    if (GCC_IS_NEWER_THAN_4_1)
