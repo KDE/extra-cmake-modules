@@ -23,7 +23,9 @@ set(CMAKE_COLOR_MAKEFILE ON)
 
 # Enable use of chrpath to avoid the need for actually relinking on install
 # since cmake cvs 12/19/2007
-set(CMAKE_USE_CHRPATH ON)
+if (NOT CMAKE_SKIP_RPATH)
+  set(CMAKE_USE_CHRPATH ON)
+endif (NOT CMAKE_SKIP_RPATH)
 
 # define the generic version of the libraries here
 # this makes it easy to advance it when the next KDE release comes
