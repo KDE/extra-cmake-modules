@@ -65,8 +65,8 @@ else(GSSAPI_LIBS AND GSSAPI_FLAVOR)
       set(GSSAPI_FOUND TRUE)
       message(STATUS "Found GSSAPI: ${GSSAPI_LIBS}")
 
-      set(GSSAPI_INCS ${GSSAPI_INCS} CACHE STRING "The GSSAPI include directory" )
-      set(GSSAPI_LIBS ${GSSAPI_LIBS} CACHE STRING "The libraries needed to use GSSAPI" )
+      set(GSSAPI_INCS ${GSSAPI_INCS})
+      set(GSSAPI_LIBS ${GSSAPI_LIBS})
       set(GSSAPI_FLAVOR ${GSSAPI_FLAVOR} CACHE STRING "The type of gss api, MIT or HEIMDAL")
 
       mark_as_advanced(GSSAPI_INCS GSSAPI_LIBS GSSAPI_FLAVOR)
