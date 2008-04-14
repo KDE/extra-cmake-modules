@@ -616,7 +616,6 @@ endif (WIN32)
 
 set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
                                   LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
-                                  BUNDLE  DESTINATION "${LIB_INSTALL_DIR}"
                                   ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
 
 
