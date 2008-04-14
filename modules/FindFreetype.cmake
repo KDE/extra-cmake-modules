@@ -45,7 +45,7 @@ else (FREETYPE_LIBRARIES AND FREETYPE_INCLUDE_DIR)
       endforeach(value)
     endif(FREETYPE_LIBRARIES AND _freetype_pkgconfig_output)
 
-    set( FREETYPE_LIBRARIES ${FREETYPE_LIBRARIES} CACHE STRING "The libraries for freetype" )
+    set( FREETYPE_LIBRARIES ${FREETYPE_LIBRARIES} )
 
     mark_as_advanced(FREETYPE_LIBRARIES FREETYPE_INCLUDE_DIR)
 
