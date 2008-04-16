@@ -25,7 +25,7 @@ else (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)
 
     pkgconfig(fontconfig _FONTCONFIGIncDir _FONTCONFIGLinkDir _FONTCONFIGLinkFlags _FONTCONFIGCflags)
 
-    set(FONTCONFIG_DEFINITIONS ${_FONTCONFIGCflags} CACHE INTERNAL "The compilation flags for fontconfig")
+    set(FONTCONFIG_DEFINITIONS ${_FONTCONFIGCflags})
   endif (NOT WIN32)
 
   find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h

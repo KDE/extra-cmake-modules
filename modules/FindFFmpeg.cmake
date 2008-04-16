@@ -24,7 +24,7 @@ IF (NOT WIN32)
 
   PKGCONFIG(libavcodec _FFMPEGIncDir _FFMPEGLinkDir _FFMPEGLinkFlags _FFMPEGCflags)
 ENDIF (NOT WIN32)
-  #set(FFMPEG_DEFINITIONS ${_FFMPEGCflags} CACHE INTERNAL "The compilation flags for ffmpeg")
+  #set(FFMPEG_DEFINITIONS ${_FFMPEGCflags})
 
   find_path(FFMPEG_INCLUDE_DIR ffmpeg/avcodec.h
     PATHS
