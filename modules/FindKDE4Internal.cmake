@@ -77,7 +77,8 @@
 # They can be relative (to CMAKE_INSTALL_PREFIX) or absolute.
 # Under Windows they are always relative.
 #
-#  BIN_INSTALL_DIR          - the directory where executables be installed (default is prefix/bin)
+#  BIN_INSTALL_DIR          - the directory where executables will be installed (default is prefix/bin)
+#  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE )
 #  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
 #  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
 #  CONFIG_INSTALL_DIR       - the config file install dir
@@ -529,12 +530,12 @@ if (WIN32)
 
 else (WIN32)
 
-   # this macro implements some very special logic how to deal with the cache
-   # by default the various install locations inherit their value from theit "parent" variable
+   # This macro implements some very special logic how to deal with the cache.
+   # By default the various install locations inherit their value from their "parent" variable
    # so if you set CMAKE_INSTALL_PREFIX, then EXEC_INSTALL_PREFIX, PLUGIN_INSTALL_DIR will
-   # calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX
-   # this would work completely without using the cache.
-   # but if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
+   # calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX .
+   # This would work completely without using the cache.
+   # But if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
    # the cache, otherwise it will be forgotten on the next cmake run.
    # Once a variable is in the cache, it doesn't depend on its "parent" variables
    # anymore and you can only change it by editing it directly.
@@ -559,6 +560,9 @@ else (WIN32)
       endif (NOT DEFINED ${_var})
    endmacro(_SET_FANCY)
 
+   if(APPLE)
+      set(BUNDLE_INSTALL_DIR "/Applications/KDE" CACHE PATH "Directory where application bundles will be installed to on OSX" )
+   endif(APPLE)
 
    _set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}"                 "Base directory for executables and libraries")
    _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
@@ -621,6 +625,16 @@ endif (WIN32)
 set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
                                   LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
                                   ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
+
+
+
+# on the Mac support an extra install directory for application bundles
+if(APPLE)
+   if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.6")
+      set(INSTALL_TARGETS_DEFAULT_ARGS  ${INSTALL_TARGETS_DEFAULT_ARGS}
+                                  BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR} )
+   endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.6")
+endif(APPLE)
 
 
 ##############  add some more default search paths  ###############
