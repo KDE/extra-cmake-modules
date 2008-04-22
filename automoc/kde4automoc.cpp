@@ -47,7 +47,7 @@ class AutoMoc
             cmakeEcho->setProcessChannelMode(QProcess::ForwardedChannels);
             QStringList args(cmakeEchoColorArgs);
             args << msg;
-            cmakeEcho->start("cmake", args, QIODevice::NotOpen);
+            cmakeEcho->start(QLatin1String("cmake"), args, QIODevice::NotOpen);
             processes.enqueue(Process(cmakeEcho, QString()));
         }
 
@@ -87,8 +87,9 @@ AutoMoc::AutoMoc()
     : verbose(!qgetenv("VERBOSE").isEmpty()), cerr(stderr), cout(stdout), failed(false)
 {
     const QByteArray colorEnv = qgetenv("COLOR");
-    cmakeEchoColorArgs << "-E" << "cmake_echo_color" << QString("--switch=") + colorEnv << "--blue"
-        << "--bold";
+    cmakeEchoColorArgs << QLatin1String("-E") << QLatin1String("cmake_echo_color") 
+        << QLatin1String("--switch=") + colorEnv << QLatin1String("--blue")
+        << QLatin1String("--bold");
 }
 
 bool AutoMoc::run()
@@ -136,8 +137,8 @@ bool AutoMoc::run()
     QHash<QString, QString> includedMocs;    // key = moc source filepath, value = moc output filepath
     QHash<QString, QString> notIncludedMocs; // key = moc source filepath, value = moc output filename
 
-    QRegExp mocIncludeRegExp("[\n]\\s*#\\s*include\\s+[\"<](moc_[^ \">]+\\.cpp|[^ \">]+\\.moc)[\">]");
-    QRegExp qObjectRegExp("[\n]\\s*Q_OBJECT\\b");
+    QRegExp mocIncludeRegExp(QLatin1String("[\n]\\s*#\\s*include\\s+[\"<](moc_[^ \">]+\\.cpp|[^ \">]+\\.moc)[\">]"));
+    QRegExp qObjectRegExp(QLatin1String("[\n]\\s*Q_OBJECT\\b"));
     QStringList headerExtensions;
     headerExtensions << ".h" << ".hpp" << ".hxx" << ".H";
     foreach (const QString &absFilename, sourceFiles) {
@@ -329,7 +330,7 @@ void AutoMoc::generateMoc(const QString &sourceFile, const QString &mocFileName)
 #ifdef Q_OS_WIN
         args << "-DWIN32";
 #endif
-        args << "-o" << mocFilePath << sourceFile;
+        args << QLatin1String("-o") << mocFilePath << sourceFile;
         //qDebug() << "executing: " << mocExe << args;
         mocProc->start(mocExe, args, QIODevice::NotOpen);
         if (mocProc->waitForStarted())
