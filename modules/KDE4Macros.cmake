@@ -1,5 +1,5 @@
 # for documentation look at FindKDE4Internal.cmake
-#
+
 # this file contains the following macros:
 # KDE4_ADD_UI_FILES
 # KDE4_ADD_UI3_FILES
@@ -19,7 +19,7 @@
 # KDE4_REMOVE_OBSOLETE_CMAKE_FILES
 # KDE4_NO_ENABLE_FINAL
 # KDE4_CREATE_HANDBOOK
-# KDE4_ADD_WIN32_APP_ICON (Use on Win32)
+# KDE4_ADD_APP_ICON
 # KDE4_CREATE_MANPAGE
 
 # Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
@@ -173,7 +173,7 @@ macro (KDE4_MOC_HEADERS _target_NAME)
    # need to create moc_<filename>.cpp file using kde4automoc.cmake
    # and add it to the target
    if(_headers_to_moc)
-      KDE4_SET_CUSTOM_TARGET_PROPERTY(${_target_NAME} AUTOMOC_HEADERS "${_headers_to_moc}")
+      kde4_set_custom_target_property(${_target_NAME} AUTOMOC_HEADERS "${_headers_to_moc}")
    endif(_headers_to_moc)
 endmacro (KDE4_MOC_HEADERS)
 
@@ -182,7 +182,7 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
    set(_moc_headers)
 
    # first list all explicitly set headers
-   KDE4_GET_CUSTOM_TARGET_PROPERTY(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
+   kde4_get_custom_target_property(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
    if(NOT _headers_to_moc STREQUAL "NOTFOUND")
       foreach(_header_to_moc ${_headers_to_moc})
          get_filename_component(_abs_header ${_header_to_moc} ABSOLUTE)
@@ -218,8 +218,8 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
 
    if(_moc_files)
       set(_automoc_source "${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_automoc.cpp")
-      GET_DIRECTORY_PROPERTY(_moc_incs INCLUDE_DIRECTORIES)
-      CONFIGURE_FILE(${KDE4_MODULE_DIR}/kde4automoc.files.in ${_automoc_source}.files)
+      get_directory_property(_moc_incs INCLUDE_DIRECTORIES)
+      configure_file(${KDE4_MODULE_DIR}/kde4automoc.files.in ${_automoc_source}.files)
       add_custom_command(OUTPUT ${_automoc_source}
          COMMAND ${KDE4_AUTOMOC_EXECUTABLE}
          ${_automoc_source}
@@ -537,15 +537,15 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
       # set the RPATH related properties
       if (NOT CMAKE_SKIP_RPATH)
          if (${_type} STREQUAL "GUI")
-            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
+            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH TRUE  BUILD_WITH_INSTALL_RPATH TRUE)
          endif (${_type} STREQUAL "GUI")
 
          if (${_type} STREQUAL "NOGUI")
-            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH TRUE BUILD_WITH_INSTALL_RPATH TRUE)
+            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH TRUE  BUILD_WITH_INSTALL_RPATH TRUE)
          endif (${_type} STREQUAL "NOGUI")
 
          if (${_type} STREQUAL "RUN_UNINSTALLED")
-            set_target_properties(${_target_NAME} PROPERTIES SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
+            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH FALSE  BUILD_WITH_INSTALL_RPATH FALSE)
          endif (${_type} STREQUAL "RUN_UNINSTALLED")
       endif (NOT CMAKE_SKIP_RPATH)
 
@@ -1015,13 +1015,13 @@ endmacro (KDE4_ADD_WIN32_APP_ICON)
 # example: KDE4_ADD_APP_ICON( myapp_sources "icons/oxygen/*/apps/myapp.png")
 
 macro (KDE4_ADD_APP_ICON appsources pattern)
-    STRING(REPLACE _SRCS "" target ${appsources})
+    string(REPLACE _SRCS "" target ${appsources})
     if (WIN32)
         find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
         find_program(WINDRES_EXECUTABLE NAMES windres)
         if(MSVC)
             set(WINDRES_EXECUTABLE TRUE)
-        endif(MSVC)        
+        endif(MSVC)
         if (PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
             file(GLOB_RECURSE files  "${pattern}")
             FOREACH (it ${files})
@@ -1043,13 +1043,13 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
             ENDFOREACH (it)
             if (_icons)
                 set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
-                ADD_CUSTOM_COMMAND(OUTPUT ${_outfilename}.ico ${_outfilename}.rc
+                add_custom_command(OUTPUT ${_outfilename}.ico ${_outfilename}.rc
                                    COMMAND ${PNG2ICO_EXECUTABLE} ARGS --rcfile ${_outfilename}.rc ${_outfilename}.ico ${_icons}
                                    DEPENDS ${PNG2ICO_EXECUTABLE} ${_icons}
                                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                                   )
                 if (MINGW)
-                    ADD_CUSTOM_COMMAND(OUTPUT ${_outfilename}_res.o
+                    add_custom_command(OUTPUT ${_outfilename}_res.o
                                        COMMAND ${WINDRES_EXECUTABLE} ARGS -i ${_outfilename}.rc -o ${_outfilename}_res.o --include-dir=${CMAKE_CURRENT_SOURCE_DIR}
                                        DEPENDS ${WINDRES_EXECUTABLE} ${_outfilename}.rc
                                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -1073,11 +1073,11 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
         if (SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
             file(GLOB_RECURSE files  "${pattern}")
             # we can only test for the 128-icon like that - we don't use patterns anymore
-            FOREACH (it ${files})
+            foreach (it ${files})
                 if (it MATCHES ".*128.*" )
                     set (_icon ${it})
                 endif (it MATCHES ".*128.*")
-            ENDFOREACH (it)
+            endforeach (it)
             set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
 
             if (_icon)

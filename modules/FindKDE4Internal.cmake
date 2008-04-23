@@ -210,13 +210,15 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+
+# this is required now by cmake 2.6 and so must not be skipped by if(KDE4_FOUND) below
+cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
+
 if(KDE4_FOUND)
   # Already found in this cmake run, nothing more to do
 else(KDE4_FOUND)
 
 include (MacroEnsureVersion)
-
-cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
 
 set(QT_MIN_VERSION "4.3.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
@@ -307,7 +309,6 @@ else (_kdeBootStrapping)
 
    string(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
    if (KDEVERSION)
-
       string(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
 
       # we need at least this version:
@@ -317,7 +318,6 @@ else (_kdeBootStrapping)
 
       #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
       macro_ensure_version( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_OK )
-
    else (KDEVERSION)
       message(FATAL_ERROR "Couldn't parse KDE version string from the kde4-config output:\n${kdeconfig_output}")
    endif (KDEVERSION)
@@ -340,8 +340,10 @@ else (_kdeBootStrapping)
    # this file contains all dependencies of all libraries of kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
 
-   find_library(KDE4_KDEFAKES_LIBRARY NAMES kdefakes PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KDEFAKES_LIBS ${kdefakes_LIB_DEPENDS} ${KDE4_KDEFAKES_LIBRARY} )
+   if (UNIX)
+      find_library(KDE4_KDEFAKES_LIBRARY NAMES kdefakes PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+      set(KDE4_KDEFAKES_LIBS ${kdefakes_LIB_DEPENDS} ${KDE4_KDEFAKES_LIBRARY} )
+   endif (UNIX)
 
    find_library(KDE4_KDECORE_LIBRARY NAMES kdecore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDECORE_LIBS ${kdecore_LIB_DEPENDS} ${KDE4_KDECORE_LIBRARY} )
@@ -487,7 +489,7 @@ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 if (WIN32)
 # use relative install prefix to avoid hardcoded install paths in cmake_install.cmake files
 
-   set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}"  ) # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+   set(LIB_INSTALL_DIR      "lib${LIB_SUFFIX}" )            # The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})
 
    set(EXEC_INSTALL_PREFIX  "" )        # Base directory for executables and libraries
    set(SHARE_INSTALL_PREFIX "share" )   # Base directory for files which go to share/
@@ -525,12 +527,12 @@ if (WIN32)
 
 else (WIN32)
 
-   # this macro implements some very special logic how to deal with the cache
-   # by default the various install locations inherit their value from theit "parent" variable
+   # This macro implements some very special logic how to deal with the cache.
+   # By default the various install locations inherit their value from their "parent" variable
    # so if you set CMAKE_INSTALL_PREFIX, then EXEC_INSTALL_PREFIX, PLUGIN_INSTALL_DIR will
-   # calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX
-   # this would work completely without using the cache.
-   # but if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
+   # calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX .
+   # This would work completely without using the cache.
+   # But if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
    # the cache, otherwise it will be forgotten on the next cmake run.
    # Once a variable is in the cache, it doesn't depend on its "parent" variables
    # anymore and you can only change it by editing it directly.
@@ -555,6 +557,9 @@ else (WIN32)
       endif (NOT DEFINED ${_var})
    endmacro(_SET_FANCY)
 
+   if(APPLE)
+      set(BUNDLE_INSTALL_DIR "/Applications/KDE" CACHE PATH "Directory where application bundles will be installed to on OSX" )
+   endif(APPLE)
 
    _set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}"                 "Base directory for executables and libraries")
    _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
@@ -618,6 +623,16 @@ set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
                                   ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
 
 
+
+# on the Mac support an extra install directory for application bundles
+if(APPLE)
+   if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.6")
+      set(INSTALL_TARGETS_DEFAULT_ARGS  ${INSTALL_TARGETS_DEFAULT_ARGS}
+                                  BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
+   endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.6")
+endif(APPLE)
+
+
 ##############  add some more default search paths  ###############
 # always search in the directory where cmake is installed 
 # and in the current installation prefix
@@ -652,31 +667,26 @@ if(WIN32)
                                 "${CMAKE_INSTALL_PREFIX}/bin" )
 endif(WIN32)
 
-# Differences between CMake 2.4 and 2.6
-if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
 
-   # some developers may be using an cmake cvs version which didn't have set_property() yet
-   # Tell them that a more recent version is required.
-   if(NOT COMMAND SET_PROPERTY)
-      message(FATAL_ERROR "You are using an old version of CMake from cvs, please update to CMake >= 2.6.0 or cvs at least from Feb 20th, 2008")
-   endif(NOT COMMAND SET_PROPERTY)
+# cmake 2.5, i.e. the cvs version between 2.4 and 2.6, is not supported
+if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
+   message(FATAL_ERROR "You are using CMake 2.5, which was the unreleased development version between 2.4 and 2.6. This is no longer supported. Please update to CMake 2.6 or current cvs HEAD.")
+endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
+
+# CMake 2.6, set compatibility behaviour to cmake 2.4
+if(COMMAND CMAKE_POLICY)
+   # CMP0000: don't require cmake_minimum_version() directly in the top level CMakeLists.txt, FindKDE4Internal.cmake is good enough
+   cmake_policy(SET CMP0000 OLD)
+   # CMP0002: in KDE4 we have multiple targets with the same name for the unit tests
+   cmake_policy(SET CMP0002 OLD)
+   # CMP0003: add the link paths to the link command as with cmake 2.4
+   cmake_policy(SET CMP0003 OLD)
+   # CMP0005: keep escaping behaviour for definitions added via add_definitions()
+   cmake_policy(SET CMP0005 OLD)
+
+endif(COMMAND CMAKE_POLICY)
 
 
-   # CMake 2.6 gives errors if there are multiple targets with the same name
-   # we use this for the target "buildtests", which is created for the unit tests
-   # and which depends on the tests, so building "buildtests" builds all the tests
-   # enabling this property disables this check in CMake
-   set_property(GLOBAL PROPERTY ALLOW_DUPLICATE_CUSTOM_TARGETS 1)
-
-   # CMake 2.6 uses the full file names of the libraries when linking and so 
-   # doesn't use -L anymore to list the link dirs. Now the dependencies created
-   # export_library_dependencies() lists the in-project libraries without 
-   # path, i.e. with only the logical name ("kdecore"), so they don't link
-   # Setting this variable to true has the effect that the link dirs are
-   # listed nevertheless also with CMake 2.6.
-   set(CMAKE_LINK_OLD_PATHS TRUE)
-
-endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.4)
 
 #####################  and now the platform specific stuff  ############################
 
@@ -759,7 +769,7 @@ if (UNIX)
      set( _KDE4_DEFAULT_USE_FULL_RPATH OFF )
    endif (NOT APPLE)
 
-   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." _KDE4_DEFAULT_USE_FULL_RPATH)
+   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." ${_KDE4_DEFAULT_USE_FULL_RPATH} )
 
    set( _KDE4_PLATFORM_INCLUDE_DIRS)
 
@@ -981,15 +991,15 @@ if (CMAKE_C_COMPILER MATCHES "icc")
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -g -0b0 -noalign")
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g -Ob0 -noalign")
+   set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -g -fno-inline -noalign")
+   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g -fno-inline -noalign")
    set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g")
    set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_DEBUG            "-O2 -g -Ob0 -noalign")
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g -Ob0 -noalign")
+   set(CMAKE_C_FLAGS_DEBUG            "-O2 -g -fno-inline -noalign")
+   set(CMAKE_C_FLAGS_DEBUGFULL        "-g -fno-inline -noalign")
 
-   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wpointer-arith -fno-common")
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wpointer-arith -fno-exceptions -fno-common")
+   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wall -w1 -Wpointer-arith -fno-common")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wall -w1 -Wpointer-arith -fno-exceptions -fno-common")
 
    # visibility support
    set(__KDE_HAVE_ICC_VISIBILITY)
@@ -1072,7 +1082,7 @@ endif (NOT KDE4Internal_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
 #the ${KDE4_INCLUDE_DIR}/KDE directory is for forwarding includes, eg. #include <KMainWindow>
-set(KDE4_INCLUDES ${KDE4_INCLUDE_DIR} ${KDE4_INCLUDE_DIR}/KDE ${QT_INCLUDES} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
+set(KDE4_INCLUDES ${KDE4_INCLUDE_DIR} ${KDE4_INCLUDE_DIR}/KDE  ${QT_INCLUDES} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
 
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DKDE_DEPRECATED_WARNINGS )
 
