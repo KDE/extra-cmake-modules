@@ -67,7 +67,7 @@ macro (KDE4_ADD_KCFG_FILES _sources )
 endmacro (KDE4_ADD_KCFG_FILES)
 
 
-GET_FILENAME_COMPONENT(KDE4_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
+get_filename_component(KDE4_MODULE_DIR  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE4_ADD_UI_FILES(foo_SRCS ${ui_files})
@@ -454,10 +454,10 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
    # mng icons
    file(GLOB _icons *.mng)
    foreach (_current_ICON ${_icons} )
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\1" _type  "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\2" _size  "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\3" _group "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\4" _name  "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\1" _type  "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\2" _size  "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\3" _group "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\4" _name  "${_current_ICON}")
 
       set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
       if( _theme_GROUP)
@@ -470,9 +470,9 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
    # and now the svg icons
    file(GLOB _icons *.svgz)
    foreach (_current_ICON ${_icons} )
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _type "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _group "${_current_ICON}")
-      STRING(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\3" _name "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _type "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _group "${_current_ICON}")
+      string(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\3" _name "${_current_ICON}")
 
       set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
       if( _theme_GROUP)
@@ -482,7 +482,7 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
       endif( _theme_GROUP)
    endforeach (_current_ICON)
 
-   KDE4_UPDATE_ICONCACHE()
+   kde4_update_iconcache()
 
 endmacro (KDE4_INSTALL_ICONS)
 
@@ -819,10 +819,6 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 
 endmacro (KDE4_ADD_UNIT_TEST)
 
-macro (KDE4_ADD_TEST_EXECUTABLE _target_NAME)
-   MESSAGE(SEND_ERROR "KDE4_ADD_TEST_EXECUTABLE is deprecated use KDE4_ADD_EXECUTABLE(<target> TEST <files>) instead")
-endmacro (KDE4_ADD_TEST_EXECUTABLE)
-
 
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
@@ -939,7 +935,7 @@ macro (KDE4_ADD_WIDGET_FILES _sources)
 endmacro (KDE4_ADD_WIDGET_FILES)
 
 
-MACRO(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
+macro(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
    install(SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/remove_files.cmake )
    set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
@@ -950,17 +946,17 @@ MACRO(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
       file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/remove_files.cmake "exec_program( ${CMAKE_COMMAND} ARGS -E remove ${module_install_dir}/${_current_FILE} OUTPUT_VARIABLE _dummy)\n" )
    endforeach ( _current_FILE)
 
-ENDMACRO(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
+endmacro(KDE4_REMOVE_OBSOLETE_CMAKE_FILES)
 
 
-MACRO(KDE4_NO_ENABLE_FINAL _project_name)
+macro(KDE4_NO_ENABLE_FINAL _project_name)
    if(KDE4_ENABLE_FINAL)
       set(KDE4_ENABLE_FINAL OFF)
       remove_definitions(-DKDE_USE_FINAL)
       message(STATUS "You used enable-final argument but \"${_project_name}\" doesn't support it. Try to fix compile it and remove KDE4_NO_ENABLE_FINAL macro. Thanks")
 
    endif(KDE4_ENABLE_FINAL)
-ENDMACRO(KDE4_NO_ENABLE_FINAL _project_name)
+endmacro(KDE4_NO_ENABLE_FINAL _project_name)
 
 
 macro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
@@ -994,7 +990,7 @@ macro (KDE4_ADD_WIN32_APP_ICON appsources)
         if(MSVC)
             set(WINDRES_EXECUTABLE TRUE)
         endif(MSVC)
-        STRING(REPLACE _SRCS "" appname ${appsources})
+        string(REPLACE _SRCS "" appname ${appsources})
         if (PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
             set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${appname})
 
