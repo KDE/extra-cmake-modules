@@ -28,6 +28,7 @@
 #                    QT_USE_QTHELP
 #                    QT_USE_QTWEBKIT
 #                    QT_USE_QTXMLPATTERNS
+#                    QT_USE_PHONON
 #
 # The file pointed to by QT_USE_FILE will set up your compile environment
 # by adding include directories, preprocessor defines, and populate a
@@ -131,9 +132,15 @@
 #  QT_QTASSISTANTCLIENT_FOUND         True if QtAssistantClient was found.
 #  QT_QTHELP_FOUND      True if QtHelp was found.
 #  QT_QTWEBKIT_FOUND        True if QtWebKit was found.
-#  QT_QTXMLPATTERNS_FOUND     True if QtXmlPatterns was found.
-#                      
+#  QT_QTXMLPATTERNS_FOUND   True if QtXmlPatterns was found.
+#  QT_PHONON_FOUND          True if phonon was found.
+#
+#
 #  QT_DEFINITIONS   Definitions to use when compiling code that uses Qt.
+#                   You do not need to use this if you include QT_USE_FILE.
+#                   The QT_USE_FILE will also define QT_DEBUG and QT_NO_DEBUG
+#                   to fit your current build type.  Those are not contained
+#                   in QT_DEFINITIONS.
 #                  
 #  QT_INCLUDES      List of paths to all include directories of 
 #                   Qt4 QT_INCLUDE_DIR and QT_QTCORE_INCLUDE_DIR are
@@ -167,7 +174,8 @@
 #  QT_QTASSISTANTCLIENT_INCLUDE_DIR       Path to "include/QtAssistant"
 #  QT_QTHELP_INCLUDE_DIR       Path to "include/QtHelp"
 #  QT_QTWEBKIT_INCLUDE_DIR     Path to "include/QtWebKit"
-#  QT_QTXMLPATTERNS_INCLUDE_DIR       Path to "include/QtXmlPatterns"
+#  QT_QTXMLPATTERNS_INCLUDE_DIR  Path to "include/QtXmlPatterns"
+#  QT_PHONON_INCLUDE_DIR       Path to "include/phonon"
 #                            
 #  QT_LIBRARY_DIR              Path to "lib" of Qt4
 # 
@@ -220,6 +228,8 @@
 # The QtWebKit library:           QT_QTWEBKIT_LIBRARY
 #
 # The QtXmlPatterns library:      QT_QTXMLPATTERNS_LIBRARY
+#
+# The Phonon library:             QT_PHONON_LIBRARY
 
 
 
@@ -395,6 +405,8 @@ IF (QT4_QMAKE_FOUND)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QT_INSTALL_LIBS"
       OUTPUT_VARIABLE QT_LIBRARY_DIR_TMP )
+    # make sure we have / and not \ as qmake gives on windows
+    FILE(TO_CMAKE_PATH "${QT_LIBRARY_DIR_TMP}" QT_LIBRARY_DIR_TMP)
     IF(EXISTS "${QT_LIBRARY_DIR_TMP}")
       SET(QT_LIBRARY_DIR ${QT_LIBRARY_DIR_TMP} CACHE PATH "Qt library dir")
     ELSE(EXISTS "${QT_LIBRARY_DIR_TMP}")
@@ -416,48 +428,60 @@ IF (QT4_QMAKE_FOUND)
   ENDIF (APPLE)
   
   # ask qmake for the binary dir
-  IF (NOT QT_BINARY_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_BINARY_DIR)
      EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE}
-        ARGS "-query QT_INSTALL_BINS"
-        OUTPUT_VARIABLE qt_bins )
+       ARGS "-query QT_INSTALL_BINS"
+       OUTPUT_VARIABLE qt_bins )
+     # make sure we have / and not \ as qmake gives on windows
+     FILE(TO_CMAKE_PATH "${qt_bins}" qt_bins)
      SET(QT_BINARY_DIR ${qt_bins} CACHE INTERNAL "")
-  ENDIF (NOT QT_BINARY_DIR)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_BINARY_DIR)
 
   # ask qmake for the include dir
-  IF (NOT QT_HEADERS_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_HEADERS_DIR)
       EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
         ARGS "-query QT_INSTALL_HEADERS" 
-        OUTPUT_VARIABLE qt_headers )
+        OUTPUT_VARIABLE qt_headers ) 
+      # make sure we have / and not \ as qmake gives on windows
+      FILE(TO_CMAKE_PATH "${qt_headers}" qt_headers)
       SET(QT_HEADERS_DIR ${qt_headers} CACHE INTERNAL "")
-  ENDIF(NOT QT_HEADERS_DIR)
+  ENDIF(QT_LIBRARY_DIR AND NOT QT_HEADERS_DIR)
 
 
   # ask qmake for the documentation directory
-  IF (NOT QT_DOC_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_DOC_DIR)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QT_INSTALL_DOCS"
       OUTPUT_VARIABLE qt_doc_dir )
+    # make sure we have / and not \ as qmake gives on windows
+    FILE(TO_CMAKE_PATH "${qt_doc_dir}" qt_doc_dir)
     SET(QT_DOC_DIR ${qt_doc_dir} CACHE PATH "The location of the Qt docs")
-  ENDIF (NOT QT_DOC_DIR)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_DOC_DIR)
 
   # ask qmake for the mkspecs directory
-  IF (NOT QT_MKSPECS_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_MKSPECS_DIR)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QMAKE_MKSPECS"
       OUTPUT_VARIABLE qt_mkspecs_dirs )
-    STRING(REPLACE ":" ";" qt_mkspecs_dirs "${qt_mkspecs_dirs}")
+    # do not replace : on windows as it might be a drive letter
+    # and windows should already use ; as a separator
+    IF(UNIX)
+      STRING(REPLACE ":" ";" qt_mkspecs_dirs "${qt_mkspecs_dirs}")
+    ENDIF(UNIX)
     FIND_PATH(QT_MKSPECS_DIR qconfig.pri PATHS ${qt_mkspecs_dirs}
       DOC "The location of the Qt mkspecs containing qconfig.pri"
       NO_DEFAULT_PATH )
-  ENDIF (NOT QT_MKSPECS_DIR)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_MKSPECS_DIR)
 
   # ask qmake for the plugins directory
-  IF (NOT QT_PLUGINS_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_PLUGINS_DIR)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QT_INSTALL_PLUGINS"
       OUTPUT_VARIABLE qt_plugins_dir )
+    # make sure we have / and not \ as qmake gives on windows
+    FILE(TO_CMAKE_PATH "${qt_plugins_dir}" qt_plugins_dir)
     SET(QT_PLUGINS_DIR ${qt_plugins_dir} CACHE PATH "The location of the Qt plugins")
-  ENDIF (NOT QT_PLUGINS_DIR)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_PLUGINS_DIR)
   ########################################
   #
   #       Setting the INCLUDE-Variables
@@ -682,6 +706,7 @@ IF (QT4_QMAKE_FOUND)
     ${QT_HEADERS_DIR}/QtWebKit
     NO_DEFAULT_PATH
     )
+  
   # Set QT_QTXMLPATTERNS_INCLUDE_DIR
   FIND_PATH(QT_QTXMLPATTERNS_INCLUDE_DIR QtXmlPatterns
     PATHS
@@ -689,13 +714,19 @@ IF (QT4_QMAKE_FOUND)
     ${QT_HEADERS_DIR}/QtXmlPatterns
     NO_DEFAULT_PATH
     )
+  
+  # Set QT_PHONON_INCLUDE_DIR
+  FIND_PATH(QT_PHONON_INCLUDE_DIR phonon
+    PATHS
+    ${QT_INCLUDE_DIR}/phonon
+    NO_DEFAULT_PATH
+    )
 
   # Make variables changeble to the advanced user
   MARK_AS_ADVANCED( QT_LIBRARY_DIR QT_INCLUDE_DIR QT_QT_INCLUDE_DIR QT_DOC_DIR QT_MKSPECS_DIR QT_PLUGINS_DIR)
 
   # Set QT_INCLUDES
-  SET( QT_INCLUDES ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default ${QT_INCLUDE_DIR})
-
+  SET( QT_INCLUDES ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default ${QT_INCLUDE_DIR} )
 
   ########################################
   #
@@ -857,6 +888,8 @@ IF (QT4_QMAKE_FOUND)
 
     FIND_LIBRARY(QT_QTXMLPATTERNS_LIBRARY NAMES QtXmlPatterns QtXmlPatterns_debug QtXmlPatterns4 QtXmlPatternsd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
+    FIND_LIBRARY(QT_PHONON_LIBRARY NAMES phonon phonon4 phonon_debug phonond4    PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
 
     IF(MSVC)
       FIND_LIBRARY(QT_QTCORE_LIBRARY_RELEASE    NAMES QtCore4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -984,6 +1017,7 @@ IF (QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QTHELP)
   _QT4_ADJUST_LIB_VARS(QTWEBKIT)
   _QT4_ADJUST_LIB_VARS(QTXMLPATTERNS)
+  _QT4_ADJUST_LIB_VARS(PHONON)
 
   # platform dependent libraries
   IF(Q_WS_X11)
@@ -1079,16 +1113,16 @@ IF (QT4_QMAKE_FOUND)
     SET(${_qt4_options})
     SET(_QT4_DOING_OPTIONS FALSE)
     FOREACH(_currentArg ${ARGN})
-       IF ("${_currentArg}" STREQUAL "OPTIONS")
-          SET(_QT4_DOING_OPTIONS TRUE)
-       ELSE ("${_currentArg}" STREQUAL "OPTIONS")
-          IF(_QT4_DOING_OPTIONS)
-             LIST(APPEND ${_qt4_options} "${_currentArg}")
-          ELSE(_QT4_DOING_OPTIONS)
-             LIST(APPEND ${_qt4_files} "${_currentArg}")
-          ENDIF(_QT4_DOING_OPTIONS)
-       ENDIF ("${_currentArg}" STREQUAL "OPTIONS")
-    ENDFOREACH(_currentArg)
+      IF ("${_currentArg}" STREQUAL "OPTIONS")
+        SET(_QT4_DOING_OPTIONS TRUE)
+      ELSE ("${_currentArg}" STREQUAL "OPTIONS")
+        IF(_QT4_DOING_OPTIONS) 
+          LIST(APPEND ${_qt4_options} "${_currentArg}")
+        ELSE(_QT4_DOING_OPTIONS)
+          LIST(APPEND ${_qt4_files} "${_currentArg}")
+        ENDIF(_QT4_DOING_OPTIONS)
+      ENDIF ("${_currentArg}" STREQUAL "OPTIONS")
+    ENDFOREACH(_currentArg) 
   ENDMACRO (QT4_EXTRACT_OPTIONS)
 
   MACRO (QT4_GET_MOC_INC_DIRS _moc_INC_DIRS)
@@ -1131,7 +1165,6 @@ IF (QT4_QMAKE_FOUND)
 
 
   # QT4_WRAP_CPP(outfiles inputfile ... )
-  # TODO  perhaps add support for -D, -U and other minor options
 
   MACRO (QT4_WRAP_CPP outfiles )
     # get include dirs
@@ -1173,7 +1206,6 @@ IF (QT4_QMAKE_FOUND)
 
 
   # QT4_ADD_RESOURCES(outfiles inputfile ... )
-  # TODO  perhaps consider adding support for compression and root options to rcc
 
   MACRO (QT4_ADD_RESOURCES outfiles )
     QT4_EXTRACT_OPTIONS(rcc_files rcc_options ${ARGN})
@@ -1254,7 +1286,7 @@ IF (QT4_QMAKE_FOUND)
 
     GET_FILENAME_COMPONENT(_in_file ${_header} ABSOLUTE)
     GET_FILENAME_COMPONENT(_basename ${_header} NAME_WE)
-
+    
     IF (_customName)
       SET(_target ${CMAKE_CURRENT_BINARY_DIR}/${_customName})
     ELSE (_customName)
