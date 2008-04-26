@@ -2,11 +2,11 @@
 # This module can be used to find Qt4.
 # The most important issue is that the Qt4 qmake is available via the system path.
 # This qmake is then used to detect basically everything else.
-# This module defines a number of key variables and macros. First is 
-# QT_USE_FILE which is the path to a CMake file that can be included to compile
-# Qt 4 applications and libraries.  By default, the QtCore and QtGui 
+# This module defines a number of key variables and macros. 
+# First is QT_USE_FILE which is the path to a CMake file that can be included 
+# to compile Qt 4 applications and libraries.  By default, the QtCore and QtGui 
 # libraries are loaded. This behavior can be changed by setting one or more 
-# of the following variables to true:
+# of the following variables to true before doing INCLUDE(${QT_USE_FILE}):
 #                    QT_DONT_USE_QTCORE
 #                    QT_DONT_USE_QTGUI
 #                    QT_USE_QT3SUPPORT
@@ -29,10 +29,21 @@
 #                    QT_USE_QTWEBKIT
 #                    QT_USE_QTXMLPATTERNS
 #
-# If you are using Qt4 via UseQt4.cmake instead of FIND_PACKAGE(Qt4), all the 
-# libraries required are stored in the variable QT_LIBRARIES.
-# Add this variable to your TARGET_LINK_LIBRARIES.  Includes and definitions
-# needed for compiling Qt code are then already set up by including the QT_USE_FILE.
+# The file pointed to by QT_USE_FILE will set up your compile environment
+# by adding include directories, preprocessor defines, and populate a
+# QT_LIBRARIES variable containing all the Qt libraries and their dependencies.
+# Add the QT_LIBRARIES variable to your TARGET_LINK_LIBRARIES.
+#
+# Typical usage could be something like:
+#   FIND_PACKAGE(Qt4)
+#   SET(QT_USE_QTXML 1)
+#   INCLUDE(${QT_USE_FILE})
+#   ADD_EXECUTABLE(myexe main.cpp)
+#   TARGET_LINK_LIBRARIES(myexe ${QT_LIBRARIES})
+#
+#
+# There are also some files that need processing by some Qt tools such as moc
+# and uic.  Listed below are macros that may be used to process those files.
 #  
 #  macro QT4_WRAP_CPP(outfiles inputfile ... OPTIONS ...)
 #        create moc code from a list of files containing Qt class with
@@ -49,8 +60,23 @@
 #        Options may be given to rcc, such as those found
 #        when executing "rcc -help"
 #
-#  macro QT4_AUTOMOC(inputfile ... )
 #  macro QT4_GENERATE_MOC(inputfile outputfile )
+#        creates a rule to run moc on infile and create outfile.
+#        Use this if for some reason QT4_WRAP_CPP() isn't appropriate, e.g.
+#        because you need a custom filename for the moc file or something similar.
+#
+#  macro QT4_AUTOMOC(sourcefile1 sourcefile2 ... )
+#        This macro is still experimental.
+#        It can be used to have moc automatically handled.
+#        So if you have the files foo.h and foo.cpp, and in foo.h a 
+#        a class uses the Q_OBJECT macro, moc has to run on it. If you don't
+#        want to use QT4_WRAP_CPP() (which is reliable and mature), you can insert
+#        #include "foo.moc"
+#        in foo.cpp and then give foo.cpp as argument to QT4_AUTOMOC(). This will the
+#        scan all listed files at cmake-time for such included moc files and if it finds
+#        them cause a rule to be generated to run moc at build time on the 
+#        accompanying header file foo.h.
+#        If a source file has the SKIP_AUTOMOC property set it will be ignored by this macro.
 #
 #  macro QT4_ADD_DBUS_INTERFACE(outfiles interface basename)
 #        create a the interface header and implementation files with the 
@@ -114,7 +140,12 @@
 #                   always in this variable even if NOTFOUND,
 #                   all other INCLUDE_DIRS are
 #                   only added if they are found.
+#                   You do not need to use this if you include QT_USE_FILE.
 #   
+#
+#  Include directories for the Qt modules are listed here.
+#  You do not need to use these variables if you include QT_USE_FILE.
+#
 #  QT_INCLUDE_DIR              Path to "include" of Qt4
 #  QT_QT_INCLUDE_DIR           Path to "include/Qt" 
 #  QT_QT3SUPPORT_INCLUDE_DIR   Path to "include/Qt3Support" 
@@ -133,8 +164,8 @@
 #  QT_QTSVG_INCLUDE_DIR        Path to "include/QtSvg"
 #  QT_QTSCRIPT_INCLUDE_DIR     Path to "include/QtScript"
 #  QT_QTTEST_INCLUDE_DIR       Path to "include/QtTest"
-#  QT_QTASSISTANTCLIENT_INCLUDE_DIR Path to "include/QtAssistant"
-#  QT_QTHELP_INCLUDE_DIR        Path to "include/QtHelp"
+#  QT_QTASSISTANTCLIENT_INCLUDE_DIR       Path to "include/QtAssistant"
+#  QT_QTHELP_INCLUDE_DIR       Path to "include/QtHelp"
 #  QT_QTWEBKIT_INCLUDE_DIR     Path to "include/QtWebKit"
 #  QT_QTXMLPATTERNS_INCLUDE_DIR       Path to "include/QtXmlPatterns"
 #                            
@@ -200,6 +231,8 @@
 #  QT_RCC_EXECUTABLE          Where to find the rcc tool
 #  QT_DBUSCPP2XML_EXECUTABLE  Where to find the qdbuscpp2xml tool.
 #  QT_DBUSXML2CPP_EXECUTABLE  Where to find the qdbusxml2cpp tool.
+#  QT_LUPDATE_EXECUTABLE      Where to find the lupdate tool.
+#  QT_LRELEASE_EXECUTABLE     Where to find the lrelease tool.
 #  
 #  QT_DOC_DIR                 Path to "doc" of Qt4
 #  QT_MKSPECS_DIR             Path to "mkspecs" of Qt4
@@ -544,11 +577,12 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
-
-
   # Set QT_QTMOTIF_INCLUDE_DIR
   IF(Q_WS_X11)
-    FIND_PATH(QT_QTMOTIF_INCLUDE_DIR QtMotif PATHS ${QT_INCLUDE_DIR}/QtMotif NO_DEFAULT_PATH )
+    FIND_PATH(QT_QTMOTIF_INCLUDE_DIR QtMotif 
+      PATHS 
+      ${QT_INCLUDE_DIR}/QtMotif 
+      NO_DEFAULT_PATH )
   ENDIF(Q_WS_X11)
 
   # Set QT_QTNETWORK_INCLUDE_DIR
@@ -617,7 +651,6 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
-
   # Set QT_QTDBUS_INCLUDE_DIR
   FIND_PATH(QT_QTDBUS_INCLUDE_DIR QtDBus
     PATHS
@@ -625,13 +658,15 @@ IF (QT4_QMAKE_FOUND)
     ${QT_HEADERS_DIR}/QtDBus
     NO_DEFAULT_PATH
     )
+  
   # Set QT_QTASSISTANTCLIENT_INCLUDE_DIR
-  FIND_PATH(QT_QTASSISTANTCLIENT_INCLUDE_DIR QtAssistantClient
+  FIND_PATH(QT_QTASSISTANTCLIENT_INCLUDE_DIR QAssistantClient
     PATHS
     ${QT_INCLUDE_DIR}/QtAssistant
     ${QT_HEADERS_DIR}/QtAssistant
     NO_DEFAULT_PATH
     )
+  
   # Set QT_QTHELP_INCLUDE_DIR
   FIND_PATH(QT_QTHELP_INCLUDE_DIR QtHelp
     PATHS
@@ -639,6 +674,7 @@ IF (QT4_QMAKE_FOUND)
     ${QT_HEADERS_DIR}/QtHelp
     NO_DEFAULT_PATH
     )
+  
   # Set QT_QTWEBKIT_INCLUDE_DIR
   FIND_PATH(QT_QTWEBKIT_INCLUDE_DIR QtWebKit
     PATHS
@@ -653,6 +689,7 @@ IF (QT4_QMAKE_FOUND)
     ${QT_HEADERS_DIR}/QtXmlPatterns
     NO_DEFAULT_PATH
     )
+
   # Make variables changeble to the advanced user
   MARK_AS_ADVANCED( QT_LIBRARY_DIR QT_INCLUDE_DIR QT_QT_INCLUDE_DIR QT_DOC_DIR QT_MKSPECS_DIR QT_PLUGINS_DIR)
 
@@ -943,9 +980,9 @@ IF (QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QTUITOOLS)
   _QT4_ADJUST_LIB_VARS(QTTEST)
   _QT4_ADJUST_LIB_VARS(QTDBUS)
-  _QT4_ADJUST_LIB_VARS(QTWEBKIT)
   _QT4_ADJUST_LIB_VARS(QTASSISTANTCLIENT)
   _QT4_ADJUST_LIB_VARS(QTHELP)
+  _QT4_ADJUST_LIB_VARS(QTWEBKIT)
   _QT4_ADJUST_LIB_VARS(QTXMLPATTERNS)
 
   # platform dependent libraries
@@ -969,8 +1006,10 @@ IF (QT4_QMAKE_FOUND)
   QT_QUERY_QMAKE(QT_MOC_EXECUTABLE_INTERNAL "QMAKE_MOC")
   QT_QUERY_QMAKE(QT_UIC_EXECUTABLE_INTERNAL "QMAKE_UIC")
 
+  # make sure we have / and not \ as qmake gives on windows
   FILE(TO_CMAKE_PATH 
     "${QT_MOC_EXECUTABLE_INTERNAL}" QT_MOC_EXECUTABLE_INTERNAL)
+  # make sure we have / and not \ as qmake gives on windows
   FILE(TO_CMAKE_PATH 
     "${QT_UIC_EXECUTABLE_INTERNAL}" QT_UIC_EXECUTABLE_INTERNAL)
 
@@ -1003,6 +1042,18 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
+  FIND_PROGRAM(QT_LUPDATE_EXECUTABLE
+    NAMES lupdate
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
+    )
+
+  FIND_PROGRAM(QT_LRELEASE_EXECUTABLE
+    NAMES lrelease
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
+    )
+
   IF (QT_MOC_EXECUTABLE)
      SET(QT_WRAP_CPP "YES")
   ENDIF (QT_MOC_EXECUTABLE)
@@ -1013,13 +1064,16 @@ IF (QT4_QMAKE_FOUND)
 
 
 
-  MARK_AS_ADVANCED( QT_UIC_EXECUTABLE QT_UIC3_EXECUTABLE QT_MOC_EXECUTABLE QT_RCC_EXECUTABLE QT_DBUSXML2CPP_EXECUTABLE QT_DBUSCPP2XML_EXECUTABLE)
+  MARK_AS_ADVANCED( QT_UIC_EXECUTABLE QT_UIC3_EXECUTABLE QT_MOC_EXECUTABLE
+    QT_RCC_EXECUTABLE QT_DBUSXML2CPP_EXECUTABLE QT_DBUSCPP2XML_EXECUTABLE
+    QT_LUPDATE_EXECUTABLE QT_LRELEASE_EXECUTABLE)
 
   ######################################
   #
   #       Macros for building Qt files
   #
   ######################################
+
   MACRO (QT4_EXTRACT_OPTIONS _qt4_files _qt4_options)
     SET(${_qt4_files})
     SET(${_qt4_options})
@@ -1257,7 +1311,7 @@ IF (QT4_QMAKE_FOUND)
 
          GET_FILENAME_COMPONENT(_abs_FILE ${_current_FILE} ABSOLUTE)
          # if "SKIP_AUTOMOC" is set to true, we will not handle this file here.
-         # here. this is required to make bouic work correctly:
+         # This is required to make uic work correctly:
          # we need to add generated .cpp files to the sources (to compile them),
          # but we cannot let automoc handle them, as the .cpp files don't exist yet when
          # cmake is run for the very first time on them -> however the .cpp files might
