@@ -228,6 +228,10 @@ set(QT_MIN_VERSION "4.4.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 find_package(Qt4 REQUIRED)
 
+# automoc4 (from kdesupport) is not yet required, but will be in June
+# until then still automoc from kdelibs is used as fallback, Alex
+find_package(Automoc4)
+
 
 # Perl is required for building KDE software,
 find_package(Perl REQUIRED)
@@ -275,13 +279,27 @@ if (_kdeBootStrapping)
       set(LIBRARY_OUTPUT_PATH            ${EXECUTABLE_OUTPUT_PATH} )
       # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
       set(KDE4_KCFGC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-      set(KDE4_AUTOMOC_EXECUTABLE        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc )
+
+      # use automoc4 from kdesupport if it has been found
+      if(AUTOMOC4_EXECUTABLE)
+         set(KDE4_AUTOMOC_EXECUTABLE        "${AUTOMOC4_EXECUTABLE}" )
+      else(AUTOMOC4_EXECUTABLE)
+         set(KDE4_AUTOMOC_EXECUTABLE        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc )
+      endif(AUTOMOC4_EXECUTABLE)
+
       set(KDE4_MEINPROC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
       set(LIBRARY_OUTPUT_PATH            ${CMAKE_BINARY_DIR}/lib )
       set(KDE4_KCFGC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.shell )
-      set(KDE4_AUTOMOC_EXECUTABLE        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc.shell )
+
+      # use automoc4 from kdesupport if it has been found
+      if(AUTOMOC4_EXECUTABLE)
+         set(KDE4_AUTOMOC_EXECUTABLE        "${AUTOMOC4_EXECUTABLE}" )
+      else(AUTOMOC4_EXECUTABLE)
+         set(KDE4_AUTOMOC_EXECUTABLE        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc.shell )
+      endif(AUTOMOC4_EXECUTABLE)
+
       set(KDE4_MEINPROC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4.shell )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
    endif (WIN32)
@@ -290,9 +308,14 @@ if (_kdeBootStrapping)
 
    # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
-   set( _KDE4_AUTOMOC_EXECUTABLE_DEP kde4automoc)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
    set( _KDE4_MEINPROC_EXECUTABLE_DEP meinproc4)
+
+   if(AUTOMOC4_EXECUTABLE)
+      set( _KDE4_AUTOMOC_EXECUTABLE_DEP)
+   else(AUTOMOC4_EXECUTABLE)
+      set( _KDE4_AUTOMOC_EXECUTABLE_DEP kde4automoc)
+   endif(AUTOMOC4_EXECUTABLE)
 
    set(KDE4_INSTALLED_VERSION_OK TRUE)
 
@@ -431,8 +454,12 @@ else (_kdeBootStrapping)
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
 
-   find_program(KDE4_AUTOMOC_EXECUTABLE NAME kde4automoc PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
-   find_program(KDE4_AUTOMOC_EXECUTABLE NAME kde4automoc )
+   if (AUTOMOC4_EXECUTABLE)
+      set(KDE4_AUTOMOC_EXECUTABLE "${AUTOMOC4_EXECUTABLE}")
+   else (AUTOMOC4_EXECUTABLE)
+      find_program(KDE4_AUTOMOC_EXECUTABLE NAME kde4automoc PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
+      find_program(KDE4_AUTOMOC_EXECUTABLE NAME kde4automoc )
+   endif (AUTOMOC4_EXECUTABLE)
 
    find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 )

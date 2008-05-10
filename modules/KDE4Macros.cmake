@@ -161,78 +161,90 @@ endmacro (_KDE4_GET_CUSTOM_TARGET_PROPERTY)
 
 
 macro (KDE4_MOC_HEADERS _target_NAME)
-   set (_headers_to_moc)
-   foreach (_current_FILE ${ARGN})
-      get_filename_component(_suffix "${_current_FILE}" EXT)
-      if (".h" STREQUAL "${_suffix}" OR ".hpp" STREQUAL "${_suffix}" OR ".hxx" STREQUAL "${_suffix}" OR ".H" STREQUAL "${_suffix}")
-         list(APPEND _headers_to_moc ${_current_FILE})
-      else (".h" STREQUAL "${_suffix}" OR ".hpp" STREQUAL "${_suffix}" OR ".hxx" STREQUAL "${_suffix}" OR ".H" STREQUAL "${_suffix}")
-         message(STATUS "KDE4_MOC_HEADERS: ignoring non-header file ${_current_FILE}")
-      endif (".h" STREQUAL "${_suffix}" OR ".hpp" STREQUAL "${_suffix}" OR ".hxx" STREQUAL "${_suffix}" OR ".H" STREQUAL "${_suffix}")
-   endforeach (_current_FILE)
-   # need to create moc_<filename>.cpp file using kde4automoc.cmake
-   # and add it to the target
-   if(_headers_to_moc)
-      _kde4_set_custom_target_property(${_target_NAME} AUTOMOC_HEADERS "${_headers_to_moc}")
-   endif(_headers_to_moc)
+   # if automoc4 from kdesupport has been found, use the macro provided there,
+   # otherwise fall back to the kdelibs one
+   if (AUTOMOC4_EXECUTABLE)
+      AUTOMOC4_MOC_HEADERS(${_target_NAME} ${ARGN})
+   else (AUTOMOC4_EXECUTABLE)
+      set (_headers_to_moc)
+      foreach (_current_FILE ${ARGN})
+         get_filename_component(_suffix "${_current_FILE}" EXT)
+         if (".h" STREQUAL "${_suffix}" OR ".hpp" STREQUAL "${_suffix}" OR ".hxx" STREQUAL "${_suffix}" OR ".H" STREQUAL "${_suffix}")
+            list(APPEND _headers_to_moc ${_current_FILE})
+         else (".h" STREQUAL "${_suffix}" OR ".hpp" STREQUAL "${_suffix}" OR ".hxx" STREQUAL "${_suffix}" OR ".H" STREQUAL "${_suffix}")
+            message(STATUS "KDE4_MOC_HEADERS: ignoring non-header file ${_current_FILE}")
+         endif (".h" STREQUAL "${_suffix}" OR ".hpp" STREQUAL "${_suffix}" OR ".hxx" STREQUAL "${_suffix}" OR ".H" STREQUAL "${_suffix}")
+      endforeach (_current_FILE)
+      # need to create moc_<filename>.cpp file using kde4automoc.cmake
+      # and add it to the target
+      if(_headers_to_moc)
+         _kde4_set_custom_target_property(${_target_NAME} AUTOMOC_HEADERS "${_headers_to_moc}")
+      endif(_headers_to_moc)
+   endif (AUTOMOC4_EXECUTABLE)
 endmacro (KDE4_MOC_HEADERS)
 
 macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
-   set(_moc_files)
-   set(_moc_headers)
-
-   # first list all explicitly set headers
-   _kde4_get_custom_target_property(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
-   if(NOT _headers_to_moc STREQUAL "NOTFOUND")
-      foreach(_header_to_moc ${_headers_to_moc})
-         get_filename_component(_abs_header ${_header_to_moc} ABSOLUTE)
-         list(APPEND _moc_files ${_abs_header})
-         list(APPEND _moc_headers ${_abs_header})
-      endforeach(_header_to_moc)
-   endif(NOT _headers_to_moc STREQUAL "NOTFOUND")
-
-   # now add all the sources for the automoc
-   foreach (_current_FILE ${${_SRCS}})
-      get_filename_component(_abs_current_FILE "${_current_FILE}" ABSOLUTE)
-      get_source_file_property(_skip "${_abs_current_FILE}" SKIP_AUTOMOC)
-      get_source_file_property(_generated "${_abs_current_FILE}" GENERATED)
-
-      if(NOT _generated AND NOT _skip)
-         get_filename_component(_suffix "${_current_FILE}" EXT)
-         # skip every source file that's not C++
-         if(_suffix STREQUAL ".cpp" OR _suffix STREQUAL ".cc" OR _suffix STREQUAL ".cxx" OR _suffix STREQUAL ".C")
-            get_filename_component(_basename "${_current_FILE}" NAME_WE)
-            get_filename_component(_abs_path "${_abs_current_FILE}" PATH)
-            set(_header "${_abs_path}/${_basename}.h")
-            if(EXISTS "${_header}")
-               list(APPEND _moc_headers ${_header})
-            endif(EXISTS "${_header}")
-            set(_pheader "${_abs_path}/${_basename}_p.h")
-            if(EXISTS "${_pheader}")
-               list(APPEND _moc_headers ${_pheader})
-            endif(EXISTS "${_pheader}")
-            list(APPEND _moc_files ${_abs_current_FILE})
-         endif(_suffix STREQUAL ".cpp" OR _suffix STREQUAL ".cc" OR _suffix STREQUAL ".cxx" OR _suffix STREQUAL ".C")
-      endif(NOT _generated AND NOT _skip)
-   endforeach (_current_FILE)
-
-   if(_moc_files)
-      set(_automoc_source "${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_automoc.cpp")
-      get_directory_property(_moc_incs INCLUDE_DIRECTORIES)
-      configure_file(${KDE4_MODULE_DIR}/kde4automoc.files.in ${_automoc_source}.files)
-      add_custom_command(OUTPUT ${_automoc_source}
-         COMMAND ${KDE4_AUTOMOC_EXECUTABLE}
-         ${_automoc_source}
-         ${CMAKE_CURRENT_SOURCE_DIR}
-         ${CMAKE_CURRENT_BINARY_DIR}
-         ${QT_MOC_EXECUTABLE}
-         DEPENDS ${${_SRCS}} ${_moc_headers} ${_automoc_source}.files ${_KDE4_AUTOMOC_EXECUTABLE_DEP}
-         )
-      # the OBJECT_DEPENDS is only necessary when a new moc file has to be generated that is included in a source file
-      # problem: the whole target is recompiled when the automoc.cpp file is touched
-      # set_source_files_properties(${${_SRCS}} PROPERTIES OBJECT_DEPENDS ${_automoc_source})
-      set(${_SRCS} ${_automoc_source} ${${_SRCS}})
-   endif(_moc_files)
+   # if automoc4 from kdesupport has been found, use the macro provided there,
+   # otherwise fall back to the kdelibs one
+   if (AUTOMOC4_EXECUTABLE)
+      AUTOMOC4(${_target_NAME} ${_SRCS})
+   else (AUTOMOC4_EXECUTABLE)
+      set(_moc_files)
+      set(_moc_headers)
+   
+      # first list all explicitly set headers
+      _kde4_get_custom_target_property(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
+      if(NOT _headers_to_moc STREQUAL "NOTFOUND")
+         foreach(_header_to_moc ${_headers_to_moc})
+            get_filename_component(_abs_header ${_header_to_moc} ABSOLUTE)
+            list(APPEND _moc_files ${_abs_header})
+            list(APPEND _moc_headers ${_abs_header})
+         endforeach(_header_to_moc)
+      endif(NOT _headers_to_moc STREQUAL "NOTFOUND")
+   
+      # now add all the sources for the automoc
+      foreach (_current_FILE ${${_SRCS}})
+         get_filename_component(_abs_current_FILE "${_current_FILE}" ABSOLUTE)
+         get_source_file_property(_skip "${_abs_current_FILE}" SKIP_AUTOMOC)
+         get_source_file_property(_generated "${_abs_current_FILE}" GENERATED)
+   
+         if(NOT _generated AND NOT _skip)
+            get_filename_component(_suffix "${_current_FILE}" EXT)
+            # skip every source file that's not C++
+            if(_suffix STREQUAL ".cpp" OR _suffix STREQUAL ".cc" OR _suffix STREQUAL ".cxx" OR _suffix STREQUAL ".C")
+               get_filename_component(_basename "${_current_FILE}" NAME_WE)
+               get_filename_component(_abs_path "${_abs_current_FILE}" PATH)
+               set(_header "${_abs_path}/${_basename}.h")
+               if(EXISTS "${_header}")
+                  list(APPEND _moc_headers ${_header})
+               endif(EXISTS "${_header}")
+               set(_pheader "${_abs_path}/${_basename}_p.h")
+               if(EXISTS "${_pheader}")
+                  list(APPEND _moc_headers ${_pheader})
+               endif(EXISTS "${_pheader}")
+               list(APPEND _moc_files ${_abs_current_FILE})
+            endif(_suffix STREQUAL ".cpp" OR _suffix STREQUAL ".cc" OR _suffix STREQUAL ".cxx" OR _suffix STREQUAL ".C")
+         endif(NOT _generated AND NOT _skip)
+      endforeach (_current_FILE)
+   
+      if(_moc_files)
+         set(_automoc_source "${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_automoc.cpp")
+         get_directory_property(_moc_incs INCLUDE_DIRECTORIES)
+         configure_file(${KDE4_MODULE_DIR}/kde4automoc.files.in ${_automoc_source}.files)
+         add_custom_command(OUTPUT ${_automoc_source}
+            COMMAND ${KDE4_AUTOMOC_EXECUTABLE}
+            ${_automoc_source}
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${CMAKE_CURRENT_BINARY_DIR}
+            ${QT_MOC_EXECUTABLE}
+            DEPENDS ${${_SRCS}} ${_moc_headers} ${_automoc_source}.files ${_KDE4_AUTOMOC_EXECUTABLE_DEP}
+            )
+         # the OBJECT_DEPENDS is only necessary when a new moc file has to be generated that is included in a source file
+         # problem: the whole target is recompiled when the automoc.cpp file is touched
+         # set_source_files_properties(${${_SRCS}} PROPERTIES OBJECT_DEPENDS ${_automoc_source})
+         set(${_SRCS} ${_automoc_source} ${${_SRCS}})
+      endif(_moc_files)
+   endif (AUTOMOC4_EXECUTABLE)
 endmacro(KDE4_HANDLE_AUTOMOC)
 
 macro(KDE4_INSTALL_TS_FILES _lang _sdir)
