@@ -4,8 +4,8 @@
 # KDE4_ADD_UI_FILES
 # KDE4_ADD_UI3_FILES
 # KDE4_ADD_KCFG_FILES
-# KDE4_SET_CUSTOM_TARGET_PROPERTY
-# KDE4_GET_CUSTOM_TARGET_PROPERTY
+# _KDE4_SET_CUSTOM_TARGET_PROPERTY
+# _KDE4_GET_CUSTOM_TARGET_PROPERTY
 # KDE4_MOC_HEADERS
 # KDE4_HANDLE_AUTOMOC
 # KDE4_CREATE_FINAL_FILES
@@ -148,16 +148,16 @@ macro (KDE4_ADD_UI3_FILES _sources )
    endforeach (_current_FILE)
 endmacro (KDE4_ADD_UI3_FILES)
 
-macro (KDE4_SET_CUSTOM_TARGET_PROPERTY _target_name _property_name _property)
+macro (_KDE4_SET_CUSTOM_TARGET_PROPERTY _target_name _property_name _property)
    string(REGEX REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
    set(_kde4_${_dir}_${_target_name}_${_property_name} "${_property}")
-endmacro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
+endmacro (_KDE4_SET_CUSTOM_TARGET_PROPERTY)
 
 
-macro (KDE4_GET_CUSTOM_TARGET_PROPERTY _var _target_name _property_name)
+macro (_KDE4_GET_CUSTOM_TARGET_PROPERTY _var _target_name _property_name)
    string(REGEX REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
    set(${_var} "${_kde4_${_dir}_${_target_name}_${_property_name}}")
-endmacro (KDE4_GET_CUSTOM_TARGET_PROPERTY)
+endmacro (_KDE4_GET_CUSTOM_TARGET_PROPERTY)
 
 
 macro (KDE4_MOC_HEADERS _target_NAME)
@@ -173,7 +173,7 @@ macro (KDE4_MOC_HEADERS _target_NAME)
    # need to create moc_<filename>.cpp file using kde4automoc.cmake
    # and add it to the target
    if(_headers_to_moc)
-      kde4_set_custom_target_property(${_target_NAME} AUTOMOC_HEADERS "${_headers_to_moc}")
+      _kde4_set_custom_target_property(${_target_NAME} AUTOMOC_HEADERS "${_headers_to_moc}")
    endif(_headers_to_moc)
 endmacro (KDE4_MOC_HEADERS)
 
@@ -182,7 +182,7 @@ macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
    set(_moc_headers)
 
    # first list all explicitly set headers
-   kde4_get_custom_target_property(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
+   _kde4_get_custom_target_property(_headers_to_moc ${_target_NAME} AUTOMOC_HEADERS)
    if(NOT _headers_to_moc STREQUAL "NOTFOUND")
       foreach(_header_to_moc ${_headers_to_moc})
          get_filename_component(_abs_header ${_header_to_moc} ABSOLUTE)
@@ -245,10 +245,6 @@ macro(KDE4_INSTALL_TS_FILES _lang _sdir)
       endif(NOT _in_svn)
    endforeach(_current_TS_FILES)
 endmacro(KDE4_INSTALL_TS_FILES)
-
-macro (KDE4_INSTALL_HANDBOOK _lang)
-   message(STATUS "KDE4_INSTALL_HANDBOOK() is deprecated. Remove it please. Now all is done in KDE4_CREATE_HANDBOOK.")
-endmacro (KDE4_INSTALL_HANDBOOK )
 
 
 macro (KDE4_CREATE_HANDBOOK _docbook)
@@ -1137,3 +1133,15 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
 endmacro (KDE4_ADD_APP_ICON)
 
 
+macro (KDE4_INSTALL_HANDBOOK _lang)
+   message(STATUS "KDE4_INSTALL_HANDBOOK() is deprecated. Remove it please. Now all is done in KDE4_CREATE_HANDBOOK.")
+endmacro (KDE4_INSTALL_HANDBOOK )
+
+macro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
+   message(FATAL_ERROR "KDE4_SET_CUSTOM_TARGET_PROPERTY() is deprecated, just use a simple variable instead")
+endmacro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
+
+
+macro (KDE4_GET_CUSTOM_TARGET_PROPERTY)
+   message(FATAL_ERROR "KDE4_GET_CUSTOM_TARGET_PROPERTY() is deprecated, just use a simple variable instead")
+endmacro (KDE4_GET_CUSTOM_TARGET_PROPERTY)
