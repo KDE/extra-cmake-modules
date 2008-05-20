@@ -5,7 +5,8 @@
 #  X11_LIBRARIES    - link against these to use X11
 #
 # and also the following more fine grained variables:
-# Include paths: X11_ICE_INCLUDE_PATH,          X11_ICE_LIB,        X11_ICE_FOUND
+#                X11_ICE_INCLUDE_PATH,          X11_ICE_LIB,        X11_ICE_FOUND
+#                X11_SM_INCLUDE_PATH,           X11_SM_LIB,         X11_SM_FOUND
 #                X11_Xaccessrules_INCLUDE_PATH,                     X11_Xaccess_FOUND
 #                X11_Xaccessstr_INCLUDE_PATH,                       X11_Xaccess_FOUND
 #                X11_Xau_INCLUDE_PATH,          X11_Xau_LIB,        X11_Xau_FOUND
@@ -72,6 +73,7 @@ IF (UNIX)
   
   # Solaris lacks XKBrules.h, so we should skip kxkbd there.
   FIND_PATH(X11_ICE_INCLUDE_PATH X11/ICE/ICE.h                       ${X11_INC_SEARCH_PATH})
+  FIND_PATH(X11_SM_INCLUDE_PATH X11/SM/SM.h                          ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xaccessrules_INCLUDE_PATH X11/extensions/XKBrules.h  ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xaccessstr_INCLUDE_PATH X11/extensions/XKBstr.h      ${X11_INC_SEARCH_PATH})
   FIND_PATH(X11_Xau_INCLUDE_PATH X11/Xauth.h                         ${X11_INC_SEARCH_PATH})
@@ -106,6 +108,7 @@ IF (UNIX)
 
   # Find additional X libraries. Keep list sorted by library name.
   FIND_LIBRARY(X11_ICE_LIB ICE               ${X11_LIB_SEARCH_PATH})
+  FIND_LIBRARY(X11_SM_LIB SM                 ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xau_LIB Xau               ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xcomposite_LIB Xcomposite ${X11_LIB_SEARCH_PATH})
   FIND_LIBRARY(X11_Xcursor_LIB Xcursor       ${X11_LIB_SEARCH_PATH})
@@ -288,6 +291,10 @@ IF (UNIX)
      SET(X11_ICE_FOUND TRUE)
   ENDIF(X11_ICE_LIB AND X11_ICE_INCLUDE_PATH)
 
+  IF(X11_SM_LIB AND X11_SM_INCLUDE_PATH)
+     SET(X11_SM_FOUND TRUE)
+  ENDIF(X11_SM_LIB AND X11_SM_INCLUDE_PATH)
+
   # Deprecated variable for backwards compatibility with CMake 1.4
   IF (X11_X11_INCLUDE_PATH AND X11_LIBRARIES)
     SET(X11_FOUND 1)
@@ -361,11 +368,15 @@ IF (UNIX)
       ENDIF(NOT CMAKE_HAVE_SHMAT)
     ENDIF($ENV{ISC} MATCHES "^yes$")
 
+    IF (X11_SM_FOUND)
+      SET (X11_X_PRE_LIBS ${X11_X_PRE_LIBS} ${X11_SM_LIB})
+    ENDIF (X11_SM_FOUND)
+
     IF (X11_ICE_FOUND)
       CHECK_LIBRARY_EXISTS("ICE" "IceConnectionNumber" "${X11_LIBRARY_DIR}"
                             CMAKE_LIB_ICE_HAS_ICECONNECTIONNUMBER)
       IF(CMAKE_LIB_ICE_HAS_ICECONNECTIONNUMBER)
-        SET (X11_X_PRE_LIBS -lSM ${X11_ICE_LIB})
+        SET (X11_X_PRE_LIBS ${X11_X_PRE_LIBS} ${X11_ICE_LIB})
       ENDIF(CMAKE_LIB_ICE_HAS_ICECONNECTIONNUMBER)
     ENDIF (X11_ICE_FOUND)
 
@@ -433,6 +444,8 @@ IF (UNIX)
     X11_XShm_INCLUDE_PATH
     X11_ICE_LIB
     X11_ICE_INCLUDE_PATH
+    X11_SM_LIB
+    X11_SM_INCLUDE_PATH
     X11_XSync_INCLUDE_PATH
   )
   SET(CMAKE_FIND_FRAMEWORK ${CMAKE_FIND_FRAMEWORK_SAVE})
