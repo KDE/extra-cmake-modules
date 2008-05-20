@@ -295,6 +295,14 @@ IF (UNIX)
      SET(X11_SM_FOUND TRUE)
   ENDIF(X11_SM_LIB AND X11_SM_INCLUDE_PATH)
 
+  IF(NOT X11_ICE_FOUND)
+    MESSAGE(FATAL_ERROR "\nThe X11 Inter-Client Exchange (ICE) Library could not be found.\nCannot continue. Please install libICE.\n")
+  ENDIF(NOT X11_ICE_FOUND)
+
+  IF(NOT X11_SM_FOUND)
+    MESSAGE(FATAL_ERROR "\nThe X11 Session Management (SM) Library could not be found.\nCannot contineu. Please install libSM.\n")
+  ENDIF(NOT X11_SM_FOUND)
+
   # Deprecated variable for backwards compatibility with CMake 1.4
   IF (X11_X11_INCLUDE_PATH AND X11_LIBRARIES)
     SET(X11_FOUND 1)
