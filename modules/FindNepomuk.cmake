@@ -24,7 +24,7 @@ if (Soprano_FOUND)
   else (NEPOMUK_INCLUDE_DIR AND NEPOMUK_LIBRARIES)
     find_path(NEPOMUK_INCLUDE_DIR
       NAMES
-      nepomuk/resource.h
+      nepomuk/global.h
       PATHS
       ${KDE4_INCLUDE_DIR}
       ${INCLUDE_INSTALL_DIR}
