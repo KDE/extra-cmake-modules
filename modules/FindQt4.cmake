@@ -680,6 +680,7 @@ IF (QT4_QMAKE_FOUND)
     PATHS
     ${QT_INCLUDE_DIR}/QtDBus
     ${QT_HEADERS_DIR}/QtDBus
+    ${QT_LIBRARY_DIR}/QtDBus.framework/Headers
     NO_DEFAULT_PATH
     )
   
