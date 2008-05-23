@@ -655,12 +655,12 @@ set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
 
 
 
-# on the Mac support an extra install directory for application bundles
+# on the Mac support an extra install directory for application bundles starting with cmake 2.6
 if(APPLE)
-   if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.6")
+   if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER "2.5")
       set(INSTALL_TARGETS_DEFAULT_ARGS  ${INSTALL_TARGETS_DEFAULT_ARGS}
                                   BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
-   endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.6")
+   endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER "2.5")
 endif(APPLE)
 
 
