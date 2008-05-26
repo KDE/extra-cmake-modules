@@ -36,7 +36,6 @@
 #  KDE4_KNEWSTUFF2_LIBRARY  - the knewstuff2 library
 #  KDE4_KDNSSD_LIBRARY      - the kdnssd library
 #  KDE4_PHONON_LIBRARY      - the phonon library
-#  KDE4_KAUDIODEVICELIST_LIBRARY - the kaudiodevicelist library
 #  KDE4_THREADWEAVER_LIBRARY- the threadweaver library
 #  KDE4_SOLID_LIBRARY       - the solid library
 #  KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
@@ -232,7 +231,6 @@ find_package(Qt4 REQUIRED)
 # until then still automoc from kdelibs is used as fallback, Alex
 find_package(Automoc4)
 
-
 # Perl is required for building KDE software,
 find_package(Perl REQUIRED)
 
@@ -268,8 +266,6 @@ if (_kdeBootStrapping)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
    set(KDE4_KDE3SUPPORT_LIBS ${KDE4_KIO_LIBS} kde3support)
    set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solid)
-   set(KDE4_PHONON_LIBS ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} phonon)
-   set(KDE4_KAUDIODEVICELIST_LIBS ${KDE4_SOLID_LIBS} kaudiodevicelist)
    set(KDE4_KFILE_LIBS ${KDE4_KDE3SUPPORT_LIBS} kfile)
    set(KDE4_KHTML_LIBS ${KDE4_KPARTS_LIBS} khtml)
 
@@ -410,12 +406,6 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KDNSSD_LIBRARY NAMES kdnssd PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDNSSD_LIBS ${kdnssd_LIB_DEPENDS} ${KDE4_KDNSSD_LIBRARY} )
-
-   find_library(KDE4_PHONON_LIBRARY NAMES phonon PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_PHONON_LIBS ${phonon_LIB_DEPENDS} ${KDE4_PHONON_LIBRARY} )
-
-   find_library(KDE4_KAUDIODEVICELIST_LIBRARY NAMES kaudiodevicelist PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   set(KDE4_KAUDIODEVICELIST_LIBS ${kaudiodevicelist_LIB_DEPENDS} ${KDE4_KAUDIODEVICELIST_LIBRARY} )
 
    find_library(KDE4_SOLID_LIBRARY NAMES solid PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_SOLID_LIBS ${solid_LIB_DEPENDS} ${KDE4_SOLID_LIBRARY} )
@@ -1125,6 +1115,10 @@ if (NOT _kde4_uninstall_rule_created)
    add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake")
 
 endif (NOT _kde4_uninstall_rule_created)
+
+find_package(Phonon)
+set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
+set(KDE4_PHONON_LIBS ${PHONON_LIBS})
 
 endif(KDE4_FOUND)
 
