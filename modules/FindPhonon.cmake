@@ -24,5 +24,5 @@ else(PHONON_FOUND)
    mark_as_advanced(PHONON_INCLUDE_DIR PHONON_LIBRARY)
 
    set(PHONON_INCLUDES ${PHONON_INCLUDE_DIR}/KDE ${PHONON_INCLUDE_DIR})
-   message(STATUS "Found Phonon: ${PHONON_LIBRARY})
+   message(STATUS "Found Phonon: ${PHONON_LIBRARY}")
 endif(PHONON_FOUND)
