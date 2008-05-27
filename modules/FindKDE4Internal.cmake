@@ -77,7 +77,7 @@
 # Under Windows they are always relative.
 #
 #  BIN_INSTALL_DIR          - the directory where executables will be installed (default is prefix/bin)
-#  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE )
+#  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE4 )
 #  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
 #  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
 #  CONFIG_INSTALL_DIR       - the config file install dir
@@ -578,7 +578,7 @@ else (WIN32)
    endmacro(_SET_FANCY)
 
    if(APPLE)
-      set(BUNDLE_INSTALL_DIR "/Applications/KDE" CACHE PATH "Directory where application bundles will be installed to on OSX" )
+      set(BUNDLE_INSTALL_DIR "/Applications/KDE4" CACHE PATH "Directory where application bundles will be installed to on OSX" )
    endif(APPLE)
 
    _set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}"                 "Base directory for executables and libraries")
