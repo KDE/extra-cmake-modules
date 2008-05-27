@@ -1116,7 +1116,7 @@ if (NOT _kde4_uninstall_rule_created)
 
 endif (NOT _kde4_uninstall_rule_created)
 
-find_package(Phonon)
+find_package(Phonon REQUIRED)
 set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
 set(KDE4_PHONON_LIBS ${PHONON_LIBS})
 set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
