@@ -1096,6 +1096,10 @@ if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
    message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
 endif (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
 
+find_package(Phonon REQUIRED)
+set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
+set(KDE4_PHONON_LIBS ${PHONON_LIBS})
+set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
 
 if (NOT KDE4Internal_FIND_QUIETLY)
    kde4_print_results()
@@ -1103,7 +1107,13 @@ endif (NOT KDE4Internal_FIND_QUIETLY)
 
 #add the found Qt and KDE include directories to the current include path
 #the ${KDE4_INCLUDE_DIR}/KDE directory is for forwarding includes, eg. #include <KMainWindow>
-set(KDE4_INCLUDES ${KDE4_INCLUDE_DIR} ${KDE4_INCLUDE_DIR}/KDE  ${QT_INCLUDES} ${_KDE4_PLATFORM_INCLUDE_DIRS} )
+set(KDE4_INCLUDES
+   ${KDE4_INCLUDE_DIR}
+   ${KDE4_INCLUDE_DIR}/KDE
+   ${KDE4_PHONON_INCLUDES}
+   ${QT_INCLUDES}
+   ${_KDE4_PLATFORM_INCLUDE_DIRS} 
+)
 
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DKDE_DEPRECATED_WARNINGS )
 
@@ -1115,11 +1125,6 @@ if (NOT _kde4_uninstall_rule_created)
    add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake")
 
 endif (NOT _kde4_uninstall_rule_created)
-
-find_package(Phonon REQUIRED)
-set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
-set(KDE4_PHONON_LIBS ${PHONON_LIBS})
-set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
 
 endif(KDE4_FOUND)
 
