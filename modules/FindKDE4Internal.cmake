@@ -217,6 +217,27 @@
 # this is required now by cmake 2.6 and so must not be skipped by if(KDE4_FOUND) below
 cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
 
+# cmake 2.5, i.e. the cvs version between 2.4 and 2.6, is not supported
+if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
+   message(FATAL_ERROR "You are using CMake 2.5, which was the unreleased development version between 2.4 and 2.6. This is no longer supported. Please update to CMake 2.6 or current cvs HEAD.")
+endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
+
+# CMake 2.6, set compatibility behaviour to cmake 2.4
+# this must be executed always, because the CMAKE_MINIMUM_REQUIRED() command above
+# resets the policy settings, so we get a lot of warnings
+if(COMMAND CMAKE_POLICY)
+   # CMP0000: don't require cmake_minimum_version() directly in the top level CMakeLists.txt, FindKDE4Internal.cmake is good enough
+   cmake_policy(SET CMP0000 OLD)
+   # CMP0002: in KDE4 we have multiple targets with the same name for the unit tests
+   cmake_policy(SET CMP0002 OLD)
+   # CMP0003: add the link paths to the link command as with cmake 2.4
+   cmake_policy(SET CMP0003 OLD)
+   # CMP0005: keep escaping behaviour for definitions added via add_definitions()
+   cmake_policy(SET CMP0005 OLD)
+endif(COMMAND CMAKE_POLICY)
+
+
+
 if(KDE4_FOUND)
   # Already found in this cmake run, nothing more to do
 else(KDE4_FOUND)
@@ -687,26 +708,6 @@ if(WIN32)
                                 "${_CMAKE_INSTALL_DIR}/bin" 
                                 "${CMAKE_INSTALL_PREFIX}/bin" )
 endif(WIN32)
-
-
-# cmake 2.5, i.e. the cvs version between 2.4 and 2.6, is not supported
-if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
-   message(FATAL_ERROR "You are using CMake 2.5, which was the unreleased development version between 2.4 and 2.6. This is no longer supported. Please update to CMake 2.6 or current cvs HEAD.")
-endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
-
-# CMake 2.6, set compatibility behaviour to cmake 2.4
-if(COMMAND CMAKE_POLICY)
-   # CMP0000: don't require cmake_minimum_version() directly in the top level CMakeLists.txt, FindKDE4Internal.cmake is good enough
-   cmake_policy(SET CMP0000 OLD)
-   # CMP0002: in KDE4 we have multiple targets with the same name for the unit tests
-   cmake_policy(SET CMP0002 OLD)
-   # CMP0003: add the link paths to the link command as with cmake 2.4
-   cmake_policy(SET CMP0003 OLD)
-   # CMP0005: keep escaping behaviour for definitions added via add_definitions()
-   cmake_policy(SET CMP0005 OLD)
-
-endif(COMMAND CMAKE_POLICY)
-
 
 
 #####################  and now the platform specific stuff  ############################
