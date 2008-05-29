@@ -149,7 +149,7 @@
 #    application bundles are created, with the NOGUI option no bundles but simple executables
 #    are created. Currently it doesn't have any effect on other platforms.
 #
-#  KDE4_ADD_EXECUTABLE (name [NOGUI] [RUN_UNINSTALLED] file1 ... fileN)
+#  KDE4_ADD_EXECUTABLE (name [NOGUI] [TEST] [RUN_UNINSTALLED] file1 ... fileN)
 #    Equivalent to ADD_EXECUTABLE(), but additionally adds some more features:
 #    -support for KDE4_ENABLE_FINAL
 #    -support for automoc
@@ -172,16 +172,8 @@
 #    are created but not built by default. You can build them by manually building the target.
 #    The name of the target can be specified using TESTNAME <targetname>, if it is not given
 #    the macro will default to the <testname>
-#
-#  KDE4_ADD_TEST_EXECUTABLE (name file1 ... fileN)
-#    add an test executable
-#    it will be built with RPATH poiting to the build dir
-#    The targets are always created, but only built for the "all"
-#    target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
-#    are created but not built by default. You can build them by manually building the target.
 #    KDESRCDIR is set to the source directory of the test, this can be used with
-#    KGlobal::dirs()->addResourceDir( "data", KDESRCDIR ); to be able to use xmlgui
-#    and other things in the test, that normally require installation
+#    KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
 #
 #  KDE4_UPDATE_ICONCACHE()
 #    Notifies the icon cache that new icons have been installed by updating
