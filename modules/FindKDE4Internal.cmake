@@ -492,7 +492,6 @@ else (_kdeBootStrapping)
 
 endif (_kdeBootStrapping)
 
-endif(NOT KDE4_FOUND)
 
 #####################  provide some options   ##########################################
 
@@ -518,8 +517,6 @@ option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 
-
-if(NOT KDE4_FOUND)
 
 ########## the following are directories where stuff will be installed to  ###########
 #
