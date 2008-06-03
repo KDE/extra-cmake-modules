@@ -929,6 +929,16 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    set(_symbol "MAKE_${_symbol}_LIB")
    set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
 
+   # if that option is enabled, by default don't add any linked libraries to the "exported"
+   # link interfaces, so that executables linking against this library won't get additional
+   # indirect dependencies. This makes work easier for packagers and should make application
+   # startup somewhat faster, if I understood Dirk correctly.
+   if(NOT "${_add_lib_param}" STREQUAL "STATIC")
+      if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
+         set_target_properties(${_target_NAME} PROPERTIES LINK_INTERFACE_LIBRARIES "" )
+      endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
+   endif(NOT "${_add_lib_param}" STREQUAL "STATIC")
+
 endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 
@@ -1128,7 +1138,8 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
                 list(APPEND ${appsources} ${_outfilename}.icns)
 
                 #            this doesn't seem to work for me - Use manual "install" instead
-                #            SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${target}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+		# TODO: test again with cmake 2.6 ?
+	        #           SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${target}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
                 install(FILES ${_outfilename}.icns DESTINATION ${BIN_INSTALL_DIR}/${target}.app/Contents/Resources/)
 
@@ -1142,6 +1153,38 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
         endif(SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
     endif(APPLE)    
 endmacro (KDE4_ADD_APP_ICON)
+
+
+macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
+   if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
+
+      # get all cmake variables which end in _LIB_DEPENDS
+      # then parse the target name out of them
+      # use the target name to get the LINK_INTERFACE_LIBRARIES target property 
+      # This way for targets where INTERFACE_LINK_LIBRARIES has been set, the value set from 
+      # export_library_dependencies() will be overridden, while for those where it hasn't been set
+      # the full list is preserved.
+      # (this is cmake 2.6 compatible, where we'll use the EXPORT() feature
+      # Alex
+
+      file(${_append_or_write} "${_filename}" "# The following variables have been created by kde4_export_library_dependencies()
+# The contents have been determined from the LINK_INTERFACE_LIBRARIES target property of the respective libraries.
+# The option KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT has been enabled to create the file this way.
+# You can modify KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT using \"make edit_cache\"\n\n")
+      get_cmake_property(allVars VARIABLES)
+      set(allLibs "")
+      foreach(currentVar ${allVars})
+	 string(REGEX REPLACE "^(.+)_LIB_DEPENDS$" "\\1" target "${currentVar}")
+	 if(NOT "${target}" STREQUAL "${currentVar}")
+	    get_target_property(interfaceLibs ${target} LINK_INTERFACE_LIBRARIES)
+	    if(NOT "${interfaceLibs}" MATCHES "NOTFOUND")
+	       file(APPEND "${_filename}" "SET(\"${currentVar}\" \"${interfaceLibs}\")\n")
+	    endif(NOT "${interfaceLibs}" MATCHES "NOTFOUND")
+	 endif(NOT "${target}" STREQUAL "${currentVar}")
+      endforeach(currentVar ${allVars})
+
+   endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
+endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
 
 
 macro (KDE4_INSTALL_HANDBOOK _lang)
