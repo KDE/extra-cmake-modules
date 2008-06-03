@@ -229,10 +229,8 @@ if(COMMAND CMAKE_POLICY)
 endif(COMMAND CMAKE_POLICY)
 
 
-
-if(KDE4_FOUND)
-  # Already found in this cmake run, nothing more to do
-else(KDE4_FOUND)
+# Only do something if it hasn't been found yet
+if(NOT KDE4_FOUND)
 
 include (MacroEnsureVersion)
 
@@ -494,12 +492,19 @@ else (_kdeBootStrapping)
 
 endif (_kdeBootStrapping)
 
+endif(NOT KDE4_FOUND)
 
 #####################  provide some options   ##########################################
 
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the html versions of the docbook docs")
+
+# this one enables the smaller link interface for libs on UNIX (exceot OSX)
+if(UNIX )# AND NOT  APPLE)
+   option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the experimental reduced library exports" FALSE)
+endif(UNIX)#  AND NOT  APPLE)
+
 
 if( KDE4_ENABLE_FINAL)
    add_definitions(-DKDE_USE_FINAL)
@@ -512,6 +517,9 @@ endif(KDE4_ENABLE_FINAL)
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
+
+
+if(NOT KDE4_FOUND)
 
 ########## the following are directories where stuff will be installed to  ###########
 #
@@ -1119,5 +1127,5 @@ if (NOT _kde4_uninstall_rule_created)
 
 endif (NOT _kde4_uninstall_rule_created)
 
-endif(KDE4_FOUND)
+endif(NOT KDE4_FOUND)
 
