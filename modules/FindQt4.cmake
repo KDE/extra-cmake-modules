@@ -107,7 +107,7 @@
 #        If the optional argument interfacename is omitted, the name of the 
 #        interface file is constructed from the basename of the header with
 #        the suffix .xml appended.
-#        Options may be given to uic, such as those found when executing "qdbuscpp2xml --help"
+#        Options may be given to qdbuscpp2xml, such as those found when executing "qdbuscpp2xml --help"
 #
 #  QT_FOUND         If false, don't try to use Qt.
 #  QT4_FOUND        If false, don't try to use Qt 4.
