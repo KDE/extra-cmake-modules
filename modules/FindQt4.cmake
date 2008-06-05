@@ -1134,6 +1134,12 @@ IF (QT4_QMAKE_FOUND)
         SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-I" ${_current})
      ENDFOREACH(_current ${_inc_DIRS})
 
+     # if Qt is installed only as framework, add -F /library/Frameworks to the moc arguments
+     # otherwise moc can't find the headers in the framework include dirs
+     IF(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
+        SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-F /Library/Frameworks")
+     ENDIF(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
+
   ENDMACRO(QT4_GET_MOC_INC_DIRS)
 
 
@@ -1152,11 +1158,11 @@ IF (QT4_QMAKE_FOUND)
           COMMAND ${QT_MOC_EXECUTABLE}
           ARGS @"${_moc_parameter_file}"
           DEPENDS ${abs_infile})
-     ELSE (MSVC_IDE)     
+     ELSE (MSVC_IDE)
         ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
            COMMAND ${QT_MOC_EXECUTABLE}
            ARGS ${moc_includes} -o ${outfile} ${abs_infile}
-           DEPENDS ${abs_infile})     
+           DEPENDS ${abs_infile})
      ENDIF (MSVC_IDE)
 
      SET_SOURCE_FILES_PROPERTIES(${outfile} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
