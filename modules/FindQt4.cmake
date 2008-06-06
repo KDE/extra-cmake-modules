@@ -1137,7 +1137,7 @@ IF (QT4_QMAKE_FOUND)
      # if Qt is installed only as framework, add -F /library/Frameworks to the moc arguments
      # otherwise moc can't find the headers in the framework include dirs
      IF(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
-        SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-F /Library/Frameworks")
+        SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-F/Library/Frameworks")
      ENDIF(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
 
   ENDMACRO(QT4_GET_MOC_INC_DIRS)
