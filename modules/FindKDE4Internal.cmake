@@ -879,21 +879,20 @@ if (CMAKE_SYSTEM_NAME MATCHES BSD)
 endif (CMAKE_SYSTEM_NAME MATCHES BSD)
 
 # compiler specific stuff, maybe this should be done differently, Alex
-MACRO(KDE_CHECK_FLAG_EXISTS FLAG VAR DOC)
-  IF(NOT ${VAR} MATCHES "${FLAG}")
-    SET(${VAR} "${${VAR}} ${FLAG}" 
-      CACHE STRING "Flags used by the linker during ${DOC} builds." FORCE)
-  ENDIF(NOT ${VAR} MATCHES "${FLAG}")
-ENDMACRO(KDE_CHECK_FLAG_EXISTS FLAG VAR)
+macro(KDE_CHECK_FLAG_EXISTS FLAG VAR DOC)
+   if(NOT ${VAR} MATCHES "${FLAG}")
+      set(${VAR} "${${VAR}} ${FLAG}" CACHE STRING "Flags used by the linker during ${DOC} builds." FORCE)
+   endif(NOT ${VAR} MATCHES "${FLAG}")
+endmacro(KDE_CHECK_FLAG_EXISTS FLAG VAR)
 
 if (MSVC)
    set (KDE4_ENABLE_EXCEPTIONS -EHsc)
 
    # make sure that no header adds libcmt by default using #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
-   KDE_CHECK_FLAG_EXISTS("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "Release with Debug Info")
-   KDE_CHECK_FLAG_EXISTS("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELEASE "release")
-   KDE_CHECK_FLAG_EXISTS("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "release minsize")
-   KDE_CHECK_FLAG_EXISTS("/NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd" CMAKE_EXE_LINKER_FLAGS_DEBUG "debug")
+   kde_check_flag_exists("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "Release with Debug Info")
+   kde_check_flag_exists("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELEASE "release")
+   kde_check_flag_exists("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "release minsize")
+   kde_check_flag_exists("/NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd" CMAKE_EXE_LINKER_FLAGS_DEBUG "debug")
 endif(MSVC)
 
 

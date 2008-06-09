@@ -1138,8 +1138,8 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
                 list(APPEND ${appsources} ${_outfilename}.icns)
 
                 #            this doesn't seem to work for me - Use manual "install" instead
-		# TODO: test again with cmake 2.6 ?
-	        #           SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${target}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+                # TODO: test again with cmake 2.6 ?
+                #           SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${target}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
                 install(FILES ${_outfilename}.icns DESTINATION ${BIN_INSTALL_DIR}/${target}.app/Contents/Resources/)
 
@@ -1174,13 +1174,13 @@ macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
       get_cmake_property(allVars VARIABLES)
       set(allLibs "")
       foreach(currentVar ${allVars})
-	 string(REGEX REPLACE "^(.+)_LIB_DEPENDS$" "\\1" target "${currentVar}")
-	 if(NOT "${target}" STREQUAL "${currentVar}")
-	    get_target_property(interfaceLibs ${target} LINK_INTERFACE_LIBRARIES)
-	    if(NOT "${interfaceLibs}" MATCHES "NOTFOUND")
-	       file(APPEND "${_filename}" "SET(\"${currentVar}\" \"${interfaceLibs}\")\n")
-	    endif(NOT "${interfaceLibs}" MATCHES "NOTFOUND")
-	 endif(NOT "${target}" STREQUAL "${currentVar}")
+         string(REGEX REPLACE "^(.+)_LIB_DEPENDS$" "\\1" target "${currentVar}")
+         if(NOT "${target}" STREQUAL "${currentVar}")
+            get_target_property(interfaceLibs ${target} LINK_INTERFACE_LIBRARIES)
+            if(NOT "${interfaceLibs}" MATCHES "NOTFOUND")
+               file(APPEND "${_filename}" "SET(\"${currentVar}\" \"${interfaceLibs}\")\n")
+            endif(NOT "${interfaceLibs}" MATCHES "NOTFOUND")
+         endif(NOT "${target}" STREQUAL "${currentVar}")
       endforeach(currentVar ${allVars})
 
    endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
