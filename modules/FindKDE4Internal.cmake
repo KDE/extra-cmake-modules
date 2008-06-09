@@ -673,6 +673,7 @@ endif(APPLE)
 
 
 ##############  add some more default search paths  ###############
+#
 # always search in the directory where cmake is installed 
 # and in the current installation prefix
 # the KDE4_xxx_INSTALL_DIR variables are empty when building kdelibs itself
@@ -707,7 +708,9 @@ if(WIN32)
 endif(WIN32)
 
 
-#####################  and now the platform specific stuff  ############################
+######################################################
+#  and now the platform specific stuff
+######################################################
 
 # Set a default build type for single-configuration
 # CMake generators if no build type is set.
@@ -744,10 +747,11 @@ if (WIN32)
       set( KDE4_KDECORE_LIBS ${KDE4_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
    endif (_kdeBootStrapping)
 
-   # windows, mingw
-   if(MINGW)
-      #hmmm, something special to do here ?
-   endif(MINGW)
+   # we prefer to use a different postfix for debug libs only on Windows
+   # does not work atm
+   if (WIN32)
+      set(CMAKE_DEBUG_POSTFIX "")
+   endif (WIN32)
 
    # windows, microsoft compiler
    if(MSVC)
@@ -878,7 +882,13 @@ if (CMAKE_SYSTEM_NAME MATCHES BSD)
    set ( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -lc")
 endif (CMAKE_SYSTEM_NAME MATCHES BSD)
 
-# compiler specific stuff, maybe this should be done differently, Alex
+
+############################################################
+# compiler specific settings
+############################################################
+
+
+# this macro is for internal use only.
 macro(KDE_CHECK_FLAG_EXISTS FLAG VAR DOC)
    if(NOT ${VAR} MATCHES "${FLAG}")
       set(${VAR} "${${VAR}} ${FLAG}" CACHE STRING "Flags used by the linker during ${DOC} builds." FORCE)
@@ -894,12 +904,6 @@ if (MSVC)
    kde_check_flag_exists("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "release minsize")
    kde_check_flag_exists("/NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd" CMAKE_EXE_LINKER_FLAGS_DEBUG "debug")
 endif(MSVC)
-
-
-if (MINGW)
-   set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
-   set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
-endif (MINGW)
 
 
 if (CMAKE_COMPILER_IS_GNUCXX)
@@ -922,13 +926,17 @@ if (CMAKE_COMPILER_IS_GNUCXX)
      add_definitions (-D_BSD_SOURCE)
    endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
-   if (WIN32)
+   # gcc under Windows
+   if (MINGW)
+      set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
+      set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
+
       # we always link against the release version of QT with mingw
       # (even for debug builds). So we need to define QT_NO_DEBUG
       # or else QPluginLoader rejects plugins because it thinks
       # they're built against the wrong QT.
       add_definitions(-DQT_NO_DEBUG)
-   endif (WIN32)
+   endif (MINGW)
 
    check_cxx_compiler_flag(-fPIE HAVE_FPIE_SUPPORT)
    if(KDE4_ENABLE_FPIE)
@@ -1028,11 +1036,6 @@ if (CMAKE_C_COMPILER MATCHES "icc")
 
 endif (CMAKE_C_COMPILER MATCHES "icc")
 
-# we prefer to use a different postfix for debug libs only on Windows
-# does not work atm
-if (WIN32)
-   SET(CMAKE_DEBUG_POSTFIX "")
-endif (WIN32)
 
 ###########    end of platform specific stuff  ##########################
 
