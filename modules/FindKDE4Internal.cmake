@@ -749,9 +749,7 @@ if (WIN32)
 
    # we prefer to use a different postfix for debug libs only on Windows
    # does not work atm
-   if (WIN32)
-      set(CMAKE_DEBUG_POSTFIX "")
-   endif (WIN32)
+   set(CMAKE_DEBUG_POSTFIX "")
 
    # windows, microsoft compiler
    if(MSVC)
