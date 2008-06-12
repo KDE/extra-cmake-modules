@@ -26,7 +26,7 @@ IF (NOT WIN32)
 ENDIF (NOT WIN32)
   #set(FFMPEG_DEFINITIONS ${_FFMPEGCflags})
 
-  find_path(FFMPEG_INCLUDE_DIR ffmpeg/avcodec.h
+  find_path(FFMPEG_INCLUDE_DIR libavcodec/avcodec.h
     PATHS
     ${_FFMPEGIncDir}
     NO_DEFAULT_PATH
