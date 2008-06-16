@@ -25,7 +25,7 @@ macro(NEPOMUK_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_sources 
   # init
   set(NEPOMUK_RESOURCES_GENERATED false)
 
-  FIND_PROGRAM(RCGEN nepomuk-rcgen PATHS ${BIN_INSTALL_DIR})
+  FIND_PROGRAM(RCGEN nepomuk-rcgen PATHS ${BIN_INSTALL_DIR} NO_DEFAULT_PATH)
 
   if(NOT RCGEN)
 
