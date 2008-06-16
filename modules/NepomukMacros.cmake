@@ -1,13 +1,6 @@
 # This file contains the following macros:
 #
 # NEPOMUK_GENERATE_FROM_ONTOLOGY
-#
-
-
-#
-# NEPOMUK_GENERATE_FROM_ONTOLOGY
-# (C) 2007 Sebastian Trueg <trueg@kde.org>
-#
 # Parameters:
 #   ontofile     - Path to the NRL ontology defining the resources to be generated.
 #   targetdir    - Folder to which the generated sources should be written.
@@ -19,13 +12,16 @@
 # In addition to the parameters an arbitrary number of template filenames can be set as arguments
 #
 # In case of success NEPOMUK_RESOURCES_GENERATED is true, otherwise false
-#
+
+# (C) 2007 Sebastian Trueg <trueg@kde.org>
+
+
 macro(NEPOMUK_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_sources out_includes)
 
   # init
   set(NEPOMUK_RESOURCES_GENERATED false)
 
-  FIND_PROGRAM(RCGEN nepomuk-rcgen PATHS ${BIN_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_program(RCGEN nepomuk-rcgen PATHS ${KDE4_BIN_INSTALL_DIR} ${BIN_INSTALL_DIR} NO_DEFAULT_PATH)
 
   if(NOT RCGEN)
 
