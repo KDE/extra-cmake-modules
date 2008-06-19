@@ -25,3 +25,10 @@ install( FILES cmake-modules-styleguide.txt kde4init_dummy.cpp.in kde4init_win32
 #   file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/remove_files.cmake "message(STATUS \"Removing ${_current_FILE}\" )\n" )
 #   file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/remove_files.cmake "exec_program( ${CMAKE_COMMAND} ARGS -E remove ${_current_FILE} OUTPUT_VARIABLE _dummy)\n" )
 #endforeach ( _current_FILE)
+
+# with cmake 2.6 and above create and install a man page for the kdelibs cmake modules
+# (cmake 2.4 doesn't support creating documentation for cmake modules in custom directories)
+if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER "2.5")
+   add_custom_target(KDECMakeModulesManPage ALL COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_CURRENT_SOURCE_DIR} --help-custom-modules ${CMAKE_CURRENT_BINARY_DIR}/kdecmake.1)
+   install(FILES kdecmake.1 DESTINATION "${MAN_INSTALL_DIR}/man1")
+endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER "2.5")
