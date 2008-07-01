@@ -64,7 +64,8 @@ macro(UPDATE_XDG_MIMETYPES _path)
    install(CODE "
 set(DESTDIR_VALUE \"\$ENV{DESTDIR}\")
 if (NOT DESTDIR_VALUE)
-  execute_process(COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} ${_xdgmimeDir})
+  execute_process(COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} ${_xdgmimeDir}
+                  WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
 endif (NOT DESTDIR_VALUE)
 ")
 endmacro (UPDATE_XDG_MIMETYPES)
