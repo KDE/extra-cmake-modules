@@ -807,7 +807,9 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
     endforeach(_filename)
 
     if(WIN32)
-      set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME}.bat)
+      get_target_property( loc ${_targetName} LOCATION )
+      # .bat because of rpath handling
+      set(_executable ${loc}.bat)
     else(WIN32)
       set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME})
     endif(WIN32)
