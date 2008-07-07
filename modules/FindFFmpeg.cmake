@@ -26,6 +26,13 @@ IF (NOT WIN32)
 ENDIF (NOT WIN32)
   #set(FFMPEG_DEFINITIONS ${_FFMPEGCflags})
 
+  #
+  # #include <libXXXX/XXXX.h> is the new style for FFMPEG headers
+  # This has been verified at least since 0.4.9
+  # Please do not change to the old format, since this will break for
+  # people who are using newer versions. Instead, upgrade your ffmpeg
+  # installation.
+  #
   find_path(FFMPEG_INCLUDE_DIR libavcodec/avcodec.h
     PATHS
     ${_FFMPEGIncDir}
