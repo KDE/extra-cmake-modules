@@ -885,12 +885,12 @@ if (UNIX)
 #define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
 
   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721 && LARGE_OFF_T % 2147483647 == 1) ? 1 : -1];
-"
-      _OFFT_IS_64BIT)
+  int main() { return 0; }
+" _OFFT_IS_64BIT)
 
-   if (not ${_OFFT_IS_64BIT})
+   if (NOT _OFFT_IS_64BIT)
      set ( _KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64")
-   endif (not ${_OFFT_IS_64BIT})
+   endif (NOT _OFFT_IS_64BIT)
 endif (UNIX)
 
 if (CMAKE_SYSTEM_NAME MATCHES BSD)
