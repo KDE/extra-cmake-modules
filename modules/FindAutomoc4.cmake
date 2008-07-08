@@ -32,7 +32,7 @@ else("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
              PATH_SUFFIXES automoc4 lib/automoc4 lib64/automoc4
              PATHS ${_env_CMAKE_PREFIX_PATH} ${CMAKE_PREFIX_PATH} ${CMAKE_SYSTEM_PREFIX_PATH} 
                    ${_env_CMAKE_LIBRARY_PATH} ${CMAKE_LIBRARY_PATH} ${CMAKE_SYSTEM_LIBRARY_PATH}
-                   ${CMAKE_INSTALL_PREFIX}/lib 
+                   ${CMAKE_INSTALL_PREFIX}
              NO_DEFAULT_PATH )
 endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
