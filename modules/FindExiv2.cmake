@@ -17,17 +17,21 @@ else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
   INCLUDE(UsePkgConfig)
+
+  if(NOT EXIV2_MIN_VERSION)
+    set(EXIV2_MIN_VERSION "0.12")
+  endif(NOT EXIV2_MIN_VERSION)
   
   PKGCONFIG(exiv2 _EXIV2IncDir _EXIV2LinkDir _EXIV2LinkFlags _EXIV2Cflags)
 
   if(_EXIV2LinkFlags)
     # query pkg-config asking for a Exiv2 >= 0.12
-    EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=0.12 exiv2 RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
+    EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${EXIV2_MIN_VERSION} exiv2 RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
     if(_return_VALUE STREQUAL "0")
-      message(STATUS "Found Exiv2 release >= 0.12")
+      message(STATUS "Found Exiv2 release >= ${EXIV2_MIN_VERSION}")
       set(EXIV2_VERSION_GOOD_FOUND TRUE)
     else(_return_VALUE STREQUAL "0")
-      message(STATUS "Found Exiv2 release < 0.12")
+      message(STATUS "Found Exiv2 release < ${EXIV2_MIN_VERSION}")
     endif(_return_VALUE STREQUAL "0")
   else(_EXIV2LinkFlags)
       set(EXIV2_FOUND FALSE)
@@ -54,6 +58,7 @@ else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
   
      if (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
         set(EXIV2_FOUND TRUE)
+        # TODO version check is missing
      endif (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
    endif(EXIV2_VERSION_GOOD_FOUND)
    if (EXIV2_FOUND)
