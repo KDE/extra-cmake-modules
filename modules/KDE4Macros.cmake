@@ -1117,7 +1117,7 @@ endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
 
 macro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
    if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
-      set_target_properties("${_target}" "${_interface_libs}")
+      set_target_properties("${_target}" PROPERTIES LINK_INTERFACE_LIBRARIES "${_interface_libs}")
    endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
 endmacro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES)
 
