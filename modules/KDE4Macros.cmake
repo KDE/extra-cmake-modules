@@ -657,6 +657,7 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
    # keep the library there-
    if(WIN32)
       set(_KDEINIT4_TARGET_NAME_ ${_target_NAME})
+      string(REGEX REPLACE "[-]" "_" _KDEINIT4_TARGET_NAME_ "${_KDEINIT4_TARGET_NAME_}")
       configure_file(${KDE4_MODULE_DIR}/kde4init_win32lib_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_win32lib_dummy.cpp)
       add_library(kdeinit_${_target_NAME} STATIC ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_win32lib_dummy.cpp)
 
