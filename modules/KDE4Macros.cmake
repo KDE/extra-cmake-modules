@@ -657,6 +657,7 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
    # keep the library there-
    if(WIN32)
       set(_KDEINIT4_TARGET_NAME_ ${_target_NAME})
+      string(REGEX REPLACE "[-]" "_" _KDEINIT4_TARGET_NAME_ "${_KDEINIT4_TARGET_NAME_}")
       configure_file(${KDE4_MODULE_DIR}/kde4init_win32lib_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_win32lib_dummy.cpp)
       add_library(kdeinit_${_target_NAME} STATIC ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_win32lib_dummy.cpp)
 
@@ -1117,7 +1118,7 @@ endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
 
 macro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
    if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
-      set_target_properties("${_target}" "${_interface_libs}")
+      set_target_properties("${_target}" PROPERTIES LINK_INTERFACE_LIBRARIES "${_interface_libs}")
    endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
 endmacro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES)
 
