@@ -1,5 +1,0 @@
-include_directories(${QT_INCLUDE_DIR})
-add_executable(kde4automoc kde4automoc.cpp)
-kde4_handle_rpath_for_executable(kde4automoc "RUN_UNINSTALLED")
-target_link_libraries(kde4automoc ${QT_QTCORE_LIBRARY})
-install(TARGETS kde4automoc DESTINATION ${BIN_INSTALL_DIR})

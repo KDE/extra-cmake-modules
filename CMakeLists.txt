@@ -1,8 +1,4 @@
-
-#if(NOT AUTOMOC4_EXECUTABLE)
-#   # this is just a fallback in case automoc4 from kdesupport isn't found, Alex
-#   add_subdirectory(automoc)
-#endif(NOT AUTOMOC4_EXECUTABLE)
+# automoc comes now from kdesupport, Alex
 
 add_subdirectory(modules)
 
