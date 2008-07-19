@@ -199,6 +199,27 @@
 #  _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 #  _KDE4_PLATFORM_DEFINITIONS is used only internally
 
+#  Note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
+#  the flags for those buildtypes. FindKDE4Internal supports the values
+#  Debug, Release, Relwithdebinfo, Profile and Debugfull
+#
+#  Release
+#          optimised for speed, qDebug/kDebug turned off, no debug symbols
+#  Release with debug info
+#          optimised for speed, debugging symbols on (-g)
+#  Debug
+#          optimised but debuggable, debugging on (-g)
+#          (-fno-reorder-blocks -fno-schedule-insns -fno-inline)
+#  DebugFull
+#          no optimisation, full debugging on (-g3)
+#  Profile
+#          DebugFull + -ftest-coverage -fprofile-arcs
+#
+#  It is expected that the "Debug" build type be still debuggable with gdb
+#  without going all over the place, but still produce better performance.
+#  It's also important to note that gcc cannot detect all warning conditions
+#  unless the optimiser is active.
+
 # Copyright (c) 2006-2008, Alexander Neundorf <neundorf@kde.org>
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
@@ -360,7 +381,6 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KDEUI_LIBRARY NAMES kdeui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KDEUI_LIBS ${kdeui_LIB_DEPENDS} ${KDE4_KDEUI_LIBRARY} )
-
    find_library(KDE4_KIO_LIBRARY NAMES kio PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KIO_LIBS ${kio_LIB_DEPENDS} ${KDE4_KIO_LIBRARY} )
 
@@ -897,6 +917,10 @@ endif(MSVC)
 
 
 if (CMAKE_COMPILER_IS_GNUCXX)
+   if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.6)
+      set (CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} "Debugfull")
+   endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.6)
+
    set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
@@ -1003,6 +1027,11 @@ endif (CMAKE_COMPILER_IS_GNUCXX)
 
 
 if (CMAKE_C_COMPILER MATCHES "icc")
+
+   if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.6)
+      set (CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} "Debugfull")
+   endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.6)
+
    set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
