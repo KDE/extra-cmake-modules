@@ -219,7 +219,6 @@
 # The qtmain library for Windows QT_QTMAIN_LIBRARY
 #
 # The QtUiTools library:      QT_QTUITOOLS_LIBRARY
-
 #
 # The QtAssistantClient library:  QT_QTASSISTANTCLIENT_LIBRARY
 #
@@ -230,9 +229,6 @@
 # The QtXmlPatterns library:      QT_QTXMLPATTERNS_LIBRARY
 #
 # The Phonon library:             QT_PHONON_LIBRARY
-
-
-
 #  
 # also defined, but NOT for general use are
 #  QT_MOC_EXECUTABLE          Where to find the moc tool.
