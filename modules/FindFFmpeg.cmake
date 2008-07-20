@@ -17,13 +17,14 @@ if (FFMPEG_LIBRARIES)# AND FFMPEG_DEFINITIONS)
   set(FFMPEG_FOUND TRUE)
 
 else (FFMPEG_LIBRARIES)# AND FFMPEG_DEFINITIONS)
-IF (NOT WIN32)
+
+if (NOT WIN32)
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
-  INCLUDE(UsePkgConfig)
+  include(UsePkgConfig)
 
-  PKGCONFIG(libavcodec _FFMPEGIncDir _FFMPEGLinkDir _FFMPEGLinkFlags _FFMPEGCflags)
-ENDIF (NOT WIN32)
+  pkgconfig(libavcodec _FFMPEGIncDir _FFMPEGLinkDir _FFMPEGLinkFlags _FFMPEGCflags)
+endif (NOT WIN32)
   #set(FFMPEG_DEFINITIONS ${_FFMPEGCflags})
 
   #
@@ -34,6 +35,15 @@ ENDIF (NOT WIN32)
   # installation.
   #
   find_path(FFMPEG_INCLUDE_DIR libavcodec/avcodec.h
+    PATHS
+    ${_FFMPEGIncDir}
+    NO_DEFAULT_PATH
+  )
+
+  # also search for the old style include dir, just for the purpose
+  # of giving a useful error message if an old libavcodec is installed
+  # and the user might wonder why it is not found
+  find_path(FFMPEG_INCLUDE_DIR_OLD_STYLE ffmpeg/avcodec.h
     PATHS
     ${_FFMPEGIncDir}
     NO_DEFAULT_PATH
@@ -70,21 +80,33 @@ ENDIF (NOT WIN32)
     set(FFMPEG_LIBRARIES ${FFMPEG_LIBRARIES} ${AVUTIL_LIBRARIES})
   endif (AVUTIL_LIBRARIES)
 
-  if (FFMPEG_LIBRARIES)
+  if (FFMPEG_LIBRARIES  AND  FFMPEG_INCLUDE_DIR)
      set(FFMPEG_FOUND TRUE)
-  endif (FFMPEG_LIBRARIES)
+  endif (FFMPEG_LIBRARIES  AND  FFMPEG_INCLUDE_DIR)
 
   if (FFMPEG_FOUND)
     if (NOT FFmpeg_FIND_QUIETLY)
       message(STATUS "Found FFMPEG: ${FFMPEG_LIBRARIES} ${FFMPEG_INCLUDE_DIR}")
     endif (NOT FFmpeg_FIND_QUIETLY)
   else (FFMPEG_FOUND)
+    # only an old libavcodec was found ?
+    if (FFMPEG_INCLUDE_DIR_OLD_STYLE  AND NOT  FFMPEG_INCLUDE_DIR  AND NOT  FFmpeg_FIND_QUIETLY)
+      message(STATUS "Found old version of libavcodec, but a newer version is required.")
+    endif (FFMPEG_INCLUDE_DIR_OLD_STYLE  AND NOT  FFMPEG_INCLUDE_DIR  AND NOT  FFmpeg_FIND_QUIETLY)
+
     if (FFmpeg_FIND_REQUIRED)
       message(FATAL_ERROR "Could NOT find FFMPEG")
+    else (FFmpeg_FIND_REQUIRED)
+      if (NOT FFmpeg_FIND_QUIETLY)
+        message(STATUS "Could NOT find FFMPEG")
+      endif (NOT FFmpeg_FIND_QUIETLY)
     endif (FFmpeg_FIND_REQUIRED)
   endif (FFMPEG_FOUND)
 
-  MARK_AS_ADVANCED(FFMPEG_LIBRARIES)
-  MARK_AS_ADVANCED(FFMPEG_INCLUDE_DIR)
+  mark_as_advanced(AVCODEC_LIBRARIES 
+                   AVFORMAT_LIBRARIES
+                   AVUTIL_LIBRARIES
+                   FFMPEG_INCLUDE_DIR
+                   FFMPEG_INCLUDE_DIR_OLD_STYLE)
 
 endif (FFMPEG_LIBRARIES)# AND FFMPEG_DEFINITIONS)
