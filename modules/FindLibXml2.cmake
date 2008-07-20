@@ -1,10 +1,11 @@
 # - Try to find LibXml2
 # Once done this will define
 #
-#  LIBXML2_FOUND - system has LibXml2
-#  LIBXML2_INCLUDE_DIR - the LibXml2 include directory
-#  LIBXML2_LIBRARIES - the libraries needed to use LibXml2
+#  LIBXML2_FOUND - System has LibXml2
+#  LIBXML2_INCLUDE_DIR - The LibXml2 include directory
+#  LIBXML2_LIBRARIES - The libraries needed to use LibXml2
 #  LIBXML2_DEFINITIONS - Compiler switches required for using LibXml2
+#  LIBXML2_XMLLINT_EXECUTABLE - The XML checking tool xmllint coming with LibXml2
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 #
@@ -42,11 +43,13 @@ ELSE (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
    SET(LIBXML2_FOUND FALSE)
 ENDIF (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
 
-FIND_PROGRAM(XMLLINT_EXECUTABLE xmllint)
+FIND_PROGRAM(LIBXML2_XMLLINT_EXECUTABLE xmllint)
+# for backwards compat. with KDE 4.0.x:
+SET(XMLLINT_EXECUTABLE "${LIBXML2_XMLLINT_EXECUTABLE}")
 
-if( NOT XMLLINT_EXECUTABLE )
+IF( NOT LIBXML2_XMLLINT_EXECUTABLE )
    MESSAGE(STATUS "xmllint program not found. Install it if you want validate generated doc file.")
-endif(NOT XMLLINT_EXECUTABLE )
+ENDIF(NOT LIBXML2_XMLLINT_EXECUTABLE )
 
 IF (LIBXML2_FOUND)
    IF (NOT LibXml2_FIND_QUIETLY)
@@ -58,5 +61,5 @@ ELSE (LIBXML2_FOUND)
    ENDIF (LibXml2_FIND_REQUIRED)
 ENDIF (LIBXML2_FOUND)
 
-MARK_AS_ADVANCED(LIBXML2_INCLUDE_DIR LIBXML2_LIBRARIES XMLLINT_EXECUTABLE)
+MARK_AS_ADVANCED(LIBXML2_INCLUDE_DIR LIBXML2_LIBRARIES LIBXML2_XMLLINT_EXECUTABLE)
 
