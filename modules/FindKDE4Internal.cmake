@@ -194,12 +194,9 @@
 #   The resulting manpage will be installed to <installdest> when using
 #   INSTALL_DESTINATION <installdest>, or to <installdest>/<subdir> if
 #   SUBDIR <subdir> is specified.
-
-
-#  _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
-#  _KDE4_PLATFORM_DEFINITIONS is used only internally
-
-#  Note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
+#
+#
+#  A note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
 #  the flags for those buildtypes. FindKDE4Internal supports the values
 #  Debug, Release, Relwithdebinfo, Profile and Debugfull
 #
@@ -219,6 +216,9 @@
 #  without going all over the place, but still produce better performance.
 #  It's also important to note that gcc cannot detect all warning conditions
 #  unless the optimiser is active.
+
+#  _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
+#  _KDE4_PLATFORM_DEFINITIONS is used only internally
 
 # Copyright (c) 2006-2008, Alexander Neundorf <neundorf@kde.org>
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
@@ -401,6 +401,7 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KJS_LIBRARY NAMES kjs PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KJS_LIBS ${kjs_LIB_DEPENDS} ${KDE4_KJS_LIBRARY} )
+
    find_library(KDE4_KJSAPI_LIBRARY NAMES kjsapi PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KJSAPI_LIBS ${kjsapi_LIB_DEPENDS} ${KDE4_KJSAPI_LIBRARY} )
 

@@ -1,4 +1,7 @@
 # - Try to find the shared-mime-info package
+#
+#  SHARED_MIME_INFO_MINIMUM_VERSION - Set this to the minimum version you need, default is 0.18
+#
 # Once done this will define
 #
 #  SHARED_MIME_INFO_FOUND - system has the shared-mime-info package
@@ -61,9 +64,11 @@ macro(UPDATE_XDG_MIMETYPES _path)
    else("${_xdgmimeDir}" STREQUAL packages )
       set(_xdgmimeDir "${_path}")
    endif("${_xdgmimeDir}" STREQUAL packages )
+
    install(CODE "
 set(DESTDIR_VALUE \"\$ENV{DESTDIR}\")
 if (NOT DESTDIR_VALUE)
+  # under Windows relative paths are used, that's why it runs from CMAKE_INSTALL_PREFIX
   execute_process(COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} ${_xdgmimeDir}
                   WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
 endif (NOT DESTDIR_VALUE)

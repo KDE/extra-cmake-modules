@@ -1,4 +1,8 @@
 # - Try to find the Exiv2 library
+#
+#  EXIV2_MIN_VERSION - You can set this variable to the minimum version you need 
+#                      before doing FIND_PACKAGE(Exiv2). The default is 0.12.
+# 
 # Once done this will define
 #
 #  EXIV2_FOUND - system has libexiv2
@@ -10,23 +14,23 @@
 if (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
 
   # in cache already
-  SET(EXIV2_FOUND TRUE)
+  set(EXIV2_FOUND TRUE)
 
 else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
   if (NOT WIN32)
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
-  INCLUDE(UsePkgConfig)
+  include(UsePkgConfig)
 
   if(NOT EXIV2_MIN_VERSION)
     set(EXIV2_MIN_VERSION "0.12")
   endif(NOT EXIV2_MIN_VERSION)
   
-  PKGCONFIG(exiv2 _EXIV2IncDir _EXIV2LinkDir _EXIV2LinkFlags _EXIV2Cflags)
+  pkgconfig(exiv2 _EXIV2IncDir _EXIV2LinkDir _EXIV2LinkFlags _EXIV2Cflags)
 
   if(_EXIV2LinkFlags)
     # query pkg-config asking for a Exiv2 >= 0.12
-    EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${EXIV2_MIN_VERSION} exiv2 RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
+    exec_program(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${EXIV2_MIN_VERSION} exiv2 RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
     if(_return_VALUE STREQUAL "0")
       message(STATUS "Found Exiv2 release >= ${EXIV2_MIN_VERSION}")
       set(EXIV2_VERSION_GOOD_FOUND TRUE)
@@ -47,11 +51,11 @@ else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
   if(EXIV2_VERSION_GOOD_FOUND)
      set(EXIV2_DEFINITIONS ${_EXIV2Cflags})
  
-     FIND_PATH(EXIV2_INCLUDE_DIR exiv2/exif.hpp
+     find_path(EXIV2_INCLUDE_DIR exiv2/exif.hpp
        ${_EXIV2IncDir}
      )
   
-     FIND_LIBRARY(EXIV2_LIBRARIES NAMES exiv2 libexiv2
+     find_library(EXIV2_LIBRARIES NAMES exiv2 libexiv2
        PATHS
        ${_EXIV2LinkDir}
      )
@@ -76,7 +80,7 @@ else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
      endif (Exiv2_FIND_REQUIRED)
    endif (EXIV2_FOUND)
 
-  MARK_AS_ADVANCED(EXIV2_INCLUDE_DIR EXIV2_LIBRARIES)
+  mark_as_advanced(EXIV2_INCLUDE_DIR EXIV2_LIBRARIES)
   
 endif (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
 
