@@ -493,9 +493,24 @@ option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the html versions of the docbook docs")
 
-# this one enables the smaller link interface for libs on UNIX (exceot OSX)
+# this one enables the smaller link interface for libs on UNIX
+set(KDE4_DISABLE_PROPERTY_ )
 if(UNIX )# AND NOT  APPLE)
    option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the experimental reduced library exports" FALSE)
+   # The purpose of the KDE4_DISABLE_PROPERTY_ variable is to be used as a prefix for 
+   # the target property LINK_INTERFACE_LIBRARIES. If it is empty, the property will have its
+   # correct name, if it's not empty, it will be a different name, i.e. the actual property
+   # will not be set, i.e. disabled. See kdelibs/kdecore/CMakeLists.txt for an example.
+   # This will be removed again as soon as we require cmake >= 2.6.0.
+   # If enabled, make it empty, so the property will keep it's actual name.
+   if (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
+      set(KDE4_DISABLE_PROPERTY_ )
+   else (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
+      # If disabled, make it non-empty, so the property name will change from "LINK_INTERFACE_LIBRARIES"
+      # to "DISABLED_LINK_INTERFACE_LIBRARIES", which is a different (non-existing) target property, and so
+      # setting that property won't have an effect
+      set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
+   endif (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
 endif(UNIX)#  AND NOT  APPLE)
 
 

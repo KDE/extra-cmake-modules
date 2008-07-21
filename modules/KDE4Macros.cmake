@@ -1117,13 +1117,11 @@ macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
 endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
 
 macro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
-   if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
-      set_target_properties("${_target}" PROPERTIES LINK_INTERFACE_LIBRARIES "${_interface_libs}")
-   endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
+   message(FATAL_ERROR "_KDE4_TARGET_LINK_INTERFACE_LIBRARIES() doesn't exist anymore. Set the LINK_INTERFACE_LIBRARIES target property instead. See kdelibs/kdecore/CMakeLists.txt for an example.")
 endmacro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES)
 
 macro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
-   message(FATAL_ERROR "KDE4_TARGET_LINK_INTERFACE_LIBRARIES() has been renamed to _KDE4_TARGET_LINK_INTERFACE_LIBRARIES(), so use that instead")
+   message(FATAL_ERROR "KDE4_TARGET_LINK_INTERFACE_LIBRARIES() doesn't exist anymore. Set the LINK_INTERFACE_LIBRARIES target property instead. See kdelibs/kdecore/CMakeLists.txt for an example.")
 endmacro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
 
 macro (KDE4_INSTALL_HANDBOOK _lang)
