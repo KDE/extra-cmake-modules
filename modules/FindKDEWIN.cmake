@@ -1,4 +1,4 @@
-# - Try to find the directory in which the kdewin32 library and other win32 related libraries lives
+# - Try to find the directory in which the kde windows supplementary libraries are living
 # 
 # used environment vars 
 #  KDEWIN_DIR  - kdewin root dir 
