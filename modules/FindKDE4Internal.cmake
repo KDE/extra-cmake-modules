@@ -493,27 +493,25 @@ option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the html versions of the docbook docs")
 
+# This option enables the reduced link interface for libs on UNIX
+#
+# The purpose of the KDE4_DISABLE_PROPERTY_ variable is to be used as a prefix for 
+# the target property LINK_INTERFACE_LIBRARIES. If it is empty, the property will have its
+# correct name, if it's not empty, it will be a different name, i.e. the actual property
+# will not be set, i.e. disabled. See kdelibs/kdecore/CMakeLists.txt for an example.
+#
+# By default (i.e. also for Windows) make it non-empty, so the property name will 
+# change from "LINK_INTERFACE_LIBRARIES" to "DISABLED_LINK_INTERFACE_LIBRARIES", 
+# which is a different (non-existing) target property, and so setting that property 
+# won't have an effect
+set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
 
-# this one enables the smaller link interface for libs on UNIX
-set(KDE4_DISABLE_PROPERTY_ )
 if(UNIX )# AND NOT  APPLE)
    option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the experimental reduced library exports" FALSE)
-   # The purpose of the KDE4_DISABLE_PROPERTY_ variable is to be used as a prefix for 
-   # the target property LINK_INTERFACE_LIBRARIES. If it is empty, the property will have its
-   # correct name, if it's not empty, it will be a different name, i.e. the actual property
-   # will not be set, i.e. disabled. See kdelibs/kdecore/CMakeLists.txt for an example.
-   # This will be removed again as soon as we use the reduced link interface as default.
-   # This won't cause any incompatibilties then because then cmake files which still 
-   # have that prefix will work, since that prefix will just be empty.
-   #
    # If enabled, make it empty, so the property will keep it's actual name.
+   # and the LINK_INTERFACE_LIBRARIES property will be set.
    if (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
       set(KDE4_DISABLE_PROPERTY_ )
-   else (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
-      # If disabled, make it non-empty, so the property name will change from "LINK_INTERFACE_LIBRARIES"
-      # to "DISABLED_LINK_INTERFACE_LIBRARIES", which is a different (non-existing) target property, and so
-      # setting that property won't have an effect
-      set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
    endif (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
 endif(UNIX)#  AND NOT  APPLE)
 
