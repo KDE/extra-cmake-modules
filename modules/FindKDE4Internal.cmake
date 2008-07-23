@@ -506,16 +506,12 @@ option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the h
 # won't have an effect
 set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
 
-if(UNIX )# AND NOT  APPLE)
-   option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the experimental reduced library exports" FALSE)
-   # If enabled, make it empty, so the property will keep it's actual name.
-   # and the LINK_INTERFACE_LIBRARIES property will be set.
-   if (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
-      set(KDE4_DISABLE_PROPERTY_ )
-   endif (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
-endif(UNIX)#  AND NOT  APPLE)
-
-
+option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the experimental reduced library exports" FALSE)
+# If enabled, make it empty, so the property will keep it's actual name.
+# and the LINK_INTERFACE_LIBRARIES property will be set.
+if (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
+   set(KDE4_DISABLE_PROPERTY_ )
+endif (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
 
 
 if( KDE4_ENABLE_FINAL)
