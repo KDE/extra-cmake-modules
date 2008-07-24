@@ -118,14 +118,14 @@
   
   #look for parser plugins
   if(Soprano_FOUND)
-  find_path(SOPRANO_PLUGIN_DIR 
-    NAMES
-    soprano/plugins
-    PATHS
-    ${SHARE_INSTALL_PREFIX} /usr/share /usr/local/share
-    NO_DEFAULT_PATH
-    NO_SYSTEM_ENVIRONMENT_PATH
-    )
+    find_path(SOPRANO_PLUGIN_DIR 
+      NAMES
+      soprano/plugins
+      PATHS
+      ${SHARE_INSTALL_PREFIX} /usr/share /usr/local/share
+      NO_DEFAULT_PATH
+      NO_SYSTEM_ENVIRONMENT_PATH
+      )
     set(SOPRANO_PLUGIN_DIR "${SOPRANO_PLUGIN_DIR}/soprano/plugins")
 
     if(EXISTS ${SOPRANO_PLUGIN_DIR}/nquadparser.desktop)
