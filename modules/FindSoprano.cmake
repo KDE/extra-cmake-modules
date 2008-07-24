@@ -10,6 +10,13 @@
 #  SOPRANO_SERVER_LIBRARIES - The Soprano server library (libsopranoserver)
 #  SOPRANO_VERSION          - The Soprano version (string value)
 #
+# SOPRANO_PLUGIN_NQUADPARSER_FOUND      - true if the nquadparser plugin is found
+# SOPRANO_PLUGIN_NQUADSERIALIZER_FOUND  - true if the nquadserializer plugin is found
+# SOPRANO_PLUGIN_RAPTORPARSER_FOUND     - true if the raptorparser plugin is found
+# SOPRANO_PLUGIN_RAPTORSERIALIZER_FOUND - true if the raptorserializer plugin is found
+# SOPRANO_PLUGIN_REDLANDBACKEND_FOUND   - true if the redlandbackend plugin is found
+# SOPRANO_PLUGIN_SESAME2BACKEND_FOUND   - true if the sesame2backend plugin is found
+
 # Options:
 #  Set SOPRANO_MIN_VERSION to set the minimum required Soprano version (default: 1.99)
 #
@@ -23,9 +30,9 @@
 #  set(SopranoIndex_FOUND TRUE)
 
 #else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
-  INCLUDE(FindLibraryWithDebug)
+  include(FindLibraryWithDebug)
 
-  FIND_PATH(SOPRANO_INCLUDE_DIR 
+  find_path(SOPRANO_INCLUDE_DIR 
     NAMES
     soprano/soprano.h
     PATHS
@@ -33,7 +40,7 @@
     ${INCLUDE_INSTALL_DIR}
     )
 
-  FIND_LIBRARY_WITH_DEBUG(SOPRANO_INDEX_LIBRARIES 
+  find_library_with_debug(SOPRANO_INDEX_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoindex
@@ -42,7 +49,7 @@
     ${LIB_INSTALL_DIR}
     )
 
-  FIND_LIBRARY_WITH_DEBUG(SOPRANO_CLIENT_LIBRARIES 
+  find_library_with_debug(SOPRANO_CLIENT_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoclient
@@ -51,7 +58,7 @@
     ${LIB_INSTALL_DIR}
     )
 
-  FIND_LIBRARY_WITH_DEBUG(SOPRANO_LIBRARIES
+  find_library_with_debug(SOPRANO_LIBRARIES
     WIN32_DEBUG_POSTFIX d
     NAMES soprano
     PATHS
@@ -59,7 +66,7 @@
     ${LIB_INSTALL_DIR}
   )
 
-  FIND_LIBRARY_WITH_DEBUG(SOPRANO_SERVER_LIBRARIES 
+  find_library_with_debug(SOPRANO_SERVER_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoserver
@@ -89,15 +96,15 @@
   # check Soprano version
 
   # We set a default for the minimum required version to be backwards compatible
-  IF(NOT SOPRANO_MIN_VERSION)
-    SET(SOPRANO_MIN_VERSION "1.99")
-  ENDIF(NOT SOPRANO_MIN_VERSION)
+  if(NOT SOPRANO_MIN_VERSION)
+    set(SOPRANO_MIN_VERSION "1.99")
+  endif(NOT SOPRANO_MIN_VERSION)
 
   if(Soprano_FOUND)
-    FILE(READ ${SOPRANO_INCLUDE_DIR}/soprano/version.h SOPRANO_VERSION_CONTENT)
-    STRING(REGEX MATCH "SOPRANO_VERSION_STRING \".*\"\n" SOPRANO_VERSION_MATCH ${SOPRANO_VERSION_CONTENT})
-    IF (SOPRANO_VERSION_MATCH)
-      STRING(REGEX REPLACE "SOPRANO_VERSION_STRING \"(.*)\"\n" "\\1" SOPRANO_VERSION ${SOPRANO_VERSION_MATCH})
+    file(READ ${SOPRANO_INCLUDE_DIR}/soprano/version.h SOPRANO_VERSION_CONTENT)
+    string(REGEX MATCH "SOPRANO_VERSION_STRING \".*\"\n" SOPRANO_VERSION_MATCH ${SOPRANO_VERSION_CONTENT})
+    if(SOPRANO_VERSION_MATCH)
+      string(REGEX REPLACE "SOPRANO_VERSION_STRING \"(.*)\"\n" "\\1" SOPRANO_VERSION ${SOPRANO_VERSION_MATCH})
       if(SOPRANO_VERSION STRLESS "${SOPRANO_MIN_VERSION}")
         set(Soprano_FOUND FALSE)
         if(Soprano_FIND_REQUIRED)
@@ -106,15 +113,54 @@
           message(STATUS "Soprano version ${SOPRANO_VERSION} is too old. Please install ${SOPRANO_MIN_VERSION} or newer")
         endif(Soprano_FIND_REQUIRED)
       endif(SOPRANO_VERSION STRLESS "${SOPRANO_MIN_VERSION}")
-    ENDIF (SOPRANO_VERSION_MATCH)
+    endif(SOPRANO_VERSION_MATCH)
   endif(Soprano_FOUND)
   
+  #look for parser plugins
+  if(Soprano_FOUND)
+    set(SOPRANO_PLUGIN_DIR ${KDE4_DATA_DIR})
+    string(REGEX REPLACE "apps.*$" "" SOPRANO_PLUGIN_DIR ${SOPRANO_PLUGIN_DIR})
+    set(SOPRANO_PLUGIN_DIR "${SOPRANO_PLUGIN_DIR}/soprano/plugins")
+
+    if(EXISTS ${SOPRANO_PLUGIN_DIR}/nquadparser.desktop)
+      set(SOPRANO_PLUGIN_NQUADPARSER_FOUND TRUE)
+      set(_plugins "${_plugins} nquadparser")
+    endif(EXISTS ${SOPRANO_PLUGIN_DIR}/nquadparser.desktop)
+
+    if(EXISTS ${SOPRANO_PLUGIN_DIR}/nquadserializer.desktop)
+      set(SOPRANO_PLUGIN_NQUADSERIALIZER_FOUND TRUE)
+      set(_plugins "${_plugins} nquadserializer")
+    endif(EXISTS ${SOPRANO_PLUGIN_DIR}/nquadserializer.desktop)
+
+    if(EXISTS ${SOPRANO_PLUGIN_DIR}/raptorparser.desktop)
+      set(SOPRANO_PLUGIN_RAPTORPARSER_FOUND TRUE)
+      set(_plugins "${_plugins} raptorparser")
+    endif(EXISTS ${SOPRANO_PLUGIN_DIR}/raptorparser.desktop)
+
+    if(EXISTS ${SOPRANO_PLUGIN_DIR}/raptorserializer.desktop)
+      set(SOPRANO_PLUGIN_RAPTORSERIALIZER_FOUND TRUE)
+      set(_plugins "${_plugins} raptorserializer")
+    endif(EXISTS ${SOPRANO_PLUGIN_DIR}/raptorserializer.desktop)
+
+    if(EXISTS ${SOPRANO_PLUGIN_DIR}/redlandbackend.desktop)
+      set(SOPRANO_PLUGIN_REDLANDBACKEND_FOUND TRUE)
+      set(_plugins "${_plugins} redlandbackend")
+    endif(EXISTS ${SOPRANO_PLUGIN_DIR}/redlandbackend.desktop)
+
+    if(EXISTS ${SOPRANO_PLUGIN_DIR}/sesame2backend.desktop)
+      set(SOPRANO_PLUGIN_SESAME2BACKEND_FOUND TRUE)
+      set(_plugins "${_plugins} sesame2backend")
+    endif(EXISTS ${SOPRANO_PLUGIN_DIR}/sesame2backend.desktop)
+
+  endif(Soprano_FOUND)
+
   if(Soprano_FOUND)
     if(NOT Soprano_FIND_QUIETLY)
       message(STATUS "Found Soprano: ${SOPRANO_LIBRARIES}")
       message(STATUS "Found Soprano includes: ${SOPRANO_INCLUDE_DIR}")
       message(STATUS "Found Soprano Index: ${SOPRANO_INDEX_LIBRARIES}")
       message(STATUS "Found Soprano Client: ${SOPRANO_CLIENT_LIBRARIES}")
+      message(STATUS "Found Sopranos Plugins: ${_plugins}")
     endif(NOT Soprano_FIND_QUIETLY)
   else(Soprano_FOUND)
     if(Soprano_FIND_REQUIRED)
