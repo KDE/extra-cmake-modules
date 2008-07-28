@@ -235,6 +235,16 @@ if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
    message(FATAL_ERROR "You are using CMake 2.5, which was the unreleased development version between 2.4 and 2.6. This is no longer supported. Please update to CMake 2.6 or current cvs HEAD.")
 endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
 
+# print a reminder to update cmake to at least 2.6.0
+if ("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS "2.6")
+  message(STATUS "
+************************************************************************
+From August 4th CMake >= 2.6.0 will be required, please update your CMake, e.g. from http://www.cmake.org/HTML/Download.html .
+************************************************************************
+")
+endif ("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS "2.6")
+
+
 # CMake 2.6, set compatibility behaviour to cmake 2.4
 # this must be executed always, because the CMAKE_MINIMUM_REQUIRED() command above
 # resets the policy settings, so we get a lot of warnings
