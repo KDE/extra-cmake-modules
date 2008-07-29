@@ -1107,7 +1107,7 @@ endmacro (KDE4_ADD_APP_ICON)
 
 
 macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
-   if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
+#   if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
 
       # get all cmake variables which end in _LIB_DEPENDS
       # then parse the target name out of them
@@ -1134,7 +1134,7 @@ macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
          endif(NOT "${target}" STREQUAL "${currentVar}")
       endforeach(currentVar ${allVars})
 
-   endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
+#   endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
 endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
 
 macro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
