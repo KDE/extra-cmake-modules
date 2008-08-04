@@ -228,36 +228,23 @@
 
 
 # this is required now by cmake 2.6 and so must not be skipped by if(KDE4_FOUND) below
-cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
-
-# cmake 2.5, i.e. the cvs version between 2.4 and 2.6, is not supported
-if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
-   message(FATAL_ERROR "You are using CMake 2.5, which was the unreleased development version between 2.4 and 2.6. This is no longer supported. Please update to CMake 2.6 or current cvs HEAD.")
-endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.5")
-
-# print a reminder to update cmake to at least 2.6.0
-if ("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS "2.6")
-  message(STATUS "
-************************************************************************
-From August 4th CMake >= 2.6.0 will be required, please update your CMake, e.g. from http://www.cmake.org/HTML/Download.html .
-************************************************************************
-")
-endif ("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS "2.6")
-
+cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
+# this second call will never fail
+# it is here for the effect that it sets the cmake policies to the 2.4.x compatibility settings for now
+cmake_minimum_required(VERSION 2.4.5)
 
 # CMake 2.6, set compatibility behaviour to cmake 2.4
 # this must be executed always, because the CMAKE_MINIMUM_REQUIRED() command above
 # resets the policy settings, so we get a lot of warnings
-if(COMMAND CMAKE_POLICY)
-   # CMP0000: don't require cmake_minimum_version() directly in the top level CMakeLists.txt, FindKDE4Internal.cmake is good enough
-   cmake_policy(SET CMP0000 OLD)
-   # CMP0002: in KDE4 we have multiple targets with the same name for the unit tests
-   cmake_policy(SET CMP0002 OLD)
-   # CMP0003: add the link paths to the link command as with cmake 2.4
-   cmake_policy(SET CMP0003 OLD)
-   # CMP0005: keep escaping behaviour for definitions added via add_definitions()
-   cmake_policy(SET CMP0005 OLD)
-endif(COMMAND CMAKE_POLICY)
+
+# CMP0000: don't require cmake_minimum_version() directly in the top level CMakeLists.txt, FindKDE4Internal.cmake is good enough
+cmake_policy(SET CMP0000 OLD)
+# CMP0002: in KDE4 we have multiple targets with the same name for the unit tests
+cmake_policy(SET CMP0002 OLD)
+# CMP0003: add the link paths to the link command as with cmake 2.4
+cmake_policy(SET CMP0003 OLD)
+# CMP0005: keep escaping behaviour for definitions added via add_definitions()
+cmake_policy(SET CMP0005 OLD)
 
 
 # Only do something if it hasn't been found yet
@@ -699,40 +686,24 @@ set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
 
 # on the Mac support an extra install directory for application bundles starting with cmake 2.6
 if(APPLE)
-   if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER "2.5")
-      set(INSTALL_TARGETS_DEFAULT_ARGS  ${INSTALL_TARGETS_DEFAULT_ARGS}
-                                  BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
-   endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER "2.5")
+   set(INSTALL_TARGETS_DEFAULT_ARGS  ${INSTALL_TARGETS_DEFAULT_ARGS}
+                               BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
 endif(APPLE)
 
 
 ##############  add some more default search paths  ###############
 #
-# always search in the directory where cmake is installed 
-# and in the current installation prefix
 # the KDE4_xxx_INSTALL_DIR variables are empty when building kdelibs itself
 # and otherwise point to the kde4 install dirs
-# they will be set by default starting with cmake 2.6.0, maybe already 2.4.8
-
-# also add the install directory of the running cmake to the search directories
-# CMAKE_ROOT is CMAKE_INSTALL_PREFIX/share/cmake, so we need to go two levels up
-get_filename_component(_CMAKE_INSTALL_DIR "${CMAKE_ROOT}" PATH)
-get_filename_component(_CMAKE_INSTALL_DIR "${_CMAKE_INSTALL_DIR}" PATH)
 
 set(CMAKE_SYSTEM_INCLUDE_PATH ${CMAKE_SYSTEM_INCLUDE_PATH}
-                              "${KDE4_INCLUDE_INSTALL_DIR}"
-                              "${_CMAKE_INSTALL_DIR}/include"
-                              "${CMAKE_INSTALL_PREFIX}/include" )
+                              "${KDE4_INCLUDE_INSTALL_DIR}")
 
 set(CMAKE_SYSTEM_PROGRAM_PATH ${CMAKE_SYSTEM_PROGRAM_PATH}
-                              "${KDE4_BIN_INSTALL_DIR}"
-                              "${_CMAKE_INSTALL_DIR}/bin"
-                              "${CMAKE_INSTALL_PREFIX}/bin" )
+                              "${KDE4_BIN_INSTALL_DIR}" )
 
 set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH} 
-                              "${KDE4_LIB_INSTALL_DIR}"
-                              "${_CMAKE_INSTALL_DIR}/lib" 
-                              "${CMAKE_INSTALL_PREFIX}/lib" )
+                              "${KDE4_LIB_INSTALL_DIR}" )
 
 # under Windows dlls may be also installed in bin/
 if(WIN32)
