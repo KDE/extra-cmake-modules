@@ -534,7 +534,19 @@ endif(KDE4_ENABLE_FINAL)
 # info from "http://www.linuxfromscratch.org/hlfs/view/unstable/glibc/chapter02/pie.html"
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
-set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
+# If we are building ! kdelibs, check where kdelibs are installed.
+# If they are installed in a directory which contains "lib64", we default to "64" for LIB_SUFFIX,
+# so the current project will by default also go into lib64.
+# The same for lib32. Alex
+set(_Init_LIB_SUFFIX "")
+if ("${KDE4_LIB_DIR}" MATCHES lib64)
+   set(_Init_LIB_SUFFIX 64)
+endif ("${KDE4_LIB_DIR}" MATCHES lib64)
+if ("${KDE4_LIB_DIR}" MATCHES lib32)
+   set(_Init_LIB_SUFFIX 32)
+endif ("${KDE4_LIB_DIR}" MATCHES lib32)
+
+set(LIB_SUFFIX "${_Init_LIB_SUFFIX}" CACHE STRING "Define suffix of directory name (32/64)" )
 
 
 ########## the following are directories where stuff will be installed to  ###########
