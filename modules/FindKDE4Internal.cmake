@@ -259,17 +259,15 @@ find_package(Qt4 REQUIRED)
 # automoc4 (from kdesupport) is now required, Alex
 find_package(Automoc4 REQUIRED)
 
-if (CMAKE_MAJOR_VERSION GREATER 4)
-   # cmake 2.6.0 and automoc4 0.9.83 didn't add the necessary definitions for backends to moc calls
-   if (NOT AUTOMOC4_VERSION)
-      # the version macro was added for 0.9.84
-      set(AUTOMOC4_VERSION "0.9.83")
-   endif (NOT AUTOMOC4_VERSION)
-   macro_ensure_version("0.9.84" "${AUTOMOC4_VERSION}" _automoc4_version_ok)
-   if (NOT _automoc4_version_ok)
-      message(FATAL_ERROR "Your version of automoc4 is too old. You have ${AUTOMOC4_VERSION}, you need at least 0.9.84")
-   endif (NOT _automoc4_version_ok)
-endif (CMAKE_MAJOR_VERSION GREATER 4)
+# cmake 2.6.0 and automoc4 < 0.9.84 don't work right for -D flags
+if (NOT AUTOMOC4_VERSION)
+   # the version macro was added for 0.9.84
+   set(AUTOMOC4_VERSION "0.9.83")
+endif (NOT AUTOMOC4_VERSION)
+macro_ensure_version("0.9.84" "${AUTOMOC4_VERSION}" _automoc4_version_ok)
+if (NOT _automoc4_version_ok)
+   message(FATAL_ERROR "Your version of automoc4 is too old. You have ${AUTOMOC4_VERSION}, you need at least 0.9.84")
+endif (NOT _automoc4_version_ok)
 
 # use automoc4 from kdesupport
 set(KDE4_AUTOMOC_EXECUTABLE        "${AUTOMOC4_EXECUTABLE}" )
