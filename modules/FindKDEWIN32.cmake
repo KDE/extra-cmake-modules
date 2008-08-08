@@ -7,7 +7,7 @@
 #  KDEWIN32_LIBRARIES - The libraries needed to use KDEWIN32
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
-# Copyright (c) 2007, Ralf Habacker, <ralf.habacker@freenet.de>
+# Copyright (c) 2007-2008, Ralf Habacker, <ralf.habacker@freenet.de>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -41,8 +41,6 @@ if (WIN32)
       NO_SYSTEM_ENVIRONMENT_PATH
     )
 
-    # kdelibs/win/ has to be built before the rest of kdelibs/
-    # eventually it will be moved out from kdelibs/
     if (KDEWIN32_LIBRARY AND KDEWIN32_INCLUDE_DIR)
       set(KDEWIN32_FOUND TRUE)
       # add needed system libs
