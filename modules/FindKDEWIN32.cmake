@@ -14,8 +14,6 @@
 
 
 if (WIN32)
-  include(FindLibraryWithDebug)
-
   if (NOT KDEWIN32_DIR)
     if(NOT KDEWIN_FOUND)
       find_package(KDEWIN)
@@ -28,9 +26,15 @@ if (WIN32)
  
     # search for kdewin32 in the default install directory for applications (default of (n)make install)
     FILE(TO_CMAKE_PATH "${CMAKE_LIBRARY_PATH}" _cmakeLibraryPathCmakeStyle)
-    find_library_with_debug(KDEWIN32_LIBRARY
-      WIN32_DEBUG_POSTFIX d
-      NAMES kdewin32
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set (LIBRARY_NAME kdewin32d)
+    else (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set (LIBRARY_NAME kdewin32)
+    endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+    find_library(KDEWIN32_LIBRARY
+      NAMES ${LIBRARY_NAME}
       PATHS 
         ${_cmakeLibraryPathCmakeStyle}
         ${CMAKE_INSTALL_PREFIX}/lib
