@@ -514,8 +514,13 @@ option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the h
 # # change from "LINK_INTERFACE_LIBRARIES" to "DISABLED_LINK_INTERFACE_LIBRARIES", 
 # # which is a different (non-existing) target property, and so setting that property 
 # # won't have an effect
-# set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
-# 
+
+# disable this for now for Windows, since there is an issue with the use of "debug" and
+# "optimized" in the LINK_INTERFACE_LIBRARIES target property, Alex
+if (WIN32)
+   set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
+endif(WIN32)
+
 # option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the experimental reduced library exports" FALSE)
 # # If enabled, make it empty, so the property will keep it's actual name.
 # # and the LINK_INTERFACE_LIBRARIES property will be set.
