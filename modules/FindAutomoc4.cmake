@@ -28,11 +28,14 @@ else("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
    file(TO_CMAKE_PATH "$ENV{CMAKE_PREFIX_PATH}" _env_CMAKE_PREFIX_PATH)
    file(TO_CMAKE_PATH "$ENV{CMAKE_LIBRARY_PATH}" _env_CMAKE_LIBRARY_PATH)
 
-   find_file(AUTOMOC4_CONFIG_FILE NAMES Automoc4Config.cmake 
+   set(AUTOMOC4_SEARCH_PATHS
+             ${_env_CMAKE_PREFIX_PATH} ${CMAKE_PREFIX_PATH} ${CMAKE_SYSTEM_PREFIX_PATH}
+             ${_env_CMAKE_LIBRARY_PATH} ${CMAKE_LIBRARY_PATH} ${CMAKE_SYSTEM_LIBRARY_PATH}
+             ${CMAKE_INSTALL_PREFIX})
+
+   find_file(AUTOMOC4_CONFIG_FILE NAMES Automoc4Config.cmake
              PATH_SUFFIXES automoc4 lib/automoc4 lib64/automoc4
-             PATHS ${_env_CMAKE_PREFIX_PATH} ${CMAKE_PREFIX_PATH} ${CMAKE_SYSTEM_PREFIX_PATH} 
-                   ${_env_CMAKE_LIBRARY_PATH} ${CMAKE_LIBRARY_PATH} ${CMAKE_SYSTEM_LIBRARY_PATH}
-                   ${CMAKE_INSTALL_PREFIX}
+             PATHS ${AUTOMOC4_SEARCH_PATHS}
              NO_DEFAULT_PATH )
 endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
@@ -50,10 +53,10 @@ if (AUTOMOC4_FOUND)
    endif (NOT Automoc4_FIND_QUIETLY)
 else (AUTOMOC4_FOUND)
    if (Automoc4_FIND_REQUIRED)
-      message(FATAL_ERROR "Did not find automoc4 (part of kdesupport).")
+      message(FATAL_ERROR "Did not find Automoc4Config.cmake (part of kdesupport). Searched in ${AUTOMOC4_SEARCH_PATHS} using suffixes automoc4 lib/automoc4 lib64/automoc4.")
    else (Automoc4_FIND_REQUIRED)
       if (NOT Automoc4_FIND_QUIETLY)
-         message(STATUS "Did not find automoc4 (part of kdesupport).")
+         message(STATUS "Did not find Automoc4Config.cmake (part of kdesupport). Searched in ${AUTOMOC4_SEARCH_PATHS} using suffixes automoc4 lib/automoc4 lib64/automoc4.")
       endif (NOT Automoc4_FIND_QUIETLY)
    endif (Automoc4_FIND_REQUIRED)
 endif (AUTOMOC4_FOUND)
