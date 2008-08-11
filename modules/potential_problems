@@ -1,2 +1,0 @@
-/CMakeLists.txt find_package(Perl REQUIRED)
-KDE4_AUTOMOC: -DQ_WS_X11
