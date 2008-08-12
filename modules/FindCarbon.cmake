@@ -8,11 +8,15 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-INCLUDE(CMakeFindFrameworks)
+include(CMakeFindFrameworks)
 
-CMAKE_FIND_FRAMEWORKS(Carbon)
+cmake_find_frameworks(Carbon)
 
 if (Carbon_FRAMEWORKS)
    set(CARBON_LIBRARY "-framework Carbon" CACHE FILEPATH "Carbon framework" FORCE)
    set(CARBON_FOUND 1)
 endif (Carbon_FRAMEWORKS)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Carbon DEFAULT_MSG CARBON_LIBRARY)
+
