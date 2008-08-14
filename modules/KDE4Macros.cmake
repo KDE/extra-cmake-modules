@@ -1119,9 +1119,7 @@ macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
       # Alex
 
       file(${_append_or_write} "${_filename}" "# The following variables have been created by kde4_export_library_dependencies()
-# The contents have been determined from the LINK_INTERFACE_LIBRARIES target property of the respective libraries.
-# The option KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT has been enabled to create the file this way.
-# You can modify KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT using \"make edit_cache\"\n\n")
+# The contents have been determined from the LINK_INTERFACE_LIBRARIES target property of the respective libraries.\n\n")
       get_cmake_property(allVars VARIABLES)
       set(allLibs "")
       foreach(currentVar ${allVars})
