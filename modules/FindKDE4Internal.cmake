@@ -216,6 +216,12 @@
 #  without going all over the place, but still produce better performance.
 #  It's also important to note that gcc cannot detect all warning conditions
 #  unless the optimiser is active.
+#
+#  This module allows to depend on a particular minimum version of kdelibs.
+#  To acomplish that one should use the apropriate cmake syntax for
+#  find_package. For example to depend on kdelibs >= 4.1.0 one should use
+#
+#  find_package(KDE4 4.1.0 REQUIRED)
 
 #  _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 #  _KDE4_PLATFORM_DEFINITIONS is used only internally
@@ -352,7 +358,25 @@ else (_kdeBootStrapping)
 
       # we need at least this version:
       if (NOT KDE_MIN_VERSION)
-         set(KDE_MIN_VERSION "3.9.0")
+         if (KDE4_FIND_VERSION_MAJOR)
+            message("${KDE4_FIND_VERSION_MAJOR}")
+            if (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
+               if (KDE4_FIND_VERSION_MINOR)
+                 set(KDE_MIN_VERSION "4.${KDE4_FIND_VERSION_MINOR}")
+               else (KDE4_FIND_VERSION_MINOR)
+                 set(KDE_MIN_VERSION "4.0")
+               endif (KDE4_FIND_VERSION_MINOR)
+               if (KDE4_FIND_VERSION_PATCH)
+                  set(KDE_MIN_VERSION "${KDE_MIN_VERSION}.${KDE4_FIND_VERSION_PATCH}")
+               else (KDE4_FIND_VERSION_PATCH)
+                  set(KDE_MIN_VERSION "${KDE_MIN_VERSION}.0")
+               endif (KDE4_FIND_VERSION_PATCH)
+            else (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
+               message(FATAL_ERROR "FindKDE4 can only be used with KDE 4")
+            endif (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
+         else (KDE4_FIND_VERSION_MAJOR)
+            set (KDE_MIN_VERSION "4.0.0")
+         endif (KDE4_FIND_VERSION_MAJOR)
       endif (NOT KDE_MIN_VERSION)
 
       #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
