@@ -259,10 +259,24 @@
 # Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
 # See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-if (QT4_QMAKE_FOUND)
-   # Check already done in this cmake run, nothing more to do
 
-else (QT4_QMAKE_FOUND)
+# If Qt3 has already been found, fail.
+IF(QT_QT_LIBRARY)
+  IF(Qt4_FIND_REQUIRED)
+    MESSAGE( FATAL_ERROR "Qt3 and Qt4 cannot be used together in one project.")
+  ELSE(Qt4_FIND_REQUIRED)
+    IF(NOT Qt4_FIND_QUIETLY)
+      MESSAGE( STATUS    "Qt3 and Qt4 cannot be used together in one project.")
+    ENDIF(NOT Qt4_FIND_QUIETLY)
+    RETURN()
+  ENDIF(Qt4_FIND_REQUIRED)
+ENDIF(QT_QTCORE_LIBRARY)
+
+
+IF (QT4_QMAKE_FOUND)
+   # Check already done in this cmake run, nothing more to do
+   RETURN()
+ENDIF (QT4_QMAKE_FOUND)
 
 # check that QT_NO_DEBUG is defined for release configurations
 MACRO(QT_CHECK_FLAG_EXISTS FLAG VAR DOC)
@@ -501,9 +515,9 @@ IF (QT4_QMAKE_FOUND)
   ENDIF( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
 
   IF( NOT QT_INCLUDE_DIR)
-    IF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
+    IF(Qt4_FIND_REQUIRED)
       MESSAGE( FATAL_ERROR "Could NOT find QtGlobal header")
-    ENDIF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
+    ENDIF(Qt4_FIND_REQUIRED)
   ENDIF( NOT QT_INCLUDE_DIR)
 
   #############################################
@@ -925,9 +939,9 @@ IF (QT4_QMAKE_FOUND)
   ENDIF (QT_USE_FRAMEWORKS)
 
   IF( NOT QT_QTCORE_LIBRARY )
-    IF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
+    IF(Qt4_FIND_REQUIRED)
       MESSAGE( FATAL_ERROR "Could NOT find QtCore. Check ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log for more details.")
-    ENDIF( NOT Qt4_FIND_QUIETLY AND Qt4_FIND_REQUIRED)
+    ENDIF(Qt4_FIND_REQUIRED)
   ENDIF( NOT QT_QTCORE_LIBRARY )
 
   # Set QT_QTASSISTANT_LIBRARY
@@ -1449,7 +1463,7 @@ IF (QT4_QMAKE_FOUND)
   SET( QT_QT_LIBRARY "")
 
 ELSE(QT4_QMAKE_FOUND)
-   
+
    SET(QT_QMAKE_EXECUTABLE "${QT_QMAKE_EXECUTABLE}-NOTFOUND" CACHE FILEPATH "Invalid qmake found" FORCE)
    IF(Qt4_FIND_REQUIRED)
       IF(QT4_INSTALLED_VERSION_TOO_OLD)
@@ -1462,7 +1476,6 @@ ELSE(QT4_QMAKE_FOUND)
          MESSAGE(STATUS "The installed Qt version ${QTVERSION} is too old, at least version ${QT_MIN_VERSION} is required")
       ENDIF(QT4_INSTALLED_VERSION_TOO_OLD AND NOT Qt4_FIND_QUIETLY)
    ENDIF(Qt4_FIND_REQUIRED)
- 
-ENDIF (QT4_QMAKE_FOUND)
+
 ENDIF (QT4_QMAKE_FOUND)
 

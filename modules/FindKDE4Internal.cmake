@@ -258,12 +258,21 @@ if(NOT KDE4_FOUND)
 
 include (MacroEnsureVersion)
 
+# we may only search for other packages with "REQUIRED" if we are required ourselves
+if(KDE4_FIND_REQUIRED)
+  set(_REQ_STRING_KDE4 "REQUIRED")
+  set(_REQ_STRING_KDE4_MESSAGE "FATAL_ERROR")
+else(KDE4_FIND_REQUIRED)
+  set(_REQ_STRING_KDE4 )
+  set(_REQ_STRING_KDE4_MESSAGE "STATUS")
+endif(KDE4_FIND_REQUIRED)
+
 set(QT_MIN_VERSION "4.4.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
-find_package(Qt4 REQUIRED)
+find_package(Qt4 ${_REQ_STRING_KDE4})
 
 # automoc4 (from kdesupport) is now required, Alex
-find_package(Automoc4 REQUIRED)
+find_package(Automoc4 ${_REQ_STRING_KDE4})
 
 # cmake 2.6.0 and automoc4 < 0.9.84 don't work right for -D flags
 if (NOT AUTOMOC4_VERSION)
@@ -271,15 +280,43 @@ if (NOT AUTOMOC4_VERSION)
    set(AUTOMOC4_VERSION "0.9.83")
 endif (NOT AUTOMOC4_VERSION)
 macro_ensure_version("0.9.84" "${AUTOMOC4_VERSION}" _automoc4_version_ok)
-if (NOT _automoc4_version_ok)
-   message(FATAL_ERROR "Your version of automoc4 is too old. You have ${AUTOMOC4_VERSION}, you need at least 0.9.84")
-endif (NOT _automoc4_version_ok)
 
-# use automoc4 from kdesupport
+# for compatibility with KDE 4.0.x
 set(KDE4_AUTOMOC_EXECUTABLE        "${AUTOMOC4_EXECUTABLE}" )
 
-# Perl is required for building KDE software,
-find_package(Perl REQUIRED)
+# Perl is required for building KDE software
+find_package(Perl ${_REQ_STRING_KDE4})
+
+# Check that we really found everything.
+# If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something wasn't found 
+# already above in the other FIND_PACKAGE() calls.
+# If KDE4 was searched without REQUIRED and something in the FIND_PACKAGE() calls above wasn't found, 
+# then we get here and must check that everything has actually been found. If something is missing,
+# we must not fail with FATAL_ERROR, but only not set KDE4_FOUND.
+if(NOT PERL_FOUND)
+   message(STATUS "KDE4 not found, because Perl not found")
+   return()
+endif(NOT PERL_FOUND)
+
+if(NOT QT4_FOUND)
+   message(STATUS "KDE4 not found, because Qt4 not found")
+   return()
+endif(NOT QT4_FOUND)
+
+if(NOT AUTOMOC4_FOUND OR NOT _automoc4_version_ok)
+   if(NOT AUTOMOC4_FOUND)
+      message(${_REQ_STRING_KDE4_MESSAGE} "KDE4 not found, because Automoc4 not found.")
+      return()
+   else(NOT AUTOMOC4_FOUND)
+      if(NOT _automoc4_version_ok)
+         message(${_REQ_STRING_KDE4_MESSAGE} "Your version of automoc4 is too old. You have ${AUTOMOC4_VERSION}, you need at least 0.9.84")
+         return()
+      endif(NOT _automoc4_version_ok)
+   endif(NOT AUTOMOC4_FOUND)
+endif(NOT AUTOMOC4_FOUND OR NOT _automoc4_version_ok)
+
+
+# now we are sure we have everything we need
 
 include (MacroLibrary)
 include (CheckCXXCompilerFlag)
