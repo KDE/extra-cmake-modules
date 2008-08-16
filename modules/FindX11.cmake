@@ -48,7 +48,6 @@ IF (UNIX)
   SET(CMAKE_FIND_FRAMEWORK NEVER)
   SET(X11_INC_SEARCH_PATH
     /usr/pkg/xorg/include
-    /usr/pkg/include
     /usr/X11R6/include 
     /usr/X11R7/include 
     /usr/include/X11
@@ -59,7 +58,6 @@ IF (UNIX)
 
   SET(X11_LIB_SEARCH_PATH
     /usr/pkg/xorg/lib
-    /usr/pkg/lib
     /usr/X11R6/lib
     /usr/X11R7/lib
     /usr/openwin/lib 
@@ -134,6 +132,7 @@ IF (UNIX)
     GET_FILENAME_COMPONENT(X11_LIBRARY_DIR ${X11_X11_LIB} PATH)
   ENDIF(X11_X11_LIB)
 
+  SET(X11_INCLUDE_DIR) # start with empty list
   IF(X11_X11_INCLUDE_PATH)
     SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH})
   ENDIF(X11_X11_INCLUDE_PATH)
@@ -152,6 +151,7 @@ IF (UNIX)
     SET(X11_INCLUDE_DIR ${X11_INCLUDE_DIR} ${X11_Xshape_INCLUDE_PATH})
   ENDIF(X11_Xshape_INCLUDE_PATH)
 
+  SET(X11_LIBRARIES) # start with empty list
   IF(X11_X11_LIB)
     SET(X11_LIBRARIES ${X11_LIBRARIES} ${X11_X11_LIB})
   ENDIF(X11_X11_LIB)
