@@ -222,6 +222,10 @@
 #  find_package. For example to depend on kdelibs >= 4.1.0 one should use
 #
 #  find_package(KDE4 4.1.0 REQUIRED)
+#
+#  In earlier versions of KDE you could use the variable KDE_MIN_VERSION to
+#  have such a dependency. This variable is deprecated with KDE 4.2.0, but
+#  will still work to make the module backwards-compatible.
 
 #  _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 #  _KDE4_PLATFORM_DEFINITIONS is used only internally
