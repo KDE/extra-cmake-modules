@@ -216,6 +216,13 @@
 #  without going all over the place, but still produce better performance.
 #  It's also important to note that gcc cannot detect all warning conditions
 #  unless the optimiser is active.
+#
+#  You can set the variable KDE_MIN_VERSION before calling find_package()
+#  to depend on a particular kdelibs version. For example to depend on
+#  KDE 4.1.0 you can use
+#
+#  set(KDE_MIN_VERSION "4.1.0")
+#  find_package(KDE4 REQUIRED)
 
 #  _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 #  _KDE4_PLATFORM_DEFINITIONS is used only internally
