@@ -15,7 +15,7 @@
 include(FindLibraryWithDebug)
 
 if(NOT STRIGI_MIN_VERSION)
-  set(STRIGI_MIN_VERSION "0.5.9")
+  set(STRIGI_MIN_VERSION "0.6.0")
 endif(NOT STRIGI_MIN_VERSION)
 
 if (WIN32)
