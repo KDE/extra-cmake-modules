@@ -582,9 +582,16 @@ option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the h
 
 # disable this for now for Windows, since there is an issue with the use of "debug" and
 # "optimized" in the LINK_INTERFACE_LIBRARIES target property, Alex
-if (WIN32)
+
+# disable the reduced linking temporarily for Windows, cmake HEAD and the soon-to-be-released cmake 2.6.2
+# With 2.6.0 and 2.6.1 it can happen that the "debug", "optimized" and "general" keywords are
+# misinterpreted by cmake as library names, the linking fails. Usually this happens under Windows.
+# In 2.6.2 this will be an error at cmake time, so we disable it for now and once we require 
+# 2.6.2 we'll fix it the right way (using TARGET_LINK_LIBRARIES(foo LINK_INTERFACE_LIBRARIES ...)
+if (WIN32  OR  "${CMAKE_MINOR_VERSION}" EQUAL 7  OR  "${CMAKE_PATCH_VERSION}" EQUAL 2)
    set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
-endif(WIN32)
+endif (WIN32  OR  "${CMAKE_MINOR_VERSION}" EQUAL 7  OR  "${CMAKE_PATCH_VERSION}" EQUAL 2)
+#endif(WIN32)
 
 # option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the experimental reduced library exports" FALSE)
 # # If enabled, make it empty, so the property will keep it's actual name.
