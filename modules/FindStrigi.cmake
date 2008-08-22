@@ -117,7 +117,7 @@ endif (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Strigi  
-                                  "Couldn't find Strigi streams and streamanalyzer libraries. Set the environment variable STRIGI_HOME (or CMAKE_FIND_PREFIX_PATH if using CMake >=2.5) to the strigi install dir."  
+                                  "Couldn't find Strigi streams and streamanalyzer libraries. Set the environment variable STRIGI_HOME (or CMAKE_PREFIX_PATH if using CMake >=2.6) to the strigi install dir."  
                                   STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
 
 if(WIN32)
