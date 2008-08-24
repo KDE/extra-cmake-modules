@@ -880,14 +880,14 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    set(_symbol "MAKE_${_symbol}_LIB")
    set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
 
-   # if that option is enabled, by default don't add any linked libraries to the "exported"
-   # link interfaces, so that executables linking against this library won't get additional
-   # indirect dependencies. This makes work easier for packagers and should make application
-   # startup somewhat faster, if I understood Dirk correctly.
+   # by default don't add any linked libraries to the "exported"
+   # link interfaces, so that executables linking against this library
+   # will not automatically add implicit dependencies to their link list.
+   #
+   # This reduces inter-package dependencies and makes it easier to remove
+   # dependencies of shared libraries without breaking binary compatibility.
    if(NOT "${_add_lib_param}" STREQUAL "STATIC")
-      if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
-         set_target_properties(${_target_NAME} PROPERTIES LINK_INTERFACE_LIBRARIES "" )
-      endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
+      set_target_properties(${_target_NAME} PROPERTIES ${KDE4_DISABLE_PROPERTY_}LINK_INTERFACE_LIBRARIES "" )
    endif(NOT "${_add_lib_param}" STREQUAL "STATIC")
 
 endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
