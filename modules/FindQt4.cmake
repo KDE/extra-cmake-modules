@@ -85,6 +85,10 @@
 #        the list of sources.
 #        To disable generating a namespace header, set the source file property 
 #        NO_NAMESPACE to TRUE on the interface file.
+#        To include a header in the interface header, set the source file property
+#        INCLUDE to the name of the header.
+#        To specify a class name to use, set the source file property CLASSNAME
+#        to the name of the class.
 #
 #  macro QT4_ADD_DBUS_INTERFACES(outfiles inputfile ... )
 #        create the interface header and implementation files 
@@ -92,6 +96,10 @@
 #        the name will be automatically determined from the name of the xml file
 #        To disable generating namespace headers, set the source file property 
 #        NO_NAMESPACE to TRUE for these inputfiles.
+#        To include a header in the interface header, set the source file property
+#        INCLUDE to the name of the header.
+#        To specify a class name to use, set the source file property CLASSNAME
+#        to the name of the class.
 #
 #  macro QT4_ADD_DBUS_ADAPTOR(outfiles xmlfile parentheader parentclassname [basename] [classname])
 #        create a dbus adaptor (header and implementation file) from the xml file
@@ -1267,6 +1275,11 @@ IF (QT4_QMAKE_FOUND)
     ELSE ( _nonamespace )
         SET(_params -m)
     ENDIF ( _nonamespace )
+
+    GET_SOURCE_FILE_PROPERTY(_classname ${_interface} CLASSNAME)
+    IF ( _classname )
+        SET(_params ${_params} -c ${_classname})
+    ENDIF ( _classname )
 
     GET_SOURCE_FILE_PROPERTY(_include ${_interface} INCLUDE)
     IF ( _include )
