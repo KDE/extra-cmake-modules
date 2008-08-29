@@ -17,6 +17,9 @@ include(FindLibraryWithDebug)
 if(NOT STRIGI_MIN_VERSION)
   set(STRIGI_MIN_VERSION "0.5.9")
 endif(NOT STRIGI_MIN_VERSION)
+if(NOT STRIGI_MAX_VERSION)
+  set(STRIGI_MAX_VERSION "0.5.99")
+endif(NOT STRIGI_MAX_VERSION)
 
 if (WIN32)
   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
@@ -82,7 +85,7 @@ if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
   # if pkgconfig found strigi, check the version, otherwise print a warning
   if(_dummyLinkFlags)
 
-    exec_program(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${STRIGI_MIN_VERSION}
+    exec_program(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${STRIGI_MIN_VERSION} --max-version=${STRIGI_MAX_VERSION}
                  libstreamanalyzer RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
 
     if(NOT _return_VALUE STREQUAL "0")
