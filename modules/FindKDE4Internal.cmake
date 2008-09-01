@@ -1104,10 +1104,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
       file(WRITE "${_source_file}" "${_source}")
       set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
 
-      try_run(_run_result _compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}")
+      try_run(_run_result _compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" COMPILE_OUTPUT_VARIABLE _compile_output_var)
 
       if(NOT _compile_result)
-         message(FATAL_ERROR "Could not compile simple test program:\n ${_source}")
+         message(FATAL_ERROR "Could not compile simple test program:\n ${_source}\n${_compile_output_var}")
       endif(NOT _compile_result)
       if(_run_result)
          message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation.")
