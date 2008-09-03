@@ -1,4 +1,4 @@
-# - Try to find Strigi
+# - Try to find Strigi, a fast and small desktop search program (http://strigi.sourceforge.net )
 # Once done this will define
 #
 #  STRIGI_FOUND - system has Strigi
