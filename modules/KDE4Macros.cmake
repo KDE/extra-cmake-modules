@@ -369,10 +369,12 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
    # first the png icons
    file(GLOB _icons *.png)
    foreach (_current_ICON ${_icons} )
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\1" _type  "${_current_ICON}")
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\2" _size  "${_current_ICON}")
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\3" _group "${_current_ICON}")
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" "\\4" _name  "${_current_ICON}")
+      # since CMake 2.6 regex matches are stored in special variables CMAKE_MATCH_x, if it didn't match, they are empty
+      string(REGEX MATCH "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.png)$" _dummy  "${_current_ICON}")
+      set(_type  "${CMAKE_MATCH_1}")
+      set(_size  "${CMAKE_MATCH_2}")
+      set(_group "${CMAKE_MATCH_3}")
+      set(_name  "${CMAKE_MATCH_4}")
 
       set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
       if( _theme_GROUP)
@@ -385,10 +387,12 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
    # mng icons
    file(GLOB _icons *.mng)
    foreach (_current_ICON ${_icons} )
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\1" _type  "${_current_ICON}")
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\2" _size  "${_current_ICON}")
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\3" _group "${_current_ICON}")
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" "\\4" _name  "${_current_ICON}")
+      # since CMake 2.6 regex matches are stored in special variables CMAKE_MATCH_x, if it didn't match, they are empty
+      string(REGEX MATCH "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$" _dummy  "${_current_ICON}")
+      set(_type  "${CMAKE_MATCH_1}")
+      set(_size  "${CMAKE_MATCH_2}")
+      set(_group "${CMAKE_MATCH_3}")
+      set(_name  "${CMAKE_MATCH_4}")
 
       set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
       if( _theme_GROUP)
@@ -401,9 +405,11 @@ macro (KDE4_INSTALL_ICONS _defaultpath )
    # and now the svg icons
    file(GLOB _icons *.svgz)
    foreach (_current_ICON ${_icons} )
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\1" _type "${_current_ICON}")
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\2" _group "${_current_ICON}")
-      string(REGEX REPLACE "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" "\\3" _name "${_current_ICON}")
+      # since CMake 2.6 regex matches are stored in special variables CMAKE_MATCH_x, if it didn't match, they are empty
+      string(REGEX MATCH "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" _dummy "${_current_ICON}")
+      set(_type  "${CMAKE_MATCH_1}")
+      set(_group "${CMAKE_MATCH_2}")
+      set(_name  "${CMAKE_MATCH_3}")
 
       set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
       if( _theme_GROUP)
