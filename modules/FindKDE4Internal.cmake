@@ -262,14 +262,17 @@ if(NOT KDE4_FOUND)
 
 include (MacroEnsureVersion)
 
-# we may only search for other packages with "REQUIRED" if we are required ourselves
-if(KDE4_FIND_REQUIRED)
+# We may only search for other packages with "REQUIRED" if we are required ourselves.
+# This file can be processed either (usually) included in FindKDE4.cmake or
+# (when building kdelibs) directly via FIND_PACKAGE(KDE4Internal), that's why
+# we have to check for both KDE4_FIND_REQUIRED and KDE4Internal_FIND_REQUIRED.
+if(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
   set(_REQ_STRING_KDE4 "REQUIRED")
   set(_REQ_STRING_KDE4_MESSAGE "FATAL_ERROR")
-else(KDE4_FIND_REQUIRED)
+else(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
   set(_REQ_STRING_KDE4 )
   set(_REQ_STRING_KDE4_MESSAGE "STATUS")
-endif(KDE4_FIND_REQUIRED)
+endif(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
 
 set(QT_MIN_VERSION "4.4.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
