@@ -1141,6 +1141,27 @@ macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
 #   endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
 endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
 
+# In cmake 2.6.2 a new keyword "LINK_INTERFACE_LIBRARIES is added to TARGET_LINK_LIBRARIES().
+# We will use this to reduce the link interface of libraries. As opposed to setting the
+# respective target property, here the "debug" and "optimized" keywords are supported
+# (this is actually the reason why we will use this).
+# The problem is, once we add this call to our cmake files, cmake 2.6.0 and 2.6.1 would not
+# work anymore, since they would fail when trying to link against -lLINK_INTERFACE_LIBRARIES
+# That's for cmake 2.6.0 and 2.6.1 we redefine TARGET_LINK_LIBRARIES() here.
+# If the first argument after the target name if "LINK_INTERFACE_LIBRARIES", then 
+# nothing is done, otherwise the original TARGET_LINK_LIBRARIES() is called.
+# This can be done by calling _target_link_libraries(), since if a command is 
+# "overloaded" by a macro, the original command gets a "_" prepended, so it 
+# is still available.
+if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" MATCHES "^2\\.6\\.[01]$")
+   macro(TARGET_LINK_LIBRARIES)
+      if(NOT "${ARGV1}" STREQUAL "LINK_INTERFACE_LIBRARIES")
+         _target_link_libraries(${ARGN})
+      endif()
+   endmacro(TARGET_LINK_LIBRARIES)
+endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" MATCHES "^2\\.6\\.[01]$")
+
+
 macro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
    message(FATAL_ERROR "_KDE4_TARGET_LINK_INTERFACE_LIBRARIES() doesn't exist anymore. Set the LINK_INTERFACE_LIBRARIES target property instead. See kdelibs/kdecore/CMakeLists.txt for an example.")
 endmacro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES)
