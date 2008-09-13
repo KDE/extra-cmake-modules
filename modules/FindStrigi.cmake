@@ -85,6 +85,7 @@ if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
   # if pkgconfig found strigi, check the version, otherwise print a warning
   if(_dummyLinkFlags)
 
+    ## TODO find out why --max-version does not work!
     exec_program(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${STRIGI_MIN_VERSION} --max-version=${STRIGI_MAX_VERSION}
                  libstreamanalyzer RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
 
@@ -93,6 +94,11 @@ if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
       message(FATAL_ERROR "Didn't find strigi >= ${STRIGI_MIN_VERSION}")
     else(NOT _return_VALUE STREQUAL "0")
       set(HAVE_STRIGI_VERSION TRUE)
+      set (STRIGI_NEEDS_SIGNED_CHAR FALSE)
+      exec_program(${PKGCONFIG_EXECUTABLE} ARGS --modversion libstreamanalyzer RETURN_VALUE _version_return_VALUE OUTPUT_VARIABLE _strigiVersion )
+      MACRO_ENSURE_VERSION("0.6.0" ${_strigiVersion} STRIGI_NEEDS_SIGNED_CHAR)
+      # message(STATUS "Strigi version is ${_strigiVersion}. Needs signed char: ${STRIGI_NEEDS_SIGNED_CHAR}")
+
       if(NOT Strigi_FIND_QUIETLY)
         message(STATUS "Found Strigi >= ${STRIGI_MIN_VERSION}")
       endif(NOT Strigi_FIND_QUIETLY)
