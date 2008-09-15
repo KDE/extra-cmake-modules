@@ -15,7 +15,7 @@
 include(FindLibraryWithDebug)
 
 if(NOT STRIGI_MIN_VERSION)
-  set(STRIGI_MIN_VERSION "0.6.0")
+  set(STRIGI_MIN_VERSION "0.5.9")
 endif(NOT STRIGI_MIN_VERSION)
 
 if (WIN32)
@@ -96,7 +96,7 @@ if (NOT WIN32 AND NOT HAVE_STRIGI_VERSION)
       # message(STATUS "Strigi version is ${_strigiVersion}. Needs signed char: ${STRIGI_NEEDS_SIGNED_CHAR}")
 
       if(NOT Strigi_FIND_QUIETLY)
-        message(STATUS "Found Strigi >= ${STRIGI_MIN_VERSION}")
+        message(STATUS "Found Strigi ${_strigiVersion}")
       endif(NOT Strigi_FIND_QUIETLY)
     endif(NOT _return_VALUE STREQUAL "0")
     if (NOT STRIGI_STREAMANALYZER_LIBRARY)
