@@ -43,6 +43,7 @@
 #  KDE4_KTEXTEDITOR_LIBRARY - the ktexteditor library
 #  KDE4_KNEPOMUK_LIBRARY    - the knepomuk library
 #  KDE4_KMETADATA_LIBRARY   - the kmetadata library
+#  KDE4_KFORMULA_LIBRARY    - the kformula library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -71,6 +72,7 @@
 #  KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
 #  KDE4_KNEPOMUK_LIBS         - the knepomuk library and all depending libraries
 #  KDE4_KMETADATA_LIBS        - the kmetadata library and all depending libraries
+#  KDE4_KFORMULA_LIBS         - the kformula library and all depending librairies
 #
 # This module defines a bunch of variables used as locations for install directories. 
 # They can be relative (to CMAKE_INSTALL_PREFIX) or absolute.
@@ -519,6 +521,10 @@ else (_kdeBootStrapping)
    # Can't do that, it's not always compiled. See FindKMetaData.cmake
    #find_library(KDE4_KMETADATA_LIBRARY NAMES kmetadata PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    #set(KDE4_KMETADATA_LIBS ${kmetadata_LIB_DEPENDS} ${KDE4_KMETADATA_LIBRARY} )
+
+   find_library(KDE4_KFORMULA_LIBRARY NAMES kformula PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_KFORMULA_LIBS ${kformula_LIB_DEPENDS} ${KDE4_KFORMULA_LIBRARY} )
+
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
 
@@ -1035,7 +1041,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 
    if (CMAKE_SYSTEM_NAME MATCHES Linux)
      set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -fno-check-new -fno-common")
+     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -fno-check-new -fno-common -pedantic")
      add_definitions (-D_BSD_SOURCE)
    endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
