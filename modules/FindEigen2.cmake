@@ -19,8 +19,6 @@ find_path(EIGEN2_INCLUDE_DIR NAMES Eigen/Core
      PATHS
      ${INCLUDE_INSTALL_DIR}
      ${KDE4_INCLUDE_DIR}
-     ${CMAKE_INCLUDE_PATH}
-     /usr/include
      PATH_SUFFIXES eigen2
    )
 
