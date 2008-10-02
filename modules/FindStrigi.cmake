@@ -32,11 +32,12 @@ if (NOT WIN32)
       message(STATUS "pkg-config query failed. did you set $PKG_CONFIG_PATH to the directory where strigi libstreamanalyzer.pc is installed?")
       message(FATAL_ERROR "Didn't find strigi >= ${STRIGI_MIN_VERSION}")
     else(NOT _return_VALUE STREQUAL "0")
-      set(HAVE_STRIGI_VERSION TRUE)
       set (STRIGI_NEEDS_SIGNED_CHAR FALSE)
       exec_program(${PKGCONFIG_EXECUTABLE} ARGS --modversion libstreamanalyzer RETURN_VALUE _version_return_VALUE OUTPUT_VARIABLE _strigiVersion )
       MACRO_ENSURE_VERSION("0.6.0" ${_strigiVersion} STRIGI_NEEDS_SIGNED_CHAR)
       # message(STATUS "Strigi version is ${_strigiVersion}. Needs signed char: ${STRIGI_NEEDS_SIGNED_CHAR}")
+
+      set( STRIGI_NEEDS_SIGNED_CHAR ${STRIGI_NEEDS_SIGNED_CHAR} CACHE BOOL "TRUE if strigi is 0.6.0 or later" )
 
       if(NOT Strigi_FIND_QUIETLY)
         message(STATUS "Found Strigi ${_strigiVersion}")
