@@ -32,13 +32,6 @@ if (NOT WIN32)
       message(STATUS "pkg-config query failed. did you set $PKG_CONFIG_PATH to the directory where strigi libstreamanalyzer.pc is installed?")
       message(FATAL_ERROR "Didn't find strigi >= ${STRIGI_MIN_VERSION}")
     else(NOT _return_VALUE STREQUAL "0")
-      set (STRIGI_NEEDS_SIGNED_CHAR FALSE)
-      exec_program(${PKGCONFIG_EXECUTABLE} ARGS --modversion libstreamanalyzer RETURN_VALUE _version_return_VALUE OUTPUT_VARIABLE _strigiVersion )
-      MACRO_ENSURE_VERSION("0.6.0" ${_strigiVersion} STRIGI_NEEDS_SIGNED_CHAR)
-      # message(STATUS "Strigi version is ${_strigiVersion}. Needs signed char: ${STRIGI_NEEDS_SIGNED_CHAR}")
-
-      set( STRIGI_NEEDS_SIGNED_CHAR ${STRIGI_NEEDS_SIGNED_CHAR} CACHE BOOL "TRUE if strigi is 0.6.0 or later" )
-
       if(NOT Strigi_FIND_QUIETLY)
         message(STATUS "Found Strigi ${_strigiVersion}")
       endif(NOT Strigi_FIND_QUIETLY)
@@ -46,10 +39,6 @@ if (NOT WIN32)
   else(_dummyLinkFlags)
     message(STATUS "pkgconfig didn't find strigi, couldn't check strigi version")
   endif(_dummyLinkFlags)
-else (NOT WIN32)
-  # STRIGI_NEEDS_SIGNED_CHAR is only set correct when pkgconfig is available...
-  # we don't use strigi < 0.6.0 so assume STRIGI_NEEDS_SIGNED_CHAR is needed
-  set(STRIGI_NEEDS_SIGNED_CHAR TRUE)
 endif(NOT WIN32)
 
 if (WIN32)
@@ -114,8 +103,53 @@ find_library_with_debug(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Strigi  
-                                  "Couldn't find Strigi streams and streamanalyzer libraries. Set the environment variable STRIGI_HOME (or CMAKE_PREFIX_PATH if using CMake >=2.6) to the strigi install dir."  
-                                  STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
+    "Couldn't find Strigi streams and streamanalyzer libraries. Set the environment variable STRIGI_HOME (or CMAKE_PREFIX_PATH if using CMake >=2.6) to the strigi install dir."  
+    STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
+
+if (STRIGI_FOUND)
+
+    # Check for the SIC change between 0.5.9 and 0.6.0...
+
+    MACRO(MACRO_CHECK_STRIGI_API_SCREWUP _RETTYPE _RESULT)
+    SET (_STRIGI_API_SCREWUP_SOURCE_CODE "
+#include <strigi/streamendanalyzer.h>
+using namespace Strigi;
+    class ScrewupEndAnalyzer : public StreamEndAnalyzer {
+public:
+    ScrewupEndAnalyzer() {}
+    bool checkHeader(const char*, int32_t) const { return false; }
+    ${_RETTYPE} analyze(Strigi::AnalysisResult&, InputStream*) {
+        return -1;
+    }
+    const char* name() const { return \"Write 1000 times: I promise to keep source compat next time\"; }
+};
+int main()
+{
+    ScrewupEndAnalyzer a;
+    return 0;
+}
+")
+    CHECK_CXX_SOURCE_COMPILES("${_STRIGI_API_SCREWUP_SOURCE_CODE}" ${_RESULT})
+    ENDMACRO(MACRO_CHECK_STRIGI_API_SCREWUP)
+
+    INCLUDE(CheckCXXSourceCompiles)
+    macro_push_required_vars()
+    set( CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${STRIGI_INCLUDE_DIR} )
+    MACRO_CHECK_STRIGI_API_SCREWUP( "signed char" STRIGI_NEEDS_SIGNED_CHAR )
+    MACRO_CHECK_STRIGI_API_SCREWUP( "char" STRIGI_NEEDS_CHAR )
+    set( STRIGI_NEEDS_SIGNED_CHAR ${STRIGI_NEEDS_SIGNED_CHAR} CACHE BOOL "TRUE if strigi is 0.6.0 or later" )
+    if (${STRIGI_NEEDS_SIGNED_CHAR})
+        message(STATUS "Strigi API is post-screwup, needs 'signed char'")
+    else (${STRIGI_NEEDS_SIGNED_CHAR})
+	if (${STRIGI_NEEDS_CHAR})
+	    message(STATUS "Strigi API is pre-screwup check, need 'char'")
+	else (${STRIGI_NEEDS_CHAR})
+	    message(FATAL "Strigi was found, but a simple test program does not compile, check CMakeFiles/CMakeError.log")
+	endif (${STRIGI_NEEDS_CHAR})
+    endif (${STRIGI_NEEDS_SIGNED_CHAR})
+    macro_pop_required_vars()
+endif (STRIGI_FOUND)
+
 
 if(WIN32)
   # this is needed to have mingw, cygwin and msvc libs installed in one directory
@@ -146,4 +180,5 @@ endif(WIN32)
 mark_as_advanced(STRIGI_INCLUDE_DIR STRIGI_STREAMANALYZER_LIBRARY STRIGI_STREAMS_LIBRARY STRIGI_STRIGIQTDBUSCLIENT_LIBRARY 
    STRIGI_LINE_ANALYZER_PREFIX
    STRIGI_THROUGH_ANALYZER_PREFIX
+   STRIGI_NEEDS_SIGNED_CHAR
 )
