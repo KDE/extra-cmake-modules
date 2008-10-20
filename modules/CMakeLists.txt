@@ -1,10 +1,11 @@
 ## install the cmake files
 
 file(GLOB cmakeFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.cmake")
+file(GLOB pyfiles "${CMAKE_CURRENT_SOURCE_DIR}/*.py")
 
 set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
 
-install( FILES cmake-modules-styleguide.txt kde4init_dummy.cpp.in kde4init_win32lib_dummy.cpp.in kde4_cmake_uninstall.cmake.in kde4automoc.files.in ${cmakeFiles} FindSIP.py 
+install( FILES cmake-modules-styleguide.txt kde4init_dummy.cpp.in kde4init_win32lib_dummy.cpp.in kde4_cmake_uninstall.cmake.in kde4automoc.files.in ${cmakeFiles} ${pyfiles}
          DESTINATION ${module_install_dir}  )
 
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
