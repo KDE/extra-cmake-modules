@@ -39,14 +39,14 @@ MACRO(PYTHON_INSTALL SOURCE_FILE DESINATION_DIR)
   IF(_abs_bin_py STREQUAL ${_absfilename})    # Don't copy the file onto itself.
     ADD_CUSTOM_COMMAND(
       TARGET compile_python_files
-      COMMAND ${CMAKE_COMMAND} ${_message} -P ${PYTHON_MACROS_MODULE_PATH}/print_status.cmake
+      COMMAND ${CMAKE_COMMAND} -E echo ${message}
       COMMAND ${PYTHON_EXECUTABLE} ${_python_compile_py} ${_bin_py}
       DEPENDS ${_absfilename}
     )
   ELSE(_abs_bin_py STREQUAL ${_absfilename})
     ADD_CUSTOM_COMMAND(
       TARGET compile_python_files
-      COMMAND ${CMAKE_COMMAND} ${_message} -P ${PYTHON_MACROS_MODULE_PATH}/print_status.cmake
+      COMMAND ${CMAKE_COMMAND} -E echo ${message} 
       COMMAND ${CMAKE_COMMAND} -E copy ${_absfilename} ${_bin_py}
       COMMAND ${PYTHON_EXECUTABLE} ${_python_compile_py} ${_bin_py}
       DEPENDS ${_absfilename}

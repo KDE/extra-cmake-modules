@@ -127,14 +127,14 @@ MACRO(PYKDE4_INSTALL_PYTHON_FILES)
         IF(_abs_bin_py STREQUAL ${_absfilename})    # Don't copy the file onto itself.
             ADD_CUSTOM_COMMAND(
                 TARGET pysupport
-                COMMAND ${CMAKE_COMMAND} ${_message} -P ${current_module_dir}/print_status.cmake
+                COMMAND ${CMAKE_COMMAND} -E echo ${message}
                 COMMAND ${PYTHON_EXECUTABLE} ${current_module_dir}/PythonCompile.py ${_bin_py}
                 DEPENDS ${_absfilename}
             )
         ELSE(_abs_bin_py STREQUAL ${_absfilename})
             ADD_CUSTOM_COMMAND(
                 TARGET pysupport
-                COMMAND ${CMAKE_COMMAND} ${_message} -P ${current_module_dir}/print_status.cmake
+                COMMAND ${CMAKE_COMMAND} -E echo ${message}
                 COMMAND ${CMAKE_COMMAND} -E copy ${_absfilename} ${_bin_py}
                 COMMAND ${PYTHON_EXECUTABLE} ${current_module_dir}/PythonCompile.py ${_bin_py}
                 DEPENDS ${_absfilename}
