@@ -13,6 +13,7 @@
 # will actually do something, Alex
 
 include(FindLibraryWithDebug)
+include(MacroPushRequiredVars)
 
 if(NOT STRIGI_MIN_VERSION)
   set(STRIGI_MIN_VERSION "0.5.9")
@@ -43,10 +44,9 @@ endif(NOT WIN32)
 
 if (WIN32)
   file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
-  string(REPLACE "\\" "/" _program_FILES_DIR "${_program_FILES_DIR}")
 endif(WIN32)
 
-string(REPLACE "\\" "/" strigi_home "$ENV{STRIGI_HOME}")
+file(TO_CMAKE_PATH "$ENV{STRIGI_HOME}" strigi_home)
 
 find_path(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h
   PATHS
