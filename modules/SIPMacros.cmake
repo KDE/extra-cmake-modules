@@ -43,7 +43,6 @@ SET(SIP_EXTRA_OPTIONS)
 
 MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
 
-
     # FIXME this removes -fvisibility=hidden from the compiler flags and has global affect.
     STRING(REPLACE "-fvisibility=hidden" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
     SET(EXTRA_LINK_LIBRARIES ${ARGN})
@@ -103,7 +102,7 @@ MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
         COMMAND ${CMAKE_COMMAND} -E echo ${message}
         COMMAND ${TOUCH_COMMAND} ${_sip_output_files} 
         COMMAND ${SIP_EXECUTABLE} ${_sip_tags} ${_sip_x} ${SIP_EXTRA_OPTIONS} -j ${SIP_CONCAT_PARTS} -c ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} ${_sip_includes} ${_abs_module_sip}
-        DEPENDS ${_abs_module_sip}
+        DEPENDS ${_abs_module_sip} ${SIP_EXTRA_FILES_DEPEND}
     )
     
     ADD_LIBRARY(${_logical_name} SHARED ${_sip_output_files} )
