@@ -44,6 +44,7 @@
 #  KDE4_KNEPOMUK_LIBRARY    - the knepomuk library
 #  KDE4_KMETADATA_LIBRARY   - the kmetadata library
 #  KDE4_KFORMULA_LIBRARY    - the kformula library
+#  KDE4_PLASMA_LIBRARY      - the plasma library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -73,6 +74,7 @@
 #  KDE4_KNEPOMUK_LIBS         - the knepomuk library and all depending libraries
 #  KDE4_KMETADATA_LIBS        - the kmetadata library and all depending libraries
 #  KDE4_KFORMULA_LIBS         - the kformula library and all depending librairies
+#  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
 #
 # This module defines a bunch of variables used as locations for install directories. 
 # They can be relative (to CMAKE_INSTALL_PREFIX) or absolute.
@@ -524,6 +526,10 @@ else (_kdeBootStrapping)
 
    find_library(KDE4_KFORMULA_LIBRARY NAMES kformula PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
    set(KDE4_KFORMULA_LIBS ${kformula_LIB_DEPENDS} ${KDE4_KFORMULA_LIBRARY} )
+
+   find_library(KDE4_PLASMA_LIBRARY NAMES plasma PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
+   set(KDE4_PLASMA_LIBS ${plasma_LIB_DEPENDS} ${KDE4_PLASMA_LIBRARY} )
+
 
 
    get_filename_component(KDE4_LIB_DIR ${KDE4_KDECORE_LIBRARY} PATH )
