@@ -10,8 +10,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-
-
 if(MUSICBRAINZ_INCLUDE_DIR AND MUSICBRAINZ_LIBRARIES)
    set(MUSICBRAINZ_FIND_QUIETLY TRUE)
 endif(MUSICBRAINZ_INCLUDE_DIR AND MUSICBRAINZ_LIBRARIES)
@@ -20,6 +18,11 @@ FIND_PATH(MUSICBRAINZ_INCLUDE_DIR musicbrainz/musicbrainz.h)
 
 FIND_LIBRARY( MUSICBRAINZ_LIBRARIES NAMES musicbrainz)
 
+# We need version 2, version 3 is source-incompatible
+FIND_PATH(MUSICBRAINZ3_INCLUDE_DIR musicbrainz3/musicbrainz.h)
+if(MUSICBRAINZ3_INCLUDE_DIR AND NOT MUSICBRAINZ_INCLUDE_DIR)
+   message(STATUS "\nIncompatible version 3 of the musicbrainz includes detected. Version 2 is needed.\n")
+endif(MUSICBRAINZ3_INCLUDE_DIR AND NOT MUSICBRAINZ_INCLUDE_DIR)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args( MusicBrainz DEFAULT_MSG
