@@ -21,7 +21,7 @@ FIND_LIBRARY( MUSICBRAINZ_LIBRARIES NAMES musicbrainz)
 # We need version 2, version 3 is source-incompatible
 FIND_PATH(MUSICBRAINZ3_INCLUDE_DIR musicbrainz3/musicbrainz.h)
 if(MUSICBRAINZ3_INCLUDE_DIR AND NOT MUSICBRAINZ_INCLUDE_DIR)
-   message(STATUS "\nIncompatible version 3 of the musicbrainz includes detected. Version 2 is needed.\n")
+   message(STATUS "\nIncompatible version 3.x of the musicbrainz includes detected. Version 2.x is needed.\n")
 endif(MUSICBRAINZ3_INCLUDE_DIR AND NOT MUSICBRAINZ_INCLUDE_DIR)
 
 include(FindPackageHandleStandardArgs)
