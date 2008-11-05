@@ -1,7 +1,5 @@
-# cmake macro to see if we have Plasma from KDE workspace
-
 # PLASMA_INCLUDE_DIR
-# PLASMA_FOUND
+# PLASMA_LIBS
 # Copyright (C) 2007 Brad Hards <bradh@frogmouth.net>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
