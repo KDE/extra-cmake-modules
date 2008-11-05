@@ -8,6 +8,7 @@
 
 set(PLASMA_LIBS ${KDE4_PLASMA_LIBS} )
 set(PLASMA_INCLUDE_DIR ${KDE4_INCLUDE_DIR})
+set(PLASMA_FOUND true)
 
 find_file(PLASMA_OPENGL_FOUND plasma/glapplet.h
           PATHS ${PLASMA_INCLUDE_DIR}
