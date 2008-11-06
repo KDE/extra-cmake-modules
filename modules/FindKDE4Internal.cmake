@@ -361,7 +361,7 @@ if (_kdeBootStrapping)
    set(KDE4_KUTILS_LIBS ${KDE4_KIO_LIBS} kutils)
    set(KDE4_KDE3SUPPORT_LIBS ${KDE4_KIO_LIBS} kde3support)
    set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solid)
-   set(KDE4_KFILE_LIBS kfile)
+   set(KDE4_KFILE_LIBS ${KDE4_KIO_LIBS} kfile)
    set(KDE4_KHTML_LIBS ${KDE4_KPARTS_LIBS} khtml)
 
    set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
