@@ -202,7 +202,7 @@
 #
 #  A note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
 #  the flags for those buildtypes. FindKDE4Internal supports the values
-#  Debug, Release, Relwithdebinfo, Profile and Debugfull
+#  Debug, Release, RelWithDebInfo, Profile and Debugfull
 #
 #  Release
 #          optimised for speed, qDebug/kDebug turned off, no debug symbols
@@ -1030,8 +1030,6 @@ endif(MSVC)
 
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-   set (CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} "Debugfull")
-
    set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
@@ -1138,8 +1136,6 @@ endif (CMAKE_COMPILER_IS_GNUCXX)
 
 
 if (CMAKE_C_COMPILER MATCHES "icc")
-
-   set (CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} "Debugfull")
 
    set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
    # Select flags.
