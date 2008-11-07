@@ -1154,6 +1154,7 @@ endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
 # "overloaded" by a macro, the original command gets a "_" prepended, so it 
 # is still available.
 if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" MATCHES "^2\\.6\\.[01]$")
+   message(STATUS "Your are still using CMake ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}, please update to CMake 2.6.2.\nIt will be required next monday.")
    macro(TARGET_LINK_LIBRARIES)
       if(NOT "${ARGV1}" STREQUAL "LINK_INTERFACE_LIBRARIES")
          _target_link_libraries(${ARGN})
@@ -1177,7 +1178,6 @@ endmacro (KDE4_INSTALL_HANDBOOK )
 macro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
    message(FATAL_ERROR "KDE4_SET_CUSTOM_TARGET_PROPERTY() is deprecated, just use a simple variable instead")
 endmacro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
-
 
 macro (KDE4_GET_CUSTOM_TARGET_PROPERTY)
    message(FATAL_ERROR "KDE4_GET_CUSTOM_TARGET_PROPERTY() is deprecated, just use a simple variable instead")
