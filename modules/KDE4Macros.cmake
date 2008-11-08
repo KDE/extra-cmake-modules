@@ -1026,7 +1026,7 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
     string(REPLACE _KDEINIT_SRCS "" target ${appsources})
     if(${appsources} STREQUAL ${target})
         string(REPLACE _SRCS "" target ${appsources})
-    endif(${appsources} STREQUAL target)
+    endif(${appsources} STREQUAL ${target})
     
     if (WIN32)
         find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
