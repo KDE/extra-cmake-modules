@@ -1,35 +1,123 @@
-# - Find MySQL / MySQL Embedded
+# - Try to find MySQL / MySQL Embedded library
 # Find the MySQL includes and client library
 # This module defines
 #  MYSQL_INCLUDE_DIR, where to find mysql.h
 #  MYSQL_LIBRARIES, the libraries needed to use MySQL.
+#  MYSQL_LIB_DIR, path to the MYSQL_LIBRARIES
 #  MYSQL_EMBEDDED_LIBRARIES, the libraries needed to use MySQL Embedded.
+#  MYSQL_EMBEDDED_LIB_DIR, path to the MYSQL_EMBEDDED_LIBRARIES
 #  MYSQL_FOUND, If false, do not try to use MySQL.
 #  MYSQL_EMBEDDED_FOUND, If false, do not try to use MySQL Embedded.
 
-# Copyright (c) 2006, Jaroslaw Staniek, <js@iidea.pl>
+# Copyright (c) 2006-2008, Jarosław Staniek <staniek@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+include(CheckCXXSourceCompiles)
+include(MacroPushRequiredVars)
 
-find_path(MYSQL_INCLUDE_DIR mysql.h
-   /usr/include/mysql
-   /usr/local/include/mysql
-)
+if(WIN32)
+   find_path(MYSQL_INCLUDE_DIR mysql.h
+      PATHS
+      $ENV{MYSQL_INCLUDE_DIR}
+      $ENV{MYSQL_DIR}/include
+      $ENV{ProgramFiles}/MySQL/*/include
+      $ENV{SystemDrive}/MySQL/*/include
+   )
+else(WIN32)
+   find_path(MYSQL_INCLUDE_DIR mysql.h
+      PATHS
+      $ENV{MYSQL_INCLUDE_DIR}
+      $ENV{MYSQL_DIR}/include
+      /usr/include/mysql
+      /usr/local/include/mysql
+      /usr/local/mysql/include
+      /usr/local/mysql/include/mysql
+      /opt/mysql/mysql/include
+      /opt/mysql/mysql/include/mysql
+   )
+endif(WIN32)
 
-find_library(MYSQL_LIBRARIES NAMES mysqlclient
-   PATHS
-   /usr/lib/mysql
-   /usr/local/lib/mysql
-)
+if(WIN32)
+   # path suffix for debug/release mode
+   # binary_dist: mysql binary distribution
+   # build_dist: custom build
+   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+      set(binary_dist debug)
+      set(build_dist Debug)
+   else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+      ADD_DEFINITIONS(-DDBUG_OFF)
+      set(binary_dist opt)
+      set(build_dist Release)
+   endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+   
+#   find_library(MYSQL_LIBRARIES NAMES mysqlclient
+   find_library(MYSQL_LIBRARIES NAMES libmysql
+      PATHS
+      $ENV{MYSQL_DIR}/lib/${binary_dist}
+      $ENV{MYSQL_DIR}/libmysql/${build_dist}
+      $ENV{MYSQL_DIR}/client/${build_dist}
+      $ENV{ProgramFiles}/MySQL/*/lib/${binary_dist}
+      $ENV{SystemDrive}/MySQL/*/lib/${binary_dist}
+   )
+else(WIN32)
+#   find_library(MYSQL_LIBRARIES NAMES mysqlclient
+   find_library(MYSQL_LIBRARIES NAMES libmysql
+      PATHS
+      $ENV{MYSQL_DIR}/libmysql_r/.libs
+      $ENV{MYSQL_DIR}/lib
+      $ENV{MYSQL_DIR}/lib/mysql
+      /usr/lib/mysql
+      /usr/local/lib/mysql
+      /usr/local/mysql/lib
+      /usr/local/mysql/lib/mysql
+      /opt/mysql/mysql/lib
+      /opt/mysql/mysql/lib/mysql
+   )
+endif(WIN32)
+
+if(WIN32)
+   set(MYSQL_LIB_PATHS
+      $ENV{MYSQL_DIR}/lib/opt
+      $ENV{MYSQL_DIR}/client/release
+      $ENV{ProgramFiles}/MySQL/*/lib/opt
+      $ENV{SystemDrive}/MySQL/*/lib/opt
+   )
+   find_library(MYSQL_LIBRARIES NAMES mysqlclient
+      PATHS
+      ${MYSQL_LIB_PATHS}
+   )
+else(WIN32)
+   set(MYSQL_LIB_PATHS
+      $ENV{MYSQL_DIR}/libmysql_r/.libs
+      $ENV{MYSQL_DIR}/lib
+      $ENV{MYSQL_DIR}/lib/mysql
+      /usr/lib/mysql
+      /usr/local/lib/mysql
+      /usr/local/mysql/lib
+      /usr/local/mysql/lib/mysql
+      /opt/mysql/mysql/lib
+      /opt/mysql/mysql/lib/mysql
+   )
+   find_library(MYSQL_LIBRARIES NAMES mysqlclient
+      PATHS
+      ${MYSQL_LIB_PATHS}
+   )
+endif(WIN32)
 
 find_library(MYSQL_EMBEDDED_LIBRARIES NAMES mysqld
    PATHS
-   /usr/lib/mysql
-   /usr/local/lib/mysql
-   /opt/mysql/lib/mysql
+   ${MYSQL_LIB_PATHS}
 )
+
+if(MYSQL_LIBRARIES)
+   get_filename_component(MYSQL_LIB_DIR ${MYSQL_LIBRARIES} PATH)
+endif(MYSQL_LIBRARIES)
+
+if(MYSQL_EMBEDDED_LIBRARIES)
+   get_filename_component(MYSQL_EMBEDDED_LIB_DIR ${MYSQL_EMBEDDED_LIBRARIES} PATH)
+endif(MYSQL_EMBEDDED_LIBRARIES)
 
 macro_push_required_vars()
 set( CMAKE_REQUIRED_INCLUDES ${MYSQL_INCLUDE_DIR} )
