@@ -669,6 +669,16 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
    # library instead against the executable, under windows we want to have everything in the executable, but for compatibility we have to 
    # keep the library there-
    if(WIN32)
+      if (MINGW)
+         list(FIND _SRCS ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_res.o _res_position)
+      else(MINGW)
+         list(FIND _SRCS ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}.rc _res_position)
+      endif(MINGW)
+      if(NOT _res_position EQUAL -1)
+         list(GET _SRCS ${_res_position} _resourcefile)
+         list(REMOVE_AT _SRCS ${_res_position})
+      endif(NOT _res_position EQUAL -1)
+
       set(_KDEINIT4_TARGET_NAME_ ${_target_NAME})
       string(REGEX REPLACE "[-]" "_" _KDEINIT4_TARGET_NAME_ "${_KDEINIT4_TARGET_NAME_}")
       configure_file(${KDE4_MODULE_DIR}/kde4init_win32lib_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_win32lib_dummy.cpp)
@@ -676,10 +686,10 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
       if (KDE4_ENABLE_FINAL)
          kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
-         kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}"  ${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp ${_separate_files} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+         kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}"  ${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp ${_separate_files} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
 
       else (KDE4_ENABLE_FINAL)
-         kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+         kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
       endif (KDE4_ENABLE_FINAL)
 
       set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
@@ -1004,14 +1014,20 @@ endmacro (KDE4_ADD_WIN32_APP_ICON)
 # this macro adds an application icon to the specified target
 # mac osx notes : the application icon is added to a Mac OS X bundle so that Finder and friends show the right thing.
 # win32 notes: the application icon(s) are compiled into the application 
+#                        there is some workaround in kde4_add_kdeinit_executable to make it possible for those applications as well
 # parameters: 
-# 'appsources'  - specifies the list of source files 
+# 'appsources'  - specifies the list of source files; this has to end in _SRCS or _KDEINIT_SRCS
+#                           (see the replace stuff below)
 # 'pattern'     - regular expression for searching application icons 
-# example: KDE4_ADD_APP_ICON( myapp_sources "pics/cr*-myapp.png")
-# example: KDE4_ADD_APP_ICON( myapp_sources "icons/oxygen/*/apps/myapp.png")
+# example: KDE4_ADD_APP_ICON( myapp_SRCS "pics/cr*-myapp.png")
+# example: KDE4_ADD_APP_ICON( myapp_KDEINIT_SRCS "icons/oxygen/*/apps/myapp.png")
 
 macro (KDE4_ADD_APP_ICON appsources pattern)
-    string(REPLACE _SRCS "" target ${appsources})
+    string(REPLACE _KDEINIT_SRCS "" target ${appsources})
+    if(${appsources} STREQUAL ${target})
+        string(REPLACE _SRCS "" target ${appsources})
+    endif(${appsources} STREQUAL target)
+    
     if (WIN32)
         find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
         find_program(WINDRES_EXECUTABLE NAMES windres)
