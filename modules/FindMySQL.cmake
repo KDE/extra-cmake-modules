@@ -30,12 +30,10 @@ else(WIN32)
       PATHS
       $ENV{MYSQL_INCLUDE_DIR}
       $ENV{MYSQL_DIR}/include
-      /usr/include/mysql
-      /usr/local/include/mysql
       /usr/local/mysql/include
-      /usr/local/mysql/include/mysql
       /opt/mysql/mysql/include
-      /opt/mysql/mysql/include/mysql
+      PATH_SUFFIXES
+      mysql
    )
 endif(WIN32)
 
@@ -68,12 +66,10 @@ else(WIN32)
       $ENV{MYSQL_DIR}/libmysql_r/.libs
       $ENV{MYSQL_DIR}/lib
       $ENV{MYSQL_DIR}/lib/mysql
-      /usr/lib/mysql
-      /usr/local/lib/mysql
       /usr/local/mysql/lib
-      /usr/local/mysql/lib/mysql
       /opt/mysql/mysql/lib
-      /opt/mysql/mysql/lib/mysql
+      PATH_SUFFIXES 
+      mysql
    )
 endif(WIN32)
 
@@ -93,12 +89,10 @@ else(WIN32)
       $ENV{MYSQL_DIR}/libmysql_r/.libs
       $ENV{MYSQL_DIR}/lib
       $ENV{MYSQL_DIR}/lib/mysql
-      /usr/lib/mysql
-      /usr/local/lib/mysql
       /usr/local/mysql/lib
-      /usr/local/mysql/lib/mysql
       /opt/mysql/mysql/lib
-      /opt/mysql/mysql/lib/mysql
+      PATH_SUFFIXES
+      mysql
    )
    find_library(MYSQL_LIBRARIES NAMES mysqlclient
       PATHS
