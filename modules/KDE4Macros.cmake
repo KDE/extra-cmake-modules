@@ -903,7 +903,10 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    # This reduces inter-package dependencies and makes it easier to remove
    # dependencies of shared libraries without breaking binary compatibility.
    if(NOT "${_add_lib_param}" STREQUAL "STATIC")
-      set_target_properties(${_target_NAME} PROPERTIES ${KDE4_DISABLE_PROPERTY_}LINK_INTERFACE_LIBRARIES "" )
+      # only do this inside kdelibs for now (so there is not too much breakage all at once, Alex
+      if(kdelibs_SOURCE_DIR)
+         set_target_properties(${_target_NAME} PROPERTIES LINK_INTERFACE_LIBRARIES "" )
+      endif(kdelibs_SOURCE_DIR)
    endif(NOT "${_add_lib_param}" STREQUAL "STATIC")
 
 endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
@@ -1129,55 +1132,8 @@ endmacro (KDE4_ADD_APP_ICON)
 
 
 macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
-#   if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX )# AND NOT APPLE)
-
-      # get all cmake variables which end in _LIB_DEPENDS
-      # then parse the target name out of them
-      # use the target name to get the LINK_INTERFACE_LIBRARIES target property 
-      # This way for targets where INTERFACE_LINK_LIBRARIES has been set, the value set from 
-      # export_library_dependencies() will be overridden, while for those where it hasn't been set
-      # the full list is preserved.
-      # (this is cmake 2.6 compatible, where we'll use the EXPORT() feature
-      # Alex
-
-      file(${_append_or_write} "${_filename}" "# The following variables have been created by kde4_export_library_dependencies()
-# The contents have been determined from the LINK_INTERFACE_LIBRARIES target property of the respective libraries.\n\n")
-      get_cmake_property(allVars VARIABLES)
-      set(allLibs "")
-      foreach(currentVar ${allVars})
-         string(REGEX REPLACE "^(.+)_LIB_DEPENDS$" "\\1" target "${currentVar}")
-         if(NOT "${target}" STREQUAL "${currentVar}")
-            get_target_property(interfaceLibs ${target} LINK_INTERFACE_LIBRARIES)
-            if(NOT "${interfaceLibs}" MATCHES "NOTFOUND")
-               file(APPEND "${_filename}" "SET(\"${currentVar}\" \"${interfaceLibs}\")\n")
-            endif(NOT "${interfaceLibs}" MATCHES "NOTFOUND")
-         endif(NOT "${target}" STREQUAL "${currentVar}")
-      endforeach(currentVar ${allVars})
-
-#   endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT  AND  UNIX)#  AND NOT APPLE)
+   message(FATAL_ERROR "_KDE4_EXPORT_LIBRARY_DEPENDENCIES() was an internal macro and has been removed again. Just remove the code which calls it, there is no substitute.")
 endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
-
-# In cmake 2.6.2 a new keyword "LINK_INTERFACE_LIBRARIES is added to TARGET_LINK_LIBRARIES().
-# We will use this to reduce the link interface of libraries. As opposed to setting the
-# respective target property, here the "debug" and "optimized" keywords are supported
-# (this is actually the reason why we will use this).
-# The problem is, once we add this call to our cmake files, cmake 2.6.0 and 2.6.1 would not
-# work anymore, since they would fail when trying to link against -lLINK_INTERFACE_LIBRARIES
-# That's for cmake 2.6.0 and 2.6.1 we redefine TARGET_LINK_LIBRARIES() here.
-# If the first argument after the target name if "LINK_INTERFACE_LIBRARIES", then 
-# nothing is done, otherwise the original TARGET_LINK_LIBRARIES() is called.
-# This can be done by calling _target_link_libraries(), since if a command is 
-# "overloaded" by a macro, the original command gets a "_" prepended, so it 
-# is still available.
-if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" MATCHES "^2\\.6\\.[01]$")
-   message(STATUS "Your are still using CMake ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}, please update to CMake 2.6.2.\nIt will be required next monday.")
-   macro(TARGET_LINK_LIBRARIES)
-      if(NOT "${ARGV1}" STREQUAL "LINK_INTERFACE_LIBRARIES")
-         _target_link_libraries(${ARGN})
-      endif()
-   endmacro(TARGET_LINK_LIBRARIES)
-endif("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" MATCHES "^2\\.6\\.[01]$")
-
 
 macro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
    message(FATAL_ERROR "_KDE4_TARGET_LINK_INTERFACE_LIBRARIES() doesn't exist anymore. Set the LINK_INTERFACE_LIBRARIES target property instead. See kdelibs/kdecore/CMakeLists.txt for an example.")
