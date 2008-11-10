@@ -2,34 +2,43 @@
 # Once done this will define
 #
 #  BLUEZ_FOUND - system has BlueZ
-
-# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
-# Copyright (c) 2007, Will Stephenson, <wstephenson@kde.org>
-# Copyright (c) 2007, Daniel Gollub, <dgollub@suse.de>
-#
+#  BLUEZ_INCLUDE_DIR - the BlueZ include directory
+#  BLUEZ_LIBRARIES - Link these to use BlueZ
+#  BLUEZ_DEFINITIONS - Compiler switches required for using BlueZ
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+#
 
 
-IF (NOT WIN32)
-   # use pkg-config to get the directories and then use these values
-   # in the FIND_PATH() and FIND_LIBRARY() calls
-   INCLUDE(UsePkgConfig)
-   PKGCONFIG(bluez _BlueZIncDir _BlueZLinkDir _BlueZLinkFlags _BlueZCflags)
-ENDIF (NOT WIN32)
+if ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
+   # in cache already
+   SET(BlueZ_FIND_QUIETLY TRUE)
+endif ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
 
-find_path(BLUEZ_INCLUDE_DIR bluetooth/bluetooth.h
-    PATHS
-    ${_BlueZIncDir}
-    /usr/X11/include
-  )
+# use pkg-config to get the directories and then use these values
+# in the FIND_PATH() and FIND_LIBRARY() calls
+if( NOT WIN32 )
+  INCLUDE(FindPkgConfig)
 
-find_library(BLUEZ_LIBRARIES NAMES bluetooth
-    PATHS
-    ${_BlueZLinkDir}
-  )
+  PKG_CHECK_MODULES(BLUEZ bluez)
+
+  SET(BLUEZ_DEFINITIONS ${BLUEZ_CFLAGS})
+endif( NOT WIN32 )
+
+FIND_PATH(BLUEZ_INCLUDE_DIR NAMES bluetooth/bluetooth.h
+  PATHS
+  ${BLUEZ_INCLUDE_DIRS}
+  /usr/X11/include
+)
+
+FIND_LIBRARY(BLUEZ_LIBRARIES NAMES bluetooth
+  PATHS
+  ${BLUEZ_LIBRARY_DIRS}
+)
 
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(BlueZ DEFAULT_MSG BLUEZ_LIBRARIES BLUEZ_INCLUDE_DIR )
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(BlueZ DEFAULT_MSG BLUEZ_INCLUDE_DIR BLUEZ_LIBRARIES )
 
-mark_as_advanced( BLUEZ_LIBRARIES BLUEZ_INCLUDE_DIR)
+# show the BLUEZ_INCLUDE_DIR and BLUEZ_LIBRARIES variables only in the advanced view
+MARK_AS_ADVANCED(BLUEZ_INCLUDE_DIR BLUEZ_LIBRARIES )
+
