@@ -16,24 +16,26 @@ if(NOT STRIGI_MIN_VERSION)
     set(STRIGI_MIN_VERSION "0.5.9")
 endif(NOT STRIGI_MIN_VERSION)
 
-if (NOT WIN32)
-    find_package(PkgConfig)
-    if(PKG_CONFIG_EXECUTABLE)
-        pkg_check_modules(STRIGI libstreamanalyzer>=${STRIGI_MIN_VERSION})
-    endif(PKG_CONFIG_EXECUTABLE)
-endif(NOT WIN32)
-
 if (WIN32)
     file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
 endif(WIN32)
 
 file(TO_CMAKE_PATH "$ENV{STRIGI_HOME}" strigi_home)
 
+if (NOT WIN32)
+    if(NOT strigi_home)
+        find_package(PkgConfig)
+        if(PKG_CONFIG_EXECUTABLE)
+            pkg_check_modules(STRIGI libstreamanalyzer>=${STRIGI_MIN_VERSION})
+        endif(PKG_CONFIG_EXECUTABLE)
+    endif(NOT strigi_home)
+endif(NOT WIN32)
+
 if (NOT STRIGI_INCLUDEDIR)
     find_path(STRIGI_INCLUDEDIR strigi/streamanalyzer.h
         PATHS
         ${strigi_home}/include
-        ${_STRIGI_INCLUDEDIR}
+        ${STRIGI_INCLUDEDIR}
         ${_program_FILES_DIR}/strigi/include
         )
 endif (NOT STRIGI_INCLUDEDIR)
