@@ -24,11 +24,9 @@ else (EXIV2_INCLUDEDIR AND EXIV2_LIBRARIES)
             PKG_CHECK_MODULES(EXIV2 exiv2>=${EXIV2_MIN_VERSION})
         endif (Exiv2_FIND_REQUIRED)
 
-        if(EXIV2_FOUND)
-            message(STATUS "Found Exiv2 release ${EXIV2_VERSION}")
-        else(EXIV2_FOUND)
+        if(NOT EXIV2_FOUND)
             message(STATUS "Cannot find Exiv2 library!")
-        endif(EXIV2_FOUND)
+        endif(NOT EXIV2_FOUND)
     else(NOT WIN32)
         #Better check
         set(EXIV2_FOUND TRUE)
