@@ -23,6 +23,12 @@ if (NOT WIN32)
     endif(PKG_CONFIG_EXECUTABLE)
 endif(NOT WIN32)
 
+if (WIN32)
+    file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
+endif(WIN32)
+
+file(TO_CMAKE_PATH "$ENV{STRIGI_HOME}" strigi_home)
+
 if (NOT STRIGI_INCLUDEDIR)
     find_path(STRIGI_INCLUDEDIR strigi/streamanalyzer.h
         PATHS
@@ -34,12 +40,6 @@ endif (NOT STRIGI_INCLUDEDIR)
 
 # Legacy
 set( STRIGI_INCLUDE_DIR ${STRIGI_INCLUDEDIR} )
-
-if (WIN32)
-    file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
-endif(WIN32)
-
-file(TO_CMAKE_PATH "$ENV{STRIGI_HOME}" strigi_home)
 
 find_library_with_debug(STRIGI_STREAMANALYZER_LIBRARY
   WIN32_DEBUG_POSTFIX d
