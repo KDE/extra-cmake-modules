@@ -19,24 +19,25 @@ if (LIBART_INCLUDE_DIR AND LIBART_LIBRARIES)
 else (LIBART_INCLUDE_DIR AND LIBART_LIBRARIES)
 
   IF (NOT WIN32)
-    INCLUDE(UsePkgConfig)
+    find_package(PkgConfig)
+
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
-    PKGCONFIG(libart-2.0 _libArtIncDir _libArtLinkDir _libArtLinkFlags _libArtCflags)
+    pkg_check_modules(LIBART libart-2.0)
 
     ######### ?? where is this used ?? ###############
-    set(LIBART_DEFINITIONS ${_libArtCflags})
+    set(LIBART_DEFINITIONS ${LIBART_CFLAGS})
   ENDIF (NOT WIN32)
 
   FIND_PATH(LIBART_INCLUDE_DIR libart_lgpl/libart.h
-     ${_libArtIncDir}/libart-2.0
+     ${LIBART_INCLUDE_DIRS}/libart-2.0
      /usr/include/libart-2.0
      /usr/local/include/libart-2.0
   )
   
   FIND_LIBRARY(LIBART_LIBRARIES NAMES art_lgpl_2
      PATHS
-     ${_libArtLinkDir}
+     ${LIBART_LIBRARY_DIRS}
   )
   
   

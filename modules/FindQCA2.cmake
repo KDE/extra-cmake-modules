@@ -23,16 +23,16 @@ if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
 else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
-  INCLUDE(UsePkgConfig)
 
   IF (NOT WIN32)
-    PKGCONFIG(qca2 QCA2_INCLUDE_DIR _Qca2LinkDir _Qca2LinkFlags _Qca2Cflags)
+    find_package(PkgConfig)
+    pkg_check_modules(QCA2 qca2)
 
-    set(QCA2_DEFINITIONS ${_Qca2Cflags})
+    set(QCA2_DEFINITIONS ${QCA2_CFLAGS})
 
     FIND_LIBRARY(QCA2_LIBRARIES NAMES qca
       PATHS
-      ${_Qca2LinkDir}
+      ${QCA2_LIBRARY_DIRS}
       NO_DEFAULT_PATH
     )
   ELSE (NOT WIN32)

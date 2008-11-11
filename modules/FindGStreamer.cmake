@@ -20,34 +20,33 @@ ENDIF (GSTREAMER_INCLUDE_DIR AND GSTREAMER_LIBRARIES AND GSTREAMER_BASE_LIBRARY 
 IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
-   INCLUDE(UsePkgConfig)
-   PKGCONFIG(gstreamer-0.10 _GStreamerIncDir _GStreamerLinkDir _GStreamerLinkFlags _GStreamerCflags)
-   #MESSAGE(STATUS "DEBUG: GStreamer include directory = ${_GStreamerIncDir}")
-   #MESSAGE(STATUS "DEBUG: GStreamer link directory = ${_GStreamerLinkDir}")
-   #MESSAGE(STATUS "DEBUG: GStreamer link flags = ${_GStreamerLinkFlags}")
-   #MESSAGE(STATUS "DEBUG: GStreamer CFlags = ${_GStreamerCflags}") 
-   SET(GSTREAMER_DEFINITIONS ${_GStreamerCflags})
+   find_package(PkgConfig)
+   pkg_check_modules(GSTREAMER gstreamer-0.10)
+   #MESSAGE(STATUS "DEBUG: GStreamer include directory = ${GSTREAMER_INCLUDE_DIRS}")
+   #MESSAGE(STATUS "DEBUG: GStreamer link directory = ${GSTREAMER_LIBRARY_DIRS}")
+   #MESSAGE(STATUS "DEBUG: GStreamer CFlags = ${GSTREAMER_CFLAGS}") 
+   SET(GSTREAMER_DEFINITIONS ${GSTREAMER_CFLAGS})
 ENDIF (NOT WIN32)
 
 FIND_PATH(GSTREAMER_INCLUDE_DIR gst/gst.h
    PATHS
-   ${_GStreamerIncDir}
+   ${GSTREAMER_INCLUDE_DIRS}
    #PATH_SUFFIXES gst
    )
 
 FIND_LIBRARY(GSTREAMER_LIBRARIES NAMES gstreamer-0.10
    PATHS
-   ${_GStreamerLinkDir}
+   ${GSTREAMER_LIBRARY_DIRS}
    )
 
 FIND_LIBRARY(GSTREAMER_BASE_LIBRARY NAMES gstbase-0.10
    PATHS
-   ${_GStreamerLinkDir}
+   ${GSTREAMER_LIBRARY_DIRS}
    )
 
 FIND_LIBRARY(GSTREAMER_INTERFACE_LIBRARY NAMES gstinterfaces-0.10
    PATHS
-   ${_GStreamerLinkDir}
+   ${GSTREAMER_LIBRARY_DIRS}
    )
 
 IF (GSTREAMER_INCLUDE_DIR)
