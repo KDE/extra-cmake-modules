@@ -9,9 +9,9 @@
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 if(NOT WIN32)
-INCLUDE(FindPkgConfig)
-PKG_CHECK_MODULES(LCMS lcms)
-SET(LCMS_DEFINITIONS ${LCMS_CFLAGS})
+find_package(PkgConfig)
+pkg_check_modules(LCMS lcms)
+set(LCMS_DEFINITIONS ${LCMS_CFLAGS})
 endif(NOT WIN32)
 
 find_path(LCMS_INCLUDE_DIR lcms.h
