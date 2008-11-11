@@ -21,22 +21,21 @@ else (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)
   if (NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
-    include(UsePkgConfig)
+    include(FindPkgConfig)
+    PKG_CHECK_MODULES(FONTCONFIG fontconfig)
 
-    pkgconfig(fontconfig _FONTCONFIGIncDir _FONTCONFIGLinkDir _FONTCONFIGLinkFlags _FONTCONFIGCflags)
-
-    set(FONTCONFIG_DEFINITIONS ${_FONTCONFIGCflags})
+    set(FONTCONFIG_DEFINITIONS ${FONTCONFIG_CFLAGS})
   endif (NOT WIN32)
 
   find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h
     PATHS
-    ${_FONTCONFIGIncDir}
+    ${FONTCONFIG_INCLUDE_DIRS}
     /usr/X11/include
   )
 
   find_library(FONTCONFIG_LIBRARIES NAMES fontconfig
     PATHS
-    ${_FONTCONFIGLinkDir}
+    ${FONTCONFIG_LIBRARY_DIRS}
   )
 
   include(FindPackageHandleStandardArgs)
@@ -45,3 +44,4 @@ else (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)
   mark_as_advanced(FONTCONFIG_LIBRARIES FONTCONFIG_INCLUDE_DIR)
 
 endif (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)
+
