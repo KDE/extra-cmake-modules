@@ -22,7 +22,7 @@ ENDIF (NETWORKMANAGER_INCLUDE_DIRS AND NM-UTIL_INCLUDE_DIRS)
 IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
-   INCLUDE(FindPkgConfig)
+   find_package((PkgConfig)
    PKG_SEARCH_MODULE( NETWORKMANAGER NetworkManager )
    PKG_SEARCH_MODULE( NM-UTIL libnm-util )
 ENDIF (NOT WIN32)

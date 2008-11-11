@@ -18,11 +18,11 @@ endif ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 if( NOT WIN32 )
-  INCLUDE(FindPkgConfig)
+  find_package(PkgConfig)
 
-  PKG_CHECK_MODULES(BLUEZ bluez)
+  pkg_check_modules(BLUEZ bluez)
 
-  SET(BLUEZ_DEFINITIONS ${BLUEZ_CFLAGS})
+  set(BLUEZ_DEFINITIONS ${BLUEZ_CFLAGS})
 endif( NOT WIN32 )
 
 FIND_PATH(BLUEZ_INCLUDE_DIR NAMES bluetooth/bluetooth.h

@@ -19,9 +19,9 @@ else (XMMS_INCLUDE_DIRS AND XMMS_LDFLAGS)
   IF (NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
-    INCLUDE(FindPkgConfig)
+    find_package(PkgConfig)
 
-    PKG_CHECK_MODULES(XMMS xmms)
+    pkg_check_modules((XMMS xmms)
   ENDIF(NOT WIN32)
 
   FIND_PATH(XMMS_INCLUDE_DIRS xmmsctrl.h
