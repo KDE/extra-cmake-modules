@@ -12,6 +12,8 @@ if (EXIV2_INCLUDEDIR AND EXIV2_LIBRARIES)
 
 else (EXIV2_INCLUDEDIR AND EXIV2_LIBRARIES)
     if (NOT WIN32)
+        find_package(PkgConfig REQUIRED)
+        
         if(NOT EXIV2_MIN_VERSION)
             set(EXIV2_MIN_VERSION "0.12")
         endif(NOT EXIV2_MIN_VERSION)

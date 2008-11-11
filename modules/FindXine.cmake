@@ -7,18 +7,19 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (XINE_INCLUDEDIR AND XINE_LIBRARY)
+if (XINE_INCLUDEDIR AND XINE_LIBRARIES)
     # Already in cache, be silent
     set(Xine_FIND_QUIETLY TRUE)
-endif (XINE_INCLUDE_DIR AND XINE_LIBRARY)
+endif (XINE_INCLUDEDIR AND XINE_LIBRARIES)
 
 IF (NOT WIN32)
-    PKG_CHECK_MODULES(PKG_XINE libxine>=1.1.9)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(XINE libxine>=1.1.9)
 ENDIF (NOT WIN32)
 
 if( XINE_FOUND )
     SET(CMAKE_REQUIRED_INCLUDES ${XINE_INCLUDEDIR})
-    SET(CMAKE_REQUIRED_LIBRARIES ${XINE_LIBRARY})
+    SET(CMAKE_REQUIRED_LIBRARIES ${XINE_LIBRARIES})
     if (NOT Xine_FIND_QUIETLY)
         message(STATUS "Found XINE: ${XINE_LIBRARY}")
     endif (NOT Xine_FIND_QUIETLY)
