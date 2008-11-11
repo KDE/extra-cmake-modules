@@ -1,4 +1,13 @@
 # - Try to find Strigi, a fast and small desktop search program (http://strigi.sourceforge.net )
+# Once done this will define
+#
+#  STRIGI_FOUND - system has Strigi
+#  STRIGI_INCLUDE_DIR - the Strigi include directory
+#  STRIGI_STREAMANALYZER_LIBRARY - Link these to use Strigi streamanalyzer
+#  STRIGI_STREAMS_LIBRARY - Link these to use Strigi streams
+#  STRIGI_LINE_ANALYZER_PREFIX - strigi plugin prefix
+#  STRIGI_THROUGH_ANALYZER_PREFIX - strigi plugin prefix
+
 
 include(FindLibraryWithDebug)
 include(MacroPushRequiredVars)
@@ -9,8 +18,22 @@ endif(NOT STRIGI_MIN_VERSION)
 
 if (NOT WIN32)
     find_package(PkgConfig)
-    pkg_check_modules(STRIGI libstreamanalyzer>=${STRIGI_MIN_VERSION})
+    if(PKG_CONFIG_EXECUTABLE)
+        pkg_check_modules(STRIGI libstreamanalyzer>=${STRIGI_MIN_VERSION})
+    endif(PKG_CONFIG_EXECUTABLE)
 endif(NOT WIN32)
+
+if (NOT STRIGI_INCLUDEDIR)
+    find_path(STRIGI_INCLUDEDIR strigi/streamanalyzer.h
+        PATHS
+        ${strigi_home}/include
+        ${_STRIGI_INCLUDEDIR}
+        ${_program_FILES_DIR}/strigi/include
+        )
+endif (NOT STRIGI_INCLUDEDIR)
+
+# Legacy
+set( STRIGI_INCLUDE_DIR ${STRIGI_INCLUDEDIR} )
 
 if (WIN32)
     file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
@@ -46,6 +69,11 @@ find_library_with_debug(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
   ${_program_FILES_DIR}/strigi/lib
 )
 
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Strigi
+    "Couldn't find Strigi streams and streamanalyzer libraries. Set the environment variable STRIGI_HOME (or CMAKE_PREFIX_PATH if using CMake >=2.6) to the strigi install dir."
+    STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
+
 if (STRIGI_FOUND)
     # Check for the SIC change between 0.5.9 and 0.6.0...
 
@@ -75,7 +103,6 @@ int main()
     macro_push_required_vars()
     set( CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${STRIGI_INCLUDEDIR} )
     set( CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${STRIGI_STREAMS_LIBRARY} ${STRIGI_STREAMANALYZER_LIBRARY} )
-    set( STRIGI_INCLUDE_DIR ${STRIGI_INCLUDEDIR} )
     MACRO_CHECK_STRIGI_API_SCREWUP( "signed char" STRIGI_NEEDS_SIGNED_CHAR )
     MACRO_CHECK_STRIGI_API_SCREWUP( "char" STRIGI_NEEDS_CHAR )
     set( STRIGI_NEEDS_SIGNED_CHAR ${STRIGI_NEEDS_SIGNED_CHAR} CACHE BOOL "TRUE if strigi is 0.6.0 or later" )
