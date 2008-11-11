@@ -20,19 +20,18 @@ else (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
 IF (NOT WIN32)
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
-  INCLUDE(UsePkgConfig)
+  find_package(PkgConfig)
+  pkg_check_modules(AGG libagg) 
   
-  PKGCONFIG(libagg _AGGIncDir _AGGLinkDir _AGGLinkFlags _AGGCflags)
-  
-  set(AGG_DEFINITIONS ${_AGGCflags})
+  set(AGG_DEFINITIONS ${AGG_CFLAGS})
 ENDIF (NOT WIN32)  
   FIND_PATH(AGG_INCLUDE_DIR agg2/agg_pixfmt_gray.h
-    ${_AGGIncDir}
+    ${AGG_INCLUDE_DIRS}
   )
   
   FIND_LIBRARY(AGG_LIBRARIES NAMES agg
     PATHS
-    ${_AGGLinkDir}
+    ${AGG_LIBRARY_DIRS}
   )
   
   if (AGG_INCLUDE_DIR AND AGG_LIBRARIES)

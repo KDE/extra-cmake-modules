@@ -19,38 +19,37 @@ ENDIF (GOBJECT_INCLUDE_DIR AND GOBJECT_LIBRARIES)
 IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
-   INCLUDE(UsePkgConfig)
-   PKGCONFIG(gobject-2.0 _GObjectIncDir _GObjectLinkDir _GObjectLinkFlags _GObjectCflags)
-   #MESSAGE(STATUS "DEBUG: GObject include directory = ${_GObjectIncDir}")
-   #MESSAGE(STATUS "DEBUG: GObject link directory = ${_GObjectLinkDir}")
-   #MESSAGE(STATUS "DEBUG: GObject link flags = ${_GObjectLinkFlags}")
-   #MESSAGE(STATUS "DEBUG: GObject CFlags = ${_GObjectCflags}")
-   SET(GOBJECT_DEFINITIONS ${_GObjectCflags})
+   find_package(PkgConfig)
+   pkg_check_modules(GOBJECT gobject-2.0) 
+   #MESSAGE(STATUS "DEBUG: GObject include directory = ${GOBJECT_INCLUDE_DIRS}")
+   #MESSAGE(STATUS "DEBUG: GObject link directory = ${GOBJECT_LIBRARY_DIRS}")
+   #MESSAGE(STATUS "DEBUG: GObject CFlags = ${GOBJECT_CFLAGS}")
+   SET(GOBJECT_DEFINITIONS ${GOBJECT_CFLAGS})
 ENDIF (NOT WIN32)
 
 FIND_PATH(GOBJECT_INCLUDE_DIR gobject.h
    PATHS
-   ${_GObjectIncDir}
-   ${_GObjectIncDir}/glib-2.0/gobject/
+   ${GOBJECT_INCLUDE_DIRS}
+   ${GOBJECT_INCLUDE_DIRS}/glib-2.0/gobject/
    /usr/include/glib-2.0/gobject/
    #PATH_SUFFIXES gst
    )
 
 FIND_LIBRARY(_GObjectLibs NAMES gobject-2.0
    PATHS
-   ${_GObjectLinkDir}
+   ${GOBJECT_LIBRARY_DIRS}
    )
 FIND_LIBRARY(_GModuleLibs NAMES gmodule-2.0
    PATHS
-   ${_GObjectLinkDir}
+   ${GOBJECT_LIBRARY_DIRS}
    )
 FIND_LIBRARY(_GThreadLibs NAMES gthread-2.0
    PATHS
-   ${_GObjectLinkDir}
+   ${GOBJECT_LIBRARY_DIRS}
    )
 FIND_LIBRARY(_GLibs NAMES glib-2.0
    PATHS
-   ${_GObjectLinkDir}
+   ${GOBJECT_LIBRARY_DIRS}
    )
 
 SET( GOBJECT_LIBRARIES ${_GObjectLibs} ${_GModuleLibs} ${_GThreadLibs} ${_GLibs} )
