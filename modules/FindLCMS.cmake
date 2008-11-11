@@ -9,13 +9,13 @@
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 if(NOT WIN32)
-INCLUDE(UsePkgConfig)
-PKGCONFIG(lcms _LcmsIncDir _LcmsLinkDir _LcmsLinkFlags _LcmsCflags)
-SET(LCMS_DEFINITIONS ${_LcmsCflags})
+INCLUDE(FindPkgConfig)
+PKG_CHECK_MODULES(LCMS lcms)
+SET(LCMS_DEFINITIONS ${LCMS_CFLAGS})
 endif(NOT WIN32)
 
 find_path(LCMS_INCLUDE_DIR lcms.h
-   ${_LcmsIncDir}
+   ${LCMS_INCLUDE_DIRS}
    ${CMAKE_INSTALL_PREFIX}/include
    /usr/include/lcms
    /usr/include/liblcms1
@@ -27,7 +27,7 @@ find_path(LCMS_INCLUDE_DIR lcms.h
 
 find_library(LCMS_LIBRARIES NAMES lcms liblcms lcms-1 liblcms-1
    PATHS     
-   ${_LcmsLinkDir}     
+   ${LCMS_LIBRARY_DIRS}     
    ${CMAKE_INSTALL_PREFIX}/lib
    /usr/lib/lcms
    /usr/local/lib/lcms
