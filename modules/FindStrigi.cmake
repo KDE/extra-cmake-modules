@@ -32,16 +32,17 @@ if (NOT WIN32)
 endif(NOT WIN32)
 
 if (NOT STRIGI_INCLUDEDIR)
-    find_path(STRIGI_INCLUDEDIR strigi/streamanalyzer.h
-        PATHS
-        ${strigi_home}/include
-        ${STRIGI_INCLUDEDIR}
-        ${_program_FILES_DIR}/strigi/include
+    find_path(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h 
+         PATHS
+         ${strigi_home}/include
+         ${STRIGI_INCLUDEDIR}
+         ${_program_FILES_DIR}/strigi/include
         )
+    set( STRIGI_INCLUDEDIR ${STRIGI_INCLUDE_DIR} )
+else (NOT STRIGI_INCLUDEDIR)
+    set( STRIGI_INCLUDE_DIR ${STRIGI_INCLUDEDIR} )
 endif (NOT STRIGI_INCLUDEDIR)
 
-# Legacy
-set( STRIGI_INCLUDE_DIR ${STRIGI_INCLUDEDIR} )
 
 find_library_with_debug(STRIGI_STREAMANALYZER_LIBRARY
   WIN32_DEBUG_POSTFIX d
@@ -79,8 +80,8 @@ find_package_handle_standard_args(Strigi
 if (STRIGI_FOUND)
     # Check for the SIC change between 0.5.9 and 0.6.0...
 
-    MACRO(MACRO_CHECK_STRIGI_API_SCREWUP _RETTYPE _RESULT)
-    SET (_STRIGI_API_SCREWUP_SOURCE_CODE "
+    macro(MACRO_CHECK_STRIGI_API_SCREWUP _RETTYPE _RESULT)
+        set (_STRIGI_API_SCREWUP_SOURCE_CODE "
 #include <strigi/streamendanalyzer.h>
 using namespace Strigi;
     class ScrewupEndAnalyzer : public StreamEndAnalyzer {
@@ -98,15 +99,15 @@ int main()
     return 0;
 }
 ")
-    CHECK_CXX_SOURCE_COMPILES("${_STRIGI_API_SCREWUP_SOURCE_CODE}" ${_RESULT})
-    ENDMACRO(MACRO_CHECK_STRIGI_API_SCREWUP)
+        check_cxx_source_compiles("${_STRIGI_API_SCREWUP_SOURCE_CODE}" ${_RESULT})
+    endmacro(MACRO_CHECK_STRIGI_API_SCREWUP)
 
-    INCLUDE(CheckCXXSourceCompiles)
+    include(CheckCXXSourceCompiles)
     macro_push_required_vars()
     set( CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${STRIGI_INCLUDEDIR} )
     set( CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${STRIGI_STREAMS_LIBRARY} ${STRIGI_STREAMANALYZER_LIBRARY} )
-    MACRO_CHECK_STRIGI_API_SCREWUP( "signed char" STRIGI_NEEDS_SIGNED_CHAR )
-    MACRO_CHECK_STRIGI_API_SCREWUP( "char" STRIGI_NEEDS_CHAR )
+    macro_check_strigi_api_screwup( "signed char" STRIGI_NEEDS_SIGNED_CHAR )
+    macro_check_strigi_api_screwup( "char" STRIGI_NEEDS_CHAR )
     set( STRIGI_NEEDS_SIGNED_CHAR ${STRIGI_NEEDS_SIGNED_CHAR} CACHE BOOL "TRUE if strigi is 0.6.0 or later" )
     set( STRIGI_NEEDS_CHAR ${STRIGI_NEEDS_CHAR} CACHE BOOL "TRUE if strigi is 0.5.9 or before" )
     if (STRIGI_NEEDS_SIGNED_CHAR)
