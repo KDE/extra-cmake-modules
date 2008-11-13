@@ -24,7 +24,7 @@ if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
 
-  IF (NOT WIN32)
+  if (NOT WIN32)
     find_package(PkgConfig)
     pkg_check_modules(QCA2 qca2)
 
@@ -45,32 +45,17 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
        find_path(QCA2_INCLUDE_DIR qca.h PATH_SUFFIXES QtCrypto)
     endif(QCA2_FOUND)
 
-  ELSE (NOT WIN32)
-    FIND_LIBRARY_WITH_DEBUG(QCA2_LIBRARIES
+  else (NOT WIN32)
+    find_library_with_debug(QCA2_LIBRARIES
                     WIN32_DEBUG_POSTFIX d
                     NAMES qca)
 
-    FIND_PATH(QCA2_INCLUDE_DIR_tmp QtCrypto/qca.h)
-    IF(QCA2_INCLUDE_DIR_tmp)
-      SET(QCA2_INCLUDE_DIR ${QCA2_INCLUDE_DIR_tmp}/QtCrypto CACHE TYPE PATH FORCE)
-    ENDIF(QCA2_INCLUDE_DIR_tmp)
-  ENDIF (NOT WIN32)
+    find_path(QCA2_INCLUDE_DIR qca.h PATH_SUFFIXES QtCrypto)
+  endif (NOT WIN32)
 
+   include(FindPackageHandleStandardArgs)
+   find_package_handle_standard_args(QCA2  DEFAULT_MSG  QCA2_LIBRARIES QCA2_INCLUDE_DIR)
 
-  if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
-    set(QCA2_FOUND TRUE)
-  else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
-    if (NOT QCA2_INCLUDE_DIR)
-      message(STATUS "Could NOT find QCA2 includes")
-    endif (NOT QCA2_INCLUDE_DIR)
-    if (NOT QCA2_LIBRARIES)
-      message(STATUS "Could NOT find QCA2 libraries")
-    endif (NOT QCA2_LIBRARIES)
-    if (QCA2_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find QCA2")
-    endif (QCA2_FIND_REQUIRED)
-  endif (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
-
-  MARK_AS_ADVANCED(QCA2_INCLUDE_DIR QCA2_LIBRARIES)
+  mark_as_advanced(QCA2_INCLUDE_DIR QCA2_LIBRARIES)
 
 endif (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
