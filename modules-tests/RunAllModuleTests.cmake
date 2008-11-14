@@ -16,9 +16,8 @@ function(execute_one_test name)
                    WORKING_DIRECTORY "${workingDir}")
 endfunction(execute_one_test)
 
-execute_one_test(Xine)
+execute_one_test(Blitz)
+execute_one_test(Eigen2)
 execute_one_test(Flex)
 execute_one_test(QCA2)
-execute_one_test(Blitz)
-
-
+execute_one_test(Xine)
