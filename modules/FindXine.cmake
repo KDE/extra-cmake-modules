@@ -22,7 +22,6 @@ endif (XINE_INCLUDE_DIR AND XINE_LIBRARY)
 find_package(PkgConfig)
 if (PKG_CONFIG_FOUND)
    pkg_check_modules(PC_LIBXINE libxine)
-   exec_program(${PKG_CONFIG_EXECUTABLE} ARGS "--variable=prefix libxine" OUTPUT_VARIABLE _LibXinePrefix)
 endif (PKG_CONFIG_FOUND)
 
 find_path(XINE_INCLUDE_DIR NAMES xine.h 
@@ -37,7 +36,7 @@ find_library(XINE_LIBRARY NAMES xine
 
 find_program(XINECONFIG_EXECUTABLE NAMES xine-config 
    HINTS
-   ${_LibXinePrefix}/bin
+   ${PC_LIBXINE_PREFIX}/bin
 )
 
 if (XINE_INCLUDE_DIR AND XINE_LIBRARY AND XINECONFIG_EXECUTABLE)
