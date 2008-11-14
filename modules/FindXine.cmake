@@ -18,55 +18,45 @@ if (XINE_INCLUDE_DIR AND XINE_LIBRARY)
   # Already in cache, be silent
   set(Xine_FIND_QUIETLY TRUE)
 endif (XINE_INCLUDE_DIR AND XINE_LIBRARY)
-  IF (NOT WIN32)
-	INCLUDE(UsePkgConfig)
-	PKGCONFIG(libxine _LibXineIncDir _LibXineLinkDir _LibXineLinkFlags _LibXineCflags)
-	EXEC_PROGRAM(${PKGCONFIG_EXECUTABLE} ARGS "--variable=prefix libxine" OUTPUT_VARIABLE _LibXinePrefix)
-  ENDIF (NOT WIN32)
-FIND_PATH(XINE_INCLUDE_DIR NAMES xine.h 
-    PATHS 
-    ${_LibXineIncDir} 
-    NO_DEFAULT_PATH)
 
-FIND_LIBRARY(XINE_LIBRARY NAMES xine
- PATHS
-  ${_LibXineLinkDir}
- NO_DEFAULT_PATH
-)
+find_package(PkgConfig)
+if (PKG_CONFIG_FOUND)
+   pkg_check_modules(PC_LIBXINE libxine)
+   exec_program(${PKG_CONFIG_EXECUTABLE} ARGS "--variable=prefix libxine" OUTPUT_VARIABLE _LibXinePrefix)
+endif (PKG_CONFIG_FOUND)
 
-FIND_PROGRAM(XINECONFIG_EXECUTABLE NAMES xine-config PATHS
+find_path(XINE_INCLUDE_DIR NAMES xine.h 
+    HINTS                    # HINTS is new in cmake 2.6. These dirs will be preferred over the default ones
+    ${PC_LIBXINE_INCLUDEDIR} 
+    )
+
+find_library(XINE_LIBRARY NAMES xine
+ HINTS
+  ${PC_LIBXINE_LIBDIR}
+ )
+
+find_program(XINECONFIG_EXECUTABLE NAMES xine-config 
+   HINTS
    ${_LibXinePrefix}/bin
 )
 
 if (XINE_INCLUDE_DIR AND XINE_LIBRARY AND XINECONFIG_EXECUTABLE)
-   EXEC_PROGRAM(${XINECONFIG_EXECUTABLE} ARGS --version RETURN_VALUE _return_VALUE OUTPUT_VARIABLE XINE_VERSION)
-   macro_ensure_version(1.1.1 ${XINE_VERSION} XINE_VERSION_OK)
-   if (XINE_VERSION_OK)
-      set(XINE_FOUND TRUE)
-      string(REGEX REPLACE "[0-9].[0-9]." "" XINE_BUGFIX_VERSION ${XINE_VERSION})
-   endif (XINE_VERSION_OK)
+   exec_program(${XINECONFIG_EXECUTABLE} ARGS --version RETURN_VALUE _return_VALUE OUTPUT_VARIABLE XINE_VERSION)
+   if("${XINE_VERSION}" VERSION_GREATER "1.1.0")   #if (... VERSION_GREATER) is new since cmake 2.6.2
+      set(XINE_VERSION_OK TRUE)
+      string(REGEX REPLACE "[0-9]\\.[0-9]\\." "" XINE_BUGFIX_VERSION ${XINE_VERSION})
+   endif("${XINE_VERSION}" VERSION_GREATER "1.1.0")
 endif (XINE_INCLUDE_DIR AND XINE_LIBRARY AND XINECONFIG_EXECUTABLE)
 
 
 if( XINE_FOUND )
-  INCLUDE(CheckCSourceCompiles)
-  SET(CMAKE_REQUIRED_INCLUDES ${XINE_INCLUDE_DIR})
-  SET(CMAKE_REQUIRED_LIBRARIES ${XINE_LIBRARY})
-  CHECK_C_SOURCE_COMPILES("#include <xine.h>\nint main()\n{\n  xine_open_video_driver(xine_new(), \"auto\", XINE_VISUAL_TYPE_XCB, NULL);\n  return 0;\n}\n" XINE_XCB_FOUND)
+  include(CheckCSourceCompiles)
+  set(CMAKE_REQUIRED_INCLUDES ${XINE_INCLUDE_DIR})
+  set(CMAKE_REQUIRED_LIBRARIES ${XINE_LIBRARY})
+  check_c_source_compiles("#include <xine.h>\nint main()\n{\n  xine_open_video_driver(xine_new(), \"auto\", XINE_VISUAL_TYPE_XCB, NULL);\n  return 0;\n}\n" XINE_XCB_FOUND)
 endif(XINE_FOUND)
 
-if (XINE_FOUND)
-   if (NOT Xine_FIND_QUIETLY)
-      message(STATUS "Found XINE: ${XINE_LIBRARY}")
-   endif (NOT Xine_FIND_QUIETLY)
-   #   if(XINECONFIG_EXECUTABLE)
-   #      EXEC_PROGRAM(${XINECONFIG_EXECUTABLE} ARGS --plugindir RETURN_VALUE _return_VALUE OUTPUT_VARIABLE XINEPLUGINSDIR)
-   #      MESSAGE(STATUS "XINEPLUGINSDIR :<${XINEPLUGINSDIR}>")
-   #   endif(XINECONFIG_EXECUTABLE)
-else (XINE_FOUND)
-   if (Xine_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find XINE 1.1.1 or greater")
-   endif (Xine_FIND_REQUIRED)
-endif (XINE_FOUND)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Xine  "Could NOT find XINE 1.1.1 or greater"  XINE_INCLUDE_DIR XINE_LIBRARY XINECONFIG_EXECUTABLE  XINE_VERSION_OK)
 
-MARK_AS_ADVANCED(XINE_INCLUDE_DIR XINE_LIBRARY)
+mark_as_advanced(XINE_INCLUDE_DIR XINE_LIBRARY XINECONFIG_EXECUTABLE)
