@@ -70,7 +70,7 @@ MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _
 
    IF (NOT ${_var})
       IF (${_minvers} MATCHES ".*")
-        SET(_logtext "${_logtext}, ${_minvers}")
+        SET(_logtext "${_logtext}, ${_minvers} or higher")
       ENDIF (${_minvers} MATCHES ".*")
       SET(_logtext "${_logtext}: ${_description} <${_url}>")
       IF (${_comments} MATCHES ".*")
