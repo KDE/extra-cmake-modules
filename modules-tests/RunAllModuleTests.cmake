@@ -14,6 +14,14 @@ function(execute_one_test name)
    file(MAKE_DIRECTORY "${workingDir}")
    execute_process(COMMAND ${CMAKE_COMMAND} "${currentDir}/${name}"
                    WORKING_DIRECTORY "${workingDir}")
+   # now the same with pkg-config disabled
+   set(workingDir "${currentDir}/${name}/build-no-pkgconfig")
+   if(CLEAN_DIRS)
+      file(REMOVE_RECURSE "${workingDir}")
+   endif(CLEAN_DIRS)
+   file(MAKE_DIRECTORY "${workingDir}")
+   execute_process(COMMAND ${CMAKE_COMMAND} -DPKG_CONFIG_EXECUTABLE=echo "${currentDir}/${name}"
+                   WORKING_DIRECTORY "${workingDir}")
 endfunction(execute_one_test)
 
 execute_one_test(Blitz)

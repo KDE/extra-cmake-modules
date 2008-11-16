@@ -17,7 +17,16 @@ cmake_minimum_required(VERSION 2.6.2)
 cmake_policy(SET CMP0000 OLD)
 
 macro(TEST_FIND_PACKAGE package prefix )
-   message(STATUS ":: ***** Testing Find${package}.cmake *****")
+   # if PKG_CONFIG_EXECUTABLE is set to "echo", FindPkgConfig.cmake
+   # will not search again for the real pkg-config, as it would if it was set to NOTFOUND
+   # and still the execute_process(${PKG_CONFIG_EXECUTABLE} ) calls will work
+   # but never return success.
+   if("${PKG_CONFIG_EXECUTABLE}" STREQUAL "echo")
+      message(STATUS ":: ***** Testing Find${package}.cmake, with pkg-config disabled *****")
+   else("${PKG_CONFIG_EXECUTABLE}" STREQUAL "echo")
+      message(STATUS ":: ***** Testing Find${package}.cmake *****")
+   endif("${PKG_CONFIG_EXECUTABLE}" STREQUAL "echo")
+
    find_package(${package})
    message(STATUS ":: ***** Results from Find${package}.cmake *****")
 
@@ -31,5 +40,5 @@ macro(TEST_FIND_PACKAGE package prefix )
    foreach(var ${ARGN})
       message(STATUS ":: ${prefix}_${var}: \"${${prefix}_${var}}\"")
    endforeach(var)
-   message(STATUS ":: ***** Done *****")
+   message(STATUS "::")
 endmacro(TEST_FIND_PACKAGE package)
