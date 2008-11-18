@@ -23,21 +23,21 @@ else (LIBART_INCLUDE_DIR AND LIBART_LIBRARIES)
 
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
-    pkg_check_modules(LIBART libart-2.0)
+    pkg_check_modules(PC_LIBART libart-2.0)
 
     ######### ?? where is this used ?? ###############
-    set(LIBART_DEFINITIONS ${LIBART_CFLAGS})
+    set(LIBART_DEFINITIONS ${PC_LIBART_CFLAGS})
   ENDIF (NOT WIN32)
 
-  FIND_PATH(LIBART_INCLUDE_DIR libart_lgpl/libart.h
-     ${LIBART_INCLUDE_DIRS}/libart-2.0
-     /usr/include/libart-2.0
-     /usr/local/include/libart-2.0
+  FIND_PATH(LIBART_INCLUDE_DIR NAMES libart_lgpl/libart.h
+     PATHS
+     ${PC_LIBART_INCLUDE_DIRS}
+     PATH_SUFFIXES libart-2.0
   )
   
   FIND_LIBRARY(LIBART_LIBRARIES NAMES art_lgpl_2
      PATHS
-     ${LIBART_LIBRARY_DIRS}
+     ${PC_LIBART_LIBRARY_DIRS}
   )
   
   

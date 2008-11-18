@@ -22,19 +22,19 @@ IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
    find_package(PkgConfig)
-   pkg_check_modules(LIBXML libxml-2.0)
-   SET(LIBXML2_DEFINITIONS ${LIBXML_CFLAGS})
+   pkg_check_modules(PC_LIBXML libxml-2.0)
+   SET(LIBXML2_DEFINITIONS ${PC_LIBXML_CFLAGS})
 ENDIF (NOT WIN32)
 
 FIND_PATH(LIBXML2_INCLUDE_DIR libxml/xpath.h
    PATHS
-   ${LIBXML_INCLUDE_DIRS}
+   ${PC_LIBXML_INCLUDE_DIRS}
    PATH_SUFFIXES libxml2
    )
 
 FIND_LIBRARY(LIBXML2_LIBRARIES NAMES xml2 libxml2
    PATHS
-   ${LIBXML_LIBRARY_DIRS}
+   ${PC_LIBXML_LIBRARY_DIRS}
    )
 
 IF (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)

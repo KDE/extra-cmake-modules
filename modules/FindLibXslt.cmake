@@ -22,22 +22,22 @@ IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
    find_package(PkgConfig)
-   pkg_check_modules(XSLT libxslt)
-   SET(LIBXSLT_DEFINITIONS ${XSLT_CFLAGS})
+   pkg_check_modules(PC_XSLT libxslt)
+   SET(LIBXSLT_DEFINITIONS ${PC_XSLT_CFLAGS})
 ENDIF (NOT WIN32)
 
 FIND_PATH(LIBXSLT_INCLUDE_DIR libxslt/xslt.h
-    ${XSLT_INCLUDE_DIRS}
+    ${PC_XSLT_INCLUDE_DIRS}
   )
 
 FIND_LIBRARY(LIBXSLT_LIBRARIES NAMES xslt libxslt
     PATHS
-    ${XSLT_LIBRARY_DIRS}
+    ${PC_XSLT_LIBRARY_DIRS}
   )
 
 FIND_LIBRARY(LIBEXSLT_LIBRARIES NAMES exslt libexslt
     PATHS
-    ${XSLT_LIBRARY_DIRS}
+    ${PC_XSLT_LIBRARY_DIRS}
   )
 
 IF (LIBXSLT_INCLUDE_DIR AND LIBXSLT_LIBRARIES)
