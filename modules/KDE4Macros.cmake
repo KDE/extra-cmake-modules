@@ -904,9 +904,9 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    # dependencies of shared libraries without breaking binary compatibility.
    if(NOT "${_add_lib_param}" STREQUAL "STATIC")
       # only do this inside kdelibs for now (so there is not too much breakage all at once, Alex
-      if(kdelibs_SOURCE_DIR)
+      if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
          set_target_properties(${_target_NAME} PROPERTIES LINK_INTERFACE_LIBRARIES "" )
-      endif(kdelibs_SOURCE_DIR)
+      endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
    endif(NOT "${_add_lib_param}" STREQUAL "STATIC")
 
 endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)

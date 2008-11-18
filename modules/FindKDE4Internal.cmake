@@ -638,39 +638,19 @@ option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the html versions of the docbook docs")
 
-# Remove this below once it's sure it really works, Alex
+# This is for the reduced link interface.
+# In kdelibs it is already alwaysenabled.
+# In all other modules provide the switch _KDE4_USE_REDUCED_LINK_INTERFACE to turn it on.
+if(kdelibs_SOURCE_DIR)
+   set(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT TRUE)
+else(kdelibs_SOURCE_DIR)
+   option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the reduced link interface" OFF)
+endif(kdelibs_SOURCE_DIR)
 
-# # This option enables the reduced link interface for libs on UNIX
-# #
-# # The purpose of the KDE4_DISABLE_PROPERTY_ variable is to be used as a prefix for 
-# # the target property LINK_INTERFACE_LIBRARIES. If it is empty, the property will have its
-# # correct name, if it's not empty, it will be a different name, i.e. the actual property
-# # will not be set, i.e. disabled. See kdelibs/kdecore/CMakeLists.txt for an example.
-# #
-# # By default (i.e. also for Windows) make it non-empty, so the property name will 
-# # change from "LINK_INTERFACE_LIBRARIES" to "DISABLED_LINK_INTERFACE_LIBRARIES", 
-# # which is a different (non-existing) target property, and so setting that property 
-# # won't have an effect
+# Setting the target property LINK_INTERFACE_LIBRARIES directly shouldn't be done,
+# instead TARGET_LINK_LIBRARIES(... LINK_INTERFACE_LIBRARIES ... ) must be used.
+set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
 
-# disable this for now for Windows, since there is an issue with the use of "debug" and
-# "optimized" in the LINK_INTERFACE_LIBRARIES target property, Alex
-
-# disable the reduced linking temporarily for Windows, cmake HEAD and the soon-to-be-released cmake 2.6.2
-# With 2.6.0 and 2.6.1 it can happen that the "debug", "optimized" and "general" keywords are
-# misinterpreted by cmake as library names, the linking fails. Usually this happens under Windows.
-# In 2.6.2 this will be an error at cmake time, so we disable it for now and once we require 
-# 2.6.2 we'll fix it the right way (using TARGET_LINK_LIBRARIES(foo LINK_INTERFACE_LIBRARIES ...)
-if (WIN32  OR  "${CMAKE_MINOR_VERSION}" EQUAL 7  OR  "${CMAKE_PATCH_VERSION}" EQUAL 2)
-   set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
-endif (WIN32  OR  "${CMAKE_MINOR_VERSION}" EQUAL 7  OR  "${CMAKE_PATCH_VERSION}" EQUAL 2)
-#endif(WIN32)
-
-# option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the experimental reduced library exports" FALSE)
-# # If enabled, make it empty, so the property will keep it's actual name.
-# # and the LINK_INTERFACE_LIBRARIES property will be set.
-# if (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
-#    set(KDE4_DISABLE_PROPERTY_ )
-# endif (KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
 
 
 if( KDE4_ENABLE_FINAL)
