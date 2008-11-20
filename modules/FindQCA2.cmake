@@ -36,10 +36,9 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
        set(QCA2_INCLUDE_DIR ${PC_QCA2_INCLUDE_DIRS})
        find_library(QCA2_LIBRARIES NAMES qca
                     PATHS
-                    ${PC_QCA2_LIBRARY_DIRS}
+                    ${PC_QCA2_LIBDIR}
                     NO_DEFAULT_PATH
                     )
-       set(QCA2_LIBRARY_DIRS ${PC_QCA2_LIBRARY_DIRS})
     else(PC_QCA2_FOUND)
        find_library(QCA2_LIBRARIES NAMES qca )
        find_path(QCA2_INCLUDE_DIR qca.h PATH_SUFFIXES QtCrypto)
