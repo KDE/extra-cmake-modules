@@ -166,6 +166,7 @@
       message(STATUS "Found Soprano includes: ${SOPRANO_INCLUDE_DIR}")
       message(STATUS "Found Soprano Index: ${SOPRANO_INDEX_LIBRARIES}")
       message(STATUS "Found Soprano Client: ${SOPRANO_CLIENT_LIBRARIES}")
+      message(STATUS "Found Soprano Plugin Dir: ${SOPRANO_PLUGIN_DIR}")
       message(STATUS "Found Soprano Plugins:${_plugins}")
     endif(NOT Soprano_FIND_QUIETLY)
   else(Soprano_FOUND)
