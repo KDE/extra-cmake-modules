@@ -93,7 +93,7 @@
 
 OPTION(Boost_USE_MULTITHREADED "Use the multithreaded versions of the boost libraries" ON)
 
-SET( _boost_TEST_VERSIONS ${Boost_ADDITIONAL_VERSIONS} "1.36.1" "1.36.0" "1.36" "1.35.1" "1.35.0" "1.35" "1.34.1" "1.34.0" "1.34" "1.33.1" "1.33.0" "1.33" )
+SET( _boost_TEST_VERSIONS ${Boost_ADDITIONAL_VERSIONS} "1.37" "1.36.1" "1.36.0" "1.36" "1.35.1" "1.35.0" "1.35" "1.34.1" "1.34.0" "1.34" "1.33.1" "1.33.0" "1.33" )
 
 
 ############################################
@@ -253,6 +253,7 @@ ELSE (_boost_IN_CACHE)
     IF(Boost_MINIMUM_VERSION MATCHES "[0-9]+\\.[0-9]+\\.[0-9]")
       STRING(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\1" Boost_FIND_VERSION_MAJOR ${Boost_MINIMUM_VERSION})
       STRING(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\2" Boost_FIND_VERSION_MINOR ${Boost_MINIMUM_VERSION})
+  message(STATUS "3")
       STRING(REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\3" Boost_FIND_VERSION_PATCH ${Boost_MINIMUM_VERSION})
     ELSEIF(Boost_MINIMUM_VERSION MATCHES "[0-9]+\\.[0-9]+")
       STRING(REGEX REPLACE "([0-9]+)\\.([0-9]+)" "\\1" Boost_FIND_VERSION_MAJOR ${Boost_MINIMUM_VERSION})
