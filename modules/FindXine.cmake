@@ -48,12 +48,12 @@ if (XINE_INCLUDE_DIR AND XINE_LIBRARY AND XINECONFIG_EXECUTABLE)
 endif (XINE_INCLUDE_DIR AND XINE_LIBRARY AND XINECONFIG_EXECUTABLE)
 
 
-if( XINE_FOUND )
+if( XINE_VERSION_OK)
   include(CheckCSourceCompiles)
   set(CMAKE_REQUIRED_INCLUDES ${XINE_INCLUDE_DIR})
   set(CMAKE_REQUIRED_LIBRARIES ${XINE_LIBRARY})
   check_c_source_compiles("#include <xine.h>\nint main()\n{\n  xine_open_video_driver(xine_new(), \"auto\", XINE_VISUAL_TYPE_XCB, NULL);\n  return 0;\n}\n" XINE_XCB_FOUND)
-endif(XINE_FOUND)
+endif(XINE_VERSION_OK)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Xine  "Could NOT find XINE 1.1.1 or greater"  XINE_INCLUDE_DIR XINE_LIBRARY XINECONFIG_EXECUTABLE  XINE_VERSION_OK)
