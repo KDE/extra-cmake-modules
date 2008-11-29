@@ -53,6 +53,7 @@ if( XINE_VERSION_OK)
   set(CMAKE_REQUIRED_INCLUDES ${XINE_INCLUDE_DIR})
   set(CMAKE_REQUIRED_LIBRARIES ${XINE_LIBRARY})
   check_c_source_compiles("#include <xine.h>\nint main()\n{\n  xine_open_video_driver(xine_new(), \"auto\", XINE_VISUAL_TYPE_XCB, NULL);\n  return 0;\n}\n" XINE_XCB_FOUND)
+  set(XINE_FOUND TRUE)
 endif(XINE_VERSION_OK)
 
 include(FindPackageHandleStandardArgs)
