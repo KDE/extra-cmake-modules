@@ -447,146 +447,98 @@ else (_kdeBootStrapping)
       get_filename_component(QT_INSTALL_DIR ${_DIR} PATH )
    endif (WIN32)
 
-   # this file contains all dependencies of all libraries of kdelibs, Alex
+   # This file contains information about the installed kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
+   # This file contains the exported library target from kdelibs (new with cmake 2.6.x)
+   # Include it to "import" the libraries from kdelibs into the current projects as targets.
+   # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
+   # the kdeui library could now also be used just as "kdeui" and still have all their
+   # dependent libraries handled correctly. But to keep compatibility and not to change
+   # behaviour we set all these variables anyway as seen below. Alex
    include(${kde_cmake_module_dir}/KDELibsLibraryTargets.cmake)
 
    if (UNIX)
-#      find_library(KDE4_KDEFAKES_LIBRARY NAMES kdefakes PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#      set(KDE4_KDEFAKES_LIBS ${kdefakes_LIB_DEPENDS} ${KDE4_KDEFAKES_LIBRARY} )
       set(KDE4_KDEFAKES_LIBRARY kdefakes )
       set(KDE4_KDEFAKES_LIBS    kdefakes )
    endif (UNIX)
 
-#   find_library(KDE4_KDECORE_LIBRARY NAMES kdecore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KDECORE_LIBS ${kdecore_LIB_DEPENDS} ${KDE4_KDECORE_LIBRARY} )
-
    set(KDE4_KDECORE_LIBRARY kdecore)
    set(KDE4_KDECORE_LIBS    kdecore)
 
-
-#   find_library(KDE4_KDEUI_LIBRARY NAMES kdeui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KDEUI_LIBS ${kdeui_LIB_DEPENDS} ${KDE4_KDEUI_LIBRARY} )
    set(KDE4_KDEUI_LIBRARY kdeui )
    set(KDE4_KDEUI_LIBS    kdeui )
 
-#   find_library(KDE4_KIO_LIBRARY NAMES kio PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KIO_LIBS ${kio_LIB_DEPENDS} ${KDE4_KIO_LIBRARY} )
    set(KDE4_KIO_LIBRARY kio )
    set(KDE4_KIO_LIBS    kio )
 
-#   find_library(KDE4_KPARTS_LIBRARY NAMES kparts PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KPARTS_LIBS ${kparts_LIB_DEPENDS} ${KDE4_KPARTS_LIBRARY} )
    set(KDE4_KPARTS_LIBRARY kparts )
    set(KDE4_KPARTS_LIBS    kparts )
 
-#   find_library(KDE4_KUTILS_LIBRARY NAMES kutils PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KUTILS_LIBS ${kutils_LIB_DEPENDS} ${KDE4_KUTILS_LIBRARY} )
    set(KDE4_KUTILS_LIBRARY kutils )
    set(KDE4_KUTILS_LIBS    kutils )
 
-#   find_library(KDE4_KDE3SUPPORT_LIBRARY NAMES kde3support PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KDE3SUPPORT_LIBS ${kde3support_LIB_DEPENDS} ${KDE4_KDE3SUPPORT_LIBRARY} )
    set(KDE4_KDE3SUPPORT_LIBRARY kde3support )
    set(KDE4_KDE3SUPPORT_LIBS    kde3support )
 
-#   find_library(KDE4_KFILE_LIBRARY NAMES kfile PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KFILE_LIBS ${kfile_LIB_DEPENDS} ${KDE4_KFILE_LIBRARY} )
    set(KDE4_KFILE_LIBRARY kfile )
    set(KDE4_KFILE_LIBS    kfile )
 
-#   find_library(KDE4_KHTML_LIBRARY NAMES khtml PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KHTML_LIBS ${khtml_LIB_DEPENDS} ${KDE4_KHTML_LIBRARY} )
    set(KDE4_KHTML_LIBRARY khtml )
    set(KDE4_KHTML_LIBS    khtml )
 
-#   find_library(KDE4_KJS_LIBRARY NAMES kjs PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KJS_LIBS ${kjs_LIB_DEPENDS} ${KDE4_KJS_LIBRARY} )
    set(KDE4_KJS_LIBRARY kjs )
    set(KDE4_KJS_LIBS    kjs )
 
-#   find_library(KDE4_KJSAPI_LIBRARY NAMES kjsapi PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KJSAPI_LIBS ${kjsapi_LIB_DEPENDS} ${KDE4_KJSAPI_LIBRARY} )
    set(KDE4_KJSAPI_LIBRARY kjsapi )
    set(KDE4_KJSAPI_LIBS    kjsapi )
 
-#   find_library(KDE4_KNEWSTUFF2_LIBRARY NAMES knewstuff2 PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KNEWSTUFF2_LIBS ${knewstuff2_LIB_DEPENDS} ${KDE4_KNEWSTUFF2_LIBRARY} )
    set(KDE4_KNEWSTUFF2_LIBRARY knewstuff2 )
    set(KDE4_KNEWSTUFF2_LIBS    knewstuff2 )
 
    if (UNIX)
-#      find_library(KDE4_KPTY_LIBRARY NAMES kpty PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#      set(KDE4_KPTY_LIBS ${kpty_LIB_DEPENDS} ${KDE4_KPTY_LIBRARY} )
       set(KDE4_KPTY_LIBRARY kpty )
       set(KDE4_KPTY_LIBS    kpty )
 
-#      find_library(KDE4_KDESU_LIBRARY NAMES kdesu PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#      set(KDE4_KDESU_LIBS ${kdesu_LIB_DEPENDS} ${KDE4_KDESU_LIBRARY} )
       set(KDE4_KDESU_LIBRARY kdesu )
       set(KDE4_KDESU_LIBS    kdesu )
    endif (UNIX)
 
-#   find_library(KDE4_KDNSSD_LIBRARY NAMES kdnssd PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KDNSSD_LIBS ${kdnssd_LIB_DEPENDS} ${KDE4_KDNSSD_LIBRARY} )
    set(KDE4_KDNSSD_LIBRARY kdnssd )
    set(KDE4_KDNSSD_LIBS    kdnssd )
 
-#   find_library(KDE4_SOLID_LIBRARY NAMES solid PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_SOLID_LIBS ${solid_LIB_DEPENDS} ${KDE4_SOLID_LIBRARY} )
    set(KDE4_SOLID_LIBRARY solid )
    set(KDE4_SOLID_LIBS    solid )
 
-#   find_library(KDE4_THREADWEAVER_LIBRARY NAMES threadweaver PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_THREADWEAVER_LIBRARIES ${threadweaver_LIB_DEPENDS} ${KDE4_THREADWEAVER_LIBRARY} )
    set(KDE4_THREADWEAVER_LIBRARY   threadweaver )
    set(KDE4_THREADWEAVER_LIBS      threadweaver )
    set(KDE4_THREADWEAVER_LIBRARIES threadweaver )
 
-#   find_library(KDE4_KNOTIFYCONFIG_LIBRARY NAMES knotifyconfig PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KNOTIFYCONFIG_LIBS ${knotifyconfig_LIB_DEPENDS} ${KDE4_KNOTIFYCONFIG_LIBRARY} )
    set(KDE4_KNOTIFYCONFIG_LIBRARY knotifyconfig )
    set(KDE4_KNOTIFYCONFIG_LIBS    knotifyconfig )
 
-#   find_library(KDE4_KROSSCORE_LIBRARY NAMES krosscore PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KROSSCORE_LIBS ${krosscore_LIB_DEPENDS} ${KDE4_KROSSCORE_LIBRARY} )
    set(KDE4_KROSSCORE_LIBRARY krosscore )
    set(KDE4_KROSSCORE_LIBS    krosscore )
 
-#   find_library(KDE4_KROSSUI_LIBRARY NAMES krossui PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KROSSUI_LIBS ${krossui_LIB_DEPENDS} ${KDE4_KROSSCORE_LIBS} ${KDE4_KROSSUI_LIBRARY} )
    set(KDE4_KROSSUI_LIBRARY krossui )
    set(KDE4_KROSSUI_LIBS    krossui )
 
-#   find_library(KDE4_KTEXTEDITOR_LIBRARY NAMES ktexteditor PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KTEXTEDITOR_LIBS ${ktexteditor_LIB_DEPENDS} ${KDE4_KTEXTEDITOR_LIBRARY} )
    set(KDE4_KTEXTEDITOR_LIBRARY ktexteditor )
    set(KDE4_KTEXTEDITOR_LIBS    ktexteditor )
 
-   # Can't do that, it's not always compiled.
-   #find_library(KDE4_KNEPOMUK_LIBRARY NAMES knepomuk PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   #set(KDE4_KNEPOMUK_LIBS ${knepomuk_LIB_DEPENDS} ${KDE4_KNEPOMUK_LIBRARY} )
    if(TARGET knepomuk)
       set(KDE4_KNEPOMUK_LIBRARY knepomuk )
       set(KDE4_KNEPOMUK_LIBS    knepomuk )
    endif(TARGET knepomuk)
 
 
-   # Can't do that, it's not always compiled. See FindKMetaData.cmake
-   #find_library(KDE4_KMETADATA_LIBRARY NAMES kmetadata PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-   #set(KDE4_KMETADATA_LIBS ${kmetadata_LIB_DEPENDS} ${KDE4_KMETADATA_LIBRARY} )
    if(TARGET kmetadata)
       set(KDE4_KMETADATA_LIBRARY kmetadata )
       set(KDE4_KMETADATA_LIBS    kmetadata )
    endif(TARGET kmetadata)
 
-#   find_library(KDE4_KFORMULA_LIBRARY NAMES kformula PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#   set(KDE4_KFORMULA_LIBS ${kformula_LIB_DEPENDS} ${KDE4_KFORMULA_LIBRARY} )
    set(KDE4_KFORMULA_LIBRARY kformula )
    set(KDE4_KFORMULA_LIBS    kformula )
 
-#    find_library(KDE4_PLASMA_LIBRARY NAMES plasma PATHS ${KDE4_LIB_INSTALL_DIR} NO_DEFAULT_PATH )
-#    set(KDE4_PLASMA_LIBS ${plasma_LIB_DEPENDS} ${KDE4_PLASMA_LIBRARY} )
    set(KDE4_PLASMA_LIBRARY plasma )
    set(KDE4_PLASMA_LIBS plasma )
 
