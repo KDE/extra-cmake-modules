@@ -3,7 +3,25 @@
 #
 #  KDEPIMLIBS_FOUND - system has KDE PIM Libraries
 #  KDEPIMLIBS_INCLUDE_DIR - the KDE PIM Libraries include directory
-
+# It also sets:
+#   KDEPIMLIBS_AKONADI_LIBS
+#   KDEPIMLIBS_AKONADI_KMIME_LIBS
+#   KDEPIMLIBS_AKONADI_KABC_LIBS
+#   KDEPIMLIBS_GPGMEPP_LIBS
+#   KDEPIMLIBS_KABC_LIBS
+#   KDEPIMLIBS_KBLOG_LIBS
+#   KDEPIMLIBS_KCAL_LIBS
+#   KDEPIMLIBS_KIMAP_LIBS
+#   KDEPIMLIBS_KLDAP_LIBS
+#   KDEPIMLIBS_KMIME_LIBS
+#   KDEPIMLIBS_KPIMIDENTITIES_LIBS
+#   KDEPIMLIBS_KPIMUTILS_LIBS
+#   KDEPIMLIBS_KRESOURCES_LIBS
+#   KDEPIMLIBS_KTNEF_LIBS
+#   KDEPIMLIBS_KXMLRPCCLIENT_LIBS
+#   KDEPIMLIBS_MAILTRANSPORT_LIBS
+#   KDEPIMLIBS_QGPGME_LIBS
+#   KDEPIMLIBS_SYNDICATION_LIBS
 
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 # Copyright (c) 2006, Ralf Habacker, <ralf.habacker@freenet.de>
@@ -26,71 +44,60 @@ find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal_export.h
   ${KDE4_INCLUDE_DIR}
 )
 
+macro(_KDEPIMLibs_Set_Lib_Vars _prefix _lib)
+  set(KDEPIMLIBS_${_prefix}_LIBRARY ${_lib})
+  set(KDEPIMLIBS_${_prefix}_LIBS    ${_lib})
+  # these two are set for compatibility with KDE 4.[01], Alex:
+  set(KDE4_${_prefix}_LIBRARY       ${_lib})
+  set(KDE4_${_prefix}_LIBS          ${_lib})
+endmacro(_KDEPIMLibs_Set_Lib_Vars)
+
+
 if( KDEPIMLIBS_INCLUDE_DIR )
   set(KDEPIMLIBS_FOUND TRUE)
 
+  get_filename_component( kdepimlibs_cmake_module_dir  "${KDEPIMLIBS_INCLUDE_DIR}" PATH)
+  set(kdepimlibs_cmake_module_dir "${kdepimlibs_cmake_module_dir}/share/apps/cmake/modules")
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${kdepimlibs_cmake_module_dir}")
+
   # this file contains all dependencies of all libraries of kdepimlibs, Alex
-  include(KDEPimLibsDependencies)
+  include("${kdepimlibs_cmake_module_dir}/KDEPimLibsInformation.cmake" OPTIONAL RESULT_VARIABLE _newKdepimLibsFound)
+  # if this file could not be loaded, we found an older version of Kdepimlibs, tell the
+  # developer that he should update kdepimlibs. Alex
+  if (NOT _newKdepimLibsFound)
+     message(FATAL_ERROR "You need a newer version of kdepimlibs, please update it")
+  endif (NOT _newKdepimLibsFound)
+  
+  include("${kdepimlibs_cmake_module_dir}/KDEPimLibsLibraryTargets.cmake")
 
-  find_library(KDE4_AKONADI_LIBRARY NAMES akonadi-kde PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_AKONADI_LIBS ${akonadi_LIB_DEPENDS} ${KDE4_AKONADI_LIBRARY} )
+  _kdepimlibs_set_lib_vars( AKONADI        akonadi-kde)
+  _kdepimlibs_set_lib_vars( AKONADI_KMIME  akonadi-kmime)
+  _kdepimlibs_set_lib_vars( AKONADI_KABC   akonadi-kabc)
+  _kdepimlibs_set_lib_vars( GPGMEPP        gpgmepp)
+  _kdepimlibs_set_lib_vars( KABC           kabc)
+  _kdepimlibs_set_lib_vars( KBLOG          kblog)
+  _kdepimlibs_set_lib_vars( KCAL           kcal)
+  _kdepimlibs_set_lib_vars( KIMAP          kimap)
+  _kdepimlibs_set_lib_vars( KLDAP          kldap)
+  _kdepimlibs_set_lib_vars( KMIME          kmime)
+  _kdepimlibs_set_lib_vars( KPIMIDENTITIES kpimidentities)
+  _kdepimlibs_set_lib_vars( KPIMUTILS      kpimutils)
+  _kdepimlibs_set_lib_vars( KRESOURCES     kresources)
+  _kdepimlibs_set_lib_vars( KTNEF          ktnef)
+  _kdepimlibs_set_lib_vars( KXMLRPCCLIENT  kxmlrpcclient)
+  _kdepimlibs_set_lib_vars( MAILTRANSPORT  mailtransport)
+  _kdepimlibs_set_lib_vars( QGPGME         qgpgme)
+  _kdepimlibs_set_lib_vars( SYNDICATION    syndication)
 
-  find_library(KDE4_AKONADI_KMIME_LIBRARY NAMES akonadi-kmime PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_AKONADI_KMIME_LIBS ${akonadi_kmime_LIB_DEPENDS} ${KDE4_AKONADI_KMIME_LIBRARY} )
+  # this is bad, so I commented it out. A module shouldn't modify variables
+  # set by another module. Alex.
+  # # setup global used KDE include
+  # set (KDE4_INCLUDES ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR})
 
-  find_library(KDE4_AKONADI_KABC_LIBRARY NAMES akonadi-kabc PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_AKONADI_KABC_LIBS ${akonadi_kabc_LIB_DEPENDS} ${KDE4_AKONADI_KABC_LIBRARY} )
-
-  find_library(KDE4_GPGMEPP_LIBRARY NAMES gpgme++ PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_GPGMEPP_LIBS ${gpgmepp_LIB_DEPENDS} ${KDE4_GPGMEPP_LIBRARY} )
-
-  find_library(KDE4_KABC_LIBRARY NAMES kabc PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KABC_LIBS ${kabc_LIB_DEPENDS} ${KDE4_KABC_LIBRARY} )
-
-  find_library(KDE4_KBLOG_LIBRARY NAMES kblog PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KBLOG_LIBS ${kblog_LIB_DEPENDS} ${KDE4_KBLOG_LIBRARY} )
-
-  find_library(KDE4_KCAL_LIBRARY NAMES kcal PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KCAL_LIBS ${kcal_LIB_DEPENDS} ${KDE4_KCAL_LIBRARY} )
-
-  find_library(KDE4_KIMAP_LIBRARY NAMES kimap PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KIMAP_LIBS ${kimap_LIB_DEPENDS} ${KDE4_KIMAP_LIBRARY} )
-
-  find_library(KDE4_KLDAP_LIBRARY NAMES kldap PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KLDAP_LIBS ${kldap_LIB_DEPENDS} ${KDE4_KLDAP_LIBRARY} )
-
-  find_library(KDE4_KMIME_LIBRARY NAMES kmime PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KMIME_LIBS ${kmime_LIB_DEPENDS} ${KDE4_KMIME_LIBRARY} )
-
-  find_library(KDE4_KPIMIDENTITIES_LIBRARY NAMES kpimidentities PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KPIMIDENTITIES_LIBS ${kpimidentities_LIB_DEPENDS} ${KDE4_KPIMIDENTITIES_LIBRARY} )
-
-  find_library(KDE4_KPIMUTILS_LIBRARY NAMES kpimutils PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KPIMUTILS_LIBS ${kpimutils_LIB_DEPENDS} ${KDE4_KPIMUTILS_LIBRARY} )
-
-  find_library(KDE4_KRESOURCES_LIBRARY NAMES kresources PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KRESOURCES_LIBS ${kresources_LIB_DEPENDS} ${KDE4_KRESOURCES_LIBRARY} )
-
-  find_library(KDE4_KTNEF_LIBRARY NAMES ktnef PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KTNEF_LIBS ${ktnef_LIB_DEPENDS} ${KDE4_KTNEF_LIBRARY} )
-
-  find_library(KDE4_KXMLRPCCLIENT_LIBRARY NAMES kxmlrpcclient PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_KXMLRPCCLIENT_LIBS ${kxmlrpcclient_LIB_DEPENDS} ${KDE4_KXMLRPCCLIENT_LIBRARY} )
-
-  find_library(KDE4_MAILTRANSPORT_LIBRARY NAMES mailtransport PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_MAILTRANSPORT_LIBS ${mailtransport_LIB_DEPENDS} ${KDE4_MAILTRANSPORT_LIBRARY} )
-
-  find_library(KDE4_QGPGME_LIBRARY NAMES qgpgme PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_QGPGME_LIBS ${qgpgme_LIB_DEPENDS} ${KDE4_QGPGME_LIBRARY} )
-
-  find_library(KDE4_SYNDICATION_LIBRARY NAMES syndication PATHS ${KDE4_LIB_DIR} NO_DEFAULT_PATH )
-  set(KDE4_SYNDICATION_LIBS ${syndication_LIB_DEPENDS} ${KDE4_SYNDICATION_LIBRARY} )
-
-  # setup global used KDE include
-  set (KDE4_INCLUDES ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR})
 else( KDEPIMLIBS_INCLUDE_DIR )
   set(KDEPIMLIBS_FOUND FALSE)
 endif( KDEPIMLIBS_INCLUDE_DIR )
+
 
 if (KDEPIMLIBS_FOUND)
    if (NOT KdepimLibs_FIND_QUIETLY)
@@ -101,5 +108,4 @@ else (KDEPIMLIBS_FOUND)
       message(FATAL_ERROR "Could NOT find a kdepimlibs installation in ${KDE4_INCLUDE_DIR}.\nPlease build and install kdepimlibs first.")
    endif (KdepimLibs_FIND_REQUIRED)
 endif (KDEPIMLIBS_FOUND)
-
 
