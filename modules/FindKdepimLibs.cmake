@@ -40,8 +40,8 @@ if (WIN32)
   endif (KDEPIMLIBS_DIR)
 endif (WIN32)
 
-find_path( KDEPIMLIBS_INCLUDE_DIR kcal/kcal_export.h
-  ${KDE4_INCLUDE_DIR}
+find_path( KDEPIMLIBS_INCLUDE_DIR NAMES kcal/kcal_export.h 
+  HINTS ${KDE4_INCLUDE_DIR}
 )
 
 macro(_KDEPIMLibs_Set_Lib_Vars _prefix _lib)
