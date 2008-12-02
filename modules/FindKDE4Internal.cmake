@@ -558,6 +558,8 @@ else (_kdeBootStrapping)
 
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
    find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
+   
+   mark_as_advanced(KDE4_KCFGC_EXECUTABLE KDE4_MEINPROC_EXECUTABLE KDE4_MAKEKDEWIDGETS_EXECUTABLE)
 
    # allow searching cmake modules in all given kde install locations (KDEDIRS based)
    execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path data OUTPUT_VARIABLE _data_DIR ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
