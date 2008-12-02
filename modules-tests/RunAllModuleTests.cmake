@@ -24,10 +24,32 @@ function(execute_one_test name)
                    WORKING_DIRECTORY "${workingDir}")
 endfunction(execute_one_test)
 
-execute_one_test(Blitz)
-execute_one_test(Eigen2)
-execute_one_test(Flex)
-execute_one_test(Flac)
-execute_one_test(QCA2)
-execute_one_test(Strigi)
-execute_one_test(Xine)
+if(DEFINED MODULE)
+   set(modulesToTest ${MODULE})
+else(DEFINED MODULE)
+   set(modulesToTest AGG 
+                     Blitz 
+                     BlueZ
+                     Eigen2 
+                     Flac 
+                     Flex 
+                     GObject 
+                     GStreamer
+                     LCMS 
+                     LibArt 
+                     LibXslt 
+                     OpenEXR 
+                     PCRE 
+                     QCA2 
+                     QImageBlitz
+                     Sqlite 
+                     Strigi 
+                     USB 
+                     Xine 
+                     Xmms)
+endif(DEFINED MODULE)
+
+foreach(currentModule ${modulesToTest})
+   execute_one_test(${currentModule})
+endforeach(currentModule ${modulesToTest})
+
