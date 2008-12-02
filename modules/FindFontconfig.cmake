@@ -2,6 +2,7 @@
 # Once done this will define
 #
 #  FONTCONFIG_FOUND - system has Fontconfig
+#  FONTCONFIG_INCLUDE_DIR - The include directory to use for the fontconfig headers
 #  FONTCONFIG_LIBRARIES - Link these to use FONTCONFIG
 #  FONTCONFIG_DEFINITIONS - Compiler switches required for using FONTCONFIG
 
@@ -22,20 +23,22 @@ else (FONTCONFIG_LIBRARIES AND FONTCONFIG_INCLUDE_DIR)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
-    pkg_check_modules(FONTCONFIG fontconfig)
+    pkg_check_modules(PC_FONTCONFIG fontconfig)
 
-    set(FONTCONFIG_DEFINITIONS ${FONTCONFIG_CFLAGS})
+    set(FONTCONFIG_DEFINITIONS ${PC_FONTCONFIG_CFLAGS_OTHER})
   endif (NOT WIN32)
 
   find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h
     PATHS
-    ${FONTCONFIG_INCLUDE_DIRS}
+    ${PC_FONTCONFIG_INCLUDEDIR}
+    ${PC_FONTCONFIG_INCLUDE_DIRS}
     /usr/X11/include
   )
 
   find_library(FONTCONFIG_LIBRARIES NAMES fontconfig
     PATHS
-    ${FONTCONFIG_LIBRARY_DIRS}
+    ${PC_FONTCONFIG_LIBDIR}
+    ${PC_FONTCONFIG_LIBRARY_DIRS}
   )
 
   include(FindPackageHandleStandardArgs)

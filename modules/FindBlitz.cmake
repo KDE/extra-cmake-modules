@@ -23,7 +23,7 @@ if (NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
-    pkg_check_modules(BLITZ qimageblitz)
+    pkg_check_modules(PC_BLITZ qimageblitz)
 endif (NOT WIN32)
 
 find_path(BLITZ_INCLUDES
@@ -32,7 +32,8 @@ find_path(BLITZ_INCLUDES
   PATH_SUFFIXES qimageblitz
   PATHS
   $ENV{QIMAGEBLITZDIR}/include
-  ${BLITZ_INCLUDE_DIRS}
+  ${PC_BLITZ_INCLUDEDIR}
+  ${PC_BLITZ_INCLUDE_DIRS}
   ${KDE4_INCLUDE_DIR}
   ${INCLUDE_INSTALL_DIR}
 )
@@ -42,7 +43,8 @@ find_library_with_debug(BLITZ_LIBRARIES
   qimageblitz
   PATHS
   $ENV{QIMAGEBLITZDIR}/lib
-  ${BLITZ_LIBRARY_DIRS}
+  ${PC_BLITZ_LIBRARY_DIRS}
+  ${PC_BLITZ_LIBDIR}
   ${KDE4_LIB_DIR}
   ${LIB_INSTALL_DIR}
 )

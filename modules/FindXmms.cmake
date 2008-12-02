@@ -1,9 +1,10 @@
 # Search xmms
-## Once done this will define
+# Once done this will define
 #
 #  XMMS_FOUND        - system has xmms
 #  XMMS_INCLUDE_DIRS - the xmms include directory
-#  XMMS_LDFLAGS      - Link these to use xmms
+#  XMMS_LIBRARIES    - Link these to use xmms
+#  XMMS_LDFLAGS      - for compatibility only, same as XMMS_LIBRARIES
 
 # Copyright (c) 2006, 2007 Laurent Montel, <montel@kde.org>
 # Copyright (c) 2007 Allen Winter <winter@kde.org>
@@ -11,29 +12,33 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (XMMS_INCLUDE_DIRS AND XMMS_LDFLAGS)
+if (XMMS_INCLUDE_DIRS AND XMMS_LIBRARIES)
   # in cache already
-  SET(XMMS_FOUND TRUE)
+  set(XMMS_FOUND TRUE)
 
-else (XMMS_INCLUDE_DIRS AND XMMS_LDFLAGS)
-  IF (NOT WIN32)
+else (XMMS_INCLUDE_DIRS AND XMMS_LIBRARIES)
+  if (NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
 
-    pkg_check_modules(XMMS xmms)
-  ENDIF(NOT WIN32)
+    pkg_check_modules(PC_XMMS xmms)
+  endif(NOT WIN32)
 
-  FIND_PATH(XMMS_INCLUDE_DIRS xmmsctrl.h
-    PATHS ${_XMMSIncDir} PATH_SUFFIXES xmms)
+  find_path(XMMS_INCLUDE_DIRS xmmsctrl.h
+    PATHS ${PC_XMMS_INCLUDEDIR} ${PC_XMMS_INCLUDE_DIRS} 
+    PATH_SUFFIXES xmms)
 
-  FIND_LIBRARY(XMMS_LDFLAGS NAMES xmms
-    PATHS ${_XMMSLinkDir})
+  find_library(XMMS_LIBRARIES NAMES xmms
+    PATHS ${PC_XMMS_LIBDIR} ${PC_XMMS_LIBRARY_DIRS})
 
-  INCLUDE(FindPackageHandleStandardArgs)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(Xmms DEFAULT_MSG
-                                    XMMS_LDFLAGS XMMS_INCLUDE_DIRS)
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(Xmms DEFAULT_MSG
+                                    XMMS_LIBRARIES XMMS_INCLUDE_DIRS)
 
-  MARK_AS_ADVANCED(XMMS_INCLUDE_DIRS XMMS_LDFLAGS)
+  mark_as_advanced(XMMS_INCLUDE_DIRS XMMS_LIBRARIES)
 
-endif (XMMS_INCLUDE_DIRS AND XMMS_LDFLAGS)
+endif (XMMS_INCLUDE_DIRS AND XMMS_LIBRARIES)
+
+# for compatibility
+set(XMMS_LDFLAGS ${XMMS_LIBRARIES})

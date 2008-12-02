@@ -22,17 +22,19 @@ if (NOT WIN32)
   # in the FIND_PATH() and FIND_LIBRARY() calls
   find_package(PkgConfig)
 
-  pkg_check_modules(PCRE libpcre)
+  pkg_check_modules(PC_PCRE libpcre)
 
-  set(PCRE_DEFINITIONS ${PCRE_CFLAGS})
+  set(PCRE_DEFINITIONS ${PC_PCRE_CFLAGS_OTHER})
 
-endif (NOT WIN32)  
+endif (NOT WIN32)
 
-find_path(PCRE_INCLUDE_DIR pcre.h PATHS ${PCRE_INCLUDE_DIRS} PATH_SUFFIXES pcre)
+find_path(PCRE_INCLUDE_DIR pcre.h 
+          HINTS ${PC_PCRE_INCLUDEDIR} ${PC_PCRE_INCLUDE_DIRS} 
+          PATH_SUFFIXES pcre)
 
-find_library(PCRE_PCRE_LIBRARY NAMES pcre PATHS ${PCRE_LIBRARY_DIRS})
+find_library(PCRE_PCRE_LIBRARY NAMES pcre HINTS ${PC_PCRE_LIBDIR} ${PC_PCRE_LIBRARY_DIRS})
 
-find_library(PCRE_PCREPOSIX_LIBRARY NAMES pcreposix PATHS ${PCRE_LIBRARY_DIRS})
+find_library(PCRE_PCREPOSIX_LIBRARY NAMES pcreposix HINTS ${PC_PCRE_LIBDIR} ${PC_PCRE_LIBRARY_DIRS})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(PCRE DEFAULT_MSG PCRE_INCLUDE_DIR PCRE_PCRE_LIBRARY PCRE_PCREPOSIX_LIBRARY )

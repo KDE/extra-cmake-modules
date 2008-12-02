@@ -27,33 +27,20 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
   if (NOT WIN32)
     find_package(PkgConfig)
     pkg_check_modules(PC_QCA2 qca2)
-
-    # If pkgconfig found QCA2, get the full path to the library using find_library()
-    # but only in the path reported by pkgconfig.
-    # Otherwise do a normal search.
-    if(PC_QCA2_FOUND)
-       set(QCA2_DEFINITIONS ${PC_QCA2_CFLAGS})
-       set(QCA2_INCLUDE_DIR ${PC_QCA2_INCLUDE_DIRS})
-       find_library(QCA2_LIBRARIES NAMES qca
-                    PATHS
-                    ${PC_QCA2_LIBDIR}
-                    NO_DEFAULT_PATH
-                    )
-    else(PC_QCA2_FOUND)
-       find_library(QCA2_LIBRARIES NAMES qca )
-       find_path(QCA2_INCLUDE_DIR qca.h PATH_SUFFIXES QtCrypto)
-    endif(PC_QCA2_FOUND)
-
-  else (NOT WIN32)
-    find_library_with_debug(QCA2_LIBRARIES
-                    WIN32_DEBUG_POSTFIX d
-                    NAMES qca)
-
-    find_path(QCA2_INCLUDE_DIR qca.h PATH_SUFFIXES QtCrypto)
+    set(QCA2_DEFINITIONS ${PC_QCA2_CFLAGS_OTHER})
   endif (NOT WIN32)
 
-   include(FindPackageHandleStandardArgs)
-   find_package_handle_standard_args(QCA2  DEFAULT_MSG  QCA2_LIBRARIES QCA2_INCLUDE_DIR)
+  find_library_with_debug(QCA2_LIBRARIES
+                  WIN32_DEBUG_POSTFIX d
+                  HINTS ${PC_QCA2_LIBDIR} ${PC_QCA2_LIBRARY_DIRS}
+                  NAMES qca)
+
+  find_path(QCA2_INCLUDE_DIR qca.h 
+            HINTS ${PC_QCA2_INCLUDEDIR} ${PC_QCA2_INCLUDE_DIRS}
+            PATH_SUFFIXES QtCrypto)
+
+  include(FindPackageHandleStandardArgs)
+  find_package_handle_standard_args(QCA2  DEFAULT_MSG  QCA2_LIBRARIES QCA2_INCLUDE_DIR)
 
   mark_as_advanced(QCA2_INCLUDE_DIR QCA2_LIBRARIES)
 

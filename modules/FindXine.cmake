@@ -27,11 +27,13 @@ endif (PKG_CONFIG_FOUND)
 find_path(XINE_INCLUDE_DIR NAMES xine.h 
     HINTS                    # HINTS is new in cmake 2.6. These dirs will be preferred over the default ones
     ${PC_LIBXINE_INCLUDEDIR} 
+    ${PC_LIBXINE_INCLUDE_DIRS} 
     )
 
 find_library(XINE_LIBRARY NAMES xine
  HINTS
   ${PC_LIBXINE_LIBDIR}
+  ${PC_LIBXINE_LIBRARY_DIRS}
  )
 
 find_program(XINECONFIG_EXECUTABLE NAMES xine-config 

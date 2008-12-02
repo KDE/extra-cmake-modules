@@ -8,7 +8,6 @@
 #  STRIGI_LINE_ANALYZER_PREFIX - strigi plugin prefix
 #  STRIGI_THROUGH_ANALYZER_PREFIX - strigi plugin prefix
 
-
 if(NOT STRIGI_MIN_VERSION)
     set(STRIGI_MIN_VERSION "0.5.9")
 endif(NOT STRIGI_MIN_VERSION)

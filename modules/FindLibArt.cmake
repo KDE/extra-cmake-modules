@@ -26,17 +26,19 @@ else (LIBART_INCLUDE_DIR AND LIBART_LIBRARIES)
     pkg_check_modules(PC_LIBART libart-2.0)
 
     ######### ?? where is this used ?? ###############
-    set(LIBART_DEFINITIONS ${PC_LIBART_CFLAGS})
+    set(LIBART_DEFINITIONS ${PC_LIBART_CFLAGS_OTHER})
   ENDIF (NOT WIN32)
 
   FIND_PATH(LIBART_INCLUDE_DIR NAMES libart_lgpl/libart.h
      PATHS
+     ${PC_LIBART_INCLUDEDIR}
      ${PC_LIBART_INCLUDE_DIRS}
      PATH_SUFFIXES libart-2.0
   )
   
   FIND_LIBRARY(LIBART_LIBRARIES NAMES art_lgpl_2
      PATHS
+     ${PC_LIBART_LIBDIR}
      ${PC_LIBART_LIBRARY_DIRS}
   )
   

@@ -21,14 +21,14 @@ else (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
-    pkg_check_modules(LIBUSB libusb)
+    pkg_check_modules(PC_LIBUSB libusb)
   ENDIF(NOT WIN32)
 
   FIND_PATH(LIBUSB_INCLUDE_DIR usb.h
-    PATHS ${LIBUSB_INCLUDE_DIRS} )
+    PATHS ${PC_LIBUSB_INCLUDEDIR} ${PC_LIBUSB_INCLUDE_DIRS})
 
   FIND_LIBRARY(LIBUSB_LIBRARIES NAMES usb 
-    PATHS ${LIBUSB_LIBRARY_DIRS} )
+    PATHS ${PC_LIBUSB_LIBDIR} ${PC_LIBUSB_LIBRARY_DIRS})
 
   include(FindPackageHandleStandardArgs)
   FIND_PACKAGE_HANDLE_STANDARD_ARGS(LIBUSB DEFAULT_MSG LIBUSB_LIBRARIES LIBUSB_INCLUDE_DIR)

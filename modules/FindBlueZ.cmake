@@ -20,20 +20,22 @@ endif ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
 if( NOT WIN32 )
   find_package(PkgConfig)
 
-  pkg_check_modules(BLUEZ bluez)
+  pkg_check_modules(PC_BLUEZ bluez)
 
-  set(BLUEZ_DEFINITIONS ${BLUEZ_CFLAGS})
+  set(BLUEZ_DEFINITIONS ${PC_BLUEZ_CFLAGS_OTHER})
 endif( NOT WIN32 )
 
 FIND_PATH(BLUEZ_INCLUDE_DIR NAMES bluetooth/bluetooth.h
   PATHS
-  ${BLUEZ_INCLUDE_DIRS}
+  ${PC_BLUEZ_INCLUDEDIR}
+  ${PC_BLUEZ_INCLUDE_DIRS}
   /usr/X11/include
 )
 
 FIND_LIBRARY(BLUEZ_LIBRARIES NAMES bluetooth
   PATHS
-  ${BLUEZ_LIBRARY_DIRS}
+  ${PC_BLUEZ_LIBDIR}
+  ${PC_BLUEZ_LIBRARY_DIRS}
 )
 
 include(FindPackageHandleStandardArgs)

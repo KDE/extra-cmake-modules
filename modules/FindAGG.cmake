@@ -14,24 +14,24 @@
 if (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
 
   # in cache already
-  SET(AGG_FOUND TRUE)
+  set(AGG_FOUND TRUE)
 
 else (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
-IF (NOT WIN32)
-  # use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  find_package(PkgConfig)
-  pkg_check_modules(AGG libagg) 
-  
-  set(AGG_DEFINITIONS ${AGG_CFLAGS})
-ENDIF (NOT WIN32)  
-  FIND_PATH(AGG_INCLUDE_DIR agg2/agg_pixfmt_gray.h
-    ${AGG_INCLUDE_DIRS}
+  if (NOT WIN32)
+    # use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    find_package(PkgConfig)
+    pkg_check_modules(PC_AGG libagg) 
+
+    set(AGG_DEFINITIONS ${PC_AGG_CFLAGS_OTHER})
+  endif (NOT WIN32)
+
+  find_path(AGG_INCLUDE_DIR agg2/agg_pixfmt_gray.h
+    PATHS ${PC_AGG_INCLUDEDIR} ${PC_AGG_INCLUDE_DIRS}
   )
   
-  FIND_LIBRARY(AGG_LIBRARIES NAMES agg
-    PATHS
-    ${AGG_LIBRARY_DIRS}
+  find_library(AGG_LIBRARIES NAMES agg
+    PATHS ${PC_AGG_LIBDIR} ${PC_AGG_LIBRARY_DIRS}
   )
   
   if (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
@@ -48,6 +48,6 @@ ENDIF (NOT WIN32)
     endif (AGG_FIND_REQUIRED)
   endif (AGG_FOUND)
   
-  MARK_AS_ADVANCED(AGG_INCLUDE_DIR AGG_LIBRARIES)
+  mark_as_advanced(AGG_INCLUDE_DIR AGG_LIBRARIES)
   
 endif (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
