@@ -14,7 +14,7 @@
 macro(_phonon_find_version)
    file(READ "${PHONON_INCLUDE_DIR}/phonon/phononnamespace.h" _phonon_header LIMIT 5000 OFFSET 1000)
    string(REGEX MATCH "define PHONON_VERSION_STR \"(4\\.[0-9]+\\.[0-9a-z]+)\"" _phonon_version_match "${_phonon_header}")
-   #set(PHONON_VERSION "${CMAKE_MATCH_1}")
+   set(PHONON_VERSION "${CMAKE_MATCH_1}")
    message(STATUS "Phonon Version: ${PHONON_VERSION}")
 endmacro(_phonon_find_version)
 
