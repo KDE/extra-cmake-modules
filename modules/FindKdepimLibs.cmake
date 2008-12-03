@@ -45,11 +45,12 @@ find_path( KDEPIMLIBS_INCLUDE_DIR NAMES kcal/kcal_export.h
 )
 
 macro(_KDEPIMLibs_Set_Lib_Vars _prefix _lib)
-  set(KDEPIMLIBS_${_prefix}_LIBRARY ${_lib})
-  set(KDEPIMLIBS_${_prefix}_LIBS    ${_lib})
+  # KDEPIMLIBS_TARGET_PREFIX exists since 03. Dec. and is empty before that, Alex
+  set(KDEPIMLIBS_${_prefix}_LIBRARY ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
+  set(KDEPIMLIBS_${_prefix}_LIBS    ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
   # these two are set for compatibility with KDE 4.[01], Alex:
-  set(KDE4_${_prefix}_LIBRARY       ${_lib})
-  set(KDE4_${_prefix}_LIBS          ${_lib})
+  set(KDE4_${_prefix}_LIBRARY       ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
+  set(KDE4_${_prefix}_LIBS          ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
 endmacro(_KDEPIMLibs_Set_Lib_Vars)
 
 
@@ -67,8 +68,12 @@ if( KDEPIMLIBS_INCLUDE_DIR )
   if (NOT _newKdepimLibsFound)
      message(FATAL_ERROR "You need a newer version of kdepimlibs, please update it")
   endif (NOT _newKdepimLibsFound)
-  
-  include("${kdepimlibs_cmake_module_dir}/KDEPimLibsLibraryTargets.cmake")
+
+  # this is for compatibility, starting next monday only the version with prefix will be installed, Alex
+  include("${kdepimlibs_cmake_module_dir}/KDEPimLibsLibraryTargetsWithPrefix.cmake" OPTIONAL RESULT_VARIABLE KDEPimLibsLibraryTargetsWithPrefix_LOADED)
+  if(NOT KDEPimLibsLibraryTargetsWithPrefix_LOADED)
+     include("${kdepimlibs_cmake_module_dir}/KDEPimLibsLibraryTargets.cmake")
+  endif(NOT KDEPimLibsLibraryTargetsWithPrefix_LOADED)
 
   _kdepimlibs_set_lib_vars( AKONADI        akonadi-kde)
   _kdepimlibs_set_lib_vars( AKONADI_KMIME  akonadi-kmime)
