@@ -1,5 +1,5 @@
 #
-# KDEWIN packager support http://download.cegit.de/kde-windows/installer
+# KDEWIN packager  http://www.winkde.org/pub/kde/ports/win32/installer
 # 
 # The kdewin packager is searched in the following pathes and order 
 # 
@@ -51,16 +51,12 @@ if (WIN32)
     	endif(NOT KDEWIN_PACKAGER_DIR)
     endif(NOT KDEWIN_PACKAGER_DIR)
 
-    # added FindKDEWIN.cmake support 
-    if (NOT KDEWIN_PACKAGER_DIR AND KDEWIN_DIR)
-    	set (KDEWIN_PACKAGER_DIR ${KDEWIN_DIR})
-    endif (NOT KDEWIN_PACKAGER_DIR AND KDEWIN_DIR)
-        
     if (KDEWIN_PACKAGER_DIR)
     
         find_program(KDEWIN_PACKAGER_EXECUTABLE kdewin-packager
             PATHS
                 ${KDEWIN_PACKAGER_DIR}/bin
+                ${CMAKE_INSTALL_PREFIX}/bin
         )
         
        set(KDEWIN_PACKAGER_FOUND TRUE)
