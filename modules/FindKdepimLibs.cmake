@@ -57,9 +57,8 @@ endmacro(_KDEPIMLibs_Set_Lib_Vars)
 if( KDEPIMLIBS_INCLUDE_DIR )
   set(KDEPIMLIBS_FOUND TRUE)
 
-  get_filename_component( kdepimlibs_cmake_module_dir  "${KDEPIMLIBS_INCLUDE_DIR}" PATH)
-  set(kdepimlibs_cmake_module_dir "${kdepimlibs_cmake_module_dir}/share/apps/cmake/modules")
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${kdepimlibs_cmake_module_dir}")
+  find_file(_kdepimlibs_cmake_module_info KDEPimLibsInformation.cmake PATHS ${CMAKE_MODULE_PATH})
+  get_filename_component( kdepimlibs_cmake_module_dir  "${_kdepimlibs_cmake_module_info}" PATH)
 
   # this file contains all dependencies of all libraries of kdepimlibs, Alex
   include("${kdepimlibs_cmake_module_dir}/KDEPimLibsInformation.cmake" OPTIONAL RESULT_VARIABLE _newKdepimLibsFound)
