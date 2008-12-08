@@ -3,7 +3,8 @@
 #
 #  KDEPIMLIBS_FOUND - system has KDE PIM Libraries
 #  KDEPIMLIBS_INCLUDE_DIR - the KDE PIM Libraries include directory
-# It also sets:
+#
+# It also sets variables for the following libraries:
 #   KDEPIMLIBS_AKONADI_LIBS
 #   KDEPIMLIBS_AKONADI_KMIME_LIBS
 #   KDEPIMLIBS_AKONADI_KABC_LIBS
@@ -22,94 +23,50 @@
 #   KDEPIMLIBS_MAILTRANSPORT_LIBS
 #   KDEPIMLIBS_QGPGME_LIBS
 #   KDEPIMLIBS_SYNDICATION_LIBS
+#
+# And the following locations:
+#   KDEPIMLIBS_DATA_DIR
+#   KDEPIMLIBS_DBUS_INTERFACES_DIR
+#   KDEPIMLIBS_DBUS_SERVICES_DIR
+#   KDEPIMLIBS_INCLUDE_DIR
+#   KDEPIMLIBS_LIB_DIR
+#   KDEPIMLIBS_BIN_DIR
+#   KDEPIMLIBS_LIBEXEC_DIR
+#   KDEPIMLIBS_SBIN_DIR
+#   KDEPIMLIBS_HTML_DIR
+#   KDEPIMLIBS_CONFIG_DIR
+#   KDEPIMLIBS_ICON_DIR
+#   KDEPIMLIBS_KCFG_DIR
+#   KDEPIMLIBS_LOCALE_DIR
+#   KDEPIMLIBS_MIME_DIR
+#   KDEPIMLIBS_SOUND_DIR
+#   KDEPIMLIBS_TEMPLATES_DIR
+#   KDEPIMLIBS_KCONF_UPDATE_DIR
+#   KDEPIMLIBS_AUTOSTART_DIR
+#   KDEPIMLIBS_XDG_APPS_DIR
+#   KDEPIMLIBS_XDG_DIRECTORY_DIR
+#   KDEPIMLIBS_SYSCONF_DIR
+#   KDEPIMLIBS_MAN_DIR
+#   KDEPIMLIBS_INFO_DIR
+#   KDEPIMLIBS_SERVICES_DIR
+#   KDEPIMLIBS_SERVICETYPES_DIR
 
-# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
-# Copyright (c) 2006, Ralf Habacker, <ralf.habacker@freenet.de>
+
+# Copyright (c) 2008, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (WIN32)
-  if (KDEPIMLIBS_DIR)
-      set (KDE4_INCLUDE_DIR ${KDE4_INCLUDE_DIR} ${KDEPIMLIBS_DIR}/include)
-      set (KDE4_LIB_DIR ${KDE4_LIB_DIR}  ${KDEPIMLIBS_DIR}/lib)
-  else (KDEPIMLIBS_DIR)
-      file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _progFiles)
-      set (KDE4_INCLUDE_DIR ${KDE4_INCLUDE_DIR} ${_progFiles}/kdepimlibs/include)
-      set (KDE4_LIB_DIR ${KDE4_LIB_DIR} ${_progFiles}/kdepimlibs/lib)
-  endif (KDEPIMLIBS_DIR)
-endif (WIN32)
+# The find_package() call below loads the file KdepimLibsConfig.cmake file.
+# This file is created and installed by kdepimlibs/CMakeLists.txt
+# It contains settings for all install location of kdepimlibs, as e.g.
+# KDEPIMLIBS_INCLUDE_DIR, and also variables for all libraries.
+# See kdepimlibs/CMakeLists.txt and kdepimlibs/KdepimLibsConfig.cmake.in 
+# for details. Alex
+set(_KdepimLibs_FIND_QUIETLY  ${KdepimLibs_FIND_QUIETLY})
+find_package(KdepimLibs QUIET NO_MODULE PATHS ${KDE4_LIB_DIR}/KdepimLibs/cmake )
+set(KdepimLibs_FIND_QUIETLY ${_KdepimLibs_FIND_QUIETLY})
 
-find_path( KDEPIMLIBS_INCLUDE_DIR NAMES kcal/kcal_export.h 
-  HINTS ${KDE4_INCLUDE_DIR}
-)
-
-macro(_KDEPIMLibs_Set_Lib_Vars _prefix _lib)
-  # KDEPIMLIBS_TARGET_PREFIX exists since 03. Dec. and is empty before that, Alex
-  set(KDEPIMLIBS_${_prefix}_LIBRARY ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
-  set(KDEPIMLIBS_${_prefix}_LIBS    ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
-  # these two are set for compatibility with KDE 4.[01], Alex:
-  set(KDE4_${_prefix}_LIBRARY       ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
-  set(KDE4_${_prefix}_LIBS          ${KDEPIMLIBS_TARGET_PREFIX}${_lib})
-endmacro(_KDEPIMLibs_Set_Lib_Vars)
-
-
-if( KDEPIMLIBS_INCLUDE_DIR )
-  set(KDEPIMLIBS_FOUND TRUE)
-
-  find_file(_kdepimlibs_cmake_module_info KDEPimLibsInformation.cmake PATHS ${CMAKE_MODULE_PATH})
-  get_filename_component( kdepimlibs_cmake_module_dir  "${_kdepimlibs_cmake_module_info}" PATH)
-
-  # this file contains all dependencies of all libraries of kdepimlibs, Alex
-  include("${kdepimlibs_cmake_module_dir}/KDEPimLibsInformation.cmake" OPTIONAL RESULT_VARIABLE _newKdepimLibsFound)
-  # if this file could not be loaded, we found an older version of Kdepimlibs, tell the
-  # developer that he should update kdepimlibs. Alex
-  if (NOT _newKdepimLibsFound)
-     message(FATAL_ERROR "You need a newer version of kdepimlibs, please update it")
-  endif (NOT _newKdepimLibsFound)
-
-  # this is for compatibility, starting next monday only the version with prefix will be installed, Alex
-  include("${kdepimlibs_cmake_module_dir}/KDEPimLibsLibraryTargetsWithPrefix.cmake" OPTIONAL RESULT_VARIABLE KDEPimLibsLibraryTargetsWithPrefix_LOADED)
-  if(NOT KDEPimLibsLibraryTargetsWithPrefix_LOADED)
-     include("${kdepimlibs_cmake_module_dir}/KDEPimLibsLibraryTargets.cmake")
-  endif(NOT KDEPimLibsLibraryTargetsWithPrefix_LOADED)
-
-  _kdepimlibs_set_lib_vars( AKONADI        akonadi-kde)
-  _kdepimlibs_set_lib_vars( AKONADI_KMIME  akonadi-kmime)
-  _kdepimlibs_set_lib_vars( AKONADI_KABC   akonadi-kabc)
-  _kdepimlibs_set_lib_vars( GPGMEPP        gpgmepp)
-  _kdepimlibs_set_lib_vars( KABC           kabc)
-  _kdepimlibs_set_lib_vars( KBLOG          kblog)
-  _kdepimlibs_set_lib_vars( KCAL           kcal)
-  _kdepimlibs_set_lib_vars( KIMAP          kimap)
-  _kdepimlibs_set_lib_vars( KLDAP          kldap)
-  _kdepimlibs_set_lib_vars( KMIME          kmime)
-  _kdepimlibs_set_lib_vars( KPIMIDENTITIES kpimidentities)
-  _kdepimlibs_set_lib_vars( KPIMUTILS      kpimutils)
-  _kdepimlibs_set_lib_vars( KRESOURCES     kresources)
-  _kdepimlibs_set_lib_vars( KTNEF          ktnef)
-  _kdepimlibs_set_lib_vars( KXMLRPCCLIENT  kxmlrpcclient)
-  _kdepimlibs_set_lib_vars( MAILTRANSPORT  mailtransport)
-  _kdepimlibs_set_lib_vars( QGPGME         qgpgme)
-  _kdepimlibs_set_lib_vars( SYNDICATION    syndication)
-
-  # this is bad, so I commented it out. A module shouldn't modify variables
-  # set by another module. Alex.
-  # # setup global used KDE include
-  # set (KDE4_INCLUDES ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR})
-
-else( KDEPIMLIBS_INCLUDE_DIR )
-  set(KDEPIMLIBS_FOUND FALSE)
-endif( KDEPIMLIBS_INCLUDE_DIR )
-
-
-if (KDEPIMLIBS_FOUND)
-   if (NOT KdepimLibs_FIND_QUIETLY)
-      message(STATUS "Found KDE PIM libraries")
-   endif (NOT KdepimLibs_FIND_QUIETLY)
-else (KDEPIMLIBS_FOUND)
-   if (KdepimLibs_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find a kdepimlibs installation in ${KDE4_INCLUDE_DIR}.\nPlease build and install kdepimlibs first.")
-   endif (KdepimLibs_FIND_REQUIRED)
-endif (KDEPIMLIBS_FOUND)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(KdepimLibs DEFAULT_MSG KdepimLibs_CONFIG )
 
