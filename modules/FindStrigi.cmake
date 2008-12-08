@@ -14,8 +14,10 @@ endif(NOT STRIGI_MIN_VERSION)
 
 file(TO_CMAKE_PATH "$ENV{STRIGI_HOME}" strigi_home)
 
+set(_Strigi_FIND_QUIETLY ${Strigi_FIND_QUIETLY})
 # Try to find and load the StrigiConfig.cmake installed by kdesupport/strigi
-find_package(Strigi NO_MODULE PATHS "${strigi_home}/lib/strigi" "${strigi_home}/lib64/strigi")
+find_package(Strigi QUIET NO_MODULE PATHS "${strigi_home}/lib/strigi" "${strigi_home}/lib64/strigi")
+set(Strigi_FIND_QUIETLY ${_Strigi_FIND_QUIETLY})
 
 # If StrigiConfig.cmake (installed by kdesupport/Strigi) has been found
 # and it contains all necessary information (since November 16th, 2008), use the information 

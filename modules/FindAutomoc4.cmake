@@ -25,7 +25,9 @@ else("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
    # when building this project outside kdesupport
    # use the new "config-mode" of cmake 2.6, which searches the installed Automoc4Config.cmake file
    # see the man page for details
+   set(_Automoc4_FIND_QUIETLY ${Automoc4_FIND_QUIETLY})
    find_package(Automoc4 QUIET NO_MODULE)
+   set(Automoc4_FIND_QUIETLY ${_Automoc4_FIND_QUIETLY})
 endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
 include(FindPackageHandleStandardArgs)
