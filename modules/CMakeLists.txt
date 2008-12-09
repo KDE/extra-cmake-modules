@@ -1,4 +1,4 @@
-## install the cmake files
+# install the cmake files
 
 file(GLOB cmakeFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.cmake")
 file(GLOB pyfiles "${CMAKE_CURRENT_SOURCE_DIR}/*.py")
