@@ -250,7 +250,9 @@ endmacro (KDE4_CREATE_HANDBOOK)
 
 macro (KDE4_CREATE_MANPAGE _docbook _section)
    get_filename_component(_input ${_docbook} ABSOLUTE)
-   get_filename_component(_base ${_input} NAME_WE)
+   get_filename_component(_base ${_input} NAME)
+
+   string(REGEX REPLACE "\\.${_section}\\.docbook$" "" _base ${_base})
 
    set(_doc ${CMAKE_CURRENT_BINARY_DIR}/${_base}.${_section})
    # sometimes we have "man-" prepended
@@ -270,7 +272,7 @@ macro (KDE4_CREATE_MANPAGE _docbook _section)
       DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
    )
    get_filename_component(_targ ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-   set(_targ "${_targ}-manpage")
+   set(_targ "${_targ}-manpage-${_base}")
    add_custom_target(${_targ} ALL DEPENDS "${_outdoc}")
 
    set(_args ${ARGN})
