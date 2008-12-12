@@ -141,7 +141,6 @@
 #    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
 #    It supports KDE4_ENABLE_FINAL.
 #    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib", otherwise it won't.
-#    It creates and installs an appropriate libtool la-file.
 #
 #  KDE4_ADD_KDEINIT_EXECUTABLE (name [NOGUI] [RUN_UNINSTALLED] file1 ... fileN)
 #    Create a KDE application in the form of a module loadable via kdeinit.
