@@ -1134,14 +1134,6 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
 endmacro (KDE4_ADD_APP_ICON)
 
 
-function(KDE4_WRITE_BASIC_CMAKE_VERSION_FILE _filename _major _minor _patch)
-   set(PROJECT_VERSION_MAJOR ${_major})
-   set(PROJECT_VERSION_MINOR ${_minor})
-   set(PROJECT_VERSION_PATCH ${_patch})
-   configure_file(${KDE4_MODULE_DIR}/kde4BasicFindPackageVersion.cmake.in "${_filename}" @ONLY)
-endfunction(KDE4_WRITE_BASIC_CMAKE_VERSION_FILE _major _minor _patch)
-
-
 macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
    message(FATAL_ERROR "_KDE4_EXPORT_LIBRARY_DEPENDENCIES() was an internal macro and has been removed again. Just remove the code which calls it, there is no substitute.")
 endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)

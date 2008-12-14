@@ -134,14 +134,6 @@
 #    Use this to add widget description files for the makekdewidgets code generator
 #    for Qt Designer plugins.
 #
-#  KDE4_WRITE_BASIC_CMAKE_VERSION_FILE( _filename _major _minor _patch)
-#    Writes a file for use as <package>ConfigVersion.cmake file to <_filename>.
-#    See the documentation of FIND_PACKAGE() for details on this.
-#    _filename is the output filename, it should be in the build tree.
-#    _major is the major version number of the project to be installed
-#    _minor is the minor version number of the project to be installed
-#    _patch is the patch version number of the project to be installed
-#
 #  KDE4_CREATE_FINAL_FILES (filename_CXX filename_C file1 ... fileN)
 #    This macro is intended mainly for internal uses.
 #    It is used for enable-final. It will generate two source files,
