@@ -64,7 +64,7 @@
 # See kdepimlibs/CMakeLists.txt and kdepimlibs/KdepimLibsConfig.cmake.in 
 # for details. Alex
 set(_KdepimLibs_FIND_QUIETLY  ${KdepimLibs_FIND_QUIETLY})
-find_package(KdepimLibs QUIET NO_MODULE PATHS ${KDE4_LIB_DIR}/KdepimLibs/cmake )
+find_package(KdepimLibs ${KdepimLibs_FIND_VERSION} QUIET NO_MODULE PATHS ${KDE4_LIB_DIR}/KdepimLibs/cmake )
 set(KdepimLibs_FIND_QUIETLY ${_KdepimLibs_FIND_QUIETLY})
 
 include(FindPackageHandleStandardArgs)

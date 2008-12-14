@@ -135,7 +135,7 @@
 #    for Qt Designer plugins.
 #
 #  KDE4_WRITE_BASIC_CMAKE_VERSION_FILE( _filename _major _minor _patch)
-#    Writes a file for use as <package>Version.cmake file to <_filename>.
+#    Writes a file for use as <package>ConfigVersion.cmake file to <_filename>.
 #    See the documentation of FIND_PACKAGE() for details on this.
 #    _filename is the output filename, it should be in the build tree.
 #    _major is the major version number of the project to be installed
