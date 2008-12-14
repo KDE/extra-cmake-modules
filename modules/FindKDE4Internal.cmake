@@ -115,8 +115,11 @@
 #  KDE4_ENABLE_FINAL - enable KDE-style enable-final all-in-one-compilation
 #  KDE4_BUILD_TESTS  - enable this to build the testcases
 #  KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature
+#  KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR - only present for CMake >= 2.6.3, defaults to TRUE
+#                      If enabled, the package should install its <package>Config.cmake file to 
+#                      lib/cmake/<package>/ instead to lib/<package>/cmake
 #
-# It also adds the following macros (from KDE4Macros.cmake)
+# It also adds the following macros and functions (from KDE4Macros.cmake)
 #  KDE4_ADD_UI_FILES (SRCS_VAR file1.ui ... fileN.ui)
 #    Use this to add Qt designer ui files to your application/library.
 #
@@ -130,6 +133,14 @@
 #  KDE4_ADD_WIDGET_FILES (SRCS_VAR file1.widgets ... fileN.widgets)
 #    Use this to add widget description files for the makekdewidgets code generator
 #    for Qt Designer plugins.
+#
+#  KDE4_WRITE_BASIC_CMAKE_VERSION_FILE( _filename _major _minor _patch)
+#    Writes a file for use as <package>Version.cmake file to <_filename>.
+#    See the documentation of FIND_PACKAGE() for details on this.
+#    _filename is the output filename, it should be in the build tree.
+#    _major is the major version number of the project to be installed
+#    _minor is the minor version number of the project to be installed
+#    _patch is the patch version number of the project to be installed
 #
 #  KDE4_CREATE_FINAL_FILES (filename_CXX filename_C file1 ... fileN)
 #    This macro is intended mainly for internal uses.
@@ -590,6 +601,15 @@ endif (_kdeBootStrapping)
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the html versions of the docbook docs")
+
+if(${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH} VERSION_GREATER 2.6.2)
+   option(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR 
+          "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead to lib/<package>/cmake" 
+          TRUE)
+else(${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH} VERSION_GREATER 2.6.2)
+   set(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR  FALSE)
+endif(${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH} VERSION_GREATER 2.6.2)
+
 
 # This is for the reduced link interface.
 # In kdelibs it is already alwaysenabled.

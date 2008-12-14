@@ -9,6 +9,7 @@ install( FILES cmake-modules-styleguide.txt
                kde4init_win32lib_dummy.cpp.in 
                kde4_cmake_uninstall.cmake.in 
                kde4automoc.files.in 
+               kde4BasicFindPackageVersion.cmake.in
                FindLibPython.py
                FindPyKDE4.py
                FindPyQt.py

@@ -1,6 +1,6 @@
 # for documentation look at FindKDE4Internal.cmake
 
-# this file contains the following macros:
+# this file contains the following macros (or functions):
 # KDE4_ADD_UI_FILES
 # KDE4_ADD_UI3_FILES
 # KDE4_ADD_KCFG_FILES
@@ -21,6 +21,7 @@
 # KDE4_CREATE_HANDBOOK
 # KDE4_ADD_APP_ICON
 # KDE4_CREATE_MANPAGE
+# KDE4_CREATE_BASIC_CMAKE_VERSION_FILE (function)
 
 # Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
@@ -1131,6 +1132,14 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
         endif(SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
     endif(APPLE)    
 endmacro (KDE4_ADD_APP_ICON)
+
+
+function(KDE4_WRITE_BASIC_CMAKE_VERSION_FILE _filename _major _minor _patch)
+   set(PROJECT_VERSION_MAJOR ${_major})
+   set(PROJECT_VERSION_MINOR ${_minor})
+   set(PROJECT_VERSION_PATCH ${_patch})
+   configure_file(${KDE4_MODULE_DIR}/kde4BasicFindPackageVersion.cmake.in "${_filename}" @ONLY)
+endfunction(KDE4_WRITE_BASIC_CMAKE_VERSION_FILE _major _minor _patch)
 
 
 macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
