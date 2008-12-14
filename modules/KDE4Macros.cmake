@@ -454,22 +454,9 @@ macro (KDE4_CREATE_FINAL_FILES _filenameCPP _filesExcludedFromFinalFile )
 
 endmacro (KDE4_CREATE_FINAL_FILES)
 
-# This macro sets the RPATH related options for libraries, plugins and kdeinit executables.
-# It overrides the defaults set in FindKDE4Internal.cmake.
-# If RPATH is not explicitly disabled, libraries and plugins are built without RPATH, in
-# the hope that the RPATH which is compiled into the executable is good enough.
-macro (KDE4_HANDLE_RPATH_FOR_LIBRARY _target_NAME)
-   if (NOT CMAKE_SKIP_RPATH)
-      if(KDE4_USE_ALWAYS_FULL_RPATH)
-         set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH FALSE  BUILD_WITH_INSTALL_RPATH FALSE)
-      else(KDE4_USE_ALWAYS_FULL_RPATH)
-         set_target_properties(${_target_NAME} PROPERTIES  INSTALL_RPATH_USE_LINK_PATH FALSE  SKIP_BUILD_RPATH TRUE  BUILD_WITH_INSTALL_RPATH TRUE  INSTALL_RPATH "")
-      endif(KDE4_USE_ALWAYS_FULL_RPATH)
-   endif (NOT CMAKE_SKIP_RPATH)
-endmacro (KDE4_HANDLE_RPATH_FOR_LIBRARY)
-
-# This macro sets the RPATH related options for executables
-# and creates wrapper shell scripts for the executables.
+# This macro doesn't set up the RPATH related options for executables anymore,
+# since now (wioth cmake 2.6) just the full RPATH is used always for everything.
+# It does create wrapper shell scripts for the executables.
 # It overrides the defaults set in FindKDE4Internal.cmake.
 # For every executable a wrapper script is created, which sets the appropriate
 # environment variable for the platform (LD_LIBRARY_PATH on most UNIX systems,
@@ -479,28 +466,8 @@ endmacro (KDE4_HANDLE_RPATH_FOR_LIBRARY)
 # If RPATH is not disabled, these scripts are also used but only for consistency, because
 # they don't really influence anything then, because the compiled-in RPATH overrides
 # the LD_LIBRARY_PATH env. variable.
-# Executables with the RUN_UNINSTALLED option will be built with the RPATH pointing to the
-# build dir, so that they can be run safely without being installed, e.g. as code generators
-# for other stuff during the build. These executables will be relinked during "make install".
-# All other executables are built with the RPATH with which they will be installed.
 macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
    if (UNIX)
-
-      # set the RPATH related properties
-      if (NOT CMAKE_SKIP_RPATH)
-         if (${_type} STREQUAL "GUI")
-            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH TRUE  BUILD_WITH_INSTALL_RPATH TRUE)
-         endif (${_type} STREQUAL "GUI")
-
-         if (${_type} STREQUAL "NOGUI")
-            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH TRUE  BUILD_WITH_INSTALL_RPATH TRUE)
-         endif (${_type} STREQUAL "NOGUI")
-
-         if (${_type} STREQUAL "RUN_UNINSTALLED")
-            set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH FALSE  BUILD_WITH_INSTALL_RPATH FALSE)
-         endif (${_type} STREQUAL "RUN_UNINSTALLED")
-      endif (NOT CMAKE_SKIP_RPATH)
-
       if (APPLE)
          set(_library_path_variable "DYLD_LIBRARY_PATH")
       else (APPLE)
@@ -579,8 +546,6 @@ macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
    if (_first_SRC)
       set_target_properties(${_target_NAME} PROPERTIES PREFIX "")
    endif (_first_SRC)
-
-   kde4_handle_rpath_for_library(${_target_NAME})
 
    if (WIN32)
       # for shared libraries/plugins a -DMAKE_target_LIB is required
@@ -709,7 +674,6 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
          add_library(kdeinit_${_target_NAME} SHARED ${_SRCS})
       endif (KDE4_ENABLE_FINAL)
 
-      kde4_handle_rpath_for_library(kdeinit_${_target_NAME})
       set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
 
       kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
@@ -890,8 +854,6 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    if(MSVC)
       add_dependencies(${_target_NAME} "${_target_NAME}_automoc")
    endif(MSVC)
-
-   kde4_handle_rpath_for_library(${_target_NAME})
 
    # for shared libraries a -DMAKE_target_LIB is required
    string(TOUPPER ${_target_NAME} _symbol)
@@ -1132,6 +1094,23 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
         endif(SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
     endif(APPLE)    
 endmacro (KDE4_ADD_APP_ICON)
+
+
+# This macro is only kept around for compatibility, it is not needed/used anymore
+# since CMake 2.6.0. With CMake 2.6.0 it is not necessary anymore link libraries again
+# ("relink") to change their RPATH. Since this is fast now, they are now always built with
+# full RPATH. 
+# Still keep this macro here, since somebody might use it and so that would break
+# if we would just remove it from here.
+# What it does now it sets the target properties of the given target the same way as
+# they were set by the old version of the macro with the option FULL_RPATH enabled.
+# This one may be a candidate for removal. Alex
+macro (KDE4_HANDLE_RPATH_FOR_LIBRARY _target_NAME)
+   message(STATUS "You are using the macro KDE4_HANDLE_RPATH_FOR_LIBRARY(), which is an internal macro and shouldn't be used by external projects. Please remove it.")
+   if (NOT CMAKE_SKIP_RPATH)
+      set_target_properties(${_target_NAME} PROPERTIES  SKIP_BUILD_RPATH FALSE  BUILD_WITH_INSTALL_RPATH FALSE)
+   endif (NOT CMAKE_SKIP_RPATH)
+endmacro (KDE4_HANDLE_RPATH_FOR_LIBRARY)
 
 
 macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)

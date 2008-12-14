@@ -890,17 +890,10 @@ if (WIN32)
 endif (WIN32)
 
 
-# setup default RPATH/install_name handling, may be overridden by KDE4_HANDLE_RPATH_FOR_[LIBRARY|EXECUTABLE]
-# default is to build with RPATH for the install dir, so it doesn't need to relink
+# setup default RPATH/install_name handling, may be overridden by KDE4_HANDLE_RPATH_FOR_EXECUTABLE
+# It sets up to build with full RPATH. When installing, RPATH will be changed to the LIB_INSTALL_DIR
+# and all link directories which are not inside the current build dir.
 if (UNIX)
-   if (NOT APPLE)
-     set( _KDE4_DEFAULT_USE_FULL_RPATH ON )
-   else (NOT APPLE)
-     set( _KDE4_DEFAULT_USE_FULL_RPATH OFF )
-   endif (NOT APPLE)
-
-   option(KDE4_USE_ALWAYS_FULL_RPATH "If set to TRUE, also libs and plugins will be linked with the full RPATH, which will usually make them work better, but make install will take longer." ${_KDE4_DEFAULT_USE_FULL_RPATH} )
-
    set( _KDE4_PLATFORM_INCLUDE_DIRS)
 
    # the rest is RPATH handling
@@ -912,8 +905,8 @@ if (UNIX)
    else (APPLE)
       # add our LIB_INSTALL_DIR to the RPATH and use the RPATH figured out by cmake when compiling
       set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR} )
-      set(CMAKE_SKIP_BUILD_RPATH TRUE)
-      set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+      set(CMAKE_SKIP_BUILD_RPATH FALSE)
+      set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
       set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
    endif (APPLE)
 endif (UNIX)
