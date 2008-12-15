@@ -861,17 +861,14 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    set(_symbol "MAKE_${_symbol}_LIB")
    set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
 
-   # by default don't add any linked libraries to the "exported"
+   # By default don't add any linked libraries to the "exported"
    # link interfaces, so that executables linking against this library
    # will not automatically add implicit dependencies to their link list.
    #
    # This reduces inter-package dependencies and makes it easier to remove
    # dependencies of shared libraries without breaking binary compatibility.
    if(NOT "${_add_lib_param}" STREQUAL "STATIC")
-      # only do this inside kdelibs for now (so there is not too much breakage all at once, Alex
-      if(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
-         set_target_properties(${_target_NAME} PROPERTIES LINK_INTERFACE_LIBRARIES "" )
-      endif(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT)
+      set_target_properties(${_target_NAME} PROPERTIES LINK_INTERFACE_LIBRARIES "" )
    endif(NOT "${_add_lib_param}" STREQUAL "STATIC")
 
 endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)

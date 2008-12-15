@@ -603,18 +603,23 @@ else(${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH} VERSIO
 endif(${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH} VERSION_GREATER 2.6.2)
 
 
-# This is for the reduced link interface.
-# In kdelibs it is already alwaysenabled.
-# In all other modules provide the switch _KDE4_USE_REDUCED_LINK_INTERFACE to turn it on.
-if(kdelibs_SOURCE_DIR)
-   set(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT TRUE)
-else(kdelibs_SOURCE_DIR)
-   option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the reduced link interface" OFF)
-endif(kdelibs_SOURCE_DIR)
-
-# Setting the target property LINK_INTERFACE_LIBRARIES directly shouldn't be done,
-# instead TARGET_LINK_LIBRARIES(... LINK_INTERFACE_LIBRARIES ... ) must be used.
-set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
+# This is obsolete now. I just keep it here so in case somebody stumbles upon it somewhere
+# he can still find a hint where it came from and what it was good for.
+#
+# What to do in that case ?  Just remove it. Alex
+#
+# # This is for the reduced link interface.
+# # In kdelibs it is already alwaysenabled.
+# # In all other modules provide the switch _KDE4_USE_REDUCED_LINK_INTERFACE to turn it on.
+# if(kdelibs_SOURCE_DIR)
+#    set(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT TRUE)
+# else(kdelibs_SOURCE_DIR)
+#    option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the reduced link interface" OFF)
+# endif(kdelibs_SOURCE_DIR)
+# 
+# # Setting the target property LINK_INTERFACE_LIBRARIES directly shouldn't be done,
+# # instead TARGET_LINK_LIBRARIES(... LINK_INTERFACE_LIBRARIES ... ) must be used.
+# set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
 
 
 
