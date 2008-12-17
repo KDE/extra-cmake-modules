@@ -20,3 +20,4 @@ for item in pyqtcfg.pyqt_sip_flags.split(' '):
 print("pyqt_version_tag:%s" % pyqt_version_tag)
 
 print("pyqt_sip_dir:%s" % pyqtcfg.pyqt_sip_dir)
+print("pyqt_sip_flags:%s" % pyqtcfg.pyqt_sip_flags)

@@ -19,6 +19,8 @@
 # PYQT4_VERSION_TAG - The PyQt version tag using by PyQt's sip files.
 #
 # PYQT4_SIP_DIR - The directory holding the PyQt4 .sip files.
+#
+# PYQT4_SIP_FLAGS - The SIP flags used to build PyQt.
 
 IF(EXISTS PYQT4_VERSION)
   # Already in cache, be silent
@@ -33,6 +35,8 @@ ELSE(EXISTS PYQT4_VERSION)
     STRING(REGEX REPLACE ".*\npyqt_version_str:([^\n]+).*$" "\\1" PYQT4_VERSION_STR ${pyqt_config})
     STRING(REGEX REPLACE ".*\npyqt_version_tag:([^\n]+).*$" "\\1" PYQT4_VERSION_TAG ${pyqt_config})
     STRING(REGEX REPLACE ".*\npyqt_sip_dir:([^\n]+).*$" "\\1" PYQT4_SIP_DIR ${pyqt_config})
+    STRING(REGEX REPLACE ".*\npyqt_sip_flags:([^\n]+).*$" "\\1" PYQT4_SIP_FLAGS ${pyqt_config})
+
     SET(PYQT4_FOUND TRUE)
   ENDIF(pyqt_config)
 
