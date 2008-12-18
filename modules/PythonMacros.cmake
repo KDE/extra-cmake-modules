@@ -28,12 +28,13 @@ MACRO(PYTHON_INSTALL SOURCE_FILE DESINATION_DIR)
   GET_FILENAME_COMPONENT(_filename ${SOURCE_FILE} NAME)
   GET_FILENAME_COMPONENT(_filenamebase ${SOURCE_FILE} NAME_WE)
   GET_FILENAME_COMPONENT(_basepath ${SOURCE_FILE} PATH)
-  SET(_bin_py ${CMAKE_CURRENT_BINARY_DIR}/${_basepath}/${_filename})
-  SET(_bin_pyc ${CMAKE_CURRENT_BINARY_DIR}/${_basepath}/${_filenamebase}.pyc)
 
   if(WIN32)
     string(REGEX REPLACE ".:/" "/" _basepath "${_basepath}")
   endif(WIN32)
+
+  SET(_bin_py ${CMAKE_CURRENT_BINARY_DIR}/${_basepath}/${_filename})
+  SET(_bin_pyc ${CMAKE_CURRENT_BINARY_DIR}/${_basepath}/${_filenamebase}.pyc)
 
   FILE(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_basepath})
 
