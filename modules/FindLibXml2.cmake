@@ -21,8 +21,8 @@ ENDIF (LIBXML2_INCLUDE_DIR AND LIBXML2_LIBRARIES)
 IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
-   find_package(PkgConfig)
-   pkg_check_modules(PC_LIBXML libxml-2.0)
+   FIND_PACKAGE(PkgConfig)
+   PKG_CHECK_MODULES(PC_LIBXML libxml-2.0)
    SET(LIBXML2_DEFINITIONS ${PC_LIBXML_CFLAGS_OTHER})
 ENDIF (NOT WIN32)
 
