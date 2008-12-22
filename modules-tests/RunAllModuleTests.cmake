@@ -1,5 +1,7 @@
-# run this script via "cmake -P RunAllModuletests.cmake" to
+# Run this script via "cmake -P RunAllModuletests.cmake" to
 # execute all module tests in one go.
+# Run this script with "cmake -DMODULE=foo -P RunAllModuletests.cmake" to 
+# test only the one specified module.
 # To see only the results and not the other cmake output,
 # you can grep for "::".
 # To have it delete the previous test build dirs, run it with -DCLEAN_DIRS=TRUE
@@ -31,6 +33,7 @@ else(DEFINED MODULE)
                      Blitz 
                      BlueZ
                      Eigen2 
+                     FFmpeg
                      Flac 
                      Flex 
                      GObject 
