@@ -21,17 +21,13 @@ set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
 # since cmake 2.4.0
 set(CMAKE_COLOR_MAKEFILE ON)
 
-# Enable use of chrpath to avoid the need for actually relinking on install
-# since cmake cvs 12/19/2007
-if (NOT CMAKE_SKIP_RPATH)
-  set(CMAKE_USE_CHRPATH ON)
-endif (NOT CMAKE_SKIP_RPATH)
-
 # define the generic version of the libraries here
 # this makes it easy to advance it when the next KDE release comes
+# Use this version number for libraries which are at version n in KDE version n
 set(GENERIC_LIB_VERSION "4.2.0")
 set(GENERIC_LIB_SOVERSION "4")
 
+# Use this version number for libraries which are already at version n+1 in KDE version n
 set(KDE_NON_GENERIC_LIB_VERSION "5.2.0")
 set(KDE_NON_GENERIC_LIB_SOVERSION "5")
 
