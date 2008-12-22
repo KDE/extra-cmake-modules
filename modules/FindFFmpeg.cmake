@@ -2,30 +2,32 @@
 # Once done this will define
 #
 #  FFMPEG_FOUND - system has ffmpeg
+#  FFMPEG_INCLUDE_DIR - Include directory necessary for using the ffmpeg headers
 #  FFMPEG_LIBRARIES - Link these to use ffmpeg
 #  FFMPEG_DEFINITIONS - Compiler switches required for using ffmpeg
 
 # Copyright (c) 2006, Matthias Kretz, <kretz@kde.org>
+# Copyright (c) 2008, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (FFMPEG_LIBRARIES)# AND FFMPEG_DEFINITIONS)
+if (FFMPEG_LIBRARIES)
 
   # in cache already
   set(FFMPEG_FOUND TRUE)
 
-else (FFMPEG_LIBRARIES)# AND FFMPEG_DEFINITIONS)
+else (FFMPEG_LIBRARIES)
 
 if (NOT WIN32)
-  # use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  include(UsePkgConfig)
+   # use pkg-config to get the directories and then use these values
+   # in the FIND_PATH() and FIND_LIBRARY() calls
+   find_package(PkgConfig)
+   pkg_check_modules(PC_LIBAVCODEC libavcodec)
+   set(FFMPEG_DEFINITIONS ${PC_LIBAVCODEC_CFLAGS_OTHER})
 
-  pkgconfig(libavcodec _FFMPEGIncDir _FFMPEGLinkDir _FFMPEGLinkFlags _FFMPEGCflags)
 endif (NOT WIN32)
-  #set(FFMPEG_DEFINITIONS ${_FFMPEGCflags})
 
   #
   # #include <libXXXX/XXXX.h> is the new style for FFMPEG headers
@@ -35,37 +37,39 @@ endif (NOT WIN32)
   # installation.
   #
   find_path(FFMPEG_INCLUDE_DIR libavcodec/avcodec.h
-    PATHS
-    ${_FFMPEGIncDir}
-    NO_DEFAULT_PATH
+    HINTS
+    ${PC_LIBAVCODEC_INCLUDEDIR}
+    ${PC_LIBAVCODEC_INCLUDE_DIRS}
   )
 
   # also search for the old style include dir, just for the purpose
   # of giving a useful error message if an old libavcodec is installed
   # and the user might wonder why it is not found
   find_path(FFMPEG_INCLUDE_DIR_OLD_STYLE ffmpeg/avcodec.h
-    PATHS
-    ${_FFMPEGIncDir}
-    NO_DEFAULT_PATH
+    HINTS
+    ${PC_LIBAVCODEC_INCLUDEDIR}
+    ${PC_LIBAVCODEC_INCLUDE_DIRS}
   )
 
   find_library(AVCODEC_LIBRARIES NAMES avcodec
-    PATHS
-    ${_FFMPEGLinkDir}
-    NO_DEFAULT_PATH
+    HINTS
+    ${PC_LIBAVCODEC_LIBDIR}
+    ${PC_LIBAVCODEC_LIBRARY_DIRS}
   )
 
   find_library(AVFORMAT_LIBRARIES NAMES avformat
-    PATHS
-    ${_FFMPEGLinkDir}
-    NO_DEFAULT_PATH
+    HINTS
+    ${PC_LIBAVCODEC_LIBDIR}
+    ${PC_LIBAVCODEC_LIBRARY_DIRS}
   )
 
   find_library(AVUTIL_LIBRARIES NAMES avutil
-    PATHS
-    ${_FFMPEGLinkDir}
-    NO_DEFAULT_PATH
+    HINTS
+    ${PC_LIBAVCODEC_LIBDIR}
+    ${PC_LIBAVCODEC_LIBRARY_DIRS}
   )
+
+
 
   set(FFMPEG_LIBRARIES )
   if (AVCODEC_LIBRARIES)
