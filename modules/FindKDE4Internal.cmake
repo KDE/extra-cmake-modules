@@ -594,13 +594,13 @@ option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the html versions of the docbook docs")
 
-if(${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH} VERSION_GREATER 2.6.2)
+if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
    option(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR 
           "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead to lib/<package>/cmake" 
           TRUE)
-else(${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH} VERSION_GREATER 2.6.2)
+else(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
    set(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR  FALSE)
-endif(${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH} VERSION_GREATER 2.6.2)
+endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
 
 
 # This is obsolete now. I just keep it here so in case somebody stumbles upon it somewhere
