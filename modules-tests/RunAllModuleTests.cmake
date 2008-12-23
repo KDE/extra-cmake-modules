@@ -32,6 +32,7 @@ else(DEFINED MODULE)
    set(modulesToTest AGG 
                      Blitz 
                      BlueZ
+                     ENCHANT
                      Eigen2 
                      FFmpeg
                      Flac 
