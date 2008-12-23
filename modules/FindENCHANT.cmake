@@ -21,24 +21,24 @@ else (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
   if (NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
-    include(UsePkgConfig)
-
-    pkgconfig(enchant _ENCHANTIncDir _ENCHANTLinkDir _ENCHANTLinkFlags _ENCHANTCflags)
-
-    set(ENCHANT_DEFINITIONS ${_ENCHANTCflags})
+    find_package(PkgConfig)
+    pkg_check_modules(PC_ENCHANT enchant)
+    set(ENCHANT_DEFINITIONS ${PC_ENCHANT_CFLAGS_OTHER})
   endif (NOT WIN32)
 
   find_path(ENCHANT_INCLUDE_DIR 
-    NAMES enchant++.h
-    PATH_SUFFIXES enchant
-    PATHS ${_ENCHANTIncDir} )
+            NAMES enchant++.h
+            HINTS ${PC_ENCHANT_INCLUDEDIR}
+                  ${PC_ENCHANT_INCLUDE_DIRS}
+            PATH_SUFFIXES enchant )
 
   find_library(ENCHANT_LIBRARIES NAMES enchant
-               PATHS    ${_ENCHANTLinkDir} )
+               HINTS ${PC_ENCHANT_LIBDIR}
+                      ${PC_ENCHANT_LIBRARY_DIRS} )
 
   include(FindPackageHandleStandardArgs)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(ENCHANT DEFAULT_MSG ENCHANT_INCLUDE_DIR ENCHANT_LIBRARIES )
+  find_package_handle_standard_args(ENCHANT  DEFAULT_MSG  ENCHANT_INCLUDE_DIR ENCHANT_LIBRARIES )
 
   mark_as_advanced(ENCHANT_INCLUDE_DIR ENCHANT_LIBRARIES)
-  
+
 endif (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
