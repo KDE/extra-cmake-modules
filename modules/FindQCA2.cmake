@@ -32,8 +32,9 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
   find_library_with_debug(QCA2_LIBRARIES
                   WIN32_DEBUG_POSTFIX d
+                  NAMES qca
                   HINTS ${PC_QCA2_LIBDIR} ${PC_QCA2_LIBRARY_DIRS}
-                  NAMES qca)
+                  )
 
   find_path(QCA2_INCLUDE_DIR qca.h 
             HINTS ${PC_QCA2_INCLUDEDIR} ${PC_QCA2_INCLUDE_DIRS}
