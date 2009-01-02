@@ -1189,7 +1189,7 @@ if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
    #bail out if something wasn't found
    kde4_print_results()
    if (NOT KDE4_INSTALLED_VERSION_OK)
-     message(FATAL_ERROR "ERROR: the installed kdelibs version ${KDEVERSION} is too old, at least version ${KDE_MIN_VERSION} is required")
+     message(FATAL_ERROR "ERROR: the installed kdelibs version ${KDE_VERSION} is too old, at least version ${KDE_MIN_VERSION} is required")
    endif (NOT KDE4_INSTALLED_VERSION_OK)
 
    if (NOT KDE4_KCFGC_EXECUTABLE)
