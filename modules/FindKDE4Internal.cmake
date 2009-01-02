@@ -419,30 +419,14 @@ else (_kdeBootStrapping)
 
    # Check the version of KDE. It must be at least KDE_MIN_VERSION as set by the user.
    # KDE_VERSION is set in KDELibsDependencies.cmake since KDE 4.0.x. Alex
-   # we need at least this version:
+   # Support for the new-style (>= 2.6.0) support for requiring some version of a package:
    if (NOT KDE_MIN_VERSION)
-
       if (KDE4_FIND_VERSION_MAJOR)
-         if (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
-            if (KDE4_FIND_VERSION_MINOR)
-               set(KDE_MIN_VERSION "4.${KDE4_FIND_VERSION_MINOR}")
-            else (KDE4_FIND_VERSION_MINOR)
-               set(KDE_MIN_VERSION "4.0")
-            endif (KDE4_FIND_VERSION_MINOR)
-            if (KDE4_FIND_VERSION_PATCH)
-               set(KDE_MIN_VERSION "${KDE_MIN_VERSION}.${KDE4_FIND_VERSION_PATCH}")
-            else (KDE4_FIND_VERSION_PATCH)
-               set(KDE_MIN_VERSION "${KDE_MIN_VERSION}.0")
-            endif (KDE4_FIND_VERSION_PATCH)
-         else (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
-            message(FATAL_ERROR "FindKDE4 can only be used for finding KDE 4 (not for KDE ${KDE4_FIND_VERSION_MAJOR}).")
-         endif (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
-      else (KDE4_FIND_VERSION_MAJOR)
-         set (KDE_MIN_VERSION "4.0.0")
+         set(KDE_MIN_VERSION "${KDE4_FIND_VERSION_MAJOR}.${KDE4_FIND_VERSION_MINOR}.${KDE4_FIND_VERSION_PATCH}")
       endif (KDE4_FIND_VERSION_MAJOR)
    endif (NOT KDE_MIN_VERSION)
 
-   #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDE_VERSION}")
+   #message(FATAL_ERROR "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDE_VERSION} exact: -${KDE4_FIND_VERSION_EXACT}- version: -${KDE4_FIND_VERSION}-")
    macro_ensure_version( ${KDE_MIN_VERSION} ${KDE_VERSION} KDE4_INSTALLED_VERSION_OK )
 
    # This file contains the exported library target from kdelibs (new with cmake 2.6.x)
