@@ -30,6 +30,29 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+
+# This is for versions of automoc4 which don't provide these two macros.
+# If such a version is used, just use the "old" style automoc handling. 
+if(NOT COMMAND _AUTOMOC4_KDE4_PRE_TARGET_HANDLING)
+
+   macro(_AUTOMOC4_KDE4_PRE_TARGET_HANDLING _target _srcs)
+      if(MSVC)
+         add_automoc4_target("${_target}_automoc" ${_srcs})
+      else(MSVC)
+         automoc4(${_target} ${_srcs} )
+      endif(MSVC)
+   endmacro(_AUTOMOC4_KDE4_PRE_TARGET_HANDLING)
+
+
+   macro(_AUTOMOC4_KDE4_POST_TARGET_HANDLING _target)
+      if(MSVC)
+         add_dependencies(${_target} "${_target}_automoc")
+      endif(MSVC)
+   endmacro(_AUTOMOC4_KDE4_POST_TARGET_HANDLING)
+
+endif(NOT COMMAND _AUTOMOC4_KDE4_PRE_TARGET_HANDLING)
+
+
 macro (KDE4_ADD_KCFG_FILES _sources )
    if( ${ARGV1} STREQUAL "GENERATE_MOC" )
       set(_kcfg_generatemoc TRUE)
@@ -528,20 +551,17 @@ macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
    endif (${_with_PREFIX} STREQUAL "WITH_PREFIX")
 
    set(_SRCS ${_first_SRC} ${ARGN})
-   if(MSVC)
-      add_automoc4_target("${_target_NAME}_automoc" _SRCS)
-   else(MSVC)
-      automoc4(${_target_NAME} _SRCS)
-   endif(MSVC)
+
+   _automoc4_kde4_pre_target_handling(${_target_NAME} _SRCS)
+
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
       add_library(${_target_NAME} MODULE  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files})
    else (KDE4_ENABLE_FINAL)
       add_library(${_target_NAME} MODULE ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
-   if(MSVC)
-      add_dependencies(${_target_NAME} "${_target_NAME}_automoc")
-   endif(MSVC)
+
+   _automoc4_kde4_post_target_handling(${_target_NAME})
 
    if (_first_SRC)
       set_target_properties(${_target_NAME} PROPERTIES PREFIX "")
@@ -664,7 +684,7 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
       target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY} kdeinit_${_target_NAME})
    else(WIN32)
-      kde4_handle_automoc(kdeinit_${_target_NAME} _SRCS)
+      _automoc4_kde4_pre_target_handling(kdeinit_${_target_NAME} _SRCS)
 
       if (KDE4_ENABLE_FINAL)
          kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
@@ -673,6 +693,8 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
       else (KDE4_ENABLE_FINAL)
          add_library(kdeinit_${_target_NAME} SHARED ${_SRCS})
       endif (KDE4_ENABLE_FINAL)
+
+      _automoc4_kde4_post_target_handling(kdeinit_${_target_NAME})
 
       set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
 
@@ -792,20 +814,16 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
       set(_add_executable_param ${_add_executable_param} EXCLUDE_FROM_ALL)
    endif (_test AND NOT KDE4_BUILD_TESTS)
 
-   if(MSVC)
-      add_automoc4_target("${_target_NAME}_automoc" _SRCS)
-   else(MSVC)
-      automoc4(${_target_NAME} _SRCS)
-   endif(MSVC)
+   _automoc4_kde4_pre_target_handling(${_target_NAME} _SRCS)
+
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
       add_executable(${_target_NAME} ${_add_executable_param} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files})
    else (KDE4_ENABLE_FINAL)
       add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
-   if(MSVC)
-      add_dependencies(${_target_NAME} "${_target_NAME}_automoc")
-   endif(MSVC)
+
+   _automoc4_kde4_post_target_handling(${_target_NAME})
 
    if (_test)
       set_target_properties(${_target_NAME} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
@@ -840,20 +858,17 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    endif (${_lib_TYPE} STREQUAL "MODULE")
 
    set(_SRCS ${_first_SRC} ${ARGN})
-   if(MSVC)
-      add_automoc4_target("${_target_NAME}_automoc" _SRCS)
-   else(MSVC)
-      automoc4(${_target_NAME} _SRCS)
-   endif(MSVC)
+
+   _automoc4_kde4_pre_target_handling(${_target_NAME} _SRCS)
+
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
       add_library(${_target_NAME} ${_add_lib_param}  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files})
    else (KDE4_ENABLE_FINAL)
       add_library(${_target_NAME} ${_add_lib_param} ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
-   if(MSVC)
-      add_dependencies(${_target_NAME} "${_target_NAME}_automoc")
-   endif(MSVC)
+
+   _automoc4_kde4_post_target_handling(${_target_NAME})
 
    # for shared libraries a -DMAKE_target_LIB is required
    string(TOUPPER ${_target_NAME} _symbol)
