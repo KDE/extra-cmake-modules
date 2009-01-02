@@ -23,7 +23,7 @@
 # KDE4_CREATE_MANPAGE
 # KDE4_CREATE_BASIC_CMAKE_VERSION_FILE (function)
 
-# Copyright (c) 2006, 2007, Alexander Neundorf, <neundorf@kde.org>
+# Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
 # Copyright (c) 2007 Matthias Kretz <kretz@kde.org>
 #

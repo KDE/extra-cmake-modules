@@ -236,7 +236,7 @@
 #  _KDE4_PLATFORM_INCLUDE_DIRS is used only internally
 #  _KDE4_PLATFORM_DEFINITIONS is used only internally
 
-# Copyright (c) 2006-2008, Alexander Neundorf <neundorf@kde.org>
+# Copyright (c) 2006-2009, Alexander Neundorf <neundorf@kde.org>
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
@@ -399,41 +399,6 @@ else (_kdeBootStrapping)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
    set( _KDE4_MEINPROC_EXECUTABLE_DEP)
 
-   # Check the version of kde. KDE4_KDECONFIG_EXECUTABLE was set by FindKDE4
-   exec_program(${KDE4_KDECONFIG_EXECUTABLE} ARGS "--version" OUTPUT_VARIABLE kdeconfig_output )
-   string(REGEX MATCH "KDE: [0-9]+\\.[0-9]+\\.[0-9]+" KDEVERSION "${kdeconfig_output}")
-
-   if (KDEVERSION)
-      string(REGEX REPLACE "^KDE: " "" KDEVERSION "${KDEVERSION}")
-
-      # we need at least this version:
-      if (NOT KDE_MIN_VERSION)
-         if (KDE4_FIND_VERSION_MAJOR)
-            if (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
-               if (KDE4_FIND_VERSION_MINOR)
-                 set(KDE_MIN_VERSION "4.${KDE4_FIND_VERSION_MINOR}")
-               else (KDE4_FIND_VERSION_MINOR)
-                 set(KDE_MIN_VERSION "4.0")
-               endif (KDE4_FIND_VERSION_MINOR)
-               if (KDE4_FIND_VERSION_PATCH)
-                  set(KDE_MIN_VERSION "${KDE_MIN_VERSION}.${KDE4_FIND_VERSION_PATCH}")
-               else (KDE4_FIND_VERSION_PATCH)
-                  set(KDE_MIN_VERSION "${KDE_MIN_VERSION}.0")
-               endif (KDE4_FIND_VERSION_PATCH)
-            else (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
-               message(FATAL_ERROR "FindKDE4 can only be used for finding KDE 4 (not for KDE ${KDE4_FIND_VERSION_MAJOR}).")
-            endif (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
-         else (KDE4_FIND_VERSION_MAJOR)
-            set (KDE_MIN_VERSION "4.0.0")
-         endif (KDE4_FIND_VERSION_MAJOR)
-      endif (NOT KDE_MIN_VERSION)
-
-      #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDEVERSION}")
-      macro_ensure_version( ${KDE_MIN_VERSION} ${KDEVERSION} KDE4_INSTALLED_VERSION_OK )
-   else (KDEVERSION)
-      message(FATAL_ERROR "Couldn't parse KDE version string from the kde4-config output:\n${kdeconfig_output}")
-   endif (KDEVERSION)
-
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
    if (WIN32)
@@ -451,6 +416,35 @@ else (_kdeBootStrapping)
 
    # This file contains information about the installed kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
+
+   # Check the version of KDE. It must be at least KDE_MIN_VERSION as set by the user.
+   # KDE_VERSION is set in KDELibsDependencies.cmake since KDE 4.0.x. Alex
+   # we need at least this version:
+   if (NOT KDE_MIN_VERSION)
+
+      if (KDE4_FIND_VERSION_MAJOR)
+         if (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
+            if (KDE4_FIND_VERSION_MINOR)
+               set(KDE_MIN_VERSION "4.${KDE4_FIND_VERSION_MINOR}")
+            else (KDE4_FIND_VERSION_MINOR)
+               set(KDE_MIN_VERSION "4.0")
+            endif (KDE4_FIND_VERSION_MINOR)
+            if (KDE4_FIND_VERSION_PATCH)
+               set(KDE_MIN_VERSION "${KDE_MIN_VERSION}.${KDE4_FIND_VERSION_PATCH}")
+            else (KDE4_FIND_VERSION_PATCH)
+               set(KDE_MIN_VERSION "${KDE_MIN_VERSION}.0")
+            endif (KDE4_FIND_VERSION_PATCH)
+         else (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
+            message(FATAL_ERROR "FindKDE4 can only be used for finding KDE 4 (not for KDE ${KDE4_FIND_VERSION_MAJOR}).")
+         endif (${KDE4_FIND_VERSION_MAJOR} EQUAL 4)
+      else (KDE4_FIND_VERSION_MAJOR)
+         set (KDE_MIN_VERSION "4.0.0")
+      endif (KDE4_FIND_VERSION_MAJOR)
+   endif (NOT KDE_MIN_VERSION)
+
+   #message(STATUS "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDE_VERSION}")
+   macro_ensure_version( ${KDE_MIN_VERSION} ${KDE_VERSION} KDE4_INSTALLED_VERSION_OK )
+
    # This file contains the exported library target from kdelibs (new with cmake 2.6.x)
    # Include it to "import" the libraries from kdelibs into the current projects as targets.
    # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
