@@ -245,9 +245,8 @@
 
 # this is required now by cmake 2.6 and so must not be skipped by if(KDE4_FOUND) below
 cmake_minimum_required(VERSION 2.6.2 FATAL_ERROR)
-# this second call will never fail
-# it is here for the effect that it sets the cmake policies to the 2.4.x compatibility settings for now
-cmake_minimum_required(VERSION 2.4.5)
+# set the cmake policies to the 2.4.x compatibility settings (may change for KDE 4.3)
+cmake_policy(VERSION 2.4.5)
 
 # CMake 2.6, set compatibility behaviour to cmake 2.4
 # this must be executed always, because the CMAKE_MINIMUM_REQUIRED() command above
