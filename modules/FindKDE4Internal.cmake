@@ -443,7 +443,7 @@ else (_kdeBootStrapping)
 
    # helper macro, sets both the KDE4_FOO_LIBRARY and KDE4_FOO_LIBS variables to KDE4__foo
    macro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
-      set(KDE4_${_var}_LIBRARY ${_prefix}${lib} )
+      set(KDE4_${_var}_LIBRARY ${_prefix}${_lib} )
       set(KDE4_${_var}_LIBS    ${_prefix}${_lib} )
    endmacro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
 
