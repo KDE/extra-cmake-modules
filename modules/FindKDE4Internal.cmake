@@ -430,117 +430,81 @@ else (_kdeBootStrapping)
    #message(FATAL_ERROR "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDE_VERSION} exact: -${KDE4_FIND_VERSION_EXACT}- version: -${KDE4_FIND_VERSION}-")
    macro_ensure_version( ${KDE_MIN_VERSION} ${KDE_VERSION} KDE4_INSTALLED_VERSION_OK )
 
-   # This file contains the exported library target from kdelibs (new with cmake 2.6.x)
+   # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
+   # the library target "kdeui" is exported as "KDE4__kdeui". The "KDE4__" is used as
+   # "namespace" to separate the imported targets from "normal" targets, it is stored in 
+   # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
    # Include it to "import" the libraries from kdelibs into the current projects as targets.
    # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
-   # the kdeui library could now also be used just as "kdeui" and still have all their
+   # the kdeui library could now also be used just as "KDE4__kdeui" and still have all their
    # dependent libraries handled correctly. But to keep compatibility and not to change
    # behaviour we set all these variables anyway as seen below. Alex
    include(${kde_cmake_module_dir}/KDELibsLibraryTargets.cmake)
 
-   if (UNIX)
-      set(KDE4_KDEFAKES_LIBRARY kdefakes )
-      set(KDE4_KDEFAKES_LIBS    kdefakes )
-   endif (UNIX)
+   # helper macro, sets both the KDE4_FOO_LIBRARY and KDE4_FOO_LIBS variables to KDE4__foo
+   macro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
+      set(KDE4_${_var}_LIBRARY ${_prefix}${lib} )
+      set(KDE4_${_var}_LIBS    ${_prefix}${_lib} )
+   endmacro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
 
-   set(KDE4_KDECORE_LIBRARY kdecore)
-   set(KDE4_KDECORE_LIBS    kdecore)
-
-   set(KDE4_KDEUI_LIBRARY kdeui )
-   set(KDE4_KDEUI_LIBS    kdeui )
-
-   set(KDE4_KIO_LIBRARY kio )
-   set(KDE4_KIO_LIBS    kio )
-
-   set(KDE4_KPARTS_LIBRARY kparts )
-   set(KDE4_KPARTS_LIBS    kparts )
-
-   set(KDE4_KUTILS_LIBRARY kutils )
-   set(KDE4_KUTILS_LIBS    kutils )
-
-   set(KDE4_KDE3SUPPORT_LIBRARY kde3support )
-   set(KDE4_KDE3SUPPORT_LIBS    kde3support )
-
-   set(KDE4_KFILE_LIBRARY kfile )
-   set(KDE4_KFILE_LIBS    kfile )
-
-   set(KDE4_KHTML_LIBRARY khtml )
-   set(KDE4_KHTML_LIBS    khtml )
-
-   set(KDE4_KJS_LIBRARY kjs )
-   set(KDE4_KJS_LIBS    kjs )
-
-   set(KDE4_KJSAPI_LIBRARY kjsapi )
-   set(KDE4_KJSAPI_LIBS    kjsapi )
-
-   set(KDE4_KNEWSTUFF2_LIBRARY knewstuff2 )
-   set(KDE4_KNEWSTUFF2_LIBS    knewstuff2 )
+   # sorted by names
+   _kde4_set_lib_variables(KDE3SUPPORT   kde3support   ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KDECORE       kdecore       ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KDEUI         kdeui         ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KDNSSD        kdnssd        ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KFILE         kfile         ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KFORMULA      kformula      ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KHTML         khtml         ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KIO           kio           ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KJS           kjs           ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KJSAPI        kjsapi        ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KNEWSTUFF2    knewstuff2    ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KNOTIFYCONFIG knotifyconfig ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KPARTS        kparts        ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KROSSCORE     krosscore     ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KROSSUI       krossui       ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KTEXTEDITOR   ktexteditor   ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(PLASMA        plasma        ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(SOLID         solid         ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(THREADWEAVER  threadweaver  ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KUTILS        kutils        ${KDE4_TARGET_PREFIX})
 
    if (UNIX)
-      set(KDE4_KPTY_LIBRARY kpty )
-      set(KDE4_KPTY_LIBS    kpty )
-
-      set(KDE4_KDESU_LIBRARY kdesu )
-      set(KDE4_KDESU_LIBS    kdesu )
+      _kde4_set_lib_variables(KDEFAKES kdefakes ${KDE4_TARGET_PREFIX})
+      _kde4_set_lib_variables(KDESU kdesu ${KDE4_TARGET_PREFIX})
+      _kde4_set_lib_variables(KPTY kpty ${KDE4_TARGET_PREFIX})
    endif (UNIX)
 
-   set(KDE4_KDNSSD_LIBRARY kdnssd )
-   set(KDE4_KDNSSD_LIBS    kdnssd )
+   # these targets do not always exist, since they are built conditionally:
+   if(TARGET ${KDE4_TARGET_PREFIX}knepomuk)
+      _kde4_set_lib_variables(KNEPOMUK knepomuk ${KDE4_TARGET_PREFIX})
+   endif(TARGET ${KDE4_TARGET_PREFIX}knepomuk)
 
-   set(KDE4_SOLID_LIBRARY solid )
-   set(KDE4_SOLID_LIBS    solid )
+   if(TARGET ${KDE4_TARGET_PREFIX}kmetadata)
+      _kde4_set_lib_variables(KMETADATA kmetadata ${KDE4_TARGET_PREFIX})
+   endif(TARGET ${KDE4_TARGET_PREFIX}kmetadata)
 
-   set(KDE4_THREADWEAVER_LIBRARY   threadweaver )
-   set(KDE4_THREADWEAVER_LIBS      threadweaver )
-   set(KDE4_THREADWEAVER_LIBRARIES threadweaver )
+   # and this one for compatibility:
+   set(KDE4_THREADWEAVER_LIBRARIES ${KDE4_TARGET_PREFIX}threadweaver )
 
-   set(KDE4_KNOTIFYCONFIG_LIBRARY knotifyconfig )
-   set(KDE4_KNOTIFYCONFIG_LIBS    knotifyconfig )
-
-   set(KDE4_KROSSCORE_LIBRARY krosscore )
-   set(KDE4_KROSSCORE_LIBS    krosscore )
-
-   set(KDE4_KROSSUI_LIBRARY krossui )
-   set(KDE4_KROSSUI_LIBS    krossui )
-
-   set(KDE4_KTEXTEDITOR_LIBRARY ktexteditor )
-   set(KDE4_KTEXTEDITOR_LIBS    ktexteditor )
-
-   if(TARGET knepomuk)
-      set(KDE4_KNEPOMUK_LIBRARY knepomuk )
-      set(KDE4_KNEPOMUK_LIBS    knepomuk )
-   endif(TARGET knepomuk)
-
-
-   if(TARGET kmetadata)
-      set(KDE4_KMETADATA_LIBRARY kmetadata )
-      set(KDE4_KMETADATA_LIBS    kmetadata )
-   endif(TARGET kmetadata)
-
-   set(KDE4_KFORMULA_LIBRARY kformula )
-   set(KDE4_KFORMULA_LIBS    kformula )
-
-   set(KDE4_PLASMA_LIBRARY plasma )
-   set(KDE4_PLASMA_LIBS plasma )
-
+   # KDE4_LIB_INSTALL_DIR and KDE4_INCLUDE_INSTALL_DIR are set in KDELibsDependencies.cmake,
+   # use them to set the KDE4_LIB_DIR and KDE4_INCLUDE_DIR "public interface" variables
    set(KDE4_LIB_DIR ${KDE4_LIB_INSTALL_DIR} )
+   set(KDE4_INCLUDE_DIR ${KDE4_INCLUDE_INSTALL_DIR} )
 
-   # kpassworddialog.h is new with KDE4
-   # KDE4_INCLUDE_INSTALL_DIR is defined by KDELibsDependencies.cmake
-   find_path(KDE4_INCLUDE_DIR kpassworddialog.h ${KDE4_INCLUDE_INSTALL_DIR} NO_DEFAULT_PATH )
 
-   # at first look in LIBEXEC_INSTALL_DIR and no default paths,
-   # if this didn't succeed, the second call makes cmake search again, but in the standard paths
-   find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
-   find_program(KDE4_KCFGC_EXECUTABLE NAME kconfig_compiler )
+   # now include the file with the imported tools (executable targets)
+   # Having the libs and tools in two separate files should help with cross compiling.
+   include(${kde_cmake_module_dir}/KDELibsToolsTargets.cmake)
 
-   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
-   find_program(KDE4_MEINPROC_EXECUTABLE NAME meinproc4 )
+   # get the build CONFIGURATIONS which were exported in this file, and use just the first
+   # of them to get the location of the installed executables
+   get_target_property(_importedConfigurations  ${KDE4_TARGET_PREFIX}kconfig_compiler IMPORTED_CONFIGURATIONS )
+   list(GET _importedConfigurations 0 _firstConfig)
 
-   find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets PATHS ${KDE4_BIN_INSTALL_DIR} NO_DEFAULT_PATH )
-   find_program(KDE4_MAKEKDEWIDGETS_EXECUTABLE NAME makekdewidgets )
-   
-   mark_as_advanced(KDE4_KCFGC_EXECUTABLE KDE4_MEINPROC_EXECUTABLE KDE4_MAKEKDEWIDGETS_EXECUTABLE)
+   get_target_property(KDE4_KCFGC_EXECUTABLE          ${KDE4_TARGET_PREFIX}kconfig_compiler LOCATION_${firstConfig})
+   get_target_property(KDE4_MEINPROC_EXECUTABLE       ${KDE4_TARGET_PREFIX}meinproc4        LOCATION_${firstConfig})
+   get_target_property(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${KDE4_TARGET_PREFIX}makekdewidgets   LOCATION_${firstConfig})
 
    # allow searching cmake modules in all given kde install locations (KDEDIRS based)
    execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path data OUTPUT_VARIABLE _data_DIR ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -573,44 +537,27 @@ option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests")
 option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the html versions of the docbook docs")
 
+# if CMake 2.6.3 or above is used, provide an option which should be used by other KDE packages
+# whether to install a CMake FooConfig.cmake into lib/foo/cmake/ or /lib/cmake/foo/
+# (with 2.6.3 and above also lib/cmake/foo/ is supported):
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
-   option(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR 
-          "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead to lib/<package>/cmake" 
-          TRUE)
+   option(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead to lib/<package>/cmake" TRUE)
 else(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
    set(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR  FALSE)
 endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
-
-
-# This is obsolete now. I just keep it here so in case somebody stumbles upon it somewhere
-# he can still find a hint where it came from and what it was good for.
-#
-# What to do in that case ?  Just remove it. Alex
-#
-# # This is for the reduced link interface.
-# # In kdelibs it is already alwaysenabled.
-# # In all other modules provide the switch _KDE4_USE_REDUCED_LINK_INTERFACE to turn it on.
-# if(kdelibs_SOURCE_DIR)
-#    set(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT TRUE)
-# else(kdelibs_SOURCE_DIR)
-#    option(KDE4_ENABLE_EXPERIMENTAL_LIB_EXPORT "Enable the reduced link interface" OFF)
-# endif(kdelibs_SOURCE_DIR)
-# 
-# # Setting the target property LINK_INTERFACE_LIBRARIES directly shouldn't be done,
-# # instead TARGET_LINK_LIBRARIES(... LINK_INTERFACE_LIBRARIES ... ) must be used.
-# set(KDE4_DISABLE_PROPERTY_ "DISABLED_")
-
-
-
-if( KDE4_ENABLE_FINAL)
-   add_definitions(-DKDE_USE_FINAL)
-endif(KDE4_ENABLE_FINAL)
 
 # Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
 # which is something between a shared library and a normal executable.
 # Programs compiled with these features appear as ?shared object? with the file command.
 # info from "http://www.linuxfromscratch.org/hlfs/view/unstable/glibc/chapter02/pie.html"
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
+
+
+#####################  some more settings   ##########################################
+
+if( KDE4_ENABLE_FINAL)
+   add_definitions(-DKDE_USE_FINAL)
+endif(KDE4_ENABLE_FINAL)
 
 # If we are building ! kdelibs, check where kdelibs are installed.
 # If they are installed in a directory which contains "lib64", we default to "64" for LIB_SUFFIX,
@@ -747,11 +694,11 @@ endif (WIN32)
 
 
 # The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries are installed.
-# The arguments are also ok for regular executables, i.e. executables which don't go
-# into sbin/ or libexec/, but for installing executables the basic syntax 
-# INSTALL(TARGETS kate DESTINATION "${BIN_INSTALL_DIR}")
-# is enough, so using this variable there doesn't help a lot.
-# The variable must not be used for installing plugins.
+# It should also be used when installing applications, since then 
+# on OS X application bundles will be installed to BUNDLE_INSTALL_DIR.
+# The variable MUST NOT be used for installing plugins.
+# It also MUST NOT be used for executables which are intended to go into sbin/ or libexec/.
+#
 # Usage is like this:
 #    install(TARGETS kdecore kdeui ${INSTALL_TARGETS_DEFAULT_ARGS} )
 #
@@ -769,7 +716,6 @@ endif (WIN32)
 set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
                                   LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
                                   ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
-
 
 
 # on the Mac support an extra install directory for application bundles starting with cmake 2.6
@@ -1231,4 +1177,3 @@ if (NOT _kde4_uninstall_rule_created)
 endif (NOT _kde4_uninstall_rule_created)
 
 endif(NOT KDE4_FOUND)
-
