@@ -60,6 +60,8 @@
 # KDE4WORKSPACE_INCLUDE_DIR, and also variables for all libraries.
 # See kdebase/workspace/CMakeLists.txt and kdebase/workspace/KDE4WorkspaceConfig.cmake.in 
 # for details. Alex
+
+
 set(_KDE4Workspace_FIND_QUIETLY  ${KDE4Workspace_FIND_QUIETLY})
 find_package(KDE4Workspace QUIET NO_MODULE PATHS ${KDE4_LIB_DIR}/KDE4Workspace/cmake )
 set(KDE4Workspace_FIND_QUIETLY ${_KDE4Workspace_FIND_QUIETLY})

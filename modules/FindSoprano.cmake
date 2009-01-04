@@ -16,10 +16,16 @@
 # SOPRANO_PLUGIN_RAPTORSERIALIZER_FOUND - true if the raptorserializer plugin is found
 # SOPRANO_PLUGIN_REDLANDBACKEND_FOUND   - true if the redlandbackend plugin is found
 # SOPRANO_PLUGIN_SESAME2BACKEND_FOUND   - true if the sesame2backend plugin is found
-
+#
 # Options:
 #  Set SOPRANO_MIN_VERSION to set the minimum required Soprano version (default: 1.99)
 #
+
+# Copyright (c) 2008, Sebastian Trueg, <sebastian@trueg.de>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 #if(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
 

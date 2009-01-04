@@ -8,6 +8,13 @@
 #  NEPOMUK_DEFINITIONS - Compiler switches required for using Nepomuk
 #
 
+
+# Copyright (c) 2008, Sebastian Trueg, <sebastian@trueg.de>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+
 if (NOT DEFINED Soprano_FOUND)
   macro_optional_find_package(Soprano)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" FALSE "" "Soprano is needed for Nepomuk")

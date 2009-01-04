@@ -11,6 +11,12 @@
 #  EXIV2_DEFINITIONS - Compiler switches required for using libexiv2
 #
 
+# Copyright (c) 2008, Gilles Caulier, <caulier.gilles@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+
 if (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
 
   # in cache already

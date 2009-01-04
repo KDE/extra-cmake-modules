@@ -1,8 +1,5 @@
 # Find SIP
 # ~~~~~~~~
-# Copyright (c) 2007, Simon Edwards <simon@simonzone.com>
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 # SIP website: http://www.riverbankcomputing.co.uk/sip/index.php
 #
@@ -22,6 +19,12 @@
 #
 # SIP_DEFAULT_SIP_DIR - Default directory where .sip files should be installed
 #     into.
+
+# Copyright (c) 2007, Simon Edwards <simon@simonzone.com>
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+
 
 IF(SIP_VERSION)
   # Already in cache, be silent

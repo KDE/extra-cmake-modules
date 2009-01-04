@@ -6,6 +6,11 @@
 #  FLEX_VERSION - the version string, like "2.5.31"
 
 
+# Copyright (c) 2008, Jakob Petsovits, <jpetso@gmx.at>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 FIND_PROGRAM(FLEX_EXECUTABLE NAMES flex)
 
 INCLUDE(MacroEnsureVersion)

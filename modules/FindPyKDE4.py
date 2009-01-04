@@ -2,6 +2,7 @@
 # modified by Paul Giannaros <paul@giannaros.org> to add better PyKDE4
 # sip directory finding
 # This file is in the public domain.
+
 import sys
 import os
 import PyKDE4.pykdeconfig

@@ -7,6 +7,11 @@
 #  KEXIV2_DEFINITIONS - Compiler switches required for using libkexiv2
 #
 
+# Copyright (c) 2008, Gilles Caulier, <caulier.gilles@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 if (KEXIV2_INCLUDE_DIR AND KEXIV2_LIBRARIES)
 
   message(STATUS "Found Kexiv2 library in cache: ${KEXIV2_LIBRARIES}")

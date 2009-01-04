@@ -6,7 +6,10 @@
 #  GOBJECT_LIBRARIES - the libraries needed to use GObject
 #  GOBJECT_DEFINITIONS - Compiler switches required for using GObject
 
-#  (c)2006, Tim Beaulen <tbscope@gmail.com>
+# Copyright (c) 2006, Tim Beaulen <tbscope@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
 IF (GOBJECT_INCLUDE_DIR AND GOBJECT_LIBRARIES)

@@ -9,6 +9,11 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
+# Copyright (c) 2008, Daniel Gollub, <dgollub@suse.de>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 
 if ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
    # in cache already

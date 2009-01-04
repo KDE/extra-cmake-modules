@@ -10,6 +10,11 @@
 #
 
 
+# Copyright (c) 2008, Gilles Caulier, <caulier.gilles@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 if ( SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES )
    # in cache already
    SET(Sqlite_FIND_QUIETLY TRUE)

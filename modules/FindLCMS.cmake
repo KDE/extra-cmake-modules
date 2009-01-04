@@ -6,6 +6,13 @@
 #  LCMS_VERSION, The value of LCMS_VERSION defined in lcms.h
 #  LCMS_FOUND, If false, do not try to use LCMS.
 
+
+# Copyright (c) 2008, Adrian Page, <adrian@pagenet.plus.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 if(NOT WIN32)
