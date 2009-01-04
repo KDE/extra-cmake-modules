@@ -7,6 +7,11 @@
 #  KIPI_DEFINITIONS - Compiler switches required for using libkipi
 #
 
+# Copyright (c) 2008, Gilles Caulier, <caulier.gilles@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
 if (KIPI_INCLUDE_DIR AND KIPI_LIBRARIES)
 
   message(STATUS "Found Kipi library in cache: ${KIPI_LIBRARIES}")
