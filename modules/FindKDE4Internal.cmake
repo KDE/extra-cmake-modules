@@ -46,6 +46,8 @@
 #  KDE4_KFORMULA_LIBRARY    - the kformula library
 #  KDE4_PLASMA_LIBRARY      - the plasma library
 #
+#  KDE4_PLASMA_OPENGL_FOUND  - TRUE if the OpenGL support of Plasma has been found, NOTFOUND otherwise
+#
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
 # should be used instead of the ones above:
@@ -492,6 +494,9 @@ else (_kdeBootStrapping)
    set(KDE4_LIB_DIR ${KDE4_LIB_INSTALL_DIR} )
    set(KDE4_INCLUDE_DIR ${KDE4_INCLUDE_INSTALL_DIR} )
 
+
+   # This setting is currently not recorded in KDELibsDependencies.cmake: 
+   find_file(KDE4_PLASMA_OPENGL_FOUND plasma/glapplet.h PATHS ${KDE4_INCLUDE_DIR} NO_DEFAULT_PATH)
 
    # now include the file with the imported tools (executable targets)
    # Having the libs and tools in two separate files should help with cross compiling.
