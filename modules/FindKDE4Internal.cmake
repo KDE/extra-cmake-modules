@@ -43,7 +43,6 @@
 #  KDE4_KTEXTEDITOR_LIBRARY - the ktexteditor library
 #  KDE4_KNEPOMUK_LIBRARY    - the knepomuk library
 #  KDE4_KMETADATA_LIBRARY   - the kmetadata library
-#  KDE4_KFORMULA_LIBRARY    - the kformula library
 #  KDE4_PLASMA_LIBRARY      - the plasma library
 #
 #  KDE4_PLASMA_OPENGL_FOUND  - TRUE if the OpenGL support of Plasma has been found, NOTFOUND otherwise
@@ -75,7 +74,6 @@
 #  KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
 #  KDE4_KNEPOMUK_LIBS         - the knepomuk library and all depending libraries
 #  KDE4_KMETADATA_LIBS        - the kmetadata library and all depending libraries
-#  KDE4_KFORMULA_LIBS         - the kformula library and all depending librairies
 #  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
 #
 # This module defines a bunch of variables used as locations for install directories. 
@@ -455,7 +453,6 @@ else (_kdeBootStrapping)
    _kde4_set_lib_variables(KDEUI         kdeui         ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KDNSSD        kdnssd        ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KFILE         kfile         ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KFORMULA      kformula      ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KHTML         khtml         ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KIO           kio           ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KJS           kjs           ${KDE4_TARGET_PREFIX})
