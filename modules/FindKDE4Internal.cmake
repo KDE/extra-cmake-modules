@@ -439,7 +439,7 @@ else (_kdeBootStrapping)
    # the kdeui library could now also be used just as "KDE4__kdeui" and still have all their
    # dependent libraries handled correctly. But to keep compatibility and not to change
    # behaviour we set all these variables anyway as seen below. Alex
-   include(${kde_cmake_module_dir}/KDELibsLibraryTargets.cmake)
+   include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
 
    # helper macro, sets both the KDE4_FOO_LIBRARY and KDE4_FOO_LIBS variables to KDE4__foo
    macro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
@@ -497,7 +497,7 @@ else (_kdeBootStrapping)
 
    # now include the file with the imported tools (executable targets)
    # Having the libs and tools in two separate files should help with cross compiling.
-   include(${kde_cmake_module_dir}/KDELibsToolsTargets.cmake)
+   include(${kde_cmake_module_dir}/KDELibs4ToolsTargets.cmake)
 
    # get the build CONFIGURATIONS which were exported in this file, and use just the first
    # of them to get the location of the installed executables
