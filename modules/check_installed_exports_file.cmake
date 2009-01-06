@@ -22,23 +22,25 @@ if(EXISTS "${installedExportsFile}")
    if (${INSTALL_DIR} MATCHES "^(/)(.+)$")
       set(binaryDirExportFileDir "_${CMAKE_MATCH_2}")
       set(binaryDirExportsFile "${CURRENT_BINARY_DIR}/CMakeFiles/Export/${binaryDirExportFileDir}/${FILENAME}")
-
-      if(EXISTS "${binaryDirExportsFile}") 
-         file(READ "${installedExportsFile}" installedExportsFileContents)
-         file(READ "${binaryDirExportsFile}" binaryDirExportsFileContents)
-
-         if(NOT "${installedExportsFileContents}" STREQUAL "${binaryDirExportsFileContents}")
-
-            if("${FILENAME}" MATCHES "^(.+)(\\.cmake)$")
-               message(STATUS "Installed and new ${FILENAME} differ, removing installed ${CMAKE_MATCH_1}-*.cmake files")
-               file(GLOB files "${installDir}/${CMAKE_MATCH_1}-*.cmake")
-               file(REMOVE ${files})
-            endif("${FILENAME}" MATCHES "^(.+)(\\.cmake)$")
-#        else(NOT "${installedExportsFileContents}" STREQUAL "${binaryDirExportsFileContents}")
-#           message(STATUS "FILES are the same")
-         endif(NOT "${installedExportsFileContents}" STREQUAL "${binaryDirExportsFileContents}")
-
-      endif(EXISTS "${binaryDirExportsFile}") 
+   else (${INSTALL_DIR} MATCHES "^(/)(.+)$")
+      set(binaryDirExportsFile "${CURRENT_BINARY_DIR}/CMakeFiles/Export/${INSTALL_DIR}/${FILENAME}")
    endif (${INSTALL_DIR} MATCHES "^(/)(.+)$")
+
+   if(EXISTS "${binaryDirExportsFile}") 
+      file(READ "${installedExportsFile}" installedExportsFileContents)
+      file(READ "${binaryDirExportsFile}" binaryDirExportsFileContents)
+
+      if(NOT "${installedExportsFileContents}" STREQUAL "${binaryDirExportsFileContents}")
+
+         if("${FILENAME}" MATCHES "^(.+)(\\.cmake)$")
+            message(STATUS "Installed and new ${FILENAME} differ, removing installed ${CMAKE_MATCH_1}-*.cmake files")
+            file(GLOB files "${installDir}/${CMAKE_MATCH_1}-*.cmake")
+            file(REMOVE ${files})
+         endif("${FILENAME}" MATCHES "^(.+)(\\.cmake)$")
+      else(NOT "${installedExportsFileContents}" STREQUAL "${binaryDirExportsFileContents}")
+         message(STATUS "FILES are the same")
+      endif(NOT "${installedExportsFileContents}" STREQUAL "${binaryDirExportsFileContents}")
+
+   endif(EXISTS "${binaryDirExportsFile}") 
 
 endif(EXISTS "${installedExportsFile}")
