@@ -826,7 +826,7 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    _automoc4_kde4_post_target_handling(${_target_NAME})
 
    if (_test)
-      set_target_properties(${_target_NAME} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
+      set_target_properties(${_target_NAME} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/\\"")
    endif (_test)
 
    kde4_handle_rpath_for_executable(${_target_NAME} ${_type})
