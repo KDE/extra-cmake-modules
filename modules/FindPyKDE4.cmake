@@ -156,5 +156,9 @@ ENDMACRO(PYKDE4_INSTALL_PYTHON_FILES)
 # executable.
 #
 MACRO(PYKDE4_ADD_EXECUTABLE _pyname _exename)
-    INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -DTARGET=${DATA_INSTALL_DIR}/${PROJECT_NAME}/${_pyname} -DLINK_NAME=${BIN_INSTALL_DIR}/${_exename} -P ${CMAKE_SOURCE_DIR}/cmake/modules/create_exe_symlink.cmake)" )
+    if(NOT ${PROJECT_NAME})
+         MESSAGE(STATUS "Project name is necessary to create symlink against python program!!! It will failed.")
+    endif(NOT ${PROJECT_NAME})
+    INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -DTARGET=${DATA_INSTALL_DIR}/${PROJECT_NAME}/${_pyname} -DLINK_NAME=${BIN_INSTALL_DIR}/${_exename} -P ${current_module_dir}/create_exe_symlink.cmake)" )
 ENDMACRO(PYKDE4_ADD_EXECUTABLE)
+
