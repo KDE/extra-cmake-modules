@@ -260,6 +260,13 @@ cmake_policy(SET CMP0002 OLD)
 cmake_policy(SET CMP0003 OLD)
 # CMP0005: keep escaping behaviour for definitions added via add_definitions()
 cmake_policy(SET CMP0005 OLD)
+# since cmake 2.6.3: NEW behaviour is that setting policies doesn't "escape" the file 
+# where this is done, macros and functions are executed with the policies as they
+# were when the were defined. Keep the OLD behaviour so we can set the policies here
+# for all KDE software without the big warning
+if(POLICY CMP0011)
+   cmake_policy(SET CMP0011 OLD)
+endif(POLICY CMP0011)
 
 
 # Only do something if it hasn't been found yet
