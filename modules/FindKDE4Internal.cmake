@@ -371,6 +371,7 @@ if (_kdeBootStrapping)
    set(KDE4_SOLID_LIBS ${KDE4_KDECORE_LIBS} solid)
    set(KDE4_KFILE_LIBS ${KDE4_KIO_LIBS} kfile)
    set(KDE4_KHTML_LIBS ${KDE4_KPARTS_LIBS} khtml)
+   set(KDE4_KTEXTEDITOR_LIBS ktexteditor)
 
    set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
 
