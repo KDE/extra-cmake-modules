@@ -286,7 +286,7 @@ else(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
   set(_REQ_STRING_KDE4_MESSAGE "STATUS")
 endif(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
 
-set(QT_MIN_VERSION "4.4.0")
+set(QT_MIN_VERSION "4.5.0")
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 find_package(Qt4 ${_REQ_STRING_KDE4})
 
