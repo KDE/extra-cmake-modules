@@ -47,7 +47,15 @@ FIND_LIBRARY(PULSEAUDIO_MAINLOOP_LIBRARY NAMES pulse-mainloop pulse-mainloop-gli
    )
 
 if (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY)
-   set(PULSEAUDIO_FOUND TRUE)
+   include(MacroEnsureVersion)
+
+   # get PulseAudio's version from its version.h, and compare it with our minimum version
+   file(STRINGS "${PULSEAUDIO_INCLUDE_DIR}/pulse/version.h" pulse_version_h
+        REGEX ".*pa_get_headers_version\\(\\).*"
+        )
+   string(REGEX REPLACE ".*pa_get_headers_version\\(\\)\ \\(\"([0-9]+\\.[0-9]+\\.[0-9]+)\"\\).*" "\\1"
+                         PULSEAUDIO_VERSION "${pulse_version_h}")
+   macro_ensure_version("${PULSEAUDIO_MINIMUM_VERSION}" "${PULSEAUDIO_VERSION}" PULSEAUDIO_FOUND)
 else (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY)
    set(PULSEAUDIO_FOUND FALSE)
 endif (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY)
