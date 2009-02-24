@@ -3,6 +3,7 @@
 #
 #  KDEPIMLIBS_FOUND - system has KDE PIM Libraries
 #  KDEPIMLIBS_INCLUDE_DIR - the KDE PIM Libraries include directory
+#  KDEPIMLIBS_INCLUDE_DIRS - the KDE PIM Libraries include directory and CamelCase headers
 #
 # It also sets variables for the following libraries:
 #   KDEPIMLIBS_AKONADI_LIBS
@@ -30,6 +31,7 @@
 #   KDEPIMLIBS_DBUS_INTERFACES_DIR
 #   KDEPIMLIBS_DBUS_SERVICES_DIR
 #   KDEPIMLIBS_INCLUDE_DIR
+#   KDEPIMLIBS_INCLUDE_DIRS
 #   KDEPIMLIBS_LIB_DIR
 #   KDEPIMLIBS_BIN_DIR
 #   KDEPIMLIBS_LIBEXEC_DIR
