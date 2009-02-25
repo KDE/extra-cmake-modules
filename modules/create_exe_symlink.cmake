@@ -8,7 +8,7 @@ GET_FILENAME_COMPONENT(link_path $ENV{DESTDIR}/${LINK_NAME} PATH)
 GET_FILENAME_COMPONENT(abs_link_path ${link_path} ABSOLUTE)
 FILE(MAKE_DIRECTORY ${abs_link_path})
 
-GET_FILENAME_COMPONENT(abs_target $ENV{DESTDIR}/${TARGET} ABSOLUTE)
+GET_FILENAME_COMPONENT(abs_target ${TARGET} ABSOLUTE)
 IF(UNIX)
     EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E create_symlink ${abs_target} ${abs_link_name})
     EXECUTE_PROCESS(COMMAND chmod a+x ${abs_target})
