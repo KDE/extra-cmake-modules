@@ -26,7 +26,7 @@ endif(NOT WIN32)
 
 find_path(POPPLER_QT4_INCLUDE_DIR 
   NAMES poppler-qt4.h
-  PATH_SUFFIXES poppler
+  PATH_SUFFIXES poppler/qt4 poppler
   PATHS ${_PopplerQt4IncDir}
 )
 
