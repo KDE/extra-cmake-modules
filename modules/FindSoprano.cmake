@@ -16,6 +16,7 @@
 # SOPRANO_PLUGIN_RAPTORSERIALIZER_FOUND - true if the raptorserializer plugin is found
 # SOPRANO_PLUGIN_REDLANDBACKEND_FOUND   - true if the redlandbackend plugin is found
 # SOPRANO_PLUGIN_SESAME2BACKEND_FOUND   - true if the sesame2backend plugin is found
+# SOPRANO_PLUGIN_VIRTUOSOBACKEND_FOUND  - true if the virtuosobackend plugin is found 
 #
 # Options:
 #  Set SOPRANO_MIN_VERSION to set the minimum required Soprano version (default: 1.99)
@@ -163,6 +164,11 @@
       set(SOPRANO_PLUGIN_SESAME2BACKEND_FOUND TRUE)
       set(_plugins "${_plugins} sesame2backend")
     endif(EXISTS ${SOPRANO_PLUGIN_DIR}/sesame2backend.desktop)
+
+    if(EXISTS ${SOPRANO_PLUGIN_DIR}/virtuosobackend.desktop)
+      set(SOPRANO_PLUGIN_VIRTUOSOBACKEND_FOUND TRUE)
+      set(_plugins "${_plugins} virtuosobackend")
+    endif(EXISTS ${SOPRANO_PLUGIN_DIR}/virtuosobackend.desktop)
 
   endif(Soprano_FOUND)
 
