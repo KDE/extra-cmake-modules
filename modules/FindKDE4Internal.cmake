@@ -802,7 +802,7 @@ if (WIN32)
 
    # windows, microsoft compiler
    if(MSVC)
-      set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN -DUNICODE )
+      set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN )
       # C4250: 'class1' : inherits 'class2::member' via dominance
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4250" )
       # C4251: 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
@@ -827,6 +827,9 @@ if (WIN32)
      set(CMAKE_MSVCIDE_RUN_PATH "${PERL_PATH_WINDOWS}\;${QT_BIN_DIR_WINDOWS}"
        CACHE STATIC "MSVC IDE Run path" FORCE)
    endif(MSVC_IDE)
+   
+   # we don't support anything below w2k and all winapi calls are unicodes
+   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINNT=0x0500 -DUNICODE" )
 endif (WIN32)
 
 
