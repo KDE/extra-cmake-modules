@@ -22,7 +22,7 @@ IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
    FIND_PACKAGE(PkgConfig)
-   PKG_CHECK_MODULES(PC_LIBXML libxml-2.0)
+   PKG_CHECK_MODULES(PC_LIBXML QUIET libxml-2.0)
    SET(LIBXML2_DEFINITIONS ${PC_LIBXML_CFLAGS_OTHER})
 ENDIF (NOT WIN32)
 

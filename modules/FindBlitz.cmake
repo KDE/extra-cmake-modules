@@ -23,7 +23,7 @@ if (NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
-    pkg_check_modules(PC_BLITZ qimageblitz)
+    pkg_check_modules(PC_BLITZ QUIET qimageblitz)
 endif (NOT WIN32)
 
 find_path(BLITZ_INCLUDES

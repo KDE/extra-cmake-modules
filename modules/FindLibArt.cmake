@@ -23,7 +23,7 @@ else (LIBART_INCLUDE_DIR AND LIBART_LIBRARIES)
 
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
-    pkg_check_modules(PC_LIBART libart-2.0)
+    pkg_check_modules(PC_LIBART QUIET libart-2.0)
 
     ######### ?? where is this used ?? ###############
     set(LIBART_DEFINITIONS ${PC_LIBART_CFLAGS_OTHER})

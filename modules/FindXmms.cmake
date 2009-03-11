@@ -22,7 +22,7 @@ else (XMMS_INCLUDE_DIRS AND XMMS_LIBRARIES)
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
 
-    pkg_check_modules(PC_XMMS xmms)
+    pkg_check_modules(PC_XMMS QUIET xmms)
   endif(NOT WIN32)
 
   find_path(XMMS_INCLUDE_DIRS xmmsctrl.h

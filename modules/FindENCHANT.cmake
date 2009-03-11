@@ -22,7 +22,7 @@ else (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
-    pkg_check_modules(PC_ENCHANT enchant)
+    pkg_check_modules(PC_ENCHANT QUIET enchant)
     set(ENCHANT_DEFINITIONS ${PC_ENCHANT_CFLAGS_OTHER})
   endif (NOT WIN32)
 

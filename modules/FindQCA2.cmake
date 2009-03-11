@@ -26,7 +26,7 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
   if (NOT WIN32)
     find_package(PkgConfig)
-    pkg_check_modules(PC_QCA2 qca2)
+    pkg_check_modules(PC_QCA2 QUIET qca2)
     set(QCA2_DEFINITIONS ${PC_QCA2_CFLAGS_OTHER})
   endif (NOT WIN32)
 

@@ -25,7 +25,7 @@ endif ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
 if( NOT WIN32 )
   find_package(PkgConfig)
 
-  pkg_check_modules(PC_BLUEZ bluez)
+  pkg_check_modules(PC_BLUEZ QUIET bluez)
 
   set(BLUEZ_DEFINITIONS ${PC_BLUEZ_CFLAGS_OTHER})
 endif( NOT WIN32 )

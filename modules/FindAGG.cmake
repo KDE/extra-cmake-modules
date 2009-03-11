@@ -21,7 +21,7 @@ else (AGG_INCLUDE_DIR AND AGG_LIBRARIES)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
-    pkg_check_modules(PC_AGG libagg) 
+    pkg_check_modules(PC_AGG QUIET libagg) 
 
     set(AGG_DEFINITIONS ${PC_AGG_CFLAGS_OTHER})
   endif (NOT WIN32)

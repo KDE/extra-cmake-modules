@@ -24,7 +24,7 @@ IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
    FIND_PACKAGE(PkgConfig)
-   PKG_CHECK_MODULES(PC_GSTREAMER gstreamer-0.10)
+   PKG_CHECK_MODULES(PC_GSTREAMER QUIET gstreamer-0.10)
    #MESSAGE(STATUS "DEBUG: GStreamer include directory = ${GSTREAMER_INCLUDE_DIRS}")
    #MESSAGE(STATUS "DEBUG: GStreamer link directory = ${GSTREAMER_LIBRARY_DIRS}")
    #MESSAGE(STATUS "DEBUG: GStreamer CFlags = ${GSTREAMER_CFLAGS_OTHER}") 

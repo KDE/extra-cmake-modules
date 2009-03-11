@@ -24,8 +24,8 @@ endif (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY AND PULSEAUDIO_MAINLOOP_LIB
 
 if (NOT WIN32)
    include(FindPkgConfig)
-   pkg_check_modules(PC_PULSEAUDIO libpulse>=${PULSEAUDIO_MINIMUM_VERSION})
-   pkg_check_modules(PC_PULSEAUDIO_MAINLOOP libpulse-mainloop-glib)
+   pkg_check_modules(PC_PULSEAUDIO QUIET libpulse>=${PULSEAUDIO_MINIMUM_VERSION})
+   pkg_check_modules(PC_PULSEAUDIO_MAINLOOP QUIET libpulse-mainloop-glib)
 endif (NOT WIN32)
 
 FIND_PATH(PULSEAUDIO_INCLUDE_DIR pulse/pulseaudio.h

@@ -25,7 +25,7 @@ endif ( SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES )
 if( NOT WIN32 )
   find_package(PkgConfig)
 
-  pkg_check_modules(PC_SQLITE sqlite3)
+  pkg_check_modules(PC_SQLITE QUIET sqlite3)
 
   set(SQLITE_DEFINITIONS ${PC_SQLITE_CFLAGS_OTHER})
 endif( NOT WIN32 )

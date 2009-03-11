@@ -21,7 +21,7 @@ else (OPENEXR_INCLUDE_DIR AND OPENEXR_LIBRARIES)
   # use pkg-config to get the directories and then use these values
   # in the FIND_PATH() and FIND_LIBRARY() calls
   find_package(PkgConfig)
-  pkg_check_modules(PC_OPENEXR OpenEXR) 
+  pkg_check_modules(PC_OPENEXR QUIET OpenEXR) 
 
   FIND_PATH(OPENEXR_INCLUDE_DIR ImfRgbaFile.h
      HINTS

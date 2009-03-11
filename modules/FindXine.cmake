@@ -21,7 +21,7 @@ endif (XINE_INCLUDE_DIR AND XINE_LIBRARY)
 
 find_package(PkgConfig)
 if (PKG_CONFIG_FOUND)
-   pkg_check_modules(PC_LIBXINE libxine)
+   pkg_check_modules(PC_LIBXINE QUIET libxine)
 endif (PKG_CONFIG_FOUND)
 
 find_path(XINE_INCLUDE_DIR NAMES xine.h 
