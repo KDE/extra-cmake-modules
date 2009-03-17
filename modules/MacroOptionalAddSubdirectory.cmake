@@ -11,9 +11,9 @@
 #     directories.
 #
 # If the CMake variable DISABLE_ALL_OPTIONAL_SUBDIRECTORIES is set to TRUE
-# for the first CMake run on the project, all subdirectories will be disabled
+# for the first CMake run on the project, all optional subdirectories will be disabled
 # by default (but can of course be enabled via the respective options).
-# E.g. the following will disable all subdirectories except the one named "kcalc":
+# E.g. the following will disable all optional subdirectories except the one named "kcalc":
 #   $ cmake -DDISABLE_ALL_OPTIONAL_SUBDIRECTORIES=TRUE -DBUILD_kcalc=TRUE <srcdir>
 
 # Copyright (c) 2007, Alexander Neundorf, <neundorf@kde.org>
