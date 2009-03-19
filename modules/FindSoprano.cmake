@@ -184,10 +184,10 @@
   else(Soprano_FOUND)
     if(Soprano_FIND_REQUIRED)
       if(NOT SOPRANO_INCLUDE_DIR)
-	message(FATAL_ERROR "Could not find Soprano includes.")
+        message(FATAL_ERROR "Could not find Soprano includes.")
       endif(NOT SOPRANO_INCLUDE_DIR)
       if(NOT SOPRANO_LIBRARIES)
-	message(FATAL_ERROR "Could not find Soprano library.")
+        message(FATAL_ERROR "Could not find Soprano library.")
       endif(NOT SOPRANO_LIBRARIES)
     else(Soprano_FIND_REQUIRED)
       if(NOT SOPRANO_INCLUDE_DIR)
@@ -199,6 +199,11 @@
     endif(Soprano_FIND_REQUIRED)
   endif(Soprano_FOUND)
 
-mark_as_advanced(SOPRANO_CLIENT_LIBRARIES SOPRANO_INDEX_LIBRARIES SOPRANO_LIBRARIES SOPRANO_SERVER_LIBRARIES SOPRANO_INCLUDE_DIR )
+mark_as_advanced(SOPRANO_CLIENT_LIBRARIES 
+                 SOPRANO_INDEX_LIBRARIES
+                 SOPRANO_LIBRARIES
+                 SOPRANO_SERVER_LIBRARIES
+                 SOPRANO_INCLUDE_DIR
+                 SOPRANO_PLUGIN_DIR)
 
 #endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
