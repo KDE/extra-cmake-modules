@@ -7,7 +7,7 @@ if (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
 endif (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
 
 # Always include srcdir and builddir in include path
-# This saves typing ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY} in about every subdir
+# This saves typing ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} in about every subdir
 # since cmake 2.4.0
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
