@@ -829,7 +829,7 @@ if (WIN32)
    endif(MSVC_IDE)
    
    # we don't support anything below w2k and all winapi calls are unicodes
-   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINNT=0x0500 -D_WIN32_IE=0x0500 -DUNICODE" )
+   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINNT=0x0501 -D_WIN32_IE=0x0501 -DUNICODE" )
 endif (WIN32)
 
 
