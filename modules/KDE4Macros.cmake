@@ -1067,7 +1067,7 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
             message(STATUS "Unable to find the png2ico or windres utilities - application will not have an application icon!")
         endif(PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
     endif(WIN32)
-    if (APPLE)
+    if (Q_WS_MAC)
         # first convert image to a tiff using the Mac OS X "sips" utility,
         # then use tiff2icns to convert to an icon
         find_program(SIPS_EXECUTABLE NAMES sips)
@@ -1112,7 +1112,7 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
         else(SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
             message(STATUS "Unable to find the sips and tiff2icns utilities - application will not have an application icon!")
         endif(SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
-    endif(APPLE)    
+    endif(Q_WS_MAC)    
 endmacro (KDE4_ADD_APP_ICON)
 
 
