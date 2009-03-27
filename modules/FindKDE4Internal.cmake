@@ -303,8 +303,18 @@ macro_ensure_version("0.9.87" "${AUTOMOC4_VERSION}" _automoc4_version_ok)
 # for compatibility with KDE 4.0.x
 set(KDE4_AUTOMOC_EXECUTABLE        "${AUTOMOC4_EXECUTABLE}" )
 
-# Perl is required for building KDE software
-find_package(Perl ${_REQ_STRING_KDE4})
+# Perl is not required for building KDE software, but we had that here since 4.0
+find_package(Perl)
+if(NOT PERL_FOUND)
+   message(STATUS "Perl not found")
+endif(NOT PERL_FOUND)
+
+# only make Phonon REQUIRED if KDE4 itself is REQUIRED
+find_package(Phonon ${_REQ_STRING_KDE4})
+set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
+set(KDE4_PHONON_LIBS ${PHONON_LIBS})
+set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
+
 
 # Check that we really found everything.
 # If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something wasn't found 
@@ -312,15 +322,16 @@ find_package(Perl ${_REQ_STRING_KDE4})
 # If KDE4 was searched without REQUIRED and something in the FIND_PACKAGE() calls above wasn't found, 
 # then we get here and must check that everything has actually been found. If something is missing,
 # we must not fail with FATAL_ERROR, but only not set KDE4_FOUND.
-if(NOT PERL_FOUND)
-   message(STATUS "KDE4 not found, because Perl not found")
-   return()
-endif(NOT PERL_FOUND)
 
 if(NOT QT4_FOUND)
-   message(STATUS "KDE4 not found, because Qt4 not found")
+   message(STATUS "KDE4 not found, because Qt4 was not found")
    return()
 endif(NOT QT4_FOUND)
+
+if(NOT PHONON_FOUND)
+   message(STATUS "KDE4 not found, because Phonon was not found")
+   return()
+endif(NOT PHONON_FOUND)
 
 if(NOT AUTOMOC4_FOUND OR NOT _automoc4_version_ok)
    if(NOT AUTOMOC4_FOUND)
@@ -1158,11 +1169,6 @@ if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
 
    message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
 endif (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
-
-find_package(Phonon REQUIRED)
-set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
-set(KDE4_PHONON_LIBS ${PHONON_LIBS})
-set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
 
 if (NOT KDE4Internal_FIND_QUIETLY)
    kde4_print_results()
