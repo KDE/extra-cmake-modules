@@ -66,25 +66,25 @@ macro (KDE4_ADD_KCFG_FILES _sources )
        get_filename_component(_basename ${_tmp_FILE} NAME_WE)
 
        file(READ ${_tmp_FILE} _contents)
-       string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILE "${_contents}")
+       string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILENAME "${_contents}")
        set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
        set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
        set(_moc_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
-       set(_kcfg_PATH   ${_abs_PATH}/${_kcfg_FILE})
+       set(_kcfg_FILE   ${_abs_PATH}/${_kcfg_FILENAME})
        # Maybe the .kcfg is a generated file?
-       if(NOT EXISTS "${_kcfg_PATH}")
-           set(_kcfg_PATH   ${CMAKE_CURRENT_BINARY_DIR}/${_kcfg_FILE})
-       endif(NOT EXISTS "${_kcfg_PATH}")
-       if(NOT EXISTS "${_kcfg_PATH}")
-           message(ERROR "${_kcfg_FILE} not found; tried in ${_abs_PATH} and ${CMAKE_CURRENT_BINARY_DIR}")
-       endif(NOT EXISTS "${_kcfg_PATH}")
+       if(NOT EXISTS "${_kcfg_FILE}")
+           set(_kcfg_FILE   ${CMAKE_CURRENT_BINARY_DIR}/${_kcfg_FILENAME})
+       endif(NOT EXISTS "${_kcfg_FILE}")
+       if(NOT EXISTS "${_kcfg_FILE}")
+           message(ERROR "${_kcfg_FILENAME} not found; tried in ${_abs_PATH} and ${CMAKE_CURRENT_BINARY_DIR}")
+       endif(NOT EXISTS "${_kcfg_FILE}")
 
        # the command for creating the source file from the kcfg file
        add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
           COMMAND ${KDE4_KCFGC_EXECUTABLE}
-          ARGS ${_kcfg_PATH} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
+          ARGS ${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
           MAIN_DEPENDENCY ${_tmp_FILE}
-          DEPENDS ${_kcfg_PATH} ${_KDE4_KCONFIG_COMPILER_DEP} )
+          DEPENDS ${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
        if(_kcfg_generatemoc)
          qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
