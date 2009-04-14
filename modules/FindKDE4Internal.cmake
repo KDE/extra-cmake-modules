@@ -204,11 +204,11 @@
 #
 #  A note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
 #  the flags for those buildtypes. FindKDE4Internal supports the values
-#  Debug, Release, RelWithDebInfo, Profile and Debugfull
+#  Debug, Release, RelWithDebInfo, Profile and Debugfull:
 #
 #  Release
 #          optimised for speed, qDebug/kDebug turned off, no debug symbols
-#  Release with debug info
+#  RelWithDebInfo (Release with debug info)
 #          optimised for speed, debugging symbols on (-g)
 #  Debug
 #          optimised but debuggable, debugging on (-g)
@@ -309,11 +309,11 @@ if(NOT PERL_FOUND)
    message(STATUS "Perl not found")
 endif(NOT PERL_FOUND)
 
-# only make Phonon REQUIRED if KDE4 itself is REQUIRED
-find_package(Phonon ${_REQ_STRING_KDE4})
-set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
-set(KDE4_PHONON_LIBS ${PHONON_LIBS})
-set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
+
+# we check for Phonon not here, but further below, i.e. after KDELibsDependencies.cmake
+# has been loaded, which helps in the case that phonon is installed to the same
+# directory as kdelibs.
+# find_package(Phonon ${_REQ_STRING_KDE4})
 
 
 # Check that we really found everything.
@@ -327,11 +327,6 @@ if(NOT QT4_FOUND)
    message(STATUS "KDE4 not found, because Qt4 was not found")
    return()
 endif(NOT QT4_FOUND)
-
-if(NOT PHONON_FOUND)
-   message(STATUS "KDE4 not found, because Phonon was not found")
-   return()
-endif(NOT PHONON_FOUND)
 
 if(NOT AUTOMOC4_FOUND OR NOT _automoc4_version_ok)
    if(NOT AUTOMOC4_FOUND)
@@ -550,6 +545,25 @@ else (_kdeBootStrapping)
    endforeach(dir)
 
 endif (_kdeBootStrapping)
+
+
+
+################### try to find Phonon ############################################
+
+# we do this here instead of above together with the checks for Perl etc.
+# since FindPhonon.cmake also uses ${KDE4_LIB_INSTALL_DIR} to check for Phonon,
+# which helps with finding the phonon installed as part of kdesupport:
+
+# only make Phonon REQUIRED if KDE4 itself is REQUIRED
+find_package(Phonon ${_REQ_STRING_KDE4})
+set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
+set(KDE4_PHONON_LIBS ${PHONON_LIBS})
+set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
+
+if(NOT PHONON_FOUND)
+   message(STATUS "KDE4 not found, because Phonon was not found")
+   return()
+endif(NOT PHONON_FOUND)
 
 
 #####################  provide some options   ##########################################
