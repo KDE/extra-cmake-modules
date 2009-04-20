@@ -122,9 +122,7 @@
       endif(SOPRANO_VERSION STRLESS "${SOPRANO_MIN_VERSION}")
     endif(SOPRANO_VERSION_MATCH)
   endif(Soprano_FOUND)
-  
 
-  message(${SOPRANO_INCLUDE_DIR})
 
   #look for parser plugins
   if(Soprano_FOUND)
@@ -132,8 +130,10 @@
       NAMES
       soprano/plugins
       PATHS
-      ${SHARE_INSTALL_PREFIX} /usr/share /usr/local/share
       ${SOPRANO_INCLUDE_DIR}/../share
+      ${SHARE_INSTALL_PREFIX} 
+      /usr/share 
+      /usr/local/share
       NO_DEFAULT_PATH
       NO_SYSTEM_ENVIRONMENT_PATH
       )
