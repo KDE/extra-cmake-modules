@@ -11,23 +11,22 @@
 
 # Copyright (c) 2008, Per Øyvind Karlsen, <peroyvind@mandriva.org>
 # Copyright (c) 2009, Alexander Neundorf, <neundorf@kde.org>
+# Copyright (c) 2009, Helio Chissini de Castro, <helio@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-FIND_PATH(LIBLZMA_INCLUDE_DIR lzmadec.h )
-FIND_LIBRARY(LIBLZMA_LIBRARY lzmadec)
+FIND_PATH(LIBLZMA_INCLUDE_DIR lzma.h )
+FIND_LIBRARY(LIBLZMA_LIBRARY lzma)
 
 SET(LIBLZMA_LIBRARIES ${LIBLZMA_LIBRARY})
 SET(LIBLZMA_INCLUDE_DIRS ${LIBLZMA_INCLUDE_DIR})
 
 
-# what's up with the following tests ?
-# I downloaded, built and installed the lzma-4.32.7 source package directly 
-# from http://tukaani.org/lzma/download and they resulting library doesn't have 
-# these symbols. Also "grep -R auto_decoder *"  gives no results.
-# Where should they come frome ? Alex
+# We're using new code known now as XZ, even library still been called LZMA
+# it can be found in http://tukaani.org/xz/
+# Avoid using old codebase
 IF (LIBLZMA_LIBRARIES)
    INCLUDE(CheckLibraryExists)
    CHECK_LIBRARY_EXISTS(${LIBLZMA_LIBRARIES} lzma_auto_decoder "" LIBLZMA_HAS_AUTO_DECODER)
