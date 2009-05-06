@@ -296,7 +296,8 @@ if (NOT AUTOMOC4_VERSION)
    # the version macro was added for 0.9.84
    set(AUTOMOC4_VERSION "0.9.83")
 endif (NOT AUTOMOC4_VERSION)
-macro_ensure_version("0.9.87" "${AUTOMOC4_VERSION}" _automoc4_version_ok)
+set(_automoc4_min_version "0.9.87")
+macro_ensure_version("${_automoc4_min_version}" "${AUTOMOC4_VERSION}" _automoc4_version_ok)
 
 # for compatibility with KDE 4.0.x
 set(KDE4_AUTOMOC_EXECUTABLE        "${AUTOMOC4_EXECUTABLE}" )
@@ -332,7 +333,7 @@ if(NOT AUTOMOC4_FOUND OR NOT _automoc4_version_ok)
       return()
    else(NOT AUTOMOC4_FOUND)
       if(NOT _automoc4_version_ok)
-         message(${_REQ_STRING_KDE4_MESSAGE} "Your version of automoc4 is too old. You have ${AUTOMOC4_VERSION}, you need at least 0.9.87")
+         message(${_REQ_STRING_KDE4_MESSAGE} "Your version of automoc4 is too old. You have ${AUTOMOC4_VERSION}, you need at least ${_automoc4_min_version}")
          return()
       endif(NOT _automoc4_version_ok)
    endif(NOT AUTOMOC4_FOUND)
