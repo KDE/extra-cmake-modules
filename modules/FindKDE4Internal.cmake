@@ -296,7 +296,7 @@ if (NOT AUTOMOC4_VERSION)
    # the version macro was added for 0.9.84
    set(AUTOMOC4_VERSION "0.9.83")
 endif (NOT AUTOMOC4_VERSION)
-set(_automoc4_min_version "0.9.87")
+set(_automoc4_min_version "0.9.88")
 macro_ensure_version("${_automoc4_min_version}" "${AUTOMOC4_VERSION}" _automoc4_version_ok)
 
 # for compatibility with KDE 4.0.x
