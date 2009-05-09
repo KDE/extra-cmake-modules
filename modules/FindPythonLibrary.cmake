@@ -3,12 +3,12 @@
 # Find the Python interpreter and related Python directories.
 #
 # This file defines the following variables:
-# 
+#
 # PYTHON_EXECUTABLE - The path and filename of the Python interpreter.
 #
 # PYTHON_SHORT_VERSION - The version of the Python interpreter found,
 #     excluding the patch version number. (e.g. 2.5 and not 2.5.1))
-# 
+#
 # PYTHON_LONG_VERSION - The version of the Python interpreter found as a human
 #     readable string.
 #
@@ -43,7 +43,13 @@ else(EXISTS PYTHON_LIBRARY)
       STRING(REGEX REPLACE ".*\nshort_version:([^\n]+).*$" "\\1" PYTHON_SHORT_VERSION ${python_config})
       STRING(REGEX REPLACE ".*\nlong_version:([^\n]+).*$" "\\1" PYTHON_LONG_VERSION ${python_config})
       STRING(REGEX REPLACE ".*\npy_inc_dir:([^\n]+).*$" "\\1" PYTHON_INCLUDE_PATH ${python_config})
-      STRING(REGEX REPLACE ".*\nsite_packages_dir:([^\n]+).*$" "\\1" PYTHON_SITE_PACKAGES_DIR ${python_config})
+      if(NOT PYTHON_SITE_PACKAGES_DIR)
+        if(NOT PYTHON_LIBS_WITH_KDE_LIBS)
+          STRING(REGEX REPLACE ".*\nsite_packages_dir:([^\n]+).*$" "\\1" PYTHON_SITE_PACKAGES_DIR ${python_config})
+        else(NOT PYTHON_LIBS_WITH_KDE_LIBS)
+          set(PYTHON_SITE_PACKAGES_DIR ${KDE4_LIB_INSTALL_DIR}/python${PYTHON_SHORT_VERSION}/site-packages)
+        endif(NOT PYTHON_LIBS_WITH_KDE_LIBS)
+      endif(NOT PYTHON_SITE_PACKAGES_DIR)
       STRING(REGEX REPLACE "([0-9]+).([0-9]+)" "\\1\\2" PYTHON_SHORT_VERSION_NO_DOT ${PYTHON_SHORT_VERSION})
       set(PYTHON_LIBRARY_NAMES python${PYTHON_SHORT_VERSION} python${PYTHON_SHORT_VERSION_NO_DOT})
       if(WIN32)
