@@ -11,7 +11,15 @@
 # version that finds all modules that this file finds.
 # Instead add a similar call with newer version numbers to the CMakeLists.txt
 # in your project before calling find_package(Boost)
-set( Boost_ADDITIONAL_VERSION ${Boost_ADDITIONAL_VERSIONS} "1.37")
+#
+#  Copyright (c) 2009      Andreas Pakulat <apaku@gmx.de>
+#
+#  Redistribution AND use is allowed according to the terms of the New
+#  BSD license.
+#  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+
+
+set( Boost_ADDITIONAL_VERSIONS ${Boost_ADDITIONAL_VERSIONS} "1.37" )
 
 include(${CMAKE_ROOT}/Modules/FindBoost.cmake)
 
