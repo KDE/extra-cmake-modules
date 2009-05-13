@@ -42,44 +42,44 @@
   find_path(SOPRANO_INCLUDE_DIR 
     NAMES
     soprano/soprano.h
-    PATHS
-    ${KDE4_INCLUDE_DIR}
+    HINTS
     ${INCLUDE_INSTALL_DIR}
+    ${KDE4_INCLUDE_DIR}
     )
 
   find_library_with_debug(SOPRANO_INDEX_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoindex
-    PATHS
-    ${KDE4_LIB_DIR}
+    HINTS
     ${LIB_INSTALL_DIR}
+    ${KDE4_LIB_DIR}
     )
 
   find_library_with_debug(SOPRANO_CLIENT_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoclient
-    PATHS
-    ${KDE4_LIB_DIR}
+    HINTS
     ${LIB_INSTALL_DIR}
+    ${KDE4_LIB_DIR}
     )
 
   find_library_with_debug(SOPRANO_LIBRARIES
     WIN32_DEBUG_POSTFIX d
     NAMES soprano
-    PATHS
-    ${KDE4_LIB_DIR}
+    HINTS
     ${LIB_INSTALL_DIR}
+    ${KDE4_LIB_DIR}
   )
 
   find_library_with_debug(SOPRANO_SERVER_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoserver
-    PATHS
-    ${KDE4_LIB_DIR}
+    HINTS
     ${LIB_INSTALL_DIR}
+    ${KDE4_LIB_DIR}
     )
 
   # check for all the libs as required to make sure that we do not try to compile with an old version
@@ -178,7 +178,7 @@
 
   if(Soprano_FOUND)
     if(NOT Soprano_FIND_QUIETLY)
-      message(STATUS "Found Soprano: ${SOPRANO_LIBRARIES}")
+      message(STATUS "Found Soprano version ${SOPRANO_VERSION}: ${SOPRANO_LIBRARIES}")
       message(STATUS "Found Soprano includes: ${SOPRANO_INCLUDE_DIR}")
       message(STATUS "Found Soprano Index: ${SOPRANO_INDEX_LIBRARIES}")
       message(STATUS "Found Soprano Client: ${SOPRANO_CLIENT_LIBRARIES}")
