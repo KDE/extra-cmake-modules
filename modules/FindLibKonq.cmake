@@ -17,6 +17,6 @@ find_path(LIBKONQ_INCLUDE_DIR konq_popupmenuplugin.h )
 find_library(LIBKONQ_LIBRARY konq)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LIBKONQ  DEFAULT_MSG  LIBKONQ_INCLUDE_DIR LIBKONG_LIBRARY )
+find_package_handle_standard_args(LIBKONQ  DEFAULT_MSG  LIBKONQ_INCLUDE_DIR LIBKONQ_LIBRARY )
 
 mark_as_advanced(LIBKONQ_INCLUDE_DIR LIBKONQ_LIBRARY)
