@@ -792,17 +792,30 @@ endmacro (KDE4_ADD_UNIT_TEST)
 
 # add a  manifest file to executables. This macro is used by kde4_add_executable
 # 
-# In cmake <= 2.6.4 there is a bug which returns a wrong path from  
-# get_target_property(var <target_name> LOCATION),  when the 
-# OUTPUT_NAME property of a target is set before. 
+# There is a henn-egg problem when a target runtime part is renamed using 
+# the OUTPUT_NAME option of cmake's set_target_properties command. 
+#
+# At now the Makefiles rules creating for manifest adding are performed 
+# *after* the cmake's add_executable command  but *before* an optional 
+# set_target_properties command. 
+# This means that in KDE4_ADD_MANIFEST the LOCATION property contains 
+#  the unchanged runtime part name of the target. :-(
 # 
-# To workaround  those cases a specific variable should be set before 
-# calling kde4_add_executable as shown by the following example: 
+# The recently used workaround  is to specify a variable build off the target name followed 
+# by _OUTPUT_NAME before calling kde4_add_executable as shown in the following example: 
 # 
 # set(xyz_OUTPUT_NAME test)
 # kde4_add_executable( xyz <source>)
 # set_target_properties( xyz PROPERTIES OUTPUT_NAME ${xyz_OUTPUT_NAME} )  
 #
+# The full solution would be to introduce a kde4_target_link_libraries macro and to 
+# call KDE4_ADD_MANIFEST inside instead of calling in kde4_add_executable. 
+# This would require  patching of *all* places in the KDE sources. where target_link_libraries 
+# is used and to change the related docs.
+# 
+# Because yet I found  only 2 locations where this problem occurs (kjs, k3b), the workaround 
+# seems to be a pragmatically solution. 
+# 
 macro (KDE4_ADD_MANIFEST _target_NAME)
     set(x ${_target_NAME}_OUTPUT_NAME)
     if (${x})
