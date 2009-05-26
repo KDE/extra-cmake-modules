@@ -582,6 +582,24 @@ endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSI
 # info from "http://www.linuxfromscratch.org/hlfs/view/unstable/glibc/chapter02/pie.html"
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
+if (WIN32)
+   find_package(KDEWIN32 REQUIRED)
+   OPTION(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
+   if (KDE4_ENABLE_UAC_MANIFEST)
+      if (NOT MT_EXECUTABLE)
+         find_program(MT_EXECUTABLE mt
+            PATHS ${KDEWIN32_INCLUDE_DIR}/../bin
+            NO_DEFAULT_PATH
+         )
+      endif (NOT MT_EXECUTABLE)
+      if (MT_EXECUTABLE)
+         message(STATUS "Found KDE manifest tool at ${MT_EXECUTABLE} ")
+      else (MT_EXECUTABLE)
+         message(STATUS "KDE manifest tool not found, manifest generating for Windows Vista disabled")
+         set (KDE4_ENABLE_UAC_MANIFEST OFF)
+      endif (MT_EXECUTABLE)
+   endif (KDE4_ENABLE_UAC_MANIFEST)
+endif (WIN32)
 
 #####################  some more settings   ##########################################
 
@@ -793,8 +811,6 @@ if (WIN32)
    if(CYGWIN)
       message(FATAL_ERROR "Cygwin is NOT supported, use mingw or MSVC to build KDE4.")
    endif(CYGWIN)
-
-   find_package(KDEWIN32 REQUIRED)
 
    # limit win32 packaging to kdelibs at now 
    # don't know if package name, version and notes are always available 
