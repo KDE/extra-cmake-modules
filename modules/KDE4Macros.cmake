@@ -30,7 +30,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-
 # This is for versions of automoc4 which don't provide these two macros.
 # If such a version is used, just use the "old" style automoc handling. 
 if(NOT COMMAND _AUTOMOC4_KDE4_PRE_TARGET_HANDLING)
@@ -791,6 +790,47 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 endmacro (KDE4_ADD_UNIT_TEST)
 
 
+# add a  manifest file to executables. This macro is used by kde4_add_executable
+# 
+# In cmake <= 2.6.4 there is a bug which returns a wrong path from  
+# get_target_property(var <target_name> LOCATION),  when the 
+# OUTPUT_NAME property of a target is set before. 
+# 
+# To workaround  those cases a specific variable should be set before 
+# calling kde4_add_executable as shown by the following example: 
+# 
+# set(xyz_OUTPUT_NAME test)
+# kde4_add_executable( xyz <source>)
+# set_target_properties( xyz PROPERTIES OUTPUT_NAME ${xyz_OUTPUT_NAME} )  
+#
+macro (KDE4_ADD_MANIFEST _target_NAME)
+    set(x ${_target_NAME}_OUTPUT_NAME)
+    if (${x})
+        set (_executable ${_target_NAME}_LOCATION)
+    else(${x})
+        get_target_property(_executable ${_target_NAME} LOCATION )
+    endif(${x})
+        
+    if (_kdeBootStrapping)
+        set(_cmake_module_path ${CMAKE_SOURCE_DIR}/cmake/modules)
+    else (_kdeBootStrapping)
+        set(_cmake_module_path ${KDE4_INSTALL_DIR}/share/apps/cmake/modules)
+    endif (_kdeBootStrapping)
+       
+    set(_manifest ${_cmake_module_path}/Win32.Manifest.in)
+    #message(STATUS ${_executable} ${_manifest})
+    add_custom_command(
+        TARGET ${_target_NAME}
+        POST_BUILD
+        COMMAND ${MT_EXECUTABLE}
+        ARGS
+           -manifest ${_manifest}
+           -updateresource:${_executable}
+        COMMENT "adding vista trustInfo manifest to ${_target_NAME}"
+   )
+endmacro(KDE4_ADD_MANIFEST) 
+
+
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
    kde4_check_executable_params( _SRCS _nogui _uninst _test ${ARGN})
@@ -823,13 +863,17 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    endif (_test AND NOT KDE4_BUILD_TESTS)
 
    _automoc4_kde4_pre_target_handling(${_target_NAME} _SRCS)
-
+   
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
       add_executable(${_target_NAME} ${_add_executable_param} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files})
    else (KDE4_ENABLE_FINAL)
       add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
+
+   IF (KDE4_ENABLE_UAC_MANIFEST)
+       KDE4_ADD_MANIFEST(${_target_NAME})
+   ENDIF(KDE4_ENABLE_UAC_MANIFEST)
 
    _automoc4_kde4_post_target_handling(${_target_NAME})
 
@@ -895,7 +939,6 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    endif(NOT "${_add_lib_param}" STREQUAL "STATIC")
 
 endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
-
 
 macro (KDE4_ADD_WIDGET_FILES _sources)
    foreach (_current_FILE ${ARGN})

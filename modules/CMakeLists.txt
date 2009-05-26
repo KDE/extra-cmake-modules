@@ -1,5 +1,23 @@
-## install the cmake files
+if (WIN32)
+    OPTION(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
+    if (KDE4_ENABLE_UAC_MANIFEST)
+        if (NOT MT_EXECUTABLE)
+            find_program(MT_EXECUTABLE mt
+                PATHS ${KDEWIN32_INCLUDE_DIR}/../bin
+                NO_DEFAULT_PATH
+            )
+        endif (NOT MT_EXECUTABLE)
+        if (MT_EXECUTABLE)
+            message(STATUS "Found KDE manifest tool at ${MT_EXECUTABLE} ")
+        else (MT_EXECUTABLE)
+            message(STATUS "KDE manifest tool not found, manifest generating for Windows Vista disabled")
+            set (KDE4_ENABLE_UAC_MANIFEST OFF)
+        endif (MT_EXECUTABLE)
+    endif (KDE4_ENABLE_UAC_MANIFEST)
+endif (WIN32)
 
+## install the cmake files
+   
 file(GLOB cmakeFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.cmake")
 
 set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
@@ -15,9 +33,17 @@ install( FILES cmake-modules-styleguide.txt
                FindPyQt.py
                FindSIP.py
                PythonCompile.py
+               Win32.Manifest.in
                ${cmakeFiles} 
          DESTINATION ${module_install_dir}  )
 
+if (KDE4_ENABLE_UAC_MANIFEST)
+    install( FILES cmake-modules-styleguide.txt 
+        Win32.Manifest.in
+         DESTINATION ${module_install_dir}  
+    )
+endif (KDE4_ENABLE_UAC_MANIFEST)
+         
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
 #set(FILES_TO_REMOVE
 #)
