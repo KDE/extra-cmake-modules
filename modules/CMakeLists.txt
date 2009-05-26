@@ -33,13 +33,11 @@ install( FILES cmake-modules-styleguide.txt
                FindPyQt.py
                FindSIP.py
                PythonCompile.py
-               Win32.Manifest.in
                ${cmakeFiles} 
          DESTINATION ${module_install_dir}  )
 
 if (KDE4_ENABLE_UAC_MANIFEST)
-    install( FILES cmake-modules-styleguide.txt 
-        Win32.Manifest.in
+    install( FILES Win32.Manifest.in
          DESTINATION ${module_install_dir}  
     )
 endif (KDE4_ENABLE_UAC_MANIFEST)
