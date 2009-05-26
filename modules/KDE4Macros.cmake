@@ -810,10 +810,10 @@ endmacro (KDE4_ADD_UNIT_TEST)
 #
 # The full solution would be to introduce a kde4_target_link_libraries macro and to 
 # call KDE4_ADD_MANIFEST inside instead of calling in kde4_add_executable. 
-# This would require  patching of *all* places in the KDE sources. where target_link_libraries 
+# This would require patching of *all* places in the KDE sources where target_link_libraries 
 # is used and to change the related docs.
 # 
-# Because yet I found  only 2 locations where this problem occurs (kjs, k3b), the workaround 
+# Because yet I found only 2 locations where this problem occurs (kjs, k3b), the workaround 
 # seems to be a pragmatically solution. 
 # 
 macro (KDE4_ADD_MANIFEST _target_NAME)
