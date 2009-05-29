@@ -790,18 +790,18 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 endmacro (KDE4_ADD_UNIT_TEST)
 
 
-# add a  manifest file to executables. This macro is used by kde4_add_executable
+# add a  manifest file to executables. 
 # 
 # There is a henn-egg problem when a target runtime part is renamed using 
 # the OUTPUT_NAME option of cmake's set_target_properties command. 
 #
 # At now the Makefiles rules creating for manifest adding are performed 
-# *after* the cmake's add_executable command  but *before* an optional 
+# *after* the cmake's add_executable command but *before* an optional 
 # set_target_properties command. 
 # This means that in KDE4_ADD_MANIFEST the LOCATION property contains 
 #  the unchanged runtime part name of the target. :-(
 # 
-# The recently used workaround  is to specify a variable build off the target name followed 
+# The recently used workaround is to specify a variable build off the target name followed 
 # by _OUTPUT_NAME before calling kde4_add_executable as shown in the following example: 
 # 
 # set(xyz_OUTPUT_NAME test)
@@ -816,7 +816,9 @@ endmacro (KDE4_ADD_UNIT_TEST)
 # Because yet I found only 2 locations where this problem occurs (kjs, k3b), the workaround 
 # seems to be a pragmatically solution. 
 # 
-macro (KDE4_ADD_MANIFEST _target_NAME)
+# This macro is an internal macro only used by kde4_add_executable
+#
+macro (_KDE4_ADD_MANIFEST _target_NAME)
     set(x ${_target_NAME}_OUTPUT_NAME)
     if (${x})
         set (_executable ${_target_NAME}_LOCATION)
@@ -835,13 +837,13 @@ macro (KDE4_ADD_MANIFEST _target_NAME)
     add_custom_command(
         TARGET ${_target_NAME}
         POST_BUILD
-        COMMAND ${MT_EXECUTABLE}
+        COMMAND ${KDE4_MT_EXECUTABLE}
         ARGS
            -manifest ${_manifest}
            -updateresource:${_executable}
         COMMENT "adding vista trustInfo manifest to ${_target_NAME}"
    )
-endmacro(KDE4_ADD_MANIFEST) 
+endmacro(_KDE4_ADD_MANIFEST) 
 
 
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
@@ -885,7 +887,7 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    endif (KDE4_ENABLE_FINAL)
 
    IF (KDE4_ENABLE_UAC_MANIFEST)
-       KDE4_ADD_MANIFEST(${_target_NAME})
+       _kde4_add_manifest(${_target_NAME})
    ENDIF(KDE4_ENABLE_UAC_MANIFEST)
 
    _automoc4_kde4_post_target_handling(${_target_NAME})

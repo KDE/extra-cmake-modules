@@ -586,18 +586,16 @@ if (WIN32)
    find_package(KDEWIN32 REQUIRED)
    OPTION(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
    if (KDE4_ENABLE_UAC_MANIFEST)
-      if (NOT MT_EXECUTABLE)
-         find_program(MT_EXECUTABLE mt
-            PATHS ${KDEWIN32_INCLUDE_DIR}/../bin
-            NO_DEFAULT_PATH
-         )
-      endif (NOT MT_EXECUTABLE)
-      if (MT_EXECUTABLE)
-         message(STATUS "Found KDE manifest tool at ${MT_EXECUTABLE} ")
-      else (MT_EXECUTABLE)
+      find_program(KDE4_MT_EXECUTABLE mt
+         PATHS ${KDEWIN32_INCLUDE_DIR}/../bin
+         NO_DEFAULT_PATH
+      )
+      if (KDE4_MT_EXECUTABLE)
+         message(STATUS "Found KDE manifest tool at ${KDE4_MT_EXECUTABLE} ")
+      else (KDE4_MT_EXECUTABLE)
          message(STATUS "KDE manifest tool not found, manifest generating for Windows Vista disabled")
          set (KDE4_ENABLE_UAC_MANIFEST OFF)
-      endif (MT_EXECUTABLE)
+      endif (KDE4_MT_EXECUTABLE)
    endif (KDE4_ENABLE_UAC_MANIFEST)
 endif (WIN32)
 
