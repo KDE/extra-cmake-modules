@@ -851,6 +851,12 @@ IF (QT4_QMAKE_FOUND)
       SET(QT_QTXMLPATTERNS_FOUND FALSE)
     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
 
+    IF(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
+      SET(QT_QTHELP_FOUND TRUE)
+      SET(QT_QTHELP_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtHelp" CACHE STRING "The QtHelp library.")
+    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
+      SET(QT_QTHELP_FOUND FALSE)
+    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
 
     # WTF?  why don't we have frameworks?  :P
     # Set QT_QTUITOOLS_LIBRARY
