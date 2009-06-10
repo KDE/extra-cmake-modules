@@ -1,7 +1,7 @@
 # Create an executable symlink to a Python script.
 # This also sets the target script's permission bits.
 
-MESSAGE(STATUS "Symlinking $ENV{DESTDIR}/${LINK_NAME} to $ENV{DESTDIR}/${TARGET}")
+MESSAGE(STATUS "Symlinking $ENV{DESTDIR}/${LINK_NAME} to ${TARGET}")
 
 GET_FILENAME_COMPONENT(abs_link_name $ENV{DESTDIR}/${LINK_NAME} ABSOLUTE)
 GET_FILENAME_COMPONENT(link_path $ENV{DESTDIR}/${LINK_NAME} PATH)
