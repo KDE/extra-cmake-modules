@@ -25,9 +25,9 @@ if (WIN32)
     FILE(TO_CMAKE_PATH "${CMAKE_LIBRARY_PATH}" _cmakeLibraryPathCmakeStyle)
 
     if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set (LIBRARY_NAME kdewin32d)
+        set (LIBRARY_NAME kdewind kdewin32d)
     else (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set (LIBRARY_NAME kdewin32)
+        set (LIBRARY_NAME kdewin kdewin32)
     endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 
     find_library(KDEWIN32_LIBRARY
