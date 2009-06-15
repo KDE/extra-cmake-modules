@@ -16,7 +16,7 @@
 if (WIN32)
   if (NOT KDEWIN32_DIR)
 
-    find_path(KDEWIN32_INCLUDE_DIR winposix_export.h
+    find_path(KDEWIN32_INCLUDE_DIR kdewin_export.h winposix_export.h
       ${CMAKE_INCLUDE_PATH}
       ${CMAKE_INSTALL_PREFIX}/include
     )
