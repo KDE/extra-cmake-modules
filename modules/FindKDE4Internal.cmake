@@ -583,11 +583,11 @@ endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSI
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 if (WIN32)
-   find_package(KDEWIN32 REQUIRED)
+   find_package(KDEWIN REQUIRED)
    OPTION(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
    if (KDE4_ENABLE_UAC_MANIFEST)
       find_program(KDE4_MT_EXECUTABLE mt
-         PATHS ${KDEWIN32_INCLUDE_DIR}/../bin
+         PATHS ${KDEWIN_INCLUDE_DIR}/../bin
          NO_DEFAULT_PATH
       )
       if (KDE4_MT_EXECUTABLE)
@@ -822,12 +822,12 @@ if (WIN32)
       addExplorerWrapper("kdelibs")
    endif(_kdeBootStrapping)
 
-   set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN32_INCLUDES})
+   set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN_INCLUDES})
 
-   # if we are compiling kdelibs, add KDEWIN32_LIBRARIES explicitely,
+   # if we are compiling kdelibs, add KDEWIN_LIBRARIES explicitely,
    # otherwise they come from KDELibsDependencies.cmake, Alex
    if (_kdeBootStrapping)
-      set( KDE4_KDECORE_LIBS ${KDE4_KDECORE_LIBS} ${KDEWIN32_LIBRARIES} )
+      set( KDE4_KDECORE_LIBS ${KDE4_KDECORE_LIBS} ${KDEWIN_LIBRARIES} )
    endif (_kdeBootStrapping)
 
    # we prefer to use a different postfix for debug libs only on Windows
