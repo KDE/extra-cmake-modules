@@ -583,7 +583,7 @@ endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSI
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 if (WIN32)
-   find_package(KDEWIN REQUIRED)
+   find_package(KDEWin REQUIRED)
    OPTION(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
    if (KDE4_ENABLE_UAC_MANIFEST)
       find_program(KDE4_MT_EXECUTABLE mt
