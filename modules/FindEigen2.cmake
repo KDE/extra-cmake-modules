@@ -1,4 +1,9 @@
 # - Try to find Eigen2 lib
+#
+# This module supports requiring a minimum version, e.g. you can do
+#   find_package(Eigen2 2.0.3)
+# to require version 2.0.3 to newer of Eigen2.
+#
 # Once done this will define
 #
 #  EIGEN2_FOUND - system has eigen lib with correct version
