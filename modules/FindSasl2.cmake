@@ -19,7 +19,9 @@ endif (SASL2_INCLUDE_DIR)
 FIND_PATH(SASL2_INCLUDE_DIR sasl/sasl.h
 )
 
-FIND_LIBRARY(SASL2_LIBRARIES NAMES sasl2
+# libsasl2 add for windows, because the windows package of cyrus-sasl2
+# contains a libsasl2 also for msvc which is not standard conform
+FIND_LIBRARY(SASL2_LIBRARIES NAMES sasl2 libsasl2
 )
 
 include(FindPackageHandleStandardArgs)
