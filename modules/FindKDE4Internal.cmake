@@ -513,7 +513,7 @@ else (_kdeBootStrapping)
    get_target_property(_importedConfigurations  ${KDE4_TARGET_PREFIX}kconfig_compiler IMPORTED_CONFIGURATIONS )
    list(GET _importedConfigurations 0 _firstConfig)
 
-   get_target_property(_KDE4_KCFGC_EXECUTABLE          ${KDE4_TARGET_PREFIX}kconfig_compiler LOCATION_${_firstConfig})
+   get_target_property(KDE4_KCFGC_EXECUTABLE          ${KDE4_TARGET_PREFIX}kconfig_compiler LOCATION_${_firstConfig})
    get_target_property(KDE4_MEINPROC_EXECUTABLE       ${KDE4_TARGET_PREFIX}meinproc4        LOCATION_${_firstConfig})
    get_target_property(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${KDE4_TARGET_PREFIX}makekdewidgets   LOCATION_${_firstConfig})
 
