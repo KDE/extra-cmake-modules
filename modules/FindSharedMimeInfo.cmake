@@ -70,7 +70,7 @@ set(DESTDIR_VALUE \"\$ENV{DESTDIR}\")
 if (NOT DESTDIR_VALUE)
   # under Windows relative paths are used, that's why it runs from CMAKE_INSTALL_PREFIX
   execute_process(COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} ${_xdgmimeDir}
-                  WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
+                  WORKING_DIRECTORY \"${CMAKE_INSTALL_PREFIX}\")
 endif (NOT DESTDIR_VALUE)
 ")
 endmacro (UPDATE_XDG_MIMETYPES)
