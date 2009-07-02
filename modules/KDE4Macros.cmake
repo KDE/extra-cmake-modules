@@ -574,8 +574,6 @@ macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 
    if (_first_SRC)
       set_target_properties(${_target_NAME} PROPERTIES PREFIX "")
-   else (_first_SRC)
-      set_target_properties(${_target_NAME} PROPERTIES PREFIX "lib")
    endif (_first_SRC)
 
    if (WIN32)
