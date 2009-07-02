@@ -102,8 +102,12 @@ MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
         COMMAND ${SIP_EXECUTABLE} ${_sip_tags} ${_sip_x} ${SIP_EXTRA_OPTIONS} -j ${SIP_CONCAT_PARTS} -c ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} ${_sip_includes} ${_abs_module_sip}
         DEPENDS ${_abs_module_sip} ${SIP_EXTRA_FILES_DEPEND}
     )
-    
-    ADD_LIBRARY(${_logical_name} SHARED ${_sip_output_files} )
+    # not sure if type MODULE could be uses anywhere, limit to cygwin for now
+    IF (CYGWIN)
+        ADD_LIBRARY(${_logical_name} MODULE ${_sip_output_files} )
+    ELSE (CYGWIN)
+        ADD_LIBRARY(${_logical_name} SHARED ${_sip_output_files} )
+    ENDIF (CYGWIN)
     TARGET_LINK_LIBRARIES(${_logical_name} ${PYTHON_LIBRARY})
     TARGET_LINK_LIBRARIES(${_logical_name} ${EXTRA_LINK_LIBRARIES})
     SET_TARGET_PROPERTIES(${_logical_name} PROPERTIES PREFIX "" OUTPUT_NAME ${_child_module_name})
