@@ -14,7 +14,7 @@
 
 
 if (WIN32)
-  if (NOT KDEWIN_LIBRARIES)
+  if (NOT KDEWIN_LIBRARY)
 
     find_path(KDEWIN_INCLUDE_DIR kdewin_export.h
       ${CMAKE_INCLUDE_PATH}
@@ -26,9 +26,12 @@ if (WIN32)
 
     if (CMAKE_BUILD_TYPE STREQUAL "Debug")
         set (LIBRARY_NAME kdewind)
-    else (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    else(CMAKE_BUILD_TYPE STREQUAL "Debug")
         set (LIBRARY_NAME kdewin)
     endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if (MSVC_IDE )
+        set (LIBRARY_NAME "kdewind")
+    endif (MSVC_IDE)
 
     find_library(KDEWIN_LIBRARY
       NAMES ${LIBRARY_NAME}
@@ -37,28 +40,27 @@ if (WIN32)
         ${CMAKE_INSTALL_PREFIX}/lib
       NO_SYSTEM_ENVIRONMENT_PATH
     )
+  endif (NOT KDEWIN_LIBRARY)
 
-    if (KDEWIN_LIBRARY AND KDEWIN_INCLUDE_DIR)
-      set(KDEWIN_FOUND TRUE)
-      # add needed system libs
-      set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} user32 shell32 ws2_32 netapi32 userenv)
-  
-      if (MINGW)
-        #mingw compiler
-        set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/mingw ${QT_INCLUDES})
-      else (MINGW)
-        # msvc compiler
-        # add the MS SDK include directory if available
-        file(TO_CMAKE_PATH "$ENV{MSSDK}" MSSDK_DIR)
-        set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/msvc  ${QT_INCLUDES} ${MSSDK_DIR})
-      endif (MINGW)
-  
-    endif (KDEWIN_LIBRARY AND KDEWIN_INCLUDE_DIR)
-    # required for configure
-    set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${KDEWIN_INCLUDES})
-    set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${KDEWIN_LIBRARIES})      
+  if (KDEWIN_LIBRARY AND KDEWIN_INCLUDE_DIR)
+    set(KDEWIN_FOUND TRUE)
+    # add needed system libs
+    set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} user32 shell32 ws2_32 netapi32 userenv)
 
-  endif (NOT KDEWIN_LIBRARIES)
+    if (MINGW)
+      #mingw compiler
+      set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/mingw ${QT_INCLUDES})
+    else (MINGW)
+      # msvc compiler
+      # add the MS SDK include directory if available
+      file(TO_CMAKE_PATH "$ENV{MSSDK}" MSSDK_DIR)
+      set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/msvc  ${QT_INCLUDES} ${MSSDK_DIR})
+    endif (MINGW)
+
+  endif (KDEWIN_LIBRARY AND KDEWIN_INCLUDE_DIR)
+  # required for configure
+  set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${KDEWIN_INCLUDES})
+  set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${KDEWIN_LIBRARIES})      
 
   if (KDEWIN_FOUND)
     if (NOT KDEWIN_FIND_QUIETLY)
