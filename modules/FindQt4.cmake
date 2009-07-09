@@ -727,6 +727,7 @@ IF (QT4_QMAKE_FOUND)
     PATHS
     ${QT_INCLUDE_DIR}/QtWebKit
     ${QT_HEADERS_DIR}/QtWebKit
+    ${QT_LIBRARY_DIR}/QtWebKit.framework/Headers
     NO_DEFAULT_PATH
     )
   
