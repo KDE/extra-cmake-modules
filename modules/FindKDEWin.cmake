@@ -17,6 +17,7 @@ if (WIN32)
   if (NOT KDEWIN_LIBRARY)
 
     find_path(KDEWIN_INCLUDE_DIR kdewin_export.h
+      ${KDE4_INCLUDE_DIR}
       ${CMAKE_INCLUDE_PATH}
       ${CMAKE_INSTALL_PREFIX}/include
     )
@@ -36,6 +37,7 @@ if (WIN32)
     find_library(KDEWIN_LIBRARY
       NAMES ${LIBRARY_NAME}
       PATHS 
+        ${KDE4_LIB_DIR}
         ${_cmakeLibraryPathCmakeStyle}
         ${CMAKE_INSTALL_PREFIX}/lib
       NO_SYSTEM_ENVIRONMENT_PATH
