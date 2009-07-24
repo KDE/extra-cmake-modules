@@ -47,6 +47,18 @@
     ${KDE4_INCLUDE_DIR}
     )
 
+  # find the cmake macro file installed by soprano, relative to the include dir
+  get_filename_component(_SOPRANO_PREFIX ${SOPRANO_INCLUDE_DIR} PATH)
+  # first check in <prefix>/share/soprano/cmake, if it's not found there, check in <prefix>/share/apps/cmake/modules
+  # find_file(_SOPRANO_MACRO_FILE NAMES SopranoAddOntology.cmake HINTS ${_SOPRANO_PREFIX}/share/soprano/cmake )
+  find_file(_SOPRANO_MACRO_FILE NAMES SopranoAddOntology.cmake HINTS ${_SOPRANO_PREFIX}/share/apps/cmake/modules )
+
+  # since which version of soprano is this file installed ?
+  # we should fail if the file is not found but SOPRANO_MIN_VERSION is bigger than this version.
+  if(_SOPRANO_MACRO_FILE)
+    include(${_SOPRANO_MACRO_FILE})
+  endif(_SOPRANO_MACRO_FILE)
+
   find_library_with_debug(SOPRANO_INDEX_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
@@ -208,6 +220,8 @@ mark_as_advanced(SOPRANO_CLIENT_LIBRARIES
                  SOPRANO_LIBRARIES
                  SOPRANO_SERVER_LIBRARIES
                  SOPRANO_INCLUDE_DIR
-                 SOPRANO_PLUGIN_DIR)
+                 SOPRANO_PLUGIN_DIR
+                 _SOPRANO_MACRO_FILE
+                 )
 
 #endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
