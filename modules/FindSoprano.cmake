@@ -47,18 +47,6 @@
     ${KDE4_INCLUDE_DIR}
     )
 
-  # find the cmake macro file installed by soprano, relative to the include dir
-  get_filename_component(_SOPRANO_PREFIX ${SOPRANO_INCLUDE_DIR} PATH)
-  # first check in <prefix>/share/soprano/cmake, if it's not found there, check in <prefix>/share/apps/cmake/modules
-  # find_file(_SOPRANO_MACRO_FILE NAMES SopranoAddOntology.cmake HINTS ${_SOPRANO_PREFIX}/share/soprano/cmake )
-  find_file(_SOPRANO_MACRO_FILE NAMES SopranoAddOntology.cmake HINTS ${_SOPRANO_PREFIX}/share/apps/cmake/modules )
-
-  # since which version of soprano is this file installed ?
-  # we should fail if the file is not found but SOPRANO_MIN_VERSION is bigger than this version.
-  if(_SOPRANO_MACRO_FILE)
-    include(${_SOPRANO_MACRO_FILE})
-  endif(_SOPRANO_MACRO_FILE)
-
   find_library_with_debug(SOPRANO_INDEX_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
@@ -185,6 +173,23 @@
       set(SOPRANO_PLUGIN_VIRTUOSOBACKEND_FOUND TRUE)
       set(_plugins "${_plugins} virtuosobackend")
     endif(EXISTS ${SOPRANO_PLUGIN_DIR}/virtuosobackend.desktop)
+
+    # make sure the Soprano cmake macros are found
+    # We also include it directly for convinience
+    get_filename_component(_SOPRANO_PREFIX ${SOPRANO_INCLUDE_DIR} PATH)
+    find_file(_SOPRANO_MACRO_FILE NAMES SopranoAddOntology.cmake HINTS ${_SOPRANO_PREFIX}/share/soprano/cmake )
+    if(_SOPRANO_MACRO_FILE)
+      # new Soprano > 2.3.0 location
+      include(${_SOPRANO_MACRO_FILE})
+      set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_SOPRANO_PREFIX}/share/soprano/cmake)
+    else(_SOPRANO_MACRO_FILE)
+      # the old Soprano 2.3.0 location
+      find_file(_SOPRANO_MACRO_FILE_OLD NAMES SopranoAddOntology.cmake HINTS ${_SOPRANO_PREFIX}/share/apps/cmake/modules )
+      if(_SOPRANO_MACRO_FILE_OLD)
+        include(${_SOPRANO_MACRO_FILE_OLD})
+        set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_SOPRANO_PREFIX}/share/apps/cmake/modules)
+      endif(_SOPRANO_MACRO_FILE_OLD)
+    endif(_SOPRANO_MACRO_FILE)
 
   endif(Soprano_FOUND)
 
