@@ -173,6 +173,17 @@
       set(SOPRANO_PLUGIN_VIRTUOSOBACKEND_FOUND TRUE)
       set(_plugins "${_plugins} virtuosobackend")
     endif(EXISTS ${SOPRANO_PLUGIN_DIR}/virtuosobackend.desktop)
+    
+    # make sure the Soprano cmake macros are found
+    get_filename_component(_SOPRANO_PREFIX ${SOPRANO_INCLUDE_DIR} PATH)
+    find_file(_SOPRANO_MACRO_FILE NAMES SopranoAddOntology.cmake HINTS ${_SOPRANO_PREFIX}/share/soprano/cmake )
+    if(_SOPRANO_MACRO_FILE)
+      # new Soprano > 2.3.0 location
+      set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_SOPRANO_PREFIX}/share/soprano/cmake)
+    else(_SOPRANO_MACRO_FILE)
+      # the old Soprano 2.3.0 location
+      set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_SOPRANO_PREFIX}/share/apps/cmake/modules)
+    endif(_SOPRANO_MACRO_FILE)
 
   endif(Soprano_FOUND)
 
