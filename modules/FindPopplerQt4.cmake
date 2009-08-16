@@ -27,11 +27,12 @@ endif(NOT WIN32)
 find_path(POPPLER_QT4_INCLUDE_DIR 
   NAMES poppler-qt4.h
   PATH_SUFFIXES poppler/qt4 poppler
-  PATHS ${_PopplerQt4IncDir}
+  HINTS ${_PopplerQt4IncDir}
 )
 
-find_library(POPPLER_QT4_LIBRARIES poppler-qt4
-  ${_PopplerQt4LinkDir}
+find_library(POPPLER_QT4_LIBRARIES 
+  NAMES poppler-qt4
+  HINTS ${_PopplerQt4LinkDir}
 )
 
 if (POPPLER_QT4_INCLUDE_DIR AND POPPLER_QT4_LIBRARIES)
