@@ -1335,7 +1335,7 @@ IF (QT4_QMAKE_FOUND)
     ENDIF (_customName)
   
     ADD_CUSTOM_COMMAND(OUTPUT ${_target}
-        COMMAND ${QT_DBUSCPP2XML_EXECUTABLE} ${_qt4_dbus_options} ${_in_file} > ${_target}
+        COMMAND ${QT_DBUSCPP2XML_EXECUTABLE} ${_qt4_dbus_options} ${_in_file} -o ${_target}
         DEPENDS ${_in_file}
     )
   ENDMACRO(QT4_GENERATE_DBUS_INTERFACE)
