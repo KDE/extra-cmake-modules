@@ -738,11 +738,13 @@ IF (QT4_QMAKE_FOUND)
     ${QT_HEADERS_DIR}/QtXmlPatterns
     NO_DEFAULT_PATH
     )
-  
+
   # Set QT_PHONON_INCLUDE_DIR
-  FIND_PATH(QT_PHONON_INCLUDE_DIR phonon
+  # Qt >= 4.5.3 (or kde-qt-4.5.2 which has the fix too) : Phonon/ClassName is inside include/phonon
+  # With previous versions of Qt, this could not work; upgrade Qt or use a standalone phonon
+  FIND_PATH(QT_PHONON_INCLUDE_DIR Phonon
     PATHS
-    ${QT_INCLUDE_DIR}/phonon
+    ${QT_HEADERS_DIR}/phonon
     NO_DEFAULT_PATH
     )
 
