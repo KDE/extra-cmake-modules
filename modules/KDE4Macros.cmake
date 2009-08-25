@@ -62,7 +62,26 @@ macro (KDE4_ADD_KCFG_FILES _sources )
      if(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
        get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
        get_filename_component(_abs_PATH ${_tmp_FILE} PATH)
+
+       # Get relative path
+       get_filename_component(_rel_PATH ${_current_FILE} PATH)
+
+       # Resolve the relative path from the current source dir
+       if(NOT ${_rel_PATH} STREQUAL "")
+           get_filename_component(_abs_PATH2 ${CMAKE_CURRENT_SOURCE_DIR}/${_rel_PATH} ABSOLUTE)
+       endif(NOT ${_rel_PATH} STREQUAL "")
+
+       # If the resolved relative path is not equal to the absolute one,
+       # that means that we got an absolute path in the first place
+       if(NOT "${_abs_PATH2}" STREQUAL "${_abs_PATH}")
+           set(_rel_PATH "")
+       endif(NOT "${_abs_PATH2}" STREQUAL "${_abs_PATH}")
+
        get_filename_component(_basename ${_tmp_FILE} NAME_WE)
+       # If we had a real relative path, then change the basename accordingly
+       if(NOT ${_rel_PATH} STREQUAL "")
+           set(_basename ${_rel_PATH}/${_basename})
+       endif(NOT ${_rel_PATH} STREQUAL "")
 
        file(READ ${_tmp_FILE} _contents)
        string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILENAME "${_contents}")
@@ -78,10 +97,15 @@ macro (KDE4_ADD_KCFG_FILES _sources )
            message(ERROR "${_kcfg_FILENAME} not found; tried in ${_abs_PATH} and ${CMAKE_CURRENT_BINARY_DIR}")
        endif(NOT EXISTS "${_kcfg_FILE}")
 
+       # make sure the directory exist in the build directory
+       if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH}")
+           file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH})
+       endif(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH}")
+
        # the command for creating the source file from the kcfg file
        add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
           COMMAND ${KDE4_KCFGC_EXECUTABLE}
-          ARGS ${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}
+          ARGS ${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH}
           MAIN_DEPENDENCY ${_tmp_FILE}
           DEPENDS ${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
 
