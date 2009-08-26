@@ -53,32 +53,40 @@ endif(NOT COMMAND _AUTOMOC4_KDE4_PRE_TARGET_HANDLING)
 
 
 macro (KDE4_ADD_KCFG_FILES _sources )
-   if( ${ARGV1} STREQUAL "GENERATE_MOC" )
-      set(_kcfg_generatemoc TRUE)
-   endif( ${ARGV1} STREQUAL "GENERATE_MOC" )
+   foreach (_current_ARG ${ARGN})
+       if( ${_current_ARG} STREQUAL "GENERATE_MOC" )
+           set(_kcfg_generatemoc TRUE)
+       endif( ${_current_ARG} STREQUAL "GENERATE_MOC" )
+
+       if( ${_current_ARG} STREQUAL "USE_RELATIVE_PATH" )
+           set(_kcfg_relativepath TRUE)
+       endif( ${_current_ARG} STREQUAL "USE_RELATIVE_PATH" )
+   endforeach (_current_ARG ${ARGN})
 
    foreach (_current_FILE ${ARGN})
 
-     if(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
+     if(NOT ${_current_FILE} STREQUAL "GENERATE_MOC" AND NOT ${_current_FILE} STREQUAL "USE_RELATIVE_PATH")
        get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
        get_filename_component(_abs_PATH ${_tmp_FILE} PATH)
 
-       # Get relative path
-       get_filename_component(_rel_PATH ${_current_FILE} PATH)
+       if (_kcfg_relativepath) # Process relative path only if the option was set
+           # Get relative path
+           get_filename_component(_rel_PATH ${_current_FILE} PATH)
 
-       # Resolve the relative path from the current source dir
-       if(NOT ${_rel_PATH} STREQUAL "")
-           get_filename_component(_abs_PATH2 ${CMAKE_CURRENT_SOURCE_DIR}/${_rel_PATH} ABSOLUTE)
-       endif(NOT ${_rel_PATH} STREQUAL "")
+           # Resolve the relative path from the current source dir
+           if(NOT ${_rel_PATH} STREQUAL "")
+               get_filename_component(_abs_PATH2 ${CMAKE_CURRENT_SOURCE_DIR}/${_rel_PATH} ABSOLUTE)
+           endif(NOT ${_rel_PATH} STREQUAL "")
 
-       # If the resolved relative path is not equal to the absolute one,
-       # that means that we got an absolute path in the first place
-       if(NOT "${_abs_PATH2}" STREQUAL "${_abs_PATH}")
-           set(_rel_PATH "")
-       endif(NOT "${_abs_PATH2}" STREQUAL "${_abs_PATH}")
+           # If the resolved relative path is not equal to the absolute one,
+           # that means that we got an absolute path in the first place
+           if(NOT "${_abs_PATH2}" STREQUAL "${_abs_PATH}")
+               set(_rel_PATH "")
+           endif(NOT "${_abs_PATH2}" STREQUAL "${_abs_PATH}")
+       endif (_kcfg_relativepath)
 
        get_filename_component(_basename ${_tmp_FILE} NAME_WE)
-       # If we had a real relative path, then change the basename accordingly
+       # If we had a real relative path and we're asked to use it, then change the basename accordingly
        if(NOT ${_rel_PATH} STREQUAL "")
            set(_basename ${_rel_PATH}/${_basename})
        endif(NOT ${_rel_PATH} STREQUAL "")
@@ -116,7 +124,7 @@ macro (KDE4_ADD_KCFG_FILES _sources )
        endif(_kcfg_generatemoc)
 
        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
-     endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
+     endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC" AND NOT ${_current_FILE} STREQUAL "USE_RELATIVE_PATH")
    endforeach (_current_FILE)
 
 endmacro (KDE4_ADD_KCFG_FILES)
