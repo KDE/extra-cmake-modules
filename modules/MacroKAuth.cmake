@@ -35,7 +35,7 @@ macro(kde4_auth_add_helper _HELPER_TARGET _HELPER_ID _HELPER_USER)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf DESTINATION ${SYSCONF_INSTALL_DIR}/dbus-1/system.d/)
 
     configure_file(${KDE4_KAUTH_DBUS_SERVICE_STUB} ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service DESTINATION ${DBUS_PREFIX}/share/dbus-1/system-services )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service DESTINATION ${DBUS_SYSTEM_SERVICES_INSTALL_DIR})
     
 
 endmacro(kde4_auth_add_helper)

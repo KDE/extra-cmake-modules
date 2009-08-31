@@ -104,6 +104,7 @@
 #  XDG_MIME_INSTALL_DIR     - the XDG mimetypes install dir
 #  DBUS_INTERFACES_INSTALL_DIR - the directory where dbus interfaces be installed (default is prefix/share/dbus-1/interfaces)
 #  DBUS_SERVICES_INSTALL_DIR        - the directory where dbus services be installed (default is prefix/share/dbus-1/services )
+#  DBUS_SYSTEM_SERVICES_INSTALL_DIR        - the directory where dbus system services be installed (default is prefix/share/dbus-1/system-services )
 #
 # The following variable is provided, but seem to be unused:
 #  LIBS_HTML_INSTALL_DIR    /share/doc/HTML            CACHE STRING "Is this still used ?")
@@ -664,6 +665,7 @@ if (WIN32)
    set(INFO_INSTALL_DIR          "share/info"                ) # The kde info install dir (default ${SHARE_INSTALL_PREFIX}/info)")
    set(DBUS_INTERFACES_INSTALL_DIR "share/dbus-1/interfaces" ) # The kde dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
    set(DBUS_SERVICES_INSTALL_DIR "share/dbus-1/services"     ) # The kde dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
+   set(DBUS_SYSTEM_SERVICES_INSTALL_DIR "share/dbus-1/system-services"     ) # The kde dbus system services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/system-services)")
 
 else (WIN32)
 
@@ -735,6 +737,7 @@ else (WIN32)
    _set_fancy(INFO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/info"           "The kde info install dir (default ${SHARE_INSTALL_PREFIX}/info)")
    _set_fancy(DBUS_INTERFACES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces" "The kde dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
    _set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services"     "The kde dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
+   _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/system-services"     "The kde dbus system services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/system-services)")
 
 endif (WIN32)
 
