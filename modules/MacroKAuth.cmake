@@ -32,10 +32,10 @@ macro(kde4_auth_add_helper _HELPER_TARGET _HELPER_ID _HELPER_USER)
     install(TARGETS ${HELPER_TARGET} DESTINATION ${LIBEXEC_INSTALL_DIR})
     
     configure_file(${KDE4_KAUTH_DBUS_POLICY_STUB} ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf DESTINATION /etc/dbus-1/system.d/)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf DESTINATION ${SYSCONF_INSTALL_DIR}/dbus-1/system.d/)
 
     configure_file(${KDE4_KAUTH_DBUS_SERVICE_STUB} ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service DESTINATION /usr/share/dbus-1/system-services )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service DESTINATION ${DBUS_PREFIX}/share/dbus-1/system-services )
     
 
 endmacro(kde4_auth_add_helper)
