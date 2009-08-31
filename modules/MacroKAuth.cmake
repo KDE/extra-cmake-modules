@@ -55,7 +55,9 @@ elseif(UNIX)
                        COMMENT "Generating ${HELPER_ID}.policy")
     add_custom_target("actions for ${HELPER_ID}" ALL DEPENDS ${_output})
 
+    if (POLKITQT_FOUND)
     install(FILES ${_output} DESTINATION ${POLICY_FILES_INSTALL_DIR})
+    endif (POLKITQT_FOUND)
 endif()
 
 endmacro(kde4_auth_register_actions)
