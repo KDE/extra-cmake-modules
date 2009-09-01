@@ -44,10 +44,19 @@ endif (POLKITQT_FOUND)
 
 
 # find_path( POLKITQT_INCLUDE_DIR PolicyKit/policykit-qt/Polkit-qt )
-find_path( POLKITQT_INCLUDE_DIR PolicyKit/polkit-qt/ )
+find_path( POLKITQT_INCLUDE_DIR
+    NAMES PolicyKit/polkit-qt/
+    HINTS ${POLKITQT_INCLUDEDIR}
+)
 
-find_library( POLKITQT_CORE_LIBRARY NAMES polkit-qt-core )
-find_library( POLKITQT_GUI_LIBRARY NAMES polkit-qt-gui )
+find_library( POLKITQT_CORE_LIBRARY 
+    NAMES polkit-qt-core 
+    HINTS ${POLKITQT_LIBDIR}
+)
+find_library( POLKITQT_GUI_LIBRARY 
+    NAMES polkit-qt-gui 
+    HINTS ${POLKITQT_LIBDIR}
+)
 
 if (POLKITQT_INCLUDE_DIR AND POLKITQT_CORE_LIBRARY AND POLKITQT_GUI_LIBRARY)
    set(POLKITQT_FOUND TRUE)
