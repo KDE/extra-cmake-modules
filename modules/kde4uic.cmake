@@ -41,7 +41,7 @@ if (KDE4_HEADER)
 endif (KDE4_HEADER)
 
 
-IF (${_uic_CONTENTS})
+IF (_uic_CONTENTS)
   #replace tr218n("") with QString::null to avoid warning from KLocale
   STRING(REGEX REPLACE "tr2i18n\\(\"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
   STRING(REGEX REPLACE "tr2i18n\\(\"\", \"\"\\)" "QString::null" _uic_CONTENTS "${_uic_CONTENTS}" )
