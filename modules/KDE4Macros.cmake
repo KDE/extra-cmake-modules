@@ -73,20 +73,14 @@ macro (KDE4_ADD_KCFG_FILES _sources )
            # Get relative path
            get_filename_component(_rel_PATH ${_current_FILE} PATH)
 
-           # Resolve the relative path from the current source dir
-           if(NOT ${_rel_PATH} STREQUAL "")
-               get_filename_component(_abs_PATH2 ${CMAKE_CURRENT_SOURCE_DIR}/${_rel_PATH} ABSOLUTE)
-           endif(NOT ${_rel_PATH} STREQUAL "")
-
-           # If the resolved relative path is not equal to the absolute one,
-           # that means that we got an absolute path in the first place
-           if(NOT "${_abs_PATH2}" STREQUAL "${_abs_PATH}")
+           if (IS_ABSOLUTE ${_rel_PATH})
+               # We got an absolute path
                set(_rel_PATH "")
-           endif(NOT "${_abs_PATH2}" STREQUAL "${_abs_PATH}")
+           endif (IS_ABSOLUTE ${_rel_PATH})
        endif (_kcfg_relativepath)
 
        get_filename_component(_basename ${_tmp_FILE} NAME_WE)
-       # If we had a real relative path and we're asked to use it, then change the basename accordingly
+       # If we had a relative path and we're asked to use it, then change the basename accordingly
        if(NOT ${_rel_PATH} STREQUAL "")
            set(_basename ${_rel_PATH}/${_basename})
        endif(NOT ${_rel_PATH} STREQUAL "")
