@@ -43,6 +43,7 @@
 #  KDE4_KTEXTEDITOR_LIBRARY - the ktexteditor library
 #  KDE4_NEPOMUK_LIBRARY    - the nepomuk library
 #  KDE4_PLASMA_LIBRARY      - the plasma library
+#  KDE4_KUNITCONVERSION_LIBRARY - the kunitconversion library
 #
 #  KDE4_PLASMA_OPENGL_FOUND  - TRUE if the OpenGL support of Plasma has been found, NOTFOUND otherwise
 #
@@ -73,8 +74,9 @@
 #  KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
 #  KDE4_NEPOMUK_LIBS         - the nepomuk library and all depending libraries
 #  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
+#  KDE4_KUNITCONVERSION_LIBS  - the kunitconversion library and all depending libraries
 #
-# This module defines a bunch of variables used as locations for install directories. 
+# This module defines a bunch of variables used as locations for install directories.
 # They can be relative (to CMAKE_INSTALL_PREFIX) or absolute.
 # Under Windows they are always relative.
 #
@@ -115,7 +117,7 @@
 #  KDE4_BUILD_TESTS  - enable this to build the testcases
 #  KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature
 #  KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR - only present for CMake >= 2.6.3, defaults to TRUE
-#                      If enabled, the package should install its <package>Config.cmake file to 
+#                      If enabled, the package should install its <package>Config.cmake file to
 #                      lib/cmake/<package>/ instead to lib/<package>/cmake
 #
 # It also adds the following macros and functions (from KDE4Macros.cmake)
@@ -261,7 +263,7 @@ cmake_policy(SET CMP0002 OLD)
 cmake_policy(SET CMP0003 OLD)
 # CMP0005: keep escaping behaviour for definitions added via add_definitions()
 cmake_policy(SET CMP0005 OLD)
-# since cmake 2.6.3: NEW behaviour is that setting policies doesn't "escape" the file 
+# since cmake 2.6.3: NEW behaviour is that setting policies doesn't "escape" the file
 # where this is done, macros and functions are executed with the policies as they
 # were when the were defined. Keep the OLD behaviour so we can set the policies here
 # for all KDE software without the big warning
@@ -319,9 +321,9 @@ endif(NOT PERL_FOUND)
 
 
 # Check that we really found everything.
-# If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something wasn't found 
+# If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something wasn't found
 # already above in the other FIND_PACKAGE() calls.
-# If KDE4 was searched without REQUIRED and something in the FIND_PACKAGE() calls above wasn't found, 
+# If KDE4 was searched without REQUIRED and something in the FIND_PACKAGE() calls above wasn't found,
 # then we get here and must check that everything has actually been found. If something is missing,
 # we must not fail with FATAL_ERROR, but only not set KDE4_FOUND.
 
@@ -417,11 +419,11 @@ else (_kdeBootStrapping)
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
    if (WIN32)
-      # we don't want to be forced to set two paths into the build tree 
+      # we don't want to be forced to set two paths into the build tree
       set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/bin )
 
       # on win32 the install dir is determined on runtime not install time
-      # KDELIBS_INSTALL_DIR and QT_INSTALL_DIR are used in KDELibsDependencies.cmake to setup 
+      # KDELIBS_INSTALL_DIR and QT_INSTALL_DIR are used in KDELibsDependencies.cmake to setup
       # kde install paths and library dependencies
       get_filename_component(_DIR ${KDE4_KDECONFIG_EXECUTABLE} PATH )
       get_filename_component(KDE4_INSTALL_DIR ${_DIR} PATH )
@@ -448,7 +450,7 @@ else (_kdeBootStrapping)
 
    # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
    # the library target "kdeui" is exported as "KDE4__kdeui". The "KDE4__" is used as
-   # "namespace" to separate the imported targets from "normal" targets, it is stored in 
+   # "namespace" to separate the imported targets from "normal" targets, it is stored in
    # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
    # Include it to "import" the libraries from kdelibs into the current projects as targets.
    # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
@@ -479,6 +481,7 @@ else (_kdeBootStrapping)
    _kde4_set_lib_variables(KROSSCORE     krosscore     ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KROSSUI       krossui       ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KTEXTEDITOR   ktexteditor   ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KUNITCONVERSION kunitconversion ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(PLASMA        plasma        ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(SOLID         solid         ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(THREADWEAVER  threadweaver  ${KDE4_TARGET_PREFIX})
@@ -504,7 +507,7 @@ else (_kdeBootStrapping)
    set(KDE4_INCLUDE_DIR ${KDE4_INCLUDE_INSTALL_DIR} )
 
 
-   # This setting is currently not recorded in KDELibsDependencies.cmake: 
+   # This setting is currently not recorded in KDELibsDependencies.cmake:
    find_file(KDE4_PLASMA_OPENGL_FOUND plasma/glapplet.h PATHS ${KDE4_INCLUDE_DIR} NO_DEFAULT_PATH)
 
    # now include the file with the imported tools (executable targets)
@@ -745,7 +748,7 @@ endif (WIN32)
 
 
 # The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries are installed.
-# It should also be used when installing applications, since then 
+# It should also be used when installing applications, since then
 # on OS X application bundles will be installed to BUNDLE_INSTALL_DIR.
 # The variable MUST NOT be used for installing plugins.
 # It also MUST NOT be used for executables which are intended to go into sbin/ or libexec/.
@@ -756,7 +759,7 @@ endif (WIN32)
 # This will install libraries correctly under UNIX, OSX and Windows (i.e. dll's go
 # into bin/.
 # Later on it will be possible to extend this for installing OSX frameworks
-# The COMPONENT Devel argument has the effect that static libraries belong to the 
+# The COMPONENT Devel argument has the effect that static libraries belong to the
 # "Devel" install component. If we use this also for all install() commands
 # for header files, it will be possible to install
 #   -everything: make install OR cmake -P cmake_install.cmake
@@ -787,13 +790,13 @@ set(CMAKE_SYSTEM_INCLUDE_PATH ${CMAKE_SYSTEM_INCLUDE_PATH}
 set(CMAKE_SYSTEM_PROGRAM_PATH ${CMAKE_SYSTEM_PROGRAM_PATH}
                               "${KDE4_BIN_INSTALL_DIR}" )
 
-set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH} 
+set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH}
                               "${KDE4_LIB_INSTALL_DIR}" )
 
 # under Windows dlls may be also installed in bin/
 if(WIN32)
-  set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH} 
-                                "${_CMAKE_INSTALL_DIR}/bin" 
+  set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH}
+                                "${_CMAKE_INSTALL_DIR}/bin"
                                 "${CMAKE_INSTALL_PREFIX}/bin" )
 endif(WIN32)
 
@@ -815,8 +818,8 @@ if (WIN32)
       message(FATAL_ERROR "Cygwin is NOT supported, use mingw or MSVC to build KDE4.")
    endif(CYGWIN)
 
-   # limit win32 packaging to kdelibs at now 
-   # don't know if package name, version and notes are always available 
+   # limit win32 packaging to kdelibs at now
+   # don't know if package name, version and notes are always available
    if(_kdeBootStrapping)
       find_package(KDEWIN_Packager)
       if (KDEWIN_PACKAGER_FOUND)
@@ -866,7 +869,7 @@ if (WIN32)
      set(CMAKE_MSVCIDE_RUN_PATH "${PERL_PATH_WINDOWS}\;${QT_BIN_DIR_WINDOWS}"
        CACHE STATIC "MSVC IDE Run path" FORCE)
    endif(MSVC_IDE)
-   
+
    # we don't support anything below w2k and all winapi calls are unicodes
    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINNT=0x0501 -D_WIN32_IE=0x0501 -DUNICODE" )
 endif (WIN32)
@@ -1025,7 +1028,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
      set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
      # As off Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
      set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common")
-     add_definitions (-D_BSD_SOURCE) 
+     add_definitions (-D_BSD_SOURCE)
    endif (CMAKE_SYSTEM_NAME MATCHES Linux)
 
    # gcc under Windows
@@ -1210,7 +1213,7 @@ set(KDE4_INCLUDES
    ${KDE4_INCLUDE_DIR}/KDE
    ${KDE4_PHONON_INCLUDES}
    ${QT_INCLUDES}
-   ${_KDE4_PLATFORM_INCLUDE_DIRS} 
+   ${_KDE4_PLATFORM_INCLUDE_DIRS}
 )
 
 set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DKDE_DEPRECATED_WARNINGS )
