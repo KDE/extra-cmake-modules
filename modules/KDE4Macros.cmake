@@ -522,7 +522,7 @@ endmacro (KDE4_CREATE_FINAL_FILES)
 # If RPATH is not disabled, these scripts are also used but only for consistency, because
 # they don't really influence anything then, because the compiled-in RPATH overrides
 # the LD_LIBRARY_PATH env. variable.
-macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME _type)
+macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME)
    if (UNIX)
       if (APPLE)
          set(_library_path_variable "DYLD_LIBRARY_PATH")
@@ -618,15 +618,14 @@ endmacro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
 # if "NOGUI" is in the list of files, the _nogui argument is set to
 # "NOGUI" (which evaluates to TRUE in cmake), otherwise it is set empty
 # (which evaluates to FALSE in cmake)
-# if "RUN_UNINSTALLED" is in the list of files, the _uninst argument is set to
-# "RUN_UNINSTALLED" (which evaluates to TRUE in cmake), otherwise it is set empty
-# (which evaluates to FALSE in cmake)
+# "RUN_UNINSTALLED" in the list of files is ignored, it is not necessary anymore
+# since KDE 4.2 (with cmake 2.6.2), since then all executables are always built
+# with RPATH pointing into the build dir.
 # if "TEST" is in the list of files, the _test argument is set to
 # "TEST" (which evaluates to TRUE in cmake), otherwise it is set empty
 # (which evaluates to FALSE in cmake)
-macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst _test)
+macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _test)
    set(${_nogui})
-   set(${_uninst})
    set(${_test})
    set(${_output_LIST} ${ARGN})
    list(LENGTH ${_output_LIST} count)
@@ -646,7 +645,6 @@ macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst _test)
    endif (${first_PARAM} STREQUAL "NOGUI")
 
    if (${first_PARAM} STREQUAL "RUN_UNINSTALLED")
-      set(${_uninst} "RUN_UNINSTALLED")
       set(remove 0)
    endif (${first_PARAM} STREQUAL "RUN_UNINSTALLED")
 
@@ -661,7 +659,6 @@ macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst _test)
    endif (${second_PARAM} STREQUAL "NOGUI")
 
    if (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
-      set(${_uninst} "RUN_UNINSTALLED")
       set(remove 0;1)
    endif (${second_PARAM} STREQUAL "RUN_UNINSTALLED")
 
@@ -669,7 +666,6 @@ macro(KDE4_CHECK_EXECUTABLE_PARAMS _output_LIST _nogui _uninst _test)
       set(${_test} "TEST")
       set(remove 0;1)
    endif (${second_PARAM} STREQUAL "TEST")
-
 
 
    if (NOT "${remove}" STREQUAL "NOTFOUND")
@@ -681,7 +677,7 @@ endmacro(KDE4_CHECK_EXECUTABLE_PARAMS)
 
 macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
-   kde4_check_executable_params(_SRCS _nogui _uninst _test ${ARGN})
+   kde4_check_executable_params(_SRCS _nogui _test ${ARGN})
 
    configure_file(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
    set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp PROPERTIES SKIP_AUTOMOC TRUE)
@@ -707,10 +703,10 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
       if (KDE4_ENABLE_FINAL)
          kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
-         kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}"  ${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp ${_separate_files} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
+         kde4_add_executable(${_target_NAME} "${_nogui}" ${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp ${_separate_files} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
 
       else (KDE4_ENABLE_FINAL)
-         kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
+         kde4_add_executable(${_target_NAME} "${_nogui}" ${_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
       endif (KDE4_ENABLE_FINAL)
 
       set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
@@ -731,7 +727,7 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
       set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
 
-      kde4_add_executable(${_target_NAME} "${_nogui}" "${_uninst}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
+      kde4_add_executable(${_target_NAME} "${_nogui}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
       target_link_libraries(${_target_NAME} kdeinit_${_target_NAME})
    endif(WIN32)
 
@@ -875,10 +871,9 @@ endmacro(_KDE4_ADD_MANIFEST)
 
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
-   kde4_check_executable_params( _SRCS _nogui _uninst _test ${ARGN})
+   kde4_check_executable_params( _SRCS _nogui _test ${ARGN})
 
    set(_add_executable_param)
-   set(_type "GUI")
 
    # determine additional parameters for add_executable()
    # for GUI apps, create a bundle on OSX
@@ -892,13 +887,8 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    endif (WIN32)
 
    if (_nogui)
-      set(_type "NOGUI")
       set(_add_executable_param)
    endif (_nogui)
-
-   if (_uninst OR _test)
-      set(_type "RUN_UNINSTALLED ${_type}")
-   endif (_uninst OR _test)
 
    if (_test AND NOT KDE4_BUILD_TESTS)
       set(_add_executable_param ${_add_executable_param} EXCLUDE_FROM_ALL)
@@ -923,7 +913,7 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
       set_target_properties(${_target_NAME} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/\\"")
    endif (_test)
 
-   kde4_handle_rpath_for_executable(${_target_NAME} ${_type})
+   kde4_handle_rpath_for_executable(${_target_NAME})
 
    if (WIN32)
       target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})

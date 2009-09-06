@@ -152,22 +152,28 @@
 #    Create a KDE application in the form of a module loadable via kdeinit.
 #    A library named kdeinit_<name> will be created and a small executable which links to it.
 #    It supports KDE4_ENABLE_FINAL
-#    If the executable has to be run from the buildtree (e.g. unit tests and code generators
-#    used later on when compiling), set the option RUN_UNINSTALLED.
 #    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
 #    application bundles are created, with the NOGUI option no bundles but simple executables
-#    are created. Currently it doesn't have any effect on other platforms.
+#    are created. Under Windows this flag is also necessary to separate between applications
+#    with GUI and without. On other UNIX systems this flag has no effect.
+#    RUN_UNINSTALLED is deprecated and is ignored, for details see the documentation for
+#    KDE4_ADD_EXECUTABLE().
 #
 #  KDE4_ADD_EXECUTABLE (name [NOGUI] [TEST] [RUN_UNINSTALLED] file1 ... fileN)
 #    Equivalent to ADD_EXECUTABLE(), but additionally adds some more features:
 #    -support for KDE4_ENABLE_FINAL
 #    -support for automoc
 #    -automatic RPATH handling
-#    If the executable has to be run from the buildtree (e.g. unit tests and code generators
-#    used later on when compiling), set the option RUN_UNINSTALLED.
 #    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
 #    application bundles are created, with the NOGUI option no bundles but simple executables
-#    are created. Currently it doesn't have any effect on other platforms.
+#    are created. Under Windows this flag is also necessary to separate between applications
+#    with GUI and without. On other UNIX systems this flag has no effect.
+#    The option TEST is for internal use only.
+#    The option RUN_UNINSTALLED is ignored. It was necessary with KDE 4.0 and 4.1 
+#    if the executable had to be run from the build tree. Since KDE 4.2 all
+#    executables can be always run uninstalled (the RPATH of executables which are not
+#    yet installed points since then into the buildtree and is changed
+#    to the proper location when installing, so RUN_UNINSTALLED is not necessary anymore).
 #
 #  KDE4_ADD_LIBRARY (name [STATIC | SHARED | MODULE ] file1 ... fileN)
 #    Equivalent to ADD_LIBRARY(), but additionally it supports KDE4_ENABLE_FINAL
@@ -590,7 +596,7 @@ option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 if (WIN32)
    find_package(KDEWin REQUIRED)
-   OPTION(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
+   option(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
    if (KDE4_ENABLE_UAC_MANIFEST)
       find_program(KDE4_MT_EXECUTABLE mt
          PATHS ${KDEWIN_INCLUDE_DIR}/../bin
