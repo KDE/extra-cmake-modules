@@ -210,6 +210,24 @@
 #   INSTALL_DESTINATION <installdest>, or to <installdest>/<subdir> if
 #   SUBDIR <subdir> is specified.
 #
+#  KDE4_INSTALL_AUTH_ACTIONS( HELPER_ID ACTIONS_FILE )
+#   This macro generates an action file, depending on the backend used, for applications using KAuth.
+#   It accepts the helper id (the DBUS name) and a file containing the actions (check kdelibs/kdecore/auth/example
+#   for file format). The macro will take care of generating the file according to the backend specified, 
+#   and to install it in the right location. This (at the moment) means that on Linux (PolicyKit) a .policy
+#   file will be generated and installed into the policykit action directory (usually /usr/share/PolicyKit/policy/),
+#   and on Mac (Authorization Services) will be added to the system action registry using the native MacOS API during
+#   the install phase
+#
+#  KDE4_INSTALL_AUTH_HELPER_FILES( HELPER_TARGET HELPER_ID HELPER_USER )
+#   This macro adds the needed files for an helper executable meant to be used by applications using KAuth.
+#   It accepts the helper target, the helper ID (the DBUS name) and the user under which the helper will run on.
+#   This macro takes care of generate the needed files, and install them in the right location. This boils down
+#   to a DBus policy to let the helper register on the system bus, and a service file for letting the helper
+#   being automatically activated by the system bus.
+#   *WARNING* You have to install the helper in ${LIBEXEC_INSTALL_DIR} to make sure everything will work.
+#
+#
 #
 #  A note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
 #  the flags for those buildtypes. FindKDE4Internal supports the values
@@ -392,24 +410,26 @@ if (_kdeBootStrapping)
    set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
 
    if (WIN32)
-      set(LIBRARY_OUTPUT_PATH            ${EXECUTABLE_OUTPUT_PATH} )
+      set(LIBRARY_OUTPUT_PATH               ${EXECUTABLE_OUTPUT_PATH} )
       # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-      set(KDE4_KCFGC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
+      set(KDE4_KCFGC_EXECUTABLE             ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
 
-      set(KDE4_MEINPROC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
+      set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
+      set(KDE4_KAUTH_POLICY_GEN_EXECUTABLE  ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kauth-policy-gen )
+      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
    else (WIN32)
-      set(LIBRARY_OUTPUT_PATH            ${CMAKE_BINARY_DIR}/lib )
-      set(KDE4_KCFGC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX}.shell )
-
-      set(KDE4_MEINPROC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4${CMAKE_EXECUTABLE_SUFFIX}.shell )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets${CMAKE_EXECUTABLE_SUFFIX}.shell )
+      set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
+      set(KDE4_KCFGC_EXECUTABLE             ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX}.shell )
+      set(KDE4_KAUTH_POLICY_GEN_EXECUTABLE  ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kauth-policy-gen${CMAKE_EXECUTABLE_SUFFIX}.shell )
+      set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4${CMAKE_EXECUTABLE_SUFFIX}.shell )
+      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets${CMAKE_EXECUTABLE_SUFFIX}.shell )
    endif (WIN32)
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
 
    # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
+   set( _KDE4_KAUTH_POLICY_GEN_EXECUTABLE_DEP kauth-policy-gen)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
    set( _KDE4_MEINPROC_EXECUTABLE_DEP meinproc4)
 
