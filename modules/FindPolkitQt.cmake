@@ -43,10 +43,7 @@ find_library( POLKITQT_GUI_LIBRARY
     NAMES polkit-qt-gui 
     HINTS ${PC_POLKITQT_LIBDIR}
 )
-find_library( POLKITQT_LIBRARIES
-    NAMES polkit-qt-gui polkit-qt-core 
-    HINTS ${PC_POLKITQT_LIBDIR}
-)
+set(POLKITQT_LIBRARIES ${POLKITQT_GUI_LIBRARY} ${POLKITQT_CORE_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
 
