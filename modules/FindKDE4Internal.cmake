@@ -313,7 +313,12 @@ else(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
   set(_REQ_STRING_KDE4_MESSAGE "STATUS")
 endif(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
 
-set(QT_MIN_VERSION "4.5.0")
+# if the minimum Qt requirement is changed, change all occurrence in the
+# following lines
+if( NOT QT_MIN_VERSION OR ${QT_MIN_VERSION} VERSION_LESS "4.5.0" )
+  set(QT_MIN_VERSION "4.5.0")
+endif( NOT QT_MIN_VERSION OR ${QT_MIN_VERSION} VERSION_LESS "4.5.0" )
+
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 find_package(Qt4 ${_REQ_STRING_KDE4})
 
