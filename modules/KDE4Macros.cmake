@@ -1257,6 +1257,8 @@ function(KDE4_INSTALL_AUTH_ACTIONS HELPER_ID ACTIONS_FILE)
                        DEPENDS ${_KDE4_KAUTH_POLICY_GEN_EXECUTABLE_DEP})
     add_custom_target("actions for ${HELPER_ID}" ALL DEPENDS ${_output})
 
+    macro_optional_find_package(PolkitQt)
+
     if (POLKITQT_FOUND)
       install(FILES ${_output} DESTINATION ${POLKITQT_POLICY_FILES_INSTALL_DIR})
     endif (POLKITQT_FOUND)
