@@ -14,6 +14,14 @@
 #   add_executable(myexe main.cpp)
 #   target_link_libraries(myexe ${QT_LIBRARIES})
 #
+# The minimum required version can be specified using the standard find_package()-syntax
+# (see example above). 
+# For compatibility with older versions of FindQt4.cmake it is also possible to
+# set the variable QT_MIN_VERSION to the minimum required version of Qt4 before the 
+# find_package(Qt4) command. 
+# If both are used, the version used in the find_package() command overrides the
+# one from QT_MIN_VERSION.
+#
 # When using the components argument, QT_USE_QT* variables are automatically set
 # for the QT_USE_FILE to pick up.  If one wishes to manually set them, the
 # available ones to set include:
@@ -295,6 +303,23 @@
 # Copyright (c) 2002 Kitware, Inc., Insight Consortium.  All rights reserved.
 # See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
+# Use FIND_PACKAGE( Qt4 COMPONENTS ... ) to enable modules
+IF( Qt4_FIND_COMPONENTS )
+  FOREACH( component ${Qt4_FIND_COMPONENTS} )
+    STRING( TOUPPER ${component} _COMPONENT )
+    SET( QT_USE_${_COMPONENT} 1 )
+  ENDFOREACH( component )
+  
+  # To make sure we don't use QtCore or QtGui when not in COMPONENTS
+  IF(NOT QT_USE_QTCORE)
+    SET( QT_DONT_USE_QTCORE 1 )
+  ENDIF(NOT QT_USE_QTCORE)
+  
+  IF(NOT QT_USE_QTGUI)
+    SET( QT_DONT_USE_QTGUI 1 )
+  ENDIF(NOT QT_USE_QTGUI)
+
+ENDIF( Qt4_FIND_COMPONENTS )
 
 # If Qt3 has already been found, fail.
 IF(QT_QT_LIBRARY)
@@ -378,6 +403,12 @@ FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake qmake4 qmake-qt4 PATHS
 
 IF (QT_QMAKE_EXECUTABLE)
 
+  IF(QT_QMAKE_EXECUTABLE_LAST)
+    STRING(COMPARE NOTEQUAL "${QT_QMAKE_EXECUTABLE_LAST}" "${QT_QMAKE_EXECUTABLE}" QT_QMAKE_CHANGED)
+  ENDIF(QT_QMAKE_EXECUTABLE_LAST)
+
+  SET(QT_QMAKE_EXECUTABLE_LAST "${QT_QMAKE_EXECUTABLE}" CACHE INTERNAL "" FORCE)
+
   SET(QT4_QMAKE_FOUND FALSE)
   
   EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} ARGS "-query QT_VERSION" OUTPUT_VARIABLE QTVERSION)
@@ -416,6 +447,16 @@ IF (QT_QMAKE_EXECUTABLE)
     STRING(REGEX REPLACE "^[0-9]+\\.([0-9])+\\.[0-9]+" "\\1" req_qt_minor_vers "${QT_MIN_VERSION}")
     STRING(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" req_qt_patch_vers "${QT_MIN_VERSION}")
 
+    # Suppport finding at least a particular version, for instance FIND_PACKAGE( Qt4 4.4.3 )
+    # This implementation is a hack to avoid duplicating code and make sure we stay
+    # source-compatible with CMake 2.6.x
+    IF( Qt4_FIND_VERSION )
+      SET( QT_MIN_VERSION ${Qt4_FIND_VERSION} )
+      SET( req_qt_major_vers ${Qt4_FIND_VERSION_MAJOR} )
+      SET( req_qt_minor_vers ${Qt4_FIND_VERSION_MINOR} )
+      SET( req_qt_patch_vers ${Qt4_FIND_VERSION_PATCH} )
+    ENDIF( Qt4_FIND_VERSION )
+
     IF (NOT req_qt_major_vers EQUAL 4)
       MESSAGE( FATAL_ERROR "Invalid Qt version string given: \"${QT_MIN_VERSION}\", major version 4 is required, e.g. \"4.0.1\"")
     ENDIF (NOT req_qt_major_vers EQUAL 4)
@@ -429,12 +470,26 @@ IF (QT_QMAKE_EXECUTABLE)
     MATH(EXPR req_vers "${req_qt_major_vers}*10000 + ${req_qt_minor_vers}*100 + ${req_qt_patch_vers}")
     MATH(EXPR found_vers "${QT_VERSION_MAJOR}*10000 + ${QT_VERSION_MINOR}*100 + ${QT_VERSION_PATCH}")
 
-    IF (found_vers LESS req_vers)
-      SET(QT4_QMAKE_FOUND FALSE)
-      SET(QT4_INSTALLED_VERSION_TOO_OLD TRUE)
-    ELSE (found_vers LESS req_vers)
-      SET(QT4_QMAKE_FOUND TRUE)
-    ENDIF (found_vers LESS req_vers)
+    # Support finding *exactly* a particular version, for instance FIND_PACKAGE( Qt4 4.4.3 EXACT )
+    IF( Qt4_FIND_VERSION_EXACT )
+      IF(found_vers EQUAL req_vers)
+        SET( QT4_QMAKE_FOUND TRUE )
+      ELSE(found_vers EQUAL req_vers)
+        SET( QT4_QMAKE_FOUND FALSE )
+        IF (found_vers LESS req_vers)
+          SET(QT4_INSTALLED_VERSION_TOO_OLD TRUE)
+        ELSE (found_vers LESS req_vers)
+          SET(QT4_INSTALLED_VERSION_TOO_NEW TRUE)
+        ENDIF (found_vers LESS req_vers)
+      ENDIF(found_vers EQUAL req_vers)
+    ELSE( Qt4_FIND_VERSION_EXACT )
+      IF (found_vers LESS req_vers)
+        SET(QT4_QMAKE_FOUND FALSE)
+        SET(QT4_INSTALLED_VERSION_TOO_OLD TRUE)
+      ELSE (found_vers LESS req_vers)
+        SET(QT4_QMAKE_FOUND TRUE)
+      ENDIF (found_vers LESS req_vers)
+    ENDIF( Qt4_FIND_VERSION_EXACT )
   ENDIF (qt_version_tmp)
 
 ENDIF (QT_QMAKE_EXECUTABLE)
@@ -1631,11 +1686,23 @@ IF (QT4_QMAKE_FOUND)
 ELSE(QT4_QMAKE_FOUND)
    
    SET(QT_QMAKE_EXECUTABLE "${QT_QMAKE_EXECUTABLE}-NOTFOUND" CACHE FILEPATH "Invalid qmake found" FORCE)
+   
+   # The code below is overly complex to make sure we do not break compatibility with CMake 2.6.x
+   # For CMake 2.8, it should be simplified by getting rid of QT4_INSTALLED_VERSION_TOO_OLD and 
+   # QT4_INSTALLED_VERSION_TOO_NEW
    IF(Qt4_FIND_REQUIRED)
       IF(QT4_INSTALLED_VERSION_TOO_OLD)
-         MESSAGE(FATAL_ERROR "The installed Qt version ${QTVERSION} is too old, at least version ${QT_MIN_VERSION} is required")
+    IF( Qt4_FIND_VERSION_EXACT )
+      MESSAGE(FATAL_ERROR "The installed Qt version ${QTVERSION} is too old, version ${QT_MIN_VERSION} is required")
+    ELSE( Qt4_FIND_VERSION_EXACT )
+      MESSAGE(FATAL_ERROR "The installed Qt version ${QTVERSION} is too old, at least version ${QT_MIN_VERSION} is required")
+    ENDIF( Qt4_FIND_VERSION_EXACT )
       ELSE(QT4_INSTALLED_VERSION_TOO_OLD)
-         MESSAGE( FATAL_ERROR "Qt qmake not found!")
+      IF( Qt4_FIND_VERSION_EXACT AND QT4_INSTALLED_VERSION_TOO_NEW )
+      MESSAGE(FATAL_ERROR "The installed Qt version ${QTVERSION} is too new, version ${QT_MIN_VERSION} is required")
+    ELSE( Qt4_FIND_VERSION_EXACT AND QT4_INSTALLED_VERSION_TOO_NEW )
+      MESSAGE( FATAL_ERROR "Qt qmake not found!")
+    ENDIF( Qt4_FIND_VERSION_EXACT AND QT4_INSTALLED_VERSION_TOO_NEW )
       ENDIF(QT4_INSTALLED_VERSION_TOO_OLD)
    ELSE(Qt4_FIND_REQUIRED)
       IF(QT4_INSTALLED_VERSION_TOO_OLD AND NOT Qt4_FIND_QUIETLY)
