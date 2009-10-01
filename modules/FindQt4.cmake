@@ -178,6 +178,9 @@
 #  QT_QTXMLPATTERNS_FOUND   True if QtXmlPatterns was found.
 #  QT_PHONON_FOUND          True if phonon was found.
 #
+#  QT_MAC_USE_COCOA    For Mac OS X, its whether Cocoa or Carbon is used.
+#                      In general, this should not be used, but its useful
+#                      when having platform specific code.
 #
 #  QT_DEFINITIONS   Definitions to use when compiling code that uses Qt.
 #                   You do not need to use this if you include QT_USE_FILE.
