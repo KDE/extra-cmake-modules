@@ -114,6 +114,30 @@
 #        the suffix .xml appended.
 #        Options may be given to qdbuscpp2xml, such as those found when executing "qdbuscpp2xml --help"
 #
+#  macro QT4_CREATE_TRANSLATION( qm_files directories ... sources ... 
+#                                ts_files ... OPTIONS ...)
+#        out: qm_files
+#        in:  directories sources ts_files
+#        options: flags to pass to lupdate, such as -extensions to specify
+#        extensions for a directory scan.
+#        generates commands to create .ts (vie lupdate) and .qm
+#        (via lrelease) - files from directories and/or sources. The ts files are 
+#        created and/or updated in the source tree (unless given with full paths).
+#        The qm files are generated in the build tree.
+#        Updating the translations can be done by adding the qm_files
+#        to the source list of your library/executable, so they are
+#        always updated, or by adding a custom target to control when
+#        they get updated/generated.
+#
+#  macro QT4_ADD_TRANSLATION( qm_files ts_files ... )
+#        out: qm_files
+#        in:  ts_files
+#        generates commands to create .qm from .ts - files. The generated
+#        filenames can be found in qm_files. The ts_files
+#        must exists and are not updated in any way.
+#
+#
+#  Below is a detailed list of variables that FindQt4.cmake sets.
 #  QT_FOUND         If false, don't try to use Qt.
 #  QT4_FOUND        If false, don't try to use Qt 4.
 #
@@ -121,6 +145,8 @@
 #  QT_VERSION_MINOR The minor version of Qt found.
 #  QT_VERSION_PATCH The patch version of Qt found.
 #
+#  QT_EDITION               Set to the edition of Qt (i.e. DesktopLight)
+#  QT_EDITION_DESKTOPLIGHT  True if QT_EDITION == DesktopLight
 #  QT_QTCORE_FOUND          True if QtCore was found.
 #  QT_QTGUI_FOUND           True if QtGui was found.
 #  QT_QT3SUPPORT_FOUND      True if Qt3Support was found.
@@ -558,7 +584,7 @@ IF (QT4_QMAKE_FOUND)
   #
   #############################################
   # Save required includes and required_flags variables
-  macro_push_required_vars()
+  MACRO_PUSH_REQUIRED_VARS()
   # Add QT_INCLUDE_DIR to CMAKE_REQUIRED_INCLUDES
   SET(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_INCLUDE_DIR}")
   # On Mac OS X when Qt has framework support, also add the framework path
@@ -570,6 +596,12 @@ IF (QT4_QMAKE_FOUND)
   CHECK_SYMBOL_EXISTS(Q_WS_WIN "QtCore/qglobal.h" Q_WS_WIN)
   CHECK_SYMBOL_EXISTS(Q_WS_QWS "QtCore/qglobal.h" Q_WS_QWS)
   CHECK_SYMBOL_EXISTS(Q_WS_MAC "QtCore/qglobal.h" Q_WS_MAC)
+  IF(Q_WS_MAC)
+    IF(QT_QMAKE_CHANGED)
+      UNSET(QT_MAC_USE_COCOA CACHE)
+    ENDIF(QT_QMAKE_CHANGED)
+    CHECK_SYMBOL_EXISTS(QT_MAC_USE_COCOA "QtCore/qconfig.h" QT_MAC_USE_COCOA)
+  ENDIF(Q_WS_MAC)
 
   IF (QT_QTCOPY_REQUIRED)
      CHECK_SYMBOL_EXISTS(QT_IS_QTCOPY "QtCore/qglobal.h" QT_KDE_QT_COPY)
@@ -579,9 +611,29 @@ IF (QT4_QMAKE_FOUND)
   ENDIF (QT_QTCOPY_REQUIRED)
 
   # Restore CMAKE_REQUIRED_INCLUDES+CMAKE_REQUIRED_FLAGS variables
-  macro_pop_required_vars()
+  MACRO_POP_REQUIRED_VARS()
   #
   #############################################
+
+
+
+  #######################################
+  #
+  #       Qt configuration
+  #
+  #######################################
+  IF(EXISTS "${QT_MKSPECS_DIR}/qconfig.pri")
+    FILE(READ ${QT_MKSPECS_DIR}/qconfig.pri _qconfig_FILE_contents)
+    STRING(REGEX MATCH "QT_CONFIG[^\n]+" QT_QCONFIG "${_qconfig_FILE_contents}")
+    STRING(REGEX MATCH "CONFIG[^\n]+" QT_CONFIG "${_qconfig_FILE_contents}")
+    STRING(REGEX MATCH "EDITION[^\n]+" QT_EDITION "${_qconfig_FILE_contents}")
+    STRING(REGEX MATCH "QT_LIBINFIX[^\n]+" _qconfig_qt_libinfix "${_qconfig_FILE_contents}")
+    STRING(REGEX REPLACE "QT_LIBINFIX *= *([^\n]*)" "\\1" QT_LIBINFIX "${_qconfig_qt_libinfix}")
+  ENDIF(EXISTS "${QT_MKSPECS_DIR}/qconfig.pri")
+  IF("${QT_EDITION}" MATCHES "DesktopLight")
+    SET(QT_EDITION_DESKTOPLIGHT 1)
+  ENDIF("${QT_EDITION}" MATCHES "DesktopLight")
+
 
   IF (QT_USE_FRAMEWORKS)
     SET(QT_DEFINITIONS ${QT_DEFINITIONS} -F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} )
@@ -1447,6 +1499,68 @@ IF (QT4_QMAKE_FOUND)
          ENDIF ( NOT _skip AND EXISTS ${_abs_FILE} )
       ENDFOREACH (_current_FILE)
    ENDMACRO(QT4_AUTOMOC)
+
+   MACRO(QT4_CREATE_TRANSLATION _qm_files)
+      QT4_EXTRACT_OPTIONS(_lupdate_files _lupdate_options ${ARGN})
+      SET(_my_sources)
+      SET(_my_dirs)
+      SET(_my_tsfiles)
+      SET(_ts_pro)
+      FOREACH (_file ${_lupdate_files})
+         GET_FILENAME_COMPONENT(_ext ${_file} EXT)
+         GET_FILENAME_COMPONENT(_abs_FILE ${_file} ABSOLUTE)
+         IF(_ext MATCHES "ts")
+           LIST(APPEND _my_tsfiles ${_abs_FILE})
+         ELSE(_ext MATCHES "ts")
+           IF(NOT _ext)
+             LIST(APPEND _my_dirs ${_abs_FILE})
+           ELSE(NOT _ext)
+             LIST(APPEND _my_sources ${_abs_FILE})
+           ENDIF(NOT _ext)
+         ENDIF(_ext MATCHES "ts")
+      ENDFOREACH(_file)
+      FOREACH(_ts_file ${_my_tsfiles})
+        IF(_my_sources)
+          # make a .pro file to call lupdate on, so we don't make our commands too
+          # long for some systems
+          GET_FILENAME_COMPONENT(_ts_name ${_ts_file} NAME_WE)
+          SET(_ts_pro ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${_ts_name}_lupdate.pro)
+          SET(_pro_srcs)
+          FOREACH(_pro_src ${_my_sources})
+            SET(_pro_srcs "${_pro_srcs} \"${_pro_src}\"")
+          ENDFOREACH(_pro_src ${_my_sources})
+          FILE(WRITE ${_ts_pro} "SOURCES = ${_pro_srcs}")
+        ENDIF(_my_sources)
+        ADD_CUSTOM_COMMAND(OUTPUT ${_ts_file}
+           COMMAND ${QT_LUPDATE_EXECUTABLE}
+           ARGS ${_lupdate_options} ${_ts_pro} ${_my_dirs} -ts ${_ts_file}
+           DEPENDS ${_my_sources} ${_ts_pro})
+      ENDFOREACH(_ts_file)
+      QT4_ADD_TRANSLATION(${_qm_files} ${_my_tsfiles})
+   ENDMACRO(QT4_CREATE_TRANSLATION)
+
+   MACRO(QT4_ADD_TRANSLATION _qm_files)
+      FOREACH (_current_FILE ${ARGN})
+         GET_FILENAME_COMPONENT(_abs_FILE ${_current_FILE} ABSOLUTE)
+         GET_FILENAME_COMPONENT(qm ${_abs_FILE} NAME_WE)
+         GET_SOURCE_FILE_PROPERTY(output_location ${_abs_FILE} OUTPUT_LOCATION)
+         IF(output_location)
+           FILE(MAKE_DIRECTORY "${output_location}")
+           SET(qm "${output_location}/${qm}.qm")
+         ELSE(output_location)
+           SET(qm "${CMAKE_CURRENT_BINARY_DIR}/${qm}.qm")
+         ENDIF(output_location)
+
+         ADD_CUSTOM_COMMAND(OUTPUT ${qm}
+            COMMAND ${QT_LRELEASE_EXECUTABLE}
+            ARGS ${_abs_FILE} -qm ${qm}
+            DEPENDS ${_abs_FILE}
+         )
+         SET(${_qm_files} ${${_qm_files}} ${qm})
+      ENDFOREACH (_current_FILE)
+   ENDMACRO(QT4_ADD_TRANSLATION)
+
+
 
 
 
