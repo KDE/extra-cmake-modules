@@ -509,65 +509,65 @@ IF (QT4_QMAKE_FOUND)
 
   # ask qmake for the library dir
   # Set QT_LIBRARY_DIR
-  IF (NOT QT_LIBRARY_DIR)
+  IF (NOT QT_LIBRARY_DIR OR QT_QMAKE_CHANGED)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QT_INSTALL_LIBS"
       OUTPUT_VARIABLE QT_LIBRARY_DIR_TMP )
     # make sure we have / and not \ as qmake gives on windows
     FILE(TO_CMAKE_PATH "${QT_LIBRARY_DIR_TMP}" QT_LIBRARY_DIR_TMP)
     IF(EXISTS "${QT_LIBRARY_DIR_TMP}")
-      SET(QT_LIBRARY_DIR ${QT_LIBRARY_DIR_TMP} CACHE PATH "Qt library dir")
+      SET(QT_LIBRARY_DIR ${QT_LIBRARY_DIR_TMP} CACHE PATH "Qt library dir" FORCE)
     ELSE(EXISTS "${QT_LIBRARY_DIR_TMP}")
       MESSAGE("Warning: QT_QMAKE_EXECUTABLE reported QT_INSTALL_LIBS as ${QT_LIBRARY_DIR_TMP}")
       MESSAGE("Warning: ${QT_LIBRARY_DIR_TMP} does NOT exist, Qt must NOT be installed correctly.")
     ENDIF(EXISTS "${QT_LIBRARY_DIR_TMP}")
-  ENDIF(NOT QT_LIBRARY_DIR)
+  ENDIF(NOT QT_LIBRARY_DIR OR QT_QMAKE_CHANGED)
   
   IF (APPLE)
     IF (EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
       SET(QT_USE_FRAMEWORKS ON
-        CACHE BOOL "Set to ON if Qt build uses frameworks.")
+        CACHE BOOL "Set to ON if Qt build uses frameworks." FORCE)
     ELSE (EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
       SET(QT_USE_FRAMEWORKS OFF
-        CACHE BOOL "Set to ON if Qt build uses frameworks.")
+        CACHE BOOL "Set to ON if Qt build uses frameworks." FORCE)
     ENDIF (EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
     
     MARK_AS_ADVANCED(QT_USE_FRAMEWORKS)
   ENDIF (APPLE)
   
   # ask qmake for the binary dir
-  IF (QT_LIBRARY_DIR AND NOT QT_BINARY_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_BINARY_DIR  OR  QT_QMAKE_CHANGED)
      EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE}
        ARGS "-query QT_INSTALL_BINS"
        OUTPUT_VARIABLE qt_bins )
      # make sure we have / and not \ as qmake gives on windows
      FILE(TO_CMAKE_PATH "${qt_bins}" qt_bins)
-     SET(QT_BINARY_DIR ${qt_bins} CACHE INTERNAL "")
-  ENDIF (QT_LIBRARY_DIR AND NOT QT_BINARY_DIR)
+     SET(QT_BINARY_DIR ${qt_bins} CACHE INTERNAL "" FORCE)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_BINARY_DIR  OR  QT_QMAKE_CHANGED)
 
   # ask qmake for the include dir
-  IF (QT_LIBRARY_DIR AND NOT QT_HEADERS_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_HEADERS_DIR  OR  QT_QMAKE_CHANGED)
       EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
         ARGS "-query QT_INSTALL_HEADERS" 
         OUTPUT_VARIABLE qt_headers ) 
       # make sure we have / and not \ as qmake gives on windows
       FILE(TO_CMAKE_PATH "${qt_headers}" qt_headers)
-      SET(QT_HEADERS_DIR ${qt_headers} CACHE INTERNAL "")
-  ENDIF(QT_LIBRARY_DIR AND NOT QT_HEADERS_DIR)
+      SET(QT_HEADERS_DIR ${qt_headers} CACHE INTERNAL "" FORCE)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_HEADERS_DIR  OR  QT_QMAKE_CHANGED)
 
 
   # ask qmake for the documentation directory
-  IF (QT_LIBRARY_DIR AND NOT QT_DOC_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_DOC_DIR  OR  QT_QMAKE_CHANGED)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QT_INSTALL_DOCS"
       OUTPUT_VARIABLE qt_doc_dir )
     # make sure we have / and not \ as qmake gives on windows
     FILE(TO_CMAKE_PATH "${qt_doc_dir}" qt_doc_dir)
-    SET(QT_DOC_DIR ${qt_doc_dir} CACHE PATH "The location of the Qt docs")
-  ENDIF (QT_LIBRARY_DIR AND NOT QT_DOC_DIR)
+    SET(QT_DOC_DIR ${qt_doc_dir} CACHE PATH "The location of the Qt docs" FORCE)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_DOC_DIR  OR  QT_QMAKE_CHANGED)
 
   # ask qmake for the mkspecs directory
-  IF (QT_LIBRARY_DIR AND NOT QT_MKSPECS_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_MKSPECS_DIR  OR  QT_QMAKE_CHANGED)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QMAKE_MKSPECS"
       OUTPUT_VARIABLE qt_mkspecs_dirs )
@@ -580,27 +580,27 @@ IF (QT4_QMAKE_FOUND)
     FIND_PATH(QT_MKSPECS_DIR qconfig.pri PATHS ${qt_mkspecs_dirs}
       DOC "The location of the Qt mkspecs containing qconfig.pri"
       NO_DEFAULT_PATH )
-  ENDIF (QT_LIBRARY_DIR AND NOT QT_MKSPECS_DIR)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_MKSPECS_DIR  OR  QT_QMAKE_CHANGED)
 
   # ask qmake for the plugins directory
-  IF (QT_LIBRARY_DIR AND NOT QT_PLUGINS_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_PLUGINS_DIR  OR  QT_QMAKE_CHANGED)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QT_INSTALL_PLUGINS"
       OUTPUT_VARIABLE qt_plugins_dir )
     # make sure we have / and not \ as qmake gives on windows
     FILE(TO_CMAKE_PATH "${qt_plugins_dir}" qt_plugins_dir)
-    SET(QT_PLUGINS_DIR ${qt_plugins_dir} CACHE PATH "The location of the Qt plugins")
-  ENDIF (QT_LIBRARY_DIR AND NOT QT_PLUGINS_DIR)
+    SET(QT_PLUGINS_DIR ${qt_plugins_dir} CACHE PATH "The location of the Qt plugins" FORCE)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_PLUGINS_DIR  OR  QT_QMAKE_CHANGED)
 
   # ask qmake for the translations directory
-  IF (QT_LIBRARY_DIR AND NOT QT_TRANSLATIONS_DIR)
+  IF (QT_LIBRARY_DIR AND NOT QT_TRANSLATIONS_DIR  OR  QT_QMAKE_CHANGED)
     EXEC_PROGRAM( ${QT_QMAKE_EXECUTABLE}
       ARGS "-query QT_INSTALL_TRANSLATIONS"
       OUTPUT_VARIABLE qt_translations_dir )
     # make sure we have / and not \ as qmake gives on windows
     FILE(TO_CMAKE_PATH "${qt_translations_dir}" qt_translations_dir)
     SET(QT_TRANSLATIONS_DIR ${qt_translations_dir} CACHE PATH "The location of the Qt translations" FORCE)
-  ENDIF (QT_LIBRARY_DIR AND NOT QT_TRANSLATIONS_DIR)
+  ENDIF (QT_LIBRARY_DIR AND NOT QT_TRANSLATIONS_DIR  OR  QT_QMAKE_CHANGED)
 
   ########################################
   #
@@ -1200,21 +1200,29 @@ IF (QT4_QMAKE_FOUND)
   #######################################
 
 
-  # find moc and uic using qmake
-  QT_QUERY_QMAKE(QT_MOC_EXECUTABLE_INTERNAL "QMAKE_MOC")
-  QT_QUERY_QMAKE(QT_UIC_EXECUTABLE_INTERNAL "QMAKE_UIC")
+  IF(QT_QMAKE_CHANGED)
+    SET(QT_UIC_EXECUTABLE NOTFOUND)
+    SET(QT_MOC_EXECUTABLE NOTFOUND)
+    SET(QT_UIC3_EXECUTABLE NOTFOUND)
+    SET(QT_RCC_EXECUTABLE NOTFOUND)
+    SET(QT_DBUSCPP2XML_EXECUTABLE NOTFOUND)
+    SET(QT_DBUSXML2CPP_EXECUTABLE NOTFOUND)
+    SET(QT_LUPDATE_EXECUTABLE NOTFOUND)
+    SET(QT_LRELEASE_EXECUTABLE NOTFOUND)
+    SET(QT_QCOLLECTIONGENERATOR_EXECUTABLE NOTFOUND)
+  ENDIF(QT_QMAKE_CHANGED)
+  
+  FIND_PROGRAM(QT_MOC_EXECUTABLE
+    NAMES moc-qt4 moc
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
+    )
 
-  # make sure we have / and not \ as qmake gives on windows
-  FILE(TO_CMAKE_PATH 
-    "${QT_MOC_EXECUTABLE_INTERNAL}" QT_MOC_EXECUTABLE_INTERNAL)
-  # make sure we have / and not \ as qmake gives on windows
-  FILE(TO_CMAKE_PATH 
-    "${QT_UIC_EXECUTABLE_INTERNAL}" QT_UIC_EXECUTABLE_INTERNAL)
-
-  SET(QT_MOC_EXECUTABLE 
-    ${QT_MOC_EXECUTABLE_INTERNAL} CACHE FILEPATH "The moc executable")
-  SET(QT_UIC_EXECUTABLE 
-    ${QT_UIC_EXECUTABLE_INTERNAL} CACHE FILEPATH "The uic executable")
+  FIND_PROGRAM(QT_UIC_EXECUTABLE
+    NAMES uic-qt4 uic
+    PATHS ${QT_BINARY_DIR}
+    NO_DEFAULT_PATH
+    )
 
   FIND_PROGRAM(QT_UIC3_EXECUTABLE
     NAMES uic3
@@ -1681,7 +1689,8 @@ IF (QT4_QMAKE_FOUND)
     IF( NOT Qt4_FIND_QUIETLY)
       MESSAGE(STATUS "Found Qt-Version ${QTVERSION} (using ${QT_QMAKE_EXECUTABLE})")
     ENDIF( NOT Qt4_FIND_QUIETLY)
-  ELSE( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND QT_UIC_EXECUTABLE AND QT_RCC_EXECUTABLE)
+  ELSE( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND 
+      QT_UIC_EXECUTABLE AND QT_RCC_EXECUTABLE AND QT_QTCORE_LIBRARY)
     SET( QT4_FOUND "NO")
     SET(QT_QMAKE_EXECUTABLE "${QT_QMAKE_EXECUTABLE}-NOTFOUND" CACHE FILEPATH "Invalid qmake found" FORCE)
     IF( Qt4_FIND_REQUIRED)
