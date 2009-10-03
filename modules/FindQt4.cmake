@@ -1294,7 +1294,7 @@ IF (QT4_QMAKE_FOUND)
       ENDIF ("${_currentArg}" STREQUAL "OPTIONS")
     ENDFOREACH(_currentArg) 
   ENDMACRO (QT4_EXTRACT_OPTIONS)
-
+  
   # macro used to create the names of output files preserving relative dirs
   MACRO (QT4_MAKE_OUTPUT_FILE infile prefix ext outfile )
     STRING(LENGTH ${CMAKE_CURRENT_BINARY_DIR} _binlength)
@@ -1346,29 +1346,45 @@ IF (QT4_QMAKE_FOUND)
 
   ENDMACRO(QT4_GET_MOC_FLAGS)
 
+  # helper macro to set up a moc rule
+  MACRO (QT4_CREATE_MOC_COMMAND infile outfile moc_flags moc_options)
+    # For Windows, create a parameters file to work around command line length limit
+    IF (WIN32)
+      # Pass the parameters in a file.  Set the working directory to
+      # be that containing the parameters file and reference it by
+      # just the file name.  This is necessary because the moc tool on
+      # MinGW builds does not seem to handle spaces in the path to the
+      # file given with the @ syntax.
+      GET_FILENAME_COMPONENT(_moc_outfile_name "${outfile}" NAME)
+      GET_FILENAME_COMPONENT(_moc_outfile_dir "${outfile}" PATH)
+      IF(_moc_outfile_dir)
+        SET(_moc_working_dir WORKING_DIRECTORY ${_moc_outfile_dir})
+      ENDIF(_moc_outfile_dir)
+      SET (_moc_parameters_file ${outfile}_parameters)
+      SET (_moc_parameters ${moc_flags} ${moc_options} -o "${outfile}" "${infile}")
+      FILE (REMOVE ${_moc_parameters_file})
+      FOREACH(arg ${_moc_parameters})
+        FILE (APPEND ${_moc_parameters_file} "${arg}\n")
+      ENDFOREACH(arg)
+      ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
+                         COMMAND ${QT_MOC_EXECUTABLE} @${_moc_outfile_name}_parameters
+                         DEPENDS ${infile}
+                         ${_moc_working_dir}
+                         VERBATIM)
+    ELSE (WIN32)     
+      ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
+                         COMMAND ${QT_MOC_EXECUTABLE}
+                         ARGS ${moc_flags} ${moc_options} -o ${outfile} ${infile}
+                         DEPENDS ${infile})     
+    ENDIF (WIN32)
+  ENDMACRO (QT4_CREATE_MOC_COMMAND)
+
   
   MACRO (QT4_GENERATE_MOC infile outfile )
-  # get include dirs
-     QT4_GET_MOC_FLAGS(moc_includes)
-
+  # get include dirs and flags
+     QT4_GET_MOC_FLAGS(moc_flags)
      GET_FILENAME_COMPONENT(abs_infile ${infile} ABSOLUTE)
-
-     IF (MSVC_IDE)
-        SET (_moc_parameter_file ${outfile}_parameters)
-        SET (_moc_param "${moc_includes} \n-o${outfile} \n${abs_infile}")
-        STRING(REGEX REPLACE ";-I;" "\\n-I" _moc_param "${_moc_param}")
-        FILE (WRITE ${_moc_parameter_file} "${_moc_param}")
-        ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
-          COMMAND ${QT_MOC_EXECUTABLE}
-          ARGS @"${_moc_parameter_file}"
-          DEPENDS ${abs_infile})
-     ELSE (MSVC_IDE)
-        ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
-           COMMAND ${QT_MOC_EXECUTABLE}
-           ARGS ${moc_includes} -o ${outfile} ${abs_infile}
-           DEPENDS ${abs_infile})
-     ENDIF (MSVC_IDE)
-
+     QT4_CREATE_MOC_COMMAND(${abs_infile} ${outfile} "${moc_flags}" "")
      SET_SOURCE_FILES_PROPERTIES(${outfile} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
 
      MACRO_ADD_FILE_DEPENDENCIES(${abs_infile} ${outfile})
@@ -1379,18 +1395,13 @@ IF (QT4_QMAKE_FOUND)
 
   MACRO (QT4_WRAP_CPP outfiles )
     # get include dirs
-    QT4_GET_MOC_FLAGS(moc_includes)
+    QT4_GET_MOC_FLAGS(moc_flags)
     QT4_EXTRACT_OPTIONS(moc_files moc_options ${ARGN})
 
     FOREACH (it ${moc_files})
       GET_FILENAME_COMPONENT(it ${it} ABSOLUTE)
-      GET_FILENAME_COMPONENT(outfile ${it} NAME_WE)
-
-      SET(outfile ${CMAKE_CURRENT_BINARY_DIR}/moc_${outfile}.cxx)
-      ADD_CUSTOM_COMMAND(OUTPUT ${outfile}
-        COMMAND ${QT_MOC_EXECUTABLE}
-        ARGS ${moc_includes} ${moc_options} -o ${outfile} ${it}
-        DEPENDS ${it})
+      QT4_MAKE_OUTPUT_FILE(${it} moc_ cxx outfile)
+      QT4_CREATE_MOC_COMMAND(${it} ${outfile} "${moc_flags}" "${moc_options}")
       SET(${outfiles} ${${outfiles}} ${outfile})
     ENDFOREACH(it)
 
@@ -1578,16 +1589,14 @@ IF (QT4_QMAKE_FOUND)
                FOREACH (_current_MOC_INC ${_match})
                   STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
 
-                  GET_filename_component(_basename ${_current_MOC} NAME_WE)
-   #               SET(_header ${CMAKE_CURRENT_SOURCE_DIR}/${_basename}.h)
-                  SET(_header ${_abs_PATH}/${_basename}.h)
+                  GET_FILENAME_COMPONENT(_basename ${_current_MOC} NAME_WE)
+                  IF(EXISTS ${_abs_PATH}/${_basename}.hpp)
+                    SET(_header ${_abs_PATH}/${_basename}.hpp)
+                  ELSE(EXISTS ${_abs_PATH}/${_basename}.hpp)
+                    SET(_header ${_abs_PATH}/${_basename}.h)
+                  ENDIF(EXISTS ${_abs_PATH}/${_basename}.hpp)
                   SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_current_MOC})
-                  ADD_CUSTOM_COMMAND(OUTPUT ${_moc}
-                     COMMAND ${QT_MOC_EXECUTABLE}
-                     ARGS ${_moc_INCS} ${_header} -o ${_moc}
-                     DEPENDS ${_header}
-                  )
-
+                  QT4_CREATE_MOC_COMMAND(${_header} ${_moc} "${_moc_INCS}" "")
                   MACRO_ADD_FILE_DEPENDENCIES(${_abs_FILE} ${_moc})
                ENDFOREACH (_current_MOC_INC)
             ENDIF(_match)
