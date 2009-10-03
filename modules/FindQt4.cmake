@@ -53,7 +53,8 @@
 #  
 #  macro QT4_WRAP_CPP(outfiles inputfile ... OPTIONS ...)
 #        create moc code from a list of files containing Qt class with
-#        the Q_OBJECT declaration.  Options may be given to moc, such as those found
+#        the Q_OBJECT declaration.  Per-direcotry preprocessor definitions 
+#        are also added.  Options may be given to moc, such as those found
 #        when executing "moc -help".  
 #
 #  macro QT4_WRAP_UI(outfiles inputfile ... OPTIONS ...)
@@ -349,6 +350,7 @@ MACRO(QT_CHECK_FLAG_EXISTS FLAG VAR DOC)
       CACHE STRING "Flags used by the compiler during ${DOC} builds." FORCE)
   ENDIF(NOT ${VAR} MATCHES "${FLAG}")
 ENDMACRO(QT_CHECK_FLAG_EXISTS FLAG VAR)
+
 QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_RELWITHDEBINFO "Release with Debug Info")
 QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_RELEASE "release")
 QT_CHECK_FLAG_EXISTS(-DQT_NO_DEBUG CMAKE_CXX_FLAGS_MINSIZEREL "release minsize")
@@ -1293,13 +1295,48 @@ IF (QT4_QMAKE_FOUND)
     ENDFOREACH(_currentArg) 
   ENDMACRO (QT4_EXTRACT_OPTIONS)
 
-  MACRO (QT4_GET_MOC_INC_DIRS _moc_INC_DIRS)
-     SET(${_moc_INC_DIRS})
+  # macro used to create the names of output files preserving relative dirs
+  MACRO (QT4_MAKE_OUTPUT_FILE infile prefix ext outfile )
+    STRING(LENGTH ${CMAKE_CURRENT_BINARY_DIR} _binlength)
+    STRING(LENGTH ${infile} _infileLength)
+    SET(_checkinfile ${CMAKE_CURRENT_SOURCE_DIR})
+    IF(_infileLength GREATER _binlength)
+      STRING(SUBSTRING "${infile}" 0 ${_binlength} _checkinfile)
+      IF(_checkinfile STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+        FILE(RELATIVE_PATH rel ${CMAKE_CURRENT_BINARY_DIR} ${infile})
+      ELSE(_checkinfile STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+        FILE(RELATIVE_PATH rel ${CMAKE_CURRENT_SOURCE_DIR} ${infile})
+      ENDIF(_checkinfile STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+    ELSE(_infileLength GREATER _binlength)
+      FILE(RELATIVE_PATH rel ${CMAKE_CURRENT_SOURCE_DIR} ${infile})
+    ENDIF(_infileLength GREATER _binlength)
+    IF(WIN32 AND rel MATCHES "^[a-zA-Z]:") # absolute path 
+      STRING(REGEX REPLACE "^([a-zA-Z]):(.*)$" "\\1_\\2" rel "${rel}")
+    ENDIF(WIN32 AND rel MATCHES "^[a-zA-Z]:") 
+    SET(_outfile "${CMAKE_CURRENT_BINARY_DIR}/${rel}")
+    STRING(REPLACE ".." "__" _outfile ${_outfile})
+    GET_FILENAME_COMPONENT(outpath ${_outfile} PATH)
+    GET_FILENAME_COMPONENT(_outfile ${_outfile} NAME_WE)
+    FILE(MAKE_DIRECTORY ${outpath})
+    SET(${outfile} ${outpath}/${prefix}${_outfile}.${ext})
+  ENDMACRO (QT4_MAKE_OUTPUT_FILE )
+
+  MACRO (QT4_GET_MOC_FLAGS _moc_flags)
+     SET(${_moc_flags})
      GET_DIRECTORY_PROPERTY(_inc_DIRS INCLUDE_DIRECTORIES)
 
      FOREACH(_current ${_inc_DIRS})
-        SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-I" ${_current})
+        SET(${_moc_flags} ${${_moc_flags}} "-I${_current}")
      ENDFOREACH(_current ${_inc_DIRS})
+     
+     GET_DIRECTORY_PROPERTY(_defines COMPILE_DEFINITIONS)
+     FOREACH(_current ${_defines})
+        SET(${_moc_flags} ${${_moc_flags}} "-D${_current}")
+     ENDFOREACH(_current ${_defines})
+
+     IF(Q_WS_WIN)
+       SET(${_moc_flags} ${${_moc_flags}} -DWIN32)
+     ENDIF(Q_WS_WIN)
 
      # if Qt is installed only as framework, add -F /library/Frameworks to the moc arguments
      # otherwise moc can't find the headers in the framework include dirs
@@ -1307,12 +1344,12 @@ IF (QT4_QMAKE_FOUND)
         SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-F/Library/Frameworks")
      ENDIF(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
 
-  ENDMACRO(QT4_GET_MOC_INC_DIRS)
+  ENDMACRO(QT4_GET_MOC_FLAGS)
 
-
+  
   MACRO (QT4_GENERATE_MOC infile outfile )
   # get include dirs
-     QT4_GET_MOC_INC_DIRS(moc_includes)
+     QT4_GET_MOC_FLAGS(moc_includes)
 
      GET_FILENAME_COMPONENT(abs_infile ${infile} ABSOLUTE)
 
@@ -1342,7 +1379,7 @@ IF (QT4_QMAKE_FOUND)
 
   MACRO (QT4_WRAP_CPP outfiles )
     # get include dirs
-    QT4_GET_MOC_INC_DIRS(moc_includes)
+    QT4_GET_MOC_FLAGS(moc_includes)
     QT4_EXTRACT_OPTIONS(moc_files moc_options ${ARGN})
 
     FOREACH (it ${moc_files})
@@ -1515,7 +1552,7 @@ IF (QT4_QMAKE_FOUND)
   ENDMACRO(QT4_ADD_DBUS_ADAPTOR)
 
    MACRO(QT4_AUTOMOC)
-      QT4_GET_MOC_INC_DIRS(_moc_INCS)
+      QT4_GET_MOC_FLAGS(_moc_INCS)
 
       SET(_matching_FILES )
       FOREACH (_current_FILE ${ARGN})
@@ -1536,7 +1573,7 @@ IF (QT4_QMAKE_FOUND)
 
             GET_FILENAME_COMPONENT(_abs_PATH ${_abs_FILE} PATH)
 
-            STRING(REGEX MATCHALL "#include +[^ ]+\\.moc[\">]" _match "${_contents}")
+            STRING(REGEX MATCHALL "# *include +[^ ]+\\.moc[\">]" _match "${_contents}")
             IF(_match)
                FOREACH (_current_MOC_INC ${_match})
                   STRING(REGEX MATCH "[^ <\"]+\\.moc" _current_MOC "${_current_MOC_INC}")
@@ -1629,7 +1666,8 @@ IF (QT4_QMAKE_FOUND)
   ######################################
 
   # if the includes,libraries,moc,uic and rcc are found then we have it
-  IF( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND QT_UIC_EXECUTABLE AND QT_RCC_EXECUTABLE)
+  IF( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND 
+      QT_UIC_EXECUTABLE AND QT_RCC_EXECUTABLE AND QT_QTCORE_LIBRARY)
     SET( QT4_FOUND "YES" )
     IF( NOT Qt4_FIND_QUIETLY)
       MESSAGE(STATUS "Found Qt-Version ${QTVERSION} (using ${QT_QMAKE_EXECUTABLE})")
@@ -1655,15 +1693,17 @@ IF (QT4_QMAKE_FOUND)
       ENDIF( NOT QT_RCC_EXECUTABLE )
       MESSAGE( FATAL_ERROR "Qt libraries, includes, moc, uic or/and rcc NOT found!")
     ENDIF( Qt4_FIND_REQUIRED)
-  ENDIF( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND QT_UIC_EXECUTABLE AND  QT_RCC_EXECUTABLE)
+  ENDIF( QT_LIBRARY_DIR AND QT_INCLUDE_DIR AND QT_MOC_EXECUTABLE AND 
+         QT_UIC_EXECUTABLE AND  QT_RCC_EXECUTABLE AND QT_QTCORE_LIBRARY)
+  
   SET(QT_FOUND ${QT4_FOUND})
 
 
-  #######################################
+  ###############################################
   #
-  #       System dependent settings  
+  #       configuration/system dependent settings  
   #
-  #######################################
+  ###############################################
   # for unix add X11 stuff
   IF(UNIX)
     # on OS X X11 may not be required
