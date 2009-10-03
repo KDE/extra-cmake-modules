@@ -159,7 +159,7 @@ endmacro (KDE4_ADD_UI_FILES)
 #usage: KDE4_ADD_UI3_FILES(foo_SRCS ${ui_files})
 macro (KDE4_ADD_UI3_FILES _sources )
 
-   qt4_get_moc_inc_dirs(_moc_INCS)
+   qt4_get_moc_flags(_moc_INCS)
 
    foreach (_current_FILE ${ARGN})
 
