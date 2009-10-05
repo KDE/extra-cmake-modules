@@ -155,11 +155,39 @@ macro (KDE4_ADD_UI_FILES _sources )
 endmacro (KDE4_ADD_UI_FILES)
 
 
+# this is basically a copy of the qt4_get_moc_flags() macros from FindQt4.cmake
+# which is for internal use only, so we should not use it here:
+macro (_KDE4_GET_MOC_FLAGS _moc_flags)
+   set(${_moc_flags})
+   get_directory_property(_inc_DIRS INCLUDE_DIRECTORIES)
+
+   foreach(_current ${_inc_DIRS})
+      set(${_moc_flags} ${${_moc_flags}} "-I${_current}")
+   endforeach(_current ${_inc_DIRS})
+
+   get_directory_property(_defines COMPILE_DEFINITIONS)
+   foreach(_current ${_defines})
+      set(${_moc_flags} ${${_moc_flags}} "-D${_current}")
+   endforeach(_current ${_defines})
+
+   if(Q_WS_WIN)
+      set(${_moc_flags} ${${_moc_flags}} -DWIN32)
+   endif(Q_WS_WIN)
+
+   # if Qt is installed only as framework, add -F /library/Frameworks to the moc arguments
+   # otherwise moc can't find the headers in the framework include dirs
+   if(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
+      set(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-F/Library/Frameworks")
+   endif(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
+
+endmacro(_KDE4_GET_MOC_FLAGS)
+
+
 #create the implementation files from the ui files and add them to the list of sources
 #usage: KDE4_ADD_UI3_FILES(foo_SRCS ${ui_files})
 macro (KDE4_ADD_UI3_FILES _sources )
 
-   qt4_get_moc_flags(_moc_INCS)
+   _kde4_get_moc_flags(_moc_INCS)
 
    foreach (_current_FILE ${ARGN})
 

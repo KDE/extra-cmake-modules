@@ -53,18 +53,18 @@ ENDIF (NOT _macroLogFeatureAlreadyIncluded)
 
 MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _comments)
 
-   SET(_required "${ARGV4}")
+   STRING(TOUPPER "${ARGV4}" _required)
    SET(_minvers "${ARGV5}")
    SET(_comments "${ARGV6}")
-
+   
    IF (${_var})
      SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/EnabledFeatures.txt)
    ELSE (${_var})
-     IF (${_required} MATCHES "[Tt][Rr][Uu][Ee]")
+     IF ("${_required}" STREQUAL "TRUE")
        SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/MissingRequirements.txt)
-     ELSE (${_required} MATCHES "[Tt][Rr][Uu][Ee]")
+     ELSE ("${_required}" STREQUAL "TRUE")
        SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/DisabledFeatures.txt)
-     ENDIF (${_required} MATCHES "[Tt][Rr][Uu][Ee]")
+     ENDIF ("${_required}" STREQUAL "TRUE")
    ENDIF (${_var})
 
    SET(_logtext "   * ${_package}")
