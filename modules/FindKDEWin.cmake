@@ -25,7 +25,7 @@ if (WIN32)
     # search for kdewin in the default install directory for applications (default of (n)make install)
     FILE(TO_CMAKE_PATH "${CMAKE_LIBRARY_PATH}" _cmakeLibraryPathCmakeStyle)
 
-    string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_TOLOWER)
+    string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_TOLOWER)
     if (CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
         set (LIBRARY_NAME kdewind)
     else(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
