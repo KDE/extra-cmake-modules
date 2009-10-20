@@ -1,10 +1,143 @@
 ## install the cmake files
-   
-file(GLOB cmakeFiles "${CMAKE_CURRENT_SOURCE_DIR}/*.cmake")
 
 set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
 
-install( FILES cmake-modules-styleguide.txt 
+# maybe FindHUNSPELL.cmake, FindPolkitQt.cmake don't have to be installed ?
+set(cmakeFilesDontInstall )
+
+# Explicitely list all files which will be installed.
+# We don't use a GLOB anymore so we can have also cmake files here
+# which are used inside kdelibs, but which don't have to be installed (and
+# so become part of the public interface of kdelibs which has to be kept 
+# compatible).
+set(cmakeFiles CheckCXXSourceCompiles.cmake
+               CheckCXXSourceRuns.cmake
+               CheckCXXSymbolExists.cmake
+               CheckPointerMember.cmake
+               CheckPrototypeExists.cmake
+               CheckStructMember.cmake
+               FindACL.cmake
+               FindAGG.cmake
+               FindAkode.cmake
+               FindAlsa.cmake
+               FindAutomoc4.cmake
+               FindAvahi.cmake
+               FindBerkeleyDB.cmake
+               FindBlitz.cmake
+               FindBlueZ.cmake
+               FindBoost.cmake
+               FindCarbon.cmake
+               FindDNSSD.cmake
+               FindENCHANT.cmake
+               FindEigen.cmake
+               FindEigen2.cmake
+               FindExiv2.cmake
+               FindFAM.cmake
+               FindFFmpeg.cmake
+               FindFlac.cmake
+               FindFlex.cmake
+               FindFontconfig.cmake
+               FindFreetype.cmake
+               FindGIF.cmake
+               FindGLIB2.cmake
+               FindGMP.cmake
+               FindGObject.cmake
+               FindGSSAPI.cmake
+               FindGStreamer.cmake
+               FindGettext.cmake
+               FindGphoto2.cmake
+               FindHUNSPELL.cmake
+               FindIOKit.cmake
+               FindKDE4Internal.cmake
+               FindKDE4Workspace.cmake
+               FindKDEWIN32.cmake
+               FindKDEWIN_Packager.cmake
+               FindKDEWin.cmake
+               FindKNepomuk.cmake
+               FindKdcraw.cmake
+               FindKdeMultimedia.cmake
+               FindKdepim.cmake
+               FindKdepimLibs.cmake
+               FindKexiv2.cmake
+               FindKipi.cmake
+               FindKonto.cmake
+               FindKopete.cmake
+               FindKorundum.cmake
+               FindLCMS.cmake
+               FindLibArt.cmake
+               FindLibKonq.cmake
+               FindLibLZMA.cmake
+               FindLibXml2.cmake
+               FindLibXslt.cmake
+               FindLibintl.cmake
+               FindLibraryWithDebug.cmake
+               FindLinuxWirelesstools.cmake
+               FindMsgfmt.cmake
+               FindMusicBrainz.cmake
+               FindMySQL.cmake
+               FindNepomuk.cmake
+               FindNetworkManager.cmake
+               FindOggVorbis.cmake
+               FindOpenEXR.cmake
+               FindOpenSSL.cmake
+               FindPCRE.cmake
+               FindPhonon.cmake
+               FindPkgConfig.cmake
+               FindPlasma.cmake
+               FindPolkitQt.cmake
+               FindPopplerQt4.cmake
+               FindPostgreSQL.cmake
+               FindPulseAudio.cmake
+               FindPyKDE4.cmake
+               FindPyQt4.cmake
+               FindPythonLibrary.cmake
+               FindQCA2.cmake
+               FindQImageBlitz.cmake
+               FindQt4.cmake
+               FindRUBY.cmake
+               FindSIP.cmake
+               FindSamba.cmake
+               FindSane.cmake
+               FindSasl2.cmake
+               FindSharedMimeInfo.cmake
+               FindSoprano.cmake
+               FindSqlite.cmake
+               FindStrigi.cmake
+               FindTaglib.cmake
+               FindUSB.cmake
+               FindX11.cmake
+               FindXKB.cmake
+               FindXine.cmake
+               FindXmms.cmake
+               HandleImportedTargetsInCMakeRequiredLibraries.cmake
+               KDE4Defaults.cmake
+               KDE4Macros.cmake
+               MacroAddCompileFlags.cmake
+               MacroAddFileDependencies.cmake
+               MacroAddLinkFlags.cmake
+               MacroAdditionalCleanFiles.cmake
+               MacroAppendIf.cmake
+               MacroBoolTo01.cmake
+               MacroEnsureOutOfSourceBuild.cmake
+               MacroEnsureVersion.cmake
+               MacroKAuth.cmake
+               MacroLibrary.cmake
+               MacroLogFeature.cmake
+               MacroOptionalAddSubdirectory.cmake
+               MacroOptionalDependPackage.cmake
+               MacroOptionalFindPackage.cmake
+               MacroPushRequiredVars.cmake
+               MacroWriteBasicCMakeVersionFile.cmake
+               NepomukMacros.cmake
+               PythonMacros.cmake
+               SIPMacros.cmake
+               Win32Macros.cmake
+               check_installed_exports_file.cmake
+               config-alsa.h.cmake
+               create_exe_symlink.cmake
+               kde4_exec_via_sh.cmake
+               kde4uic.cmake
+               cmake-modules-styleguide.txt 
                kde4init_dummy.cpp.in 
                kde4init_win32lib_dummy.cpp.in 
                kde4_cmake_uninstall.cmake.in 
@@ -14,15 +147,15 @@ install( FILES cmake-modules-styleguide.txt
                FindPyKDE4.py
                FindPyQt.py
                FindSIP.py
-               PythonCompile.py
-               ${cmakeFiles} 
-         DESTINATION ${module_install_dir}  )
+               )
 
 if (KDE4_ENABLE_UAC_MANIFEST)
-    install( FILES Win32.Manifest.in
-         DESTINATION ${module_install_dir}  
-    )
+   set(cmakeFiles ${cmakeFiles} Win32.Manifest.in )
 endif (KDE4_ENABLE_UAC_MANIFEST)
+
+install(FILES ${cmakeFiles}
+        DESTINATION ${module_install_dir} )
+
          
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
 #set(FILES_TO_REMOVE
