@@ -52,6 +52,7 @@
     NAMES
     sopranoindex
     HINTS
+    ${SOPRANO_LIB_DIR}
     ${LIB_INSTALL_DIR}
     ${KDE4_LIB_DIR}
     )
@@ -61,6 +62,7 @@
     NAMES
     sopranoclient
     HINTS
+    ${SOPRANO_LIB_DIR}
     ${LIB_INSTALL_DIR}
     ${KDE4_LIB_DIR}
     )
@@ -69,6 +71,7 @@
     WIN32_DEBUG_POSTFIX d
     NAMES soprano
     HINTS
+    ${SOPRANO_LIB_DIR}
     ${LIB_INSTALL_DIR}
     ${KDE4_LIB_DIR}
   )
@@ -78,6 +81,7 @@
     NAMES
     sopranoserver
     HINTS
+    ${SOPRANO_LIB_DIR}
     ${LIB_INSTALL_DIR}
     ${KDE4_LIB_DIR}
     )
