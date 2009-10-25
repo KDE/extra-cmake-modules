@@ -1,5 +1,6 @@
 
 enable_testing()
+SET(BUILD_TESTING ON CACHE INTERNAL "Build the testing tree (internal)")
 
 # support for Dart: http://public.kitware.com/dashboard.php?name=kde
 if (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
