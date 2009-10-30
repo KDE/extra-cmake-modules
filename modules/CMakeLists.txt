@@ -50,6 +50,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindIOKit.cmake
                FindKDE4Internal.cmake
                FindKDE4Workspace.cmake
+               FindKDevPlatform.cmake
                FindKDEWIN32.cmake
                FindKDEWIN_Packager.cmake
                FindKDEWin.cmake
