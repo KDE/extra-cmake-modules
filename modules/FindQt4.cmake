@@ -29,6 +29,8 @@
 #                    QT_DONT_USE_QTGUI
 #                    QT_USE_QT3SUPPORT
 #                    QT_USE_QTASSISTANT
+#                    QT_USE_QAXCONTAINER
+#                    QT_USE_QAXSERVER
 #                    QT_USE_QTDESIGNER
 #                    QT_USE_QTMOTIF
 #                    QT_USE_QTMAIN
@@ -47,6 +49,7 @@
 #                    QT_USE_QTWEBKIT
 #                    QT_USE_QTXMLPATTERNS
 #                    QT_USE_PHONON
+#                    QT_USE_QTSCRIPTTOOLS
 #
 # There are also some files that need processing by some Qt tools such as moc
 # and uic.  Listed below are macros that may be used to process those files.
@@ -160,6 +163,8 @@
 #  QT_QTGUI_FOUND           True if QtGui was found.
 #  QT_QT3SUPPORT_FOUND      True if Qt3Support was found.
 #  QT_QTASSISTANT_FOUND     True if QtAssistant was found.
+#  QT_QAXCONTAINER_FOUND     True if QAxContainer was found (Windows only).
+#  QT_QAXSERVER_FOUND          True if QAxServer was found (Windows only).
 #  QT_QTDBUS_FOUND          True if QtDBus was found.
 #  QT_QTDESIGNER_FOUND      True if QtDesigner was found.
 #  QT_QTDESIGNERCOMPONENTS  True if QtDesignerComponents was found.
@@ -178,6 +183,7 @@
 #  QT_QTWEBKIT_FOUND        True if QtWebKit was found.
 #  QT_QTXMLPATTERNS_FOUND   True if QtXmlPatterns was found.
 #  QT_PHONON_FOUND          True if phonon was found.
+#  QT_QTSCRIPTTOOLS_FOUND   True if QtScriptTools was found.
 #
 #  QT_MAC_USE_COCOA    For Mac OS X, its whether Cocoa or Carbon is used.
 #                      In general, this should not be used, but its useful
@@ -204,6 +210,8 @@
 #  QT_QT_INCLUDE_DIR           Path to "include/Qt" 
 #  QT_QT3SUPPORT_INCLUDE_DIR   Path to "include/Qt3Support" 
 #  QT_QTASSISTANT_INCLUDE_DIR  Path to "include/QtAssistant" 
+#  QT_QAXCONTAINER_INCLUDE_DIR  Path to "include/ActiveQt" (Windows only)
+#  QT_QAXSERVER_INCLUDE_DIR  Path to "include/ActiveQt" (Windows only)
 #  QT_QTCORE_INCLUDE_DIR       Path to "include/QtCore"         
 #  QT_QTDESIGNER_INCLUDE_DIR   Path to "include/QtDesigner" 
 #  QT_QTDESIGNERCOMPONENTS_INCLUDE_DIR   Path to "include/QtDesigner"
@@ -223,6 +231,7 @@
 #  QT_QTWEBKIT_INCLUDE_DIR     Path to "include/QtWebKit"
 #  QT_QTXMLPATTERNS_INCLUDE_DIR  Path to "include/QtXmlPatterns"
 #  QT_PHONON_INCLUDE_DIR       Path to "include/phonon"
+#  QT_QTSCRIPTTOOLS_INCLUDE_DIR       Path to "include/QtScriptTools"
 #                            
 #  QT_BINARY_DIR               Path to "bin" of Qt4
 #  QT_LIBRARY_DIR              Path to "lib" of Qt4
@@ -237,6 +246,10 @@
 # The Qt3Support library:     QT_QT3SUPPORT_LIBRARY
 #
 # The QtAssistant library:    QT_QTASSISTANT_LIBRARY
+#
+# The QtAxServer library:     QT_QAXSERVER_LIBRARY
+#
+# The QtAxContainer library:  QT_QTAXCONTAINER_LIBRARY
 #
 # The QtCore library:         QT_QTCORE_LIBRARY
 #
@@ -280,6 +293,8 @@
 #
 # The Phonon library:             QT_PHONON_LIBRARY
 #  
+# The QtScriptTools library:      QT_QTSCRIPTTOOLS_LIBRARY
+#
 # also defined, but NOT for general use are
 #  QT_MOC_EXECUTABLE                   Where to find the moc tool.
 #  QT_UIC_EXECUTABLE                   Where to find the uic tool.
@@ -739,6 +754,14 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
+  # Set QT_QTSCRIPTTOOLS_INCLUDE_DIR
+  FIND_PATH(QT_QTSCRIPTTOOLS_INCLUDE_DIR QtScriptTools
+    PATHS
+    ${QT_INCLUDE_DIR}/QtScriptTools
+    ${QT_LIBRARY_DIR}/QtScriptTools.framework/Headers
+    NO_DEFAULT_PATH
+    )
+
   # Set QT_QTTEST_INCLUDE_DIR
   FIND_PATH(QT_QTTEST_INCLUDE_DIR QtTest
     PATHS
@@ -812,6 +835,23 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
+  IF(WIN32)
+    # Set QT_QTAXSERVER_INCLUDE_DIR
+    FIND_PATH(QT_QTAXSERVER_INCLUDE_DIR QtAxServer
+    PATHS
+    ${QT_INCLUDE_DIR}/QtAxServer
+    ${QT_HEADERS_DIR}/QtAxServer
+    NO_DEFAULT_PATH
+    )
+
+    # Set QT_QTAXCONTAINER_INCLUDE_DIR
+    FIND_PATH(QT_QTAXCONTAINER_INCLUDE_DIR QtAxContainer
+    PATHS
+    ${QT_INCLUDE_DIR}/QtAxContainer
+    ${QT_HEADERS_DIR}/QtAxContainer
+    NO_DEFAULT_PATH
+    )
+  ENDIF(WIN32)
   # Set QT_QTDESIGNER_INCLUDE_DIR
   FIND_PATH(QT_QTDESIGNER_INCLUDE_DIR QDesignerComponents
     PATHS
@@ -998,6 +1038,8 @@ IF (QT4_QMAKE_FOUND)
     FIND_LIBRARY(QT_QTUITOOLS_LIBRARY NAMES QtUiTools QtUiTools4 PATHS ${QT_LIBRARY_DIR} )
     # Set QT_QTSCRIPT_LIBRARY
     FIND_LIBRARY(QT_QTSCRIPT_LIBRARY NAMES QtScript QtScript4    PATHS ${QT_LIBRARY_DIR} )
+    # Set QT_QTSCRIPTTOOLS_LIBRARY
+    FIND_LIBRARY(QT_QTSCRIPTTOOLS_LIBRARY NAMES QtScriptTools QtScriptTools4    PATHS ${QT_LIBRARY_DIR} )
 
   ELSE (QT_USE_FRAMEWORKS)
     
@@ -1046,6 +1088,12 @@ IF (QT4_QMAKE_FOUND)
 
     FIND_LIBRARY(QT_QTASSISTANTCLIENT_LIBRARY NAMES QtAssistantClient QtAssistantClient_debug QtAssistantClient4 QtAssistantClientd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
+    IF(WIN32)
+      FIND_LIBRARY(QT_QTAXSERVER_LIBRARY NAMES QtAxServer QtAxServer4 QtAxServerd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+      
+      FIND_LIBRARY(QT_QTAXCONTAINER_LIBRARY NAMES QtAxContainer QtAxContainer4 QtAxContainerd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+    ENDIF(WIN32)
+
     FIND_LIBRARY(QT_QTHELP_LIBRARY NAMES QtHelp QtHelp_debug QtHelp4 QtHelpd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     FIND_LIBRARY(QT_QTWEBKIT_LIBRARY NAMES QtWebKit QtWebKit_debug QtWebKit4 QtWebKitd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -1054,6 +1102,7 @@ IF (QT4_QMAKE_FOUND)
 
     FIND_LIBRARY(QT_PHONON_LIBRARY NAMES phonon phonon4 phonon_debug phonond4    PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
+    FIND_LIBRARY(QT_QTSCRIPTTOOLS_LIBRARY NAMES QtXmlPatterns QtXmlPatterns_debug QtXmlPatterns4 QtXmlPatternsd4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
     IF(MSVC)
       FIND_LIBRARY(QT_QTCORE_LIBRARY_RELEASE    NAMES QtCore4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -1082,12 +1131,18 @@ IF (QT4_QMAKE_FOUND)
       FIND_LIBRARY(QT_QTDBUS_LIBRARY_DEBUG      NAMES QtDBusd4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTASSISTANT_LIBRARY_RELEASE NAMES QtAssistantClient4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTASSISTANT_LIBRARY_DEBUG NAMES QtAssistantClientd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+      FIND_LIBRARY(QT_QTAXSERVER_LIBRARY_RELEASE NAMES QtAxServer PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+      FIND_LIBRARY(QT_QTAXSERVER_LIBRARY_DEBUG NAMES QtAxServerd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+      FIND_LIBRARY(QT_QTAXCONTAINER_LIBRARY_RELEASE NAMES QtAxContainer PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+      FIND_LIBRARY(QT_QTAXCONTAINER_LIBRARY_DEBUG NAMES QtAxContainerd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_RELEASE NAMES QtDesigner4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTDESIGNER_LIBRARY_DEBUG  NAMES QtDesignerd4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTDESIGNERCOMPONENTS_LIBRARY_RELEASE NAMES QtDesignerComponents4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTDESIGNERCOMPONENTS_LIBRARY_DEBUG NAMES QtDesignerComponentsd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTMAIN_LIBRARY_RELEASE    NAMES qtmain             PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTMAIN_LIBRARY_DEBUG      NAMES qtmaind             PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+      FIND_LIBRARY(QT_QTSCRIPTTOOLS_LIBRARY_RELEASE NAMES QtScriptTools4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+      FIND_LIBRARY(QT_QTSCRIPTTOOLS_LIBRARY_DEBUG  NAMES QtScriptToolsd4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
     ENDIF(MSVC)
   ENDIF (QT_USE_FRAMEWORKS)
 
@@ -1182,6 +1237,7 @@ IF (QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QTWEBKIT)
   _QT4_ADJUST_LIB_VARS(QTXMLPATTERNS)
   _QT4_ADJUST_LIB_VARS(PHONON)
+  _QT4_ADJUST_LIB_VARS(QTSCRIPTTOOLS)
 
   # platform dependent libraries
   IF(Q_WS_X11)
@@ -1189,6 +1245,8 @@ IF (QT4_QMAKE_FOUND)
   ENDIF(Q_WS_X11)
   IF(WIN32)
     _QT4_ADJUST_LIB_VARS(QTMAIN)
+    _QT4_ADJUST_LIB_VARS(QAXSERVER)
+    _QT4_ADJUST_LIB_VARS(QAXCONTAINER)
   ENDIF(WIN32)
   
 
