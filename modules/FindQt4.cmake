@@ -699,9 +699,6 @@ IF (QT4_QMAKE_FOUND)
     NO_DEFAULT_PATH
     )
 
-  # Make variables changeble to the advanced user
-  MARK_AS_ADVANCED( QT_INCLUDE_DIR QT_QT_INCLUDE_DIR)
-
   # Set QT_INCLUDE_DIR by removine "/QtCore" in the string ${QT_QTCORE_INCLUDE_DIR}
   IF( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
     IF (QT_USE_FRAMEWORKS)
@@ -717,6 +714,9 @@ IF (QT4_QMAKE_FOUND)
       MESSAGE( FATAL_ERROR "Could NOT find QtCore header")
     ENDIF(Qt4_FIND_REQUIRED)
   ENDIF( NOT QT_INCLUDE_DIR)
+
+  # Make variables changeble to the advanced user
+  MARK_AS_ADVANCED( QT_INCLUDE_DIR QT_QT_INCLUDE_DIR)
 
   # Set QT_INCLUDES
   SET( QT_INCLUDES ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default ${QT_INCLUDE_DIR} )
