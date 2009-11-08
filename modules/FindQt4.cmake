@@ -617,18 +617,93 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_TRANSLATIONS_DIR ${qt_translations_dir} CACHE PATH "The location of the Qt translations" FORCE)
   ENDIF (QT_LIBRARY_DIR AND NOT QT_TRANSLATIONS_DIR  OR  QT_QMAKE_CHANGED)
 
+  # Make variables changeble to the advanced user
+  MARK_AS_ADVANCED( QT_LIBRARY_DIR QT_DOC_DIR QT_MKSPECS_DIR
+                    QT_PLUGINS_DIR QT_TRANSLATIONS_DIR)
+
+
   ########################################
   #
   #       Setting the INCLUDE-Variables
   #
   ########################################
 
-  FIND_PATH(QT_QTCORE_INCLUDE_DIR QtGlobal
-    ${QT_HEADERS_DIR}/QtCore
-    ${QT_LIBRARY_DIR}/QtCore.framework/Headers
+  SET(QT_MODULES QtCore QtGui Qt3Support QtSvg QtScript QtTest QtUiTools 
+                 QtHelp QtWebKit QtXmlPatterns QtNetwork 
+                 QtNsPlugin QtOpenGL QtSql QtXml QtDesigner QtDBus QtScriptTools)
+
+  FOREACH(QT_MODULE ${QT_MODULES})
+    STRING(TOUPPER ${QT_MODULE} _upper_qt_module)
+    FIND_PATH(QT_${_upper_qt_module}_INCLUDE_DIR ${QT_MODULE}
+              PATHS
+              ${QT_HEADERS_DIR}/${QT_MODULE}
+              ${QT_LIBRARY_DIR}/${QT_MODULE}.framework/Headers
+              NO_DEFAULT_PATH
+      )
+  ENDFOREACH(QT_MODULE)
+
+  IF(WIN32)
+    # Set QT_QTAXSERVER_INCLUDE_DIR
+    FIND_PATH(QT_QTAXSERVER_INCLUDE_DIR QtAxServer
+    PATHS
+    ${QT_INCLUDE_DIR}/QtAxServer
+    ${QT_HEADERS_DIR}/QtAxServer
+    NO_DEFAULT_PATH
+    )
+
+    # Set QT_QTAXCONTAINER_INCLUDE_DIR
+    FIND_PATH(QT_QTAXCONTAINER_INCLUDE_DIR QtAxContainer
+    PATHS
+    ${QT_INCLUDE_DIR}/QtAxContainer
+    ${QT_HEADERS_DIR}/QtAxContainer
+    NO_DEFAULT_PATH
+    )
+  ENDIF(WIN32)
+
+  # Set QT_QTDESIGNERCOMPONENTS_INCLUDE_DIR
+  FIND_PATH(QT_QTDESIGNERCOMPONENTS_INCLUDE_DIR QDesignerComponents
+    PATHS
+    ${QT_HEADERS_DIR}/QtDesigner
+    ${QT_LIBRARY_DIR}/QtDesigner.framework/Headers
     NO_DEFAULT_PATH
     )
   
+  # Set QT_QTASSISTANT_INCLUDE_DIR
+  FIND_PATH(QT_QTASSISTANT_INCLUDE_DIR QtAssistant
+    PATHS
+    ${QT_HEADERS_DIR}/QtAssistant
+    ${QT_LIBRARY_DIR}/QtAssistant.framework/Headers
+    NO_DEFAULT_PATH
+    )
+  
+  # Set QT_QTASSISTANTCLIENT_INCLUDE_DIR
+  FIND_PATH(QT_QTASSISTANTCLIENT_INCLUDE_DIR QAssistantClient
+    PATHS
+    ${QT_HEADERS_DIR}/QtAssistant
+    ${QT_LIBRARY_DIR}/QtAssistant.framework/Headers
+    NO_DEFAULT_PATH
+    )
+  
+  # Set QT_QT_INCLUDE_DIR
+  FIND_PATH(QT_QT_INCLUDE_DIR qglobal.h
+    PATHS
+    ${QT_INCLUDE_DIR}/Qt
+    ${QT_LIBRARY_DIR}/QtCore.framework/Headers
+    NO_DEFAULT_PATH
+    )
+
+  # Set QT_PHONON_INCLUDE_DIR
+  # Qt >= 4.5.3 (or kde-qt-4.5.2 which has the fix too) : Phonon/ClassName is inside include/phonon
+  # With previous versions of Qt, this could not work; upgrade Qt or use a standalone phonon
+  FIND_PATH(QT_PHONON_INCLUDE_DIR Phonon
+    PATHS
+    ${QT_HEADERS_DIR}/phonon
+    NO_DEFAULT_PATH
+    )
+
+  # Make variables changeble to the advanced user
+  MARK_AS_ADVANCED( QT_INCLUDE_DIR QT_QT_INCLUDE_DIR)
+
   # Set QT_INCLUDE_DIR by removine "/QtCore" in the string ${QT_QTCORE_INCLUDE_DIR}
   IF( QT_QTCORE_INCLUDE_DIR AND NOT QT_INCLUDE_DIR)
     IF (QT_USE_FRAMEWORKS)
@@ -641,16 +716,12 @@ IF (QT4_QMAKE_FOUND)
 
   IF( NOT QT_INCLUDE_DIR)
     IF(Qt4_FIND_REQUIRED)
-      MESSAGE( FATAL_ERROR "Could NOT find QtGlobal header")
+      MESSAGE( FATAL_ERROR "Could NOT find QtCore header")
     ENDIF(Qt4_FIND_REQUIRED)
   ENDIF( NOT QT_INCLUDE_DIR)
 
-  # Make variables changeble to the advanced user
-  MARK_AS_ADVANCED( QT_LIBRARY_DIR QT_INCLUDE_DIR QT_DOC_DIR QT_MKSPECS_DIR
-                    QT_PLUGINS_DIR QT_TRANSLATIONS_DIR)
-
   # Set QT_INCLUDES
-  SET( QT_INCLUDES ${QT_MKSPECS_DIR}/default ${QT_INCLUDE_DIR} )
+  SET( QT_INCLUDES ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default ${QT_INCLUDE_DIR} )
 
 
   #############################################
@@ -690,6 +761,14 @@ IF (QT4_QMAKE_FOUND)
   #
   #############################################
 
+  # This check is after the check for the window system, since it uses Q_WS_X11:
+  # Set QT_QTMOTIF_INCLUDE_DIR
+  IF(Q_WS_X11)
+    FIND_PATH(QT_QTMOTIF_INCLUDE_DIR QtMotif 
+      PATHS 
+      ${QT_INCLUDE_DIR}/QtMotif 
+      NO_DEFAULT_PATH )
+  ENDIF(Q_WS_X11)
 
 
   #######################################
@@ -713,218 +792,6 @@ IF (QT4_QMAKE_FOUND)
   IF (QT_USE_FRAMEWORKS)
     SET(QT_DEFINITIONS ${QT_DEFINITIONS} -F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} )
   ENDIF (QT_USE_FRAMEWORKS)
-
-  # Set QT_QT3SUPPORT_INCLUDE_DIR
-  FIND_PATH(QT_QT3SUPPORT_INCLUDE_DIR Qt3Support
-    PATHS
-    ${QT_INCLUDE_DIR}/Qt3Support
-    ${QT_LIBRARY_DIR}/Qt3Support.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QT_INCLUDE_DIR
-  FIND_PATH(QT_QT_INCLUDE_DIR qglobal.h
-    PATHS
-    ${QT_INCLUDE_DIR}/Qt
-    ${QT_LIBRARY_DIR}/QtCore.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTGUI_INCLUDE_DIR
-  FIND_PATH(QT_QTGUI_INCLUDE_DIR QtGui
-    PATHS
-    ${QT_INCLUDE_DIR}/QtGui
-    ${QT_LIBRARY_DIR}/QtGui.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTSVG_INCLUDE_DIR
-  FIND_PATH(QT_QTSVG_INCLUDE_DIR QtSvg
-    PATHS
-    ${QT_INCLUDE_DIR}/QtSvg
-    ${QT_LIBRARY_DIR}/QtSvg.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTSCRIPT_INCLUDE_DIR
-  FIND_PATH(QT_QTSCRIPT_INCLUDE_DIR QtScript
-    PATHS
-    ${QT_INCLUDE_DIR}/QtScript
-    ${QT_LIBRARY_DIR}/QtScript.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTSCRIPTTOOLS_INCLUDE_DIR
-  FIND_PATH(QT_QTSCRIPTTOOLS_INCLUDE_DIR QtScriptTools
-    PATHS
-    ${QT_INCLUDE_DIR}/QtScriptTools
-    ${QT_LIBRARY_DIR}/QtScriptTools.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTTEST_INCLUDE_DIR
-  FIND_PATH(QT_QTTEST_INCLUDE_DIR QtTest
-    PATHS
-    ${QT_INCLUDE_DIR}/QtTest
-    ${QT_LIBRARY_DIR}/QtTest.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTUITOOLS_INCLUDE_DIR
-  FIND_PATH(QT_QTUITOOLS_INCLUDE_DIR QtUiTools
-    PATHS
-    ${QT_INCLUDE_DIR}/QtUiTools
-    ${QT_LIBRARY_DIR}/QtUiTools.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTMOTIF_INCLUDE_DIR
-  IF(Q_WS_X11)
-    FIND_PATH(QT_QTMOTIF_INCLUDE_DIR QtMotif 
-      PATHS 
-      ${QT_INCLUDE_DIR}/QtMotif 
-      NO_DEFAULT_PATH )
-  ENDIF(Q_WS_X11)
-
-  # Set QT_QTNETWORK_INCLUDE_DIR
-  FIND_PATH(QT_QTNETWORK_INCLUDE_DIR QtNetwork
-    PATHS
-    ${QT_INCLUDE_DIR}/QtNetwork
-    ${QT_LIBRARY_DIR}/QtNetwork.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTNSPLUGIN_INCLUDE_DIR
-  FIND_PATH(QT_QTNSPLUGIN_INCLUDE_DIR QtNsPlugin
-    PATHS
-    ${QT_INCLUDE_DIR}/QtNsPlugin
-    ${QT_LIBRARY_DIR}/QtNsPlugin.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTOPENGL_INCLUDE_DIR
-  FIND_PATH(QT_QTOPENGL_INCLUDE_DIR QtOpenGL
-    PATHS
-    ${QT_INCLUDE_DIR}/QtOpenGL
-    ${QT_LIBRARY_DIR}/QtOpenGL.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTSQL_INCLUDE_DIR
-  FIND_PATH(QT_QTSQL_INCLUDE_DIR QtSql
-    PATHS
-    ${QT_INCLUDE_DIR}/QtSql
-    ${QT_LIBRARY_DIR}/QtSql.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTXML_INCLUDE_DIR
-  FIND_PATH(QT_QTXML_INCLUDE_DIR QtXml
-    PATHS
-    ${QT_INCLUDE_DIR}/QtXml
-    ${QT_LIBRARY_DIR}/QtXml.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTASSISTANT_INCLUDE_DIR
-  FIND_PATH(QT_QTASSISTANT_INCLUDE_DIR QtAssistant
-    PATHS
-    ${QT_INCLUDE_DIR}/QtAssistant
-    ${QT_HEADERS_DIR}/QtAssistant
-    ${QT_LIBRARY_DIR}/QtAssistant.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  IF(WIN32)
-    # Set QT_QTAXSERVER_INCLUDE_DIR
-    FIND_PATH(QT_QTAXSERVER_INCLUDE_DIR QtAxServer
-    PATHS
-    ${QT_INCLUDE_DIR}/QtAxServer
-    ${QT_HEADERS_DIR}/QtAxServer
-    NO_DEFAULT_PATH
-    )
-
-    # Set QT_QTAXCONTAINER_INCLUDE_DIR
-    FIND_PATH(QT_QTAXCONTAINER_INCLUDE_DIR QtAxContainer
-    PATHS
-    ${QT_INCLUDE_DIR}/QtAxContainer
-    ${QT_HEADERS_DIR}/QtAxContainer
-    NO_DEFAULT_PATH
-    )
-  ENDIF(WIN32)
-  # Set QT_QTDESIGNER_INCLUDE_DIR
-  FIND_PATH(QT_QTDESIGNER_INCLUDE_DIR QDesignerComponents
-    PATHS
-    ${QT_INCLUDE_DIR}/QtDesigner
-    ${QT_HEADERS_DIR}/QtDesigner 
-    ${QT_LIBRARY_DIR}/QtDesigner.framework/Headers
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTDESIGNERCOMPONENTS_INCLUDE_DIR
-  FIND_PATH(QT_QTDESIGNERCOMPONENTS_INCLUDE_DIR QDesignerComponents
-    PATHS
-    ${QT_INCLUDE_DIR}/QtDesigner
-    ${QT_HEADERS_DIR}/QtDesigner
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_QTDBUS_INCLUDE_DIR
-  FIND_PATH(QT_QTDBUS_INCLUDE_DIR QtDBus
-    PATHS
-    ${QT_INCLUDE_DIR}/QtDBus
-    ${QT_HEADERS_DIR}/QtDBus
-    ${QT_LIBRARY_DIR}/QtDBus.framework/Headers
-    NO_DEFAULT_PATH
-    )
-  
-  # Set QT_QTASSISTANTCLIENT_INCLUDE_DIR
-  FIND_PATH(QT_QTASSISTANTCLIENT_INCLUDE_DIR QAssistantClient
-    PATHS
-    ${QT_INCLUDE_DIR}/QtAssistant
-    ${QT_HEADERS_DIR}/QtAssistant
-    NO_DEFAULT_PATH
-    )
-  
-  # Set QT_QTHELP_INCLUDE_DIR
-  FIND_PATH(QT_QTHELP_INCLUDE_DIR QtHelp
-    PATHS
-    ${QT_INCLUDE_DIR}/QtHelp
-    ${QT_HEADERS_DIR}/QtHelp
-    NO_DEFAULT_PATH
-    )
-  
-  # Set QT_QTWEBKIT_INCLUDE_DIR
-  FIND_PATH(QT_QTWEBKIT_INCLUDE_DIR QtWebKit
-    PATHS
-    ${QT_INCLUDE_DIR}/QtWebKit
-    ${QT_HEADERS_DIR}/QtWebKit
-    ${QT_LIBRARY_DIR}/QtWebKit.framework/Headers
-    NO_DEFAULT_PATH
-    )
-  
-  # Set QT_QTXMLPATTERNS_INCLUDE_DIR
-  FIND_PATH(QT_QTXMLPATTERNS_INCLUDE_DIR QtXmlPatterns
-    PATHS
-    ${QT_INCLUDE_DIR}/QtXmlPatterns
-    ${QT_HEADERS_DIR}/QtXmlPatterns
-    NO_DEFAULT_PATH
-    )
-
-  # Set QT_PHONON_INCLUDE_DIR
-  # Qt >= 4.5.3 (or kde-qt-4.5.2 which has the fix too) : Phonon/ClassName is inside include/phonon
-  # With previous versions of Qt, this could not work; upgrade Qt or use a standalone phonon
-  FIND_PATH(QT_PHONON_INCLUDE_DIR Phonon
-    PATHS
-    ${QT_HEADERS_DIR}/phonon
-    NO_DEFAULT_PATH
-    )
-
-  # Make variables changeble to the advanced user
-  MARK_AS_ADVANCED( QT_QT_INCLUDE_DIR)
-
-  # Set QT_INCLUDES
-  SET( QT_INCLUDES ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default ${QT_INCLUDE_DIR} )
 
   ########################################
   #
@@ -1402,7 +1269,12 @@ IF (QT4_QMAKE_FOUND)
      GET_DIRECTORY_PROPERTY(_inc_DIRS INCLUDE_DIRECTORIES)
 
      FOREACH(_current ${_inc_DIRS})
-        SET(${_moc_flags} ${${_moc_flags}} "-I${_current}")
+        IF("${_current}" MATCHES ".framework/?$")
+          STRING(REGEX REPLACE "/[^/]+.framework" "" framework_path "${_current}")
+          SET(${_moc_flags} ${${_moc_flags}} "-F${framework_path}")
+        ELSE("${_current}" MATCHES ".framework/?$")
+          SET(${_moc_flags} ${${_moc_flags}} "-I${_current}")
+        ENDIF("${_current}" MATCHES ".framework/?$")
      ENDFOREACH(_current ${_inc_DIRS})
      
      GET_DIRECTORY_PROPERTY(_defines COMPILE_DEFINITIONS)
@@ -1413,12 +1285,6 @@ IF (QT4_QMAKE_FOUND)
      IF(Q_WS_WIN)
        SET(${_moc_flags} ${${_moc_flags}} -DWIN32)
      ENDIF(Q_WS_WIN)
-
-     # if Qt is installed only as framework, add -F /library/Frameworks to the moc arguments
-     # otherwise moc can't find the headers in the framework include dirs
-     IF(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
-        SET(${_moc_INC_DIRS} ${${_moc_INC_DIRS}} "-F/Library/Frameworks")
-     ENDIF(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
 
   ENDMACRO(QT4_GET_MOC_FLAGS)
 
