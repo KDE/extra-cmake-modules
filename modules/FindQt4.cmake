@@ -210,25 +210,25 @@
 #  QT_QT_INCLUDE_DIR           Path to "include/Qt" 
 #  QT_QT3SUPPORT_INCLUDE_DIR   Path to "include/Qt3Support" 
 #  QT_QTASSISTANT_INCLUDE_DIR  Path to "include/QtAssistant" 
+#  QT_QTASSISTANTCLIENT_INCLUDE_DIR       Path to "include/QtAssistantClient"
 #  QT_QAXCONTAINER_INCLUDE_DIR  Path to "include/ActiveQt" (Windows only)
 #  QT_QAXSERVER_INCLUDE_DIR  Path to "include/ActiveQt" (Windows only)
 #  QT_QTCORE_INCLUDE_DIR       Path to "include/QtCore"         
+#  QT_QTDBUS_INCLUDE_DIR       Path to "include/QtDBus" 
 #  QT_QTDESIGNER_INCLUDE_DIR   Path to "include/QtDesigner" 
 #  QT_QTDESIGNERCOMPONENTS_INCLUDE_DIR   Path to "include/QtDesigner"
-#  QT_QTDBUS_INCLUDE_DIR       Path to "include/QtDBus" 
 #  QT_QTGUI_INCLUDE_DIR        Path to "include/QtGui" 
+#  QT_QTHELP_INCLUDE_DIR       Path to "include/QtHelp"
 #  QT_QTMOTIF_INCLUDE_DIR      Path to "include/QtMotif" 
 #  QT_QTNETWORK_INCLUDE_DIR    Path to "include/QtNetwork" 
 #  QT_QTNSPLUGIN_INCLUDE_DIR   Path to "include/QtNsPlugin" 
 #  QT_QTOPENGL_INCLUDE_DIR     Path to "include/QtOpenGL" 
-#  QT_QTSQL_INCLUDE_DIR        Path to "include/QtSql" 
-#  QT_QTXML_INCLUDE_DIR        Path to "include/QtXml" 
-#  QT_QTSVG_INCLUDE_DIR        Path to "include/QtSvg"
 #  QT_QTSCRIPT_INCLUDE_DIR     Path to "include/QtScript"
+#  QT_QTSQL_INCLUDE_DIR        Path to "include/QtSql" 
+#  QT_QTSVG_INCLUDE_DIR        Path to "include/QtSvg"
 #  QT_QTTEST_INCLUDE_DIR       Path to "include/QtTest"
-#  QT_QTASSISTANTCLIENT_INCLUDE_DIR       Path to "include/QtAssistant"
-#  QT_QTHELP_INCLUDE_DIR       Path to "include/QtHelp"
 #  QT_QTWEBKIT_INCLUDE_DIR     Path to "include/QtWebKit"
+#  QT_QTXML_INCLUDE_DIR        Path to "include/QtXml" 
 #  QT_QTXMLPATTERNS_INCLUDE_DIR  Path to "include/QtXmlPatterns"
 #  QT_PHONON_INCLUDE_DIR       Path to "include/phonon"
 #  QT_QTSCRIPTTOOLS_INCLUDE_DIR       Path to "include/QtScriptTools"
@@ -247,6 +247,8 @@
 #
 # The QtAssistant library:    QT_QTASSISTANT_LIBRARY
 #
+# The QtAssistantClient library:  QT_QTASSISTANTCLIENT_LIBRARY
+#
 # The QtAxServer library:     QT_QAXSERVER_LIBRARY
 #
 # The QtAxContainer library:  QT_QTAXCONTAINER_LIBRARY
@@ -261,6 +263,8 @@
 #
 # The QtGui library:          QT_QTGUI_LIBRARY
 #
+# The QtHelp library:         QT_QTHELP_LIBRARY
+#
 # The QtMotif library:        QT_QTMOTIF_LIBRARY
 #
 # The QtNetwork library:      QT_QTNETWORK_LIBRARY
@@ -269,27 +273,23 @@
 #
 # The QtOpenGL library:       QT_QTOPENGL_LIBRARY
 #
-# The QtSql library:          QT_QTSQL_LIBRARY
+# The QtScript library:       QT_QTSCRIPT_LIBRARY
 #
-# The QtXml library:          QT_QTXML_LIBRARY
+# The QtSql library:          QT_QTSQL_LIBRARY
 #
 # The QtSvg library:          QT_QTSVG_LIBRARY
 #
-# The QtScript library:       QT_QTSCRIPT_LIBRARY
-#
 # The QtTest library:         QT_QTTEST_LIBRARY
-#
-# The qtmain library for Windows QT_QTMAIN_LIBRARY
 #
 # The QtUiTools library:      QT_QTUITOOLS_LIBRARY
 #
-# The QtAssistantClient library:  QT_QTASSISTANTCLIENT_LIBRARY
+# The QtWebKit library:       QT_QTWEBKIT_LIBRARY
 #
-# The QtHelp library:             QT_QTHELP_LIBRARY
+# The QtXml library:          QT_QTXML_LIBRARY
 #
-# The QtWebKit library:           QT_QTWEBKIT_LIBRARY
+# The QtXmlPatterns library:  QT_QTXMLPATTERNS_LIBRARY
 #
-# The QtXmlPatterns library:      QT_QTXMLPATTERNS_LIBRARY
+# The qtmain library for Windows QT_QTMAIN_LIBRARY
 #
 # The Phonon library:             QT_PHONON_LIBRARY
 #  
