@@ -5,11 +5,12 @@
 #  NEPOMUK_FOUND - system has Nepomuk
 #  NEPOMUK_INCLUDE_DIR - the Nepomuk include directory
 #  NEPOMUK_LIBRARIES - Link these to use Nepomuk
+#  NEPOMUK_QUERY_LIBRARIES - Link these to use Nepomuk query
 #  NEPOMUK_DEFINITIONS - Compiler switches required for using Nepomuk
 #
 
 
-# Copyright (c) 2008, Sebastian Trueg, <sebastian@trueg.de>
+# Copyright (c) 2008-2009, Sebastian Trueg, <sebastian@trueg.de>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -40,6 +41,14 @@ if (Soprano_FOUND)
     find_library(NEPOMUK_LIBRARIES
       NAMES
       nepomuk
+      PATHS
+      ${KDE4_LIB_DIR}
+      ${LIB_INSTALL_DIR}
+      )
+
+    find_library(NEPOMUK_QUERY_LIBRARIES
+      NAMES
+      nepomukquery
       PATHS
       ${KDE4_LIB_DIR}
       ${LIB_INSTALL_DIR}
