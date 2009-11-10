@@ -785,9 +785,9 @@ IF (QT4_QMAKE_FOUND)
   ENDIF("${QT_EDITION}" MATCHES "DesktopLight")
 
 
-  IF (QT_USE_FRAMEWORKS)
-    SET(QT_DEFINITIONS ${QT_DEFINITIONS} -F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} )
-  ENDIF (QT_USE_FRAMEWORKS)
+#  IF (QT_USE_FRAMEWORKS)
+#    SET(QT_DEFINITIONS ${QT_DEFINITIONS} -F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} )
+#  ENDIF (QT_USE_FRAMEWORKS)
 
   ########################################
   #
@@ -795,116 +795,116 @@ IF (QT4_QMAKE_FOUND)
   #
   ########################################
 
-  IF (QT_USE_FRAMEWORKS)
-    # If FIND_LIBRARY found libraries in Apple frameworks, we would NOT have
-    # to jump through these hoops.
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
-      SET(QT_QTCORE_FOUND TRUE)
-      SET(QT_QTCORE_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtCore" CACHE STRING "The QtCore library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
-      SET(QT_QTCORE_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtGui.framework)
-      SET(QT_QTGUI_FOUND TRUE)
-      SET(QT_QTGUI_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtGui" CACHE STRING "The QtGui library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtGui.framework)
-      SET(QT_QTGUI_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtGui.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/Qt3Support.framework)
-      SET(QT_QT3SUPPORT_FOUND TRUE)
-      SET(QT_QT3SUPPORT_LIBRARY "-F${QT_LIBRARY_DIR} -framework Qt3Support" CACHE STRING "The Qt3Support library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/Qt3Support.framework)
-      SET(QT_QT3SUPPORT_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/Qt3Support.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtNetwork.framework)
-      SET(QT_QTNETWORK_FOUND TRUE)
-      SET(QT_QTNETWORK_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtNetwork" CACHE STRING "The QtNetwork library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtNetwork.framework)
-      SET(QT_QTNETWORK_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtNetwork.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtOpenGL.framework)
-      SET(QT_QTOPENGL_FOUND TRUE)
-      SET(QT_QTOPENGL_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtOpenGL" CACHE STRING "The QtOpenGL library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtOpenGL.framework)
-      SET(QT_QTOPENGL_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtOpenGL.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtSql.framework)
-      SET(QT_QTSQL_FOUND TRUE)
-      SET(QT_QTSQL_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtSql" CACHE STRING "The QtSql library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtSql.framework)
-      SET(QT_QTSQL_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtSql.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtXml.framework)
-      SET(QT_QTXML_FOUND TRUE)
-      SET(QT_QTXML_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtXml" CACHE STRING "The QtXml library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtXml.framework)
-      SET(QT_QTXML_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtXml.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtSvg.framework)
-      SET(QT_QTSVG_FOUND TRUE)
-      SET(QT_QTSVG_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtSvg" CACHE STRING "The QtSvg library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtSvg.framework)
-      SET(QT_QTSVG_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtSvg.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtDBus.framework)
-      SET(QT_QTDBUS_FOUND TRUE)
-      SET(QT_QTDBUS_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtDBus" CACHE STRING "The QtDBus library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtDBus.framework)
-      SET(QT_QTDBUS_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtDBus.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
-      SET(QT_QTTEST_FOUND TRUE)
-      SET(QT_QTTEST_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtTest" CACHE STRING "The QtTest library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
-      SET(QT_QTTEST_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
-      SET(QT_QTASSISTANTCLIENT_FOUND TRUE)
-      SET(QT_QTASSISTANTCLIENT_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtAssistantClient" CACHE STRING "The QtAssistantClient library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
-      SET(QT_QTASSISTANTCLIENT_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
-      SET(QT_QTWEBKIT_FOUND TRUE)
-      SET(QT_QTWEBKIT_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtWebKit" CACHE STRING "The QtWebKit library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
-      SET(QT_QTWEBKIT_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
-      SET(QT_QTXMLPATTERNS_FOUND TRUE)
-      SET(QT_QTXMLPATTERNS_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtXmlPatterns" CACHE STRING "The QtXmlPatterns library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
-      SET(QT_QTXMLPATTERNS_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
-
-    IF(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
-      SET(QT_QTHELP_FOUND TRUE)
-      SET(QT_QTHELP_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtHelp" CACHE STRING "The QtHelp library.")
-    ELSE(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
-      SET(QT_QTHELP_FOUND FALSE)
-    ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
-
-    # WTF?  why don't we have frameworks?  :P
-    # Set QT_QTUITOOLS_LIBRARY
-    FIND_LIBRARY(QT_QTUITOOLS_LIBRARY NAMES QtUiTools QtUiTools4 PATHS ${QT_LIBRARY_DIR} )
-    # Set QT_QTSCRIPT_LIBRARY
-    FIND_LIBRARY(QT_QTSCRIPT_LIBRARY NAMES QtScript QtScript4    PATHS ${QT_LIBRARY_DIR} )
-    # Set QT_QTSCRIPTTOOLS_LIBRARY
-    FIND_LIBRARY(QT_QTSCRIPTTOOLS_LIBRARY NAMES QtScriptTools QtScriptTools4    PATHS ${QT_LIBRARY_DIR} )
-
-  ELSE (QT_USE_FRAMEWORKS)
+#   IF (QT_USE_FRAMEWORKS)
+#     # If FIND_LIBRARY found libraries in Apple frameworks, we would NOT have
+#     # to jump through these hoops.
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
+#       SET(QT_QTCORE_FOUND TRUE)
+#       SET(QT_QTCORE_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtCore" CACHE STRING "The QtCore library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
+#       SET(QT_QTCORE_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtCore.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtGui.framework)
+#       SET(QT_QTGUI_FOUND TRUE)
+#       SET(QT_QTGUI_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtGui" CACHE STRING "The QtGui library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtGui.framework)
+#       SET(QT_QTGUI_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtGui.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/Qt3Support.framework)
+#       SET(QT_QT3SUPPORT_FOUND TRUE)
+#       SET(QT_QT3SUPPORT_LIBRARY "-F${QT_LIBRARY_DIR} -framework Qt3Support" CACHE STRING "The Qt3Support library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/Qt3Support.framework)
+#       SET(QT_QT3SUPPORT_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/Qt3Support.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtNetwork.framework)
+#       SET(QT_QTNETWORK_FOUND TRUE)
+#       SET(QT_QTNETWORK_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtNetwork" CACHE STRING "The QtNetwork library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtNetwork.framework)
+#       SET(QT_QTNETWORK_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtNetwork.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtOpenGL.framework)
+#       SET(QT_QTOPENGL_FOUND TRUE)
+#       SET(QT_QTOPENGL_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtOpenGL" CACHE STRING "The QtOpenGL library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtOpenGL.framework)
+#       SET(QT_QTOPENGL_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtOpenGL.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtSql.framework)
+#       SET(QT_QTSQL_FOUND TRUE)
+#       SET(QT_QTSQL_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtSql" CACHE STRING "The QtSql library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtSql.framework)
+#       SET(QT_QTSQL_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtSql.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtXml.framework)
+#       SET(QT_QTXML_FOUND TRUE)
+#       SET(QT_QTXML_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtXml" CACHE STRING "The QtXml library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtXml.framework)
+#       SET(QT_QTXML_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtXml.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtSvg.framework)
+#       SET(QT_QTSVG_FOUND TRUE)
+#       SET(QT_QTSVG_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtSvg" CACHE STRING "The QtSvg library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtSvg.framework)
+#       SET(QT_QTSVG_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtSvg.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtDBus.framework)
+#       SET(QT_QTDBUS_FOUND TRUE)
+#       SET(QT_QTDBUS_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtDBus" CACHE STRING "The QtDBus library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtDBus.framework)
+#       SET(QT_QTDBUS_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtDBus.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
+#       SET(QT_QTTEST_FOUND TRUE)
+#       SET(QT_QTTEST_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtTest" CACHE STRING "The QtTest library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
+#       SET(QT_QTTEST_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtTest.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
+#       SET(QT_QTASSISTANTCLIENT_FOUND TRUE)
+#       SET(QT_QTASSISTANTCLIENT_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtAssistantClient" CACHE STRING "The QtAssistantClient library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
+#       SET(QT_QTASSISTANTCLIENT_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtAssistantClient.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
+#       SET(QT_QTWEBKIT_FOUND TRUE)
+#       SET(QT_QTWEBKIT_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtWebKit" CACHE STRING "The QtWebKit library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
+#       SET(QT_QTWEBKIT_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtWebKit.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
+#       SET(QT_QTXMLPATTERNS_FOUND TRUE)
+#       SET(QT_QTXMLPATTERNS_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtXmlPatterns" CACHE STRING "The QtXmlPatterns library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
+#       SET(QT_QTXMLPATTERNS_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtXmlPatterns.framework)
+# 
+#     IF(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
+#       SET(QT_QTHELP_FOUND TRUE)
+#       SET(QT_QTHELP_LIBRARY "-F${QT_LIBRARY_DIR} -framework QtHelp" CACHE STRING "The QtHelp library.")
+#     ELSE(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
+#       SET(QT_QTHELP_FOUND FALSE)
+#     ENDIF(EXISTS ${QT_LIBRARY_DIR}/QtHelp.framework)
+# 
+#     # WTF?  why don't we have frameworks?  :P
+#     # Set QT_QTUITOOLS_LIBRARY
+#     FIND_LIBRARY(QT_QTUITOOLS_LIBRARY NAMES QtUiTools QtUiTools4 PATHS ${QT_LIBRARY_DIR} )
+#     # Set QT_QTSCRIPT_LIBRARY
+#     FIND_LIBRARY(QT_QTSCRIPT_LIBRARY NAMES QtScript QtScript4    PATHS ${QT_LIBRARY_DIR} )
+#     # Set QT_QTSCRIPTTOOLS_LIBRARY
+#     FIND_LIBRARY(QT_QTSCRIPTTOOLS_LIBRARY NAMES QtScriptTools QtScriptTools4    PATHS ${QT_LIBRARY_DIR} )
+# 
+#   ELSE (QT_USE_FRAMEWORKS)
     
     # Set QT_QTCORE_LIBRARY by searching for a lib with "QtCore."  as part of the filename
     FIND_LIBRARY(QT_QTCORE_LIBRARY NAMES QtCore QtCore4 QtCored4 QtCore_debug         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH )
@@ -1007,7 +1007,7 @@ IF (QT4_QMAKE_FOUND)
       FIND_LIBRARY(QT_QTSCRIPTTOOLS_LIBRARY_RELEASE NAMES QtScriptTools4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
       FIND_LIBRARY(QT_QTSCRIPTTOOLS_LIBRARY_DEBUG  NAMES QtScriptToolsd4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
     ENDIF(MSVC)
-  ENDIF (QT_USE_FRAMEWORKS)
+#  ENDIF (QT_USE_FRAMEWORKS)
 
   IF( NOT QT_QTCORE_LIBRARY )
     IF(Qt4_FIND_REQUIRED)
