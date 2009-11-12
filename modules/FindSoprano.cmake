@@ -3,6 +3,8 @@
 #
 # Sets the following variables:
 #  Soprano_FOUND            - true is Soprano has been found
+#  SOPRANO_ONTO2VOCABULARYCLASS_EXECUTABLE - the onto2vocabularyclass program, required for adding ontologies
+#  SOPRANO_SOPRANOCMD_EXECUTABLE - the sopranocmd program
 #  SOPRANO_INCLUDE_DIR      - The include directory
 #  SOPRANO_LIBRARIES        - The Soprano core library to link to (libsoprano)
 #  SOPRANO_INDEX_LIBRARIES  - The Soprano index library (libsopranoindex)
@@ -38,6 +40,21 @@
 
 #else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
   include(FindLibraryWithDebug)
+
+  find_program(SOPRANO_SOPRANOCMD_EXECUTABLE
+    NAMES sopranocmd 
+    HINTS
+    ${BIN_INSTALL_DIR}
+    ${KDE4_BIN_INSTALL_DIR}
+    )
+
+  find_program(SOPRANO_ONTO2VOCABULARYCLASS_EXECUTABLE
+    NAMES onto2vocabularyclass
+    HINTS
+    ${BIN_INSTALL_DIR}
+    ${KDE4_BIN_INSTALL_DIR}
+    )
+
 
   find_path(SOPRANO_INCLUDE_DIR 
     NAMES
@@ -227,6 +244,8 @@ mark_as_advanced(SOPRANO_CLIENT_LIBRARIES
                  SOPRANO_INCLUDE_DIR
                  SOPRANO_PLUGIN_DIR
                  _SOPRANO_MACRO_FILE
+                 SOPRANO_ONTO2VOCABULARYCLASS_EXECUTABLE
+                 SOPRANO_SOPRANOCMD_EXECUTABLE
                  )
 
 #endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
