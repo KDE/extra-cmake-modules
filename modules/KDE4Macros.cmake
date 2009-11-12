@@ -803,6 +803,9 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 
     if(WIN32)
       get_target_property( loc ${_targetName} LOCATION )
+      if(MSVC_IDE)
+        STRING(REGEX REPLACE "\\$\\(.*\\)" "\${CTEST_CONFIGURATION_TYPE}" loc "${loc}")
+      endif()
       # .bat because of rpath handling
       set(_executable ${loc}.bat)
     else(WIN32)
