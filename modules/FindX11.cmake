@@ -7,6 +7,7 @@
 # and also the following more fine grained variables:
 #                X11_ICE_INCLUDE_PATH,          X11_ICE_LIB,        X11_ICE_FOUND
 #                X11_SM_INCLUDE_PATH,           X11_SM_LIB,         X11_SM_FOUND
+#                X11_X11_INCLUDE_PATH,          X11_X11_LIB
 #                X11_Xaccessrules_INCLUDE_PATH,                     X11_Xaccess_FOUND
 #                X11_Xaccessstr_INCLUDE_PATH,                       X11_Xaccess_FOUND
 #                X11_Xau_INCLUDE_PATH,          X11_Xau_LIB,        X11_Xau_FOUND
