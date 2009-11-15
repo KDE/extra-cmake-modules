@@ -326,6 +326,7 @@ endif( ${QT_MIN_VERSION} VERSION_LESS "4.5.0" )
 
 
 #this line includes FindQt4.cmake, which searches the Qt library and headers
+# TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
 find_package(Qt4 ${_REQ_STRING_KDE4})
 
 # automoc4 (from kdesupport) is now required, Alex
