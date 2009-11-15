@@ -378,10 +378,6 @@ SET(QT_USE_FILE ${CMAKE_ROOT}/Modules/UseQt4.cmake)
 
 SET( QT_DEFINITIONS "")
 
-IF (WIN32)
-  SET(QT_DEFINITIONS -DQT_DLL)
-ENDIF(WIN32)
-
 SET(QT4_INSTALLED_VERSION_TOO_OLD FALSE)
 
 #  macro for asking qmake to process pro files
@@ -785,11 +781,6 @@ IF (QT4_QMAKE_FOUND)
   IF("${QT_EDITION}" MATCHES "DesktopLight")
     SET(QT_EDITION_DESKTOPLIGHT 1)
   ENDIF("${QT_EDITION}" MATCHES "DesktopLight")
-
-# Remove this when nobody comes and complains that it doesn't build for him on mac until 31.12.2009:
-#  IF (QT_USE_FRAMEWORKS)
-#    SET(QT_DEFINITIONS ${QT_DEFINITIONS} -F${QT_LIBRARY_DIR} -L${QT_LIBRARY_DIR} )
-#  ENDIF (QT_USE_FRAMEWORKS)
 
   ########################################
   #
