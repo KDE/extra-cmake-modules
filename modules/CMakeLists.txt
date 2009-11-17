@@ -20,6 +20,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindAGG.cmake
                FindAkode.cmake
                FindAlsa.cmake
+               FindAttica.cmake
                FindAutomoc4.cmake
                FindAvahi.cmake
                FindBerkeleyDB.cmake
