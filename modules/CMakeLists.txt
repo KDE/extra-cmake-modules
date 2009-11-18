@@ -20,7 +20,6 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindAGG.cmake
                FindAkode.cmake
                FindAlsa.cmake
-               FindAttica.cmake
                FindAutomoc4.cmake
                FindAvahi.cmake
                FindBerkeleyDB.cmake
@@ -67,6 +66,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindKorundum.cmake
                FindLCMS.cmake
                FindLibArt.cmake
+               FindLibAttica.cmake
                FindLibKonq.cmake
                FindLibLZMA.cmake
                FindLibXml2.cmake
