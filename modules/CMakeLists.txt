@@ -3,7 +3,8 @@
 set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
 
 # maybe FindHUNSPELL.cmake, FindPolkitQt.cmake don't have to be installed ?
-set(cmakeFilesDontInstall )
+set(cmakeFilesDontInstall 
+               FindPolkitQt-1.cmake)
 
 # Explicitely list all files which will be installed.
 # We don't use a GLOB anymore so we can have also cmake files here
