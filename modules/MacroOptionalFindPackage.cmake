@@ -13,10 +13,10 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-MACRO (MACRO_OPTIONAL_FIND_PACKAGE _name )
-   OPTION(WITH_${_name} "Search for ${_name} package" ON)
+macro (MACRO_OPTIONAL_FIND_PACKAGE _name )
+   option(WITH_${_name} "Search for ${_name} package" ON)
    if (WITH_${_name})
-      FIND_PACKAGE(${_name} ${ARGN})
+      find_package(${_name} ${ARGN})
    else (WITH_${_name})
       set(${_name}_FOUND)
       set(${_name}_INCLUDE_DIR)
@@ -24,5 +24,5 @@ MACRO (MACRO_OPTIONAL_FIND_PACKAGE _name )
       set(${_name}_LIBRARY)
       set(${_name}_LIBRARIES)
    endif (WITH_${_name})
-ENDMACRO (MACRO_OPTIONAL_FIND_PACKAGE)
+endmacro (MACRO_OPTIONAL_FIND_PACKAGE)
 
