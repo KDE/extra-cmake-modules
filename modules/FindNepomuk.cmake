@@ -23,45 +23,38 @@ endif (NOT DEFINED Soprano_FOUND)
 
 if (Soprano_FOUND)
 
-  set (NEPOMUK_FIND_REQUIRED ${Nepomuk_FIND_REQUIRED})
-  if (NEPOMUK_INCLUDE_DIR AND NEPOMUK_LIBRARIES AND NEPOMUK_QUERY_LIBRARIES)
+  find_path(NEPOMUK_INCLUDE_DIR
+    NAMES
+    nepomuk/global.h
+    HINTS
+    ${KDE4_INCLUDE_DIR}
+    ${INCLUDE_INSTALL_DIR}
+    )
 
-    # Already in cache, be silent
-    set(NEPOMUK_FIND_QUIETLY TRUE)
+  find_library(NEPOMUK_LIBRARIES
+    NAMES
+    nepomuk
+    HINTS
+    ${KDE4_LIB_DIR}
+    ${LIB_INSTALL_DIR}
+    )
 
-  else (NEPOMUK_INCLUDE_DIR AND NEPOMUK_LIBRARIES AND NEPOMUK_QUERY_LIBRARIES)
-    find_path(NEPOMUK_INCLUDE_DIR
-      NAMES
-      nepomuk/global.h
-      PATHS
-      ${KDE4_INCLUDE_DIR}
-      ${INCLUDE_INSTALL_DIR}
-      )
+  find_library(NEPOMUK_QUERY_LIBRARIES
+    NAMES
+    nepomukquery
+    HINTS
+    ${KDE4_LIB_DIR}
+    ${LIB_INSTALL_DIR}
+    )
 
-    find_library(NEPOMUK_LIBRARIES
-      NAMES
-      nepomuk
-      PATHS
-      ${KDE4_LIB_DIR}
-      ${LIB_INSTALL_DIR}
-      )
-
-    find_library(NEPOMUK_QUERY_LIBRARIES
-      NAMES
-      nepomukquery
-      PATHS
-      ${KDE4_LIB_DIR}
-      ${LIB_INSTALL_DIR}
-      )
-
-    mark_as_advanced(NEPOMUK_INCLUDE_DIR NEPOMUK_LIBRARIES)
-
-  endif (NEPOMUK_INCLUDE_DIR AND NEPOMUK_LIBRARIES AND NEPOMUK_QUERY_LIBRARIES)
-
-  include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(NEPOMUK DEFAULT_MSG 
-                                    NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR)
-  #to retain backward compatibility
-  set (Nepomuk_FOUND ${NEPOMUK_FOUND})
+  mark_as_advanced(NEPOMUK_INCLUDE_DIR NEPOMUK_LIBRARIES NEPOMUK_QUERY_LIBRARIES)
 
 endif (Soprano_FOUND)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Nepomuk  DEFAULT_MSG 
+                                  NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR)
+
+#to retain backward compatibility
+set (Nepomuk_FOUND ${NEPOMUK_FOUND})
+
