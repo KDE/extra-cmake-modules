@@ -2,11 +2,12 @@
 
 set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
 
-# maybe FindHUNSPELL.cmake, FindPolkitQt.cmake don't have to be installed ?
+# maybe FindHUNSPELL.cmake doesn't have to be installed ?
 # This variable doesn't actually do anything, but it's probably a good idea
 # to have it around, so there is a place where the modules which are not installed
 # are listed explicitely:
-set(cmakeFilesDontInstall 
+set(cmakeFilesDontInstall
+               FindPolkitQt.cmake
                FindPolkitQt-1.cmake)
 
 # Explicitely list all files which will be installed.
@@ -90,7 +91,6 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindPhonon.cmake
                FindPkgConfig.cmake
                FindPlasma.cmake
-               FindPolkitQt.cmake
                FindPopplerQt4.cmake
                FindPostgreSQL.cmake
                FindPulseAudio.cmake
