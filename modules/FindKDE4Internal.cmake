@@ -34,6 +34,7 @@
 #  KDE4_KJS_LIBRARY         - the kjs library
 #  KDE4_KJSAPI_LIBRARY      - the kjs public api library
 #  KDE4_KNEWSTUFF2_LIBRARY  - the knewstuff2 library
+#  KDE4_KNEWSTUFF3_LIBRARY  - the knewstuff3 library
 #  KDE4_KDNSSD_LIBRARY      - the kdnssd library
 #  KDE4_PHONON_LIBRARY      - the phonon library
 #  KDE4_THREADWEAVER_LIBRARY- the threadweaver library
@@ -63,6 +64,7 @@
 #  KDE4_KJS_LIBS              - the kjs library and all depending libraries
 #  KDE4_KJSAPI_LIBS           - the kjs public api library and all depending libraries
 #  KDE4_KNEWSTUFF2_LIBS       - the knewstuff2 library and all depending libraries
+#  KDE4_KNEWSTUFF3_LIBS       - the knewstuff3 library and all depending libraries
 #  KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 #  KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
 #  KDE4_KPTY_LIBS             - the kpty library and all depending libraries
@@ -516,6 +518,7 @@ else (_kdeBootStrapping)
    _kde4_set_lib_variables(KJS           kjs           ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KJSAPI        kjsapi        ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KNEWSTUFF2    knewstuff2    ${KDE4_TARGET_PREFIX})
+   _kde4_set_lib_variables(KNEWSTUFF3    knewstuff3    ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KNOTIFYCONFIG knotifyconfig ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KPARTS        kparts        ${KDE4_TARGET_PREFIX})
    _kde4_set_lib_variables(KROSSCORE     krosscore     ${KDE4_TARGET_PREFIX})
