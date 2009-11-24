@@ -34,6 +34,7 @@
 #                    QT_USE_QTDESIGNER
 #                    QT_USE_QTMOTIF
 #                    QT_USE_QTMAIN
+#                    QT_USE_QTMULTIMEDIA
 #                    QT_USE_QTNETWORK
 #                    QT_USE_QTNSPLUGIN
 #                    QT_USE_QTOPENGL
@@ -169,6 +170,7 @@
 #  QT_QTDESIGNER_FOUND      True if QtDesigner was found.
 #  QT_QTDESIGNERCOMPONENTS  True if QtDesignerComponents was found.
 #  QT_QTMOTIF_FOUND         True if QtMotif was found.
+#  QT_QTMULTIMEDIA_FOUND    True if QtMultimedia was found.
 #  QT_QTNETWORK_FOUND       True if QtNetwork was found.
 #  QT_QTNSPLUGIN_FOUND      True if QtNsPlugin was found.
 #  QT_QTOPENGL_FOUND        True if QtOpenGL was found.
@@ -220,6 +222,7 @@
 #  QT_QTGUI_INCLUDE_DIR        Path to "include/QtGui" 
 #  QT_QTHELP_INCLUDE_DIR       Path to "include/QtHelp"
 #  QT_QTMOTIF_INCLUDE_DIR      Path to "include/QtMotif" 
+#  QT_QTMULTIMEDIA_INCLUDE_DIR Path to "include/QtMultimedia" 
 #  QT_QTNETWORK_INCLUDE_DIR    Path to "include/QtNetwork" 
 #  QT_QTNSPLUGIN_INCLUDE_DIR   Path to "include/QtNsPlugin" 
 #  QT_QTOPENGL_INCLUDE_DIR     Path to "include/QtOpenGL" 
@@ -249,9 +252,9 @@
 #
 # The QtAssistantClient library:  QT_QTASSISTANTCLIENT_LIBRARY
 #
-# The QAxServer library:     QT_QAXSERVER_LIBRARY
+# The QAxServer library:      QT_QAXSERVER_LIBRARY
 #
-# The QAxContainer library:  QT_QAXCONTAINER_LIBRARY
+# The QAxContainer library:   QT_QAXCONTAINER_LIBRARY
 #
 # The QtCore library:         QT_QTCORE_LIBRARY
 #
@@ -266,6 +269,8 @@
 # The QtHelp library:         QT_QTHELP_LIBRARY
 #
 # The QtMotif library:        QT_QTMOTIF_LIBRARY
+#
+# The QtMultimedia library:   QT_QTMULTIMEDIA_LIBRARY
 #
 # The QtNetwork library:      QT_QTNETWORK_LIBRARY
 #
@@ -629,7 +634,7 @@ IF (QT4_QMAKE_FOUND)
   ########################################
 
   SET(QT_MODULES QtCore QtGui Qt3Support QtSvg QtScript QtTest QtUiTools 
-                 QtHelp QtWebKit QtXmlPatterns QtNetwork 
+                 QtHelp QtWebKit QtXmlPatterns QtNetwork QtMultimedia
                  QtNsPlugin QtOpenGL QtSql QtXml QtDesigner QtDBus QtScriptTools)
 
   FOREACH(QT_MODULE ${QT_MODULES})
@@ -805,6 +810,9 @@ IF (QT4_QMAKE_FOUND)
     FIND_LIBRARY(QT_QTMOTIF_LIBRARY NAMES QtMotif  QtMotif_debug PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
   ENDIF(Q_WS_X11)
 
+  # Set QT_QTMULTIMEDIA_LIBRARY
+  FIND_LIBRARY(QT_QTMULTIMEDIA_LIBRARY NAMES QtMultimedia QtMultimedia_debug QtMultimedia4 QtMultimediad4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+
   # Set QT_QTNETWORK_LIBRARY
   FIND_LIBRARY(QT_QTNETWORK_LIBRARY NAMES QtNetwork QtNetwork_debug QtNetwork4 QtNetworkd4 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
 
@@ -859,6 +867,8 @@ IF (QT4_QMAKE_FOUND)
     FIND_LIBRARY(QT_QT3SUPPORT_LIBRARY_DEBUG      NAMES Qt3Supportd4           PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
     FIND_LIBRARY(QT_QTGUI_LIBRARY_RELEASE         NAMES QtGui4                 PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
     FIND_LIBRARY(QT_QTGUI_LIBRARY_DEBUG           NAMES QtGuid4                PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTMULTIMEDIA_LIBRARY_RELEASE  NAMES QtMultimedia4          PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
+    FIND_LIBRARY(QT_QTMULTIMEDIA_LIBRARY_DEBUG    NAMES QtMultimediad4         PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
     FIND_LIBRARY(QT_QTNETWORK_LIBRARY_RELEASE     NAMES QtNetwork4             PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
     FIND_LIBRARY(QT_QTNETWORK_LIBRARY_DEBUG       NAMES QtNetworkd4            PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
     FIND_LIBRARY(QT_QTOPENGL_LIBRARY_RELEASE      NAMES QtOpenGL4              PATHS ${QT_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -977,6 +987,7 @@ IF (QT4_QMAKE_FOUND)
   _QT4_ADJUST_LIB_VARS(QTASSISTANT)
   _QT4_ADJUST_LIB_VARS(QTDESIGNER)
   _QT4_ADJUST_LIB_VARS(QTDESIGNERCOMPONENTS)
+  _QT4_ADJUST_LIB_VARS(QTMULTIMEDIA)
   _QT4_ADJUST_LIB_VARS(QTNETWORK)
   _QT4_ADJUST_LIB_VARS(QTNSPLUGIN)
   _QT4_ADJUST_LIB_VARS(QTOPENGL)
