@@ -2,7 +2,7 @@
 # Find an installation of Soprano
 #
 # Sets the following variables:
-#  Soprano_FOUND            - true is Soprano has been found
+#  Soprano_FOUND, SOPRANO_FOUND  - true is Soprano has been found
 #  SOPRANO_ONTO2VOCABULARYCLASS_EXECUTABLE - the onto2vocabularyclass program, required for adding ontologies
 #  SOPRANO_SOPRANOCMD_EXECUTABLE - the sopranocmd program
 #  SOPRANO_INCLUDE_DIR      - The include directory
@@ -23,8 +23,21 @@
 # Options:
 #  Set SOPRANO_MIN_VERSION to set the minimum required Soprano version (default: 1.99)
 #
+# FindSoprano.cmake supports the COMPOENTS keyword of find_package().
+# If the REQUIRED keyword is used and any of the specified components have not been
+# found, SOPRANO_FOUND will be set to FALSE.
+#
+# The following components are supported:
+#   PLUGIN_NQUADPARSER
+#   PLUGIN_NQUADSERIALIZER
+#   PLUGIN_RAPTORPARSER
+#   PLUGIN_RAPTORSERIALIZER
+#   PLUGIN_REDLANDBACKEND
+#   PLUGIN_SESAME2BACKEND
+#   PLUGIN_VIRTUOSOBACKEND
 
 # Copyright (c) 2008, Sebastian Trueg, <sebastian@trueg.de>
+# Copyright (c) 2009, Alexander Neundorf, <neundorf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -90,23 +103,6 @@ find_library_with_debug(SOPRANO_SERVER_LIBRARIES
   ${KDE4_LIB_DIR}
   )
 
-# check for all the libs as required to make sure that we do not try to compile with an old version
-
-if(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
-  set(Soprano_FOUND TRUE)
-endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES)
-
-if(Soprano_FOUND AND SOPRANO_INDEX_LIBRARIES)
-  set(SopranoIndex_FOUND TRUE)
-endif(Soprano_FOUND AND SOPRANO_INDEX_LIBRARIES)
-
-if(Soprano_FOUND AND SOPRANO_CLIENT_LIBRARIES)
-  set(SopranoClient_FOUND TRUE)
-endif(Soprano_FOUND AND SOPRANO_CLIENT_LIBRARIES)
-
-if(Soprano_FOUND AND SOPRANO_SERVER_LIBRARIES)
-  set(SopranoServer_FOUND TRUE)
-endif(Soprano_FOUND AND SOPRANO_SERVER_LIBRARIES)
 
 # check Soprano version
 
@@ -115,13 +111,12 @@ if(NOT SOPRANO_MIN_VERSION)
   set(SOPRANO_MIN_VERSION "1.99")
 endif(NOT SOPRANO_MIN_VERSION)
 
-if(Soprano_FOUND)
+if(SOPRANO_INCLUDE_DIR)
   file(READ ${SOPRANO_INCLUDE_DIR}/soprano/version.h SOPRANO_VERSION_CONTENT)
-  string(REGEX MATCH "SOPRANO_VERSION_STRING \".*\"\n" SOPRANO_VERSION_MATCH ${SOPRANO_VERSION_CONTENT})
+  string(REGEX MATCH "SOPRANO_VERSION_STRING \".*\"\n" SOPRANO_VERSION_MATCH "${SOPRANO_VERSION_CONTENT}")
   if(SOPRANO_VERSION_MATCH)
     string(REGEX REPLACE "SOPRANO_VERSION_STRING \"(.*)\"\n" "\\1" SOPRANO_VERSION ${SOPRANO_VERSION_MATCH})
     if(SOPRANO_VERSION STRLESS "${SOPRANO_MIN_VERSION}")
-      set(Soprano_FOUND FALSE)
       if(Soprano_FIND_REQUIRED)
         message(FATAL_ERROR "Soprano version ${SOPRANO_VERSION} is too old. Please install ${SOPRANO_MIN_VERSION} or newer")
       else(Soprano_FIND_REQUIRED)
@@ -129,16 +124,24 @@ if(Soprano_FOUND)
       endif(Soprano_FIND_REQUIRED)
     endif(SOPRANO_VERSION STRLESS "${SOPRANO_MIN_VERSION}")
   endif(SOPRANO_VERSION_MATCH)
-endif(Soprano_FOUND)
+endif(SOPRANO_INCLUDE_DIR)
 
+set(_SOPRANO_REQUIRED_COMPONENTS_RESULTS)
+if( Soprano_FIND_COMPONENTS )
+  foreach( _component ${Soprano_FIND_COMPONENTS} )
+    set(_SOPRANO_REQUIRED_COMPONENTS_RESULTS ${_SOPRANO_REQUIRED_COMPONENTS_RESULTS} SOPRANO_${_component}_FOUND)
+  endforeach( _component )
+endif( Soprano_FIND_COMPONENTS )
 
 #look for parser plugins
-if(Soprano_FOUND)
+if(SOPRANO_INCLUDE_DIR)
+  get_filename_component(_SOPRANO_PREFIX ${SOPRANO_INCLUDE_DIR} PATH)
+
   find_path(SOPRANO_PLUGIN_ROOT_DIR 
     NAMES
     soprano/plugins
     PATHS
-    ${SOPRANO_INCLUDE_DIR}/../share
+    ${_SOPRANO_PREFIX}/share
     ${SHARE_INSTALL_PREFIX} 
     /usr/share 
     /usr/local/share
@@ -184,7 +187,6 @@ if(Soprano_FOUND)
 
   # make sure the Soprano cmake macros are found
   # We also include it directly for convinience
-  get_filename_component(_SOPRANO_PREFIX ${SOPRANO_INCLUDE_DIR} PATH)
   find_file(_SOPRANO_MACRO_FILE NAMES SopranoAddOntology.cmake HINTS ${_SOPRANO_PREFIX}/share/soprano/cmake )
   if(_SOPRANO_MACRO_FILE)
     # new Soprano > 2.3.0 location
@@ -199,34 +201,31 @@ if(Soprano_FOUND)
     endif(_SOPRANO_MACRO_FILE_OLD)
   endif(_SOPRANO_MACRO_FILE)
 
-endif(Soprano_FOUND)
+endif(SOPRANO_INCLUDE_DIR)
 
-if(Soprano_FOUND)
-  if(NOT Soprano_FIND_QUIETLY)
-    message(STATUS "Found Soprano version ${SOPRANO_VERSION}: ${SOPRANO_LIBRARIES}")
-    message(STATUS "Found Soprano includes: ${SOPRANO_INCLUDE_DIR}")
-    message(STATUS "Found Soprano Index: ${SOPRANO_INDEX_LIBRARIES}")
-    message(STATUS "Found Soprano Client: ${SOPRANO_CLIENT_LIBRARIES}")
-    message(STATUS "Found Soprano Plugin Dir: ${SOPRANO_PLUGIN_DIR}")
-    message(STATUS "Found Soprano Plugins:${_plugins}")
-  endif(NOT Soprano_FIND_QUIETLY)
-else(Soprano_FOUND)
-  if(Soprano_FIND_REQUIRED)
-    if(NOT SOPRANO_INCLUDE_DIR)
-      message(FATAL_ERROR "Could not find Soprano includes.")
-    endif(NOT SOPRANO_INCLUDE_DIR)
-    if(NOT SOPRANO_LIBRARIES)
-      message(FATAL_ERROR "Could not find Soprano library.")
-    endif(NOT SOPRANO_LIBRARIES)
-  else(Soprano_FIND_REQUIRED)
-    if(NOT SOPRANO_INCLUDE_DIR)
-      message(STATUS "Could not find Soprano includes.")
-    endif(NOT SOPRANO_INCLUDE_DIR)
-    if(NOT SOPRANO_LIBRARIES)
-      message(STATUS "Could not find Soprano library.")
-    endif(NOT SOPRANO_LIBRARIES)
-  endif(Soprano_FIND_REQUIRED)
-endif(Soprano_FOUND)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Soprano DEFAULT_MSG 
+                                  SOPRANO_INCLUDE_DIR SOPRANO_LIBRARIES
+                                  ${_SOPRANO_REQUIRED_COMPONENTS_RESULTS} )
+
+# for compatibility:
+set(Soprano_FOUND ${SOPRANO_FOUND})
+
+# check for all the libs as required to make sure that we do not try to compile with an old version
+
+if(SOPRANO_FOUND AND SOPRANO_INDEX_LIBRARIES)
+  set(SopranoIndex_FOUND TRUE)
+endif(SOPRANO_FOUND AND SOPRANO_INDEX_LIBRARIES)
+
+if(SOPRANO_FOUND AND SOPRANO_CLIENT_LIBRARIES)
+  set(SopranoClient_FOUND TRUE)
+endif(SOPRANO_FOUND AND SOPRANO_CLIENT_LIBRARIES)
+
+if(SOPRANO_FOUND AND SOPRANO_SERVER_LIBRARIES)
+  set(SopranoServer_FOUND TRUE)
+endif(SOPRANO_FOUND AND SOPRANO_SERVER_LIBRARIES)
+
+
 
 mark_as_advanced(SOPRANO_CLIENT_LIBRARIES 
                  SOPRANO_INDEX_LIBRARIES
@@ -239,4 +238,3 @@ mark_as_advanced(SOPRANO_CLIENT_LIBRARIES
                  SOPRANO_SOPRANOCMD_EXECUTABLE
                  )
 
-#endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
