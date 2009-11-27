@@ -19,14 +19,14 @@
 if (NOT DEFINED Soprano_FOUND)
   find_package(Soprano)
   include(MacroLogFeature)
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" FALSE "" "Soprano is needed for Nepomuk")
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" TRUE "" "Soprano is needed for Nepomuk")
 endif (NOT DEFINED Soprano_FOUND)
 
-if (NOT DEFINED DESKTOP_ONTOLOGIES_FOUND)
+if (NOT DEFINED SHAREDDESKTOPONTOLOGIES_FOUND)
   find_package(SharedDesktopOntologies)
   include(MacroLogFeature)
-  macro_log_feature(DESKTOP_ONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" FALSE "" "Ontologies necessary for the Nepomuk semantic desktop.")
-endif (NOT DEFINED DESKTOP_ONTOLOGIES_FOUND)
+  macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "" "Ontologies necessary for the Nepomuk semantic desktop.")
+endif (NOT DEFINED SHAREDDESKTOPONTOLOGIES_FOUND)
 
 # Check for the following stuff independent from whether soprano has been found
 # or not. This will give a better error message at the end.
@@ -61,7 +61,7 @@ include(FindPackageHandleStandardArgs)
 # easier for the user to see what was missing:
 find_package_handle_standard_args(Nepomuk  DEFAULT_MSG 
                                   NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR
-                                  Soprano_FOUND SOPRANO_PLUGIN_RAPTORPARSER_FOUND SOPRANO_PLUGIN_REDLANDBACKEND_FOUND DESKTOP_ONTOLOGIES_FOUND
+                                  Soprano_FOUND SOPRANO_PLUGIN_RAPTORPARSER_FOUND SOPRANO_PLUGIN_REDLANDBACKEND_FOUND SHAREDDESKTOPONTOLOGIES_FOUND
                                   )
 
 #to retain backward compatibility
