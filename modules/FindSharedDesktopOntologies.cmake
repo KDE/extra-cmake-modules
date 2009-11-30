@@ -19,10 +19,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
-   # in cache already
-   set(SHAREDDESKTOPONTOLOGIES_FIND_QUIETLY TRUE)
-endif (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
 
 # First try the SharedDesktopOntologiesConfig.cmake from shared-desktop-ontologies 0.2 and newer
 find_package(SharedDesktopOntologies ${SharedDesktopOntologies_FIND_VERSION} QUIET NO_MODULE)
@@ -32,16 +28,10 @@ if (NOT SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
   find_path (SHAREDDESKTOPONTOLOGIES_ROOT_DIR
     nie/nie.trig
     PATHS
-    /usr/share
-    /usr/local/share
     ${SHARE_INSTALL_PREFIX}
     ENV XDG_DATA_DIRS
-    PATH_SUFFIXES ontology)
+    PATH_SUFFIXES ontology share/ontology )
 
-  # Look in CMAKE_PREFIX_PATH
-  find_path(SHAREDDESKTOPONTOLOGIES_ROOT_DIR
-    nie/nie.trig
-    PATH_SUFFIXES share/ontology)
 endif (NOT SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
 
 mark_as_advanced(SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
