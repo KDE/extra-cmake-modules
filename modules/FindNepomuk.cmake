@@ -19,13 +19,13 @@
 if (NOT DEFINED Soprano_FOUND)
   find_package(Soprano)
   include(MacroLogFeature)
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" TRUE "" "Soprano is needed for Nepomuk")
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" FALSE "" "Soprano is needed for Nepomuk")
 endif (NOT DEFINED Soprano_FOUND)
 
 if (NOT DEFINED SHAREDDESKTOPONTOLOGIES_FOUND)
   find_package(SharedDesktopOntologies)
   include(MacroLogFeature)
-  macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "" "Ontologies necessary for the Nepomuk semantic desktop.")
+  macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" FALSE "" "Ontologies necessary for the Nepomuk semantic desktop.")
 endif (NOT DEFINED SHAREDDESKTOPONTOLOGIES_FOUND)
 
 # Check for the following stuff independent from whether soprano has been found
