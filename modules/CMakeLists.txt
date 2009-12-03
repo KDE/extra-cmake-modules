@@ -136,6 +136,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                MacroPushRequiredVars.cmake
                MacroWriteBasicCMakeVersionFile.cmake
                NepomukMacros.cmake
+               NepomukAddOntologies.cmake
                PythonMacros.cmake
                SIPMacros.cmake
                Win32Macros.cmake
