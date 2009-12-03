@@ -140,13 +140,10 @@ if(SOPRANO_INCLUDE_DIR)
   find_path(SOPRANO_PLUGIN_ROOT_DIR 
     NAMES
     soprano/plugins
-    PATHS
+    HINTS
     ${_SOPRANO_PREFIX}/share
     ${SHARE_INSTALL_PREFIX} 
-    /usr/share 
-    /usr/local/share
-    NO_DEFAULT_PATH
-    NO_SYSTEM_ENVIRONMENT_PATH
+    PATH_SUFFIXES share
     )
   set(SOPRANO_PLUGIN_DIR "${SOPRANO_PLUGIN_ROOT_DIR}/soprano/plugins")
 
