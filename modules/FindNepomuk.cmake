@@ -54,14 +54,22 @@ find_library(NEPOMUK_QUERY_LIBRARIES
   ${LIB_INSTALL_DIR}
   )
 
-mark_as_advanced(NEPOMUK_INCLUDE_DIR NEPOMUK_LIBRARIES NEPOMUK_QUERY_LIBRARIES)
+find_file(NEPOMUK_ADDONTOLOGYCLASSES_FILE NepomukAddOntologyClasses.cmake
+          HINTS ${KDE4_DATA_INSTALL_DIR}/cmake/modules/
+          PATH_SUFFIXES share/apps/cmake/modules/
+         )
+
+include("${NEPOMUK_ADDONTOLOGYCLASSES_FILE}" OPTIONAL)
+
+mark_as_advanced(NEPOMUK_INCLUDE_DIR NEPOMUK_LIBRARIES NEPOMUK_QUERY_LIBRARIES NEPOMUK_ADDONTOLOGIES_FILE)
 
 include(FindPackageHandleStandardArgs)
 # List all nepomuk and also all necessary soprano variables here, to make it 
 # easier for the user to see what was missing:
 find_package_handle_standard_args(Nepomuk  DEFAULT_MSG 
-                                  NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR
-                                  Soprano_FOUND SOPRANO_PLUGIN_RAPTORPARSER_FOUND SOPRANO_PLUGIN_REDLANDBACKEND_FOUND SHAREDDESKTOPONTOLOGIES_FOUND
+                                  NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR NEPOMUK_ADDONTOLOGYCLASSES_FILE
+                                  Soprano_FOUND SOPRANO_PLUGIN_RAPTORPARSER_FOUND SOPRANO_PLUGIN_REDLANDBACKEND_FOUND
+                                  SHAREDDESKTOPONTOLOGIES_FOUND
                                   )
 
 #to retain backward compatibility
