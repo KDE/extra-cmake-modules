@@ -23,7 +23,7 @@
 # Options:
 #  Set SOPRANO_MIN_VERSION to set the minimum required Soprano version (default: 1.99)
 #
-# FindSoprano.cmake supports the COMPOENTS keyword of find_package().
+# FindSoprano.cmake supports the COMPONENTS keyword of find_package().
 # If the REQUIRED keyword is used and any of the specified components have not been
 # found, SOPRANO_FOUND will be set to FALSE.
 #
