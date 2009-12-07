@@ -120,7 +120,6 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                KDE4Defaults.cmake
                KDE4Macros.cmake
                MacroAddCompileFlags.cmake
-               MacroAddFileDependencies.cmake
                MacroAddLinkFlags.cmake
                MacroAdditionalCleanFiles.cmake
                MacroAppendIf.cmake
