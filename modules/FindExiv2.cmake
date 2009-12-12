@@ -60,10 +60,11 @@ else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
      find_path(EXIV2_INCLUDE_DIR exiv2/exif.hpp
        ${_EXIV2IncDir}
      )
-  
+
      find_library(EXIV2_LIBRARIES NAMES exiv2 libexiv2
-       PATHS
+       HINTS
        ${_EXIV2LinkDir}
+       NO_DEFAULT_PATH
      )
   
      if (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
