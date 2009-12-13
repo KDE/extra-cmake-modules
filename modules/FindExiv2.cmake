@@ -57,7 +57,7 @@ else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
   if(EXIV2_VERSION_GOOD_FOUND)
      set(EXIV2_DEFINITIONS ${_EXIV2Cflags})
  
-     find_path(EXIV2_INCLUDE_DIR exiv2/exif.hpp
+     find_path(EXIV2_INCLUDE_DIR NAMES exiv2/exif.hpp
        HINTS
        ${_EXIV2IncDir}
      )
