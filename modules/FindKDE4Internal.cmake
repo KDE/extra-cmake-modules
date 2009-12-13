@@ -403,6 +403,14 @@ else(kdelibs_SOURCE_DIR)
    set(_kdeBootStrapping FALSE)
 endif(kdelibs_SOURCE_DIR)
 
+
+# helper macro, sets both the KDE4_FOO_LIBRARY and KDE4_FOO_LIBS variables to KDE4__foo
+# It is used both in bootstrapping and in normal mode.
+macro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
+   set(KDE4_${_var}_LIBRARY ${_prefix}${_lib} )
+   set(KDE4_${_var}_LIBS    ${_prefix}${_lib} )
+endmacro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
+
 #######################  #now try to find some kde stuff  ################################
 
 if (_kdeBootStrapping)
@@ -489,60 +497,6 @@ else (_kdeBootStrapping)
    #message(FATAL_ERROR "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDE_VERSION} exact: -${KDE4_FIND_VERSION_EXACT}- version: -${KDE4_FIND_VERSION}-")
    macro_ensure_version( ${KDE_MIN_VERSION} ${KDE_VERSION} KDE4_INSTALLED_VERSION_OK )
 
-   # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
-   # the library target "kdeui" is exported as "KDE4__kdeui". The "KDE4__" is used as
-   # "namespace" to separate the imported targets from "normal" targets, it is stored in
-   # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
-   # Include it to "import" the libraries from kdelibs into the current projects as targets.
-   # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
-   # the kdeui library could now also be used just as "KDE4__kdeui" and still have all their
-   # dependent libraries handled correctly. But to keep compatibility and not to change
-   # behaviour we set all these variables anyway as seen below. Alex
-   include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
-
-   # helper macro, sets both the KDE4_FOO_LIBRARY and KDE4_FOO_LIBS variables to KDE4__foo
-   macro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
-      set(KDE4_${_var}_LIBRARY ${_prefix}${_lib} )
-      set(KDE4_${_var}_LIBS    ${_prefix}${_lib} )
-   endmacro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
-
-   # sorted by names
-   _kde4_set_lib_variables(KDE3SUPPORT   kde3support   ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KDECORE       kdecore       ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KDEUI         kdeui         ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KDEWEBKIT     kdewebkit     ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KDNSSD        kdnssd        ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KFILE         kfile         ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KHTML         khtml         ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KIO           kio           ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KJS           kjs           ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KJSAPI        kjsapi        ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KNEWSTUFF2    knewstuff2    ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KNEWSTUFF3    knewstuff3    ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KNOTIFYCONFIG knotifyconfig ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KPARTS        kparts        ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KROSSCORE     krosscore     ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KROSSUI       krossui       ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KTEXTEDITOR   ktexteditor   ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KUNITCONVERSION kunitconversion ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(PLASMA        plasma        ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(SOLID         solid         ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(THREADWEAVER  threadweaver  ${KDE4_TARGET_PREFIX})
-   _kde4_set_lib_variables(KUTILS        kutils        ${KDE4_TARGET_PREFIX})
-
-   if (UNIX)
-      _kde4_set_lib_variables(KDEFAKES kdefakes ${KDE4_TARGET_PREFIX})
-      _kde4_set_lib_variables(KDESU kdesu ${KDE4_TARGET_PREFIX})
-      _kde4_set_lib_variables(KPTY kpty ${KDE4_TARGET_PREFIX})
-   endif (UNIX)
-
-   # these targets do not always exist, since they are built conditionally:
-   if(TARGET ${KDE4_TARGET_PREFIX}nepomuk)
-      _kde4_set_lib_variables(NEPOMUK nepomuk ${KDE4_TARGET_PREFIX})
-   endif(TARGET ${KDE4_TARGET_PREFIX}nepomuk)
-
-   # and this one for compatibility:
-   set(KDE4_THREADWEAVER_LIBRARIES ${KDE4_TARGET_PREFIX}threadweaver )
 
    # KDE4_LIB_INSTALL_DIR and KDE4_INCLUDE_INSTALL_DIR are set in KDELibsDependencies.cmake,
    # use them to set the KDE4_LIB_DIR and KDE4_INCLUDE_DIR "public interface" variables
@@ -589,8 +543,63 @@ else (_kdeBootStrapping)
       endif (EXISTS "${apath}")
    endforeach(dir)
 
+
+   # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
+   # the library target "kdeui" is exported as "KDE4__kdeui". The "KDE4__" is used as
+   # "namespace" to separate the imported targets from "normal" targets, it is stored in
+   # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
+   # Include it to "import" the libraries from kdelibs into the current projects as targets.
+   # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
+   # the kdeui library could now also be used just as "KDE4__kdeui" and still have all their
+   # dependent libraries handled correctly. But to keep compatibility and not to change
+   # behaviour we set all these variables anyway as seen below. Alex
+   include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
+
+   # This one is for compatibility only:
+   set(KDE4_THREADWEAVER_LIBRARIES ${KDE4_TARGET_PREFIX}threadweaver )
+
 endif (_kdeBootStrapping)
 
+
+# Set the various KDE4_FOO_LIBRARY/LIBS variables.
+# In bootstrapping mode KDE4_TARGET_PREFIX is empty, so e.g. KDE4_KDECORE_LIBRARY
+# will be simply set to "kdecore".
+
+# Sorted by names:
+_kde4_set_lib_variables(KDE3SUPPORT   kde3support   "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KDECORE       kdecore       "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KDEUI         kdeui         "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KDEWEBKIT     kdewebkit     "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KDNSSD        kdnssd        "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KFILE         kfile         "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KHTML         khtml         "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KIO           kio           "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KJS           kjs           "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KJSAPI        kjsapi        "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KNEWSTUFF2    knewstuff2    "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KNEWSTUFF3    knewstuff3    "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KNOTIFYCONFIG knotifyconfig "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KPARTS        kparts        "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KROSSCORE     krosscore     "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KROSSUI       krossui       "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KTEXTEDITOR   ktexteditor   "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KUNITCONVERSION kunitconversion "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KUTILS        kutils        "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(PLASMA        plasma        "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(SOLID         solid         "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(THREADWEAVER  threadweaver  "${KDE4_TARGET_PREFIX}")
+
+if (UNIX)
+   _kde4_set_lib_variables(KDEFAKES kdefakes "${KDE4_TARGET_PREFIX}")
+   _kde4_set_lib_variables(KDESU kdesu       "${KDE4_TARGET_PREFIX}")
+   _kde4_set_lib_variables(KPTY kpty         "${KDE4_TARGET_PREFIX}")
+endif (UNIX)
+
+# The nepomuk target does not always exist, since is is built conditionally. When bootstrapping
+# we set it always anyways.
+if(_kdeBootStrapping  OR  TARGET ${KDE4_TARGET_PREFIX}nepomuk)
+   _kde4_set_lib_variables(NEPOMUK nepomuk "${KDE4_TARGET_PREFIX}")
+endif(_kdeBootStrapping  OR  TARGET ${KDE4_TARGET_PREFIX}nepomuk)
 
 
 ################### try to find Phonon ############################################
