@@ -4,7 +4,7 @@
 #   LIBATTICA_FOUND          Indicates that Attica was found
 #   LIBATTICA_LIBRARIES      Libraries needed to use Attica
 #   LIBATTICA_LIBRARY_DIRS   Paths needed for linking against Attica
-#   LIBATTICA_INCLUDE_DIRS   Paths needed for finding Attica include files
+#   LIBATTICA_INCLUDE_DIR    Path needed for finding Attica include files
 #
 # Copyright (c) 2009 Frederik Gladhorn <gladhorn@kde.org>
 #
