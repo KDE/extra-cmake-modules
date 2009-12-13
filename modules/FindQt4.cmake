@@ -1016,7 +1016,14 @@ IF (QT4_QMAKE_FOUND)
     _QT4_ADJUST_LIB_VARS(QAXSERVER)
     _QT4_ADJUST_LIB_VARS(QAXCONTAINER)
   ENDIF(WIN32)
-  
+
+  # If Qt is installed as a framework, we need to add QT_QTCORE_LIBRARY here (which
+  # is the framework directory in that case), since this will make the cmake include_directories()
+  # command recognize that we need the framework flag with the respective directory (-F)
+  IF(QT_USE_FRAMEWORKS)
+      SET(QT_QTCORE_INCLUDE_DIR ${QT_QTCORE_INCLUDE_DIR}  ${QT_QTCORE_LIBRARY})
+  ENDIF(QT_USE_FRAMEWORKS)
+
 
   #######################################
   #

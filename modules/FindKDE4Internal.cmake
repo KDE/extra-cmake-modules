@@ -979,9 +979,6 @@ if (APPLE)
   # optimization flags are set below for the various build types
   set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common")
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common")
-  if (QT_USE_FRAMEWORKS)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -F${QT_LIBRARY_DIR}")
-  endif (QT_USE_FRAMEWORKS)
 endif (APPLE)
 
 
