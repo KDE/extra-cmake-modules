@@ -628,6 +628,45 @@ IF (QT4_QMAKE_FOUND)
                     QT_PLUGINS_DIR QT_TRANSLATIONS_DIR)
 
 
+  #############################################
+  #
+  # Find out what window system we're using
+  #
+  #############################################
+  # Save required includes and required_flags variables
+  MACRO_PUSH_REQUIRED_VARS()
+  # Add QT_INCLUDE_DIR to CMAKE_REQUIRED_INCLUDES
+  SET(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_HEADERS_DIR}")
+  # On Mac OS X when Qt has framework support, also add the framework path
+  IF( QT_USE_FRAMEWORKS )
+    SET(CMAKE_REQUIRED_FLAGS "-F${QT_LIBRARY_DIR} ")
+  ENDIF( QT_USE_FRAMEWORKS )
+  # Check for Window system symbols (note: only one should end up being set)
+  CHECK_SYMBOL_EXISTS(Q_WS_X11 "QtCore/qglobal.h" Q_WS_X11)
+  CHECK_SYMBOL_EXISTS(Q_WS_WIN "QtCore/qglobal.h" Q_WS_WIN)
+  CHECK_SYMBOL_EXISTS(Q_WS_QWS "QtCore/qglobal.h" Q_WS_QWS)
+  CHECK_SYMBOL_EXISTS(Q_WS_MAC "QtCore/qglobal.h" Q_WS_MAC)
+  IF(Q_WS_MAC)
+    IF(QT_QMAKE_CHANGED)
+      SET(QT_MAC_USE_COCOA "" CACHE BOOL "Use Cocoa on Mac" FORCE)
+    ENDIF(QT_QMAKE_CHANGED)
+    CHECK_SYMBOL_EXISTS(QT_MAC_USE_COCOA "QtCore/qconfig.h" QT_MAC_USE_COCOA)
+  ENDIF(Q_WS_MAC)
+
+  IF (QT_QTCOPY_REQUIRED)
+     CHECK_SYMBOL_EXISTS(QT_IS_QTCOPY "QtCore/qglobal.h" QT_KDE_QT_COPY)
+     IF (NOT QT_IS_QTCOPY)
+        MESSAGE(FATAL_ERROR "qt-copy is required, but hasn't been found")
+     ENDIF (NOT QT_IS_QTCOPY)
+  ENDIF (QT_QTCOPY_REQUIRED)
+
+  # Restore CMAKE_REQUIRED_INCLUDES+CMAKE_REQUIRED_FLAGS variables
+  MACRO_POP_REQUIRED_VARS()
+  #
+  #############################################
+
+
+
   ########################################
   #
   #       Setting the INCLUDE-Variables
@@ -637,6 +676,10 @@ IF (QT4_QMAKE_FOUND)
   SET(QT_MODULES QtCore QtGui Qt3Support QtSvg QtScript QtTest QtUiTools 
                  QtHelp QtWebKit QtXmlPatterns QtNetwork QtMultimedia
                  QtNsPlugin QtOpenGL QtSql QtXml QtDesigner QtDBus QtScriptTools)
+  
+  IF(Q_WS_X11)
+    SET(QT_MODULES ${QT_MODULES} QtMotif)
+  ENDIF(Q_WS_X11)
 
   FOREACH(QT_MODULE ${QT_MODULES})
     STRING(TOUPPER ${QT_MODULE} _upper_qt_module)
@@ -724,53 +767,6 @@ IF (QT4_QMAKE_FOUND)
 
   # Set QT_INCLUDES
   SET( QT_INCLUDES ${QT_QT_INCLUDE_DIR} ${QT_MKSPECS_DIR}/default ${QT_INCLUDE_DIR} )
-
-
-  #############################################
-  #
-  # Find out what window system we're using
-  #
-  #############################################
-  # Save required includes and required_flags variables
-  MACRO_PUSH_REQUIRED_VARS()
-  # Add QT_INCLUDE_DIR to CMAKE_REQUIRED_INCLUDES
-  SET(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_INCLUDE_DIR}")
-  # On Mac OS X when Qt has framework support, also add the framework path
-  IF( QT_USE_FRAMEWORKS )
-    SET(CMAKE_REQUIRED_FLAGS "-F${QT_LIBRARY_DIR} ")
-  ENDIF( QT_USE_FRAMEWORKS )
-  # Check for Window system symbols (note: only one should end up being set)
-  CHECK_SYMBOL_EXISTS(Q_WS_X11 "QtCore/qglobal.h" Q_WS_X11)
-  CHECK_SYMBOL_EXISTS(Q_WS_WIN "QtCore/qglobal.h" Q_WS_WIN)
-  CHECK_SYMBOL_EXISTS(Q_WS_QWS "QtCore/qglobal.h" Q_WS_QWS)
-  CHECK_SYMBOL_EXISTS(Q_WS_MAC "QtCore/qglobal.h" Q_WS_MAC)
-  IF(Q_WS_MAC)
-    IF(QT_QMAKE_CHANGED)
-      SET(QT_MAC_USE_COCOA "" CACHE BOOL "Use Cocoa on Mac" FORCE)
-    ENDIF(QT_QMAKE_CHANGED)
-    CHECK_SYMBOL_EXISTS(QT_MAC_USE_COCOA "QtCore/qconfig.h" QT_MAC_USE_COCOA)
-  ENDIF(Q_WS_MAC)
-
-  IF (QT_QTCOPY_REQUIRED)
-     CHECK_SYMBOL_EXISTS(QT_IS_QTCOPY "QtCore/qglobal.h" QT_KDE_QT_COPY)
-     IF (NOT QT_IS_QTCOPY)
-        MESSAGE(FATAL_ERROR "qt-copy is required, but hasn't been found")
-     ENDIF (NOT QT_IS_QTCOPY)
-  ENDIF (QT_QTCOPY_REQUIRED)
-
-  # Restore CMAKE_REQUIRED_INCLUDES+CMAKE_REQUIRED_FLAGS variables
-  MACRO_POP_REQUIRED_VARS()
-  #
-  #############################################
-
-  # This check is after the check for the window system, since it uses Q_WS_X11:
-  # Set QT_QTMOTIF_INCLUDE_DIR
-  IF(Q_WS_X11)
-    FIND_PATH(QT_QTMOTIF_INCLUDE_DIR QtMotif 
-      PATHS 
-      ${QT_INCLUDE_DIR}/QtMotif 
-      NO_DEFAULT_PATH )
-  ENDIF(Q_WS_X11)
 
 
   #######################################
