@@ -164,28 +164,28 @@
 #  QT_QTGUI_FOUND           True if QtGui was found.
 #  QT_QT3SUPPORT_FOUND      True if Qt3Support was found.
 #  QT_QTASSISTANT_FOUND     True if QtAssistant was found.
+#  QT_QTASSISTANTCLIENT_FOUND  True if QtAssistantClient was found.
 #  QT_QAXCONTAINER_FOUND    True if QAxContainer was found (Windows only).
 #  QT_QAXSERVER_FOUND       True if QAxServer was found (Windows only).
 #  QT_QTDBUS_FOUND          True if QtDBus was found.
 #  QT_QTDESIGNER_FOUND      True if QtDesigner was found.
 #  QT_QTDESIGNERCOMPONENTS  True if QtDesignerComponents was found.
+#  QT_QTHELP_FOUND          True if QtHelp was found.
 #  QT_QTMOTIF_FOUND         True if QtMotif was found.
-#  QT_QTMULTIMEDIA_FOUND    True if QtMultimedia was found.
+#  QT_QTMULTIMEDIA_FOUND    True if QtMultimedia was found (since Qt 4.6.0).
 #  QT_QTNETWORK_FOUND       True if QtNetwork was found.
 #  QT_QTNSPLUGIN_FOUND      True if QtNsPlugin was found.
 #  QT_QTOPENGL_FOUND        True if QtOpenGL was found.
 #  QT_QTSQL_FOUND           True if QtSql was found.
-#  QT_QTXML_FOUND           True if QtXml was found.
 #  QT_QTSVG_FOUND           True if QtSvg was found.
 #  QT_QTSCRIPT_FOUND        True if QtScript was found.
+#  QT_QTSCRIPTTOOLS_FOUND   True if QtScriptTools was found.
 #  QT_QTTEST_FOUND          True if QtTest was found.
 #  QT_QTUITOOLS_FOUND       True if QtUiTools was found.
-#  QT_QTASSISTANTCLIENT_FOUND  True if QtAssistantClient was found.
-#  QT_QTHELP_FOUND          True if QtHelp was found.
 #  QT_QTWEBKIT_FOUND        True if QtWebKit was found.
+#  QT_QTXML_FOUND           True if QtXml was found.
 #  QT_QTXMLPATTERNS_FOUND   True if QtXmlPatterns was found.
 #  QT_PHONON_FOUND          True if phonon was found.
-#  QT_QTSCRIPTTOOLS_FOUND   True if QtScriptTools was found.
 #
 #  QT_MAC_USE_COCOA    For Mac OS X, its whether Cocoa or Carbon is used.
 #                      In general, this should not be used, but its useful
@@ -242,7 +242,8 @@
 #  QT_TRANSLATIONS_DIR         Path to "translations" of Qt4
 #  QT_DOC_DIR                  Path to "doc" of Qt4
 #  QT_MKSPECS_DIR              Path to "mkspecs" of Qt4
-#                            
+#
+#
 # For every library of Qt, a QT_QTFOO_LIBRARY variable is defined, with the full path to the library.
 #
 # So there are the following variables:
@@ -280,6 +281,8 @@
 #
 # The QtScript library:       QT_QTSCRIPT_LIBRARY
 #
+# The QtScriptTools library:      QT_QTSCRIPTTOOLS_LIBRARY
+#
 # The QtSql library:          QT_QTSQL_LIBRARY
 #
 # The QtSvg library:          QT_QTSVG_LIBRARY
@@ -297,8 +300,6 @@
 # The qtmain library for Windows QT_QTMAIN_LIBRARY
 #
 # The Phonon library:             QT_PHONON_LIBRARY
-#  
-# The QtScriptTools library:      QT_QTSCRIPTTOOLS_LIBRARY
 #
 # also defined, but NOT for general use are
 #  QT_MOC_EXECUTABLE                   Where to find the moc tool.
@@ -1024,6 +1025,7 @@ IF (QT4_QMAKE_FOUND)
     SET(QT_INCLUDES       ${QT_INCLUDES} ${QT_QTCORE_LIBRARY} )
     SET(QT_INCLUDE_DIR ${QT_INCLUDE_DIR} ${QT_QTCORE_LIBRARY} )
   ENDIF(QT_USE_FRAMEWORKS)
+
 
 
   #######################################
