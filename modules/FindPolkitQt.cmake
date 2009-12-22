@@ -25,7 +25,7 @@ if (POLKITQT_INCLUDE_DIR AND POLKITQT_GUI_LIBRARY AND POLKITQT_CORE_LIBRARY)
 endif (POLKITQT_INCLUDE_DIR AND POLKITQT_GUI_LIBRARY AND POLKITQT_CORE_LIBRARY)
 
 if (NOT POLKITQT_MIN_VERSION)
-  set(POLKITQT_MIN_VERSION "0.9.0")
+  set(POLKITQT_MIN_VERSION "0.9.3")
 endif (NOT POLKITQT_MIN_VERSION)
 
 if (NOT WIN32)
@@ -40,6 +40,38 @@ find_path( POLKITQT_INCLUDE_DIR
      NAMES polkit-qt/auth.h
      PATH_SUFFIXES PolicyKit
 )
+
+find_path( POLKITQT_VERSION_FILE
+     NAMES polkit-qt/polkitqtversion.h
+     PATH_SUFFIXES PolicyKit
+)
+
+set(POLKITQT_VERSION_OK TRUE)
+if(POLKITQT_VERSION_FILE)
+  file(READ ${POLKITQT_INCLUDE_DIR}/polkit-qt/polkitqtversion.h POLKITQT_VERSION_CONTENT)
+  string (REGEX MATCH "POLKITQT_VERSION_STRING \".*\"\n" POLKITQT_VERSION_MATCH "${POLKITQT_VERSION_CONTENT}")
+  
+  if(POLKITQT_VERSION_MATCH)
+    string(REGEX REPLACE "POLKITQT_VERSION_STRING \"(.*)\"\n" "\\1" POLKITQT_VERSION ${POLKITQT_VERSION_MATCH})
+    if(POLKITQT_VERSION STRLESS "${POLKITQT_MIN_VERSION}")
+      set(POLKITQT_VERSION_OK FALSE)
+      if(PolkitQt_FIND_REQUIRED)
+        message(FATAL_ERROR "PolkitQt version ${POLKITQT_VERSION} was found, but it is too old. Please install ${POLKITQT_MIN_VERSION} or newer.")
+      else(PolkitQt_FIND_REQUIRED)
+        message(STATUS "PolkitQt version ${POLKITQT_VERSION} is too old. Please install ${POLKITQT_MIN_VERSION} or newer.")
+      endif(PolkitQt_FIND_REQUIRED)
+    endif(POLKITQT_VERSION STRLESS "${POLKITQT_MIN_VERSION}")
+  endif(POLKITQT_VERSION_MATCH)
+elseif(POLKITQT_INCLUDE_DIR)
+  # The version is so old that it does not even have the file
+  set(POLKITQT_VERSION_OK FALSE)
+  if(PolkitQt_FIND_REQUIRED)
+    message(FATAL_ERROR "It looks like PolkitQt is too old. Please install PolkitQt version ${POLKITQT_MIN_VERSION} or newer.")
+  else(PolkitQt_FIND_REQUIRED)
+    message(STATUS "It looks like PolkitQt is too old. Please install PolkitQt version ${POLKITQT_MIN_VERSION} or newer.")
+  endif(PolkitQt_FIND_REQUIRED)
+endif(POLKITQT_VERSION_FILE)
+
 find_library( POLKITQT_CORE_LIBRARY 
     NAMES polkit-qt-core 
     HINTS ${PC_POLKITQT_LIBDIR}
@@ -54,21 +86,9 @@ include(FindPackageHandleStandardArgs)
 
 # handle the QUIETLY and REQUIRED arguments and set POLKITQT_FOUND to TRUE if 
 # all listed variables are TRUE
-find_package_handle_standard_args(PolkitQt  DEFAULT_MSG  POLKITQT_INCLUDE_DIR POLKITQT_GUI_LIBRARY POLKITQT_CORE_LIBRARY)
+find_package_handle_standard_args(PolkitQt  DEFAULT_MSG  POLKITQT_INCLUDE_DIR POLKITQT_GUI_LIBRARY POLKITQT_CORE_LIBRARY POLKITQT_VERSION_OK)
 
-mark_as_advanced(POLKITQT_INCLUDE_DIR POLKITQT_CORE_LIBRARY POLKITQT_GUI_LIBRARY POLKITQT_LIBRARIES)
-
-if (POLKITQT_FOUND)
-    if (PC_POLKITQT_VERSION VERSION_LESS POLKITQT_MIN_VERSION)
-        if(PolkitQt_FIND_REQUIRED)
-            message(FATAL_ERROR "Found Polkit-Qt release ${PC_POLKITQT_VERSION}, but at least ${POLKITQT_MIN_VERSION} is required.")
-        else(PolkitQt_FIND_REQUIRED)
-            message(STATUS "Found Polkit-Qt release ${PC_POLKITQT_VERSION}, but at least ${POLKITQT_MIN_VERSION} is required.")
-        endif(PolkitQt_FIND_REQUIRED)
-        set(POLKITQT_FOUND FALSE)
-    endif (PC_POLKITQT_VERSION VERSION_LESS POLKITQT_MIN_VERSION)
-endif (POLKITQT_FOUND)
-
+mark_as_advanced(POLKITQT_INCLUDE_DIR POLKITQT_CORE_LIBRARY POLKITQT_GUI_LIBRARY POLKITQT_LIBRARIES POLKITQT_VERSION_OK)
 
 if(POLKITQT_FOUND)
     get_filename_component(_POLKITQT_INSTALL_PREFIX "${POLKITQT_CORE_LIBRARY}"  PATH)
