@@ -23,18 +23,9 @@
 # First try the SharedDesktopOntologiesConfig.cmake from shared-desktop-ontologies 0.2 and newer
 find_package(SharedDesktopOntologies ${SharedDesktopOntologies_FIND_VERSION} QUIET NO_MODULE)
 
-if (NOT SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
-  # Look in the standard dirs
-  find_path (SHAREDDESKTOPONTOLOGIES_ROOT_DIR
-    nie/nie.trig
-    PATHS
-    ${SHARE_INSTALL_PREFIX}
-    ENV XDG_DATA_DIRS
-    PATH_SUFFIXES ontology share/ontology )
-
-endif (NOT SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
-
-mark_as_advanced(SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
+if (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
+  mark_as_advanced(SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
+endif (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(SharedDesktopOntologies DEFAULT_MSG SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
