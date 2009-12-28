@@ -19,7 +19,7 @@
 if (NOT DEFINED Soprano_FOUND)
   find_package(Soprano)
   include(MacroLogFeature)
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" FALSE "" "Soprano is needed for Nepomuk")
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net/" FALSE "" "Soprano is needed for Nepomuk")
 endif (NOT DEFINED Soprano_FOUND)
 
 if (NOT DEFINED SHAREDDESKTOPONTOLOGIES_FOUND)
@@ -64,9 +64,9 @@ include("${NEPOMUK_ADDONTOLOGYCLASSES_FILE}" OPTIONAL)
 mark_as_advanced(NEPOMUK_INCLUDE_DIR NEPOMUK_LIBRARIES NEPOMUK_QUERY_LIBRARIES NEPOMUK_ADDONTOLOGIES_FILE)
 
 include(FindPackageHandleStandardArgs)
-# List all nepomuk and also all necessary soprano variables here, to make it 
+# List all nepomuk and also all necessary soprano variables here, to make it
 # easier for the user to see what was missing:
-find_package_handle_standard_args(Nepomuk  DEFAULT_MSG 
+find_package_handle_standard_args(Nepomuk  DEFAULT_MSG
                                   NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR NEPOMUK_ADDONTOLOGYCLASSES_FILE
                                   Soprano_FOUND SOPRANO_PLUGIN_RAPTORPARSER_FOUND SOPRANO_PLUGIN_REDLANDBACKEND_FOUND
                                   SHAREDDESKTOPONTOLOGIES_FOUND
