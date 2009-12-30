@@ -83,10 +83,20 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
       message(SEND_ERROR "Running ${RCGEN} to generate list of sources failed with error code ${rcgen_result}")
     endif(NOT ${rcgen_result} EQUAL 0)
     
+    # jom parses the '#' from the class uri as the start of a comment so we must escape it
+    if(MSVC)
+      foreach(_class IN LISTS _classes)
+        string(REPLACE "#" "^#" _class ${_class})
+        list(REMOVE_AT _classes 0)
+        list(APPEND _classes ${_class})
+      endforeach(_class)  
+    endif(MSVC)
+
     add_custom_command(OUTPUT ${_out_headers} ${_out_sources}
       COMMAND ${RCGEN} ${_fastmode} --writeall --target ${_targetdir}/ ${_classes} ${_visibility} ${_ontologies}
       DEPENDS ${_ontologies}
       COMMENT "Generating ontology source files from ${_ontofilenames}"
+      VERBATIM
       )
 
     # make sure the includes are found
