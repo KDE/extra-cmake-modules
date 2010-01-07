@@ -21,7 +21,14 @@
 
 
 # First try the SharedDesktopOntologiesConfig.cmake from shared-desktop-ontologies 0.2 and newer
-find_package(SharedDesktopOntologies ${SharedDesktopOntologies_FIND_VERSION} QUIET NO_MODULE)
+
+# This is to make it work with cmake 2.6.2, since SDO 0.2 installs its config file into 
+# the 2.6.3 compatible location only ( share/cmake/SDO/ instead share/SDO/[cmake/] )
+if( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" VERSION_LESS "2.6.3")
+  find_path(_SDO_CONFIG_DIR SharedDesktopOntologiesConfig.cmake PATH_SUFFIXES share/cmake/SharedDesktopOntologies/ )
+endif( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" VERSION_LESS "2.6.3")
+
+find_package(SharedDesktopOntologies ${SharedDesktopOntologies_FIND_VERSION} QUIET NO_MODULE HINTS "${_SDO_CONFIG_DIR}" )
 
 if (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
   mark_as_advanced(SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
