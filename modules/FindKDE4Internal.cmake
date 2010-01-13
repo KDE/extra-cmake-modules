@@ -303,6 +303,10 @@ endif(POLICY CMP0011)
 # Only do something if it hasn't been found yet
 if(NOT KDE4_FOUND)
 
+# get the directory of the current file, used later on in the file
+get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
+
+
 include (MacroEnsureVersion)
 
 # We may only search for other packages with "REQUIRED" if we are required ourselves.
@@ -316,6 +320,13 @@ else(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
   set(_REQ_STRING_KDE4 )
   set(_REQ_STRING_KDE4_MESSAGE "STATUS")
 endif(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
+
+
+# Store CMAKE_MODULE_PATH and then append the current dir to it, so we are sure
+# we get the FindQt4.cmake located next to us and not a different one.
+# The original CMAKE_MODULE_PATH is restored later on.
+set(_kde_cmake_module_path_back ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${kde_cmake_module_dir} ${CMAKE_MODULE_PATH} )
 
 # if the minimum Qt requirement is changed, change all occurrence in the
 # following lines
@@ -351,6 +362,8 @@ if(NOT PERL_FOUND)
    message(STATUS "Perl not found")
 endif(NOT PERL_FOUND)
 
+# restore the original CMAKE_MODULE_PATH
+set(CMAKE_MODULE_PATH ${_kde_cmake_module_path_back})
 
 # we check for Phonon not here, but further below, i.e. after KDELibsDependencies.cmake
 # has been loaded, which helps in the case that phonon is installed to the same
@@ -389,9 +402,6 @@ include (MacroLibrary)
 include (CheckCXXCompilerFlag)
 include (CheckCXXSourceCompiles)
 
-
-# get the directory of the current file, used later on in the file
-get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 # are we trying to compile kdelibs ? kdelibs_SOURCE_DIR comes from "project(kdelibs)" in kdelibs/CMakeLists.txt
 # then enter bootstrap mode

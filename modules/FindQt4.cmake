@@ -361,10 +361,10 @@ IF(QT_QT_LIBRARY)
 ENDIF(QT_QT_LIBRARY)
 
 
-IF (QT4_QMAKE_FOUND)
+IF (QT4_QMAKE_FOUND  AND  Qt4ImportedTarget__QtCore)
    # Check already done in this cmake run, nothing more to do
    RETURN()
-ENDIF (QT4_QMAKE_FOUND)
+ENDIF (QT4_QMAKE_FOUND  AND  Qt4ImportedTarget__QtCore)
 
 # check that QT_NO_DEBUG is defined for release configurations
 MACRO(QT_CHECK_FLAG_EXISTS FLAG VAR DOC)
@@ -894,38 +894,40 @@ IF (QT4_QMAKE_FOUND)
   MACRO (_QT4_ADJUST_LIB_VARS basename)
 #    message(STATUS "Adjusting ${basename}, release: -${QT_${basename}_LIBRARY_RELEASE}- debug: -${QT_${basename}_LIBRARY_DEBUG}-")
     IF (QT_${basename}_LIBRARY_RELEASE OR QT_${basename}_LIBRARY_DEBUG)
-      ADD_LIBRARY(Qt4__${basename} SHARED IMPORTED )
+      IF(NOT TARGET Qt4ImportedTarget__${basename})
+        ADD_LIBRARY(Qt4ImportedTarget__${basename} SHARED IMPORTED )
 
-      IF(WIN32)
-        SET(_QT4_LIBRARY_PROPERTY_NAME IMPLIB)
-      ELSE(WIN32)
-        SET(_QT4_LIBRARY_PROPERTY_NAME LOCATION)
-      ENDIF(WIN32)
+        IF(WIN32)
+          SET(_QT4_LIBRARY_PROPERTY_NAME IMPLIB)
+        ELSE(WIN32)
+          SET(_QT4_LIBRARY_PROPERTY_NAME LOCATION)
+        ENDIF(WIN32)
 
 
-      IF (QT_${basename}_LIBRARY_RELEASE)
-        SET_PROPERTY(TARGET Qt4__${basename} APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
-        SET_PROPERTY(TARGET Qt4__${basename}        PROPERTY IMPORTED_${_QT4_LIBRARY_PROPERTY_NAME}_RELEASE "${QT_${basename}_LIBRARY_RELEASE}" )
+        IF (QT_${basename}_LIBRARY_RELEASE)
+          SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+          SET_PROPERTY(TARGET Qt4ImportedTarget__${basename}        PROPERTY IMPORTED_${_QT4_LIBRARY_PROPERTY_NAME}_RELEASE "${QT_${basename}_LIBRARY_RELEASE}" )
 #        message(STATUS "Setting IMPORTED_LOCATION_RELEASE to -${QT_${basename}_LIBRARY_RELEASE}-")
-      ENDIF (QT_${basename}_LIBRARY_RELEASE)
+        ENDIF (QT_${basename}_LIBRARY_RELEASE)
 
-      IF (QT_${basename}_LIBRARY_DEBUG)
-        SET_PROPERTY(TARGET Qt4__${basename} APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
-        SET_PROPERTY(TARGET Qt4__${basename}        PROPERTY IMPORTED_${_QT4_LIBRARY_PROPERTY_NAME}_DEBUG "${QT_${basename}_LIBRARY_DEBUG}" )
+        IF (QT_${basename}_LIBRARY_DEBUG)
+          SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+          SET_PROPERTY(TARGET Qt4ImportedTarget__${basename}        PROPERTY IMPORTED_${_QT4_LIBRARY_PROPERTY_NAME}_DEBUG "${QT_${basename}_LIBRARY_DEBUG}" )
 
 #       message(STATUS "Setting IMPORTED_LOCATION_DEBUG to -${QT_${basename}_LIBRARY_DEBUG}-")
 
-        SET_PROPERTY(TARGET Qt4__${basename} PROPERTY MAP_IMPORTED_CONFIG_PROFILE DEBUG)
-        SET_PROPERTY(TARGET Qt4__${basename} PROPERTY MAP_IMPORTED_CONFIG_DEBUGFULL DEBUG)
-      ENDIF (QT_${basename}_LIBRARY_DEBUG)
+          SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} PROPERTY MAP_IMPORTED_CONFIG_PROFILE DEBUG)
+          SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} PROPERTY MAP_IMPORTED_CONFIG_DEBUGFULL DEBUG)
+        ENDIF (QT_${basename}_LIBRARY_DEBUG)
 
-      SET(QT_${basename}_LIBRARY       Qt4__${basename} )
-      SET(QT_${basename}_LIBRARIES     Qt4__${basename} )
+        SET(QT_${basename}_LIBRARY       Qt4ImportedTarget__${basename} )
+        SET(QT_${basename}_LIBRARIES     Qt4ImportedTarget__${basename} )
 
-      IF (QT_${basename}_LIBRARY)
-        SET(QT_${basename}_FOUND 1)
-      ENDIF (QT_${basename}_LIBRARY)
+        IF (QT_${basename}_LIBRARY)
+          SET(QT_${basename}_FOUND 1)
+        ENDIF (QT_${basename}_LIBRARY)
 
+      ENDIF(NOT TARGET Qt4ImportedTarget__${basename})
     ENDIF (QT_${basename}_LIBRARY_RELEASE OR QT_${basename}_LIBRARY_DEBUG)
 
     IF (QT_${basename}_INCLUDE_DIR)
