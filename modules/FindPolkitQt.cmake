@@ -91,8 +91,7 @@ find_package_handle_standard_args(PolkitQt  DEFAULT_MSG  POLKITQT_INCLUDE_DIR PO
 mark_as_advanced(POLKITQT_INCLUDE_DIR 
                  POLKITQT_CORE_LIBRARY
                  POLKITQT_GUI_LIBRARY
-                 POLKITQT_LIBRARIES
-                 POLKITQT_VERSION_OK
+                 POLKITQT_VERSION_FILE
                 )
 
 if(POLKITQT_FOUND)

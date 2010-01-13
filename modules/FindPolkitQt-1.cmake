@@ -74,7 +74,7 @@ find_library( POLKITQT-1_GUI_LIBRARY
     NAMES polkit-qt-gui-1
     HINTS ${PC_POLKITQT-1_LIBDIR}
 )
-find_library( POLKITQT-1_AGENT_LIBRARY 
+find_library( POLKITQT-1_AGENT_LIBRARY
     NAMES polkit-qt-agent-1
     HINTS ${PC_POLKITQT-1_LIBDIR}
 )
@@ -85,13 +85,13 @@ include(FindPackageHandleStandardArgs)
 
 # handle the QUIETLY and REQUIRED arguments and set POLKITQT-1_FOUND to TRUE if 
 # all listed variables are TRUE
-find_package_handle_standard_args(PolkitQt-1 DEFAULT_MSG POLKITQT-1_LIBRARIES POLKITQT-1_INCLUDE_DIR POLKITQT-1_VERSION_OK)
+find_package_handle_standard_args(PolkitQt-1  DEFAULT_MSG  POLKITQT-1_LIBRARIES POLKITQT-1_INCLUDE_DIR POLKITQT-1_VERSION_OK)
 
 mark_as_advanced(POLKITQT-1_INCLUDE_DIR 
                  POLKITQT-1_CORE_LIBRARY
                  POLKITQT-1_GUI_LIBRARY
-                 POLKITQT-1_LIBRARIES
-                 POLKITQT-1_VERSION_OK
+                 POLKITQT-1_AGENT_LIBRARY
+                 POLKITQT-1_VERSION_FILE
                 )
 
 if (POLKITQT-1_FOUND)
