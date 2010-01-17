@@ -892,7 +892,9 @@ IF (QT4_QMAKE_FOUND)
   ############################################
 
   MACRO (_QT4_ADJUST_LIB_VARS basename)
-#    message(STATUS "Adjusting ${basename}, release: -${QT_${basename}_LIBRARY_RELEASE}- debug: -${QT_${basename}_LIBRARY_DEBUG}-")
+    # The name of the imported targets, i.e. the prefix "Qt4ImportedTarget__" must not change,
+    # since it is stored in EXPORT-files as name of a required library. If the name would change
+    # here, this would lead to the imported Qt4-library targets not being resolved by cmake anymore.
     IF (QT_${basename}_LIBRARY_RELEASE OR QT_${basename}_LIBRARY_DEBUG)
       IF(NOT TARGET Qt4ImportedTarget__${basename})
         ADD_LIBRARY(Qt4ImportedTarget__${basename} SHARED IMPORTED )
@@ -907,16 +909,13 @@ IF (QT4_QMAKE_FOUND)
         IF (QT_${basename}_LIBRARY_RELEASE)
           SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
           SET_PROPERTY(TARGET Qt4ImportedTarget__${basename}        PROPERTY IMPORTED_${_QT4_LIBRARY_PROPERTY_NAME}_RELEASE "${QT_${basename}_LIBRARY_RELEASE}" )
-#        message(STATUS "Setting IMPORTED_LOCATION_RELEASE to -${QT_${basename}_LIBRARY_RELEASE}-")
         ENDIF (QT_${basename}_LIBRARY_RELEASE)
 
         IF (QT_${basename}_LIBRARY_DEBUG)
           SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
           SET_PROPERTY(TARGET Qt4ImportedTarget__${basename}        PROPERTY IMPORTED_${_QT4_LIBRARY_PROPERTY_NAME}_DEBUG "${QT_${basename}_LIBRARY_DEBUG}" )
 
-#       message(STATUS "Setting IMPORTED_LOCATION_DEBUG to -${QT_${basename}_LIBRARY_DEBUG}-")
-
-          SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} PROPERTY MAP_IMPORTED_CONFIG_PROFILE DEBUG)
+          SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} PROPERTY MAP_IMPORTED_CONFIG_PROFILE   DEBUG)
           SET_PROPERTY(TARGET Qt4ImportedTarget__${basename} PROPERTY MAP_IMPORTED_CONFIG_DEBUGFULL DEBUG)
         ENDIF (QT_${basename}_LIBRARY_DEBUG)
 
