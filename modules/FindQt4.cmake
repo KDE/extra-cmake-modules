@@ -979,7 +979,7 @@ IF (QT4_QMAKE_FOUND)
 
       ENDIF(QT_USE_IMPORTED_TARGETS)
 
-message(STATUS "QT_${basename}_LIBRARY: ${QT_${basename}_LIBRARY}")
+#message(STATUS "QT_${basename}_LIBRARY: ${QT_${basename}_LIBRARY}")
 
       SET(QT_${basename}_FOUND 1)
 
