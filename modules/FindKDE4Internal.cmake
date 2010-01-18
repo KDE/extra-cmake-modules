@@ -337,6 +337,10 @@ if( ${QT_MIN_VERSION} VERSION_LESS "4.5.0" )
   set(QT_MIN_VERSION "4.5.0")
 endif( ${QT_MIN_VERSION} VERSION_LESS "4.5.0" )
 
+# Tell FindQt4.cmake to point the QT_QTFOO_LIBRARY targets at the imported targets
+# for the Qt libraries, so we get full handling of release and debug versions of the 
+# Qt libs and are flexible regarding the install location of Qt under Windows:
+set(QT_USE_IMPORTED_TARGETS TRUE)
 
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 # TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
