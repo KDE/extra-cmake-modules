@@ -44,11 +44,7 @@ FUNCTION(HANDLE_IMPORTED_TARGETS_IN_CMAKE_REQUIRED_LIBRARIES _RESULT)
             ENDIF ("${_CCSR_LOOP_COUNTER}" LESS 100)
 
             LIST(GET _importedConfigs 0 _firstImportedConfig)
-            IF(NOT WIN32)
-               GET_TARGET_PROPERTY(_firstImportedLocation ${_CURRENT_LIB} IMPORTED_LOCATION_${_firstImportedConfig})
-            ELSE(NOT WIN32)
-               GET_TARGET_PROPERTY(_firstImportedLocation ${_CURRENT_LIB} IMPORTED_IMPLIB_${_firstImportedConfig})
-            ENDIF(NOT WIN32)
+            GET_TARGET_PROPERTY(_firstImportedLocation ${_CURRENT_LIB} IMPORTED_LOCATION_${_firstImportedConfig})
             GET_TARGET_PROPERTY(_linkInterfaceLibs ${_CURRENT_LIB} IMPORTED_LINK_INTERFACE_LIBRARIES_${_firstImportedConfig} )
 
             LIST(APPEND _CCSR_NEW_REQ_LIBS  ${_firstImportedLocation})
