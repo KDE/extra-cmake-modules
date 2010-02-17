@@ -1244,22 +1244,23 @@ endmacro (KDE4_HANDLE_RPATH_FOR_LIBRARY)
 # being automatically activated by the system bus.
 # *WARNING* You have to install the helper in ${LIBEXEC_INSTALL_DIR} to make sure everything will work.
 function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
-    
-  if (_kdeBootStrapping)
-    set(_stubFilesDir  ${CMAKE_SOURCE_DIR}/kdecore/auth/backends/dbus/ )
-  else (_kdeBootStrapping)
-    set(_stubFilesDir  ${KDE4_DATA_INSTALL_DIR}/kauth/ )
-  endif (_kdeBootStrapping)
+    if(KAUTH_HELPER_BACKEND_NAME STREQUAL "DBUS")
+        if (_kdeBootStrapping)
+            set(_stubFilesDir  ${CMAKE_SOURCE_DIR}/kdecore/auth/backends/dbus/ )
+        else (_kdeBootStrapping)
+            set(_stubFilesDir  ${KDE4_DATA_INSTALL_DIR}/kauth/ )
+        endif (_kdeBootStrapping)
 
-  configure_file(${_stubFilesDir}/dbus_policy.stub
-                 ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf 
-          DESTINATION ${SYSCONF_INSTALL_DIR}/dbus-1/system.d/)
-       
-  configure_file(${_stubFilesDir}/dbus_service.stub
-                 ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service 
-          DESTINATION ${DBUS_SYSTEM_SERVICES_INSTALL_DIR})
+        configure_file(${_stubFilesDir}/dbus_policy.stub
+                        ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf)
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf
+                DESTINATION ${SYSCONF_INSTALL_DIR}/dbus-1/system.d/)
+
+        configure_file(${_stubFilesDir}/dbus_service.stub
+                        ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service)
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service
+                DESTINATION ${DBUS_SYSTEM_SERVICES_INSTALL_DIR})
+    endif(KAUTH_HELPER_BACKEND_NAME STREQUAL "DBUS")
 endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
 
 # This macro generates an action file, depending on the backend used, for applications using KAuth.
@@ -1276,7 +1277,7 @@ function(KDE4_INSTALL_AUTH_ACTIONS HELPER_ID ACTIONS_FILE)
   elseif(KDE4_AUTH_BACKEND_NAME STREQUAL "POLKITQT" OR KDE4_AUTH_BACKEND_NAME STREQUAL "POLKITQT-1")
     set(_output ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.policy)
     get_filename_component(_input ${ACTIONS_FILE} ABSOLUTE)
-    
+
     add_custom_command(OUTPUT ${_output} 
                        COMMAND ${KDE4_KAUTH_POLICY_GEN_EXECUTABLE} ${_input} > ${_output} 
                        MAIN_DEPENDENCY ${_input}
