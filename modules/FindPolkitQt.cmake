@@ -88,11 +88,7 @@ include(FindPackageHandleStandardArgs)
 # all listed variables are TRUE
 find_package_handle_standard_args(PolkitQt  DEFAULT_MSG  POLKITQT_INCLUDE_DIR POLKITQT_GUI_LIBRARY POLKITQT_CORE_LIBRARY POLKITQT_VERSION_OK)
 
-mark_as_advanced(POLKITQT_INCLUDE_DIR 
-                 POLKITQT_CORE_LIBRARY
-                 POLKITQT_GUI_LIBRARY
-                 POLKITQT_VERSION_FILE
-                )
+mark_as_advanced(POLKITQT_INCLUDE_DIR POLKITQT_CORE_LIBRARY POLKITQT_GUI_LIBRARY POLKITQT_LIBRARIES POLKITQT_VERSION_OK)
 
 if(POLKITQT_FOUND)
     get_filename_component(_POLKITQT_INSTALL_PREFIX "${POLKITQT_CORE_LIBRARY}"  PATH)

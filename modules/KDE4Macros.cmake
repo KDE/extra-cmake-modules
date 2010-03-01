@@ -106,12 +106,6 @@ macro (KDE4_ADD_KCFG_FILES _sources )
            file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH})
        endif(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH}")
 
-       if (CMAKE_CROSSCOMPILING)
-           set(IMPORT_KCONFIG_COMPILER_EXECUTABLE "${KDE_HOST_TOOLS_PATH}/ImportKConfigCompilerExecutable.cmake" CACHE FILEPATH "Point it to the export file of kconfig_compiler from a native build")
-           include(${IMPORT_KCONFIG_COMPILER_EXECUTABLE})
-           set(KDE4_KCFGC_EXECUTABLE kconfig_compiler)
-       endif (CMAKE_CROSSCOMPILING)
-
        # the command for creating the source file from the kcfg file
        add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
           COMMAND ${KDE4_KCFGC_EXECUTABLE}
@@ -289,13 +283,6 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
    endif (_kdeBootStrapping)
 
    file(GLOB _docs *.docbook)
-
-   if (CMAKE_CROSSCOMPILING)
-      set(IMPORT_MEINPROC4_EXECUTABLE "${KDE_HOST_TOOLS_PATH}/ImportMeinProc4Executable.cmake" CACHE FILEPATH "Point it to the export file of meinproc4 from a native build")
-      include(${IMPORT_MEINPROC4_EXECUTABLE})
-      set(KDE4_MEINPROC_EXECUTABLE meinproc4)
-   endif (CMAKE_CROSSCOMPILING)
-
    add_custom_command(OUTPUT ${_doc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_bootstrapOption} --cache ${_doc} ${_input}
       DEPENDS ${_docs} ${_KDE4_MEINPROC_EXECUTABLE_DEP} ${_ssheet}
@@ -366,12 +353,6 @@ macro (KDE4_CREATE_MANPAGE _docbook _section)
       set(_ssheet "${KDE4_DATA_INSTALL_DIR}/ksgmltools2/docbook/xsl/manpages/docbook.xsl")
       set(_bootstrapOption)
    endif (_kdeBootStrapping)
-
-   if (CMAKE_CROSSCOMPILING)
-      set(IMPORT_MEINPROC4_EXECUTABLE "${KDE_HOST_TOOLS_PATH}/ImportMeinProc4Executable.cmake" CACHE FILEPATH "Point it to the export file of meinproc4 from a native build")
-      include(${IMPORT_MEINPROC4_EXECUTABLE})
-      set(KDE4_MEINPROC_EXECUTABLE meinproc4)
-   endif (CMAKE_CROSSCOMPILING)
 
    add_custom_command(OUTPUT ${_outdoc}
       COMMAND ${KDE4_MEINPROC_EXECUTABLE} --stylesheet ${_ssheet} --check ${_bootstrapOption} ${_input}
