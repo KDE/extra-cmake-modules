@@ -175,7 +175,7 @@
 #    are created. Under Windows this flag is also necessary to separate between applications
 #    with GUI and without. On other UNIX systems this flag has no effect.
 #    The option TEST is for internal use only.
-#    The option RUN_UNINSTALLED is ignored. It was necessary with KDE 4.0 and 4.1 
+#    The option RUN_UNINSTALLED is ignored. It was necessary with KDE 4.0 and 4.1
 #    if the executable had to be run from the build tree. Since KDE 4.2 all
 #    executables can be always run uninstalled (the RPATH of executables which are not
 #    yet installed points since then into the buildtree and is changed
@@ -219,7 +219,7 @@
 #  KDE4_INSTALL_AUTH_ACTIONS( HELPER_ID ACTIONS_FILE )
 #   This macro generates an action file, depending on the backend used, for applications using KAuth.
 #   It accepts the helper id (the DBUS name) and a file containing the actions (check kdelibs/kdecore/auth/example
-#   for file format). The macro will take care of generating the file according to the backend specified, 
+#   for file format). The macro will take care of generating the file according to the backend specified,
 #   and to install it in the right location. This (at the moment) means that on Linux (PolicyKit) a .policy
 #   file will be generated and installed into the policykit action directory (usually /usr/share/PolicyKit/policy/),
 #   and on Mac (Authorization Services) will be added to the system action registry using the native MacOS API during
@@ -340,7 +340,7 @@ if( ${QT_MIN_VERSION} VERSION_LESS "4.5.0" )
 endif( ${QT_MIN_VERSION} VERSION_LESS "4.5.0" )
 
 # Tell FindQt4.cmake to point the QT_QTFOO_LIBRARY targets at the imported targets
-# for the Qt libraries, so we get full handling of release and debug versions of the 
+# for the Qt libraries, so we get full handling of release and debug versions of the
 # Qt libs and are flexible regarding the install location of Qt under Windows:
 set(QT_USE_IMPORTED_TARGETS TRUE)
 
@@ -907,7 +907,7 @@ if (WIN32)
    # windows, microsoft compiler
    if(MSVC)
       set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN )
-      
+
       # C4250: 'class1' : inherits 'class2::member' via dominance
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4250" )
       # C4251: 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
@@ -1066,7 +1066,7 @@ if (MSVC)
    set (KDE4_ENABLE_EXCEPTIONS -EHsc)
 
    # Qt disables the native wchar_t type, do it too to avoid linking issues
-   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Zc:wchar_t-" )   
+   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Zc:wchar_t-" )
 
    # make sure that no header adds libcmt by default using #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
    kde_check_flag_exists("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "Release with Debug Info")
@@ -1171,9 +1171,9 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 
       try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" COMPILE_OUTPUT_VARIABLE _compile_output_var)
 
-      if(NOT _run_result)
+      if(NOT _compile_result)
          message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation.")
-      endif(NOT _run_result)
+      endif(NOT _compile_result)
 
       if (GCC_IS_NEWER_THAN_4_2)
           set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
