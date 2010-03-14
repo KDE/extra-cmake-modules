@@ -94,6 +94,8 @@ FUNCTION(FIND_PACKAGE_HANDLE_STANDARD_ARGS _NAME _FAIL_MSG _VAR1 )
         ENDIF ("${${_NAME}_FIND_VERSION}" VERSION_GREATER "${VERSION}")
       ENDIF(${_NAME}_FIND_VERSION_EXACT)
 
+      ELSE(VERSION)
+        SET(VERSION_MSG " (WARNING: Required version is \"${${_NAME}_FIND_VERSION}\", but version of ${_NAME} is unknown)")
       ENDIF(VERSION)
 
     # if the package was not found, but some a version was given, add that to the output:
