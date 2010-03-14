@@ -99,6 +99,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindPyQt4.cmake
                Qt4Macros.cmake
                Qt4ConfigDependentSettings.cmake
+               FindPackageHandleStandardArgs.cmake
                FindPythonLibrary.cmake
                FindQCA2.cmake
                FindQImageBlitz.cmake
