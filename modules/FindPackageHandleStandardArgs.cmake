@@ -74,6 +74,8 @@ FUNCTION(FIND_PACKAGE_HANDLE_STANDARD_ARGS _NAME _FAIL_MSG _VAR1 )
     # if the package was found, check for the version using <NAME>_FIND_VERSION
     IF (${_NAME_UPPER}_FOUND)
       SET(VERSION ${${_NAME_UPPER}_VERSION})
+      
+      IF(VERSION)  #hmm what do we do if the module in question doesn't set FOO_VERSION but something else ?... Ignore it for now
 
       IF(${_NAME}_FIND_VERSION_EXACT)       # exact version required
         IF (NOT "${${_NAME}_FIND_VERSION}" VERSION_EQUAL "${VERSION}")
@@ -91,6 +93,8 @@ FUNCTION(FIND_PACKAGE_HANDLE_STANDARD_ARGS _NAME _FAIL_MSG _VAR1 )
           SET(VERSION_MSG " (found version \"${VERSION}\", required is \"${${_NAME}_FIND_VERSION}\")")
         ENDIF ("${${_NAME}_FIND_VERSION}" VERSION_GREATER "${VERSION}")
       ENDIF(${_NAME}_FIND_VERSION_EXACT)
+
+      ENDIF(VERSION)
 
     # if the package was not found, but some a version was given, add that to the output:
     ELSE (${_NAME_UPPER}_FOUND)
