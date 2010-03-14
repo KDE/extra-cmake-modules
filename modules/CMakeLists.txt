@@ -10,6 +10,9 @@ set(cmakeFilesDontInstall
                FindPolkitQt.cmake
                FindPolkitQt-1.cmake)
 
+# remove once we depend on a newer cmake version:
+# FindPackageHandleStandardArgs (2.8.2)
+
 # Explicitely list all files which will be installed.
 # We don't use a GLOB anymore so we can have also cmake files here
 # which are used inside kdelibs, but which don't have to be installed (and
