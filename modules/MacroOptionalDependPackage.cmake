@@ -9,14 +9,14 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-MACRO (MACRO_OPTIONAL_DEPEND_PACKAGE _name _module_needed)
+macro (MACRO_OPTIONAL_DEPEND_PACKAGE _name _module_needed)
    set(_packagename Find${_name}.cmake)
    find_file(_PACKAGE_DEPEND_FOUND ${_packagename} PATHS ${CMAKE_MODULE_PATH} )
    if(NOT _PACKAGE_DEPEND_FOUND)
-        MESSAGE(STATUS "optional cmake package ${_packagename} (for ${_module_needed}) was not found.")
+        message(STATUS "optional cmake package ${_packagename} (for ${_module_needed}) was not found.")
         set(DEPEND_PACKAGE_${_name} FALSE)
    else(NOT _PACKAGE_DEPEND_FOUND)
         set(DEPEND_PACKAGE_${_name} TRUE)
    endif(NOT _PACKAGE_DEPEND_FOUND)
-ENDMACRO (MACRO_OPTIONAL_DEPEND_PACKAGE)
+endmacro (MACRO_OPTIONAL_DEPEND_PACKAGE)
 
