@@ -1263,7 +1263,7 @@ endmacro (KDE4_HANDLE_RPATH_FOR_LIBRARY)
 # being automatically activated by the system bus.
 # *WARNING* You have to install the helper in ${LIBEXEC_INSTALL_DIR} to make sure everything will work.
 function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
-    if(KAUTH_HELPER_BACKEND_NAME STREQUAL "DBUS")
+    if(KDE4_AUTH_HELPER_BACKEND_NAME STREQUAL "DBUS")
         if (_kdeBootStrapping)
             set(_stubFilesDir  ${CMAKE_SOURCE_DIR}/kdecore/auth/backends/dbus/ )
         else (_kdeBootStrapping)
@@ -1279,7 +1279,7 @@ function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
                         ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service)
         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service
                 DESTINATION ${DBUS_SYSTEM_SERVICES_INSTALL_DIR})
-    endif(KAUTH_HELPER_BACKEND_NAME STREQUAL "DBUS")
+    endif(KDE4_AUTH_HELPER_BACKEND_NAME STREQUAL "DBUS")
 endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
 
 # This macro generates an action file, depending on the backend used, for applications using KAuth.
