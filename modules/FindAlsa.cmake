@@ -38,7 +38,7 @@ macro(ALSA_VERSION_STRING _result)
     # check for version in alsa/version.h
     if(ALSA_INCLUDES)
         file(READ "${ALSA_INCLUDES}/alsa/version.h" _ALSA_VERSION_CONTENT)
-        string(REGEX REPLACE ".*SND_LIB_VERSION_STR.*\"(.*)\".*" "\\1" ${_result} ${_ALSA_VERSION_CONTENT})
+        string(REGEX REPLACE ".*SND_LIB_VERSION_STR.*\"(.*)\".*" "\\1" ${_result} "${_ALSA_VERSION_CONTENT}")
     else(ALSA_INCLUDES)
         message(STATUS "ALSA version not known. ALSA output will probably not work correctly.")
     endif(ALSA_INCLUDES)
