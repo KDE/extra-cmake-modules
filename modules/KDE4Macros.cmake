@@ -1122,18 +1122,7 @@ macro (KDE4_ADD_WIN32_APP_ICON appsources)
 endmacro (KDE4_ADD_WIN32_APP_ICON)
 
 # adds application icon to target source list 
-
-# this macro adds an application icon to the specified target
-# mac osx notes : the application icon is added to a Mac OS X bundle so that Finder and friends show the right thing.
-# win32 notes: the application icon(s) are compiled into the application 
-#                        there is some workaround in kde4_add_kdeinit_executable to make it possible for those applications as well
-# parameters: 
-# 'appsources'  - specifies the list of source files; this has to end in _SRCS or _KDEINIT_SRCS
-#                           (see the replace stuff below)
-# 'pattern'     - regular expression for searching application icons 
-# example: KDE4_ADD_APP_ICON( myapp_SRCS "pics/cr*-myapp.png")
-# example: KDE4_ADD_APP_ICON( myapp_KDEINIT_SRCS "icons/oxygen/*/apps/myapp.png")
-
+# for detailled documentation see the top of FindKDE4Internal.cmake
 macro (KDE4_ADD_APP_ICON appsources pattern)
     string(REPLACE _KDEINIT_SRCS "" target ${appsources})
     if(${appsources} STREQUAL ${target})

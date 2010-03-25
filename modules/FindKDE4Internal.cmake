@@ -196,6 +196,19 @@
 #    KDESRCDIR is set to the source directory of the test, this can be used with
 #    KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
 #
+#
+#  KDE4_ADD_APP_ICON (SRCS_VAR pattern)
+#  adds an application icon to target source list.
+#  Mac OSX notes : the application icon is added to a Mac OS X bundle so that Finder and friends show the right thing.
+#  Win32 notes: the application icon(s) are compiled into the application 
+#  There is some workaround in kde4_add_kdeinit_executable to make it possible for those applications as well.
+# Parameters:
+#  SRCS_VAR  - specifies the list of source files; this has to end in _SRCS or _KDEINIT_SRCS
+#                           (see the replace stuff below)
+#  pattern     - regular expression for searching application icons 
+#  Example: KDE4_ADD_APP_ICON( myapp_SRCS "pics/cr*-myapp.png")
+#  Example: KDE4_ADD_APP_ICON( myapp_KDEINIT_SRCS "icons/oxygen/*/apps/myapp.png")
+#
 #  KDE4_UPDATE_ICONCACHE()
 #    Notifies the icon cache that new icons have been installed by updating
 #    mtime of ${ICON_INSTALL_DIR}/hicolor directory.
@@ -240,9 +253,9 @@
 #  Debug, Release, RelWithDebInfo, Profile and Debugfull:
 #
 #  Release
-#          optimised for speed, qDebug/kDebug turned off, no debug symbols
+#          optimised for speed, qDebug/kDebug turned off, no debug symbols, no asserts
 #  RelWithDebInfo (Release with debug info)
-#          optimised for speed, debugging symbols on (-g)
+#          similar to Release, optimised for speed, but with debugging symbols on (-g)
 #  Debug
 #          optimised but debuggable, debugging on (-g)
 #          (-fno-reorder-blocks -fno-schedule-insns -fno-inline)
@@ -251,10 +264,13 @@
 #  Profile
 #          DebugFull + -ftest-coverage -fprofile-arcs
 #
+#
+#  The default buildtype is RelWithDebInfo.
 #  It is expected that the "Debug" build type be still debuggable with gdb
 #  without going all over the place, but still produce better performance.
 #  It's also important to note that gcc cannot detect all warning conditions
 #  unless the optimiser is active.
+#
 #
 #  This module allows to depend on a particular minimum version of kdelibs.
 #  To acomplish that one should use the apropriate cmake syntax for
