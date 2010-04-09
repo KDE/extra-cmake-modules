@@ -18,7 +18,7 @@ IF (NOT WIN32)
    # use pkg-config to get the directories and then use these values
    # in the FIND_PATH() and FIND_LIBRARY() calls
    FIND_PACKAGE(PkgConfig)
-   PKG_CHECK_MODULES(PC_LIBATTICA QUIET libattica-0.1)
+   PKG_CHECK_MODULES(PC_LIBATTICA QUIET libattica)
    SET(LIBATTICA_DEFINITIONS ${PC_ATTICA_CFLAGS_OTHER})
 ENDIF (NOT WIN32)
 
