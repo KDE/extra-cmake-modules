@@ -35,6 +35,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindBlueZ.cmake
                FindBoost.cmake
                FindCarbon.cmake
+               FindDBusMenuQt.cmake
                FindDNSSD.cmake
                FindENCHANT.cmake
                FindEigen.cmake
