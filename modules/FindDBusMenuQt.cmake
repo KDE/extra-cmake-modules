@@ -31,7 +31,7 @@ else (DBUSMENUQT_INCLUDE_DIR AND DBUSMENUQT_LIBRARIES)
     endif (NOT WIN32)
 
     find_library(DBUSMENUQT_LIBRARIES
-        NAMES dbusmenu-qt
+        NAMES dbusmenu-qt dbusmenu-qtd
         HINTS ${PC_DBUSMENUQT_LIBDIR} ${PC_DBUSMENUQT_LIBRARY_DIRS}
         )
 
