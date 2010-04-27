@@ -16,24 +16,23 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if(NOT WIN32)
-   include(UsePkgConfig)
+find_package(PkgConfig)
+pkg_check_modules(PC_POPPLERQT4 QUIET poppler-qt4)
 
-   pkgconfig(poppler-qt4 _PopplerQt4IncDir _PopplerQt4LinkDir _PopplerQt4LinkFlags _PopplerQt4Cflags)
+set(POPPLER_QT4_DEFINITIONS ${PC_POPPLERQT4_CFLAGS_OTHER})
 
-   set(POPPLER_QT4_DEFINITIONS ${_PopplerQt4Cflags})
-endif(NOT WIN32)
-
-find_path(POPPLER_QT4_INCLUDE_DIR 
+find_path(POPPLER_QT4_INCLUDE_DIR
   NAMES poppler-qt4.h
+  HINTS ${PC_POPPLERQT4_INCLUDEDIR}
   PATH_SUFFIXES poppler/qt4 poppler
-  HINTS ${_PopplerQt4IncDir}
 )
 
-find_library(POPPLER_QT4_LIBRARIES 
+find_library(POPPLER_QT4_LIBRARY
   NAMES poppler-qt4
-  HINTS ${_PopplerQt4LinkDir}
+  HINTS ${PC_POPPLERQT4_LIBDIR}
 )
+
+set(POPPLER_QT4_LIBRARIES ${POPPLER_QT4_LIBRARY})
 
 if (POPPLER_QT4_INCLUDE_DIR AND POPPLER_QT4_LIBRARIES)
   set(POPPLER_QT4_FOUND TRUE)

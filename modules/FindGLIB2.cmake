@@ -16,25 +16,27 @@ if(GLIB2_INCLUDE_DIR AND GLIB2_LIBRARIES)
     set(GLIB2_FIND_QUIETLY TRUE)
 endif(GLIB2_INCLUDE_DIR AND GLIB2_LIBRARIES)
 
-if (NOT WIN32)
-   include(UsePkgConfig)
-   pkgconfig(glib-2.0 _LibGLIB2IncDir _LibGLIB2LinkDir _LibGLIB2LinkFlags _LibGLIB2Cflags)
-endif(NOT WIN32)
+find_package(PkgConfig)
+pkg_check_modules(PC_LibGLIB2 QUIET glib-2.0)
 
-find_path(GLIB2_MAIN_INCLUDE_DIR glib.h
-          PATH_SUFFIXES glib-2.0
-          PATHS ${_LibGLIB2IncDir} )
+find_path(GLIB2_MAIN_INCLUDE_DIR
+          NAMES glib.h
+          HINTS ${PC_LibGLIB2_INCLUDEDIR}
+          PATH_SUFFIXES glib-2.0)
+
+find_library(GLIB2_LIBRARY 
+             NAMES glib-2.0 
+             HINTS ${PC_LibGLIB2_LIBDIR}
+)
+
+set(GLIB2_LIBRARIES ${GLIB2_LIBRARY})
 
 # search the glibconfig.h include dir under the same root where the library is found
-find_library(GLIB2_LIBRARIES 
-             NAMES glib-2.0 
-             PATHS ${_LibGLIB2LinkDir} )
-
 get_filename_component(glib2LibDir "${GLIB2_LIBRARIES}" PATH)
 
 find_path(GLIB2_INTERNAL_INCLUDE_DIR glibconfig.h
           PATH_SUFFIXES glib-2.0/include
-          PATHS ${_LibGLIB2IncDir} "${glib2LibDir}" ${CMAKE_SYSTEM_LIBRARY_PATH})
+          HINTS ${PC_LibGLIB2_INCLUDEDIR} "${glib2LibDir}" ${CMAKE_SYSTEM_LIBRARY_PATH})
 
 set(GLIB2_INCLUDE_DIR "${GLIB2_MAIN_INCLUDE_DIR}")
 
