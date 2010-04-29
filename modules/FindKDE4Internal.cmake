@@ -499,8 +499,9 @@ else (_kdeBootStrapping)
       get_filename_component(QT_INSTALL_DIR ${_DIR} PATH )
    endif (WIN32)
 
-   # This file contains information about the installed kdelibs, Alex
+   # These files contain information about the installed kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
+   include(${kde_cmake_module_dir}/KDEPlatformProfile.cmake)
 
    # Check the version of KDE. It must be at least KDE_MIN_VERSION as set by the user.
    # KDE_VERSION is set in KDELibsDependencies.cmake since KDE 4.0.x. Alex
