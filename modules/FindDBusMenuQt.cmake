@@ -5,9 +5,6 @@
 #  DBUSMENUQT_INCLUDE_DIR - the dbusmenu-qt include directory
 #  DBUSMENUQT_LIBRARIES - the libraries needed to use dbusmenu-qt
 #  DBUSMENUQT_DEFINITIONS - Compiler switches required for using dbusmenu-qt
-#
-# use pkg-config to get the directories and then use these values
-# in the FIND_PATH() and FIND_LIBRARY() calls
 
 # Copyright (c) 2009, Canonical Ltd.
 # - Author: Aurélien Gâteau <aurelien.gateau@canonical.com>
@@ -20,27 +17,20 @@
 
 include(FindPackageHandleStandardArgs)
 
-if (DBUSMENUQT_INCLUDE_DIR AND DBUSMENUQT_LIBRARIES)
-    # in cache already
-    set(DBUSMENUQT_FOUND TRUE)
-else (DBUSMENUQT_INCLUDE_DIR AND DBUSMENUQT_LIBRARIES)
-    if (NOT WIN32)
-        find_package(PkgConfig)
-        pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt)
-        set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})
-    endif (NOT WIN32)
+find_package(PkgConfig)
+pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt)
+set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})
 
-    find_library(DBUSMENUQT_LIBRARIES
-        NAMES dbusmenu-qt dbusmenu-qtd
-        HINTS ${PC_DBUSMENUQT_LIBDIR} ${PC_DBUSMENUQT_LIBRARY_DIRS}
-        )
+find_library(DBUSMENUQT_LIBRARIES
+    NAMES dbusmenu-qt dbusmenu-qtd
+    HINTS ${PC_DBUSMENUQT_LIBDIR} ${PC_DBUSMENUQT_LIBRARY_DIRS}
+    )
 
-    find_path(DBUSMENUQT_INCLUDE_DIR dbusmenuexporter.h
-        HINTS ${PC_DBUSMENUQT_INCLUDEDIR} ${PC_DBUSMENUQT_INCLUDE_DIRS}
-        PATH_SUFFIXES dbusmenu-qt
-        )
-	
-    find_package_handle_standard_args(DBusMenuQt DEFAULT_MSG DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR)
+find_path(DBUSMENUQT_INCLUDE_DIR dbusmenuexporter.h
+    HINTS ${PC_DBUSMENUQT_INCLUDEDIR} ${PC_DBUSMENUQT_INCLUDE_DIRS}
+    PATH_SUFFIXES dbusmenu-qt
+    )
 
-    mark_as_advanced(DBUSMENUQT_INCLUDE_DIR DBUSMENUQT_LIBRARIES)
-endif (DBUSMENUQT_INCLUDE_DIR AND DBUSMENUQT_LIBRARIES)
+find_package_handle_standard_args(DBusMenuQt DEFAULT_MSG DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR)
+
+mark_as_advanced(DBUSMENUQT_INCLUDE_DIR DBUSMENUQT_LIBRARIES)
