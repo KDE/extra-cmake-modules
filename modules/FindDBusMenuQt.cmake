@@ -31,6 +31,6 @@ find_path(DBUSMENUQT_INCLUDE_DIR dbusmenuexporter.h
     PATH_SUFFIXES dbusmenu-qt
     )
 
-find_package_handle_standard_args(DBusMenuQt DEFAULT_MSG DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR)
+find_package_handle_standard_args(DBusMenuQt "Could not find dbusmenu-qt; available at http://people.canonical.com/~agateau/dbusmenu/" DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR)
 
 mark_as_advanced(DBUSMENUQT_INCLUDE_DIR DBUSMENUQT_LIBRARIES)
