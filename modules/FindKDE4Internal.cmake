@@ -10,7 +10,29 @@
 #                             KDE4_INCLUDE_DIR, but also the Qt4 include directories
 #                             and other platform specific include directories
 #  KDE4_LIB_DIR             - the directory where the KDE libraries are installed,
-#                             intended to be used with LINK_DIRECTORIES()
+#                             intended to be used with LINK_DIRECTORIES(). In general, this is not necessary.
+#  KDE4_LIBEXEC_INSTALL_DIR - the directory where libexec executables from kdelibs are installed
+#  KDE4_BIN_INSTALL_DIR     - the directory where executables from kdelibs are installed
+#  KDE4_SBIN_INSTALL_DIR    - the directory where system executables from kdelibs are installed
+#  KDE4_DATA_INSTALL_DIR    - the parent directory where kdelibs applications install their data
+#  KDE4_HTML_INSTALL_DIR    - the directory where HTML documentation from kdelibs is installed
+#  KDE4_CONFIG_INSTALL_DIR  - the directory where config files from kdelibs are installed
+#  KDE4_ICON_INSTALL_DIR    - the directory where icons from kdelibs are
+#  KDE4_KCFG_INSTALL_DIR    - the directory where kconfig files from kdelibs are installed
+#  KDE4_LOCALE_INSTALL_DIR  - the directory where translations from kdelibs are installed
+#  KDE4_MIME_INSTALL_DIR    - the directory where mimetype desktop files from kdelibs are installed
+#  KDE4_SOUND_INSTALL_DIR   - the directory where sound files from kdelibs are installed
+#  KDE4_TEMPLATES_INSTALL_DIR     - the directory where templates (Create new file...) from kdelibs are installed
+#  KDE4_WALLPAPER_INSTALL_DIR     - the directory where wallpapers from kdelibs are installed
+#  KDE4_KCONF_UPDATE_INSTALL_DIR  - the directory where kconf_update files from kdelibs are installed
+#  KDE4_AUTOSTART_INSTALL_DIR     - the directory where autostart from kdelibs are installed
+#  KDE4_XDG_APPS_INSTALL_DIR      - the XDG apps dir from kdelibs
+#  KDE4_XDG_DIRECTORY_INSTALL_DIR - the XDG directory from kdelibs
+#  KDE4_SYSCONF_INSTALL_DIR       - the directory where sysconfig files from kdelibs are installed
+#  KDE4_MAN_INSTALL_DIR           - the directory where man pages from kdelibs are installed
+#  KDE4_INFO_INSTALL_DIR          - the directory where info files from kdelibs are installed
+#  KDE4_DBUS_INTERFACES_DIR       - the directory where dbus interfaces from kdelibs are installed
+#  KDE4_DBUS_SERVICES_DIR         - the directory where dbus service files from kdelibs are installed
 #
 # The following variables are defined for the various tools required to
 # compile KDE software:
@@ -80,7 +102,9 @@
 #  KDE4_KUNITCONVERSION_LIBS  - the kunitconversion library and all depending libraries
 #  KDE4_KDEWEBKIT_LIBS        - the kdewebkit library and all depending libraries
 #
-# This module defines a bunch of variables used as locations for install directories.
+# This module defines also a bunch of variables used as locations for install directories
+# for files of the package which is using this module. These variables don't say
+# anything about the location of the installed KDE.
 # They can be relative (to CMAKE_INSTALL_PREFIX) or absolute.
 # Under Windows they are always relative.
 #
@@ -88,29 +112,31 @@
 #  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE4 )
 #  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
 #  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
-#  CONFIG_INSTALL_DIR       - the config file install dir
+#  CONFIG_INSTALL_DIR       - the directory where config files will be installed
 #  DATA_INSTALL_DIR         - the parent directory where applications can install their data
-#  HTML_INSTALL_DIR         - the HTML install dir for documentation
-#  ICON_INSTALL_DIR         - the icon install dir (default prefix/share/icons/)
-#  INFO_INSTALL_DIR         - the kde info install dir (default prefix/info)
-#  KCFG_INSTALL_DIR         - the install dir for kconfig files
-#  LOCALE_INSTALL_DIR       - the install dir for translations
-#  MAN_INSTALL_DIR          - the kde man page install dir (default prefix/man/)
-#  MIME_INSTALL_DIR         - the install dir for the mimetype desktop files
+#  HTML_INSTALL_DIR         - the directory where HTML documentation will be installed
+#  ICON_INSTALL_DIR         - the directory where the icons will be installed (default prefix/share/icons/)
+#  INFO_INSTALL_DIR         - the directory where info files will be installed (default prefix/info)
+#  KCFG_INSTALL_DIR         - the directory where kconfig files will be installed
+#  LOCALE_INSTALL_DIR       - the directory where translations will be installed
+#  MAN_INSTALL_DIR          - the directory where man pages will be installed (default prefix/man/)
+#  MIME_INSTALL_DIR         - the directory where mimetype desktop files will be installed
 #  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)
-#  SERVICES_INSTALL_DIR     - the install dir for service (desktop, protocol, ...) files
-#  SERVICETYPES_INSTALL_DIR - the install dir for servicestypes desktop files
-#  SOUND_INSTALL_DIR        - the install dir for sound files
-#  TEMPLATES_INSTALL_DIR    - the install dir for templates (Create new file...)
-#  WALLPAPER_INSTALL_DIR    - the install dir for wallpapers
-#  DEMO_INSTALL_DIR         - the install dir for demos
-#  KCONF_UPDATE_INSTALL_DIR - the kconf_update install dir
+#  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
+#  SERVICETYPES_INSTALL_DIR - the directory where servicestypes desktop files will be installed
+#  SOUND_INSTALL_DIR        - the directory where sound files will be installed
+#  TEMPLATES_INSTALL_DIR    - the directory where templates (Create new file...) will be installed
+#  WALLPAPER_INSTALL_DIR    - the directory where wallpapers will be installed
+#  AUTOSTART_INSTALL_DIR    - the directory where autostart files will be installed
+#  DEMO_INSTALL_DIR         - the directory where demos will be installed
+#  KCONF_UPDATE_INSTALL_DIR - the directory where kconf_update files will be installed
+#  SYSCONF_INSTALL_DIR      - the directory where sysconfig files will be installed (default /etc)
 #  XDG_APPS_INSTALL_DIR     - the XDG apps dir
 #  XDG_DIRECTORY_INSTALL_DIR- the XDG directory
 #  XDG_MIME_INSTALL_DIR     - the XDG mimetypes install dir
-#  DBUS_INTERFACES_INSTALL_DIR - the directory where dbus interfaces be installed (default is prefix/share/dbus-1/interfaces)
-#  DBUS_SERVICES_INSTALL_DIR        - the directory where dbus services be installed (default is prefix/share/dbus-1/services )
-#  DBUS_SYSTEM_SERVICES_INSTALL_DIR        - the directory where dbus system services be installed (default is prefix/share/dbus-1/system-services )
+#  DBUS_INTERFACES_INSTALL_DIR - the directory where dbus interfaces will be installed (default is prefix/share/dbus-1/interfaces)
+#  DBUS_SERVICES_INSTALL_DIR        - the directory where dbus services will be installed (default is prefix/share/dbus-1/services )
+#  DBUS_SYSTEM_SERVICES_INSTALL_DIR        - the directory where dbus system services will be installed (default is prefix/share/dbus-1/system-services )
 #
 # The following variable is provided, but seem to be unused:
 #  LIBS_HTML_INSTALL_DIR    /share/doc/HTML            CACHE STRING "Is this still used ?")
@@ -744,12 +770,12 @@ if (WIN32)
    set(XDG_DIRECTORY_INSTALL_DIR "share/desktop-directories" ) # The XDG directory
    set(XDG_MIME_INSTALL_DIR      "share/mime/packages"       ) # The install dir for the xdg mimetypes
 
-   set(SYSCONF_INSTALL_DIR       "etc"                       ) # The kde sysconfig install dir (default /etc)
-   set(MAN_INSTALL_DIR           "share/man"                 ) # The kde man install dir (default ${SHARE_INSTALL_PREFIX}/man/)
-   set(INFO_INSTALL_DIR          "share/info"                ) # The kde info install dir (default ${SHARE_INSTALL_PREFIX}/info)")
-   set(DBUS_INTERFACES_INSTALL_DIR "share/dbus-1/interfaces" ) # The kde dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
-   set(DBUS_SERVICES_INSTALL_DIR "share/dbus-1/services"     ) # The kde dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
-   set(DBUS_SYSTEM_SERVICES_INSTALL_DIR "share/dbus-1/system-services"     ) # The kde dbus system services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/system-services)")
+   set(SYSCONF_INSTALL_DIR       "etc"                       ) # The sysconfig install dir (default /etc)
+   set(MAN_INSTALL_DIR           "share/man"                 ) # The man install dir (default ${SHARE_INSTALL_PREFIX}/man/)
+   set(INFO_INSTALL_DIR          "share/info"                ) # The info install dir (default ${SHARE_INSTALL_PREFIX}/info)")
+   set(DBUS_INTERFACES_INSTALL_DIR "share/dbus-1/interfaces" ) # The dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
+   set(DBUS_SERVICES_INSTALL_DIR "share/dbus-1/services"     ) # The dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
+   set(DBUS_SYSTEM_SERVICES_INSTALL_DIR "share/dbus-1/system-services"     ) # The dbus system services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/system-services)")
 
 else (WIN32)
 
@@ -816,12 +842,12 @@ else (WIN32)
    _set_fancy(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories"      "The XDG directory")
    _set_fancy(XDG_MIME_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/mime/packages"  "The install dir for the xdg mimetypes")
 
-   _set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"            "The kde sysconfig install dir (default ${CMAKE_INSTALL_PREFIX}/etc)")
-   _set_fancy(MAN_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/man"            "The kde man install dir (default ${SHARE_INSTALL_PREFIX}/man/)")
-   _set_fancy(INFO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/info"           "The kde info install dir (default ${SHARE_INSTALL_PREFIX}/info)")
-   _set_fancy(DBUS_INTERFACES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces" "The kde dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
-   _set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services"     "The kde dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
-   _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/system-services"     "The kde dbus system services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/system-services)")
+   _set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"            "The sysconfig install dir (default ${CMAKE_INSTALL_PREFIX}/etc)")
+   _set_fancy(MAN_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/man"            "The man install dir (default ${SHARE_INSTALL_PREFIX}/man/)")
+   _set_fancy(INFO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/info"           "The info install dir (default ${SHARE_INSTALL_PREFIX}/info)")
+   _set_fancy(DBUS_INTERFACES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces" "The dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
+   _set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services"     "The dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
+   _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/system-services"     "The dbus system services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/system-services)")
 
 endif (WIN32)
 
