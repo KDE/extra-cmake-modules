@@ -4,14 +4,13 @@
 #   pkg_check_modules(<PREFIX> [REQUIRED] [QUIET] <MODULE> [<MODULE>]*)
 #     checks for all the given modules
 #
-#   pkg_search_module(<PREFIX> [REQUIRED] <MODULE> [<MODULE>]*)
+#   pkg_search_module(<PREFIX> [REQUIRED] [QUIET] <MODULE> [<MODULE>]*)
 #     checks for given modules and uses the first working one
 #
 # When the 'REQUIRED' argument was set, macros will fail with an error
 # when module(s) could not be found
 #
-# When the 'QUIET' argument is set, no error message will be output if
-# the package was not found.
+# When the 'QUIET' argument is set, no status messages will be printed.
 #
 # It sets the following variables:
 #   PKG_CONFIG_FOUND         ... true if pkg-config works on the system
@@ -306,7 +305,9 @@ macro(_pkg_check_modules_internal _is_required _is_silent _prefix)
         _pkgconfig_invoke(${_pkg_check_modules_pkg} "${_pkg_check_prefix}" INCLUDEDIR ""   --variable=includedir )
         _pkgconfig_invoke(${_pkg_check_modules_pkg} "${_pkg_check_prefix}" LIBDIR     ""   --variable=libdir )
 
-        message(STATUS "  found ${_pkg_check_modules_pkg}, version ${_pkgconfig_VERSION}")
+        if (NOT ${_is_silent})
+          message(STATUS "  found ${_pkg_check_modules_pkg}, version ${_pkgconfig_VERSION}")
+        endif (NOT ${_is_silent})
       endforeach(_pkg_check_modules_pkg)
 
       # set variables which are combined for multiple modules
@@ -348,7 +349,9 @@ macro(pkg_search_module _prefix _module0)
     set(_pkg_modules_found 0)
     _pkgconfig_parse_options(_pkg_modules_alt _pkg_is_required _pkg_is_silent "${_module0}" ${ARGN})
 
-    message(STATUS "checking for one of the modules '${_pkg_modules_alt}'")
+    if (NOT ${_pkg_is_silent})
+      message(STATUS "checking for one of the modules '${_pkg_modules_alt}'")
+    endif (NOT ${_pkg_is_silent})
 
     # iterate through all modules and stop at the first working one.
     foreach(_pkg_alt ${_pkg_modules_alt})
