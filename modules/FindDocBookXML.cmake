@@ -29,6 +29,16 @@ find_path (DOCBOOKXML_CURRENTDTD_DIR catalog.xml
    share/xml/docbook/${DOCBOOKXML_CURRENTDTD_VERSION}
 )
 
+#hacks for Fedora
+if(NOT ${DOCBOOKXML_CURRENTDTD_DIR})
+find_path(DOCBOOKXML_CURRENTDTD_DIR catalog
+   PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
+   PATH_SUFFIXES
+   share/sgml/docbook/xml-dtd-4.2-1.0-48.fc12
+   share/sgml/docbook/xml-dtd-4.2-1.0-50.fc13
+)
+endif(NOT ${DOCBOOKXML_CURRENTDTD_DIR})
+
 #set (DOCBOOKXML_OLDDTD_DIR ${DOCBOOKXML_CURRENTDTD_DIR})
 #set (DOCBOOKXML_OLDDTD_VERSION "4.1.2")
 #find_path (DOCBOOKXML_OLDDTD_DIR catalog.xml
