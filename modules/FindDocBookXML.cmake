@@ -17,12 +17,10 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-set (DOCBOOKXML_CURRENTDTD_VERSION "4.2" 
+set (DOCBOOKXML_CURRENTDTD_VERSION "4.2"
      CACHE INTERNAL "Required version of XML DTDs")
-find_path (DOCBOOKXML_CURRENTDTD_DIR catalog.xml
-   PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
 
-   PATH_SUFFIXES
+set (DTD_PATH_LIST
    share/xml/docbook/schema/dtd/${DOCBOOKXML_CURRENTDTD_VERSION}
    share/xml/docbook/xml-dtd-${DOCBOOKXML_CURRENTDTD_VERSION}
    share/sgml/docbook/xml-dtd-${DOCBOOKXML_CURRENTDTD_VERSION}
@@ -30,24 +28,28 @@ find_path (DOCBOOKXML_CURRENTDTD_DIR catalog.xml
 )
 
 #hacks for Fedora
-if(NOT ${DOCBOOKXML_CURRENTDTD_DIR})
-find_path(DOCBOOKXML_CURRENTDTD_DIR catalog
-   PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
-   PATH_SUFFIXES
+set (DTD_PATH_LIST ${DTD_PATH_LIST}
    share/sgml/docbook/xml-dtd-4.2-1.0-48.fc12
    share/sgml/docbook/xml-dtd-4.2-1.0-50.fc13
 )
-endif(NOT ${DOCBOOKXML_CURRENTDTD_DIR})
+ 
+find_path (DOCBOOKXML_CURRENTDTD_DIR docbookx.dtd
+   PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
+
+   PATH_SUFFIXES ${DTD_PATH_LIST}
+)
 
 #set (DOCBOOKXML_OLDDTD_DIR ${DOCBOOKXML_CURRENTDTD_DIR})
 #set (DOCBOOKXML_OLDDTD_VERSION "4.1.2")
-#find_path (DOCBOOKXML_OLDDTD_DIR catalog.xml
-#   PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
-#   PATH_SUFFIXES
+#set (DTD_PATH_LIST)
 #   share/xml/docbook/schema/dtd/${DOCBOOKXML_OLDDTD_VERSION}
 #   share/xml/docbook/xml-dtd-${DOCBOOKXML_OLDDTD_VERSION}
 #   share/sgml/docbook/xml-dtd-${DOCBOOKXML_OLDDTD_VERSION}
 #   share/xml/docbook/${DOCBOOKXML_OLDDTD_VERSION}
+#)
+#find_path (DOCBOOKXML_OLDDTD_DIR docbookx.dtd
+#   PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
+#   PATH_SUFFIXES ${DTD_PATH_LIST}
 #)
 
 find_package_handle_standard_args (DocBookXML
