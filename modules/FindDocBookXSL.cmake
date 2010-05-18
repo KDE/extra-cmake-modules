@@ -16,19 +16,29 @@ set (STYLESHEET_PATH_LIST
     share/xml/docbook/stylesheet/nwalsh/current
 )
 
-foreach (STYLESHEET_PREFIX_ITER ${CMAKE_SYSTEM_PREFIX_PATH})
-   file(GLOB STYLESHEET_SUFFIX_ITER RELATIVE ${STYLESHEET_PREFIX_ITER}
-        ${STYLESHEET_PREFIX_ITER}/share/xml/docbook/xsl-stylesheets-*
-   )
-   if (STYLESHEET_SUFFIX_ITER)
-      list (APPEND STYLESHEET_PATH_LIST ${STYLESHEET_SUFFIX_ITER})
-   endif ()
-endforeach ()
-
 find_path (DOCBOOKXSL_DIR VERSION
    PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
    PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
 )
+
+if (NOT DOCBOOKXSL_DIR)
+   # hacks for systems that put the version in the stylesheet dirs
+   set (STYLESHEET_PATH_LIST)
+   foreach (STYLESHEET_PREFIX_ITER ${CMAKE_SYSTEM_PREFIX_PATH})
+      file(GLOB STYLESHEET_SUFFIX_ITER RELATIVE ${STYLESHEET_PREFIX_ITER}
+           ${STYLESHEET_PREFIX_ITER}/share/xml/docbook/xsl-stylesheets-*
+      )
+      if (STYLESHEET_SUFFIX_ITER)
+         list (APPEND STYLESHEET_PATH_LIST ${STYLESHEET_SUFFIX_ITER})
+      endif ()
+   endforeach ()
+
+   find_path (DOCBOOKXSL_DIR VERSION
+      PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
+      PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
+   )
+endif (NOT DOCBOOKXSL_DIR)
+
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args (DocBookXSL

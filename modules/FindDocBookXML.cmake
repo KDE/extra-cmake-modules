@@ -27,21 +27,29 @@ set (DTD_PATH_LIST
    share/xml/docbook/${DOCBOOKXML_CURRENTDTD_VERSION}
 )
 
-# hacks for systems that use the package version in the DTD dirs,
-# e.g. Fedora, OpenSolaris
-foreach (DTD_PREFIX_ITER ${CMAKE_SYSTEM_PREFIX_PATH})
-   file(GLOB DTD_SUFFIX_ITER RELATIVE ${DTD_PREFIX_ITER}
-        ${DTD_PREFIX_ITER}/share/sgml/docbook/xml-dtd-${DOCBOOKXML_CURRENTDTD_VERSION}-*
-   )
-   if (DTD_SUFFIX_ITER)
-      list (APPEND DTD_PATH_LIST ${DTD_SUFFIX_ITER})
-   endif ()
-endforeach ()
-
 find_path (DOCBOOKXML_CURRENTDTD_DIR docbookx.dtd
    PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
    PATH_SUFFIXES ${DTD_PATH_LIST}
 )
+
+if (NOT DOCBOOKXML_CURRENTDTD_DIR)
+   # hacks for systems that use the package version in the DTD dirs,
+   # e.g. Fedora, OpenSolaris
+   set (DTD_PATH_LIST)
+   foreach (DTD_PREFIX_ITER ${CMAKE_SYSTEM_PREFIX_PATH})
+      file(GLOB DTD_SUFFIX_ITER RELATIVE ${DTD_PREFIX_ITER}
+           ${DTD_PREFIX_ITER}/share/sgml/docbook/xml-dtd-${DOCBOOKXML_CURRENTDTD_VERSION}-*
+      )
+      if (DTD_SUFFIX_ITER)
+         list (APPEND DTD_PATH_LIST ${DTD_SUFFIX_ITER})
+      endif ()
+   endforeach ()
+
+   find_path (DOCBOOKXML_CURRENTDTD_DIR docbookx.dtd
+      PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
+      PATH_SUFFIXES ${DTD_PATH_LIST}
+   )
+endif (NOT DOCBOOKXML_CURRENTDTD_DIR)
 
 #set (DOCBOOKXML_OLDDTD_DIR ${DOCBOOKXML_CURRENTDTD_DIR})
 #set (DOCBOOKXML_OLDDTD_VERSION "4.1.2")
