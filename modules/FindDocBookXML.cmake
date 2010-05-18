@@ -56,6 +56,7 @@ find_path (DOCBOOKXML_CURRENTDTD_DIR docbookx.dtd
 #   PATH_SUFFIXES ${DTD_PATH_LIST}
 #)
 
+include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args (DocBookXML
     "Could NOT find DocBook XML DTDs (v${DOCBOOKXML_CURRENTDTD_VERSION})"
     DOCBOOKXML_CURRENTDTD_VERSION DOCBOOKXML_CURRENTDTD_DIR)

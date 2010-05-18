@@ -30,6 +30,7 @@ find_path (DOCBOOKXSL_DIR VERSION
    PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
 )
 
+include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args (DocBookXSL
                                    "Could NOT find DocBook XSL stylesheets"
                                    DOCBOOKXSL_DIR)
