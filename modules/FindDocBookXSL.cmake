@@ -16,7 +16,7 @@ set (STYLESHEET_PATH_LIST
     share/xml/docbook/stylesheet/nwalsh/current
 )
 
-find_path (DOCBOOKXSL_DIR VERSION
+find_path (DOCBOOKXSL_DIR lib/lib.xsl 
    PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
    PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
 )
