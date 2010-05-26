@@ -4,7 +4,7 @@
 #  DOCBOOKXSL_FOUND - system has the required DocBook XML DTDs
 #  DOCBOOKXSL_DIR - the directory containing the stylesheets
 #  used to process DocBook XML
-#
+
 # Copyright (c) 2010, Luigi Toscano, <luigi.toscano@tiscali.it>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
