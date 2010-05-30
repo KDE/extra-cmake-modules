@@ -442,6 +442,7 @@ FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake qmake4 qmake-qt4 qmake-mac PATHS
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\${qt_install_version};InstallDir]/bin"
   $ENV{QTDIR}/bin
+  DOC "The qmake executable for the Qt installation to use"
 )
 
 IF (QT_QMAKE_EXECUTABLE)
@@ -463,6 +464,7 @@ IF (QT_QMAKE_EXECUTABLE)
       "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
       "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
       $ENV{QTDIR}/bin
+      DOC "The qmake executable for the Qt installation to use"
       )
     IF(QT_QMAKE_EXECUTABLE)
       EXEC_PROGRAM(${QT_QMAKE_EXECUTABLE} 
@@ -665,7 +667,7 @@ IF (QT4_QMAKE_FOUND)
   CHECK_SYMBOL_EXISTS(Q_WS_MAC "QtCore/qglobal.h" Q_WS_MAC)
   IF(Q_WS_MAC)
     IF(QT_QMAKE_CHANGED)
-      SET(QT_MAC_USE_COCOA "" CACHE BOOL "Use Cocoa on Mac" FORCE)
+      UNSET(QT_MAC_USE_COCOA CACHE)
     ENDIF(QT_QMAKE_CHANGED)
     CHECK_SYMBOL_EXISTS(QT_MAC_USE_COCOA "QtCore/qconfig.h" QT_MAC_USE_COCOA)
   ENDIF(Q_WS_MAC)
@@ -692,7 +694,8 @@ IF (QT4_QMAKE_FOUND)
 
   SET(QT_MODULES QtCore QtGui Qt3Support QtSvg QtScript QtTest QtUiTools 
                  QtHelp QtWebKit QtXmlPatterns QtNetwork QtMultimedia
-                 QtNsPlugin QtOpenGL QtSql QtXml QtDesigner QtDBus QtScriptTools QtDeclarative)
+                 QtNsPlugin QtOpenGL QtSql QtXml QtDesigner QtDBus QtScriptTools
+                 QtDeclarative)
   
   IF(Q_WS_X11)
     SET(QT_MODULES ${QT_MODULES} QtMotif)
@@ -984,7 +987,7 @@ IF (QT4_QMAKE_FOUND)
 
       ENDIF(QT_USE_IMPORTED_TARGETS)
 
-#message(STATUS "QT_${basename}_LIBRARY: ${QT_${basename}_LIBRARY}")
+# message(STATUS "QT_${basename}_LIBRARY: ${QT_${basename}_LIBRARY}")
 
       SET(QT_${basename}_FOUND 1)
 
