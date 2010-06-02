@@ -15,6 +15,7 @@ set (STYLESHEET_PATH_LIST
     share/sgml/docbook/xsl-stylesheets
     share/xml/docbook/stylesheet/nwalsh/current
     share/xml/docbook/stylesheet/nwalsh
+    share/xsl/docbook
 )
 
 find_path (DOCBOOKXSL_DIR lib/lib.xsl 
