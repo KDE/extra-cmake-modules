@@ -234,12 +234,12 @@
 #  KDE4_ADD_APP_ICON (SRCS_VAR pattern)
 #  adds an application icon to target source list.
 #  Mac OSX notes : the application icon is added to a Mac OS X bundle so that Finder and friends show the right thing.
-#  Win32 notes: the application icon(s) are compiled into the application 
+#  Win32 notes: the application icon(s) are compiled into the application
 #  There is some workaround in kde4_add_kdeinit_executable to make it possible for those applications as well.
 # Parameters:
 #  SRCS_VAR  - specifies the list of source files; this has to end in _SRCS or _KDEINIT_SRCS
 #                           (see the replace stuff below)
-#  pattern     - regular expression for searching application icons 
+#  pattern     - regular expression for searching application icons
 #  Example: KDE4_ADD_APP_ICON( myapp_SRCS "pics/cr*-myapp.png")
 #  Example: KDE4_ADD_APP_ICON( myapp_KDEINIT_SRCS "icons/oxygen/*/apps/myapp.png")
 #
@@ -1136,8 +1136,36 @@ if (MSVC)
    kde_check_flag_exists("/NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd" CMAKE_EXE_LINKER_FLAGS_DEBUG "debug")
 endif(MSVC)
 
+# This macro is for internal use only
+# Return the directories present in gcc's include path.
+macro(_DETERMINE_GCC_SYSTEM_INCLUDE_DIRS _lang _result)
+  set(${_result})
+  set(_gccOutput)
+  file(WRITE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy" "\n" )
+  execute_process(COMMAND ${CMAKE_C_COMPILER} -v -E -x ${_lang} -dD dummy
+                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles
+                  ERROR_VARIABLE _gccOutput
+                  OUTPUT_VARIABLE _gccStdout )
+  file(REMOVE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy")
+
+  if( "${_gccOutput}" MATCHES "> search starts here[^\n]+\n *(.+) *\n *End of (search) list" )
+    SET(${_result} ${CMAKE_MATCH_1})
+    STRING(REPLACE "\n" " " ${_result} "${${_result}}")
+    SEPARATE_ARGUMENTS(${_result})
+  ENDIF( "${_gccOutput}" MATCHES "> search starts here[^\n]+\n *(.+) *\n *End of (search) list" )
+ENDMACRO(_DETERMINE_GCC_SYSTEM_INCLUDE_DIRS _lang)
+
+if (CMAKE_COMPILER_IS_GNUCC)
+   _DETERMINE_GCC_SYSTEM_INCLUDE_DIRS(c _dirs)
+   set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES
+       ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES} ${_dirs})
+endif (CMAKE_COMPILER_IS_GNUCC)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
+   _DETERMINE_GCC_SYSTEM_INCLUDE_DIRS(c++ _dirs)
+   set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES
+       ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES} ${_dirs})
+
    set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
