@@ -561,7 +561,8 @@ else (_kdeBootStrapping)
    # This setting is currently not recorded in KDELibsDependencies.cmake:
    find_file(KDE4_PLASMA_OPENGL_FOUND plasma/glapplet.h PATHS ${KDE4_INCLUDE_DIR} NO_DEFAULT_PATH)
 
-   # now include the file with the imported tools (executable targets)
+   # Now include the file with the imported tools (executable targets).
+   # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
    # Having the libs and tools in two separate files should help with cross compiling.
    include(${kde_cmake_module_dir}/KDELibs4ToolsTargets.cmake)
 
@@ -602,6 +603,7 @@ else (_kdeBootStrapping)
    # the library target "kdeui" is exported as "KDE4__kdeui". The "KDE4__" is used as
    # "namespace" to separate the imported targets from "normal" targets, it is stored in
    # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
+   # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
    # Include it to "import" the libraries from kdelibs into the current projects as targets.
    # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
    # the kdeui library could now also be used just as "KDE4__kdeui" and still have all their
