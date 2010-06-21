@@ -782,8 +782,7 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
 endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
-# add a unit test, which is executed when running make test
-# it will be built with RPATH pointing to the build dir
+# Add a unit test, which is executed when running make test .
 # The targets are always created, but only built for the "all"
 # target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
 # are created but not built by default. You can build them by manually building the target.
