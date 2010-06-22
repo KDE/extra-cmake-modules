@@ -24,44 +24,44 @@
 
 
 
-INCLUDE(CMakeFindFrameworks)
+include(CMakeFindFrameworks)
 
 if(EXISTS PYTHON_LIBRARY)
   # Already in cache, be silent
   set(PYTHONLIBRARY_FOUND TRUE)
 else(EXISTS PYTHON_LIBRARY)
 
-  FIND_PACKAGE(PythonInterp)
+  find_package(PythonInterp)
 
   if(PYTHONINTERP_FOUND)
 
-    FIND_FILE(_find_lib_python_py FindLibPython.py PATHS ${CMAKE_MODULE_PATH})
+    find_file(_find_lib_python_py FindLibPython.py PATHS ${CMAKE_MODULE_PATH})
 
-    EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE}  ${_find_lib_python_py} OUTPUT_VARIABLE python_config)
+    execute_process(COMMAND ${PYTHON_EXECUTABLE}  ${_find_lib_python_py} OUTPUT_VARIABLE python_config)
     if(python_config)
-      STRING(REGEX REPLACE ".*exec_prefix:([^\n]+).*$" "\\1" PYTHON_PREFIX ${python_config})
-      STRING(REGEX REPLACE ".*\nshort_version:([^\n]+).*$" "\\1" PYTHON_SHORT_VERSION ${python_config})
-      STRING(REGEX REPLACE ".*\nlong_version:([^\n]+).*$" "\\1" PYTHON_LONG_VERSION ${python_config})
-      STRING(REGEX REPLACE ".*\npy_inc_dir:([^\n]+).*$" "\\1" PYTHON_INCLUDE_PATH ${python_config})
+      string(REGEX REPLACE ".*exec_prefix:([^\n]+).*$" "\\1" PYTHON_PREFIX ${python_config})
+      string(REGEX REPLACE ".*\nshort_version:([^\n]+).*$" "\\1" PYTHON_SHORT_VERSION ${python_config})
+      string(REGEX REPLACE ".*\nlong_version:([^\n]+).*$" "\\1" PYTHON_LONG_VERSION ${python_config})
+      string(REGEX REPLACE ".*\npy_inc_dir:([^\n]+).*$" "\\1" PYTHON_INCLUDE_PATH ${python_config})
       if(NOT PYTHON_SITE_PACKAGES_DIR)
         if(NOT PYTHON_LIBS_WITH_KDE_LIBS)
-          STRING(REGEX REPLACE ".*\nsite_packages_dir:([^\n]+).*$" "\\1" PYTHON_SITE_PACKAGES_DIR ${python_config})
+          string(REGEX REPLACE ".*\nsite_packages_dir:([^\n]+).*$" "\\1" PYTHON_SITE_PACKAGES_DIR ${python_config})
         else(NOT PYTHON_LIBS_WITH_KDE_LIBS)
           set(PYTHON_SITE_PACKAGES_DIR ${KDE4_LIB_INSTALL_DIR}/python${PYTHON_SHORT_VERSION}/site-packages)
         endif(NOT PYTHON_LIBS_WITH_KDE_LIBS)
       endif(NOT PYTHON_SITE_PACKAGES_DIR)
-      STRING(REGEX REPLACE "([0-9]+).([0-9]+)" "\\1\\2" PYTHON_SHORT_VERSION_NO_DOT ${PYTHON_SHORT_VERSION})
+      string(REGEX REPLACE "([0-9]+).([0-9]+)" "\\1\\2" PYTHON_SHORT_VERSION_NO_DOT ${PYTHON_SHORT_VERSION})
       set(PYTHON_LIBRARY_NAMES python${PYTHON_SHORT_VERSION} python${PYTHON_SHORT_VERSION_NO_DOT})
       if(WIN32)
-          STRING(REPLACE "\\" "/" PYTHON_SITE_PACKAGES_DIR ${PYTHON_SITE_PACKAGES_DIR})
+          string(REPLACE "\\" "/" PYTHON_SITE_PACKAGES_DIR ${PYTHON_SITE_PACKAGES_DIR})
       endif(WIN32)
-      FIND_LIBRARY(PYTHON_LIBRARY NAMES ${PYTHON_LIBRARY_NAMES} PATHS ${PYTHON_PREFIX}/lib ${PYTHON_PREFIX}/libs NO_DEFAULT_PATH)
+      find_library(PYTHON_LIBRARY NAMES ${PYTHON_LIBRARY_NAMES} PATHS ${PYTHON_PREFIX}/lib ${PYTHON_PREFIX}/libs NO_DEFAULT_PATH)
       set(PYTHONLIBRARY_FOUND TRUE)
     endif(python_config)
 
     # adapted from cmake's builtin FindPythonLibs
     if(APPLE)
-      CMAKE_FIND_FRAMEWORKS(Python)
+      cmake_find_frameworks(Python)
       set(PYTHON_FRAMEWORK_INCLUDES)
       if(Python_FRAMEWORKS)
         # If a framework has been selected for the include path,
