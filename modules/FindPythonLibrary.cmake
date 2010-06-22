@@ -35,9 +35,13 @@ else(EXISTS PYTHON_LIBRARY)
 
   if(PYTHONINTERP_FOUND)
 
-    find_file(_find_lib_python_py FindLibPython.py PATHS ${CMAKE_MODULE_PATH})
+    # get the directory of the current file, used later on in the file
+    get_filename_component( _py_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
+    if(NOT EXISTS "${_py_cmake_module_dir}/FindLibPython.py")
+      message(FATAL_ERROR "The file FindLibPython.py does not exist in ${_py_cmake_module_dir} (the directory where FindPythonLibrary.cmake is located). Check your installation.")
+    endif(NOT EXISTS "${_py_cmake_module_dir}/FindLibPython.py")
 
-    execute_process(COMMAND ${PYTHON_EXECUTABLE}  ${_find_lib_python_py} OUTPUT_VARIABLE python_config)
+    execute_process(COMMAND ${PYTHON_EXECUTABLE}  "${_py_cmake_module_dir}/FindLibPython.py" OUTPUT_VARIABLE python_config)
     if(python_config)
       string(REGEX REPLACE ".*exec_prefix:([^\n]+).*$" "\\1" PYTHON_PREFIX ${python_config})
       string(REGEX REPLACE ".*\nshort_version:([^\n]+).*$" "\\1" PYTHON_SHORT_VERSION ${python_config})
