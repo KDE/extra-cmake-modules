@@ -53,4 +53,4 @@ else("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Automoc4 "Did not find automoc4 (part of kdesupport). Searched for Automoc4Config.cmake in ${AUTOMOC4_SEARCH_PATHS} using suffixes automoc4 lib/automoc4 lib64/automoc4." AUTOMOC4_EXECUTABLE)
+find_package_handle_standard_args(Automoc4 "Did not find automoc4 (Automoc4Config.cmake, part of kdesupport)." AUTOMOC4_EXECUTABLE)
