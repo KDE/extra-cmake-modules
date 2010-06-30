@@ -12,6 +12,7 @@
 
 set (STYLESHEET_PATH_LIST
     share/xml/docbook/stylesheet/docbook-xsl
+    share/xml/docbook/xsl-stylesheets
     share/sgml/docbook/xsl-stylesheets
     share/xml/docbook/stylesheet/nwalsh/current
     share/xml/docbook/stylesheet/nwalsh
