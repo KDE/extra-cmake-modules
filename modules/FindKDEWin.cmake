@@ -31,9 +31,6 @@ if (WIN32)
     else(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
         set (LIBRARY_NAME kdewin)
     endif (CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
-    if (MSVC_IDE )
-        set (LIBRARY_NAME "kdewind")
-    endif (MSVC_IDE)
 
     find_library(KDEWIN_LIBRARY
       NAMES ${LIBRARY_NAME}
