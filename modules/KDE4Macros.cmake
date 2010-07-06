@@ -1121,13 +1121,10 @@ macro (KDE4_ADD_WIN32_APP_ICON appsources)
 endmacro (KDE4_ADD_WIN32_APP_ICON)
 
 # adds application icon to target source list 
-# for detailled documentation see the top of FindKDE4Internal.cmake
+# for detailed documentation see the top of FindKDE4Internal.cmake
 macro (KDE4_ADD_APP_ICON appsources pattern)
-    string(REPLACE _KDEINIT_SRCS "" target ${appsources})
-    if(${appsources} STREQUAL ${target})
-        string(REPLACE _SRCS "" target ${appsources})
-    endif(${appsources} STREQUAL ${target})
-    
+    set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${appsources})
+
     if (WIN32)
         find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
         find_program(WINDRES_EXECUTABLE NAMES windres)
@@ -1156,7 +1153,6 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
                 endif (fn MATCHES ".*128.*")
             endforeach (it)
             if (_icons)
-                set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
                 add_custom_command(OUTPUT ${_outfilename}.ico ${_outfilename}.rc
                                    COMMAND ${PNG2ICO_EXECUTABLE} ARGS --rcfile ${_outfilename}.rc ${_outfilename}.ico ${_icons}
                                    DEPENDS ${PNG2ICO_EXECUTABLE} ${_icons}
@@ -1173,7 +1169,7 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
                     list(APPEND ${appsources} ${_outfilename}.rc)
                 endif(MINGW)
             else(_icons)
-                message(STATUS "Unable to find a related icon for target ${target} - application will not have an application icon!")
+                message(STATUS "Unable to find a related icon that matches pattern ${pattern} for variable ${appsources} - application will not have an application icon!")
             endif(_icons)
         else(PNG2ICO_EXECUTABLE AND WINDRES_EXECUTABLE)
             message(STATUS "Unable to find the png2ico or windres utilities - application will not have an application icon!")
@@ -1192,7 +1188,6 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
                     set (_icon ${it})
                 endif (it MATCHES ".*128.*")
             endforeach (it)
-            set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${target})
 
             if (_icon)
                 
@@ -1204,27 +1199,24 @@ macro (KDE4_ADD_APP_ICON appsources pattern)
                                    )
 
                 # This will register the icon into the bundle
-                set(MACOSX_BUNDLE_ICON_FILE ${target}.icns)
+                set(MACOSX_BUNDLE_ICON_FILE ${appsources}.icns)
 
                 # Append the icns file to the sources list so it will be a dependency to the
                 # main target
                 list(APPEND ${appsources} ${_outfilename}.icns)
 
-                #            this doesn't seem to work for me - Use manual "install" instead
-                # TODO: test again with cmake 2.6 ?
-                #           SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/${target}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-
-                install(FILES ${_outfilename}.icns DESTINATION ${BIN_INSTALL_DIR}/${target}.app/Contents/Resources/)
+                # Install the icon into the Resources dir in the bundle
+                set_source_files_properties(${_outfilename}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
             else(_icon)
                 # TODO - try to scale a non-128 icon...? Try to convert an SVG on the fly?
-                message(STATUS "Unable to find an 128x128 icon for target ${target} - application will not have an application icon!")
+                message(STATUS "Unable to find an 128x128 icon that matches pattern ${pattern} for variable ${appsources} - application will not have an application icon!")
             endif(_icon)
 
         else(SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
             message(STATUS "Unable to find the sips and tiff2icns utilities - application will not have an application icon!")
         endif(SIPS_EXECUTABLE AND TIFF2ICNS_EXECUTABLE)
-    endif(Q_WS_MAC)    
+    endif(Q_WS_MAC)
 endmacro (KDE4_ADD_APP_ICON)
 
 

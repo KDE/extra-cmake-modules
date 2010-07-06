@@ -233,14 +233,14 @@
 #
 #  KDE4_ADD_APP_ICON (SRCS_VAR pattern)
 #  adds an application icon to target source list.
+#  Make sure you have a 128x128 icon, or the icon won't display on Mac OS X.
 #  Mac OSX notes : the application icon is added to a Mac OS X bundle so that Finder and friends show the right thing.
 #  Win32 notes: the application icon(s) are compiled into the application
 #  There is some workaround in kde4_add_kdeinit_executable to make it possible for those applications as well.
 # Parameters:
-#  SRCS_VAR  - specifies the list of source files; this has to end in _SRCS or _KDEINIT_SRCS
-#                           (see the replace stuff below)
-#  pattern     - regular expression for searching application icons
-#  Example: KDE4_ADD_APP_ICON( myapp_SRCS "pics/cr*-myapp.png")
+#  SRCS_VAR  - specifies the list of source files
+#  pattern   - regular expression for searching application icons
+#  Example: KDE4_ADD_APP_ICON( myapp_SOURCES "pics/cr*-myapp.png")
 #  Example: KDE4_ADD_APP_ICON( myapp_KDEINIT_SRCS "icons/oxygen/*/apps/myapp.png")
 #
 #  KDE4_UPDATE_ICONCACHE()
