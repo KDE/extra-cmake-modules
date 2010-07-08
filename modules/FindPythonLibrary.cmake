@@ -60,7 +60,7 @@ else(EXISTS PYTHON_LIBRARY)
       set(PYTHON_SITE_PACKAGES_DIR "${_TMP_PYTHON_SITE_PACKAGES_DIR}" CACHE PATH "The python site packages dir" FORCE)
 
       # This one is intended to be used and changed by the user for installing own modules:
-      set(PYTHON_SITE_PACKAGES_INSTALL_DIR lib${LIB_SUFFIX}/python${PYTHON_SHORT_VERSION}/site-packages CACHE PATH "The directory where python modules will be installed to.")
+      set(PYTHON_SITE_PACKAGES_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/python${PYTHON_SHORT_VERSION}/site-packages CACHE PATH "The directory where python modules will be installed to.")
 
       string(REGEX REPLACE "([0-9]+).([0-9]+)" "\\1\\2" PYTHON_SHORT_VERSION_NO_DOT ${PYTHON_SHORT_VERSION})
       set(PYTHON_LIBRARY_NAMES python${PYTHON_SHORT_VERSION} python${PYTHON_SHORT_VERSION_NO_DOT})
