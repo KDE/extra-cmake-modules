@@ -45,7 +45,11 @@ if (WIN32)
   if (KDEWIN_LIBRARY AND KDEWIN_INCLUDE_DIR)
     set(KDEWIN_FOUND TRUE)
     # add needed system libs
-    set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} user32 shell32 ws2_32 netapi32 userenv)
+    if(NOT WINCE)
+        set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} user32 shell32 ws2_32 netapi32 userenv)
+    else(NOT WINCE)
+         set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} ws2 )
+    endif(NOT WINCE)
 
     if (MINGW)
       #mingw compiler
@@ -54,7 +58,11 @@ if (WIN32)
       # msvc compiler
       # add the MS SDK include directory if available
       file(TO_CMAKE_PATH "$ENV{MSSDK}" MSSDK_DIR)
-      set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/msvc  ${QT_INCLUDES} ${MSSDK_DIR})
+      if (WINCE)
+        set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/msvc ${WCECOMPAT_INCLUDE_DIR} ${QT_INCLUDES} ${MSSDK_DIR})
+      else(WINCE)
+        set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/msvc ${QT_INCLUDES} ${MSSDK_DIR})
+      endif(WINCE)
     endif (MINGW)
 
   endif (KDEWIN_LIBRARY AND KDEWIN_INCLUDE_DIR)
