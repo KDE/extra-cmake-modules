@@ -14,7 +14,13 @@
 
 
 if (WIN32)
+
+  if(WINCE)
+    FIND_PACKAGE(WCECOMPAT REQUIRED)
+  endif(WINCE)
+    
   if (NOT KDEWIN_LIBRARY)
+ 
 
     find_path(KDEWIN_INCLUDE_DIR kdewin_export.h
       ${KDE4_INCLUDE_DIR}
@@ -48,7 +54,7 @@ if (WIN32)
     if(NOT WINCE)
         set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} user32 shell32 ws2_32 netapi32 userenv)
     else(NOT WINCE)
-         set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} ws2 )
+         set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} ws2 ${WCECOMPAT_LIBRARIES})
     endif(NOT WINCE)
 
     if (MINGW)
