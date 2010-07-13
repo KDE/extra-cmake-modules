@@ -53,8 +53,12 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
   endforeach(_arg)
 
   # find our helper program (first in the install dir, then everywhere)
+  if(NOT WINCE)
   find_program(RCGEN nepomuk-rcgen PATHS ${KDE4_BIN_INSTALL_DIR} ${BIN_INSTALL_DIR} NO_DEFAULT_PATH)
   find_program(RCGEN nepomuk-rcgen)
+  else(NOT WINCE)
+  find_program(RCGEN nepomuk-rcgen PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
+  endif(NOT WINCE)
 
   if(NOT RCGEN)
     message(SEND_ERROR "Failed to find the Nepomuk source generator" )
