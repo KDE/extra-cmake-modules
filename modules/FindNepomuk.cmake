@@ -66,11 +66,20 @@ mark_as_advanced(NEPOMUK_INCLUDE_DIR NEPOMUK_LIBRARIES NEPOMUK_QUERY_LIBRARIES N
 include(FindPackageHandleStandardArgs)
 # List all nepomuk and also all necessary soprano variables here, to make it
 # easier for the user to see what was missing:
+if(NOT WINCE)
 find_package_handle_standard_args(Nepomuk  DEFAULT_MSG
                                   NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR NEPOMUK_ADDONTOLOGYCLASSES_FILE
                                   Soprano_FOUND SOPRANO_PLUGIN_RAPTORPARSER_FOUND SOPRANO_PLUGIN_REDLANDBACKEND_FOUND
                                   SHAREDDESKTOPONTOLOGIES_FOUND
                                   )
+else(NOT WINCE)
+#FIXME: There are no backends at this time
+find_package_handle_standard_args(Nepomuk  DEFAULT_MSG
+                                  NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR NEPOMUK_ADDONTOLOGYCLASSES_FILE
+                                  Soprano_FOUND
+                                  SHAREDDESKTOPONTOLOGIES_FOUND
+                                  )
+endif(NOT WINCE)
 
 #to retain backward compatibility
 set (Nepomuk_FOUND ${NEPOMUK_FOUND})
