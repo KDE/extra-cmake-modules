@@ -216,8 +216,11 @@
 #    to the proper location when installing, so RUN_UNINSTALLED is not necessary anymore).
 #
 #  KDE4_ADD_LIBRARY (name [STATIC | SHARED | MODULE ] file1 ... fileN)
-#    Equivalent to ADD_LIBRARY(), but additionally it supports KDE4_ENABLE_FINAL
-#    and under Windows it adds a -DMAKE_<name>_LIB definition to the compilation.
+#    Equivalent to ADD_LIBRARY(). Additionally it supports KDE4_ENABLE_FINAL, 
+#    includes automoc-handling and sets LINK_INTERFACE_LIBRARIES target property empty.
+#    The RPATH is set according to the global RPATH settings as set up by FindKDE4Internal.cmake
+#    (CMAKE_SKIP_BUILD_RPATH=FALSE, CMAKE_BUILD_WITH_INSTALL_RPATH=FALSE, CMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE)
+#    Under Windows it adds a -DMAKE_<name>_LIB definition to the compilation.
 #
 #  KDE4_ADD_UNIT_TEST (testname [TESTNAME targetname] file1 ... fileN)
 #    add a unit test, which is executed when running make test
@@ -347,9 +350,7 @@ cmake_policy(SET CMP0005 OLD)
 # where this is done, macros and functions are executed with the policies as they
 # were when the were defined. Keep the OLD behaviour so we can set the policies here
 # for all KDE software without the big warning
-if(POLICY CMP0011)
-   cmake_policy(SET CMP0011 OLD)
-endif(POLICY CMP0011)
+cmake_policy(SET CMP0011 OLD)
 
 
 # Only do something if it hasn't been found yet

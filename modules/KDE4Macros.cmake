@@ -971,7 +971,6 @@ endmacro (KDE4_ADD_EXECUTABLE)
 
 
 macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
-#is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
 
    set(_first_SRC ${_lib_TYPE})
    set(_add_lib_param)
