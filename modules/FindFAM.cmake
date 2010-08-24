@@ -11,16 +11,11 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (FAM_INCLUDE_DIR)
-  # Already in cache, be silent
-  set(FAM_FIND_QUIETLY TRUE)
-endif (FAM_INCLUDE_DIR)
-
 FIND_PATH(FAM_INCLUDE_DIR fam.h)
 
 FIND_LIBRARY(FAM_LIBRARIES NAMES fam )
 
-include(FindPackageHandleStandardArgs)
+INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(FAM DEFAULT_MSG FAM_INCLUDE_DIR FAM_LIBRARIES )
 
 MARK_AS_ADVANCED(FAM_INCLUDE_DIR FAM_LIBRARIES)

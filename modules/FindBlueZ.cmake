@@ -17,7 +17,7 @@
 
 if ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
    # in cache already
-   SET(BlueZ_FIND_QUIETLY TRUE)
+   set(BlueZ_FIND_QUIETLY TRUE)
 endif ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
 
 # use pkg-config to get the directories and then use these values
@@ -30,22 +30,22 @@ if( NOT WIN32 )
   set(BLUEZ_DEFINITIONS ${PC_BLUEZ_CFLAGS_OTHER})
 endif( NOT WIN32 )
 
-FIND_PATH(BLUEZ_INCLUDE_DIR NAMES bluetooth/bluetooth.h
+find_path(BLUEZ_INCLUDE_DIR NAMES bluetooth/bluetooth.h
   PATHS
   ${PC_BLUEZ_INCLUDEDIR}
   ${PC_BLUEZ_INCLUDE_DIRS}
   /usr/X11/include
 )
 
-FIND_LIBRARY(BLUEZ_LIBRARIES NAMES bluetooth
+find_library(BLUEZ_LIBRARIES NAMES bluetooth
   PATHS
   ${PC_BLUEZ_LIBDIR}
   ${PC_BLUEZ_LIBRARY_DIRS}
 )
 
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(BlueZ DEFAULT_MSG BLUEZ_INCLUDE_DIR BLUEZ_LIBRARIES )
+find_package_handle_standard_args(BlueZ DEFAULT_MSG BLUEZ_INCLUDE_DIR BLUEZ_LIBRARIES )
 
 # show the BLUEZ_INCLUDE_DIR and BLUEZ_LIBRARIES variables only in the advanced view
-MARK_AS_ADVANCED(BLUEZ_INCLUDE_DIR BLUEZ_LIBRARIES )
+mark_as_advanced(BLUEZ_INCLUDE_DIR BLUEZ_LIBRARIES )
 

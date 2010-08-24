@@ -11,13 +11,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (EIGEN_INCLUDE_DIR)
-
-  # in cache already
-  set(EIGEN_FOUND TRUE)
-
-else (EIGEN_INCLUDE_DIR)
-
 find_path(EIGEN_INCLUDE_DIR NAMES eigen/matrix.h
      PATHS
      ${INCLUDE_INSTALL_DIR}
@@ -26,8 +19,6 @@ find_path(EIGEN_INCLUDE_DIR NAMES eigen/matrix.h
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Eigen DEFAULT_MSG EIGEN_INCLUDE_DIR )
 
-
 mark_as_advanced(EIGEN_INCLUDE_DIR)
 
-endif(EIGEN_INCLUDE_DIR)
 
