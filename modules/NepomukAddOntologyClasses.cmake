@@ -54,20 +54,20 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
 
   # find our helper program (first in the install dir, then everywhere)
   if(NOT WINCE)
-  find_program(RCGEN nepomuk-rcgen PATHS ${KDE4_BIN_INSTALL_DIR} ${BIN_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_program(RCGEN nepomuk-rcgen)
+    find_program(RCGEN nepomuk-rcgen PATHS ${KDE4_BIN_INSTALL_DIR} ${BIN_INSTALL_DIR} NO_DEFAULT_PATH)
+    find_program(RCGEN nepomuk-rcgen)
   else(NOT WINCE)
-  find_program(RCGEN nepomuk-rcgen PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
+    find_program(RCGEN nepomuk-rcgen PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
   endif(NOT WINCE)
 
   if(NOT RCGEN)
     message(SEND_ERROR "Failed to find the Nepomuk source generator" )
   else(NOT RCGEN)
-    FILE(TO_NATIVE_PATH ${RCGEN} RCGEN)
+    file(TO_NATIVE_PATH ${RCGEN} RCGEN)
 
     # we generate the files in the current binary dir
     set(_targetdir ${CMAKE_CURRENT_BINARY_DIR})
-    
+
     # generate the list of source and header files
     execute_process(
       COMMAND ${RCGEN} ${_fastmode} --listheaders --prefix ${_targetdir}/ ${_classes} ${_visibility} ${_ontologies}
@@ -86,7 +86,7 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
     if(NOT ${rcgen_result} EQUAL 0)
       message(SEND_ERROR "Running ${RCGEN} to generate list of sources failed with error code ${rcgen_result}")
     endif(NOT ${rcgen_result} EQUAL 0)
-    
+
     add_custom_command(OUTPUT ${_out_headers} ${_out_sources}
       COMMAND ${RCGEN} ${_fastmode} --writeall --target ${_targetdir}/ ${_classes} ${_visibility} ${_ontologies}
       DEPENDS ${_ontologies}
