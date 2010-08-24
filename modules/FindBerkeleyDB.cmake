@@ -11,15 +11,15 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-FIND_PATH(BERKELEY_DB_INCLUDE_DIR db.h
+find_path(BERKELEY_DB_INCLUDE_DIR db.h
   /usr/include/db4
   /usr/local/include/db4
 )
 
-FIND_LIBRARY(BERKELEY_DB_LIBRARIES NAMES db )
+find_library(BERKELEY_DB_LIBRARIES NAMES db )
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Berkeley "Could not find Berkeley DB >= 4.1" BERKELEY_DB_INCLUDE_DIR BERKELEY_DB_LIBRARIES)
 # show the BERKELEY_DB_INCLUDE_DIR and BERKELEY_DB_LIBRARIES variables only in the advanced view
-MARK_AS_ADVANCED(BERKELEY_DB_INCLUDE_DIR BERKELEY_DB_LIBRARIES )
+mark_as_advanced(BERKELEY_DB_INCLUDE_DIR BERKELEY_DB_LIBRARIES )
 

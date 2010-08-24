@@ -6,17 +6,10 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (AVAHI_INCLUDE_DIR)
-  # Already in cache, be silent
-  set(Avahi_FIND_QUIETLY TRUE)
-endif (AVAHI_INCLUDE_DIR)
-
-
-FIND_PATH(AVAHI_INCLUDE_DIR avahi-common/defs.h)
+find_path(AVAHI_INCLUDE_DIR avahi-common/defs.h)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Avahi DEFAULT_MSG
                                   AVAHI_INCLUDE_DIR)
 
-
-MARK_AS_ADVANCED(AVAHI_INCLUDE_DIR)
+mark_as_advanced(AVAHI_INCLUDE_DIR)
 
