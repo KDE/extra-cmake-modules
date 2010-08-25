@@ -15,20 +15,14 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 
 if(NOT Eigen2_FIND_VERSION)
-  if(NOT Eigen2_FIND_VERSION_MAJOR)
-    set(Eigen2_FIND_VERSION_MAJOR 2)
-  endif(NOT Eigen2_FIND_VERSION_MAJOR)
-  if(NOT Eigen2_FIND_VERSION_MINOR)
-    set(Eigen2_FIND_VERSION_MINOR 0)
-  endif(NOT Eigen2_FIND_VERSION_MINOR)
-  if(NOT Eigen2_FIND_VERSION_PATCH)
-    set(Eigen2_FIND_VERSION_PATCH 0)
-  endif(NOT Eigen2_FIND_VERSION_PATCH)
+  set(Eigen2_FIND_VERSION_MAJOR 2)
+  set(Eigen2_FIND_VERSION_MINOR 0)
+  set(Eigen2_FIND_VERSION_PATCH 0)
 
   set(Eigen2_FIND_VERSION "${Eigen2_FIND_VERSION_MAJOR}.${Eigen2_FIND_VERSION_MINOR}.${Eigen2_FIND_VERSION_PATCH}")
 endif(NOT Eigen2_FIND_VERSION)
 
-macro(_eigen2_check_version)
+macro(_eigen2_get_version)
   file(READ "${EIGEN2_INCLUDE_DIR}/Eigen/src/Core/util/Macros.h" _eigen2_version_header LIMIT 5000 OFFSET 1000)
 
   string(REGEX MATCH "define *EIGEN_WORLD_VERSION ([0-9]*)" _eigen2_world_version_match "${_eigen2_version_header}")
@@ -39,26 +33,7 @@ macro(_eigen2_check_version)
   set(EIGEN2_MINOR_VERSION "${CMAKE_MATCH_1}")
 
   set(EIGEN2_VERSION ${EIGEN2_WORLD_VERSION}.${EIGEN2_MAJOR_VERSION}.${EIGEN2_MINOR_VERSION})
-  if(${EIGEN2_VERSION} VERSION_LESS ${Eigen2_FIND_VERSION})
-    set(EIGEN2_VERSION_OK FALSE)
-  else(${EIGEN2_VERSION} VERSION_LESS ${Eigen2_FIND_VERSION})
-    set(EIGEN2_VERSION_OK TRUE)
-  endif(${EIGEN2_VERSION} VERSION_LESS ${Eigen2_FIND_VERSION})
-
-  if(NOT EIGEN2_VERSION_OK)
-  
-    message(STATUS "Eigen2 version ${EIGEN2_VERSION} found in ${EIGEN2_INCLUDE_DIR}, "
-                   "but at least version ${Eigen2_FIND_VERSION} is required")
-  endif(NOT EIGEN2_VERSION_OK)
-endmacro(_eigen2_check_version)
-
-if (EIGEN2_INCLUDE_DIR)
-
-  # in cache already
-  _eigen2_check_version()
-  set(EIGEN2_FOUND ${EIGEN2_VERSION_OK})
-
-else (EIGEN2_INCLUDE_DIR)
+endmacro(_eigen2_get_version)
 
 find_path(EIGEN2_INCLUDE_DIR NAMES Eigen/Core
      PATHS
@@ -68,13 +43,13 @@ find_path(EIGEN2_INCLUDE_DIR NAMES Eigen/Core
    )
 
 if(EIGEN2_INCLUDE_DIR)
-  _eigen2_check_version()
+  _eigen2_get_version()
 endif(EIGEN2_INCLUDE_DIR)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Eigen2 DEFAULT_MSG EIGEN2_INCLUDE_DIR EIGEN2_VERSION_OK)
+find_package_handle_standard_args(Eigen2 REQUIRED_VARS EIGEN2_INCLUDE_DIR
+                                         VERSION_VAR EIGEN2_VERSION)
 
 mark_as_advanced(EIGEN2_INCLUDE_DIR)
 
-endif(EIGEN2_INCLUDE_DIR)
 

@@ -10,13 +10,10 @@ set(cmakeFilesDontInstall
                FindPolkitQt.cmake
                FindPolkitQt-1.cmake)
 
-# remove once we depend on a newer cmake version:
-# FindPackageHandleStandardArgs (2.8.2)
-
 # Explicitely list all files which will be installed.
 # We don't use a GLOB anymore so we can have also cmake files here
 # which are used inside kdelibs, but which don't have to be installed (and
-# so become part of the public interface of kdelibs which has to be kept 
+# so become part of the public interface of kdelibs which has to be kept
 # compatible).
 set(cmakeFiles CheckCXXSourceCompiles.cmake
                CheckCXXSourceRuns.cmake
@@ -101,6 +98,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                Qt4Macros.cmake
                Qt4ConfigDependentSettings.cmake
                FindPackageHandleStandardArgs.cmake
+               CMakeParseArguments.cmake  # used by FindPackageHandleStandardArgs.cmake, will be in CMake 2.8.3
                FindPythonLibrary.cmake
                FindQCA2.cmake
                FindQImageBlitz.cmake
@@ -150,11 +148,11 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                create_exe_symlink.cmake
                kde4_exec_via_sh.cmake
                kde4uic.cmake
-               cmake-modules-styleguide.txt 
-               kde4init_dummy.cpp.in 
-               kde4init_win32lib_dummy.cpp.in 
-               kde4_cmake_uninstall.cmake.in 
-               kde4automoc.files.in 
+               cmake-modules-styleguide.txt
+               kde4init_dummy.cpp.in
+               kde4init_win32lib_dummy.cpp.in
+               kde4_cmake_uninstall.cmake.in
+               kde4automoc.files.in
                BasicFindPackageVersion.cmake.in
                FindLibPython.py
                FindPyKDE4.py
@@ -170,7 +168,7 @@ endif (KDE4_ENABLE_UAC_MANIFEST)
 install(FILES ${cmakeFiles}
         DESTINATION ${module_install_dir} )
 
-         
+
 # the files listed here will be removed by remove_obsoleted_cmake_files.cmake, Alex
 #set(FILES_TO_REMOVE
 #)
