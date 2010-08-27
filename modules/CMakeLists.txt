@@ -8,7 +8,9 @@ set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
 # are listed explicitely:
 set(cmakeFilesDontInstall
                FindPolkitQt.cmake
-               FindPolkitQt-1.cmake)
+               FindPolkitQt-1.cmake
+               FindHUpnp.cmake 
+               )
 
 # Explicitely list all files which will be installed.
 # We don't use a GLOB anymore so we can have also cmake files here
@@ -159,7 +161,6 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindPyQt.py
                FindSIP.py
                PythonCompile.py
-               FindHUpnp.cmake
                )
 
 if (KDE4_ENABLE_UAC_MANIFEST)
