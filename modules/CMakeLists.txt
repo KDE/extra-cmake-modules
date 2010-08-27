@@ -159,6 +159,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindPyQt.py
                FindSIP.py
                PythonCompile.py
+               FindHUpnp.cmake
                )
 
 if (KDE4_ENABLE_UAC_MANIFEST)
