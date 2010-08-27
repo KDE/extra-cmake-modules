@@ -13,6 +13,6 @@ find_library( HUPNP_LIBS HUpnp )
 
 include( FindPackageHandleStandardArgs )
 
-find_package_handle_standard_args( HUpnp "Could not find HUPnP" HUPNP_INCLUDE_DIR HUPNP_LIBS )
+find_package_handle_standard_args( HUpnp DEFAULT_MSG HUPNP_INCLUDE_DIR HUPNP_LIBS )
 
 mark_as_advanced( HUPNP_INCLUDE_DIR HUPNP_LIBS )
