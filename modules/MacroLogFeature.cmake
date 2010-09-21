@@ -48,6 +48,9 @@ IF (NOT _macroLogFeatureAlreadyIncluded)
   ENDIF (EXISTS ${_file})
 
   SET(_macroLogFeatureAlreadyIncluded TRUE)
+
+  INCLUDE(FeatureSummary)
+
 ENDIF (NOT _macroLogFeatureAlreadyIncluded)
 
 
@@ -56,7 +59,7 @@ MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _
    STRING(TOUPPER "${ARGV4}" _required)
    SET(_minvers "${ARGV5}")
    SET(_comments "${ARGV6}")
-   
+
    IF (${_var})
      SET(_LOGFILENAME ${CMAKE_BINARY_DIR}/EnabledFeatures.txt)
    ELSE (${_var})
@@ -88,11 +91,19 @@ MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _
    ENDIF (NOT ${_var})
 
    FILE(APPEND "${_LOGFILENAME}" "${_logtext}\n")
- 
+
+   IF(COMMAND SET_PACKAGE_INFO)  # in FeatureSummary.cmake since CMake 2.8.3
+     SET_PACKAGE_INFO("${_package}" "\"${_description}\"" "${_url}" "\"${_comments}\"")
+   ENDIF(COMMAND SET_PACKAGE_INFO)
+
 ENDMACRO(MACRO_LOG_FEATURE)
 
 
 MACRO(MACRO_DISPLAY_FEATURE_LOG)
+   IF(COMMAND FEATURE_SUMMARY) # in FeatureSummary.cmake since CMake 2.8.3
+      FEATURE_SUMMARY(FILENAME ${CMAKE_CURRENT_BINARY_DIR}/FindPackageLog.txt
+                      WHAT ALL)
+   ENDIF(COMMAND FEATURE_SUMMARY)
 
    SET(_missingFile ${CMAKE_BINARY_DIR}/MissingRequirements.txt)
    SET(_enabledFile ${CMAKE_BINARY_DIR}/EnabledFeatures.txt)
