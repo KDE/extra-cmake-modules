@@ -67,6 +67,12 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
+# Include guard, it's not necessary to parse this fail again and again:
+IF(_FPHSA_ALREADY_INCLUDED)
+  RETURN()
+ENDIF(_FPHSA_ALREADY_INCLUDED)
+SET(_FPHSA_ALREADY_INCLUDED TRUE)
+
 INCLUDE(FindPackageMessage)
 INCLUDE(CMakeParseArguments)
 
@@ -112,7 +118,7 @@ FUNCTION(FIND_PACKAGE_HANDLE_STANDARD_ARGS _NAME _FIRST_ARG _VAR1)
 
   STRING(TOUPPER ${_NAME} _NAME_UPPER)
 
-  # collect all variables which were not found, so they can be printed, so the 
+  # collect all variables which were not found, so they can be printed, so the
   # user knows better what went wrong (#6375)
   SET(MISSING_VARS "")
   SET(DETAILS "")
