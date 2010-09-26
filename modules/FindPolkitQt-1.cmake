@@ -8,19 +8,24 @@
 #  POLKITQT-1_GUI_LIBRARY - Link this to use GUI elements in polkit-qt (polkit-qt-gui)
 #  POLKITQT-1_AGENT_LIBRARY - Link this to use the agent wrapper in polkit-qt
 #  POLKITQT-1_DEFINITIONS - Compiler switches required for using Polkit-qt
+#
+# The minimum required version of PolkitQt-1 can be specified using the
+# standard syntax, e.g. find_package(PolkitQt-1 1.0)
 
 # Copyright (c) 2009, Dario Freddi, <drf@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (POLKITQT-1_INCLUDE_DIR AND POLKITQT-1_LIB)
-    set(POLKITQT-1_FIND_QUIETLY TRUE)
-endif (POLKITQT-1_INCLUDE_DIR AND POLKITQT-1_LIB)
+# Support POLKITQT-1_MIN_VERSION for compatibility:
+if(NOT PolkitQt-1_FIND_VERSION)
+  set(PolkitQt-1_FIND_VERSION "${POLKITQT-1_MIN_VERSION}")
+endif(NOT PolkitQt-1_FIND_VERSION)
 
-if (NOT POLKITQT-1_MIN_VERSION)
-  set(POLKITQT-1_MIN_VERSION "0.95.1")
-endif (NOT POLKITQT-1_MIN_VERSION)
+# the minimum version of PolkitQt-1 we require
+if(NOT PolkitQt-1_FIND_VERSION)
+  set(PolkitQt-1_FIND_VERSION "0.95.1")
+endif(NOT PolkitQt-1_FIND_VERSION)
 
 if (NOT WIN32)
    # use pkg-config to get the directories and then use these values
@@ -40,37 +45,22 @@ find_file( POLKITQT-1_VERSION_FILE
      PATHS ${POLKITQT-1_INCLUDE_DIR}
 )
 
-set(POLKITQT-1_VERSION_OK TRUE)
-if(POLKITQT-1_VERSION_FILE)
+# Search the version and store it in the cache so we don't have to do this everytime
+if(POLKITQT-1_VERSION_FILE  AND NOT  POLKITQT-1_VERSION)
   file(READ ${POLKITQT-1_VERSION_FILE} POLKITQT-1_VERSION_CONTENT)
   string (REGEX MATCH "POLKITQT1_VERSION_STRING \".*\"\n" POLKITQT-1_VERSION_MATCH "${POLKITQT-1_VERSION_CONTENT}")
-  
-  if(POLKITQT-1_VERSION_MATCH)
-    string(REGEX REPLACE "POLKITQT1_VERSION_STRING \"(.*)\"\n" "\\1" POLKITQT-1_VERSION ${POLKITQT-1_VERSION_MATCH})
-    if(POLKITQT-1_VERSION STRLESS "${POLKITQT-1_MIN_VERSION}")
-      set(POLKITQT-1_VERSION_OK FALSE)
-      if(PolkitQt-1_FIND_REQUIRED)
-        message(FATAL_ERROR "PolkitQt-1 version ${POLKITQT-1_VERSION} was found, but it is too old. Please install ${POLKITQT-1_MIN_VERSION} or newer.")
-      else(PolkitQt-1_FIND_REQUIRED)
-        message(STATUS "PolkitQt-1 version ${POLKITQT-1_VERSION} is too old. Please install ${POLKITQT-1_MIN_VERSION} or newer.")
-      endif(PolkitQt-1_FIND_REQUIRED)
-    endif(POLKITQT-1_VERSION STRLESS "${POLKITQT-1_MIN_VERSION}")
-  endif(POLKITQT-1_VERSION_MATCH)
-elseif(POLKITQT-1_INCLUDE_DIR)
-  # The version is so old that it does not even have the file
-  set(POLKITQT-1_VERSION_OK FALSE)
-  if(PolkitQt_FIND_REQUIRED)
-    message(FATAL_ERROR "It looks like PolkitQt-1 is too old. Please install PolkitQt-1 version ${POLKITQT-1_MIN_VERSION} or newer.")
-  else(PolkitQt_FIND_REQUIRED)
-    message(STATUS "It looks like PolkitQt-1 is too old. Please install PolkitQt-1 version ${POLKITQT-1_MIN_VERSION} or newer.")
-  endif(PolkitQt_FIND_REQUIRED)
-endif(POLKITQT-1_VERSION_FILE)
 
-find_library( POLKITQT-1_CORE_LIBRARY 
+  if(POLKITQT-1_VERSION_MATCH)
+    string(REGEX REPLACE "POLKITQT1_VERSION_STRING \"(.*)\"\n" "\\1" _POLKITQT-1_VERSION ${POLKITQT-1_VERSION_MATCH})
+  endif(POLKITQT-1_VERSION_MATCH)
+  set(POLKITQT-1_VERSION "${_POLKITQT-1_VERSION}" CACHE STRING "Version number of PolkitQt-1" FORCE)
+endif(POLKITQT-1_VERSION_FILE  AND NOT  POLKITQT-1_VERSION)
+
+find_library( POLKITQT-1_CORE_LIBRARY
     NAMES polkit-qt-core-1
     HINTS ${PC_POLKITQT-1_LIBDIR}
 )
-find_library( POLKITQT-1_GUI_LIBRARY 
+find_library( POLKITQT-1_GUI_LIBRARY
     NAMES polkit-qt-gui-1
     HINTS ${PC_POLKITQT-1_LIBDIR}
 )
@@ -83,11 +73,13 @@ set(POLKITQT-1_LIBRARIES ${POLKITQT-1_GUI_LIBRARY} ${POLKITQT-1_CORE_LIBRARY} ${
 
 include(FindPackageHandleStandardArgs)
 
-# handle the QUIETLY and REQUIRED arguments and set POLKITQT-1_FOUND to TRUE if 
+# handle the QUIETLY and REQUIRED arguments and set POLKITQT-1_FOUND to TRUE if
 # all listed variables are TRUE
-find_package_handle_standard_args(PolkitQt-1  DEFAULT_MSG  POLKITQT-1_LIBRARIES POLKITQT-1_INCLUDE_DIR POLKITQT-1_VERSION_OK)
+find_package_handle_standard_args(PolkitQt-1  REQUIRED_VARS  POLKITQT-1_GUI_LIBRARY POLKITQT-1_CORE_LIBRARY
+                                                             POLKITQT-1_AGENT_LIBRARY POLKITQT-1_INCLUDE_DIR
+                                              VERSION_VAR POLKITQT-1_VERSION )
 
-mark_as_advanced(POLKITQT-1_INCLUDE_DIR 
+mark_as_advanced(POLKITQT-1_INCLUDE_DIR
                  POLKITQT-1_CORE_LIBRARY
                  POLKITQT-1_GUI_LIBRARY
                  POLKITQT-1_AGENT_LIBRARY
