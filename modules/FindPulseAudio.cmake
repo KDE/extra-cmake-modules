@@ -5,7 +5,10 @@
 #  PULSEAUDIO_FOUND - system has the PulseAudio library
 #  PULSEAUDIO_INCLUDE_DIR - the PulseAudio include directory
 #  PULSEAUDIO_LIBRARY - the libraries needed to use PulseAudio
-#  PULSEAUDIO_MAINLOOP_LIBRARY - the libraries needed to use PulsAudio Mailoop
+#  PULSEAUDIO_MAINLOOP_LIBRARY - the libraries needed to use PulsAudio Mainloop
+#
+# The minimum required version of PulseAudio can be specified using the
+# standard syntax, e.g. find_package(PulseAudio 1.0)
 
 # Copyright (c) 2008, Matthias Kretz, <kretz@kde.org>
 # Copyright (c) 2009, Marcus Hufgard, <Marcus.Hufgard@hufgard.de>
@@ -13,18 +16,19 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (NOT PULSEAUDIO_MINIMUM_VERSION)
-  set(PULSEAUDIO_MINIMUM_VERSION "0.9.9")
-endif (NOT PULSEAUDIO_MINIMUM_VERSION)
+# Support PULSEAUDIO_MINIMUM_VERSION for compatibility:
+if(NOT PulseAudio_FIND_VERSION)
+  set(PulseAudio_FIND_VERSION "${PULSEAUDIO_MINIMUM_VERSION}")
+endif(NOT PulseAudio_FIND_VERSION)
 
-if (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY AND PULSEAUDIO_MAINLOOP_LIBRARY)
-   # Already in cache, be silent
-   set(PULSEAUDIO_FIND_QUIETLY TRUE)
-endif (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY AND PULSEAUDIO_MAINLOOP_LIBRARY)
+# the minimum version of PulseAudio we require
+if(NOT PulseAudio_FIND_VERSION)
+  set(PulseAudio_FIND_VERSION "0.9.9")
+endif(NOT PulseAudio_FIND_VERSION)
 
 if (NOT WIN32)
    include(FindPkgConfig)
-   pkg_check_modules(PC_PULSEAUDIO QUIET libpulse>=${PULSEAUDIO_MINIMUM_VERSION})
+   pkg_check_modules(PC_PULSEAUDIO QUIET libpulse>=${PulseAudio_FIND_VERSION})
    pkg_check_modules(PC_PULSEAUDIO_MAINLOOP QUIET libpulse-mainloop-glib)
 endif (NOT WIN32)
 
@@ -46,31 +50,22 @@ find_library(PULSEAUDIO_MAINLOOP_LIBRARY NAMES pulse-mainloop pulse-mainloop-gli
    ${PC_PULSEAUDIO_LIBRARY_DIRS}
    )
 
-if (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY)
-   include(MacroEnsureVersion)
+# Store the version number in the cache, so we don't have to search every time again:
+if (PULSEAUDIO_INCLUDE_DIR  AND NOT  PULSEAUDIO_VERSION)
 
    # get PulseAudio's version from its version.h, and compare it with our minimum version
    file(STRINGS "${PULSEAUDIO_INCLUDE_DIR}/pulse/version.h" pulse_version_h
         REGEX ".*pa_get_headers_version\\(\\).*"
         )
    string(REGEX REPLACE ".*pa_get_headers_version\\(\\)\ \\(\"([0-9]+\\.[0-9]+\\.[0-9]+)\"\\).*" "\\1"
-                         PULSEAUDIO_VERSION "${pulse_version_h}")
-   macro_ensure_version("${PULSEAUDIO_MINIMUM_VERSION}" "${PULSEAUDIO_VERSION}" PULSEAUDIO_FOUND)
-else (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY)
-   set(PULSEAUDIO_FOUND FALSE)
-endif (PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY)
+                         _PULSEAUDIO_VERSION "${pulse_version_h}")
 
-if (PULSEAUDIO_FOUND)
-   if (NOT PULSEAUDIO_FIND_QUIETLY)
-      message(STATUS "Found PulseAudio: ${PULSEAUDIO_LIBRARY}")
-      if (PULSEAUDIO_MAINLOOP_LIBRARY)
-          message(STATUS "Found PulseAudio Mainloop: ${PULSEAUDIO_MAINLOOP_LIBRARY}")
-      else (PULSAUDIO_MAINLOOP_LIBRARY)
-          message(STATUS "Could NOT find PulseAudio Mainloop Library")
-      endif (PULSEAUDIO_MAINLOOP_LIBRARY)
-   endif (NOT PULSEAUDIO_FIND_QUIETLY)
-else (PULSEAUDIO_FOUND)
-   message(STATUS "Could NOT find PulseAudio")
-endif (PULSEAUDIO_FOUND)
+   set(PULSEAUDIO_VERSION "${_PULSEAUDIO_VERSION}" CACHE STRING "Version number of PulseAudio" FORCE)
+endif (PULSEAUDIO_INCLUDE_DIR  AND NOT  PULSEAUDIO_VERSION)
+
+# Use the new extended syntax of find_package_handle_standard_args(), which also handles version checking:
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(PulseAudio REQUIRED_VARS PULSEAUDIO_LIBRARY PULSEAUDIO_INCLUDE_DIR
+                                             VERSION_VAR PULSEAUDIO_VERSION )
 
 mark_as_advanced(PULSEAUDIO_INCLUDE_DIR PULSEAUDIO_LIBRARY PULSEAUDIO_MAINLOOP_LIBRARY)
