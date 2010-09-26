@@ -9,8 +9,9 @@
 #  POLKITQT_DEFINITIONS - Compiler switches required for using Polkit-qt
 #  POLKITQT_POLICY_FILES_INSTALL_DIR - The directory where policy files should be installed to.
 #
-# The minimum required version PolkitQt can be specified by setting the
-# POLKITQT_MIN_VERSION variable.
+# The minimum required version of PolkitQt can be specified using the
+# standard syntax, e.g. find_package(PolkitQt 1.0)
+# For compatiblity, this can also be done by setting the POLKITQT_MIN_VERSION variable.
 
 # Copyright (c) 2009, Daniel Nicoletti, <dantti85-pk@yahoo.com.br>
 # Copyright (c) 2009, Dario Freddi, <drf54321@gmail.com>
@@ -20,13 +21,16 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (POLKITQT_INCLUDE_DIR AND POLKITQT_GUI_LIBRARY AND POLKITQT_CORE_LIBRARY)
-    set(PolkitQt_FIND_QUIETLY TRUE)
-endif (POLKITQT_INCLUDE_DIR AND POLKITQT_GUI_LIBRARY AND POLKITQT_CORE_LIBRARY)
 
-if (NOT POLKITQT_MIN_VERSION)
-  set(POLKITQT_MIN_VERSION "0.9.3")
-endif (NOT POLKITQT_MIN_VERSION)
+# Support POLKITQT_MIN_VERSION for compatibility:
+if(NOT PolkitQt_FIND_VERSION)
+  set(PolkitQt_FIND_VERSION "${POLKITQT_MIN_VERSION}")
+endif(NOT PolkitQt_FIND_VERSION)
+
+# the minimum version of PolkitQt we require
+if(NOT PolkitQt_FIND_VERSION)
+  set(PolkitQt_FIND_VERSION "0.9.3")
+endif(NOT PolkitQt_FIND_VERSION)
 
 if (NOT WIN32)
    # use pkg-config to get the directories and then use these values
@@ -43,52 +47,35 @@ find_path( POLKITQT_INCLUDE_DIR
 
 find_file( POLKITQT_VERSION_FILE
      polkit-qt/polkitqtversion.h
-     PATHS ${POLKITQT_INCLUDE_DIR}
+     HINTS ${POLKITQT_INCLUDE_DIR}
 )
 
-set(POLKITQT_VERSION_OK TRUE)
-if(POLKITQT_VERSION_FILE)
+if(POLKITQT_VERSION_FILE  AND NOT  POLKITQT_VERSION)
   file(READ ${POLKITQT_VERSION_FILE} POLKITQT_VERSION_CONTENT)
   string (REGEX MATCH "POLKITQT_VERSION_STRING \".*\"\n" POLKITQT_VERSION_MATCH "${POLKITQT_VERSION_CONTENT}")
-  
-  if(POLKITQT_VERSION_MATCH)
-    string(REGEX REPLACE "POLKITQT_VERSION_STRING \"(.*)\"\n" "\\1" POLKITQT_VERSION ${POLKITQT_VERSION_MATCH})
-    if(POLKITQT_VERSION STRLESS "${POLKITQT_MIN_VERSION}")
-      set(POLKITQT_VERSION_OK FALSE)
-      if(PolkitQt_FIND_REQUIRED)
-        message(FATAL_ERROR "PolkitQt version ${POLKITQT_VERSION} was found, but it is too old. Please install ${POLKITQT_MIN_VERSION} or newer.")
-      else(PolkitQt_FIND_REQUIRED)
-        message(STATUS "PolkitQt version ${POLKITQT_VERSION} is too old. Please install ${POLKITQT_MIN_VERSION} or newer.")
-      endif(PolkitQt_FIND_REQUIRED)
-    endif(POLKITQT_VERSION STRLESS "${POLKITQT_MIN_VERSION}")
-  endif(POLKITQT_VERSION_MATCH)
-elseif(POLKITQT_INCLUDE_DIR)
-  # The version is so old that it does not even have the file
-  set(POLKITQT_VERSION_OK FALSE)
-  if(PolkitQt_FIND_REQUIRED)
-    message(FATAL_ERROR "It looks like PolkitQt is too old. Please install PolkitQt version ${POLKITQT_MIN_VERSION} or newer.")
-  else(PolkitQt_FIND_REQUIRED)
-    message(STATUS "It looks like PolkitQt is too old. Please install PolkitQt version ${POLKITQT_MIN_VERSION} or newer.")
-  endif(PolkitQt_FIND_REQUIRED)
-endif(POLKITQT_VERSION_FILE)
 
-find_library( POLKITQT_CORE_LIBRARY 
-    NAMES polkit-qt-core 
+  if(POLKITQT_VERSION_MATCH)
+    string(REGEX REPLACE "POLKITQT_VERSION_STRING \"(.*)\"\n" "\\1" _POLKITQT_VERSION ${POLKITQT_VERSION_MATCH})
+  endif(POLKITQT_VERSION_MATCH)
+  set(POLKITQT_VERSION "${_POLKITQT_VERSION}" CACHE STRING "Version number of PolkitQt" FORCE)
+endif(POLKITQT_VERSION_FILE  AND NOT  POLKITQT_VERSION)
+
+find_library( POLKITQT_CORE_LIBRARY
+    NAMES polkit-qt-core
     HINTS ${PC_POLKITQT_LIBDIR}
 )
-find_library( POLKITQT_GUI_LIBRARY 
-    NAMES polkit-qt-gui 
+find_library( POLKITQT_GUI_LIBRARY
+    NAMES polkit-qt-gui
     HINTS ${PC_POLKITQT_LIBDIR}
 )
 set(POLKITQT_LIBRARIES ${POLKITQT_GUI_LIBRARY} ${POLKITQT_CORE_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
+# Use the extended (new) syntax for FPHSA():
+find_package_handle_standard_args(PolkitQt  REQUIRED_VARS POLKITQT_GUI_LIBRARY POLKITQT_CORE_LIBRARY POLKITQT_INCLUDE_DIR
+                                            VERSION_VAR  POLKITQT_VERSION)
 
-# handle the QUIETLY and REQUIRED arguments and set POLKITQT_FOUND to TRUE if 
-# all listed variables are TRUE
-find_package_handle_standard_args(PolkitQt  DEFAULT_MSG  POLKITQT_INCLUDE_DIR POLKITQT_GUI_LIBRARY POLKITQT_CORE_LIBRARY POLKITQT_VERSION_OK)
-
-mark_as_advanced(POLKITQT_INCLUDE_DIR 
+mark_as_advanced(POLKITQT_INCLUDE_DIR
                  POLKITQT_CORE_LIBRARY
                  POLKITQT_GUI_LIBRARY
                  POLKITQT_VERSION_FILE
