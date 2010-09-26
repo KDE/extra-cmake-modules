@@ -18,18 +18,25 @@
 include(FindPackageHandleStandardArgs)
 
 find_package(PkgConfig)
-pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt)
-set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})
+if (DBusMenuQt_FIND_VERSION)
+    pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt dbusmenu-qt>=${DBusMenuQt_FIND_VERSION})
+else(DBusMenuQt_FIND_VERSION)
+    pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt)
+endif(DBusMenuQt_FIND_VERSION)
 
-find_library(DBUSMENUQT_LIBRARIES
-    NAMES dbusmenu-qt dbusmenu-qtd
-    HINTS ${PC_DBUSMENUQT_LIBDIR} ${PC_DBUSMENUQT_LIBRARY_DIRS}
-    )
+if(PC_DBUSMENUQT_FOUND)
+    set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})
 
-find_path(DBUSMENUQT_INCLUDE_DIR dbusmenuexporter.h
-    HINTS ${PC_DBUSMENUQT_INCLUDEDIR} ${PC_DBUSMENUQT_INCLUDE_DIRS}
-    PATH_SUFFIXES dbusmenu-qt
-    )
+    find_library(DBUSMENUQT_LIBRARIES
+        NAMES dbusmenu-qt dbusmenu-qtd
+        HINTS ${PC_DBUSMENUQT_LIBDIR} ${PC_DBUSMENUQT_LIBRARY_DIRS}
+        )
+
+    find_path(DBUSMENUQT_INCLUDE_DIR dbusmenuexporter.h
+        HINTS ${PC_DBUSMENUQT_INCLUDEDIR} ${PC_DBUSMENUQT_INCLUDE_DIRS}
+        PATH_SUFFIXES dbusmenu-qt
+        )
+endif(PC_DBUSMENUQT_FOUND)
 
 find_package_handle_standard_args(DBusMenuQt "Could not find dbusmenu-qt; available at https://launchpad.net/libdbusmenu-qt/" DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR)
 
