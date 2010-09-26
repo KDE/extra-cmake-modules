@@ -41,7 +41,7 @@ if (UPDATE_MIME_DATABASE_EXECUTABLE  AND NOT  SHAREDMIMEINFO_VERSION)
     string(REGEX REPLACE "update-mime-database \\([a-zA-Z\\-]+\\) ([0-9]\\.[0-9]+).*"
            "\\1" smiVersion "${_smiVersionRaw}")
 
-    set(SHAREDMIMEINFO_VERSION "${smiVersion}" CACHE STRING "Version number of SharedMimeInfo")
+    set(SHAREDMIMEINFO_VERSION "${smiVersion}" CACHE STRING "Version number of SharedMimeInfo" FORCE)
 endif (UPDATE_MIME_DATABASE_EXECUTABLE  AND NOT  SHAREDMIMEINFO_VERSION)
 
 # Use the new FPHSA() syntax:
