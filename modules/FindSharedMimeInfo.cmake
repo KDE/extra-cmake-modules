@@ -1,21 +1,34 @@
 # - Try to find the shared-mime-info package
 #
-#  SHARED_MIME_INFO_MINIMUM_VERSION - Set this to the minimum version you need, default is 0.18
-#
 # Once done this will define
 #
 #  SHARED_MIME_INFO_FOUND - system has the shared-mime-info package
 #  UPDATE_MIME_DATABASE_EXECUTABLE - the update-mime-database executable
+#
+# The minimum required version of SharedMimeInfo can be specified using the
+# standard syntax, e.g. find_package(SharedMimeInfo 0.20)
+#
+# For backward compatibility, there is also the variable SHARED_MIME_INFO_MINIMUM_VERSION,
+# which can be set to the minimum version you need, default is 0.18.
+#
+# When both are used, i.e. the version is set in the find_package() call and
+# SHARED_MIME_INFO_MINIMUM_VERSION is set, the version specified in the find_package()
+# call takes precedence.
 
 # Copyright (c) 2007, Pino Toscano, <toscano.pino@tiscali.it>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+# Support SHARED_MIME_INFO_MINIMUM_VERSION for compatibility:
+if(NOT SharedMimeInfo_FIND_VERSION)
+  set(SharedMimeInfo_FIND_VERSION "${SHARED_MIME_INFO_MINIMUM_VERSION}")
+endif(NOT SharedMimeInfo_FIND_VERSION)
+
 # the minimum version of shared-mime-database we require
-if (NOT SHARED_MIME_INFO_MINIMUM_VERSION)
-  set(SHARED_MIME_INFO_MINIMUM_VERSION "0.18")
-endif (NOT SHARED_MIME_INFO_MINIMUM_VERSION)
+if(NOT SharedMimeInfo_FIND_VERSION)
+  set(SharedMimeInfo_FIND_VERSION "0.18")
+endif(NOT SharedMimeInfo_FIND_VERSION)
 
 if (UPDATE_MIME_DATABASE_EXECUTABLE)
 
@@ -23,8 +36,6 @@ if (UPDATE_MIME_DATABASE_EXECUTABLE)
     set(SHARED_MIME_INFO_FOUND TRUE)
 
 else (UPDATE_MIME_DATABASE_EXECUTABLE)
-
-    include (MacroEnsureVersion)
 
     find_program (UPDATE_MIME_DATABASE_EXECUTABLE NAMES update-mime-database)
 
@@ -37,20 +48,12 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
         set (SHARED_MIME_INFO_FOUND TRUE)
     endif (UPDATE_MIME_DATABASE_EXECUTABLE)
 
-    if (SHARED_MIME_INFO_FOUND)
-        if (NOT SharedMimeInfo_FIND_QUIETLY)
-            message(STATUS "Found shared-mime-info version: ${smiVersion}")
-            macro_ensure_version(${SHARED_MIME_INFO_MINIMUM_VERSION} ${smiVersion} _smiVersion_OK)
-            if (NOT _smiVersion_OK)
-                message(FATAL_ERROR "The found version of shared-mime-info (${smiVersion}) is below the minimum required (${SHARED_MIME_INFO_MINIMUM_VERSION})")
-            endif (NOT _smiVersion_OK)
-
-        endif (NOT SharedMimeInfo_FIND_QUIETLY)
-    else (SHARED_MIME_INFO_FOUND)
-        if (SharedMimeInfo_FIND_REQUIRED)
-            message(FATAL_ERROR "Could NOT find shared-mime-info. See http://freedesktop.org/wiki/Software/shared-mime-info.")
-        endif (SharedMimeInfo_FIND_REQUIRED)
-    endif (SHARED_MIME_INFO_FOUND)
+    # Use the new FPHSA() syntax:
+    include(FindPackageHandleStandardArgs.cmake)
+    find_package_handle_standard_args(SharedMimeInfo REQUIRED_VARS UPDATE_MIME_DATABASE_EXECUTABLE
+                                                     VERSION_VAR smiVersion )
+# This should go into MacroLogFeature/FeatureSummary:
+#            message(FATAL_ERROR "Could NOT find shared-mime-info. See http://freedesktop.org/wiki/Software/shared-mime-info.")
 
 endif (UPDATE_MIME_DATABASE_EXECUTABLE)
 
