@@ -6,7 +6,7 @@
 #  PULSEAUDIO_INCLUDE_DIR - the PulseAudio include directory
 #  PULSEAUDIO_LIBRARY - the libraries needed to use PulseAudio
 #  PULSEAUDIO_MAINLOOP_LIBRARY - the libraries needed to use PulsAudio Mailoop
-#
+
 # Copyright (c) 2008, Matthias Kretz, <kretz@kde.org>
 # Copyright (c) 2009, Marcus Hufgard, <Marcus.Hufgard@hufgard.de>
 #
@@ -28,19 +28,19 @@ if (NOT WIN32)
    pkg_check_modules(PC_PULSEAUDIO_MAINLOOP QUIET libpulse-mainloop-glib)
 endif (NOT WIN32)
 
-FIND_PATH(PULSEAUDIO_INCLUDE_DIR pulse/pulseaudio.h
+find_path(PULSEAUDIO_INCLUDE_DIR pulse/pulseaudio.h
    HINTS
    ${PC_PULSEAUDIO_INCLUDEDIR}
    ${PC_PULSEAUDIO_INCLUDE_DIRS}
    )
 
-FIND_LIBRARY(PULSEAUDIO_LIBRARY NAMES pulse libpulse 
+find_library(PULSEAUDIO_LIBRARY NAMES pulse libpulse
    HINTS
    ${PC_PULSEAUDIO_LIBDIR}
    ${PC_PULSEAUDIO_LIBRARY_DIRS}
    )
 
-FIND_LIBRARY(PULSEAUDIO_MAINLOOP_LIBRARY NAMES pulse-mainloop pulse-mainloop-glib libpulse-mainloop-glib
+find_library(PULSEAUDIO_MAINLOOP_LIBRARY NAMES pulse-mainloop pulse-mainloop-glib libpulse-mainloop-glib
    HINTS
    ${PC_PULSEAUDIO_LIBDIR}
    ${PC_PULSEAUDIO_LIBRARY_DIRS}
