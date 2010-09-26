@@ -33,18 +33,21 @@ endif(NOT SharedMimeInfo_FIND_VERSION)
 
 find_program (UPDATE_MIME_DATABASE_EXECUTABLE NAMES update-mime-database)
 
-if (UPDATE_MIME_DATABASE_EXECUTABLE)
+# Store the version number in the cache, so we don't have to search the next time again:
+if (UPDATE_MIME_DATABASE_EXECUTABLE  AND NOT  SHAREDMIMEINFO_VERSION)
 
     exec_program (${UPDATE_MIME_DATABASE_EXECUTABLE} ARGS -v RETURN_VALUE _null OUTPUT_VARIABLE _smiVersionRaw)
 
     string(REGEX REPLACE "update-mime-database \\([a-zA-Z\\-]+\\) ([0-9]\\.[0-9]+).*"
            "\\1" smiVersion "${_smiVersionRaw}")
-endif (UPDATE_MIME_DATABASE_EXECUTABLE)
+
+    set(SHAREDMIMEINFO_VERSION "${smiVersion}" CACHE STRING "Version number of SharedMimeInfo")
+endif (UPDATE_MIME_DATABASE_EXECUTABLE  AND NOT  SHAREDMIMEINFO_VERSION)
 
 # Use the new FPHSA() syntax:
 include(FindPackageHandleStandardArgs.cmake)
 find_package_handle_standard_args(SharedMimeInfo REQUIRED_VARS UPDATE_MIME_DATABASE_EXECUTABLE
-                                                 VERSION_VAR smiVersion )
+                                                 VERSION_VAR SHAREDMIMEINFO_VERSION )
 
 # For backward compatiblity:
 set(SHARED_MIME_INFO_FOUND ${SHAREDMIMEINFO_FOUND} )
