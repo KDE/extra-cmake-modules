@@ -11,28 +11,20 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
+if (NOT WIN32)
+  # use pkg-config to get the directories and then use these values
+  # in the FIND_PATH() and FIND_LIBRARY() calls
+  find_package(PkgConfig)
+  pkg_check_modules(PC_LIBUSB QUIET libusb)
+endif(NOT WIN32)
 
-  # in cache already
-  set(LIBUSB_FOUND TRUE)
+find_path(LIBUSB_INCLUDE_DIR usb.h
+  HINTS ${PC_LIBUSB_INCLUDEDIR} ${PC_LIBUSB_INCLUDE_DIRS})
 
-else (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
-  IF (NOT WIN32)
-    # use pkg-config to get the directories and then use these values
-    # in the FIND_PATH() and FIND_LIBRARY() calls
-    find_package(PkgConfig)
-    pkg_check_modules(PC_LIBUSB QUIET libusb)
-  ENDIF(NOT WIN32)
+find_library(LIBUSB_LIBRARIES NAMES usb
+  HINTS ${PC_LIBUSB_LIBDIR} ${PC_LIBUSB_LIBRARY_DIRS})
 
-  FIND_PATH(LIBUSB_INCLUDE_DIR usb.h
-    PATHS ${PC_LIBUSB_INCLUDEDIR} ${PC_LIBUSB_INCLUDE_DIRS})
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(LIBUSB  DEFAULT_MSG  LIBUSB_LIBRARIES LIBUSB_INCLUDE_DIR)
 
-  FIND_LIBRARY(LIBUSB_LIBRARIES NAMES usb 
-    PATHS ${PC_LIBUSB_LIBDIR} ${PC_LIBUSB_LIBRARY_DIRS})
-
-  include(FindPackageHandleStandardArgs)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(LIBUSB DEFAULT_MSG LIBUSB_LIBRARIES LIBUSB_INCLUDE_DIR)
-
-  MARK_AS_ADVANCED(LIBUSB_INCLUDE_DIR LIBUSB_LIBRARIES)
-
-endif (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
+mark_as_advanced(LIBUSB_INCLUDE_DIR LIBUSB_LIBRARIES)

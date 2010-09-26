@@ -11,21 +11,16 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if (SASL2_INCLUDE_DIR)
-  # Already in cache, be silent
-  set(SASL2_FIND_QUIETLY TRUE)
-endif (SASL2_INCLUDE_DIR)
-
-FIND_PATH(SASL2_INCLUDE_DIR sasl/sasl.h
+find_path(SASL2_INCLUDE_DIR sasl/sasl.h
 )
 
 # libsasl2 add for windows, because the windows package of cyrus-sasl2
 # contains a libsasl2 also for msvc which is not standard conform
-FIND_LIBRARY(SASL2_LIBRARIES NAMES sasl2 libsasl2
+find_library(SASL2_LIBRARIES NAMES sasl2 libsasl2
 )
 
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Sasl2 DEFAULT_MSG SASL2_INCLUDE_DIR SASL2_LIBRARIES)
+find_package_handle_standard_args(Sasl2  DEFAULT_MSG  SASL2_LIBRARIES SASL2_INCLUDE_DIR)
 
-MARK_AS_ADVANCED(SASL2_INCLUDE_DIR SASL2_LIBRARIES)
+mark_as_advanced(SASL2_INCLUDE_DIR SASL2_LIBRARIES)
 
