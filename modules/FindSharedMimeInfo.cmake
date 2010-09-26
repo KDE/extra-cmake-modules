@@ -2,18 +2,19 @@
 #
 # Once done this will define
 #
-#  SHARED_MIME_INFO_FOUND - system has the shared-mime-info package
+#  SHAREDMIMEINFO_FOUND - system has the shared-mime-info package
 #  UPDATE_MIME_DATABASE_EXECUTABLE - the update-mime-database executable
 #
 # The minimum required version of SharedMimeInfo can be specified using the
 # standard syntax, e.g. find_package(SharedMimeInfo 0.20)
 #
-# For backward compatibility, there is also the variable SHARED_MIME_INFO_MINIMUM_VERSION,
-# which can be set to the minimum version you need, default is 0.18.
-#
-# When both are used, i.e. the version is set in the find_package() call and
-# SHARED_MIME_INFO_MINIMUM_VERSION is set, the version specified in the find_package()
-# call takes precedence.
+# For backward compatiblity, the following two variables are also supported:
+#  SHARED_MIME_INFO_FOUND - same as SHAREDMIMEINFO_FOUND
+#  SHARED_MIME_INFO_MINIMUM_VERSION - set to the minimum version you need, default is 0.18.
+#    When both are used, i.e. the version is set in the find_package() call and
+#   SHARED_MIME_INFO_MINIMUM_VERSION is set, the version specified in the find_package()
+#   call takes precedence.
+
 
 # Copyright (c) 2007, Pino Toscano, <toscano.pino@tiscali.it>
 #
@@ -30,32 +31,27 @@ if(NOT SharedMimeInfo_FIND_VERSION)
   set(SharedMimeInfo_FIND_VERSION "0.18")
 endif(NOT SharedMimeInfo_FIND_VERSION)
 
+find_program (UPDATE_MIME_DATABASE_EXECUTABLE NAMES update-mime-database)
+
 if (UPDATE_MIME_DATABASE_EXECUTABLE)
 
-    # in cache already
-    set(SHARED_MIME_INFO_FOUND TRUE)
+    exec_program (${UPDATE_MIME_DATABASE_EXECUTABLE} ARGS -v RETURN_VALUE _null OUTPUT_VARIABLE _smiVersionRaw)
 
-else (UPDATE_MIME_DATABASE_EXECUTABLE)
+    string(REGEX REPLACE "update-mime-database \\([a-zA-Z\\-]+\\) ([0-9]\\.[0-9]+).*"
+           "\\1" smiVersion "${_smiVersionRaw}")
+endif (UPDATE_MIME_DATABASE_EXECUTABLE)
 
-    find_program (UPDATE_MIME_DATABASE_EXECUTABLE NAMES update-mime-database)
+# Use the new FPHSA() syntax:
+include(FindPackageHandleStandardArgs.cmake)
+find_package_handle_standard_args(SharedMimeInfo REQUIRED_VARS UPDATE_MIME_DATABASE_EXECUTABLE
+                                                 VERSION_VAR smiVersion )
 
-    if (UPDATE_MIME_DATABASE_EXECUTABLE)
+# For backward compatiblity:
+set(SHARED_MIME_INFO_FOUND ${SHAREDMIMEINFO_FOUND} )
 
-        exec_program (${UPDATE_MIME_DATABASE_EXECUTABLE} ARGS -v RETURN_VALUE _null OUTPUT_VARIABLE _smiVersionRaw)
-
-        string(REGEX REPLACE "update-mime-database \\([a-zA-Z\\-]+\\) ([0-9]\\.[0-9]+).*"
-               "\\1" smiVersion "${_smiVersionRaw}")
-        set (SHARED_MIME_INFO_FOUND TRUE)
-    endif (UPDATE_MIME_DATABASE_EXECUTABLE)
-
-    # Use the new FPHSA() syntax:
-    include(FindPackageHandleStandardArgs.cmake)
-    find_package_handle_standard_args(SharedMimeInfo REQUIRED_VARS UPDATE_MIME_DATABASE_EXECUTABLE
-                                                     VERSION_VAR smiVersion )
 # This should go into MacroLogFeature/FeatureSummary:
 #            message(FATAL_ERROR "Could NOT find shared-mime-info. See http://freedesktop.org/wiki/Software/shared-mime-info.")
 
-endif (UPDATE_MIME_DATABASE_EXECUTABLE)
 
 mark_as_advanced(UPDATE_MIME_DATABASE_EXECUTABLE)
 
