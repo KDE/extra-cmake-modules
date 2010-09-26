@@ -45,7 +45,7 @@ if (UPDATE_MIME_DATABASE_EXECUTABLE  AND NOT  SHAREDMIMEINFO_VERSION)
 endif (UPDATE_MIME_DATABASE_EXECUTABLE  AND NOT  SHAREDMIMEINFO_VERSION)
 
 # Use the new FPHSA() syntax:
-include(FindPackageHandleStandardArgs.cmake)
+include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(SharedMimeInfo REQUIRED_VARS UPDATE_MIME_DATABASE_EXECUTABLE
                                                  VERSION_VAR SHAREDMIMEINFO_VERSION )
 
