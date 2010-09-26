@@ -1,8 +1,8 @@
 # - Try to find the Exiv2 library
 #
-#  EXIV2_MIN_VERSION - You can set this variable to the minimum version you need 
+#  EXIV2_MIN_VERSION - You can set this variable to the minimum version you need
 #                      before doing FIND_PACKAGE(Exiv2). The default is 0.12.
-# 
+#
 # Once done this will define
 #
 #  EXIV2_FOUND - system has libexiv2
@@ -10,84 +10,71 @@
 #  EXIV2_LIBRARIES - Link these to use libexiv2
 #  EXIV2_DEFINITIONS - Compiler switches required for using libexiv2
 #
+# The minimum required version of Exiv2 can be specified using the
+# standard syntax, e.g. find_package(Exiv2 0.17)
+#
+# For compatiblity, also the variable EXIV2_MIN_VERSION can be set to the minimum version
+# you need before doing FIND_PACKAGE(Exiv2). The default is 0.12.
 
+# Copyright (c) 2010, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2008, Gilles Caulier, <caulier.gilles@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+# Support EXIV2_MIN_VERSION for compatibility:
+if(NOT Exiv2_FIND_VERSION)
+  set(Exiv2_FIND_VERSION "${EXIV2_MIN_VERSION}")
+endif(NOT Exiv2_FIND_VERSION)
 
-if (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
+# the minimum version of exiv2 we require
+if(NOT Exiv2_FIND_VERSION)
+  set(Exiv2_FIND_VERSION "0.12")
+endif(NOT Exiv2_FIND_VERSION)
 
-  # in cache already
-  set(EXIV2_FOUND TRUE)
 
-else (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
-  if (NOT WIN32)
-  # use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  include(UsePkgConfig)
+if (NOT WIN32)
+   # use pkg-config to get the directories and then use these values
+   # in the FIND_PATH() and FIND_LIBRARY() calls
+   find_package(PkgConfig)
+   pkg_check_modules(PC_EXIV2 QUIET exiv2)
+   set(EXIV2_DEFINITIONS ${PC_EXIV2_CFLAGS_OTHER})
+endif (NOT WIN32)
 
-  if(NOT EXIV2_MIN_VERSION)
-    set(EXIV2_MIN_VERSION "0.12")
-  endif(NOT EXIV2_MIN_VERSION)
-  
-  pkgconfig(exiv2 _EXIV2IncDir _EXIV2LinkDir _EXIV2LinkFlags _EXIV2Cflags)
 
-  if(_EXIV2LinkFlags)
-    # query pkg-config asking for a Exiv2 >= 0.12
-    exec_program(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${EXIV2_MIN_VERSION} exiv2 RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull )
-    if(_return_VALUE STREQUAL "0")
-      message(STATUS "Found Exiv2 release >= ${EXIV2_MIN_VERSION}")
-      set(EXIV2_VERSION_GOOD_FOUND TRUE)
-    else(_return_VALUE STREQUAL "0")
-      message(STATUS "Found Exiv2 release < ${EXIV2_MIN_VERSION}")
-    endif(_return_VALUE STREQUAL "0")
-  else(_EXIV2LinkFlags)
-      set(EXIV2_FOUND FALSE)
-      set(EXIV2_VERSION_GOOD_FOUND FALSE)
-      message(STATUS "Cannot find Exiv2 library!")
-  endif(_EXIV2LinkFlags)
-  
-  else(NOT WIN32)
-     #Better check
-     set(EXIV2_VERSION_GOOD_FOUND TRUE)
-  endif (NOT WIN32)
+find_path(EXIV2_INCLUDE_DIR NAMES exiv2/exif.hpp
+          HINTS
+          ${PC_EXIV2_INCLUDEDIR}
+          ${PC_EXIV2_INCLUDE_DIRS}
+        )
 
-  if(EXIV2_VERSION_GOOD_FOUND)
-     set(EXIV2_DEFINITIONS ${_EXIV2Cflags})
- 
-     find_path(EXIV2_INCLUDE_DIR NAMES exiv2/exif.hpp
-       HINTS
-       ${_EXIV2IncDir}
-     )
+find_library(EXIV2_LIBRARY NAMES exiv2 libexiv2
+             HINTS
+             ${PC_EXIV2_LIBDIR}
+             ${PC_EXIV2_LIBRARY_DIRS}
+            )
 
-     find_library(EXIV2_LIBRARIES NAMES exiv2 libexiv2
-       HINTS
-       ${_EXIV2LinkDir}
-     )
-  
-     if (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
-        set(EXIV2_FOUND TRUE)
-        # TODO version check is missing
-     endif (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
-   endif(EXIV2_VERSION_GOOD_FOUND)
-   if (EXIV2_FOUND)
-      if (NOT Exiv2_FIND_QUIETLY)
-       message(STATUS "Found Exiv2: ${EXIV2_LIBRARIES}")
-      endif (NOT Exiv2_FIND_QUIETLY)
-   else (EXIV2_FOUND)
-     if (Exiv2_FIND_REQUIRED)
-       if (NOT EXIV2_INCLUDE_DIR)
-         message(FATAL_ERROR "Could NOT find Exiv2 header files")
-       endif (NOT EXIV2_INCLUDE_DIR)
-       if (NOT EXIV2_LIBRARIES)
-           message(FATAL_ERROR "Could NOT find Exiv2 library")
-       endif (NOT EXIV2_LIBRARIES)
-     endif (Exiv2_FIND_REQUIRED)
-   endif (EXIV2_FOUND)
 
-  mark_as_advanced(EXIV2_INCLUDE_DIR EXIV2_LIBRARIES)
-  
-endif (EXIV2_INCLUDE_DIR AND EXIV2_LIBRARIES)
+# Get the version number from exiv2/version.hpp and store it in the cache:
+if(EXIV2_INCLUDE_DIR  AND NOT  EXIV2_VERSION)
+  file(READ ${EXIV2_INCLUDE_DIR}/exiv2/version.hpp EXIV2_VERSION_CONTENT)
+  string(REGEX MATCH "#define EXIV2_MAJOR_VERSION +\\( *([0-9]+) *\\)"  _dummy "${EXIV2_VERSION_CONTENT}")
+  set(EXIV2_VERSION_MAJOR "${CMAKE_MATCH_1}")
+
+  string(REGEX MATCH "#define EXIV2_MINOR_VERSION +\\( *([0-9]+) *\\)"  _dummy "${EXIV2_VERSION_CONTENT}")
+  set(EXIV2_VERSION_MINOR "${CMAKE_MATCH_1}")
+
+  string(REGEX MATCH "#define EXIV2_PATCH_VERSION +\\( *([0-9]+) *\\)"  _dummy "${EXIV2_VERSION_CONTENT}")
+  set(EXIV2_VERSION_PATCH "${CMAKE_MATCH_1}")
+
+  set(EXIV2_VERSION "${EXIV2_VERSION_MAJOR}.${EXIV2_VERSION_MINOR}.${EXIV2_VERSION_PATCH}" CACHE STRING "Version number of Exiv2" FORCE)
+endif(EXIV2_INCLUDE_DIR  AND NOT  EXIV2_VERSION)
+
+set(EXIV2_LIBRARIES "${EXIV2_LIBRARY}")
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Exiv2  REQUIRED_VARS  EXIV2_LIBRARY EXIV2_INCLUDE_DIR
+                                         VERSION_VAR  EXIV2_VERSION)
+
+mark_as_advanced(EXIV2_INCLUDE_DIR EXIV2_LIBRARY)
 
