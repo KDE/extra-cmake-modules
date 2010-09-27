@@ -1,10 +1,17 @@
 # - Try to find dbusmenu-qt
+# This module helps finding an installation of the DBusMenuQt library (see https://launchpad.net/libdbusmenu-qt/)
 # Once done this will define
 #
 #  DBUSMENUQT_FOUND - system has dbusmenu-qt
 #  DBUSMENUQT_INCLUDE_DIR - the dbusmenu-qt include directory
 #  DBUSMENUQT_LIBRARIES - the libraries needed to use dbusmenu-qt
 #  DBUSMENUQT_DEFINITIONS - Compiler switches required for using dbusmenu-qt
+#
+# The minimum required version of DBusMenuQt can be specified using the
+# standard syntax, e.g. find_package(DBusMenuQt 0.6)
+#
+# WARNING: versions below 0.4.0 cannot be checked for.
+# So if you want to have a version check, require at least 0.4.0 of dbusmenuqt.
 
 # Copyright (c) 2009, Canonical Ltd.
 # - Author: Aurélien Gâteau <aurelien.gateau@canonical.com>
@@ -18,26 +25,50 @@
 include(FindPackageHandleStandardArgs)
 
 find_package(PkgConfig)
-if (DBusMenuQt_FIND_VERSION)
-    pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt dbusmenu-qt>=${DBusMenuQt_FIND_VERSION})
-else(DBusMenuQt_FIND_VERSION)
-    pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt)
-endif(DBusMenuQt_FIND_VERSION)
+pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt)
 
-if(PC_DBUSMENUQT_FOUND)
-    set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})
 
-    find_library(DBUSMENUQT_LIBRARIES
-        NAMES dbusmenu-qt dbusmenu-qtd
-        HINTS ${PC_DBUSMENUQT_LIBDIR} ${PC_DBUSMENUQT_LIBRARY_DIRS}
-        )
+set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})
 
-    find_path(DBUSMENUQT_INCLUDE_DIR dbusmenuexporter.h
-        HINTS ${PC_DBUSMENUQT_INCLUDEDIR} ${PC_DBUSMENUQT_INCLUDE_DIRS}
-        PATH_SUFFIXES dbusmenu-qt
-        )
-endif(PC_DBUSMENUQT_FOUND)
+find_library(DBUSMENUQT_LIBRARIES
+    NAMES dbusmenu-qt dbusmenu-qtd
+    HINTS ${PC_DBUSMENUQT_LIBDIR} ${PC_DBUSMENUQT_LIBRARY_DIRS}
+    )
 
-find_package_handle_standard_args(DBusMenuQt "Could not find dbusmenu-qt; available at https://launchpad.net/libdbusmenu-qt/" DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR)
+find_path(DBUSMENUQT_INCLUDE_DIR dbusmenuexporter.h
+    HINTS ${PC_DBUSMENUQT_INCLUDEDIR} ${PC_DBUSMENUQT_INCLUDE_DIRS}
+    PATH_SUFFIXES dbusmenu-qt
+    )
 
-mark_as_advanced(DBUSMENUQT_INCLUDE_DIR DBUSMENUQT_LIBRARIES)
+
+# dbusmenu_version.h is installed since 0.4.0, fail if a version below this is required:
+if ((DBusMenuQt_FIND_VERSION)  AND ("${DBusMenuQt_FIND_VERSION}" VERSION_LESS "0.4.0"))
+  message(FATAL_ERROR "Cannot check reliably for a DBusMenuQt version below 0.4.0 (${DBusMenuQt_FIND_VERSION} was requested)")
+endif ((DBusMenuQt_FIND_VERSION)  AND ("${DBusMenuQt_FIND_VERSION}" VERSION_LESS "0.4.0"))
+
+
+# find the version number from dbusmenu_version.h and store it in the cache
+if(DBUSMENUQT_INCLUDE_DIR  AND NOT DBUSMENUQT_VERSION)
+  # parse the version number out from dbusmenu_version:
+  if(EXISTS ${DBUSMENUQT_INCLUDE_DIR}/dbusmenu_version.h)
+    file(READ "${DBUSMENUQT_INCLUDE_DIR}/dbusmenu_version.h" DBUSMENUQT_VERSION_CONTENT)
+
+    string(REGEX MATCH "\\(\\( *([0-9]+) *<<"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+    set(DBUSMENUQT_VERSION_MAJOR "${CMAKE_MATCH_1}")
+
+    string(REGEX MATCH "\\|\\( *([0-9]+) *<<"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+    set(DBUSMENUQT_VERSION_MINOR "${CMAKE_MATCH_1}")
+
+    string(REGEX MATCH "\\| *([0-9]+) *\\)"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+    set(DBUSMENUQT_VERSION_PATCH "${CMAKE_MATCH_1}")
+  endif(EXISTS ${DBUSMENUQT_INCLUDE_DIR}/dbusmenu_version.h)
+
+  set(DBUSMENUQT_VERSION "${DBUSMENUQT_VERSION_MAJOR}.${DBUSMENUQT_VERSION_MINOR}.${DBUSMENUQT_VERSION_PATCH}" CACHE STRING "Version number of DBusMenuQt" FORCE)
+endif(DBUSMENUQT_INCLUDE_DIR  AND NOT DBUSMENUQT_VERSION)
+
+
+find_package_handle_standard_args(DBusMenuQt REQUIRED_VARS DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR
+                                             VERSION_VAR DBUSMENUQT_VERSION)
+#"Could not find dbusmenu-qt; available at https://launchpad.net/libdbusmenu-qt/" DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR)
+
+mark_as_advanced(DBUSMENUQT_INCLUDE_DIR DBUSMENUQT_LIBRARIES DBUSMENUQT_VERSION)
