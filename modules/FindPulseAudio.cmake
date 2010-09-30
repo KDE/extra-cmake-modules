@@ -57,7 +57,7 @@ if (PULSEAUDIO_INCLUDE_DIR  AND NOT  PULSEAUDIO_VERSION)
    file(STRINGS "${PULSEAUDIO_INCLUDE_DIR}/pulse/version.h" pulse_version_h
         REGEX ".*pa_get_headers_version\\(\\).*"
         )
-   string(REGEX REPLACE ".*pa_get_headers_version\\(\\)\ \\(\"([0-9]+\\.[0-9]+\\.[0-9]+)\"\\).*" "\\1"
+   string(REGEX REPLACE ".*pa_get_headers_version\\(\\)\ \\(\"([0-9]+\\.[0-9]+\\.[0-9]+)[^\"]*\"\\).*" "\\1"
                          _PULSEAUDIO_VERSION "${pulse_version_h}")
 
    set(PULSEAUDIO_VERSION "${_PULSEAUDIO_VERSION}" CACHE STRING "Version number of PulseAudio" FORCE)
