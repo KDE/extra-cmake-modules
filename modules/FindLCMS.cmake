@@ -3,11 +3,12 @@
 # This module defines
 #  LCMS_INCLUDE_DIR, where to find lcms.h
 #  LCMS_LIBRARIES, the libraries needed to use LCMS.
-#  LCMS_VERSION, The value of LCMS_VERSION defined in lcms.h
+#  LCMS_DOT_VERSION, The version number of the LCMS library, e.g. "1.19"
+#  LCMS_VERSION, Similar to LCMS_DOT_VERSION, but without the dots, e.g. "119"
 #  LCMS_FOUND, If false, do not try to use LCMS.
 #
 # The minimum required version of LCMS can be specified using the
-# standard syntax, e.g. find_package(LCMS 1.1)
+# standard syntax, e.g. find_package(LCMS 1.10)
 
 # Copyright (c) 2008, Adrian Page, <adrian@pagenet.plus.com>
 # Copyright (c) 2009, Cyrille Berger, <cberger@cberger.net>
@@ -48,11 +49,12 @@ if(LCMS_INCLUDE_DIR  AND NOT  LCMS_VERSION)
       string(SUBSTRING ${_LCMS_VERSION} 1 2 LCMS_MINOR_VERSION)
    endif(LCMS_VERSION_MATCH)
    set(LCMS_VERSION "${LCMS_MAJOR_VERSION}${LCMS_MINOR_VERSION}" CACHE STRING "Version number of lcms" FORCE)
+   set(LCMS_DOT_VERSION "${LCMS_MAJOR_VERSION}.${LCMS_MINOR_VERSION}" CACHE STRING "Version number of lcms split into components" FORCE)
 endif(LCMS_INCLUDE_DIR  AND NOT  LCMS_VERSION)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LCMS REQUIRED_VARS LCMS_LIBRARIES LCMS_INCLUDE_DIR
-                                       VERSION_VAR LCMS_VERSION )
+                                       VERSION_VAR LCMS_DOT_VERSION )
 
 mark_as_advanced(LCMS_INCLUDE_DIR LCMS_LIBRARIES LCMS_VERSION)
 
