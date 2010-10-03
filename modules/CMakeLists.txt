@@ -116,6 +116,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindSqlite.cmake
                FindStrigi.cmake
                FindTaglib.cmake
+               FindUDev.cmake
                FindUSB.cmake
                FindWcecompat.cmake
                FindX11.cmake
