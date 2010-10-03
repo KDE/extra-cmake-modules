@@ -53,14 +53,34 @@ if(DBUSMENUQT_INCLUDE_DIR  AND NOT DBUSMENUQT_VERSION)
   if(EXISTS ${DBUSMENUQT_INCLUDE_DIR}/dbusmenu_version.h)
     file(READ "${DBUSMENUQT_INCLUDE_DIR}/dbusmenu_version.h" DBUSMENUQT_VERSION_CONTENT)
 
-    string(REGEX MATCH "\\(\\( *([0-9]+) *<<"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
-    set(DBUSMENUQT_VERSION_MAJOR "${CMAKE_MATCH_1}")
+    if ("${DBUSMENUQT_VERSION_CONTENT}" MATCHES "DBUSMENUQT_VERSION_MAJOR") # introduced after 0.6.4, makes this code here more robust
 
-    string(REGEX MATCH "\\|\\( *([0-9]+) *<<"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
-    set(DBUSMENUQT_VERSION_MINOR "${CMAKE_MATCH_1}")
+     string(REGEX MATCH "#define +DBUSMENUQT_VERSION_MAJOR +([0-9]+)"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+     set(DBUSMENUQT_VERSION_MAJOR "${CMAKE_MATCH_1}")
 
-    string(REGEX MATCH "\\| *([0-9]+) *\\)"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
-    set(DBUSMENUQT_VERSION_PATCH "${CMAKE_MATCH_1}")
+      string(REGEX MATCH "#define +DBUSMENUQT_VERSION_MINOR +([0-9]+)"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+      set(DBUSMENUQT_VERSION_MINOR "${CMAKE_MATCH_1}")
+
+      string(REGEX MATCH "#define +DBUSMENUQT_VERSION_PATCH +([0-9]+)"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+      set(DBUSMENUQT_VERSION_PATCH "${CMAKE_MATCH_1}")
+
+    else("${DBUSMENUQT_VERSION_CONTENT}" MATCHES "DBUSMENUQT_VERSION_MAJOR")
+      # In versions up to 0.6.4, the code for setting the version number in the header looked like
+      # shopw below. This made version checking quite un-obvious:
+      # #define DBUSMENUQT_VERSION \
+      #     ((0 << 16) \
+      #     |(6 << 8) \
+      #     |4)
+
+      string(REGEX MATCH "\\(\\( *([0-9]+) *<<"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+      set(DBUSMENUQT_VERSION_MAJOR "${CMAKE_MATCH_1}")
+
+      string(REGEX MATCH "\\|\\( *([0-9]+) *<<"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+      set(DBUSMENUQT_VERSION_MINOR "${CMAKE_MATCH_1}")
+
+      string(REGEX MATCH "\\| *([0-9]+) *\\)"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
+      set(DBUSMENUQT_VERSION_PATCH "${CMAKE_MATCH_1}")
+    endif("${DBUSMENUQT_VERSION_CONTENT}" MATCHES "DBUSMENUQT_VERSION_MAJOR")
   endif(EXISTS ${DBUSMENUQT_INCLUDE_DIR}/dbusmenu_version.h)
 
   set(DBUSMENUQT_VERSION "${DBUSMENUQT_VERSION_MAJOR}.${DBUSMENUQT_VERSION_MINOR}.${DBUSMENUQT_VERSION_PATCH}" CACHE STRING "Version number of DBusMenuQt" FORCE)
