@@ -626,30 +626,63 @@ macro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE _target_NAME)
 endmacro (KDE4_HANDLE_RPATH_FOR_EXECUTABLE)
 
 
-macro (KDE4_ADD_PLUGIN _target_NAME _with_PREFIX)
-#is the first argument is "WITH_PREFIX" then keep the standard "lib" prefix, otherwise set the prefix empty
-   if (${_with_PREFIX} STREQUAL "WITH_PREFIX")
-      set(_first_SRC)
-   else (${_with_PREFIX} STREQUAL "WITH_PREFIX")
-      set(_first_SRC ${_with_PREFIX})
-   endif (${_with_PREFIX} STREQUAL "WITH_PREFIX")
+macro (KDE4_ADD_PLUGIN _target_NAME )
+#if the first argument is "WITH_PREFIX" then keep the standard "lib" prefix,
+#otherwise set the prefix empty
 
-   set(_SRCS ${_first_SRC} ${ARGN})
+   set(_args ${ARGN})
+   # default to module
+   set(_add_lib_param "MODULE")
+   set(_with_pre FALSE)
+   
+   foreach(arg ${_args})
+      if (arg STREQUAL "WITH_PREFIX")
+         set(_with_pre TRUE)
+      endif (arg STREQUAL "WITH_PREFIX")
+      if (arg STREQUAL "STATIC")
+         set(_add_lib_param STATIC)
+      endif (arg STREQUAL "STATIC")
+      if (arg STREQUAL "SHARED")
+         set(_add_lib_param SHARED)
+      endif (arg STREQUAL "SHARED")
+      if (arg STREQUAL "MODULE")
+         set(_add_lib_param MODULE)
+      endif (arg STREQUAL "MODULE")
+   endforeach(arg)
+
+   if(_with_pre)
+      list(REMOVE_ITEM _args "WITH_PREFIX")
+   endif(_with_pre)
+   if(_add_lib_param STREQUAL "STATIC")
+      list(REMOVE_ITEM _args "STATIC")
+   endif(_add_lib_param STREQUAL "STATIC")
+   if (_add_lib_param STREQUAL "SHARED")
+      list(REMOVE_ITEM _args "SHARED")
+   endif (_add_lib_param STREQUAL "SHARED")
+   if (_add_lib_param STREQUAL "MODULE")
+       list(REMOVE_ITEM _args "MODULE")
+   endif (_add_lib_param STREQUAL "MODULE")
+
+   set(_SRCS ${_args})
 
    _automoc4_kde4_pre_target_handling(${_target_NAME} _SRCS)
 
+   if("${_add_lib_param}" STREQUAL "STATIC")
+      add_definitions(-DQT_STATICPLUGIN)
+   endif("${_add_lib_param}" STREQUAL "STATIC")
+
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
-      add_library(${_target_NAME} MODULE  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files})
+      add_library(${_target_NAME} ${_add_lib_param}   ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files})
    else (KDE4_ENABLE_FINAL)
-      add_library(${_target_NAME} MODULE ${_SRCS})
+      add_library(${_target_NAME} ${_add_lib_param}  ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
 
    _automoc4_kde4_post_target_handling(${_target_NAME})
 
-   if (_first_SRC)
+   if (NOT _with_pre)
       set_target_properties(${_target_NAME} PROPERTIES PREFIX "")
-   endif (_first_SRC)
+   endif (NOT _with_pre)
 
    # for shared libraries/plugins a -DMAKE_target_LIB is required
    string(TOUPPER ${_target_NAME} _symbol)
