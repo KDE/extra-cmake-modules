@@ -146,6 +146,21 @@
 #  DBUS_SERVICES_INSTALL_DIR        - the directory where dbus services will be installed (default is prefix/share/dbus-1/services )
 #  DBUS_SYSTEM_SERVICES_INSTALL_DIR        - the directory where dbus system services will be installed (default is prefix/share/dbus-1/system-services )
 #
+# The variable INSTALL_TARGETS_DEFAULT_ARGS can be used when installing libraries
+# or executables into the default locations.
+# The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries are installed.
+# It should also be used when installing applications, since then
+# on OS X application bundles will be installed to BUNDLE_INSTALL_DIR.
+# The variable MUST NOT be used for installing plugins.
+# It also MUST NOT be used for executables which are intended to go into sbin/ or libexec/.
+#
+# Usage is like this:
+#    install(TARGETS kdecore kdeui ${INSTALL_TARGETS_DEFAULT_ARGS} )
+#
+# This will install libraries correctly under UNIX, OSX and Windows (i.e. dll's go
+# into bin/.
+#
+#
 # The following variable is provided, but seem to be unused:
 #  LIBS_HTML_INSTALL_DIR    /share/doc/HTML            CACHE STRING "Is this still used ?")
 #
@@ -216,7 +231,7 @@
 #    to the proper location when installing, so RUN_UNINSTALLED is not necessary anymore).
 #
 #  KDE4_ADD_LIBRARY (name [STATIC | SHARED | MODULE ] file1 ... fileN)
-#    Equivalent to ADD_LIBRARY(). Additionally it supports KDE4_ENABLE_FINAL, 
+#    Equivalent to ADD_LIBRARY(). Additionally it supports KDE4_ENABLE_FINAL,
 #    includes automoc-handling and sets LINK_INTERFACE_LIBRARIES target property empty.
 #    The RPATH is set according to the global RPATH settings as set up by FindKDE4Internal.cmake
 #    (CMAKE_SKIP_BUILD_RPATH=FALSE, CMAKE_BUILD_WITH_INSTALL_RPATH=FALSE, CMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE)
@@ -506,7 +521,7 @@ if (_kdeBootStrapping)
       set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4${CMAKE_EXECUTABLE_SUFFIX}.shell )
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets${CMAKE_EXECUTABLE_SUFFIX}.shell )
    endif (WIN32)
-   
+
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
 
 
@@ -879,17 +894,7 @@ else (WIN32)
 endif (WIN32)
 
 
-# The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries are installed.
-# It should also be used when installing applications, since then
-# on OS X application bundles will be installed to BUNDLE_INSTALL_DIR.
-# The variable MUST NOT be used for installing plugins.
-# It also MUST NOT be used for executables which are intended to go into sbin/ or libexec/.
-#
-# Usage is like this:
-#    install(TARGETS kdecore kdeui ${INSTALL_TARGETS_DEFAULT_ARGS} )
-#
-# This will install libraries correctly under UNIX, OSX and Windows (i.e. dll's go
-# into bin/.
+# For more documentation see above.
 # Later on it will be possible to extend this for installing OSX frameworks
 # The COMPONENT Devel argument has the effect that static libraries belong to the
 # "Devel" install component. If we use this also for all install() commands
@@ -898,7 +903,6 @@ endif (WIN32)
 #   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
-
 set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
                                   LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
                                   ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
