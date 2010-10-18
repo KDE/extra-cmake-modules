@@ -18,6 +18,7 @@
 #  KDE4_HTML_INSTALL_DIR    - the directory where HTML documentation from kdelibs is installed
 #  KDE4_CONFIG_INSTALL_DIR  - the directory where config files from kdelibs are installed
 #  KDE4_ICON_INSTALL_DIR    - the directory where icons from kdelibs are
+#  KDE4_IMPORTS_INSTALL_DIR - the directory where imports from kdelibs are
 #  KDE4_KCFG_INSTALL_DIR    - the directory where kconfig files from kdelibs are installed
 #  KDE4_LOCALE_INSTALL_DIR  - the directory where translations from kdelibs are installed
 #  KDE4_MIME_INSTALL_DIR    - the directory where mimetype desktop files from kdelibs are installed
@@ -130,6 +131,7 @@
 #  MAN_INSTALL_DIR          - the directory where man pages will be installed (default prefix/man/)
 #  MIME_INSTALL_DIR         - the directory where mimetype desktop files will be installed
 #  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)
+#  IMPORTS_INSTALL_DIR      - the subdirectory relative to the install prefix where imports will be installed
 #  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
 #  SERVICETYPES_INSTALL_DIR - the directory where servicestypes desktop files will be installed
 #  SOUND_INSTALL_DIR        - the directory where sound files will be installed
@@ -792,6 +794,7 @@ if (WIN32)
    set(INCLUDE_INSTALL_DIR  "include"                     ) # The subdirectory to the header prefix
 
    set(PLUGIN_INSTALL_DIR       "lib${LIB_SUFFIX}/kde4"   ) #                "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)
+   set(IMPORTS_INSTALL_DIR       "${PLUGIN_INSTALL_DIR}/imports"   ) # "The subdirectory relative to the install prefix where imports will be installed
    set(CONFIG_INSTALL_DIR       "share/config"            ) # The config file install dir
    set(DATA_INSTALL_DIR         "share/apps"              ) # The parent directory where applications can install their data
    set(HTML_INSTALL_DIR         "share/doc/HTML"          ) # The HTML install dir for documentation
@@ -864,6 +867,7 @@ else (WIN32)
    _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include"         "The subdirectory to the header prefix")
 
    _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
+   _set_fancy(IMPORTS_INSTALL_DIR       "${PLUGIN_INSTALL_DIR}/imports"                "The subdirectory relative to the install prefix where imports will be installed")
    _set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"         "The config file install dir")
    _set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"           "The parent directory where applications can install their data")
    _set_fancy(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"       "The HTML install dir for documentation")
