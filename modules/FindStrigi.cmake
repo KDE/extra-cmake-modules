@@ -106,48 +106,8 @@ else(STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
        STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR)
 
    if (STRIGI_FOUND)
-       # Check for the SIC change between 0.5.9 and 0.6.0...
-
-       macro(MACRO_CHECK_STRIGI_API_SCREWUP _RETTYPE _RESULT)
-        set (_STRIGI_API_SCREWUP_SOURCE_CODE "
-#include <strigi/streamendanalyzer.h>
-using namespace Strigi;
-    class ScrewupEndAnalyzer : public StreamEndAnalyzer {
-public:
-    ScrewupEndAnalyzer() {}
-    bool checkHeader(const char*, int32_t) const { return false; }
-    ${_RETTYPE} analyze(Strigi::AnalysisResult&, InputStream*) {
-        return -1;
-    }
-    const char* name() const { return \"Write 1000 times: I promise to keep source compat next time\"; }
-};
-int main()
-{
-    ScrewupEndAnalyzer a;
-    return 0;
-}
-")
-           check_cxx_source_compiles("${_STRIGI_API_SCREWUP_SOURCE_CODE}" ${_RESULT})
-       endmacro(MACRO_CHECK_STRIGI_API_SCREWUP)
-
-       include(CheckCXXSourceCompiles)
-       macro_push_required_vars()
-       set( CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${STRIGI_INCLUDEDIR} )
-       set( CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${STRIGI_STREAMS_LIBRARY} ${STRIGI_STREAMANALYZER_LIBRARY} )
-       macro_check_strigi_api_screwup( "signed char" STRIGI_NEEDS_SIGNED_CHAR )
-       macro_check_strigi_api_screwup( "char" STRIGI_NEEDS_CHAR )
-       set( STRIGI_NEEDS_SIGNED_CHAR ${STRIGI_NEEDS_SIGNED_CHAR} CACHE BOOL "TRUE if strigi is 0.6.0 or later" )
-       set( STRIGI_NEEDS_CHAR ${STRIGI_NEEDS_CHAR} CACHE BOOL "TRUE if strigi is 0.5.9 or before" )
-       if (STRIGI_NEEDS_SIGNED_CHAR)
-           message(STATUS "Strigi API needs 'signed char'")
-       else (STRIGI_NEEDS_SIGNED_CHAR)
-           if (STRIGI_NEEDS_CHAR)
-               message(STATUS "Strigi API needs 'char'")
-           else (STRIGI_NEEDS_CHAR)
-               message(FATAL_ERROR "Strigi was found, but a simple test program does not compile, check CMakeFiles/CMakeError.log")
-           endif (STRIGI_NEEDS_CHAR)
-       endif (STRIGI_NEEDS_SIGNED_CHAR)
-       macro_pop_required_vars()
+       set( STRIGI_NEEDS_SIGNED_CHAR TRUE CACHE BOOL "TRUE if strigi is 0.6.0 or later" )
+       set( STRIGI_NEEDS_CHAR FALSE CACHE BOOL "TRUE if strigi is 0.5.9 or before" )
    endif (STRIGI_FOUND)
 
 endif (STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
