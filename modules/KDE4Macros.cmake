@@ -281,10 +281,10 @@ macro (KDE4_CREATE_HANDBOOK _docbook)
 
    #Bootstrap
    if (_kdeBootStrapping)
-      set(_ssheet ${CMAKE_SOURCE_DIR}/kdoctools/customization/kde-chunk.xsl)
+      set(_ssheet "${CMAKE_BINARY_DIR}/kdoctools/customization/kde-chunk.xsl")
       set(_bootstrapOption "--srcdir=${CMAKE_BINARY_DIR}/kdoctools/")
    else (_kdeBootStrapping)
-      set(_ssheet ${KDE4_DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl)
+      set(_ssheet "${KDE4_DATA_INSTALL_DIR}/ksgmltools2/customization/kde-chunk.xsl")
       set(_bootstrapOption)
    endif (_kdeBootStrapping)
 
