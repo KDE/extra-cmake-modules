@@ -100,12 +100,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-# Include guard, it's not necessary to parse this fail again and again:
-IF(_FINDPKGCONFIG_ALREADY_INCLUDED AND PKG_CONFIG_EXECUTABLE)
-  RETURN()
-ENDIF(_FINDPKGCONFIG_ALREADY_INCLUDED AND PKG_CONFIG_EXECUTABLE)
-SET(_FINDPKGCONFIG_ALREADY_INCLUDED TRUE)
-
 ### Common stuff ####
 set(PKG_CONFIG_VERSION 1)
 set(PKG_CONFIG_FOUND   0)

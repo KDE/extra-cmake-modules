@@ -67,12 +67,6 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-# Include guard, it's not necessary to parse this fail again and again:
-IF(_FPHSA_ALREADY_INCLUDED)
-  RETURN()
-ENDIF(_FPHSA_ALREADY_INCLUDED)
-SET(_FPHSA_ALREADY_INCLUDED TRUE)
-
 INCLUDE(FindPackageMessage)
 INCLUDE(CMakeParseArguments)
 
