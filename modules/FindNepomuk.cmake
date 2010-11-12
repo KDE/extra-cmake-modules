@@ -4,6 +4,7 @@
 #  NEPOMUK_INCLUDE_DIR - the Nepomuk include directory
 #  NEPOMUK_LIBRARIES - Link these to use Nepomuk
 #  NEPOMUK_QUERY_LIBRARIES - Link these to use Nepomuk query
+#  NEPOMUK_UTILS_LIBRARIES - Link these to use Nepomuk utils
 #  NEPOMUK_DEFINITIONS - Compiler switches required for using Nepomuk
 #
 # Nepomuk requires Soprano, so this module checks for Soprano too.
@@ -54,6 +55,14 @@ find_library(NEPOMUK_QUERY_LIBRARIES
   ${LIB_INSTALL_DIR}
   )
 
+find_library(NEPOMUK_UTILS_LIBRARIES
+  NAMES
+  nepomukutils
+  HINTS
+  ${KDE4_LIB_DIR}
+  ${LIB_INSTALL_DIR}
+)
+
 find_file(NEPOMUK_ADDONTOLOGYCLASSES_FILE NepomukAddOntologyClasses.cmake
           HINTS ${KDE4_DATA_INSTALL_DIR}/cmake/modules/
           PATH_SUFFIXES share/apps/cmake/modules/
@@ -61,7 +70,7 @@ find_file(NEPOMUK_ADDONTOLOGYCLASSES_FILE NepomukAddOntologyClasses.cmake
 
 include("${NEPOMUK_ADDONTOLOGYCLASSES_FILE}" OPTIONAL)
 
-mark_as_advanced(NEPOMUK_INCLUDE_DIR NEPOMUK_LIBRARIES NEPOMUK_QUERY_LIBRARIES NEPOMUK_ADDONTOLOGIES_FILE)
+mark_as_advanced(NEPOMUK_INCLUDE_DIR NEPOMUK_LIBRARIES NEPOMUK_QUERY_LIBRARIES NEPOMUK_UTILS_LIBRARIES NEPOMUK_ADDONTOLOGIES_FILE)
 
 include(FindPackageHandleStandardArgs)
 # List all nepomuk and also all necessary soprano variables here, to make it
