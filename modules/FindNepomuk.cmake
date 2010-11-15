@@ -18,7 +18,7 @@
 
 
 if (NOT DEFINED Soprano_FOUND)
-  find_package(Soprano)
+  find_package(Soprano ${SOPRANO_MIN_VERSION})
   include(MacroLogFeature)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net/" FALSE "" "Soprano is needed for Nepomuk")
 endif (NOT DEFINED Soprano_FOUND)

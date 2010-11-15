@@ -209,9 +209,10 @@ if(SOPRANO_INCLUDE_DIR)
 endif(SOPRANO_INCLUDE_DIR)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Soprano DEFAULT_MSG 
-                                  SOPRANO_INCLUDE_DIR SOPRANO_LIBRARIES
-                                  ${_SOPRANO_REQUIRED_COMPONENTS_RESULTS} )
+
+find_package_handle_standard_args(Soprano REQUIRED_VARS SOPRANO_INCLUDE_DIR SOPRANO_LIBRARIES
+                                                       _SOPRANO_REQUIRED_COMPONENTS_RESULTS 
+                                         VERSION_VAR SOPRANO_VERSION)
 
 # for compatibility:
 set(Soprano_FOUND ${SOPRANO_FOUND})
