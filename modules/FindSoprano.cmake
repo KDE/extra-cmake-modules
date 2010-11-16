@@ -211,7 +211,7 @@ endif(SOPRANO_INCLUDE_DIR)
 include(FindPackageHandleStandardArgs)
 
 find_package_handle_standard_args(Soprano REQUIRED_VARS SOPRANO_INCLUDE_DIR SOPRANO_LIBRARIES
-                                                       _SOPRANO_REQUIRED_COMPONENTS_RESULTS 
+                                                       ${_SOPRANO_REQUIRED_COMPONENTS_RESULTS} 
                                          VERSION_VAR SOPRANO_VERSION)
 
 # for compatibility:
