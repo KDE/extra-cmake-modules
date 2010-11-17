@@ -39,4 +39,4 @@ if (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
 endif (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(SharedDesktopOntologies REQUIRED_VARS SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
+find_package_handle_standard_args(SharedDesktopOntologies REQUIRED_VARS SHAREDDESKTOPONTOLOGIES_ROOT_DIR VERSION_VAR SharedDesktopOntologies_VERSION)
