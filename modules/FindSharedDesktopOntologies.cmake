@@ -28,6 +28,10 @@ if( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" VERSI
   find_path(_SDO_CONFIG_DIR SharedDesktopOntologiesConfig.cmake PATH_SUFFIXES share/cmake/SharedDesktopOntologies/ )
 endif( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" VERSION_LESS "2.6.3")
 
+if(NOT SharedDesktopOntologies_FIND_VERSION)
+  set(SharedDesktopOntologies_FIND_VERSION "${SDO_MIN_VERSION}")
+endif(NOT SharedDesktopOntologies_FIND_VERSION)
+
 find_package(SharedDesktopOntologies ${SharedDesktopOntologies_FIND_VERSION} QUIET NO_MODULE HINTS "${_SDO_CONFIG_DIR}" )
 
 if (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
@@ -35,4 +39,4 @@ if (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
 endif (SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(SharedDesktopOntologies REQUIRED_VARS SHAREDDESKTOPONTOLOGIES_ROOT_DIR VERSION_VAR SDO_MIN_VERSION)
+find_package_handle_standard_args(SharedDesktopOntologies REQUIRED_VARS SHAREDDESKTOPONTOLOGIES_ROOT_DIR)
