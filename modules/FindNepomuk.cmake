@@ -33,7 +33,7 @@ endif (NOT DEFINED SHAREDDESKTOPONTOLOGIES_FOUND)
 # or not. This will give a better error message at the end.
 find_path(NEPOMUK_INCLUDE_DIR
   NAMES
-  nepomuk/global.h
+  nepomuk/resource.h
   HINTS
   ${KDE4_INCLUDE_DIR}
   ${INCLUDE_INSTALL_DIR}
