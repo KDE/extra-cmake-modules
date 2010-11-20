@@ -992,12 +992,14 @@ if (WIN32)
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4251" )
       # C4396: 'identifier' : 'function' the inline specifier cannot be used when a friend declaration refers to a specialization of a function template
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4396" )
-      if(CMAKE_COMPILER_2005)
-         # to avoid a lot of deprecated warnings
-         add_definitions( -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -D_SCL_SECURE_NO_WARNINGS )
-         # 'identifier' : no suitable definition provided for explicit template instantiation request
-         set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4661" )
-      endif(CMAKE_COMPILER_2005)
+      # to avoid a lot of deprecated warnings
+      add_definitions( -D_CRT_SECURE_NO_DEPRECATE
+                       -D_CRT_SECURE_NO_WARNINGS
+                       -D_CRT_NONSTDC_NO_DEPRECATE
+                       -D_SCL_SECURE_NO_WARNINGS
+                       )
+      # 'identifier' : no suitable definition provided for explicit template instantiation request
+      set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4661" )
    endif(MSVC)
 
 
