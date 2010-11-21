@@ -99,4 +99,17 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
     # finally append the source files to the source list
     list(APPEND ${_sources} ${_out_sources})
   endif(NOT RCGEN)
+
+  # reset variable names used
+  unset(_current_arg_type)
+  unset(_arg)
+  unset(_ontologies)
+  unset(_ontofilenames)
+  unset(_classes)
+  unset(_visibility)
+  unset(_fastmode)
+  unset(_targetdir)
+  unset(_out_headers)
+  unset(_out_sources)
+  unset(rcgen_result)
 endmacro(NEPOMUK_ADD_ONTOLOGY_CLASSES)
