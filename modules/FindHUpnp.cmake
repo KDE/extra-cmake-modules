@@ -7,7 +7,10 @@
 #
 # Copyright (c) 2010, Paulo Romulo Alves Barros <paulo.romulo@kdemail.net>
 
-find_path( HUPNP_INCLUDE_DIR HUpnp )
+find_path( HUPNP_INCLUDE_DIR
+     NAMES HUpnp
+     PATH_SUFFIXES HUpnpCore
+)
 
 find_library( HUPNP_LIBS HUpnp )
 
