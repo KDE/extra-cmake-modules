@@ -63,6 +63,7 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindKDEWIN32.cmake
                FindKDEWIN_Packager.cmake
                FindKDEWin.cmake
+               FindKdcraw.cmake
                FindKdeMultimedia.cmake
                FindKdepim.cmake
                FindKdepimLibs.cmake
