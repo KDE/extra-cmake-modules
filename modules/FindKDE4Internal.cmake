@@ -1223,12 +1223,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    if (MINGW)
       set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
       set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
-
-      # we always link against the release version of QT with mingw
-      # (even for debug builds). So we need to define QT_NO_DEBUG
-      # or else QPluginLoader rejects plugins because it thinks
-      # they're built against the wrong QT.
-      add_definitions(-DQT_NO_DEBUG)
    endif (MINGW)
 
    check_cxx_compiler_flag(-fPIE HAVE_FPIE_SUPPORT)
