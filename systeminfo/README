@@ -1,0 +1,6 @@
+Run cmake on the CMakeLists.txt file in this directory and it will print out
+the value of some cmake variables. These variables can be used in
+CMakeLists.txt to determine the current system type.
+
+Alex
+
