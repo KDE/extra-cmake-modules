@@ -8,7 +8,18 @@ set(ECM_PATCH_VERSION 1 )
 
 set(ECM_VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION} )
 
-# need to add a target to create the documentation via cmake --help...
+# create and install docs
+add_custom_target(ManPage ALL
+                  COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.1"
+                  COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
+                  COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt"
+                 )
+
+install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.1" DESTINATION man/man1/ )
+
+install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt" "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
+        DESTINATION share/extra-cmake-modules-${ECM_VERSION}/doc/ )
+
 
 file(GLOB installFiles ${CMAKE_SOURCE_DIR}/modules/*cmake )
 
