@@ -27,4 +27,11 @@ install(FILES ${installFiles} DESTINATION share/extra-cmake-modules-${ECM_VERSIO
 
 # need to install a Config.cmake file
 
-# need to add cpack setup stuff for creating a package
+# set up packaging
+set(CPACK_PACKAGE_NAME extra-cmake-modules )
+set(CPACK_PACKAGE_VERSION ${ECM_VERSION})
+set(CPACK_SYSTEM_NAME "generic")
+set(CPACK_GENERATOR "TGZ")
+set(CPACK_SET_DESTDIR FALSE)
+
+include(CPack)
