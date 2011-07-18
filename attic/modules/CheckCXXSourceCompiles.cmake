@@ -1,9 +1,8 @@
-# - Check if the source code provided in the SOURCE argument compiles.
-# CHECK_CXX_SOURCE_COMPILES(SOURCE VAR)
-# - macro which checks if the source code compiles
-#  SOURCE - source code to try to compile
-#  VAR    - variable to store whether the source code compiled
-#
+# - Check if given C++ source compiles and links into an executable
+# CHECK_CXX_SOURCE_COMPILES(<code> <var> [FAIL_REGEX <fail-regex>])
+#  <code>       - source code to try to compile, must define 'main'
+#  <var>        - variable to store whether the source code compiled
+#  <fail-regex> - fail if test output matches this regex
 # The following variables may be set before calling this macro to
 # modify the way the check is run:
 #
@@ -18,6 +17,18 @@ INCLUDE(${_CHECK_CXX_SOURCE_COMPILES_DIR}/HandleImportedTargetsInCMakeRequiredLi
 
 MACRO(CHECK_CXX_SOURCE_COMPILES SOURCE VAR)
   IF("${VAR}" MATCHES "^${VAR}$")
+    SET(_FAIL_REGEX)
+    SET(_key)
+    FOREACH(arg ${ARGN})
+      IF("${arg}" MATCHES "^(FAIL_REGEX)$")
+        SET(_key "${arg}")
+      ELSEIF(_key)
+        LIST(APPEND _${_key} "${arg}")
+      ELSE()
+        MESSAGE(FATAL_ERROR "Unknown argument:\n  ${arg}\n")
+      ENDIF()
+    ENDFOREACH()
+
     SET(MACRO_CHECK_FUNCTION_DEFINITIONS
       "-D${VAR} ${CMAKE_REQUIRED_FLAGS}")
     IF(CMAKE_REQUIRED_LIBRARIES)
@@ -48,6 +59,13 @@ MACRO(CHECK_CXX_SOURCE_COMPILES SOURCE VAR)
       "${CHECK_CXX_SOURCE_COMPILES_ADD_LIBRARIES}"
       "${CHECK_CXX_SOURCE_COMPILES_ADD_INCLUDES}"
       OUTPUT_VARIABLE OUTPUT)
+
+    FOREACH(_regex ${_FAIL_REGEX})
+      IF("${OUTPUT}" MATCHES "${_regex}")
+        SET(${VAR} 0)
+      ENDIF()
+    ENDFOREACH()
+
     IF(${VAR})
       SET(${VAR} 1 CACHE INTERNAL "Test ${VAR}")
       MESSAGE(STATUS "Performing Test ${VAR} - Success")
