@@ -26,7 +26,7 @@ install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt" "${CMAKE_BINARY_DIR}
         DESTINATION ${DOC_INSTALL_DIR} )
 
 
-file(GLOB installFiles ${CMAKE_SOURCE_DIR}/modules/*cmake )
+file(GLOB installFiles ${CMAKE_SOURCE_DIR}/modules/*[^~] )
 
 install(FILES ${installFiles} DESTINATION ${MODULES_INSTALL_DIR} )
 
