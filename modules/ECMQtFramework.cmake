@@ -86,10 +86,11 @@ configure_file(
   @ONLY
 )
 
-configure_file(
-  "${EXTRA_CMAKE_MODULES_MODULE_PATH}/ECMConfigVersion.cmake.in"
-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-  @ONLY
+include (WriteBasicConfigVersionFile)
+
+write_basic_config_version_file("${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION ${ECM_VERSION_MAJOR}.${ECM_VERSION_MINOR}.${ECM_VERSION_PATCH}
+  COMPATIBILITY AnyNewerVersion
 )
 
 configure_file(
