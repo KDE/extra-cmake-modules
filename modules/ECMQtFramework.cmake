@@ -120,10 +120,7 @@ install(FILES
 
 STRING(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
-file(WRITE
+configure_file(
+  "${EXTRA_CMAKE_MODULES_MODULE_PATH}/ECMVersionHeader.h.in"
   "${CMAKE_BINARY_DIR}/${PROJECT_NAME}_version.h"
-  "#ifndef ${PROJECT_NAME_UPPER}_VERSION_H\n"
-  "#define ${PROJECT_NAME_UPPER}_VERSION_H\n"
-  "#define ${PROJECT_NAME_UPPER}_VERSION \"${ECM_VERSION_STRING}\"\n"
-  "#endif\n"
 )
