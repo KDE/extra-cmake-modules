@@ -14,8 +14,8 @@ include(GenerateExportHeader)
 add_compiler_export_flags()
 
 # create coverage build type
-set(CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} Coverage )
-if (${CMAKE_VERSION} VERSION_GREATER 2.8.2)
+set(CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} Coverage)
+if(${CMAKE_VERSION} VERSION_GREATER 2.8.2)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
                 "Debug" "Release" "MinSizeRel" "RelWithDebInfo" "Coverage")
 endif()
@@ -58,10 +58,10 @@ set(CMAKE_AUTOMOC ON)
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of library directory name (eg. '64')")
 
-set(LIB_INSTALL_DIR lib${LIB_SUFFIX} )
-set(BIN_INSTALL_DIR bin )
-set(INCLUDE_INSTALL_DIR include )
-set(DATA_INSTALL_DIR share/apps )
+set(LIB_INSTALL_DIR lib${LIB_SUFFIX})
+set(BIN_INSTALL_DIR bin)
+set(INCLUDE_INSTALL_DIR include)
+set(DATA_INSTALL_DIR share/apps)
 
 set(LIBRARY_TYPE SHARED)
 
@@ -76,9 +76,9 @@ set(ECM_TARGET_DEFAULT_ARGS
 set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR})
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-set(CMAKECONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME}" )
+set(CMAKECONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME}")
 
-file(RELATIVE_PATH relInstallDir ${CMAKE_INSTALL_PREFIX}/${CMAKECONFIG_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX} )
+file(RELATIVE_PATH relInstallDir ${CMAKE_INSTALL_PREFIX}/${CMAKECONFIG_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX})
 
 configure_file(
   "${EXTRA_CMAKE_MODULES_MODULE_PATH}/ECMConfig.cmake.in"
@@ -86,7 +86,7 @@ configure_file(
   @ONLY
 )
 
-include (WriteBasicConfigVersionFile)
+include(WriteBasicConfigVersionFile)
 
 write_basic_config_version_file("${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
   VERSION ${ECM_VERSION_MAJOR}.${ECM_VERSION_MINOR}.${ECM_VERSION_PATCH}
@@ -118,7 +118,7 @@ install(FILES
   COMPONENT Devel
 )
 
-STRING(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
+string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
 configure_file(
   "${EXTRA_CMAKE_MODULES_MODULE_PATH}/ECMVersionHeader.h.in"
