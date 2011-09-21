@@ -31,7 +31,7 @@
 #
 # 4) Qt build flags are defined.
 # These include
-
+#
 # * Disabling automatic ascii casts provided by Qt (so for example QLatin1String must be used). This is
 # relevant to prevent encoding errors, and makes conversion to QString potentially faster or avoidable.
 #
