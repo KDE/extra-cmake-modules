@@ -1,10 +1,3 @@
-
-# We need to make sure this file is included before Qt found.
-# Otherwise QT_USE_IMPORTED_TARGETS would have no effect.
-# ### Temporarily disabled until KDE Frameworks includes this file before finding Qt.
-# if (QT4_FOUND)
-#   message(SEND_ERROR "This file must be included before finding the Qt package.")
-# endif()
 #- Automatic configuration of a project as a Qt framework.
 #
 # This module can be used to simplify creation of quality frameworks written in Qt.
@@ -87,6 +80,14 @@
 # the preprocessor. The version file must be installed by the user.
 #
 # 15) The FeatureSummary module is included.
+
+# We need to make sure this file is included before Qt found.
+# Otherwise QT_USE_IMPORTED_TARGETS would have no effect.
+# ### Temporarily disabled until KDE Frameworks includes this file before finding Qt.
+# if (QT4_FOUND)
+#   message(SEND_ERROR "This file must be included before finding the Qt package.")
+# endif()
+
 
 include(FeatureSummary)
 include(GenerateExportHeader)
