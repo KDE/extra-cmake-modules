@@ -1,4 +1,4 @@
-# - Try to find BlueZ
+# - Try to find BlueZ bluetooth library.
 # Once done this will define
 #
 #  BLUEZ_FOUND - system has BlueZ
@@ -15,20 +15,12 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-if ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
-   # in cache already
-   set(BlueZ_FIND_QUIETLY TRUE)
-endif ( BLUEZ_INCLUDE_DIR AND BLUEZ_LIBRARIES )
-
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
-if( NOT WIN32 )
-  find_package(PkgConfig)
+find_package(PkgConfig)
+pkg_check_modules(PC_BLUEZ QUIET bluez)
 
-  pkg_check_modules(PC_BLUEZ QUIET bluez)
-
-  set(BLUEZ_DEFINITIONS ${PC_BLUEZ_CFLAGS_OTHER})
-endif( NOT WIN32 )
+set(BLUEZ_DEFINITIONS ${PC_BLUEZ_CFLAGS_OTHER})
 
 find_path(BLUEZ_INCLUDE_DIR NAMES bluetooth/bluetooth.h
   PATHS
@@ -37,15 +29,16 @@ find_path(BLUEZ_INCLUDE_DIR NAMES bluetooth/bluetooth.h
   /usr/X11/include
 )
 
-find_library(BLUEZ_LIBRARIES NAMES bluetooth
+find_library(BLUEZ_LIBRARY NAMES bluetooth
   PATHS
   ${PC_BLUEZ_LIBDIR}
   ${PC_BLUEZ_LIBRARY_DIRS}
 )
 
+set(BLUEZ_LIBRARIES ${BLUEZ_LIBRARY} )
+
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(BlueZ DEFAULT_MSG BLUEZ_INCLUDE_DIR BLUEZ_LIBRARIES )
+find_package_handle_standard_args(BlueZ DEFAULT_MSG BLUEZ_LIBRARY BLUEZ_INCLUDE_DIR)
 
-# show the BLUEZ_INCLUDE_DIR and BLUEZ_LIBRARIES variables only in the advanced view
-mark_as_advanced(BLUEZ_INCLUDE_DIR BLUEZ_LIBRARIES )
-
+# show the BLUEZ_INCLUDE_DIR and BLUEZ_LIBRARY variables only in the advanced view
+mark_as_advanced(BLUEZ_INCLUDE_DIR BLUEZ_LIBRARY )
