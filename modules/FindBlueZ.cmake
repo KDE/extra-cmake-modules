@@ -35,10 +35,10 @@ find_library(BLUEZ_LIBRARY NAMES bluetooth
   ${PC_BLUEZ_LIBRARY_DIRS}
 )
 
-set(BLUEZ_LIBRARIES ${BLUEZ_LIBRARY} )
+set(BLUEZ_LIBRARIES ${BLUEZ_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(BlueZ DEFAULT_MSG BLUEZ_LIBRARY BLUEZ_INCLUDE_DIR)
 
 # show the BLUEZ_INCLUDE_DIR and BLUEZ_LIBRARY variables only in the advanced view
-mark_as_advanced(BLUEZ_INCLUDE_DIR BLUEZ_LIBRARY )
+mark_as_advanced(BLUEZ_INCLUDE_DIR BLUEZ_LIBRARY)
