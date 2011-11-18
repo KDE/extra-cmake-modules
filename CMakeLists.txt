@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.4 FATAL_ERROR) # this will be upgraded to 2.8.6, and 2.8.7 soon
+cmake_minimum_required(VERSION 2.8.4 FATAL_ERROR) # this will be upgraded to 2.8.6
 
 project(extra-cmake-modules)
 
