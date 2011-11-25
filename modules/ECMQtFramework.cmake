@@ -80,6 +80,10 @@
 # the preprocessor. The version file must be installed by the user.
 #
 # 15) The FeatureSummary module is included.
+#
+# 16) The CMAKE_LINK_INTERFACE_LIBRARIES variable is set to empty. This means that the library targets created
+# will have an empty link interface unless the LINK_INTERFACE_LIBRARIES or the LINK_PUBLIC keyword 
+# to target_link_libraries are used.
 
 # We need to make sure this file is included before Qt found.
 # Otherwise QT_USE_IMPORTED_TARGETS would have no effect.
@@ -93,6 +97,9 @@ include(FeatureSummary)
 include(GenerateExportHeader)
 
 add_compiler_export_flags()
+
+# This will only have an effect in CMake 2.8.7
+set(CMAKE_LINK_INTERFACE_LIBRARIES "")
 
 # create coverage build type
 set(CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} Coverage)
