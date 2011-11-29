@@ -37,7 +37,10 @@ install(FILES ${installFiles} DESTINATION ${MODULES_INSTALL_DIR})
 file(RELATIVE_PATH relInstallDir ${CMAKE_INSTALL_PREFIX}/${CMAKECONFIG_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX})
 
 configure_file(extra-cmake-modules-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/extra-cmake-modules-config.cmake @ONLY)
-configure_file(extra-cmake-modules-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/extra-cmake-modules-config-version.cmake @ONLY)
+include(WriteBasicConfigVersionFile)
+write_basic_config_version_file( ${CMAKE_CURRENT_BINARY_DIR}/extra-cmake-modules-config-version.cmake
+                                 VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION}
+                                 COMPATIBILITY AnyNewerVersion )
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/extra-cmake-modules-config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/extra-cmake-modules-config-version.cmake
