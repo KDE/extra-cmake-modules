@@ -195,11 +195,12 @@ install(FILES
   COMPONENT Devel
 )
 
-install(EXPORT ${PROJECT_NAME}LibraryTargets
-  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-  FILE ${PROJECT_NAME}Targets.cmake
-  COMPONENT Devel
-)
+# Disabled for now, as long as kdelibs is one big module
+#install(EXPORT ${PROJECT_NAME}LibraryTargets
+  #DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  #FILE ${PROJECT_NAME}Targets.cmake
+  #COMPONENT Devel
+#)
 
 install(FILES
   "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Use.cmake"
