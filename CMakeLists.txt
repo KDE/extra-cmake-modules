@@ -10,6 +10,7 @@ set(ECM_VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION})
 
 set(SHARE_INSTALL_DIR share/extra-cmake-modules-${ECM_VERSION})
 set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/modules/)
+set(FIND_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/find-modules/)
 set(CMAKECONFIG_INSTALL_DIR ${SHARE_INSTALL_DIR}/cmake/)
 set(DOC_INSTALL_DIR ${SHARE_INSTALL_DIR}/doc/)
 
@@ -27,9 +28,11 @@ install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt" "${CMAKE_BINARY_DIR}
         DESTINATION ${DOC_INSTALL_DIR})
 
 
-file(GLOB installFiles ${CMAKE_SOURCE_DIR}/modules/*[^~])
+file(GLOB installModuleFiles ${CMAKE_SOURCE_DIR}/modules/*[^~])
+install(FILES ${installModuleFiles} DESTINATION ${MODULES_INSTALL_DIR})
 
-install(FILES ${installFiles} DESTINATION ${MODULES_INSTALL_DIR})
+file(GLOB installFindModuleFiles ${CMAKE_SOURCE_DIR}/find-modules/*[^~])
+install(FILES ${installFindModuleFiles} DESTINATION ${FIND_MODULES_INSTALL_DIR})
 
 # figure out the relative path from the installed Config.cmake file to the install prefix (which may be at
 # runtime different from the chosen CMAKE_INSTALL_PREFIX if under Windows the package was installed anywhere)
