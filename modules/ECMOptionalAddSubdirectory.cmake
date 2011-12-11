@@ -1,7 +1,10 @@
 # - ECM_OPTIONAL_ADD_SUBDIRECTORY() combines ADD_SUBDIRECTORY() with an OPTION()
+#
 # ECM_OPTIONAL_ADD_SUBDIRECTORY(<dir>)
+#
 # If you use ECM_OPTIONAL_ADD_SUBDIRECTORY() instead of ADD_SUBDIRECTORY(),
 # this will have two effects
+#
 # 1 - CMake will not complain if the directory doesn't exist
 #     This makes sense if you want to distribute just one of the subdirs
 #     in a source package, e.g. just one of the subdirs in kdeextragear.

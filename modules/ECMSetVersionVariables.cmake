@@ -1,4 +1,5 @@
 # - Convenience macro for setting version variables.
+#
 # ECM_SET_VERSION_VARIABLES(<prefix> <major> <minor> <patch>)
 #
 # This macro sets the following variables:

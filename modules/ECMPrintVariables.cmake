@@ -1,4 +1,5 @@
 # - Convenience macro for printing the values of cmake variables, useful e.g. while debugging.
+#
 # ECM_PRINT_VARIABLES(var1 var2 .. varN)
 #
 # This macro will print the name of each variable followed by its value.
