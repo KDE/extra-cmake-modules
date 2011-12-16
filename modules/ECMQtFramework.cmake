@@ -170,7 +170,7 @@ set(CMAKECONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME}")
 file(RELATIVE_PATH relInstallDir ${CMAKE_INSTALL_PREFIX}/${CMAKECONFIG_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX})
 
 configure_file(
-  "${EXTRA_CMAKE_MODULES_MODULE_PATH}/ECMConfig.cmake.in"
+  "${CMAKE_CURRENT_LIST_DIR}/ECMConfig.cmake.in"
   "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
   @ONLY
 )
@@ -183,7 +183,7 @@ write_basic_config_version_file("${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersio
 )
 
 configure_file(
-  "${EXTRA_CMAKE_MODULES_MODULE_PATH}/ECMQtUseFile.cmake.in"
+  "${CMAKE_CURRENT_LIST_DIR}/ECMQtUseFile.cmake.in"
   "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Use.cmake"
   @ONLY
 )
@@ -211,6 +211,6 @@ install(FILES
 string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
 configure_file(
-  "${EXTRA_CMAKE_MODULES_MODULE_PATH}/ECMVersionHeader.h.in"
+  "${CMAKE_CURRENT_LIST_DIR}/ECMVersionHeader.h.in"
   "${CMAKE_BINARY_DIR}/${PROJECT_NAME}_version.h"
 )
