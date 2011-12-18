@@ -8,6 +8,9 @@ set(ECM_PATCH_VERSION 2)
 
 set(ECM_VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION})
 
+enable_testing()
+add_subdirectory(tests)
+
 set(SHARE_INSTALL_DIR share/extra-cmake-modules-${ECM_VERSION})
 set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/modules/)
 set(FIND_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/find-modules/)
