@@ -40,5 +40,9 @@ set(BLUEZ_LIBRARIES ${BLUEZ_LIBRARY})
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(BlueZ DEFAULT_MSG BLUEZ_LIBRARY BLUEZ_INCLUDE_DIR)
 
+include(FeatureSummary)
+set_package_properties(BlueZ PROPERTIES URL http://www.bluez.org/
+  DESCRIPTION "Official Linux Bluetooth protocol stack")
+
 # show the BLUEZ_INCLUDE_DIR and BLUEZ_LIBRARY variables only in the advanced view
 mark_as_advanced(BLUEZ_INCLUDE_DIR BLUEZ_LIBRARY)
