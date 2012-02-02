@@ -15,6 +15,7 @@ if (QT5_BUILD)
           Svg
           Widgets
           PrintSupport
+          UiTools
         )
       find_package(Qt5${_component})
     endforeach()
