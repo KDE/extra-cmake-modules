@@ -7,6 +7,7 @@ if (QT5_BUILD)
           DBus
           DBusTools # For macros
           Designer
+          Declarative
           Script
           ScriptTools
           Network
@@ -16,6 +17,7 @@ if (QT5_BUILD)
           Widgets
           PrintSupport
           UiTools
+          Quick1
         )
       find_package(Qt5${_component})
     endforeach()

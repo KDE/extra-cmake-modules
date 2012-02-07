@@ -163,6 +163,8 @@ set(_qt_modules
   Concurrent
   Xml
   UiTools
+  Declarative
+  Quick1
 )
 
 foreach(_module ${_qt_modules})
@@ -174,6 +176,9 @@ endforeach()
 
 list(APPEND QT_QTCORE_LIBRARIES ${Qt5Concurrent_LIBRARIES})
 list(APPEND QT_QTCORE_LIBRARY ${Qt5Concurrent_LIBRARIES})
+
+list(APPEND QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick1_LIBRARIES})
+list(APPEND QT_QTDECLARATIVE_LIBRARY ${Qt5Quick1_LIBRARIES})
 
 macro(qt4_wrap_ui)
   qt5_wrap_ui(${ARGN})
