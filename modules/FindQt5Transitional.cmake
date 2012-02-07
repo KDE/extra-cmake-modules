@@ -18,6 +18,7 @@ if (QT5_BUILD)
           PrintSupport
           UiTools
           Quick1
+          WebKit
         )
       find_package(Qt5${_component})
     endforeach()

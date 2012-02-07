@@ -165,6 +165,7 @@ set(_qt_modules
   UiTools
   Declarative
   Quick1
+  WebKit
 )
 
 foreach(_module ${_qt_modules})
