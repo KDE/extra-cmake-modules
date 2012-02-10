@@ -16,6 +16,7 @@ if (QT5_BUILD)
           Svg
           Widgets
           PrintSupport
+          Concurrent
           UiTools
           Quick1
           WebKit
