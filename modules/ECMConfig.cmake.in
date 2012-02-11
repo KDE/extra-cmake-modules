@@ -15,4 +15,4 @@ set(@PROJECT_NAME@_LIBRARY @PROJECT_NAME@)
 
 set(@PROJECT_NAME@_USE_FILE "${myDir}/@PROJECT_NAME@Use.cmake")
 
-include(${myDir}/@PROJECT_NAME@Targets.cmake)
+#include(${myDir}/@PROJECT_NAME@Targets.cmake)
