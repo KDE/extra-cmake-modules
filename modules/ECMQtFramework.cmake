@@ -150,7 +150,7 @@ set(LIB_SUFFIX "" CACHE STRING "Define suffix of library directory name (eg. '64
 set(LIB_INSTALL_DIR lib${LIB_SUFFIX})
 set(BIN_INSTALL_DIR bin)
 set(INCLUDE_INSTALL_DIR include)
-set(DATA_INSTALL_DIR share/apps)
+set(DATA_INSTALL_DIR share)
 
 set(LIBRARY_TYPE SHARED)
 
