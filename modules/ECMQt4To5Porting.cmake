@@ -166,6 +166,7 @@ set(_qt_modules
   Declarative
   Quick
   WebKit
+  Sql
 )
 
 foreach(_module ${_qt_modules})

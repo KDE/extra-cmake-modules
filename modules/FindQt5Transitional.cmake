@@ -14,6 +14,7 @@ if (QT5_BUILD)
           Test
           Xml
           Svg
+          Sql
           Widgets
           PrintSupport
           Concurrent
