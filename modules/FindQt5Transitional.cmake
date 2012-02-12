@@ -18,7 +18,7 @@ if (QT5_BUILD)
           PrintSupport
           Concurrent
           UiTools
-          Quick1
+          Quick
           WebKit
         )
       find_package(Qt5${_component})
