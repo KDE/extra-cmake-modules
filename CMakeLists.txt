@@ -4,7 +4,7 @@ project(extra-cmake-modules)
 
 set(ECM_MAJOR_VERSION 0)
 set(ECM_MINOR_VERSION 0)
-set(ECM_PATCH_VERSION 2)
+set(ECM_PATCH_VERSION 3)
 
 set(ECM_VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION})
 
@@ -13,15 +13,16 @@ add_subdirectory(tests)
 
 set(SHARE_INSTALL_DIR share/extra-cmake-modules-${ECM_VERSION})
 set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/modules/)
+set(KDE_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/kde-modules/)
 set(FIND_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/find-modules/)
 set(CMAKECONFIG_INSTALL_DIR ${SHARE_INSTALL_DIR}/cmake/)
 set(DOC_INSTALL_DIR ${SHARE_INSTALL_DIR}/doc/)
 
 # create and install docs
 add_custom_target(ManPage ALL
-                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.1"
-                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
-                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt"
+                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.1"
+                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
+                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt"
                     VERBATIM
                  )
 
@@ -33,6 +34,9 @@ install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt" "${CMAKE_BINARY_DIR}
 
 file(GLOB installModuleFiles ${CMAKE_SOURCE_DIR}/modules/*[^~])
 install(FILES ${installModuleFiles} DESTINATION ${MODULES_INSTALL_DIR})
+
+file(GLOB installKdeModuleFiles ${CMAKE_SOURCE_DIR}/kde-modules/*[^~])
+install(FILES ${installKdeModuleFiles} DESTINATION ${KDE_MODULES_INSTALL_DIR})
 
 file(GLOB installFindModuleFiles ${CMAKE_SOURCE_DIR}/find-modules/*[^~])
 install(FILES ${installFindModuleFiles} DESTINATION ${FIND_MODULES_INSTALL_DIR})
