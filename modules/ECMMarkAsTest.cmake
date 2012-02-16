@@ -12,10 +12,8 @@
 # all tests by invoking the 'buildtests' target.
 
 if (NOT BUILD_TESTING)
-  get_property(_buildtestsAdded GLOBAL PROPERTY BUILDTESTS_ADDED)
-  if(NOT _buildtestsAdded)
+  if(NOT TARGET buildtests)
     add_custom_target(buildtests)
-    set_property(GLOBAL PROPERTY BUILDTESTS_ADDED TRUE)
   endif()
 endif()
 
