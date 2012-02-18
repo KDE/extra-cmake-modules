@@ -8,6 +8,7 @@
 #  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE4 )
 #  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
 #  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
+#  CMAKECONFIG_INSTALL_PREFIX - the prefix under which packages will create their own subdirectory for their CMake configuration files
 #  CONFIG_INSTALL_DIR       - the directory where config files will be installed
 #  DATA_INSTALL_DIR         - the parent directory where applications can install their data
 #  HTML_INSTALL_DIR         - the directory where HTML documentation will be installed
@@ -131,6 +132,7 @@ _set_fancy(INCLUDE_INSTALL_DIR       "include"                                  
 
 _set_fancy(PLUGIN_INSTALL_DIR        "${LIB_INSTALL_DIR}/kde4"                     "The install dir where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
 _set_fancy(IMPORTS_INSTALL_DIR       "${PLUGIN_INSTALL_DIR}/imports"               "The install dir where imports will be installed")
+_set_fancy(CMAKECONFIG_INSTALL_PREFIX "${LIB_INSTALL_DIR}/cmake"                   "The prefix under which packages will create their own subdirectory for their CMake configuration files")
 _set_fancy(CONFIG_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/config"              "The config file install dir")
 _set_fancy(DATA_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/apps"                "The parent directory where applications can install their data")
 _set_fancy(HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/HTML"            "The HTML install dir for documentation")
