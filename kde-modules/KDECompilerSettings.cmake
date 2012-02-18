@@ -1,3 +1,14 @@
+# This module provides the following options:
+#   KDE4_ENABLE_FPIE - if enabled, the KDE4_CXX_FPIE_FLAGS and KDE4_PIE_LDFLAGS variables is set accordingly
+#
+# This module provides the following variables:
+#   KDE4_CXX_FPIE_FLAGS - the flag to be used for building PIE executables
+#   KDE4_PIE_LDFLAGS - the flag to be used by linking PIE executables
+#   KDE4_ENABLE_EXCEPTIONS - use this to enable exceptions
+#
+# This module also sets up CMAKE_CXX_FLAGS for a set of predefined buildtypes
+# as documented below.
+#
 #  A note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
 #  the flags for those buildtypes. FindKDE4Internal supports the values
 #  Debug, Release, RelWithDebInfo, Profile and Debugfull:
@@ -21,8 +32,8 @@
 #  It's also important to note that gcc cannot detect all warning conditions
 #  unless the optimiser is active.
 
-
 include(CheckCXXCompilerFlag)
+include(GenerateExportHeader)
 
 # Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
 # which is something between a shared library and a normal executable.
@@ -209,12 +220,6 @@ if (APPLE)
   #set(CMAKE_SHARED_LINKER_FLAGS "-single_module -undefined dynamic_lookup -multiply_defined suppress")
   #set(CMAKE_MODULE_LINKER_FLAGS "-undefined dynamic_lookup -multiply_defined suppress")
 
-  # we profile...
-  if(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
-    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-    set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-  endif()
-
   # removed -Os, was there a special reason for using -Os instead of -O2 ?, Alex
   # optimization flags are set below for the various build types
   set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -fno-common")
@@ -229,13 +234,6 @@ if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
       set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-new-dtags -Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
       set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--enable-new-dtags -Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
       set ( CMAKE_EXE_LINKER_FLAGS    "-Wl,--enable-new-dtags ${CMAKE_EXE_LINKER_FLAGS}")
-
-      # we profile...
-      if(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
-        # TODO: do those flags also apply to the Intel compiler ?
-        set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-        set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-      endif(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
    endif()
 
    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
@@ -256,6 +254,7 @@ endif (CMAKE_SYSTEM_NAME MATCHES BSD)
 # compiler specific settings
 ############################################################
 
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "DebugFull" "Release" "RelWithDebInfo" "Profile" "Coverage")
 
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -313,6 +312,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 #    set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES
 #        ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES} ${_dirs})
 
+# TODO: why do the other KDE4_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
    set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
@@ -320,11 +320,19 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
    set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
    set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
    set(CMAKE_CXX_FLAGS_PROFILE        "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
+   set(CMAKE_CXX_FLAGS_COVERAGE       "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
    set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
    set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
    set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
    set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
    set(CMAKE_C_FLAGS_PROFILE          "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
+   set(CMAKE_C_FLAGS_COVERAGE         "${CMAKE_C_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
+
+   # TODO: do those flags also apply to the Intel compiler ? What about clang ?
+   set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+   set (CMAKE_SHARED_LINKER_FLAGS_PROFILE "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+   set (CMAKE_MODULE_LINKER_FLAGS_PROFILE "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+
 
    if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
      set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
@@ -453,3 +461,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 #   endif (__KDE_HAVE_ICC_VISIBILITY)
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+
+add_compiler_export_flags()  # from GenerateExportHeader.cmake
+
+add_definitions(${_KDE4_PLATFORM_DEFINITIONS})

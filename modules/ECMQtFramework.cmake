@@ -82,7 +82,7 @@
 # 15) The FeatureSummary module is included.
 #
 # 16) The CMAKE_LINK_INTERFACE_LIBRARIES variable is set to empty. This means that the library targets created
-# will have an empty link interface unless the LINK_INTERFACE_LIBRARIES or the LINK_PUBLIC keyword 
+# will have an empty link interface unless the LINK_INTERFACE_LIBRARIES or the LINK_PUBLIC keyword
 # to target_link_libraries are used.
 
 # We need to make sure this file is included before Qt found.
@@ -94,33 +94,11 @@
 
 
 include(FeatureSummary)
-include(GenerateExportHeader)
 
-add_compiler_export_flags()
+include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDEInstallDirs.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDECMakeSettings.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDECompilerSettings.cmake)
 
-# This will only have an effect in CMake 2.8.7
-set(CMAKE_LINK_INTERFACE_LIBRARIES "")
-
-# create coverage build type
-set(CMAKE_CONFIGURATION_TYPES ${CMAKE_CONFIGURATION_TYPES} Coverage)
-if(${CMAKE_VERSION} VERSION_GREATER 2.8.2)
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-                "Debug" "Release" "MinSizeRel" "RelWithDebInfo" "Coverage")
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
-  set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
-  set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-
-  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Wno-variadic-macros -fno-check-new -fno-common -pedantic-errors")
-
-  if(NOT APPLE)
-    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined ${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined ${CMAKE_MODULE_LINKER_FLAGS}")
-  endif()
-endif()
 
 add_definitions(-DQT_NO_CAST_TO_ASCII)
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
@@ -132,26 +110,6 @@ add_definitions(-DQT_USE_FAST_CONCATENATION)
 add_definitions(-DQT_USE_FAST_OPERATOR_PLUS)
 
 
-# Tell FindQt4.cmake to point the QT_QTFOO_LIBRARY targets at the imported targets
-# for the Qt libraries, so we get full handling of release and debug versions of the
-# Qt libs and are flexible regarding the install location of Qt under Windows
-set(QT_USE_IMPORTED_TARGETS TRUE)
-
-# Always include the source and build directories in the include path
-# to save doing so manually in every subdirectory.
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
-
-set(CMAKE_AUTOMOC ON)
-
-set(LIB_SUFFIX "" CACHE STRING "Define suffix of library directory name (eg. '64')")
-
-set(LIB_INSTALL_DIR lib${LIB_SUFFIX})
-set(BIN_INSTALL_DIR bin)
-set(INCLUDE_INSTALL_DIR include)
-set(DATA_INSTALL_DIR share)
-
 set(LIBRARY_TYPE SHARED)
 
 set(ECM_TARGET_DEFAULT_ARGS
@@ -161,11 +119,7 @@ set(ECM_TARGET_DEFAULT_ARGS
   ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT ${PROJECT_NAME}
 )
 
-# set up RPATH/install_name_dir
-set(CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR})
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-set(CMAKECONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/${PROJECT_NAME}")
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/${PROJECT_NAME}")
 
 file(RELATIVE_PATH relInstallDir ${CMAKE_INSTALL_PREFIX}/${CMAKECONFIG_INSTALL_DIR} ${CMAKE_INSTALL_PREFIX})
 
