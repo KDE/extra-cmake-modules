@@ -149,7 +149,7 @@ if (UNIX)
       list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemLibDir)
       if("${_isSystemLibDir}" STREQUAL "-1")
          set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
-      endif("${_isSystemLibDir}" STREQUAL "-1")
+      endif()
 
       set(CMAKE_SKIP_BUILD_RPATH FALSE)
       set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
@@ -255,15 +255,14 @@ endif (APPLE)
 # TODO: why don't we go inside that block on the BSDs ?
 if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-      set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
-      set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
-
-      set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_SHARED_LINKER_FLAGS}")
-      set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_MODULE_LINKER_FLAGS}")
-      set ( CMAKE_EXE_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_EXE_LINKER_FLAGS}")
+     # TODO: does the Intel compiler also support --enable-new-dtags ? ...probably since they are only forwarded to the linker....
+      set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-new-dtags -Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
+      set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--enable-new-dtags -Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
+      set ( CMAKE_EXE_LINKER_FLAGS    "-Wl,--enable-new-dtags ${CMAKE_EXE_LINKER_FLAGS}")
 
       # we profile...
       if(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
+        # TODO: do those flags also apply to the Intel compiler ?
         set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
         set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
       endif(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
@@ -295,7 +294,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
    macro(_KDE_INSERT_FLAG FLAG VAR DOC)
       if(NOT ${VAR} MATCHES "${FLAG}")
          set(${VAR} "${${VAR}} ${FLAG}" CACHE STRING "Flags used by the linker during ${DOC} builds." FORCE)
-      endif(NOT ${VAR} MATCHES "${FLAG}")
+      endif()
    endmacro()
 
    set (KDE4_ENABLE_EXCEPTIONS -EHsc)
@@ -390,7 +389,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
    check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
    if(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
-   endif(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
+   endif()
 
    # visibility support
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
@@ -452,7 +451,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
       if (GCC_IS_NEWER_THAN_4_2)
          set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type -fvisibility-inlines-hidden")
-      endif (GCC_IS_NEWER_THAN_4_2)
+      endif()
    else()
       set (__KDE_HAVE_GCC_VISIBILITY 0)
    endif()
