@@ -375,19 +375,23 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
    # CMAKE_CXX_COMPILER_VERSION exists since cmake 2.8.7.20120217
    if(NOT CMAKE_CXX_COMPILER_VERSION)
-      message(FATAL_ERROR "Your CMake is too old. You need current git master.")
-   endif()
-
-   if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.1.0")
+      message(STATUS "************** Your CMake is old. Better update to git master.")
       set(GCC_IS_NEWER_THAN_4_1 TRUE)
-   endif()
-
-   if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.2.0")
       set(GCC_IS_NEWER_THAN_4_2 TRUE)
-   endif()
-
-   if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.3.0")
       set(GCC_IS_NEWER_THAN_4_3 TRUE)
+   else()
+
+      if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.1.0")
+         set(GCC_IS_NEWER_THAN_4_1 TRUE)
+      endif()
+
+      if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.2.0")
+         set(GCC_IS_NEWER_THAN_4_2 TRUE)
+      endif()
+
+      if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.3.0")
+         set(GCC_IS_NEWER_THAN_4_3 TRUE)
+      endif()
    endif()
 
    # save a little by making local statics not threadsafe
