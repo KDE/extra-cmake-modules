@@ -26,7 +26,9 @@ if(NOT KDE_SKIP_RPATH_SETTINGS)
          # directories listed in CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES) and use the RPATH figured out by cmake when compiling
 
          list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemLibDir)
-         if("${_isSystemLibDir}" STREQUAL "-1")
+         list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES      "${LIB_INSTALL_DIR}" _isSystemCxxLibDir)
+         list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES        "${LIB_INSTALL_DIR}" _isSystemCLibDir)
+         if("${_isSystemPlatformLibDir}" STREQUAL "-1"  AND  "${_isSystemCxxLibDir}" STREQUAL "-1"  AND  "${_isSystemCLibDir}" STREQUAL "-1")
             set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
          endif()
 
