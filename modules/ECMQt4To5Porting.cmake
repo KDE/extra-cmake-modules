@@ -163,8 +163,7 @@ set(_qt_modules
   Concurrent
   Xml
   UiTools
-  Declarative
-  Quick
+  Quick1
   WebKit
   Sql
 )
@@ -179,8 +178,8 @@ endforeach()
 list(APPEND QT_QTCORE_LIBRARIES ${Qt5Concurrent_LIBRARIES})
 list(APPEND QT_QTCORE_LIBRARY ${Qt5Concurrent_LIBRARIES})
 
-list(APPEND QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick_LIBRARIES})
-list(APPEND QT_QTDECLARATIVE_LIBRARY ${Qt5Quick_LIBRARIES})
+set(QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick1_LIBRARIES})
+set(QT_QTDECLARATIVE_LIBRARY ${Qt5Quick1_LIBRARIES})
 
 macro(qt4_wrap_ui)
   qt5_wrap_ui(${ARGN})

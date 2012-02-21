@@ -9,7 +9,6 @@ if (QT5_BUILD)
           DBus
           DBusTools # For macros
           Designer
-          Declarative
           Script
           ScriptTools
           Network
@@ -21,13 +20,16 @@ if (QT5_BUILD)
           PrintSupport
           Concurrent
           UiTools
-          Quick
+          Quick1
           WebKit
         )
       find_package(Qt5${_component})
     endforeach()
   else()
     foreach(_component ${Qt5Transitional_FIND_COMPONENTS})
+      if ("${_component}" STREQUAL "Declarative")
+        set(_component Quick1)
+      endif()
       find_package(Qt5${_component} REQUIRED)
       if ("${_component}" STREQUAL "Gui")
         find_package(Qt5Widgets REQUIRED)
