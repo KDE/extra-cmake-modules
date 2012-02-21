@@ -45,6 +45,10 @@ if (QT5_BUILD)
       endif()
     endforeach()
   endif()
+
+  if(Qt5Core_FOUND)
+    set(Qt5Transitional_FOUND TRUE)
+  endif()
   include("${CMAKE_CURRENT_LIST_DIR}/ECMQt4To5Porting.cmake") # TODO: Port away from this.
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 else()
