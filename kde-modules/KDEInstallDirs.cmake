@@ -17,7 +17,6 @@
 #  KCFG_INSTALL_DIR         - the directory where kconfig files will be installed
 #  LOCALE_INSTALL_DIR       - the directory where translations will be installed
 #  MAN_INSTALL_DIR          - the directory where man pages will be installed (default prefix/man/)
-#  MIME_INSTALL_DIR         - the directory where mimetype desktop files will be installed
 #  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)
 #  IMPORTS_INSTALL_DIR      - the subdirectory relative to the install prefix where imports will be installed
 #  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
