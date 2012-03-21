@@ -5,7 +5,7 @@
 # Under Windows they are always relative.
 #
 #  BIN_INSTALL_DIR          - the directory where executables will be installed (default is prefix/bin)
-#  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE4 )
+#  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE5 )
 #  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
 #  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
 #  CMAKECONFIG_INSTALL_PREFIX - the prefix under which packages will create their own subdirectory for their CMake configuration files
@@ -17,7 +17,7 @@
 #  KCFG_INSTALL_DIR         - the directory where kconfig files will be installed
 #  LOCALE_INSTALL_DIR       - the directory where translations will be installed
 #  MAN_INSTALL_DIR          - the directory where man pages will be installed (default prefix/man/)
-#  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)
+#  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde5)
 #  IMPORTS_INSTALL_DIR      - the subdirectory relative to the install prefix where imports will be installed
 #  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
 #  SERVICETYPES_INSTALL_DIR - the directory where servicestypes desktop files will be installed
@@ -113,7 +113,7 @@ endmacro(_SET_FANCY)
 
 
 if(APPLE)
-  set(BUNDLE_INSTALL_DIR             "/Applications/KDE4" CACHE PATH               "Directory where application bundles will be installed to on OSX" )
+  set(BUNDLE_INSTALL_DIR             "/Applications/KDE5" CACHE PATH               "Directory where application bundles will be installed to on OSX" )
 endif(APPLE)
 
 _set_fancy(EXEC_INSTALL_PREFIX       ""                                            "Base directory for executables and libraries")
@@ -125,11 +125,11 @@ _set_fancy(LIB_INSTALL_DIR           "${EXEC_INSTALL_PREFIX}${_LIBDIR_DEFAULT}" 
 if(WIN32)
   _set_fancy(LIBEXEC_INSTALL_DIR     "${BIN_INSTALL_DIR}"                          "The install dir for libexec executables (default is ${BIN_INSTALL_DIR} on Windows)")
 else()
-  _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/kde4/libexec"             "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
+  _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/kde5/libexec"             "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/kde5/libexec)")
 endif()
 _set_fancy(INCLUDE_INSTALL_DIR       "include"                                     "The install dir for header files")
 
-_set_fancy(PLUGIN_INSTALL_DIR        "${LIB_INSTALL_DIR}/kde4"                     "The install dir where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
+_set_fancy(PLUGIN_INSTALL_DIR        "${LIB_INSTALL_DIR}/kde5"                     "The install dir where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde5)")
 _set_fancy(IMPORTS_INSTALL_DIR       "${PLUGIN_INSTALL_DIR}/imports"               "The install dir where imports will be installed")
 _set_fancy(CMAKECONFIG_INSTALL_PREFIX "${LIB_INSTALL_DIR}/cmake"                   "The prefix under which packages will create their own subdirectory for their CMake configuration files")
 _set_fancy(DATA_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}"                     "The parent directory where applications can install their data")
@@ -137,14 +137,14 @@ _set_fancy(HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/HTML"         
 _set_fancy(ICON_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/icons"               "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
 _set_fancy(KCFG_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/config.kcfg"         "The install dir for kconfig files")
 _set_fancy(LOCALE_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/locale"              "The install dir for translations")
-_set_fancy(SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/kde4/services"       "The install dir for service (desktop, protocol, ...) files")
-_set_fancy(SERVICETYPES_INSTALL_DIR  "${SHARE_INSTALL_PREFIX}/kde4/servicetypes"   "The install dir for servicestypes desktop files")
+_set_fancy(SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/kde5/services"       "The install dir for service (desktop, protocol, ...) files")
+_set_fancy(SERVICETYPES_INSTALL_DIR  "${SHARE_INSTALL_PREFIX}/kde5/servicetypes"   "The install dir for servicestypes desktop files")
 _set_fancy(SOUND_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/sounds"              "The install dir for sound files")
 _set_fancy(TEMPLATES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/templates"           "The install dir for templates (Create new file...)")
 _set_fancy(WALLPAPER_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/wallpapers"          "The install dir for wallpapers")
 _set_fancy(KCONF_UPDATE_INSTALL_DIR  "${DATA_INSTALL_DIR}/kconf_update"            "The kconf_update install dir")
 
-_set_fancy(XDG_APPS_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/applications/kde4"   "The XDG apps dir")
+_set_fancy(XDG_APPS_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/applications/kde5"   "The XDG apps dir")
 _set_fancy(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories" "The XDG directory")
 _set_fancy(XDG_MIME_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/mime/packages"       "The install dir for the xdg mimetypes")
 
