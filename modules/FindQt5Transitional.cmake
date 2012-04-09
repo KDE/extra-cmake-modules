@@ -1,7 +1,7 @@
 
-option(QT5_BUILD "Build with Qt5")
+find_package(Qt5Core QUIET)
 
-if (QT5_BUILD)
+if (Qt5Core_FOUND)
   if (NOT Qt5Transitional_FIND_COMPONENTS)
     foreach(_component
           Core
@@ -46,9 +46,8 @@ if (QT5_BUILD)
     endforeach()
   endif()
 
-  if(Qt5Core_FOUND)
-    set(Qt5Transitional_FOUND TRUE)
-  endif()
+  set(Qt5Transitional_FOUND TRUE)
+  set(QT5_BUILD TRUE)
   include("${CMAKE_CURRENT_LIST_DIR}/ECMQt4To5Porting.cmake") # TODO: Port away from this.
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 else()
