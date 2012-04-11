@@ -185,6 +185,10 @@ macro(qt4_wrap_ui)
   qt5_wrap_ui(${ARGN})
 endmacro()
 
+macro(qt4_wrap_cpp)
+  qt5_wrap_cpp(${ARGN})
+endmacro()
+
 macro(qt4_generate_moc)
   qt5_generate_moc(${ARGN})
 endmacro()
