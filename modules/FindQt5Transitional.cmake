@@ -7,7 +7,6 @@ if (Qt5Core_FOUND)
           Core
           Gui
           DBus
-          DBusTools # For macros
           Designer
           Script
           ScriptTools
@@ -35,9 +34,6 @@ if (Qt5Core_FOUND)
         find_package(Qt5Widgets REQUIRED)
         find_package(Qt5PrintSupport REQUIRED)
         find_package(Qt5Svg REQUIRED)
-      endif()
-      if ("${_component}" STREQUAL "DBus")
-        find_package(Qt5DBusTools REQUIRED)
       endif()
       if ("${_component}" STREQUAL "Core")
         find_package(Qt5Concurrent REQUIRED)
