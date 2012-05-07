@@ -70,18 +70,12 @@
 #
 # 12) The targets file is installed. This means that myspeciallib can be used as an imported target.
 #
-# 13) A USE file is installed. This means that consumers of myspeciallib can
-#
-#  include(${myspeciallib_USE_FILE})
-#
-# which will include the Qt USE file, and add the header directories for myspeciallib to include_directories()
-#
-# 14) A version file is created called myspeciallib_version.h, which contains version information usable by
+# 13) A version file is created called myspeciallib_version.h, which contains version information usable by
 # the preprocessor. The version file must be installed by the user.
 #
-# 15) The FeatureSummary module is included.
+# 14) The FeatureSummary module is included.
 #
-# 16) The CMAKE_LINK_INTERFACE_LIBRARIES variable is set to empty. This means that the library targets created
+# 15) The CMAKE_LINK_INTERFACE_LIBRARIES variable is set to empty. This means that the library targets created
 # will have an empty link interface unless the LINK_INTERFACE_LIBRARIES or the LINK_PUBLIC keyword
 # to target_link_libraries are used.
 
@@ -136,12 +130,6 @@ write_basic_config_version_file("${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersio
   COMPATIBILITY AnyNewerVersion
 )
 
-configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/ECMQtUseFile.cmake.in"
-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Use.cmake"
-  @ONLY
-)
-
 install(FILES
   "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
   "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
@@ -155,12 +143,6 @@ install(FILES
   #FILE ${PROJECT_NAME}Targets.cmake
   #COMPONENT Devel
 #)
-
-install(FILES
-  "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Use.cmake"
-  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-  COMPONENT Devel
-)
 
 string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
