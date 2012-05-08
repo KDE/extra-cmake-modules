@@ -47,6 +47,11 @@ if (Qt5Core_FOUND)
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 else()
   foreach(_component ${Qt5Transitional_FIND_COMPONENTS})
+    if("${_component}" STREQUAL "Widgets")  # new in Qt5
+      set(_component Gui)
+    elseif("${_component}" STREQUAL "Concurrent")   # new in Qt5
+      set(_component Core)
+    endif()
     list(APPEND _components Qt${_component})
   endforeach()
   find_package(Qt4 REQUIRED ${_components})
