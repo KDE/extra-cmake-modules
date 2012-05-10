@@ -43,7 +43,9 @@ if (Qt5Core_FOUND)
 
   set(Qt5Transitional_FOUND TRUE)
   set(QT5_BUILD TRUE)
-  include("${CMAKE_CURRENT_LIST_DIR}/ECMQt4To5Porting.cmake") # TODO: Port away from this.
+
+  get_filename_component(_modules_dir "${CMAKE_CURRENT_LIST_DIR}/../modules" ABSOLUTE)
+  include("${_modules_dir}/ECMQt4To5Porting.cmake") # TODO: Port away from this.
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 else()
   foreach(_component ${Qt5Transitional_FIND_COMPONENTS})
