@@ -1,11 +1,11 @@
-# - Selectively use some of the Find-modules provided by extra-cmake-modules
+# - Selectively use some of the Find-modules provided by extra-cmake-modules (ECM)
 #
 # ECM_USE_FIND_MODULES(DIR <dir> MODULES module1.cmake module2.cmake .. moduleN.cmake [NO_OVERRIDE] )
 #
 # This macro is automatically available once extra-cmake-modules has been found, so it is not
 # necessary to include(ECMUseFindModules) explictely.
 #
-# Use this macro instead of simply adding ${EXTRA_CMAKE_MODULES_FIND_MODULE_DIR} to CMAKE_MODULE_PATH
+# Use this macro instead of simply adding ${ECM_FIND_MODULE_DIR} to CMAKE_MODULE_PATH
 # if you want to use only a subset or some specific find-modules coming with extra-cmake-modules.
 # The given find-modules will be copied to the given directory. This directory should then be added
 # to CMAKE_MODULE_PATH. The given modules override modules of the same name coming with CMake, except
@@ -19,7 +19,7 @@
 #                CMake version
 #
 # Example:
-#   find_package(extra-cmake-modules 0.0.2 REQUIRED)
+#   find_package(ECM 0.0.4 REQUIRED)
 #   ecm_use_find_modules(DIR ${CMAKE_BINARY_DIR}/cmake/ Modules FindBlueZ.cmake NO_OVERRIDE )
 #   set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR}/cmake/ )
 #
@@ -53,11 +53,11 @@ function(ecm_use_find_modules)
    file(MAKE_DIRECTORY "${EUFM_DIR}")
 
    foreach(file ${EUFM_MODULES})
-      if(NOT EXISTS ${EXTRA_CMAKE_MODULES_FIND_MODULE_DIR}/${file} )
-         message(FATAL_ERROR "File ${file} not found in ${EXTRA_CMAKE_MODULES_FIND_MODULE_DIR} !")
+      if(NOT EXISTS ${ECM_FIND_MODULE_DIR}/${file} )
+         message(FATAL_ERROR "File ${file} not found in ${ECM_FIND_MODULE_DIR} !")
       endif()
       if(NOT EXISTS "${CMAKE_ROOT}/Modules/${file}" OR NOT EUFM_NO_OVERRIDE)
-         configure_file("${EXTRA_CMAKE_MODULES_FIND_MODULE_DIR}/${file}" "${EUFM_DIR}/${file}" COPYONLY)
+         configure_file("${ECM_FIND_MODULE_DIR}/${file}" "${EUFM_DIR}/${file}" COPYONLY)
       endif()
    endforeach()
 

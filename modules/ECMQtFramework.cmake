@@ -89,21 +89,6 @@
 
 include(FeatureSummary)
 
-include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDEInstallDirs.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDECMakeSettings.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDECompilerSettings.cmake)
-
-
-add_definitions(-DQT_NO_CAST_TO_ASCII)
-add_definitions(-DQT_NO_CAST_FROM_ASCII)
-add_definitions(-DQT_STRICT_ITERATORS)
-add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
-add_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
-add_definitions(-DQT_NO_KEYWORDS)
-add_definitions(-DQT_USE_FAST_CONCATENATION)
-add_definitions(-DQT_USE_FAST_OPERATOR_PLUS)
-
-
 set(LIBRARY_TYPE SHARED)
 
 set(ECM_TARGET_DEFAULT_ARGS
@@ -115,12 +100,13 @@ set(ECM_TARGET_DEFAULT_ARGS
 
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/${PROJECT_NAME}")
 
-file(RELATIVE_PATH relInstallDir "${CMAKE_INSTALL_PREFIX}/${CMAKECONFIG_INSTALL_DIR}" "${CMAKE_INSTALL_PREFIX}")
+include(CMakePackageConfigHelpers)
 
-configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/ECMConfig.cmake.in"
+configure_package_config_file(
+  "${CMAKE_CURRENT_LIST_DIR}/ECMQtFrameworkConfig.cmake.in"
   "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-  @ONLY
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+  PATH_VARS  INCLUDE_INSTALL_DIR LIB_INSTALL_DIR CMAKE_INSTALL_PREFIX
 )
 
 include(WriteBasicConfigVersionFile)

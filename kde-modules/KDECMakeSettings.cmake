@@ -1,6 +1,7 @@
-# KDE_SKIP_RPATH_SETTINGS
-# KDE_SKIP_BUILD_SETTINGS
-# KDE_SKIP_TEST_SETTINGS
+# The following variables can be set to TRUE to skip parts of the functionality:
+#  KDE_SKIP_RPATH_SETTINGS
+#  KDE_SKIP_BUILD_SETTINGS
+#  KDE_SKIP_TEST_SETTINGS
 
 
 ################# RPATH handling ##################################
@@ -79,6 +80,14 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
 
    # Enable automoc in cmake
    set(CMAKE_AUTOMOC ON)
+
+   # under Windows, generate all executables and libraries into
+   # one common directory, so the executables find their dlls
+   if(WIN32)
+      set(ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+      set(LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+      set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+   endif()
 
 endif()
 

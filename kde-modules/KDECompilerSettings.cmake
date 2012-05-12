@@ -473,3 +473,14 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 add_compiler_export_flags()  # from GenerateExportHeader.cmake
 
 add_definitions(${_KDE4_PLATFORM_DEFINITIONS})
+
+# add some more Qt-related definitions:
+add_definitions(-DQT_NO_CAST_TO_ASCII
+                -DQT_NO_CAST_FROM_ASCII
+                -DQT_STRICT_ITERATORS
+                -DQT_NO_URL_CAST_FROM_STRING
+                -DQT_NO_CAST_FROM_BYTEARRAY
+                -DQT_NO_KEYWORDS
+                -DQT_USE_FAST_CONCATENATION
+                -DQT_USE_FAST_OPERATOR_PLUS
+               )
