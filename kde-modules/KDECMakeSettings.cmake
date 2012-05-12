@@ -78,6 +78,9 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # This will only have an effect in CMake 2.8.7
    set(CMAKE_LINK_INTERFACE_LIBRARIES "")
 
+   # Default to shared libs for KDE, if no type is explicitely given to add_library():
+   set(BUILD_SHARED_LIBS TRUE CACHE BOOL "If enabled, shared libs will be built by default, otherwise static libs")
+
    # Enable automoc in cmake
    set(CMAKE_AUTOMOC ON)
 
