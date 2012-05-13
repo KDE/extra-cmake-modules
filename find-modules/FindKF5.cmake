@@ -85,10 +85,13 @@ if(firstComponent)
 
    find_package(${firstComponent}  ${KF5_FIND_VERSION} CONFIG )
 
-   set(KF5_File "${firstComponent_CONFIG}")
+   set(KF5_File "${${firstComponent}_CONFIG}}")
 
-   if(NOT DEFINED ${firstComponent}_INSTALL_PREFIX)
-      message(STATUS "${firstComponent} does not set ${firstComponent}_INSTALL_PREFIX !")
+   if(${firstComponent}_CONFIG)
+      set(KF5_${firstComponent}_FOUND TRUE)
+      if(NOT DEFINED ${firstComponent}_INSTALL_PREFIX)
+         message(STATUS "${firstComponent} does not set ${firstComponent}_INSTALL_PREFIX !")
+      endif()
    endif()
 
    # search for the other components first in the same directory where the first one
@@ -105,6 +108,9 @@ if(firstComponent)
                    NO_CMAKE_SYSTEM_PATH
                    NO_CMAKE_SYSTEM_PACKAGE_REGISTRY
                  )
+      if(${comp}_CONFIG)
+         set(KF5_${comp}_FOUND TRUE)
+      endif()
       message(STATUS "${comp}: ${${comp}_CONFIG}")
    endforeach()
 
