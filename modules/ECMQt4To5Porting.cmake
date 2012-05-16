@@ -173,6 +173,7 @@ foreach(_module ${_qt_modules})
     set(QT_QT${_module_upper}_LIBRARIES ${Qt5${_module}_LIBRARIES})
     set(QT_QT${_module_upper}_LIBRARY ${QT_QT${_module_upper}_LIBRARIES})
     list(APPEND QT_INCLUDES ${Qt5${_module}_INCLUDE_DIRS})
+    set(QT_QT${_module_upper}_FOUND ${Qt5${_module}_FOUND})
 endforeach()
 
 list(APPEND QT_QTCORE_LIBRARIES ${Qt5Concurrent_LIBRARIES})
