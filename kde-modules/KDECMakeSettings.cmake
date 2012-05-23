@@ -89,6 +89,11 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # Enable automoc in cmake
    set(CMAKE_AUTOMOC ON)
 
+   unset(EXECUTABLE_OUTPUT_PATH)
+   unset(LIBRARY_OUTPUT_PATH)
+   unset(ARCHIVE_OUTPUT_DIRECTORY)
+   unset(LIBRARY_OUTPUT_DIRECTORY)
+   unset(RUNTIME_OUTPUT_DIRECTORY)
    # under Windows, generate all executables and libraries into
    # one common directory, so the executables find their dlls
    if(WIN32)
