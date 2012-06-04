@@ -94,6 +94,12 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    unset(ARCHIVE_OUTPUT_DIRECTORY)
    unset(LIBRARY_OUTPUT_DIRECTORY)
    unset(RUNTIME_OUTPUT_DIRECTORY)
+
+   # By default, create 'GUI' executables. This can be reverted on a per-target basis
+   # using ECMMarkNonGuiExecutable
+   set(CMAKE_WIN32_EXECUTABLE ON)
+   set(CMAKE_MACOSX_BUNDLE ON)
+
    # under Windows, generate all executables and libraries into
    # one common directory, so the executables find their dlls
    if(WIN32)
