@@ -166,6 +166,7 @@ set(_qt_modules
   Quick1
   WebKit
   Sql
+  OpenGL
 )
 
 foreach(_module ${_qt_modules})

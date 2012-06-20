@@ -21,6 +21,7 @@ if (Qt5Core_FOUND)
           UiTools
           Quick1
           WebKit
+          OpenGL
         )
       find_package(Qt5${_component})
     endforeach()
