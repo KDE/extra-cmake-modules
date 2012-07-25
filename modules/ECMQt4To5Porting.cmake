@@ -183,6 +183,20 @@ list(APPEND QT_QTCORE_LIBRARY ${Qt5Concurrent_LIBRARIES})
 set(QT_QTDECLARATIVE_LIBRARIES ${Qt5Quick1_LIBRARIES})
 set(QT_QTDECLARATIVE_LIBRARY ${Qt5Quick1_LIBRARIES})
 
+get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake LOCATION)
+get_target_property(QT_RCC_EXECUTABLE Qt5::rcc LOCATION)
+if (TARGET Qt5::uic)
+    get_target_property(QT_UIC_EXECUTABLE Qt5::uic LOCATION)
+endif()
+
+if (TARGET Qt5::qdbuscpp2xml)
+    get_target_property(QT_QDBUSCPP2XML_EXECUTABLE Qt5::qdbuscpp2xml LOCATION)
+endif()
+
+if (TARGET Qt5::qdbusxml2cpp)
+    get_target_property(QT_QDBUSXML2CPP_EXECUTABLE Qt5::qdbusxml2cpp LOCATION)
+endif()
+
 macro(qt4_wrap_ui)
   qt5_wrap_ui(${ARGN})
 endmacro()
