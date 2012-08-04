@@ -5,14 +5,19 @@ set(KF5_VERSION_STRING "5.0.0")
 # misusing this file for searching their own libraries.
 
 set(knownComponentsTier1  itemmodels
+                          karchive
+                          kcodecs
                           kcoreaddons
                           kdbusaddons
+                          kidletime
                           kplotting
+                          kwidgetsaddons
                           kwindowsystem
                           solid
                           threadweaver)
 
-set(knownComponentsTier2  kauth )
+set(knownComponentsTier2  kauth
+                          kconfig)
 
 set(knownComponentsTier3   )
 
