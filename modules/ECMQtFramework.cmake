@@ -127,10 +127,3 @@ install(FILES
   #FILE ${PROJECT_NAME}Targets.cmake
   #COMPONENT Devel
 #)
-
-string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
-
-configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/ECMVersionHeader.h.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_version.h"
-)
