@@ -238,13 +238,6 @@ if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
 endif (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
 
 
-
-if (CMAKE_SYSTEM_NAME MATCHES BSD)
-   set ( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lc")
-   set ( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -lc")
-endif (CMAKE_SYSTEM_NAME MATCHES BSD)
-
-
 ############################################################
 # compiler specific settings
 ############################################################
