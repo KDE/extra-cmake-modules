@@ -325,7 +325,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
    if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
      set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
      # As off Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
-     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common")
+     set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common")
 # TODO: the following line was added by Dirk in 2007 to make snprintf() available. But this should not be necessary, since
 #       _BSD_SOURCE is already added to _KDE4_PLATFORM_DEFINITIONS (http://quickgit.kde.org/index.php?p=kdelibs.git&a=commitdiff&h=4a44862b2d178c1d2e1eb4da90010d19a1e4a42c&hp=6531561cb4ed978ff86b8d840dcafc9705af5527)
 #     add_definitions (-D_BSD_SOURCE)
