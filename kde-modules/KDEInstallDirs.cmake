@@ -1,8 +1,7 @@
 # This module defines also a bunch of variables used as locations for install directories
 # for files of the package which is using this module. These variables don't say
 # anything about the location of the installed KDE.
-# They can be relative (to CMAKE_INSTALL_PREFIX) or absolute.
-# Under Windows they are always relative.
+# They are all relative (to CMAKE_INSTALL_PREFIX).
 #
 #  BIN_INSTALL_DIR          - the directory where executables will be installed (default is prefix/bin)
 #  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE5 )
@@ -17,8 +16,9 @@
 #  KCFG_INSTALL_DIR         - the directory where kconfig files will be installed
 #  LOCALE_INSTALL_DIR       - the directory where translations will be installed
 #  MAN_INSTALL_DIR          - the directory where man pages will be installed (default prefix/man/)
-#  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde5)
-#  IMPORTS_INSTALL_DIR      - the subdirectory relative to the install prefix where imports will be installed
+#  QT_PLUGIN_INSTALL_DIR    - the directory where Qt plugins will be installed (default is {LIB_INSTALL_DIR}/plugins)
+#  PLUGIN_INSTALL_DIR       - the directory where KDE plugins will be installed (default is ${QT_PLUGIN_INSTALL_DIR}/kf5)
+#  IMPORTS_INSTALL_DIR      - the directory where QML imports will be installed (default is ${QT_PLUGIN_INSTALL_DIR}/imports)
 #  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
 #  SERVICETYPES_INSTALL_DIR - the directory where servicestypes desktop files will be installed
 #  SOUND_INSTALL_DIR        - the directory where sound files will be installed
@@ -129,8 +129,9 @@ else()
 endif()
 _set_fancy(INCLUDE_INSTALL_DIR       "include"                                     "The install dir for header files")
 
-_set_fancy(PLUGIN_INSTALL_DIR        "${LIB_INSTALL_DIR}/kde5"                     "The install dir where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde5)")
-_set_fancy(IMPORTS_INSTALL_DIR       "${PLUGIN_INSTALL_DIR}/imports"               "The install dir where imports will be installed")
+_set_fancy(QT_PLUGIN_INSTALL_DIR     "${LIB_INSTALL_DIR}/plugins"                  "The install dir where Qt plugins will be installed (default is ${LIB_INSTALL_DIR}/plugins)")
+_set_fancy(PLUGIN_INSTALL_DIR        "${QT_PLUGIN_INSTALL_DIR}/kf5"                "The install dir where plugins (loaded via KPluginLoader) will be installed (default is ${LIB_INSTALL_DIR}/plugins/kf5)")
+_set_fancy(IMPORTS_INSTALL_DIR       "${QT_PLUGIN_INSTALL_DIR}/imports"            "The install dir where imports will be installed")
 _set_fancy(CMAKECONFIG_INSTALL_PREFIX "${LIB_INSTALL_DIR}/cmake"                   "The prefix under which packages will create their own subdirectory for their CMake configuration files")
 _set_fancy(DATA_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}"                     "The parent directory where applications can install their data")
 _set_fancy(HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/HTML"            "The HTML install dir for documentation")
