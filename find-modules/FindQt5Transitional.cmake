@@ -8,6 +8,7 @@ if (Qt5Core_FOUND)
           Gui
           DBus
           Designer
+          Declarative
           Script
           ScriptTools
           Network
@@ -19,7 +20,6 @@ if (Qt5Core_FOUND)
           PrintSupport
           Concurrent
           UiTools
-          Quick1
           WebKit
           OpenGL
         )
@@ -27,9 +27,6 @@ if (Qt5Core_FOUND)
     endforeach()
   else()
     foreach(_component ${Qt5Transitional_FIND_COMPONENTS})
-      if ("${_component}" STREQUAL "Declarative")
-        set(_component Quick1)
-      endif()
       find_package(Qt5${_component} REQUIRED)
       if ("${_component}" STREQUAL "Gui")
         find_package(Qt5Widgets REQUIRED)
