@@ -1,6 +1,6 @@
 # Install a DBus ".service" file, so that a program can be started via DBus activation.
 #
-# dbus_add_activation_service(inputfile)
+# ecm_dbus_add_activation_service(inputfile)
 #
 # This macro will read the input file, generate a .service file from it, and install it
 # into the right directory for the dbus server to find it.
@@ -9,7 +9,7 @@
 # to XDG_DATA_DIRS before starting the DBus server.
 #
 # Example:
-#   dbus_add_activation_service(org.mydomain.myapp.service.in)
+#   ecm_dbus_add_activation_service(org.mydomain.myapp.service.in)
 #
 # The file org.mydomain.myapp.service.in contains:
 #
@@ -31,7 +31,7 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the License for more information.
 
-macro(dbus_add_activation_service _sources)
+macro(ecm_dbus_add_activation_service _sources)
     foreach(_i ${_sources})
         get_filename_component(_service_file ${_i} ABSOLUTE)
         string(REGEX REPLACE "\\.service.*$" ".service" _output_file ${_i})
