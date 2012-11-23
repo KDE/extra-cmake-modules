@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.10.1 FATAL_ERROR)
 
 project(extra-cmake-modules)
 
 set(ECM_MAJOR_VERSION 0)
 set(ECM_MINOR_VERSION 0)
-set(ECM_PATCH_VERSION 5)
+set(ECM_PATCH_VERSION 6)
 
 set(ECM_VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION})
 

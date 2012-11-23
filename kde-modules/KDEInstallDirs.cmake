@@ -179,3 +179,9 @@ if(APPLE)
   set(INSTALL_TARGETS_DEFAULT_ARGS  ${INSTALL_TARGETS_DEFAULT_ARGS}
                                     BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
 endif(APPLE)
+
+# new in cmake 2.8.9: this is used for all installed files which do not have a component set
+# so set the default component name to the name of the project, if a project name has been set:
+if(NOT "${PROJECT_NAME}" STREQUAL "Project")
+  set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "${PROJECT_NAME}")
+endif()
