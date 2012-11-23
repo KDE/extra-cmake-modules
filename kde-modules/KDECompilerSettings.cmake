@@ -356,24 +356,16 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
    set( __KDE_HAVE_GCC_VISIBILITY ${__KDE_HAVE_GCC_VISIBILITY} CACHE BOOL "GCC support for hidden visibility")
 
    # CMAKE_CXX_COMPILER_VERSION exists since cmake 2.8.7.20120217
-   if(NOT CMAKE_CXX_COMPILER_VERSION)
-      message(STATUS "************** Your CMake is old. Better update to git master.")
+   if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.1.0")
       set(GCC_IS_NEWER_THAN_4_1 TRUE)
+   endif()
+
+   if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.2.0")
       set(GCC_IS_NEWER_THAN_4_2 TRUE)
+   endif()
+
+   if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.3.0")
       set(GCC_IS_NEWER_THAN_4_3 TRUE)
-   else()
-
-      if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.1.0")
-         set(GCC_IS_NEWER_THAN_4_1 TRUE)
-      endif()
-
-      if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.2.0")
-         set(GCC_IS_NEWER_THAN_4_2 TRUE)
-      endif()
-
-      if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.3.0")
-         set(GCC_IS_NEWER_THAN_4_3 TRUE)
-      endif()
    endif()
 
    # save a little by making local statics not threadsafe
