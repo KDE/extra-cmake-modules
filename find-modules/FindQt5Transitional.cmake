@@ -54,7 +54,7 @@ else()
     endif()
     list(APPEND _components Qt${_component})
   endforeach()
-  find_package(Qt4 REQUIRED ${_components})
+  find_package(Qt4 ${QT_MIN_VERSION} REQUIRED ${_components})
   include_directories(${QT_INCLUDES})
 
   # if we are not called from a build of a complete kdelibs, which contains libinqt5,
