@@ -47,7 +47,7 @@ include(CMakePackageConfigHelpers)
 function(ECM_SETUP_VERSION _major _minor _patch)
   set(options )
   set(oneValueArgs VARIABLE_PREFIX SOVERSION VERSION_HEADER PACKAGE_VERSION_FILE)
-  set(multiValueArgs SOVERSION VERSION_HEADER_FILE PACKAGE_VERSION_FILE)
+  set(multiValueArgs )
 
   cmake_parse_arguments(ESV "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
