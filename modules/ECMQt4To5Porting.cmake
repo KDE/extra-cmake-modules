@@ -165,6 +165,7 @@ set(_qt_modules
   Xml
   UiTools
   WebKit
+  WebKitWidgets
   Sql
   OpenGL
 )
@@ -179,6 +180,9 @@ endforeach()
 
 list(APPEND QT_QTCORE_LIBRARIES ${Qt5Concurrent_LIBRARIES})
 list(APPEND QT_QTCORE_LIBRARY ${Qt5Concurrent_LIBRARIES})
+
+list(APPEND QT_QTWEBKIT_LIBRARIES ${Qt5WebKitWidgets_LIBRARIES})
+list(APPEND QT_QTWEBKIT_LIBRARY ${Qt5WebKitWidgets_LIBRARIES})
 
 get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake LOCATION)
 get_target_property(QT_RCC_EXECUTABLE Qt5::rcc LOCATION)

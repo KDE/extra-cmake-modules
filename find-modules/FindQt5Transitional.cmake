@@ -21,6 +21,7 @@ if (Qt5Core_FOUND)
           Concurrent
           UiTools
           WebKit
+          WebKitWidgets
           OpenGL
         )
       find_package(Qt5${_component})
@@ -28,6 +29,9 @@ if (Qt5Core_FOUND)
   else()
     foreach(_component ${Qt5Transitional_FIND_COMPONENTS})
       find_package(Qt5${_component} REQUIRED)
+      if ("${_component}" STREQUAL "WebKit")
+        find_package(Qt5WebKitWidgets REQUIRED)
+      endif()
       if ("${_component}" STREQUAL "Gui")
         find_package(Qt5Widgets REQUIRED)
         find_package(Qt5PrintSupport REQUIRED)
