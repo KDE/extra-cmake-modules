@@ -3,31 +3,34 @@ find_package(Qt5Core QUIET)
 
 if (Qt5Core_FOUND)
   if (NOT Qt5Transitional_FIND_COMPONENTS)
-    foreach(_component
-          Core
-          Gui
-          DBus
-          Designer
-          Declarative
-          Script
-          ScriptTools
-          Network
-          Test
-          Xml
-          Svg
-          Sql
-          Widgets
-          PrintSupport
-          Concurrent
-          UiTools
-          WebKit
-          WebKitWidgets
-          OpenGL
-        )
+    set(_components
+        Core
+        Gui
+        DBus
+        Designer
+        Declarative
+        Script
+        ScriptTools
+        Network
+        Test
+        Xml
+        Svg
+        Sql
+        Widgets
+        PrintSupport
+        Concurrent
+        UiTools
+        WebKit
+        WebKitWidgets
+        OpenGL
+      )
+    foreach(_component ${_components})
       find_package(Qt5${_component})
+
       list(APPEND QT_LIBRARIES ${Qt5${_component}_LIBRARIES})
     endforeach()
   else()
+    set(_components ${Qt5Transitional_FIND_COMPONENTS})
     foreach(_component ${Qt5Transitional_FIND_COMPONENTS})
       find_package(Qt5${_component} REQUIRED)
       if ("${_component}" STREQUAL "WebKit")
@@ -51,6 +54,18 @@ if (Qt5Core_FOUND)
 
   set(Qt5Transitional_FOUND TRUE)
   set(QT5_BUILD TRUE)
+
+  # Temporary until upstream does this:
+  foreach(_component ${_components})
+    if (TARGET Qt5::${_component})
+      set_property(TARGET Qt5::${_component}
+        APPEND PROPERTY
+          INTERFACE_INCLUDE_DIRECTORIES ${Qt5${_component}_INCLUDE_DIRS})
+      set_property(TARGET Qt5::${_component}
+        APPEND PROPERTY
+          INTERFACE_COMPILE_DEFINITIONS ${Qt5${_component}_COMPILE_DEFINITIONS})
+    endif()
+  endforeach()
 
   get_filename_component(_modules_dir "${CMAKE_CURRENT_LIST_DIR}/../modules" ABSOLUTE)
   include("${_modules_dir}/ECMQt4To5Porting.cmake") # TODO: Port away from this.
