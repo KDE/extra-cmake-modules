@@ -83,6 +83,10 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # of all targets. Similar to CMAKE_INCLUDE_CURRENT_DIR, but transitive.
    set(CMAKE_BUILD_INTERFACE_INCLUDES ON)
 
+   # When a shared library changes, but its includes do not, don't relink
+   # all dependencies. It is not needed.
+   set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
+
    # This will only have an effect in CMake 2.8.7
    set(CMAKE_LINK_INTERFACE_LIBRARIES "")
 
