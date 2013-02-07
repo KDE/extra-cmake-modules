@@ -10,6 +10,7 @@ set(knownComponentsTier1  itemmodels
                           kcoreaddons
                           kdbusaddons
                           kidletime
+                          kjs
                           kplotting
                           kwidgetsaddons
                           kwindowsystem
