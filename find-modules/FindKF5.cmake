@@ -1,3 +1,9 @@
+# Finds KDE frameworks 5 and its components, like e.g. karchive
+#
+# KF5_INCLUDE_DIRS - the include dirs of all requested components
+# KF5_<comp>_LIBRARIES - the libraries to link against of all requested components
+# KF5_<comp>_FOUND - signals whether the requested component <comp> has been found
+
 # hmm, any better ideas ?
 set(KF5_VERSION_STRING "5.0.0")
 
@@ -66,21 +72,50 @@ if(DEFINED unknownComponents)
    return()
 endif()
 
+get_filename_component(_kf5KdeModuleDir "${CMAKE_CURRENT_LIST_DIR}/../kde-modules" REALPATH)
 
 if(installDirsCompRequested)
-   include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDEInstallDirs.cmake)
+   include("${_kf5KdeModuleDir}/KDEInstallDirs.cmake")
+   if(NOT KF5_FIND_QUIETLY)
+      message(STATUS "KF5[InstallDirs]: Loaded settings from ${_kf5KdeModuleDir}/KDEInstallDirs.cmake")
+   endif()
    set(KF5_InstallDirs_FOUND TRUE)
 endif()
 
 if(cmakeCompRequested)
-   include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDECMakeSettings.cmake)
+   include("${_kf5KdeModuleDir}/KDECMakeSettings.cmake")
+   if(NOT KF5_FIND_QUIETLY)
+      message(STATUS "KF5[CMake]: Loaded settings from ${_kf5KdeModuleDir}/KDECMakeSettings.cmake")
+   endif()
    set(KF5_CMake_FOUND TRUE)
 endif()
 
 if(compilerCompRequested)
-   include(${CMAKE_CURRENT_LIST_DIR}/../kde-modules/KDECompilerSettings.cmake)
+   include("${_kf5KdeModuleDir}/KDECompilerSettings.cmake")
+   if(NOT KF5_FIND_QUIETLY)
+      message(STATUS "KF5[Compiler]: Loaded settings from ${_kf5KdeModuleDir}/KDECompilerSettings.cmake")
+   endif()
    set(KF5_Compiler_FOUND TRUE)
 endif()
+
+unset(KF5_INCLUDE_DIRS)
+unset(KF5_LIBRARIES)
+
+
+macro(_KF5_HANDLE_COMPONENT _comp)
+   set(KF5_${_comp}_FOUND TRUE)
+   if(NOT KF5_FIND_QUIETLY)
+      message(STATUS "KF5[${_comp}]: Loaded ${${_comp}_CONFIG}")
+   endif()
+   if(NOT DEFINED ${_comp}_INCLUDE_DIRS)
+      message(FATAL_ERROR "${_comp} does not set ${_comp}_INCLUDE_DIRS !")
+   endif()
+   if(NOT DEFINED ${_comp}_LIBRARIES)
+      message(FATAL_ERROR "${_comp} does not set ${_comp}_LIBRARIES !")
+   endif()
+   set(KF5_INCLUDE_DIRS ${KF5_INCLUDE_DIRS} ${${_comp}_INCLUDE_DIRS} )
+   set(KF5_LIBRARIES ${KF5_LIBRARIES} ${${_comp}_LIBRARIES} )
+endmacro()
 
 
 if(firstComponent)
@@ -94,10 +129,11 @@ if(firstComponent)
    set(KF5_File "${${firstComponent}_CONFIG}}")
 
    if(${firstComponent}_CONFIG)
-      set(KF5_${firstComponent}_FOUND TRUE)
       if(NOT DEFINED ${firstComponent}_INSTALL_PREFIX)
          message(STATUS "${firstComponent} does not set ${firstComponent}_INSTALL_PREFIX !")
       endif()
+
+      _kf5_handle_component(${firstComponent})
    endif()
 
    # search for the other components first in the same directory where the first one
@@ -115,9 +151,9 @@ if(firstComponent)
                    NO_CMAKE_SYSTEM_PACKAGE_REGISTRY
                  )
       if(${comp}_CONFIG)
-         set(KF5_${comp}_FOUND TRUE)
+         _kf5_handle_component(${comp})
+
       endif()
-      message(STATUS "${comp}: ${${comp}_CONFIG}")
    endforeach()
 
    set(CMAKE_PREFIX_PATH ${_CMAKE_PREFIX_PATH} )
