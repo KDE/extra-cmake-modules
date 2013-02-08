@@ -87,7 +87,14 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # all dependencies. It is not needed.
    set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
 
-   # This will only have an effect in CMake 2.8.7
+   # Since CMake 2.8.7
+   # By default don't add any linked libraries to the "exported"
+   # link interfaces of shared libraries, so that executables linking
+   # against these libraries will not automatically add implicit
+   # dependencies to their link list.
+   #
+   # This reduces inter-package dependencies and makes it easier to remove
+   # dependencies of shared libraries without breaking binary compatibility.
    set(CMAKE_LINK_INTERFACE_LIBRARIES "")
 
    # Default to shared libs for KDE, if no type is explicitely given to add_library():
