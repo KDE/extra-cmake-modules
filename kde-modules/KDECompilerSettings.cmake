@@ -368,13 +368,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       set(GCC_IS_NEWER_THAN_4_3 TRUE)
    endif()
 
-   # save a little by making local statics not threadsafe
-   # ### do not enable it for older compilers, see
-   # ### http://gcc.gnu.org/bugzilla/show_bug.cgi?id=31806
-   if (GCC_IS_NEWER_THAN_4_3)
-       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
-   endif()
-
    if (GCC_IS_NEWER_THAN_4_2)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
    endif()
