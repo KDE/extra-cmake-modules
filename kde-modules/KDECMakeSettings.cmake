@@ -50,12 +50,15 @@ endif()
 
 
 if(NOT KDE_SKIP_TEST_SETTINGS)
-   enable_testing()
-
    # support for cdash dashboards
    if (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
       include(CTest)
-   endif (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
+   else()
+      option(BUILD_TESTING "Build the testing tree." ON)
+      if(BUILD_TESTING)
+         enable_testing()
+      endif ()
+   endif ()
 endif()
 
 # Tell FindQt4.cmake to point the QT_QTFOO_LIBRARY targets at the imported targets
