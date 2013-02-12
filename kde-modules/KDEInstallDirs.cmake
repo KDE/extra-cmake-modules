@@ -19,6 +19,7 @@
 #  QT_PLUGIN_INSTALL_DIR    - the directory where Qt plugins will be installed (default is {LIB_INSTALL_DIR}/plugins)
 #  PLUGIN_INSTALL_DIR       - the directory where KDE plugins will be installed (default is ${QT_PLUGIN_INSTALL_DIR}/kf5)
 #  IMPORTS_INSTALL_DIR      - the directory where QML imports will be installed (default is ${QT_PLUGIN_INSTALL_DIR}/imports)
+#  QML_INSTALL_DIR          - the directory where QML2 imports will be installed (default is ${LIB_INSTALL_DIR}/qml)
 #  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
 #  SERVICETYPES_INSTALL_DIR - the directory where servicestypes desktop files will be installed
 #  SOUND_INSTALL_DIR        - the directory where sound files will be installed
@@ -131,7 +132,8 @@ _set_fancy(INCLUDE_INSTALL_DIR       "include"                                  
 
 _set_fancy(QT_PLUGIN_INSTALL_DIR     "${LIB_INSTALL_DIR}/plugins"                  "The install dir where Qt plugins will be installed (default is ${LIB_INSTALL_DIR}/plugins)")
 _set_fancy(PLUGIN_INSTALL_DIR        "${QT_PLUGIN_INSTALL_DIR}/kf5"                "The install dir where plugins (loaded via KPluginLoader) will be installed (default is ${LIB_INSTALL_DIR}/plugins/kf5)")
-_set_fancy(IMPORTS_INSTALL_DIR       "${QT_PLUGIN_INSTALL_DIR}/imports"            "The install dir where imports will be installed")
+_set_fancy(IMPORTS_INSTALL_DIR       "${QT_PLUGIN_INSTALL_DIR}/imports"            "The install dir where QtQuick1 imports will be installed")
+_set_fancy(QML_INSTALL_DIR           "${LIB_INSTALL_DIR}/qml"                      "The install dir where QtQuick2 imports will be installed")
 _set_fancy(CMAKECONFIG_INSTALL_PREFIX "${LIB_INSTALL_DIR}/cmake"                   "The prefix under which packages will create their own subdirectory for their CMake configuration files")
 _set_fancy(DATA_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}"                     "The parent directory where applications can install their data")
 _set_fancy(HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/HTML"            "The HTML install dir for documentation")
