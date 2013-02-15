@@ -401,7 +401,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
       if(NOT _compile_result)
          message(STATUS "${_compile_output_var}")
-         message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
+         message(STATUS "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
       endif(NOT _compile_result)
 
       if (GCC_IS_NEWER_THAN_4_2)
