@@ -138,6 +138,14 @@ if (WIN32)
 #        CACHE STATIC "MSVC IDE Run path" FORCE)
 #    endif()
 
+   # TODO: do we really want to have this line here ? Is it actually needed ?
+   # we prefer to use a different postfix for debug libs only on Windows
+   # does not work atm
+   set(CMAKE_DEBUG_POSTFIX "")
+
+   # we don't support anything below w2k and all winapi calls are unicodes
+   set( _KDE4_PLATFORM_DEFINITIONS -D_WIN32_WINNT=0x0501 -DWINVER=0x0501 -D_WIN32_IE=0x0501 -DUNICODE )
+
 endif (WIN32)
 
 
@@ -149,21 +157,6 @@ endif (WIN32)
 #    # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
 #    set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
 # endif ()
-
-if(CYGWIN)
-   message(FATAL_ERROR "Cygwin is NOT supported, use mingw or MSVC.")
-endif(CYGWIN)
-
-
-if(WIN32)
-# TODO: do we really want to have this line here ? Is it actually needed ?
-   # we prefer to use a different postfix for debug libs only on Windows
-   # does not work atm
-   set(CMAKE_DEBUG_POSTFIX "")
-
-   # we don't support anything below w2k and all winapi calls are unicodes
-   set( _KDE4_PLATFORM_DEFINITIONS -D_WIN32_WINNT=0x0501 -DWINVER=0x0501 -D_WIN32_IE=0x0501 -DUNICODE )
-endif()
 
 
 # This will need to be modified later to support either Qt/X11 or Qt/Mac builds
@@ -178,6 +171,9 @@ endif()
 
 
 if ("${CMAKE_SYSTEM_NAME}" MATCHES Linux OR "${CMAKE_SYSTEM_NAME}" STREQUAL GNU)
+   # _BSD_SOURCE: is/was needed by glibc for snprintf to be available when building C files.
+   # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
+
    set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
 endif()
 
@@ -185,23 +181,21 @@ endif()
 if (UNIX)
    set ( _KDE4_PLATFORM_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE)
 
-# TODO: is this test really necessary, or is it good enough to simply add -D_FILE_OFFSET_BITS=64 , as done below ?
-#    check_cxx_source_compiles("
-# #include <sys/types.h>
-#  /* Check that off_t can represent 2**63 - 1 correctly.
-#     We can't simply define LARGE_OFF_T to be 9223372036854775807,
-#     since some C++ compilers masquerading as C compilers
-#     incorrectly reject 9223372036854775807.  */
-# #define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
-#
-#   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721 && LARGE_OFF_T % 2147483647 == 1) ? 1 : -1];
-#   int main() { return 0; }
-# " _OFFT_IS_64BIT)
-#
-#    if (NOT _OFFT_IS_64BIT)
-#      set ( _KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64")
-#    endif (NOT _OFFT_IS_64BIT)
-   set ( _KDE4_PLATFORM_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64)
+# are there platforms where this is not the case ?
+   check_cxx_source_compiles("
+#include <sys/types.h>
+ /* Check that off_t can represent 2**63 - 1 correctly.
+    We can't simply define LARGE_OFF_T to be 9223372036854775807,
+    since some C++ compilers masquerading as C compilers
+    incorrectly reject 9223372036854775807.  */
+#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+  int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721 && LARGE_OFF_T % 2147483647 == 1) ? 1 : -1];
+  int main() { return 0; }
+" _OFFT_IS_64BIT)
+
+   if (NOT _OFFT_IS_64BIT)
+     set ( _KDE4_PLATFORM_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64)
+   endif ()
 endif (UNIX)
 
 
@@ -332,8 +326,8 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
    # gcc under Windows
    if (MINGW)
-      set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
-      set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols")
+      set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
+      set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
    endif ()
 
    check_cxx_compiler_flag(-fPIE __KDE_HAVE_FPIE_SUPPORT)
@@ -389,18 +383,26 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 #       set (KDE4_C_FLAGS "-fvisibility=hidden")
 
 # TODO: get the following information from QtConfig.cmake
+
 #       # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
 #       # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
-#       set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
-#       set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
-#       file(WRITE "${_source_file}" "${_source}")
-#       set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
-#
-#       try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" COMPILE_OUTPUT_VARIABLE _compile_output_var)
-#
-#       if(NOT _compile_result)
-#          message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
-#       endif(NOT _compile_result)
+      set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
+      set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
+      file(WRITE "${_source_file}" "${_source}")
+      set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
+
+      set (CMAKE_CXX_FLAGS_SAVED "${CMAKE_CXX_FLAGS}")
+      # If Qt is built with reduce-relocations (The default) we need to add -fPIE here.
+      set (CMAKE_CXX_FLAGS "${Qt5Core_EXECUTABLE_COMPILE_FLAGS}")
+
+      try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" COMPILE_OUTPUT_VARIABLE _compile_output_var)
+
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_SAVED}")
+
+      if(NOT _compile_result)
+         message(STATUS "${_compile_output_var}")
+         message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
+      endif(NOT _compile_result)
 
       if (GCC_IS_NEWER_THAN_4_2)
          set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
