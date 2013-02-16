@@ -1,9 +1,4 @@
-# This module provides the following options:
-#   KDE4_ENABLE_FPIE - if enabled, the KDE4_CXX_FPIE_FLAGS and KDE4_PIE_LDFLAGS variables is set accordingly
-#
 # This module provides the following variables:
-#   KDE4_CXX_FPIE_FLAGS - the flag to be used for building PIE executables
-#   KDE4_PIE_LDFLAGS - the flag to be used by linking PIE executables
 #   KDE4_ENABLE_EXCEPTIONS - use this to enable exceptions
 #
 # This module also sets up CMAKE_CXX_FLAGS for a set of predefined buildtypes
@@ -34,12 +29,6 @@
 
 include(CheckCXXCompilerFlag)
 include(GenerateExportHeader)
-
-# Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
-# which is something between a shared library and a normal executable.
-# Programs compiled with these features appear as ?shared object? with the file command.
-# info from "http://www.linuxfromscratch.org/~manuel/hlfs-book/glibc-2.4/chapter02/pie.html"
-option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 # TODO: what's up with this manifest stuff ?
 #       setting the CMAKE_MODULE_PATH like this is definitely wrong.
@@ -330,14 +319,14 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols -Wl,--disable-auto-import")
    endif ()
 
-   check_cxx_compiler_flag(-fPIE __KDE_HAVE_FPIE_SUPPORT)
-   if(KDE4_ENABLE_FPIE)
-      if(__KDE_HAVE_FPIE_SUPPORT)
-         set (KDE4_CXX_FPIE_FLAGS "-fPIE")
-         set (KDE4_PIE_LDFLAGS "-pie")
-      else()
+   # TODO : with CMake 2.8.11 this can be removed, it will work automatically
+   if(Qt5_POSITION_INDEPENDENT_CODE)
+      check_cxx_compiler_flag(-fPIE __KDE_HAVE_FPIE_SUPPORT)
+      if(NOT __KDE_HAVE_FPIE_SUPPORT)
+         # Should we fail here ?
          message(STATUS "Your compiler doesn't support the PIE flag")
       endif()
+      set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
    endif()
 
    check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
