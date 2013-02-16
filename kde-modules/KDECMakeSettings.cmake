@@ -84,13 +84,14 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
 
    # Add the src and build dir to the BUILD_INTERFACE include directories
    # of all targets. Similar to CMAKE_INCLUDE_CURRENT_DIR, but transitive.
+   # Since CMake 2.8.11
    set(CMAKE_BUILD_INTERFACE_INCLUDES ON)
 
    # When a shared library changes, but its includes do not, don't relink
    # all dependencies. It is not needed.
+   # Since CMake 2.8.11
    set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
 
-   # Since CMake 2.8.7
    # By default don't add any linked libraries to the "exported"
    # link interfaces of shared libraries, so that executables linking
    # against these libraries will not automatically add implicit
@@ -98,24 +99,27 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    #
    # This reduces inter-package dependencies and makes it easier to remove
    # dependencies of shared libraries without breaking binary compatibility.
+   # Since CMake 2.8.7
    set(CMAKE_LINK_INTERFACE_LIBRARIES "")
 
    # Default to shared libs for KDE, if no type is explicitely given to add_library():
    set(BUILD_SHARED_LIBS TRUE CACHE BOOL "If enabled, shared libs will be built by default, otherwise static libs")
 
    # Enable automoc in cmake
+   # Since CMake 2.8.6
    set(CMAKE_AUTOMOC ON)
+
+   # By default, create 'GUI' executables. This can be reverted on a per-target basis
+   # using ECMMarkNonGuiExecutable
+   # Since CMake 2.8.8
+   set(CMAKE_WIN32_EXECUTABLE ON)
+   set(CMAKE_MACOSX_BUNDLE ON)
 
    unset(EXECUTABLE_OUTPUT_PATH)
    unset(LIBRARY_OUTPUT_PATH)
    unset(ARCHIVE_OUTPUT_DIRECTORY)
    unset(LIBRARY_OUTPUT_DIRECTORY)
    unset(RUNTIME_OUTPUT_DIRECTORY)
-
-   # By default, create 'GUI' executables. This can be reverted on a per-target basis
-   # using ECMMarkNonGuiExecutable
-   set(CMAKE_WIN32_EXECUTABLE ON)
-   set(CMAKE_MACOSX_BUNDLE ON)
 
    # under Windows, generate all executables and libraries into
    # one common directory, so the executables find their dlls
