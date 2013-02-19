@@ -334,10 +334,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
    endif()
 
-   if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.3.0")
-      set(GCC_IS_NEWER_THAN_4_3 TRUE)
-   endif()
-
    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
 
    set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
