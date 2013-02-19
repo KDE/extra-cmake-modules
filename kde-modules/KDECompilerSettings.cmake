@@ -324,11 +324,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
    # TODO : with CMake 2.8.11 this can be removed, it will work automatically
    if(Qt5_POSITION_INDEPENDENT_CODE)
-      check_cxx_compiler_flag(-fPIE __KDE_HAVE_FPIE_SUPPORT)
-      if(NOT __KDE_HAVE_FPIE_SUPPORT)
-         # Should we fail here ?
-         message(STATUS "Your compiler doesn't support the PIE flag")
-      endif()
       set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
    endif()
 
