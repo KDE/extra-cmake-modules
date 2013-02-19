@@ -338,11 +338,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
    set( __KDE_HAVE_GCC_VISIBILITY ${__KDE_HAVE_GCC_VISIBILITY} CACHE BOOL "GCC support for hidden visibility")
 
-   # CMAKE_CXX_COMPILER_VERSION exists since cmake 2.8.7.20120217
-   if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.1.0")
-      set(GCC_IS_NEWER_THAN_4_1 TRUE)
-   endif()
-
    if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.2.0")
       set(GCC_IS_NEWER_THAN_4_2 TRUE)
    endif()
@@ -356,12 +351,10 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
    endif()
 
    set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
-   if (GCC_IS_NEWER_THAN_4_1)
-      exec_program(${CMAKE_C_COMPILER} ARGS ${CMAKE_C_COMPILER_ARG1} -v OUTPUT_VARIABLE _gcc_alloc_info)
-      string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
-   endif ()
+   exec_program(${CMAKE_C_COMPILER} ARGS ${CMAKE_C_COMPILER_ARG1} -v OUTPUT_VARIABLE _gcc_alloc_info)
+   string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
 
-   if (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR AND NOT WIN32)
+   if (__KDE_HAVE_GCC_VISIBILITY AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR AND NOT WIN32)
 
 # TODO: this variable is not documented and not used anywhere
 #       added by Thiago here http://quickgit.kde.org/index.php?p=kdelibs.git&a=commitdiff&h=6bb4ef06259281d643d410cc4e84cd40bf4cd43f
