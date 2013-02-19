@@ -170,7 +170,10 @@ endif()
 if (UNIX)
    set ( _KDE4_PLATFORM_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE)
 
-# are there platforms where this is not the case ?
+   # This flag is needed in order to be able to support files > 2GB even on
+   # 32bit platforms. The default is to use the non-64bit aware syscalls on
+   # 32bit platforms, which makes every application to SIGXFSZ (which is
+   # equivalent to a crash) when they see or touch a file > 2GB.
    check_cxx_source_compiles("
 #include <sys/types.h>
  /* Check that off_t can represent 2**63 - 1 correctly.
