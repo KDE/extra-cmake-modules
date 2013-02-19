@@ -334,10 +334,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
    endif()
 
-   # visibility support
-   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
-   set( __KDE_HAVE_GCC_VISIBILITY ${__KDE_HAVE_GCC_VISIBILITY} CACHE BOOL "GCC support for hidden visibility")
-
    if(NOT "${CMAKE_CXX_COMPILER_VERSION}"  VERSION_LESS  "4.2.0")
       set(GCC_IS_NEWER_THAN_4_2 TRUE)
    endif()
@@ -354,26 +350,12 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
    exec_program(${CMAKE_C_COMPILER} ARGS ${CMAKE_C_COMPILER_ARG1} -v OUTPUT_VARIABLE _gcc_alloc_info)
    string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
 
-   if (__KDE_HAVE_GCC_VISIBILITY AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR AND NOT WIN32)
-
-# TODO: this variable is not documented and not used anywhere
-#       added by Thiago here http://quickgit.kde.org/index.php?p=kdelibs.git&a=commitdiff&h=6bb4ef06259281d643d410cc4e84cd40bf4cd43f
-#       and moved by Thiago into this extra variable here: http://quickgit.kde.org/index.php?p=kdelibs.git&a=commitdiff&h=a47300bd88435735bca6518926bc6c0e4c6cd708
-#       set (KDE4_C_FLAGS "-fvisibility=hidden")
-
+   if (NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR AND NOT WIN32)
       if (TARGET Qt5::Core)
          if(NOT QT_VISIBILITY_AVAILABLE)
             message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
          endif()
       endif()
-
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-
-      if (GCC_IS_NEWER_THAN_4_2)
-         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility-inlines-hidden")
-      endif()
-   else()
-      set (__KDE_HAVE_GCC_VISIBILITY 0)
    endif()
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -394,13 +376,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wall -w1 -Wpointer-arith -fno-common")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wall -w1 -Wpointer-arith -fno-exceptions -fno-common")
-
-   # visibility support
-   set(__KDE_HAVE_ICC_VISIBILITY)
-#   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_ICC_VISIBILITY)
-#   if (__KDE_HAVE_ICC_VISIBILITY)
-#      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-#   endif (__KDE_HAVE_ICC_VISIBILITY)
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
