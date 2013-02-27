@@ -1,8 +1,41 @@
-# Finds KDE frameworks 5 and its components, like e.g. karchive
+# Finds KDE frameworks 5 and its components, like e.g. KArchive
 #
 # KF5_INCLUDE_DIRS - the include dirs of all requested components
 # KF5_<comp>_LIBRARIES - the libraries to link against of all requested components
 # KF5_<comp>_FOUND - signals whether the requested component <comp> has been found
+#
+# Known "pseudo" components, these do not actually search any libraries, but offer other features.
+#   Compiler  -  When specified, KDE-recommended compiler flags etc. are applied. See KDECompilerSettings.cmake.
+#   CMake - When specified, KDE-recommended CMake settings are applied. See KDECMakeSettings.cmake.
+#   InstallDirs - When specified, the set of install variables is loaded. See KDEInstallDirs.cmake.
+#
+# The following components do not have dependencies to any other components:
+#   ItemModels
+#   KArchive
+#   KCodecs
+#   KCoreAddons
+#   KDBusAddons
+#   KIdleTime
+#   kjs
+#   KPlotting
+#   KWidgetsAddons
+#   KWindowSystem
+#   Solid
+#   ThreadWeaver
+#
+# The following components have dependencies to some of the components above:
+#   KAuth
+#   KConfig
+#
+# When searching for multiple components, the first real component is searched as usual
+# using CMAKE_PREFIX_PATH and additionally in the environment variables KF5_DIRS.
+# All following components are searched only in the same prefix as the first one, and in those
+# contained in KF5_DIRS. This is to ensure that a matching set of KF5 libraries is found.
+
+# Copyright (c) 2013, Alexander Neundorf, <neundorf@kde.org>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 # hmm, any better ideas ?
 set(KF5_VERSION_STRING "5.0.0")
@@ -10,21 +43,21 @@ set(KF5_VERSION_STRING "5.0.0")
 # we probably only want to search known components, so people don't start
 # misusing this file for searching their own libraries.
 
-set(knownComponentsTier1  itemmodels
-                          karchive
-                          kcodecs
-                          kcoreaddons
-                          kdbusaddons
-                          kidletime
+set(knownComponentsTier1  ItemModels
+                          KArchive
+                          KCodecs
+                          KCoreAddons
+                          KDBusAddons
+                          KIdleTime
                           kjs
-                          kplotting
-                          kwidgetsaddons
-                          kwindowsystem
-                          solid
-                          threadweaver)
+                          KPlotting
+                          KWidgetsAddons
+                          KWindowSystem
+                          Solid
+                          ThreadWeaver)
 
-set(knownComponentsTier2  kauth
-                          kconfig)
+set(knownComponentsTier2  KAuth
+                          KConfig)
 
 set(knownComponentsTier3   )
 
@@ -119,7 +152,7 @@ endmacro()
 
 
 if(firstComponent)
-   file(TO_CMAKE_PATH "$ENV{KDEDIRS}" _KDEDIRS)
+   file(TO_CMAKE_PATH "$ENV{KF5_DIRS}" _KDEDIRS)
 
    set(_CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} )
    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${_KDEDIRS} )
