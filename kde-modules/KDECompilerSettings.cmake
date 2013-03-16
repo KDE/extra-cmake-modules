@@ -327,11 +327,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols")
    endif ()
 
-   # TODO : with CMake 2.8.11 this can be removed, it will work automatically
-   if(Qt5_POSITION_INDEPENDENT_CODE)
-      set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
-   endif()
-
    check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
    if(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")

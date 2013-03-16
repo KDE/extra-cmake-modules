@@ -92,11 +92,6 @@ if (Qt5Core_FOUND)
 
   get_filename_component(_modules_dir "${CMAKE_CURRENT_LIST_DIR}/../modules" ABSOLUTE)
   include("${_modules_dir}/ECMQt4To5Porting.cmake") # TODO: Port away from this.
-  include_directories(${QT_INCLUDES}) # TODO: Port away from this.
-
-  if (Qt5_POSITION_INDEPENDENT_CODE)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-  endif()
 
 else()
   foreach(_component ${Qt5Transitional_FIND_COMPONENTS})
