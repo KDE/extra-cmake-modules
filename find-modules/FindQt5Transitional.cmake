@@ -2,29 +2,29 @@
 find_package(Qt5Core QUIET)
 
 if (Qt5Core_FOUND)
+  set(_allComponents
+      Core
+      Gui
+      DBus
+      Designer
+      Declarative
+      Script
+      ScriptTools
+      Network
+      Test
+      Xml
+      Svg
+      Sql
+      Widgets
+      PrintSupport
+      Concurrent
+      UiTools
+      WebKit
+      WebKitWidgets
+      OpenGL
+    )
   if (NOT Qt5Transitional_FIND_COMPONENTS)
-    set(_components
-        Core
-        Gui
-        DBus
-        Designer
-        Declarative
-        Script
-        ScriptTools
-        Network
-        Test
-        Xml
-        Svg
-        Sql
-        Widgets
-        PrintSupport
-        Concurrent
-        UiTools
-        WebKit
-        WebKitWidgets
-        OpenGL
-      )
-    foreach(_component ${_components})
+    foreach(_component ${_allComponents})
       find_package(Qt5${_component})
 
       list(APPEND QT_LIBRARIES ${Qt5${_component}_LIBRARIES})
@@ -56,7 +56,7 @@ if (Qt5Core_FOUND)
   set(QT5_BUILD TRUE)
 
   # Temporary until upstream does this:
-  foreach(_component ${_components})
+  foreach(_component ${_allComponents})
     if (TARGET Qt5::${_component})
       set_property(TARGET Qt5::${_component}
         APPEND PROPERTY
