@@ -24,7 +24,7 @@ if (Qt5Core_FOUND)
       OpenGL
       X11Extras
       Qml
-      Quick1
+      Quick
     )
   if (NOT Qt5Transitional_FIND_COMPONENTS)
     foreach(_component ${_allComponents})
