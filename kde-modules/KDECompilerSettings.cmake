@@ -69,31 +69,6 @@ if (WIN32)
    # limit win32 packaging to kdelibs at now
    # don't know if package name, version and notes are always available
 
-# TODO: with KDE frameworks, there is no bootstrapping of FindKDE4Internal.cmake, so can the following
-#       lines simply be removed ?
-
-#    if(_kdeBootStrapping)
-#       find_package(KDEWIN_Packager)
-#       if (KDEWIN_PACKAGER_FOUND)
-#          kdewin_packager("kdelibs" "${KDE_VERSION}" "KDE base library" "")
-#       endif (KDEWIN_PACKAGER_FOUND)
-#
-#       include(Win32Macros)
-#       addExplorerWrapper("kdelibs")
-#    endif(_kdeBootStrapping)
-
-# TODO: I don't think we should set any include dirs in this file
-#   set( _KDE4_PLATFORM_INCLUDE_DIRS ${KDEWIN_INCLUDES})
-
-   # if we are compiling kdelibs, add KDEWIN_LIBRARIES explicitely,
-   # otherwise they come from KDELibsDependencies.cmake, Alex
-
-# TODO: bootstrapping, see above
-#    if (_kdeBootStrapping)
-#       set( KDE4_KDECORE_LIBS ${KDE4_KDECORE_LIBS} ${KDEWIN_LIBRARIES} )
-#    endif (_kdeBootStrapping)
-
-
    # windows, microsoft compiler
    if(MSVC)
       set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN )
@@ -137,21 +112,7 @@ if (WIN32)
 
 endif (WIN32)
 
-
-
-# TODO: this should not be here, make sure nothing breaks without it
-# if (Q_WS_X11)
-#    # Done by FindQt4.cmake already
-#    #find_package(X11 REQUIRED)
-#    # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
-#    set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
-# endif ()
-
-
-# This will need to be modified later to support either Qt/X11 or Qt/Mac builds
 if (APPLE)
-  set ( _KDE4_PLATFORM_DEFINITIONS -D__APPLE_KDE__ )
-
   # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
   # -undefined dynamic_lookup; in the future we should do this programmatically
   # hmm... why doesn't this work?
