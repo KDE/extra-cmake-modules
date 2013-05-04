@@ -61,7 +61,20 @@ set(knownComponentsTier2  KAuth
 
 set(knownComponentsTier3   )
 
-set(allKnownComponents Compiler CMake InstallDirs ${knownComponentsTier1} ${knownComponentsTier2} ${knownComponentsTier3} )
+set(knownComponentsStaging
+   ItemViews
+   KCompletion
+   KNotifications
+   KJobWidgets
+   KConfigWidgets
+   KIconThemes
+   kguiaddons
+   ki18n
+   kwidgets
+   kservice
+)
+
+set(allKnownComponents Compiler CMake InstallDirs ${knownComponentsTier1} ${knownComponentsTier2} ${knownComponentsTier3} ${knownComponentsStaging})
 
 set(cmakeCompRequested FALSE)
 set(compilerCompRequested FALSE)
