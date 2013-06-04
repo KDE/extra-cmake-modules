@@ -20,20 +20,14 @@ set(cmakeFilesDontInstall
 # compatible).
 set(cmakeFiles CheckCXXSourceCompiles.cmake
                CheckCXXSourceRuns.cmake
-               CheckCXXSymbolExists.cmake
                CheckPointerMember.cmake
                CheckPrototypeExists.cmake
                CheckStructMember.cmake
                FindACL.cmake
                FindAGG.cmake
-               FindAkode.cmake
                FindAlsa.cmake
-               FindAutomoc4.cmake
                FindAvahi.cmake
                FindBerkeleyDB.cmake
-               FindBlitz.cmake
-               FindBlueZ.cmake
-               FindBoost.cmake
                FindCarbon.cmake
                FindDBusMenuQt.cmake
                FindDNSSD.cmake
@@ -44,29 +38,22 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindFAM.cmake
                FindFFmpeg.cmake
                FindFlac.cmake
-               FindFlex.cmake
                FindFontconfig.cmake
-               FindFreetype.cmake
-               FindGIF.cmake
                FindGLIB2.cmake
                FindGMP.cmake
                FindGObject.cmake
                FindGSSAPI.cmake
                FindGStreamer.cmake
-               FindGettext.cmake
                FindGphoto2.cmake
                FindHUNSPELL.cmake
                FindIOKit.cmake
-               FindKDE4Internal.cmake
                FindKDE4Workspace.cmake
-               FindKDevPlatform.cmake
                FindKDEWIN32.cmake
                FindKDEWIN_Packager.cmake
                FindKDEWin.cmake
+               FindKDevPlatform.cmake
                FindKdcraw.cmake
                FindKdeMultimedia.cmake
-               FindKdepim.cmake
-               FindKdepimLibs.cmake
                FindKexiv2.cmake
                FindKipi.cmake
                FindKopete.cmake
@@ -76,92 +63,61 @@ set(cmakeFiles CheckCXXSourceCompiles.cmake
                FindLibAttica.cmake
                FindLibKonq.cmake
                FindLibLZMA.cmake
-               FindLibXml2.cmake
-               FindLibXslt.cmake
+               FindLibPython.py
                FindLibintl.cmake
                FindLibraryWithDebug.cmake
                FindLinuxWirelesstools.cmake
-               FindMsgfmt.cmake
                FindMusicBrainz.cmake
                FindMySQL.cmake
                FindNepomuk.cmake
                FindNetworkManager.cmake
                FindOggVorbis.cmake
                FindOpenEXR.cmake
-               FindOpenSSL.cmake
                FindPCRE.cmake
                FindPhonon.cmake
-               FindPkgConfig.cmake
-               FindPlasma.cmake
                FindPopplerQt4.cmake
-               FindPostgreSQL.cmake
                FindPulseAudio.cmake
                FindPyKDE4.cmake
+               FindPyKDE4.py
+               FindPyQt.py
                FindPyQt4.cmake
-               Qt4Macros.cmake
-               Qt4ConfigDependentSettings.cmake
-               FindPackageHandleStandardArgs.cmake
-               CMakeParseArguments.cmake  # used by FindPackageHandleStandardArgs.cmake, will be in CMake 2.8.3
                FindPythonLibrary.cmake
                FindQCA2.cmake
                FindQImageBlitz.cmake
                FindQt4.cmake
-               FindRUBY.cmake
                FindSIP.cmake
+               FindSIP.py
                FindSamba.cmake
                FindSane.cmake
                FindSasl2.cmake
-               FindSharedMimeInfo.cmake
                FindSharedDesktopOntologies.cmake
-               FindSoprano.cmake
+               FindSharedMimeInfo.cmake
                FindSqlite.cmake
                FindStrigi.cmake
                FindTaglib.cmake
                FindUSB.cmake
                FindWcecompat.cmake
-               FindX11.cmake
                FindXKB.cmake
                FindXine.cmake
                FindXmms.cmake
                HandleImportedTargetsInCMakeRequiredLibraries.cmake
-               KDE4Defaults.cmake
-               KDE4Macros.cmake
-               MacroAddCompileFlags.cmake
-               MacroAddLinkFlags.cmake
-               MacroAdditionalCleanFiles.cmake
                MacroAppendIf.cmake
                MacroBoolTo01.cmake
                MacroEnsureOutOfSourceBuild.cmake
-               MacroEnsureVersion.cmake
-               MacroKAuth.cmake
                MacroLibrary.cmake
-               MacroLogFeature.cmake
-               MacroOptionalAddSubdirectory.cmake
-               MacroOptionalDependPackage.cmake
-               MacroOptionalFindPackage.cmake
-               MacroPushRequiredVars.cmake
-               MacroWriteBasicCMakeVersionFile.cmake
-               NepomukMacros.cmake
                NepomukAddOntologyClasses.cmake
+               NepomukMacros.cmake
+               PythonCompile.py
                PythonMacros.cmake
+               Qt4ConfigDependentSettings.cmake
+               Qt4Macros.cmake
                SIPMacros.cmake
-               Win32Macros.cmake
                check_installed_exports_file.cmake
+               cmake-modules-styleguide.txt
                config-alsa.h.cmake
                create_exe_symlink.cmake
-               kde4_exec_via_sh.cmake
-               kde4uic.cmake
-               cmake-modules-styleguide.txt
-               kde4init_dummy.cpp.in
-               kde4init_win32lib_dummy.cpp.in
                kde4_cmake_uninstall.cmake.in
-               kde4automoc.files.in
-               BasicFindPackageVersion.cmake.in
-               FindLibPython.py
-               FindPyKDE4.py
-               FindPyQt.py
-               FindSIP.py
-               PythonCompile.py
+               kde4_exec_via_sh.cmake
                )
 
 if (KDE4_ENABLE_UAC_MANIFEST)
