@@ -73,6 +73,7 @@ set(knownComponentsStaging
    kwidgets
    kservice
    XmlGui
+   KWallet
 )
 
 set(allKnownComponents Compiler CMake InstallDirs ${knownComponentsTier1} ${knownComponentsTier2} ${knownComponentsTier3} ${knownComponentsStaging})
