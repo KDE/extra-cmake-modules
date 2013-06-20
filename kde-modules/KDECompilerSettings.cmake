@@ -70,7 +70,7 @@ if (WIN32)
    # don't know if package name, version and notes are always available
 
    # windows, microsoft compiler
-   if(MSVC)
+   if(MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
       set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN )
 
       # C4250: 'class1' : inherits 'class2::member' via dominance
@@ -174,7 +174,7 @@ if (CMAKE_BUILD_TYPE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "DebugFull" "Release" "RelWithDebInfo" "Profile" "Coverage")
 endif()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
 
    # this macro is for internal use only.
    macro(_KDE_INSERT_FLAG FLAG VAR DOC)
@@ -193,7 +193,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
    _kde_insert_flag("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELEASE "release")
    _kde_insert_flag("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "release minsize")
    _kde_insert_flag("/NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd" CMAKE_EXE_LINKER_FLAGS_DEBUG "debug")
-endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+endif()
 
 # TODO: this is for BSD, this looks like something which should be done in CMake
 # # This macro is for internal use only
