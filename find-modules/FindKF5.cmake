@@ -21,6 +21,7 @@
 #   KWidgetsAddons
 #   KWindowSystem
 #   Solid
+#   Sonnet
 #   ThreadWeaver
 #
 # The following components have dependencies to some of the components above:
@@ -54,6 +55,7 @@ set(knownComponentsTier1  ItemModels
                           KWidgetsAddons
                           KWindowSystem
                           Solid
+                          Sonnet
                           ThreadWeaver)
 
 set(knownComponentsTier2  KAuth
