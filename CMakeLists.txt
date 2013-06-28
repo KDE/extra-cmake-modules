@@ -1,17 +1,17 @@
-cmake_minimum_required(VERSION 2.8.10.20130411 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 
 project(extra-cmake-modules)
 
 set(ECM_MAJOR_VERSION 0)
 set(ECM_MINOR_VERSION 0)
-set(ECM_PATCH_VERSION 8)
+set(ECM_PATCH_VERSION 9)
 
 set(ECM_VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION})
 
 enable_testing()
 add_subdirectory(tests)
 
-set(SHARE_INSTALL_DIR share/ECM-${ECM_VERSION})
+set(SHARE_INSTALL_DIR share/ECM )
 set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/modules/)
 set(KDE_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/kde-modules/)
 set(FIND_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/find-modules/)
