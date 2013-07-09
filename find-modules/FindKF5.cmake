@@ -47,6 +47,7 @@ set(KF5_VERSION_STRING "5.0.0")
 set(knownComponentsTier1  ItemModels
                           KArchive
                           KCodecs
+                          KConfig
                           KCoreAddons
                           KDBusAddons
                           KIdleTime
@@ -58,8 +59,7 @@ set(knownComponentsTier1  ItemModels
                           Sonnet
                           ThreadWeaver)
 
-set(knownComponentsTier2  KAuth
-                          KConfig)
+set(knownComponentsTier2  KAuth)
 
 set(knownComponentsTier3   )
 
