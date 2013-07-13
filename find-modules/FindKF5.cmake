@@ -72,7 +72,7 @@ set(knownComponentsStaging
    KIconThemes
    kguiaddons
    ki18n
-   kwidgets
+   KWidgets
    kservice
    XmlGui
    KWallet
