@@ -70,7 +70,7 @@ set(knownComponentsStaging
    KJobWidgets
    KConfigWidgets
    KIconThemes
-   kguiaddons
+   KGuiAddons
    ki18n
    KWidgets
    KService
