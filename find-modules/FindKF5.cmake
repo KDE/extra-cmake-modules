@@ -53,6 +53,7 @@ set(knownComponentsTier1  ItemModels
                           KIdleTime
                           kjs
                           KPlotting
+                          KTextWidget
                           KWidgetsAddons
                           KWindowSystem
                           Solid
