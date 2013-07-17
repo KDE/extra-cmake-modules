@@ -51,7 +51,7 @@ set(knownComponentsTier1  ItemModels
                           KCoreAddons
                           KDBusAddons
                           KIdleTime
-                          kjs
+                          KJS
                           KPlotting
                           KTextWidgets
                           KWidgetsAddons
