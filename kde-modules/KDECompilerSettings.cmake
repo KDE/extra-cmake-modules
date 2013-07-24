@@ -149,10 +149,9 @@ if (APPLE)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-common")
 endif (APPLE)
 
-
 # TODO: why don't we go inside that block on the BSDs ?
 if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
-   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
      # TODO: does the Intel compiler also support --enable-new-dtags ? ...probably since they are only forwarded to the linker....
       set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-new-dtags -Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
       set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--enable-new-dtags -Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
@@ -233,6 +232,10 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 #    set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES
 #        ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES} ${_dirs})
 
+endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 # TODO: why do the other KDE4_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
    set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
    # Select flags.
@@ -288,7 +291,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
       endif()
    endif()
 
-endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
