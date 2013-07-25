@@ -65,6 +65,10 @@ set(knownComponentsTier2  KAuth)
 set(knownComponentsTier3   )
 
 set(knownComponentsStaging
+   KDE4Attic
+   KUnitConversion
+   KIO
+   KIOWidgets
    ItemViews
    KCompletion
    KNotifications
