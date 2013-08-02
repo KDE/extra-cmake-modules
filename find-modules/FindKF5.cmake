@@ -77,7 +77,6 @@ set(knownComponentsStaging
    KIconThemes
    KGuiAddons
    KI18n
-   KWidgets
    KService
    XmlGui
    KWallet
