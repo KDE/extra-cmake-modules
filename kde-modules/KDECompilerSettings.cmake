@@ -235,7 +235,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 # TODO: why do the other KDE4_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
    set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
    # Select flags.
@@ -291,7 +291,57 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQ
       endif()
    endif()
 
-endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+# TODO: why do the other KDE4_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
+   set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
+   # Select flags.
+   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
+   set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
+   set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-inline")
+   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
+   set(CMAKE_CXX_FLAGS_PROFILE        "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
+   set(CMAKE_CXX_FLAGS_COVERAGE       "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
+   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
+   set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
+   set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-inline")
+   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
+   set(CMAKE_C_FLAGS_PROFILE          "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
+   set(CMAKE_C_FLAGS_COVERAGE         "${CMAKE_C_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
+
+   # TODO: do those flags also apply to the Intel compiler?
+   set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+   set (CMAKE_SHARED_LINKER_FLAGS_PROFILE "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+   set (CMAKE_MODULE_LINKER_FLAGS_PROFILE "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+
+   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
+   # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-exceptions -DQT_NO_EXCEPTIONS -fno-common -Werror=return-type")
+
+   # There is a lot of code out there that includes headers that throw
+   # exceptions, but we disable exceptions by default.
+   # GCC, MSVC and ICC do not complain about these cases when the exceptions
+   # are thrown inside some template code that is not expanded/used, which is
+   # what happens most of the time.
+   # We have to follow suit and be less strict in order not to break the build
+   # in many places.
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdelayed-template-parsing")
+
+   if (CMAKE_SYSTEM_NAME STREQUAL GNU)
+      set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
+      set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
+   endif ()
+
+   if (NOT WIN32)
+      if (TARGET Qt5::Core)
+         if(NOT QT_VISIBILITY_AVAILABLE)
+            message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
+         endif()
+      endif()
+   endif()
+endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
