@@ -81,7 +81,6 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # Add the src and build dir to the BUILD_INTERFACE include directories
    # of all targets. Similar to CMAKE_INCLUDE_CURRENT_DIR, but transitive.
    # Since CMake 2.8.11
-   set(CMAKE_BUILD_INTERFACE_INCLUDES ON)
    set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
    # When a shared library changes, but its includes do not, don't relink
