@@ -3,7 +3,7 @@
 # ECM_USE_FIND_MODULES(DIR <dir> MODULES module1.cmake module2.cmake .. moduleN.cmake [NO_OVERRIDE] )
 #
 # This macro is automatically available once extra-cmake-modules has been found, so it is not
-# necessary to include(ECMUseFindModules) explictely.
+# necessary to include(ECMUseFindModules) explicitly.
 #
 # Use this macro instead of simply adding ${ECM_FIND_MODULE_DIR} to CMAKE_MODULE_PATH
 # if you want to use only a subset or some specific find-modules coming with extra-cmake-modules.
