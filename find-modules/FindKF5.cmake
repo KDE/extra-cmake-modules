@@ -50,6 +50,7 @@ set(knownComponentsTier1  ItemModels
                           KConfig
                           KCoreAddons
                           KDBusAddons
+                          KGuiAddons
                           KIdleTime
                           KJS
                           KPlotting
@@ -60,7 +61,8 @@ set(knownComponentsTier1  ItemModels
                           Sonnet
                           ThreadWeaver)
 
-set(knownComponentsTier2  KAuth)
+set(knownComponentsTier2  KAuth
+                          KCrash)
 
 set(knownComponentsTier3   )
 
@@ -75,13 +77,11 @@ set(knownComponentsStaging
    KJobWidgets
    KConfigWidgets
    KIconThemes
-   KGuiAddons
    KI18n
    KService
    XmlGui
    KWallet
    ktextwidgets
-   KCrash
    KStyle
 )
 
