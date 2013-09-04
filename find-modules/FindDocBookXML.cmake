@@ -48,8 +48,8 @@ endif ()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args (DocBookXML
-    "Could NOT find DocBook XML DTDs (v${DocBookXML_CURRENTDTD_VERSION})"
-    DocBookXML_CURRENTDTD_DIR DocBookXML_CURRENTDTD_VERSION)
+    REQUIRED_VARS DocBookXML_CURRENTDTD_DIR DocBookXML_CURRENTDTD_VERSION
+    FOUND_VAR DocBookXML_FOUND)
 
 #maintain backwards compatibility
 set(DOCBOOKXML_FOUND ${DocBookXML_FOUND})
