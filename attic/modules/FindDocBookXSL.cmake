@@ -1,8 +1,8 @@
 # Try to find DocBook XSL stylesheet
 # Once done, it will define:
 #
-#  DOCBOOKXSL_FOUND - system has the required DocBook XML DTDs
-#  DOCBOOKXSL_DIR - the directory containing the stylesheets
+#  DocBookXSL_FOUND - system has the required DocBook XML DTDs
+#  DocBookXSL_DIR - the directory containing the stylesheets
 #  used to process DocBook XML
 
 # Copyright (c) 2010, Luigi Toscano, <luigi.toscano@tiscali.it>
@@ -20,12 +20,12 @@ set (STYLESHEET_PATH_LIST
     share/xsl/docbook-xsl
 )
 
-find_path (DOCBOOKXSL_DIR lib/lib.xsl 
+find_path (DocBookXSL_DIR lib/lib.xsl
    PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
    PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
 )
 
-if (NOT DOCBOOKXSL_DIR)
+if (NOT DocBookXSL_DIR)
    # hacks for systems that put the version in the stylesheet dirs
    set (STYLESHEET_PATH_LIST)
    foreach (STYLESHEET_PREFIX_ITER ${CMAKE_SYSTEM_PREFIX_PATH})
@@ -37,16 +37,16 @@ if (NOT DOCBOOKXSL_DIR)
       endif ()
    endforeach ()
 
-   find_path (DOCBOOKXSL_DIR VERSION
+   find_path (DocBookXSL_DIR VERSION
       PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
       PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
    )
-endif (NOT DOCBOOKXSL_DIR)
+endif (NOT DocBookXSL_DIR)
 
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args (DocBookXSL
                                    "Could NOT find DocBook XSL stylesheets"
-                                   DOCBOOKXSL_DIR)
+                                   DocBookXSL_DIR)
 
-mark_as_advanced (DOCBOOKXSL_DIR)
+mark_as_advanced (DocBookXSL_DIR)
