@@ -49,4 +49,8 @@ find_package_handle_standard_args (DocBookXSL
                                    "Could NOT find DocBook XSL stylesheets"
                                    DocBookXSL_DIR)
 
+#maintain backwards compatibility
+set(DOCBOOKXSL_FOUND ${DocBookXSL_FOUND})
+set(DOCBOOKXSL_DIR ${DocBookXSL_DIR})
+
 mark_as_advanced (DocBookXSL_DIR)

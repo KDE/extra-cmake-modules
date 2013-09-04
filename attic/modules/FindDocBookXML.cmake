@@ -51,4 +51,9 @@ find_package_handle_standard_args (DocBookXML
     "Could NOT find DocBook XML DTDs (v${DocBookXML_CURRENTDTD_VERSION})"
     DocBookXML_CURRENTDTD_DIR DocBookXML_CURRENTDTD_VERSION)
 
+#maintain backwards compatibility
+set(DOCBOOKXML_FOUND ${DocBookXML_FOUND})
+set(DOCBOOKXML_CURRENTDTD_DIR ${DocBookXML_CURRENTDTD_DIR})
+set(DOCBOOKXML_CURRENTDTD_VERSION ${DocBookXML_CURRENTDTD_VERSION})
+
 mark_as_advanced (DocBookXML_CURRENTDTD_DIR DocBookXML_CURRENTDTD_VERSION)
