@@ -21,26 +21,26 @@ set (STYLESHEET_PATH_LIST
 )
 
 find_path (DocBookXSL_DIR lib/lib.xsl
-   PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
-   PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
+    PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
+    PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
 )
 
 if (NOT DocBookXSL_DIR)
-   # hacks for systems that put the version in the stylesheet dirs
-   set (STYLESHEET_PATH_LIST)
-   foreach (STYLESHEET_PREFIX_ITER ${CMAKE_SYSTEM_PREFIX_PATH})
-      file(GLOB STYLESHEET_SUFFIX_ITER RELATIVE ${STYLESHEET_PREFIX_ITER}
-           ${STYLESHEET_PREFIX_ITER}/share/xml/docbook/xsl-stylesheets-*
-      )
-      if (STYLESHEET_SUFFIX_ITER)
-         list (APPEND STYLESHEET_PATH_LIST ${STYLESHEET_SUFFIX_ITER})
-      endif ()
-   endforeach ()
+    # hacks for systems that put the version in the stylesheet dirs
+    set (STYLESHEET_PATH_LIST)
+    foreach (STYLESHEET_PREFIX_ITER ${CMAKE_SYSTEM_PREFIX_PATH})
+        file(GLOB STYLESHEET_SUFFIX_ITER RELATIVE ${STYLESHEET_PREFIX_ITER}
+            ${STYLESHEET_PREFIX_ITER}/share/xml/docbook/xsl-stylesheets-*
+        )
+        if (STYLESHEET_SUFFIX_ITER)
+            list (APPEND STYLESHEET_PATH_LIST ${STYLESHEET_SUFFIX_ITER})
+        endif ()
+    endforeach ()
 
-   find_path (DocBookXSL_DIR VERSION
-      PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
-      PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
-   )
+    find_path (DocBookXSL_DIR VERSION
+        PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
+        PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
+    )
 endif ()
 
 
