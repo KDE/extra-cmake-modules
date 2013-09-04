@@ -44,7 +44,7 @@ if (NOT DocBookXML_CURRENTDTD_DIR)
       PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
       PATH_SUFFIXES ${DTD_PATH_LIST}
    )
-endif (NOT DocBookXML_CURRENTDTD_DIR)
+endif ()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args (DocBookXML

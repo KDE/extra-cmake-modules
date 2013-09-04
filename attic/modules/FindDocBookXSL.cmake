@@ -41,7 +41,7 @@ if (NOT DocBookXSL_DIR)
       PATHS ${CMAKE_SYSTEM_PREFIX_PATH}
       PATH_SUFFIXES ${STYLESHEET_PATH_LIST}
    )
-endif (NOT DocBookXSL_DIR)
+endif ()
 
 
 include(FindPackageHandleStandardArgs)
