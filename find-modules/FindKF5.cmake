@@ -62,13 +62,13 @@ set(knownComponentsTier1  ItemModels
                           ThreadWeaver)
 
 set(knownComponentsTier2  KAuth
-                          KCrash)
+                          KCrash
+                          KUnitConversion)
 
 set(knownComponentsTier3   )
 
 set(knownComponentsStaging
    KDE4Attic
-   KUnitConversion
    KIO
    KIOWidgets
    ItemViews
