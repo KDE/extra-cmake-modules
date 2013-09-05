@@ -72,6 +72,7 @@ set(knownComponentsStaging
    KIO
    KIOWidgets
    ItemViews
+   KBookmarks
    KCompletion
    KNotifications
    KJobWidgets
