@@ -2,155 +2,237 @@
 #
 # This will define:
 #
-#   XCB_FOUND       - True if xcb is available
-#   XCB_LIBRARIES   - Link these to use xcb
-#   XCB_INCLUDE_DIR - Include directory for xcb
-#   XCB_DEFINITIONS - Compiler flags for using xcb
+#   XCB_FOUND        - True if xcb is available
+#   XCB_LIBRARIES    - Link these to use xcb
+#   XCB_INCLUDE_DIRS - Include directory for xcb
+#   XCB_DEFINITIONS  - Compiler flags for using xcb
 #
 # In addition the following more fine grained variables will be defined:
 #
-#   XCB_XCB_FOUND        XCB_XCB_INCLUDE_DIR        XCB_XCB_LIBRARIES
-#   XCB_UTIL_FOUND       XCB_UTIL_INCLUDE_DIR       XCB_UTIL_LIBRARIES
-#   XCB_COMPOSITE_FOUND  XCB_COMPOSITE_INCLUDE_DIR  XCB_COMPOSITE_LIBRARIES
-#   XCB_DAMAGE_FOUND     XCB_DAMAGE_INCLUDE_DIR     XCB_DAMAGE_LIBRARIES
-#   XCB_XFIXES_FOUND     XCB_XFIXES_INCLUDE_DIR     XCB_XFIXES_LIBRARIES
-#   XCB_RENDER_FOUND     XCB_RENDER_INCLUDE_DIR     XCB_RENDER_LIBRARIES
-#   XCB_RANDR_FOUND      XCB_RANDR_INCLUDE_DIR      XCB_RANDR_LIBRARIES
-#   XCB_SHAPE_FOUND      XCB_SHAPE_INCLUDE_DIR      XCB_SHAPE_LIBRARIES
-#   XCB_DRI2_FOUND       XCB_DRI2_INCLUDE_DIR       XCB_DRI2_LIBRARIES
-#   XCB_GLX_FOUND        XCB_GLX_INCLUDE_DIR        XCB_GLX_LIBRARIES
-#   XCB_SHM_FOUND        XCB_SHM_INCLUDE_DIR        XCB_SHM_LIBRARIES
-#   XCB_XV_FOUND         XCB_XV_INCLUDE_DIR         XCB_XV_LIBRARIES
-#   XCB_SYNC_FOUND       XCB_SYNC_INCLUDE_DIR       XCB_SYNC_LIBRARIES
-#   XCB_XTEST_FOUND      XCB_XTEST_INCLUDE_DIR      XCB_XTEST_LIBRARIES
-#   XCB_ICCCM_FOUND      XCB_ICCCM_INCLUDE_DIR      XCB_ICCCM_LIBRARIES
-#   XCB_EWMH_FOUND       XCB_EWMH_INCLUDE_DIR       XCB_EWMH_LIBRARIES
-#   XCB_IMAGE_FOUND      XCB_IMAGE_INCLUDE_DIR      XCB_IMAGE_LIBRARIES
-#   XCB_RENDERUTIL_FOUND XCB_RENDERUTIL_INCLUDE_DIR XCB_RENDERUTIL_LIBRARIES
-#   XCB_KEYSYMS_FOUND    XCB_KEYSYMS_INCLUDE_DIR    XCB_KEYSYMS_LIBRARIES
+#   XCB_XCB_FOUND        XCB_XCB_INCLUDE_DIR        XCB_XCB_LIBRARY
+#   XCB_UTIL_FOUND       XCB_UTIL_INCLUDE_DIR       XCB_UTIL_LIBRARY
+#   XCB_COMPOSITE_FOUND  XCB_COMPOSITE_INCLUDE_DIR  XCB_COMPOSITE_LIBRARY
+#   XCB_DAMAGE_FOUND     XCB_DAMAGE_INCLUDE_DIR     XCB_DAMAGE_LIBRARY
+#   XCB_XFIXES_FOUND     XCB_XFIXES_INCLUDE_DIR     XCB_XFIXES_LIBRARY
+#   XCB_RENDER_FOUND     XCB_RENDER_INCLUDE_DIR     XCB_RENDER_LIBRARY
+#   XCB_RANDR_FOUND      XCB_RANDR_INCLUDE_DIR      XCB_RANDR_LIBRARY
+#   XCB_SHAPE_FOUND      XCB_SHAPE_INCLUDE_DIR      XCB_SHAPE_LIBRARY
+#   XCB_DRI2_FOUND       XCB_DRI2_INCLUDE_DIR       XCB_DRI2_LIBRARY
+#   XCB_GLX_FOUND        XCB_GLX_INCLUDE_DIR        XCB_GLX_LIBRARY
+#   XCB_SHM_FOUND        XCB_SHM_INCLUDE_DIR        XCB_SHM_LIBRARY
+#   XCB_XV_FOUND         XCB_XV_INCLUDE_DIR         XCB_XV_LIBRARY
+#   XCB_SYNC_FOUND       XCB_SYNC_INCLUDE_DIR       XCB_SYNC_LIBRARY
+#   XCB_XTEST_FOUND      XCB_XTEST_INCLUDE_DIR      XCB_XTEST_LIBRARY
+#   XCB_ICCCM_FOUND      XCB_ICCCM_INCLUDE_DIR      XCB_ICCCM_LIBRARY
+#   XCB_EWMH_FOUND       XCB_EWMH_INCLUDE_DIR       XCB_EWMH_LIBRARY
+#   XCB_IMAGE_FOUND      XCB_IMAGE_INCLUDE_DIR      XCB_IMAGE_LIBRARY
+#   XCB_RENDERUTIL_FOUND XCB_RENDERUTIL_INCLUDE_DIR XCB_RENDERUTIL_LIBRARY
+#   XCB_KEYSYMS_FOUND    XCB_KEYSYMS_INCLUDE_DIR    XCB_KEYSYMS_LIBRARY
 #
 # Copyright (c) 2011 Fredrik Höglund <fredrik@kde.org>
+# Copyright (c) 2013 Martin Gräßlin <mgraesslin@kde.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+set(knownComponents XCB
+                    COMPOSITE
+                    DAMAGE
+                    DRI2
+                    EWMH
+                    GLX
+                    ICCCM
+                    IMAGE
+                    KEYSYMS
+                    RANDR
+                    RENDER
+                    RENDERUTIL
+                    SHAPE
+                    SHM
+                    SYNC
+                    UTIL
+                    XFIXES
+                    XTEST
+                    XV)
+
+unset(unknownComponents)
+
+set(pkgConfigModules)
+set(requiredComponents)
+
+if (XCB_FIND_COMPONENTS)
+  set(comps ${XCB_FIND_COMPONENTS})
+else()
+  set(comps ${knownComponents})
+endif()
+
+# iterate through the list of requested components, and check that we know them all.
+# If not, fail.
+foreach(comp ${comps})
+    list(FIND knownComponents ${comp} index )
+    if("${index}" STREQUAL "-1")
+        list(APPEND unknownComponents "${comp}")
+    else()
+        if("${comp}" STREQUAL "XCB")
+            list(APPEND pkgConfigModules "xcb")
+        elseif("${comp}" STREQUAL "COMPOSITE")
+            list(APPEND pkgConfigModules "xcb-composite")
+        elseif("${comp}" STREQUAL "DAMAGE")
+            list(APPEND pkgConfigModules "xcb-damage")
+        elseif("${comp}" STREQUAL "DRI2")
+            list(APPEND pkgConfigModules "xcb-dri2")
+        elseif("${comp}" STREQUAL "EWMH")
+            list(APPEND pkgConfigModules "xcb-ewmh")
+        elseif("${comp}" STREQUAL "GLX")
+            list(APPEND pkgConfigModules "xcb-glx")
+        elseif("${comp}" STREQUAL "ICCCM")
+            list(APPEND pkgConfigModules "xcb-icccm")
+        elseif("${comp}" STREQUAL "IMAGE")
+            list(APPEND pkgConfigModules "xcb-image")
+        elseif("${comp}" STREQUAL "KEYSYMS")
+            list(APPEND pkgConfigModules "xcb-keysyms")
+        elseif("${comp}" STREQUAL "RANDR")
+            list(APPEND pkgConfigModules "xcb-randr")
+        elseif("${comp}" STREQUAL "RENDER")
+            list(APPEND pkgConfigModules "xcb-render")
+        elseif("${comp}" STREQUAL "RENDERUTIL")
+            list(APPEND pkgConfigModules "xcb-renderutil")
+        elseif("${comp}" STREQUAL "SHAPE")
+            list(APPEND pkgConfigModules "xcb-shape")
+        elseif("${comp}" STREQUAL "SHM")
+            list(APPEND pkgConfigModules "xcb-shm")
+        elseif("${comp}" STREQUAL "SYNC")
+            list(APPEND pkgConfigModules "xcb-sync")
+        elseif("${comp}" STREQUAL "UTIL")
+            list(APPEND pkgConfigModules "xcb-util")
+        elseif("${comp}" STREQUAL "XFIXES")
+            list(APPEND pkgConfigModules "xcb-xfixes")
+        elseif("${comp}" STREQUAL "XTEST")
+            list(APPEND pkgConfigModules "xcb-xtest")
+        elseif("${comp}" STREQUAL "XV")
+            list(APPEND pkgConfigModules "xcb-xv")
+        endif()
+    endif()
+endforeach()
+
+
+if(DEFINED unknownComponents)
+   set(msgType STATUS)
+   if(XCB_FIND_REQUIRED)
+      set(msgType FATAL_ERROR)
+   endif()
+   if(NOT XCB_FIND_QUIETLY)
+      message(${msgType} "XCB: requested unknown components ${unknownComponents}")
+   endif()
+   return()
+endif()
+
+macro(_XCB_HANDLE_COMPONENT _comp)
+    set(_header )
+    set(_lib )
+    if("${_comp}" STREQUAL "XCB")
+        set(_header "xcb/xcb.h")
+        set(_lib "xcb")
+    elseif("${_comp}" STREQUAL "COMPOSITE")
+        set(_header "xcb/composite.h")
+        set(_lib "xcb-composite")
+    elseif("${_comp}" STREQUAL "DAMAGE")
+        set(_header "xcb/damage.h")
+        set(_lib "xcb-damage")
+    elseif("${_comp}" STREQUAL "DRI2")
+        set(_header "xcb/dri2.h")
+        set(_lib "xcb-dri2")
+    elseif("${_comp}" STREQUAL "EWMH")
+        set(_header "xcb/xcb_ewmh.h")
+        set(_lib "xcb-ewmh")
+    elseif("${_comp}" STREQUAL "GLX")
+        set(_header "xcb/glx.h")
+        set(_lib "xcb-glx")
+    elseif("${_comp}" STREQUAL "ICCCM")
+        set(_header "xcb/xcb_icccm.h")
+        set(_lib "xcb-icccm")
+    elseif("${_comp}" STREQUAL "IMAGE")
+        set(_header "xcb/xcb_image.h")
+        set(_lib "xcb-image")
+    elseif("${_comp}" STREQUAL "KEYSYMS")
+        set(_header "xcb/xcb_keysyms.h")
+        set(_lib "xcb-keysyms")
+    elseif("${_comp}" STREQUAL "RANDR")
+        set(_header "xcb/randr.h")
+        set(_lib "xcb-randr")
+    elseif("${_comp}" STREQUAL "RENDER")
+        set(_header "xcb/render.h")
+        set(_lib "xcb-render")
+    elseif("${_comp}" STREQUAL "RENDERUTIL")
+        set(_header "xcb/xcb_renderutil.h")
+        set(_lib "xcb-render-util")
+    elseif("${_comp}" STREQUAL "SHAPE")
+        set(_header "xcb/shape.h")
+        set(_lib "xcb-shape")
+    elseif("${_comp}" STREQUAL "SHM")
+        set(_header "xcb/shm.h")
+        set(_lib "xcb-shm")
+    elseif("${_comp}" STREQUAL "SYNC")
+        set(_header "xcb/sync.h")
+        set(_lib "xcb-sync")
+    elseif("${_comp}" STREQUAL "UTIL")
+        set(_header "xcb/xcb_util.h")
+        set(_lib "xcb-util")
+    elseif("${_comp}" STREQUAL "XFIXES")
+        set(_header "xcb/xfixes.h")
+        set(_lib "xcb-xfixes")
+    elseif("${_comp}" STREQUAL "XTEST")
+        set(_header "xcb/xtest.h")
+        set(_lib "xcb-xtest")
+    elseif("${_comp}" STREQUAL "XV")
+        set(_header "xcb/xv.h")
+        set(_lib "xcb-xv")
+    endif()
+
+    find_path(XCB_${_comp}_INCLUDE_DIR NAMES ${_header} HINTS ${PKG_XCB_INCLUDE_DIRS})
+    find_library(XCB_${_comp}_LIBRARY NAMES ${_lib} HINTS ${PKG_XCB_LIBRARY_DIRS})
+
+    if(XCB_${_comp}_INCLUDE_DIR AND XCB_${_comp}_LIBRARY)
+        list(APPEND XCB_INCLUDE_DIRS ${XCB_${_comp}_INCLUDE_DIR})
+        list(APPEND XCB_LIBRARIES ${XCB_${_comp}_LIBRARY})
+        if (NOT XCB_FIND_QUIETLY)
+            message(STATUS "XCB[${_comp}]: Found component ${_comp}")
+        endif()
+    endif()
+
+    if(XCB_FIND_REQUIRED_${_comp})
+        list(APPEND requiredComponents XCB_${_comp}_FOUND)
+    endif()
+
+    find_package_handle_standard_args(XCB_${_comp} DEFAULT_MSG XCB_${_comp}_LIBRARY XCB_${_comp}_INCLUDE_DIR)
+
+    mark_as_advanced(XCB_${_comp}_LIBRARY XCB_${_comp}_INCLUDE_DIR)
+
+    # compatibility for old variable naming
+    set(XCB_${_comp}_INCLUDE_DIRS ${XCB_${_comp}_INCLUDE_DIR})
+    set(XCB_${_comp}_LIBRARIES ${XCB_${_comp}_LIBRARY})
+endmacro()
 
 IF (NOT WIN32)
-  IF (XCB_INCLUDE_DIR AND XCB_LIBRARIES)
-    # In the cache already
-    SET(XCB_FIND_QUIETLY TRUE)
-  ENDIF (XCB_INCLUDE_DIR AND XCB_LIBRARIES)
+    include(FindPackageHandleStandardArgs)
+    # Use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    find_package(PkgConfig)
+    pkg_check_modules(PKG_XCB QUIET ${pkgConfigModules})
 
-  # Use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  FIND_PACKAGE(PkgConfig)
-  PKG_CHECK_MODULES(PKG_XCB QUIET xcb xcb-util xcb-composite xcb-xfixes xcb-damage xcb-render xcb-randr
-                                  xcb-shape xcb-dri2 xcb-glx xcb-shm xcb-xv xcb-sync
-                                  xcb-xtest xcb-icccm xcb-ewmh xcb-image xcb-renderutil xcb-keysyms)
+    set(XCB_DEFINITIONS ${PKG_XCB_CFLAGS})
 
-  SET(XCB_DEFINITIONS ${PKG_XCB_CFLAGS})
+    foreach(comp ${comps})
+        _xcb_handle_component(${comp})
+    endforeach()
 
-  FIND_PATH(XCB_XCB_INCLUDE_DIR         NAMES xcb/xcb.h             HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_UTIL_INCLUDE_DIR        NAMES xcb/xcb_util.h        HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_COMPOSITE_INCLUDE_DIR   NAMES xcb/composite.h       HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_XFIXES_INCLUDE_DIR      NAMES xcb/xfixes.h          HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_DAMAGE_INCLUDE_DIR      NAMES xcb/damage.h          HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_RENDER_INCLUDE_DIR      NAMES xcb/render.h          HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_RANDR_INCLUDE_DIR       NAMES xcb/randr.h           HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_SHAPE_INCLUDE_DIR       NAMES xcb/shape.h           HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_DRI2_INCLUDE_DIR        NAMES xcb/dri2.h            HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_GLX_INCLUDE_DIR         NAMES xcb/glx.h             HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_SHM_INCLUDE_DIR         NAMES xcb/shm.h             HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_XV_INCLUDE_DIR          NAMES xcb/xv.h              HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_SYNC_INCLUDE_DIR        NAMES xcb/sync.h            HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_XTEST_INCLUDE_DIR       NAMES xcb/xtest.h           HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_ICCCM_INCLUDE_DIR       NAMES xcb/xcb_icccm.h       HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_EWMH_INCLUDE_DIR        NAMES xcb/xcb_ewmh.h        HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_IMAGE_INCLUDE_DIR       NAMES xcb/xcb_image.h       HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_RENDERUTIL_INCLUDE_DIR  NAMES xcb/xcb_renderutil.h  HINTS ${PKG_XCB_INCLUDE_DIRS})
-  FIND_PATH(XCB_KEYSYMS_INCLUDE_DIR     NAMES xcb/xcb_keysyms.h     HINTS ${PKG_XCB_INCLUDE_DIRS})
+    if(XCB_INCLUDE_DIRS)
+        list(REMOVE_DUPLICATES XCB_INCLUDE_DIRS)
+    endif()
 
-  FIND_LIBRARY(XCB_XCB_LIBRARIES         NAMES xcb              HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_UTIL_LIBRARIES        NAMES xcb-util         HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_COMPOSITE_LIBRARIES   NAMES xcb-composite    HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_DAMAGE_LIBRARIES      NAMES xcb-damage       HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_XFIXES_LIBRARIES      NAMES xcb-xfixes       HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_RENDER_LIBRARIES      NAMES xcb-render       HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_RANDR_LIBRARIES       NAMES xcb-randr        HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_SHAPE_LIBRARIES       NAMES xcb-shape        HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_DRI2_LIBRARIES        NAMES xcb-dri2         HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_GLX_LIBRARIES         NAMES xcb-glx          HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_SHM_LIBRARIES         NAMES xcb-shm          HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_XV_LIBRARIES          NAMES xcb-xv           HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_SYNC_LIBRARIES        NAMES xcb-sync         HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_XTEST_LIBRARIES       NAMES xcb-xtest        HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_ICCCM_LIBRARIES       NAMES xcb-icccm        HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_EWMH_LIBRARIES        NAMES xcb-ewmh         HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_IMAGE_LIBRARIES       NAMES xcb-image        HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_RENDERUTIL_LIBRARIES  NAMES xcb-render-util  HINTS ${PKG_XCB_LIBRARY_DIRS})
-  FIND_LIBRARY(XCB_KEYSYMS_LIBRARIES     NAMES xcb-keysyms      HINTS ${PKG_XCB_LIBRARY_DIRS})
+    find_package_handle_standard_args(XCB DEFAULT_MSG XCB_LIBRARIES XCB_INCLUDE_DIRS ${requiredComponents})
 
-  set(XCB_INCLUDE_DIR ${XCB_XCB_INCLUDE_DIR} ${XCB_UTIL_INCLUDE_DIR} ${XCB_COMPOSITE_INCLUDE_DIR}
-          ${XCB_XFIXES_INCLUDE_DIR} ${XCB_DAMAGE_INCLUDE_DIR} ${XCB_RENDER_INCLUDE_DIR}
-          ${XCB_RANDR_INCLUDE_DIR} ${XCB_SHAPE_INCLUDE_DIR} ${XCB_DRI2_INCLUDE_DIR}
-          ${XCB_GLX_INCLUDE_DIR} ${XCB_SHM_INCLUDE_DIR} ${XCB_XV_INCLUDE_DIR}
-          ${XCB_SYNC_INCLUDE_DIR} ${XCB_XTEST_INCLUDE_DIR} ${XCB_ICCCM_INCLUDE_DIR}
-          ${XCB_EWMH_INCLUDE_DIR} ${XCB_IMAGE_INCLUDE_DIR} ${XCB_RENDERUTIL_INCLUDE_DIR}
-          ${XCB_KEYSYMS_INCLUDE_DIR})
-
-  set(XCB_LIBRARIES ${XCB_XCB_LIBRARIES} ${XCB_UTIL_LIBRARIES} ${XCB_COMPOSITE_LIBRARIES}
-          ${XCB_XFIXES_LIBRARIES} ${XCB_DAMAGE_LIBRARIES} ${XCB_RENDER_LIBRARIES}
-          ${XCB_RANDR_LIBRARIES} ${XCB_SHAPE_LIBRARIES} ${XCB_DRI2_LIBRARIES} ${XCB_GLX_LIBRARIES}
-          ${XCB_SHM_LIBRARIES} ${XCB_XV_LIBRARIES} ${XCB_SYNC_LIBRARIES} ${XCB_XTEST_LIBRARIES}
-          ${XCB_ICCCM_LIBRARIES} ${XCB_EWMH_LIBRARIES} ${XCB_IMAGE_LIBRARIES}
-          ${XCB_RENDERUTIL_LIBRARIES}  ${XCB_KEYSYMS_LIBRARIES})
-
-  list(REMOVE_DUPLICATES XCB_INCLUDE_DIR)
-
-  include(FindPackageHandleStandardArgs)
-
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB             DEFAULT_MSG  XCB_LIBRARIES             XCB_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_XCB         DEFAULT_MSG  XCB_XCB_LIBRARIES         XCB_XCB_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_UTIL        DEFAULT_MSG  XCB_UTIL_LIBRARIES        XCB_UTIL_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_COMPOSITE   DEFAULT_MSG  XCB_COMPOSITE_LIBRARIES   XCB_COMPOSITE_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_DAMAGE      DEFAULT_MSG  XCB_DAMAGE_LIBRARIES      XCB_DAMAGE_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_XFIXES      DEFAULT_MSG  XCB_XFIXES_LIBRARIES      XCB_XFIXES_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_RENDER      DEFAULT_MSG  XCB_RENDER_LIBRARIES      XCB_RENDER_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_RANDR       DEFAULT_MSG  XCB_RANDR_LIBRARIES       XCB_RANDR_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_SHAPE       DEFAULT_MSG  XCB_SHAPE_LIBRARIES       XCB_SHAPE_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_DRI2        DEFAULT_MSG  XCB_DRI2_LIBRARIES        XCB_DRI2_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_GLX         DEFAULT_MSG  XCB_GLX_LIBRARIES         XCB_GLX_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_SHM         DEFAULT_MSG  XCB_SHM_LIBRARIES         XCB_SHM_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_XV          DEFAULT_MSG  XCB_XV_LIBRARIES          XCB_XV_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_SYNC        DEFAULT_MSG  XCB_SYNC_LIBRARIES        XCB_SYNC_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_XTEST       DEFAULT_MSG  XCB_XTEST_LIBRARIES       XCB_XTEST_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_ICCCM       DEFAULT_MSG  XCB_ICCCM_LIBRARIES       XCB_ICCCM_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_EWMH        DEFAULT_MSG  XCB_EWMH_LIBRARIES        XCB_EWMH_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_IMAGE       DEFAULT_MSG  XCB_IMAGE_LIBRARIES       XCB_IMAGE_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_RENDERUTIL  DEFAULT_MSG  XCB_RENDERUTIL_LIBRARIES  XCB_RENDERUTIL_INCLUDE_DIR)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(XCB_KEYSYMS     DEFAULT_MSG  XCB_KEYSYMS_LIBRARIES     XCB_KEYSYMS_INCLUDE_DIR)
-
-  MARK_AS_ADVANCED(
-        XCB_INCLUDE_DIR             XCB_LIBRARIES
-        XCB_XCB_INCLUDE_DIR         XCB_XCB_LIBRARIES
-        XCB_UILT_INCLUDE_DIR        XCB_UTIL_LIBRARIES
-        XCB_COMPOSITE_INCLUDE_DIR   XCB_COMPOSITE_LIBRARIES
-        XCB_DAMAGE_INCLUDE_DIR      XCB_DAMAGE_LIBRARIES
-        XCB_XFIXES_INCLUDE_DIR      XCB_XFIXES_LIBRARIES
-        XCB_RENDER_INCLUDE_DIR      XCB_RENDER_LIBRARIES
-        XCB_RANDR_INCLUDE_DIR       XCB_RANDR_LIBRARIES
-        XCB_SHAPE_INCLUDE_DIR       XCB_SHAPE_LIBRARIES
-        XCB_DRI2_INCLUDE_DIR        XCB_DRI2_LIBRARIES
-        XCB_GLX_INCLUDE_DIR         XCB_GLX_LIBRARIES
-        XCB_SHM_INCLUDE_DIR         XCB_SHM_LIBRARIES
-        XCB_XV_INCLUDE_DIR          XCB_XV_LIBRARIES
-        XCB_SYNC_INCLUDE_DIR        XCB_SYNC_LIBRARIES
-        XCB_XTEST_INCLUDE_DIR       XCB_XTEST_LIBRARIES
-        XCB_ICCCM_INCLUDE_DIR       XCB_ICCCM_LIBRARIES
-        XCB_EWMH_INCLUDE_DIR        XCB_EWMH_LIBRARIES
-        XCB_IMAGE_INCLUDE_DIR       XCB_IMAGE_LIBRARIES
-        XCB_RENDERUTIL_INCLUDE_DIR  XCB_RENDERUTIL_LIBRARIES
-        XCB_KEYSYMS_INCLUDE_DIR     XCB_KEYSYMS_LIBRARIES
-  )
+    # compatibility for old variable naming
+    set(XCB_INCLUDE_DIR ${XCB_INCLUDE_DIRS})
 
 ENDIF (NOT WIN32)
