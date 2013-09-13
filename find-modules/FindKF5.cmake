@@ -63,7 +63,8 @@ set(knownComponentsTier1  ItemModels
 
 set(knownComponentsTier2  KAuth
                           KCrash
-                          KUnitConversion)
+                          KUnitConversion
+                          KNotifications)
 
 set(knownComponentsTier3   )
 
@@ -74,7 +75,6 @@ set(knownComponentsStaging
    ItemViews
    KBookmarks
    KCompletion
-   KNotifications
    KJobWidgets
    KConfigWidgets
    KIconThemes
