@@ -49,9 +49,7 @@ configure_package_config_file(ECMConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/ECM
                               PATH_VARS  FIND_MODULES_INSTALL_DIR KDE_MODULES_INSTALL_DIR MODULES_INSTALL_DIR )
 
 
-write_basic_package_version_file( ${CMAKE_CURRENT_BINARY_DIR}/ECMConfigVersion.cmake
-                                 VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION}
-                                 COMPATIBILITY AnyNewerVersion )
+configure_file(ECMConfigVersion.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/ECMConfigVersion.cmake @ONLY )
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ECMConfig.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/ECMConfigVersion.cmake
