@@ -63,10 +63,10 @@ set(knownComponentsTier1  ItemModels
 
 set(knownComponentsTier2  KAuth
                           KCrash
-                          KUnitConversion
-                          KNotifications)
+                          KNotifications
+                          KI18n)
 
-set(knownComponentsTier3   )
+set(knownComponentsTier3  KUnitConversion )
 
 set(knownComponentsStaging
    KDE4Attic
@@ -78,7 +78,6 @@ set(knownComponentsStaging
    KJobWidgets
    KConfigWidgets
    KIconThemes
-   KI18n
    KService
    XmlGui
    KWallet
