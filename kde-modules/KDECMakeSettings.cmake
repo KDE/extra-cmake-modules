@@ -111,6 +111,10 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    set(CMAKE_WIN32_EXECUTABLE ON)
    set(CMAKE_MACOSX_BUNDLE ON)
 
+   # By default, don't put a prefix on MODULE targets. add_library(MODULE) is basically for plugin targets,
+   # and in KDE plugins don't have a prefix.
+   set(CMAKE_SHARED_MODULE_PREFIX "")
+
    unset(EXECUTABLE_OUTPUT_PATH)
    unset(LIBRARY_OUTPUT_PATH)
    unset(ARCHIVE_OUTPUT_DIRECTORY)
