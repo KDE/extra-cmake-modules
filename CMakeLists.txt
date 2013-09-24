@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
 
-project(extra-cmake-modules)
+project(extra-cmake-modules NONE)
 
 set(ECM_MAJOR_VERSION 0)
 set(ECM_MINOR_VERSION 0)
