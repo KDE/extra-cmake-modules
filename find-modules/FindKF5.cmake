@@ -83,6 +83,8 @@ set(knownComponentsStaging
    KWallet
    ktextwidgets
    KStyle
+   KCMUtils
+   KPrintUtils
 )
 
 set(allKnownComponents Compiler CMake InstallDirs ${knownComponentsTier1} ${knownComponentsTier2} ${knownComponentsTier3} ${knownComponentsStaging})
