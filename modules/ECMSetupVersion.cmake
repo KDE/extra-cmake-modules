@@ -5,17 +5,17 @@
 #  - optionally it creates a CMake package version file, which can then be installed along with a
 #    CMake package Config.cmake file
 #
-#   ecm_setup_version(<major> <minor> <patch>
+#   ecm_setup_version(<version>
 #                     VARIABLE_PREFIX prefix
 #                     [SOVERSION <soversion>]
 #                     [VERSION_HEADER filename]
 #                     [PACKAGE_VERSION_FILE filename] )
 #
 #
-# ecm_setup_version() sets the following variables
-#    <prefix>_VERSION_MAJOR = <major>
-#    <prefix>_VERSION_MINOR = <minor>
-#    <prefix>_VERSION_PATCH = <patch>
+# ecm_setup_version() sets the following CMake variables
+#    <prefix>_VERSION_MAJOR = <version_major_component>
+#    <prefix>_VERSION_MINOR = <version_minor_component>
+#    <prefix>_VERSION_PATCH = <version_patch_component>
 #    <prefix>_VERSION_STRING = <major>.<minor>.<patch>
 #    <prefix>_SOVERSION is set to <major> if <soversion> has not been specified.
 #
@@ -44,12 +44,19 @@
 
 include(CMakePackageConfigHelpers)
 
-function(ECM_SETUP_VERSION _major _minor _patch)
+function(ECM_SETUP_VERSION _version)
+  # Temporary hack. Remove.
+  set(args ${ARGN})
+  if (${ARGV1} MATCHES "[0-9]")
+    set(_version "${_version}.${ARGV1}.${ARGV2}")
+    list(REMOVE_AT args 0)
+    list(REMOVE_AT args 0)
+  endif()
   set(options )
   set(oneValueArgs VARIABLE_PREFIX SOVERSION VERSION_HEADER PACKAGE_VERSION_FILE)
   set(multiValueArgs )
 
-  cmake_parse_arguments(ESV "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
+  cmake_parse_arguments(ESV "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${args})
 
   if(ESV_UNPARSED_ARGUMENTS)
     message(FATAL_ERROR "Unknown keywords given to ECM_SETUP_VERSION(): \"${ESV_UNPARSED_ARGUMENTS}\"")
@@ -58,6 +65,10 @@ function(ECM_SETUP_VERSION _major _minor _patch)
   if(NOT ESV_VARIABLE_PREFIX)
     message(FATAL_ERROR "Required argument PREFIX missing in ECM_SETUP_VERSION() call")
   endif()
+
+  string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" _major "${_version}")
+  string(REGEX REPLACE "^[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" _minor "${_version}")
+  string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" _patch "${_version}")
 
   if(NOT ESV_SOVERSION)
     set(ESV_SOVERSION ${_major})
