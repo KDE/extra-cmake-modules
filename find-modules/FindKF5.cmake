@@ -45,6 +45,7 @@ set(KF5_VERSION_STRING "5.0.0")
 # misusing this file for searching their own libraries.
 
 set(knownComponentsTier1  ItemModels
+                          ItemViews
                           KArchive
                           KCodecs
                           KConfig
@@ -66,25 +67,28 @@ set(knownComponentsTier2  KAuth
                           KNotifications
                           KI18n)
 
-set(knownComponentsTier3  KUnitConversion )
+set(knownComponentsTier3  KUnitConversion
+                          KConfigWidgets
+                          KDESu
+                          XmlGui
+                          KParts
+                          KIconThemes
+                          KPrintUtils
+                          KTextWidgets)
+
+set(knownComponentsTier4 KCMUtils)
 
 set(knownComponentsStaging
    KDE4Attic
    KIO
    KIOWidgets
-   ItemViews
    KBookmarks
    KCompletion
    KJobWidgets
-   KConfigWidgets
-   KIconThemes
    KService
-   XmlGui
    KWallet
-   ktextwidgets
    KStyle
-   KCMUtils
-   KPrintUtils
+   KNotifyConfig
 )
 
 set(allKnownComponents Compiler CMake InstallDirs ${knownComponentsTier1} ${knownComponentsTier2} ${knownComponentsTier3} ${knownComponentsStaging})
