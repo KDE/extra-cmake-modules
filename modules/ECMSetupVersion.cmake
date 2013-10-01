@@ -45,18 +45,11 @@
 include(CMakePackageConfigHelpers)
 
 function(ECM_SETUP_VERSION _version)
-  # Temporary hack. Remove.
-  set(args ${ARGN})
-  if (${ARGV1} MATCHES "[0-9]")
-    set(_version "${_version}.${ARGV1}.${ARGV2}")
-    list(REMOVE_AT args 0)
-    list(REMOVE_AT args 0)
-  endif()
   set(options )
   set(oneValueArgs VARIABLE_PREFIX SOVERSION VERSION_HEADER PACKAGE_VERSION_FILE)
   set(multiValueArgs )
 
-  cmake_parse_arguments(ESV "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${args})
+  cmake_parse_arguments(ESV "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
   if(ESV_UNPARSED_ARGUMENTS)
     message(FATAL_ERROR "Unknown keywords given to ECM_SETUP_VERSION(): \"${ESV_UNPARSED_ARGUMENTS}\"")
@@ -78,7 +71,7 @@ function(ECM_SETUP_VERSION _version)
   set(${ESV_VARIABLE_PREFIX}_VERSION_MINOR ${_minor})
   set(${ESV_VARIABLE_PREFIX}_VERSION_PATCH ${_patch})
   set(${ESV_VARIABLE_PREFIX}_SOVERSION ${ESV_SOVERSION})
-  set(${ESV_VARIABLE_PREFIX}_VERSION_STRING "${_major}.${_minor}.${_patch}")
+  set(${ESV_VARIABLE_PREFIX}_VERSION_STRING "${_version}")
 
   if(ESV_VERSION_HEADER)
     set(PROJECT_NAME_UPPER "${ESV_VARIABLE_PREFIX}")
@@ -90,7 +83,7 @@ function(ECM_SETUP_VERSION _version)
   endif()
 
   if(ESV_PACKAGE_VERSION_FILE)
-    write_basic_package_version_file("${ESV_PACKAGE_VERSION_FILE}" VERSION ${_major}.${_minor}.${_patch} COMPATIBILITY AnyNewerVersion)
+    write_basic_package_version_file("${ESV_PACKAGE_VERSION_FILE}" VERSION ${_version} COMPATIBILITY AnyNewerVersion)
   endif()
 
   set(${ESV_VARIABLE_PREFIX}_VERSION_MAJOR  "${${ESV_VARIABLE_PREFIX}_VERSION_MAJOR}"  PARENT_SCOPE)
