@@ -6,7 +6,7 @@
 #
 # ECM_MARK_AS_TEST( target1 target2 ... targetN )
 #
-# If BUILD_TESTING is False, then targets marked as tests are exluded from
+# If BUILD_TESTING is False, then targets marked as tests are excluded from
 # the ALL target. They are all part of the 'buildtests' target though, so
 # even if building with BUILD_TESTING set to False, it is possible to build
 # all tests by invoking the 'buildtests' target.
