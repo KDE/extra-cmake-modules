@@ -91,7 +91,7 @@ set(knownComponentsStaging
    KNotifyConfig
 )
 
-set(allKnownComponents Compiler CMake InstallDirs ${knownComponentsTier1} ${knownComponentsTier2} ${knownComponentsTier3} ${knownComponentsStaging})
+set(allKnownComponents Compiler CMake InstallDirs ${knownComponentsTier1} ${knownComponentsTier2} ${knownComponentsTier3} ${knownComponentsTier4} ${knownComponentsStaging})
 
 set(cmakeCompRequested FALSE)
 set(compilerCompRequested FALSE)
