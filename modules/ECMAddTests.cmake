@@ -33,8 +33,10 @@ function(ecm_add_test)
     get_filename_component(_testname ${_sources} NAME_WE)
   else()
     #more than one source file passed, but no test name given -> error
-    message(FATAL_ERROR "ecm_add_unit_test() called with multiple source files but without setting \"TEST_NAME\"")
+    message(FATAL_ERROR "ecm_add_test() called with multiple source files but without setting \"TEST_NAME\"")
   endif()
+
+  message("-------- ${_testname}")
   set(_testname "${ECM_ADD_TEST_NAME_PREFIX}${_testname}")
   add_executable(${_testname} ${_sources})
   add_test(${_testname} ${_testname})
@@ -47,7 +49,7 @@ function(ecm_add_tests)
   set(multiValueArgs LINK_LIBRARIES)
   cmake_parse_arguments(ECM_ADD_TESTS "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
   foreach(_test_source ${ECM_ADD_TESTS_UNPARSED_ARGUMENTS})
-    ecm_add_unit_test(${_test_source}
+    ecm_add_test(${_test_source}
       NAME_PREFIX ${ECM_ADD_TESTS_NAME_PREFIX}
       LINK_LIBRARIES ${ECM_ADD_TESTS_LINK_LIBRARIES}
     )
