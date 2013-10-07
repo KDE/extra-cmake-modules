@@ -74,13 +74,14 @@ set(knownComponentsTier3  KUnitConversion
                           KParts
                           KIconThemes
                           KPrintUtils
-                          KTextWidgets)
+                          KTextWidgets
+                          KPty)
 
 set(knownComponentsTier4 KCMUtils)
 
 set(knownComponentsStaging
    KDE4Attic
-   KIO
+   KIOCore
    KIOWidgets
    KBookmarks
    KCompletion
