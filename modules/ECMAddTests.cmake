@@ -36,7 +36,6 @@ function(ecm_add_test)
     message(FATAL_ERROR "ecm_add_test() called with multiple source files but without setting \"TEST_NAME\"")
   endif()
 
-  message("-------- ${_testname}")
   set(_testname "${ECM_ADD_TEST_NAME_PREFIX}${_testname}")
   add_executable(${_testname} ${_sources})
   add_test(${_testname} ${_testname})
