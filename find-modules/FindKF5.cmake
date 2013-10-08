@@ -81,8 +81,7 @@ set(knownComponentsTier4 KCMUtils)
 
 set(knownComponentsStaging
    KDE4Attic
-   KIOCore
-   KIOWidgets
+   KIO
    KBookmarks
    KCompletion
    KJobWidgets
