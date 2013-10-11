@@ -173,7 +173,9 @@ _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/syst
 # This can then also be used for packaging with cpack.
 set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
                                   LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
-                                  ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
+                                  ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel
+                                  INCLUDES DESTINATION "${INCLUDE_INSTALL_DIR}"
+)
 
 
 # on the Mac support an extra install directory for application bundles
