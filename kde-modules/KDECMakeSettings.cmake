@@ -97,6 +97,8 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # dependencies of shared libraries without breaking binary compatibility.
    # Since CMake 2.8.7
    set(CMAKE_LINK_INTERFACE_LIBRARIES "")
+   # TODO: Remove this and the above line.
+   cmake_policy(SET CMP0022 OLD)
 
    # Default to shared libs for KDE, if no type is explicitely given to add_library():
    set(BUILD_SHARED_LIBS TRUE CACHE BOOL "If enabled, shared libs will be built by default, otherwise static libs")
