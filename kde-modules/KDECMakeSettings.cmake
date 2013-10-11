@@ -96,7 +96,7 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # This reduces inter-package dependencies and makes it easier to remove
    # dependencies of shared libraries without breaking binary compatibility.
    # Since CMake 2.8.7
-   set(CMAKE_LINK_INTERFACE_LIBRARIES "")
+#    set(CMAKE_LINK_INTERFACE_LIBRARIES "")
    # TODO: Remove this and the above line.
    cmake_policy(SET CMP0022 OLD)
 
