@@ -187,30 +187,21 @@ if(firstComponent)
    set(KF5_File "${${firstComponent}_CONFIG}}")
 
    if(${firstComponent}_CONFIG)
-      if(NOT DEFINED ${firstComponent}_INSTALL_PREFIX)
-         message(STATUS "${firstComponent} does not set ${firstComponent}_INSTALL_PREFIX !")
-      endif()
-
       _kf5_handle_component(${firstComponent})
    endif()
 
    # search for the other components first in the same directory where the first one
    # has been found, and additionally in KDEDIRS. This is to make sure we don't
    # get a random mix of installed KDE libraries.
-   set(CMAKE_PREFIX_PATH ${${firstComponent}_INSTALL_PREFIX} ${_KDEDIRS})
+  get_filename_component(packages_dir "${${firstComponent}_DIR}/.." ABSOLUTE)
 
    foreach(comp ${followingComponents})
       find_package(${comp} ${KF5_FIND_VERSION} CONFIG
-                   NO_CMAKE_ENVIRONMENT_PATH
-                   NO_SYSTEM_ENVIRONMENT_PATH
-                   NO_CMAKE_BUILDS_PATH
-                   NO_CMAKE_PACKAGE_REGISTRY
-                   NO_CMAKE_SYSTEM_PATH
-                   NO_CMAKE_SYSTEM_PACKAGE_REGISTRY
-                 )
+        PATHS "${packages_dir}"
+        NO_DEFAULT_PATH
+      )
       if(${comp}_CONFIG)
          _kf5_handle_component(${comp})
-
       endif()
    endforeach()
 
