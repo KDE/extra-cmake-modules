@@ -19,17 +19,17 @@ set(CMAKECONFIG_INSTALL_DIR ${SHARE_INSTALL_DIR}/cmake/)
 set(DOC_INSTALL_DIR ${SHARE_INSTALL_DIR}/doc/)
 
 # create and install docs
-add_custom_target(ManPage ALL
-                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.7"
-                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
-                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt"
-                    VERBATIM
-                 )
+# add_custom_target(ManPage ALL
+#                     COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.7"
+#                     COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
+#                     COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt"
+#                     VERBATIM
+#                  )
 
-install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.7" DESTINATION man/man7/)
+# install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.7" DESTINATION man/man7/)
 
-install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt" "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
-        DESTINATION ${DOC_INSTALL_DIR})
+# install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt" "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
+#         DESTINATION ${DOC_INSTALL_DIR})
 
 
 file(GLOB installModuleFiles ${CMAKE_SOURCE_DIR}/modules/*[^~])
