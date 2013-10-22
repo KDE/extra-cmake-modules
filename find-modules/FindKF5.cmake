@@ -64,6 +64,7 @@ set(knownComponentsTier1  ItemModels
 
 set(knownComponentsTier2  KAuth
                           KCrash
+                          KJobWidgets
                           KNotifications
                           KI18n)
 
@@ -84,7 +85,6 @@ set(knownComponentsStaging
    KIO
    KBookmarks
    KCompletion
-   KJobWidgets
    KService
    KWallet
    KStyle
