@@ -75,7 +75,8 @@ set(knownComponentsTier3  KUnitConversion
                           KIconThemes
                           KPrintUtils
                           KTextWidgets
-                          KPty)
+                          KPty
+                          KDeclarative)
 
 set(knownComponentsTier4 KCMUtils)
 
