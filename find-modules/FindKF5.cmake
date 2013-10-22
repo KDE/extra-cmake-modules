@@ -81,7 +81,6 @@ set(knownComponentsTier3  KUnitConversion
 set(knownComponentsTier4 KCMUtils)
 
 set(knownComponentsStaging
-   KDE4Attic
    KIO
    KBookmarks
    KCompletion
