@@ -80,6 +80,7 @@ set(knownComponentsTier3  KBookmarks
                           KEmoticons
                           KIconThemes
                           KJsEmbed
+                          KNewStuff
                           KParts
                           KPrintUtils
                           KPty
