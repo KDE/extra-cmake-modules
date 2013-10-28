@@ -69,6 +69,7 @@ set(knownComponentsTier2  KAuth
                           KI18n)
 
 set(knownComponentsTier3  KUnitConversion
+                          KBookmarks
                           KConfigWidgets
                           KDESu
                           XmlGui
@@ -77,17 +78,17 @@ set(knownComponentsTier3  KUnitConversion
                           KPrintUtils
                           KTextWidgets
                           KPty
-                          KDeclarative)
+                          KDeclarative
+                          KStyle
+                          )
 
 set(knownComponentsTier4 KCMUtils)
 
 set(knownComponentsStaging
    KIO
-   KBookmarks
    KCompletion
    KService
    KWallet
-   KStyle
    KNotifyConfig
    Kross
 )
