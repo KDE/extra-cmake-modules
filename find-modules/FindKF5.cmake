@@ -77,6 +77,7 @@ set(knownComponentsTier3  KBookmarks
                           KDeclarative
                           KDESu
                           KDEWebKit
+                          KEmoticons
                           KIconThemes
                           KJsEmbed
                           KParts
