@@ -55,40 +55,46 @@ set(knownComponentsTier1  ItemModels
                           KIdleTime
                           KJS
                           KPlotting
-                          KTextWidgets
                           KWidgetsAddons
                           KWindowSystem
                           Solid
                           Sonnet
-                          ThreadWeaver)
-
-set(knownComponentsTier2  KAuth
-                          KCrash
-                          KJobWidgets
-                          KNotifications
-                          KI18n)
-
-set(knownComponentsTier3  KUnitConversion
-                          KBookmarks
-                          KConfigWidgets
-                          KDESu
-                          XmlGui
-                          KParts
-                          KIconThemes
-                          KPrintUtils
-                          KTextWidgets
-                          KPty
-                          KDeclarative
-                          KStyle
+                          ThreadWeaver
                           )
 
-set(knownComponentsTier4 KCMUtils)
+set(knownComponentsTier2  KDNSSD
+                          KAuth
+                          KCompletion
+                          KCrash
+                          KI18n
+                          KJobWidgets
+                          KNotifications
+                          KWallet
+                          )
+
+set(knownComponentsTier3  KBookmarks
+                          KConfigWidgets
+                          KDeclarative
+                          KDESu
+                          KDEWebKit
+                          KIconThemes
+                          KJsEmbed
+                          KParts
+                          KPrintUtils
+                          KPty
+                          KService
+                          KTextWidgets
+                          KUnitConversion
+                          XmlGui
+                          )
+
+set(knownComponentsTier4 KCMUtils
+                         KStyle
+                         KDE4Support
+                         )
 
 set(knownComponentsStaging
    KIO
-   KCompletion
-   KService
-   KWallet
    KNotifyConfig
    Kross
 )
