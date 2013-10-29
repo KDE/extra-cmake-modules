@@ -88,7 +88,7 @@ set(knownComponentsTier3  KBookmarks
                           KTextWidgets
                           KUnitConversion
                           XmlGui
-                          )
+                          KDED)
 
 set(knownComponentsTier4 KCMUtils
                          KStyle
