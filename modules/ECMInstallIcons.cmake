@@ -1,8 +1,35 @@
 # - Function for installing icons
 # This module provides the function ECM_INSTALL_ICONS().
 
-# ECM_INSTALL_ICONS installs all icons in the current path
-# into the diectory provided.
+# ECM_INSTALL_ICONS installs all icons in the current path that
+# match a specific file naming convention into into the directory provided
+# following the Freedesktop.org icon naming spec
+# http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
+
+# The files in the directory must be in the format in order to be installed
+# themeSize-Group-name.extension
+
+# The following file extensions are supported
+# .png
+# .mng
+# .svgz
+
+# Where the theme is one of:
+# "hi" for hicolor
+# "lo" for locolor
+# "cr" for the crystal icon theme
+# "ox" for the oxygen icon theme
+
+# Size refers to the size of one dimension of the icon
+# Typically, 16, 22, 32, 48, 64, 128 or 256
+# For svgz files the size should be set to "sc"
+
+# For example the file
+# hi22-action-menu_new.png
+# would be installed into
+# PREFIX/hicolor/22x22/actions/menu_new.png
+
+
 
 # a "map" of short type names to the directories
 # unknown names should give empty results
