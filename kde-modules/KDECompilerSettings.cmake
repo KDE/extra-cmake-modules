@@ -293,6 +293,16 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 # TODO: why do the other KDE4_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
+   # Note that exceptions are enabled by default when building with clang. That
+   # is, -fno-exceptions is not set in CMAKE_CXX_FLAGS below. This is because a
+   # lot of code in different KDE modules ends up including code that throws
+   # exceptions. Most (or all) of the occurrences are in template code that
+   # never gets instantiated. Contrary to GCC, ICC and MSVC, clang (most likely
+   # rightfully) complains about that. Trying to work around the issue by
+   # passing -fdelayed-template-parsing brings other problems, as noted in
+   # http://lists.kde.org/?l=kde-core-devel&m=138157459706783&w=2.
+   # The generated code will be slightly bigger, but there is no way to avoid
+   # it.
    set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
@@ -314,17 +324,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
    set (CMAKE_MODULE_LINKER_FLAGS_PROFILE "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
 
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-   # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-exceptions -DQT_NO_EXCEPTIONS -fno-common -Werror=return-type")
-
-   # There is a lot of code out there that includes headers that throw
-   # exceptions, but we disable exceptions by default.
-   # GCC, MSVC and ICC do not complain about these cases when the exceptions
-   # are thrown inside some template code that is not expanded/used, which is
-   # what happens most of the time.
-   # We have to follow suit and be less strict in order not to break the build
-   # in many places.
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdelayed-template-parsing")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-common -Werror=return-type")
 
    if (CMAKE_SYSTEM_NAME STREQUAL GNU)
       set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
