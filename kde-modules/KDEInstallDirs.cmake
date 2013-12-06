@@ -128,7 +128,7 @@ if(WIN32)
 else()
   _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/kde5/libexec"             "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/kde5/libexec)")
 endif()
-_set_fancy(INCLUDE_INSTALL_DIR       "include"                                     "The install dir for header files")
+_set_fancy(INCLUDE_INSTALL_DIR       "include/KF5"                                 "The install dir for header files")
 
 _set_fancy(QT_PLUGIN_INSTALL_DIR     "${LIB_INSTALL_DIR}/plugins"                  "The install dir where Qt plugins will be installed (default is ${LIB_INSTALL_DIR}/plugins)")
 _set_fancy(PLUGIN_INSTALL_DIR        "${QT_PLUGIN_INSTALL_DIR}/kf5"                "The install dir where plugins (loaded via KPluginLoader) will be installed (default is ${LIB_INSTALL_DIR}/plugins/kf5)")
