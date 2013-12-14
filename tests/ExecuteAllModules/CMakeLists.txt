@@ -12,6 +12,8 @@ cmake_minimum_required(VERSION 2.8)
 file(GLOB all_find_modules "${CMAKE_CURRENT_SOURCE_DIR}/../../find-modules/Find*cmake")
 file(GLOB all_other_modules "${CMAKE_CURRENT_SOURCE_DIR}/../../modules/*cmake")
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
+
 foreach(module ${all_find_modules} ${all_other_modules})
   message(STATUS "module: ${module}")
   include("${module}")
