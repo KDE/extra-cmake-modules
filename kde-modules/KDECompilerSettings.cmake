@@ -1,5 +1,5 @@
 # This module provides the following variables:
-#   KDE4_ENABLE_EXCEPTIONS - use this to enable exceptions
+#   KDE_ENABLE_EXCEPTIONS - use this to enable exceptions
 #
 # This module also sets up CMAKE_CXX_FLAGS for a set of predefined buildtypes
 # as documented below.
@@ -182,7 +182,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR (WIN32 AND "${CMAKE_CXX_COMPIL
       endif()
    endmacro()
 
-   set (KDE4_ENABLE_EXCEPTIONS -EHsc)
+   set (KDE_ENABLE_EXCEPTIONS -EHsc)
 
    # make sure that no header adds libcmt by default using #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
    _kde_insert_flag("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "Release with Debug Info")
@@ -233,8 +233,8 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-# TODO: why do the other KDE4_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
-   set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
+# TODO: why do the other KDE_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
+   set (KDE_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
@@ -292,7 +292,7 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-# TODO: why do the other KDE4_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
+# TODO: why do the other KDE_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
    # Note that exceptions are enabled by default when building with clang. That
    # is, -fno-exceptions is not set in CMAKE_CXX_FLAGS below. This is because a
    # lot of code in different KDE modules ends up including code that throws
@@ -303,7 +303,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
    # http://lists.kde.org/?l=kde-core-devel&m=138157459706783&w=2.
    # The generated code will be slightly bigger, but there is no way to avoid
    # it.
-   set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
+   set (KDE_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
@@ -343,7 +343,7 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
-   set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
+   set (KDE_ENABLE_EXCEPTIONS -fexceptions)
    # Select flags.
    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
@@ -362,4 +362,3 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 add_compiler_export_flags()  # from GenerateExportHeader.cmake
 
 add_definitions(${_KDE4_PLATFORM_DEFINITIONS})
-
