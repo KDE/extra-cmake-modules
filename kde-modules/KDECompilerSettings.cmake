@@ -1,31 +1,13 @@
+# This module sets more useful CMAKE_CXX_FLAGS.
+#
+# In particular, it enables many more warnings than the default,
+# and sets stricter modes for some compiler features.  By default,
+# it disables exceptions.
+#
 # This module provides the following variables:
-#   KDE_ENABLE_EXCEPTIONS - use this to enable exceptions
+#   KDE_ENABLE_EXCEPTIONS - use this to enable exceptions, as in
+#                           set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 #
-# This module also sets up CMAKE_CXX_FLAGS for a set of predefined buildtypes
-# as documented below.
-#
-#  A note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
-#  the flags for those buildtypes. FindKDE4Internal supports the values
-#  Debug, Release, RelWithDebInfo, Profile and Debugfull:
-#
-#  Release
-#          optimised for speed, qDebug/kDebug turned off, no debug symbols, no asserts
-#  RelWithDebInfo (Release with debug info)
-#          similar to Release, optimised for speed, but with debugging symbols on (-g)
-#  Debug
-#          optimised but debuggable, debugging on (-g)
-#          (-fno-reorder-blocks -fno-schedule-insns -fno-inline)
-#  DebugFull
-#          no optimisation, full debugging on (-g3)
-#  Profile
-#          DebugFull + -ftest-coverage -fprofile-arcs
-#
-#
-#  The default buildtype is RelWithDebInfo.
-#  It is expected that the "Debug" build type be still debuggable with gdb
-#  without going all over the place, but still produce better performance.
-#  It's also important to note that gcc cannot detect all warning conditions
-#  unless the optimiser is active.
 
 include(CheckCXXCompilerFlag)
 include(GenerateExportHeader)
@@ -56,12 +38,6 @@ include(GenerateExportHeader)
 ######################################################
 #  and now the platform specific stuff
 ######################################################
-
-# Set a default build type for single-configuration
-# CMake generators if no build type is set.
-if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE RelWithDebInfo)
-endif()
 
 
 if (WIN32)
@@ -169,10 +145,6 @@ endif (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
 # compiler specific settings
 ############################################################
 
-if (CMAKE_BUILD_TYPE)
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "DebugFull" "Release" "RelWithDebInfo" "Profile" "Coverage")
-endif()
-
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
 
    # this macro is for internal use only.
@@ -235,24 +207,6 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 # TODO: why do the other KDE_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
    set (KDE_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
-   # Select flags.
-   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
-   set(CMAKE_CXX_FLAGS_PROFILE        "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
-   set(CMAKE_CXX_FLAGS_COVERAGE       "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
-   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
-   set(CMAKE_C_FLAGS_PROFILE          "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
-   set(CMAKE_C_FLAGS_COVERAGE         "${CMAKE_C_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
-
-   # TODO: do those flags also apply to the Intel compiler ? What about clang ?
-   set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-   set (CMAKE_SHARED_LINKER_FLAGS_PROFILE "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-   set (CMAKE_MODULE_LINKER_FLAGS_PROFILE "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
 
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
    # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
@@ -304,24 +258,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
    # The generated code will be slightly bigger, but there is no way to avoid
    # it.
    set (KDE_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
-   # Select flags.
-   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-inline")
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
-   set(CMAKE_CXX_FLAGS_PROFILE        "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
-   set(CMAKE_CXX_FLAGS_COVERAGE       "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
-   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-inline")
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
-   set(CMAKE_C_FLAGS_PROFILE          "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
-   set(CMAKE_C_FLAGS_COVERAGE         "${CMAKE_C_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
-
-   # TODO: do those flags also apply to the Intel compiler?
-   set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-   set (CMAKE_SHARED_LINKER_FLAGS_PROFILE "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-   set (CMAKE_MODULE_LINKER_FLAGS_PROFILE "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
 
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-common -Werror=return-type")
@@ -344,15 +280,6 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
    set (KDE_ENABLE_EXCEPTIONS -fexceptions)
-   # Select flags.
-   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-   set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -g -fno-inline -noalign")
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g -fno-inline -noalign")
-   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g")
-   set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_DEBUG            "-O2 -g -fno-inline -noalign")
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g -fno-inline -noalign")
 
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -w1 -Wpointer-arith -fno-common")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -w1 -Wpointer-arith -fno-exceptions -fno-common")
