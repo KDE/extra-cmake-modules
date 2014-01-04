@@ -363,5 +363,3 @@ add_compiler_export_flags()  # from GenerateExportHeader.cmake
 
 add_definitions(${_KDE4_PLATFORM_DEFINITIONS})
 
-# TODO: remove once http://git.reviewboard.kde.org/r/114502/ is in
-set(KDE4_ENABLE_EXCEPTIONS "${KDE_ENABLE_EXCEPTIONS}")
