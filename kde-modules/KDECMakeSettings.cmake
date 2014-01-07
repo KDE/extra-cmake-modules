@@ -7,6 +7,8 @@
 ################# RPATH handling ##################################
 
 if(NOT KDE_SKIP_RPATH_SETTINGS)
+   # Set the default RPATH to point to useful locations, namely where the
+   # libraries will be installed and the linker search path
 
    if(NOT LIB_INSTALL_DIR)
       message(FATAL_ERROR "LIB_INSTALL_DIR not set. This is necessary for using the RPATH settings.")
@@ -17,20 +19,12 @@ if(NOT KDE_SKIP_RPATH_SETTINGS)
       set(_abs_LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
    endif()
 
-   # setup default RPATH/install_name handling, may be overridden by KDE4_HANDLE_RPATH_FOR_EXECUTABLE
-   # It sets up to build with full RPATH. When installing, RPATH will be changed to the LIB_INSTALL_DIR
-   # and all link directories which are not inside the current build dir.
    if (UNIX)
-      # the rest is RPATH handling
-      # here the defaults are set
-      # which are partly overwritten in kde4_handle_rpath_for_library()
-      # and kde4_handle_rpath_for_executable(), both located in KDE4Macros.cmake, Alex
       if (APPLE)
          set(CMAKE_INSTALL_NAME_DIR ${_abs_LIB_INSTALL_DIR})
       else ()
-         # add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of the standard system link
-         # directories listed in CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES) and use the RPATH figured out by cmake when compiling
-
+         # add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of
+         # the standard system link directories - such as /usr/lib on UNIX)
          list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${_abs_LIB_INSTALL_DIR}" _isSystemLibDir)
          list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES      "${_abs_LIB_INSTALL_DIR}" _isSystemCxxLibDir)
          list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES        "${_abs_LIB_INSTALL_DIR}" _isSystemCLibDir)
@@ -38,9 +32,13 @@ if(NOT KDE_SKIP_RPATH_SETTINGS)
             set(CMAKE_INSTALL_RPATH "${_abs_LIB_INSTALL_DIR}")
          endif()
 
+         # Append directories in the linker search path (but outside the project)
+         set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+         # Ensure these default settings have not been overridden
+         # by careless users
          set(CMAKE_SKIP_BUILD_RPATH FALSE)
          set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-         set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
       endif ()
    endif (UNIX)
 
