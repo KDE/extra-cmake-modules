@@ -10,7 +10,6 @@
 #
 
 include(CheckCXXCompilerFlag)
-include(GenerateExportHeader)
 
 # TODO: what's up with this manifest stuff ?
 #       setting the CMAKE_MODULE_PATH like this is definitely wrong.
@@ -286,7 +285,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
 endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
-add_compiler_export_flags()  # from GenerateExportHeader.cmake
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 add_definitions(${_KDE4_PLATFORM_DEFINITIONS})
 
