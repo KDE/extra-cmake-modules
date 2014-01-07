@@ -100,13 +100,8 @@ endif()
 # additionally if installing to the same location as kdelibs, the other install
 # directories are reused from the installed kdelibs
 macro(_SET_FANCY _var _value _comment)
-  set(_predefinedvalue "${_value}")
-  if ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
-      set(_predefinedvalue "${KDE4_${_var}}")
-  endif()
-
   if (NOT DEFINED ${_var})
-      set(${_var} ${_predefinedvalue})
+      set(${_var} ${_value})
   else()
       set(${_var} "${${_var}}" CACHE STRING "${_comment}")
   endif()
