@@ -17,7 +17,10 @@ if (WIN32)
    if(MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
       # FIXME: KDE_FULL_TEMPLATE_EXPORT_INSTANTIATION is a hangover from kdemacros.h
       #        and should probably be removed
-      set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN )
+      add_definitions(-DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION)
+
+      # Speeds up compile times by not including everything with windows.h
+      add_definitions(-DWIN32_LEAN_AND_MEAN)
 
       # Disable warnings:
       # C4250: 'class1' : inherits 'class2::member' via dominance
@@ -34,13 +37,11 @@ if (WIN32)
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4661" )
 
       # to avoid a lot of deprecated warnings
-      # FIXME: this gets overridden below
-      set(_KDE4_PLATFORM_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS}
-                       -D_CRT_SECURE_NO_DEPRECATE
-                       -D_CRT_SECURE_NO_WARNINGS
-                       -D_CRT_NONSTDC_NO_DEPRECATE
-                       -D_SCL_SECURE_NO_WARNINGS
-                       )
+      add_definitions(-D_CRT_SECURE_NO_DEPRECATE
+                      -D_CRT_SECURE_NO_WARNINGS
+                      -D_CRT_NONSTDC_NO_DEPRECATE
+                      -D_SCL_SECURE_NO_WARNINGS
+                     )
    endif()
 
 # TODO: we should not depend on Perl or Qt already been found here
@@ -60,8 +61,10 @@ if (WIN32)
    # does not work atm
    set(CMAKE_DEBUG_POSTFIX "")
 
-   # we don't support anything below w2k and all winapi calls are unicodes
-   set( _KDE4_PLATFORM_DEFINITIONS -D_WIN32_WINNT=0x0501 -DWINVER=0x0501 -D_WIN32_IE=0x0501 -DUNICODE )
+   # we don't support anything below w2k
+   add_definitions(-D_WIN32_WINNT=0x0501 -DWINVER=0x0501 -D_WIN32_IE=0x0501)
+   # all winapi calls are unicodes
+   add_definitions(-DUNICODE)
 
 endif (WIN32)
 
@@ -76,16 +79,18 @@ endif()
 
 
 if ("${CMAKE_SYSTEM_NAME}" MATCHES Linux OR "${CMAKE_SYSTEM_NAME}" STREQUAL GNU)
+   # Get glibc to provide useful functions
+   #
    # _BSD_SOURCE: is/was needed by glibc for snprintf to be available when
    # building C files.
    # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
-
-   set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
+   add_definitions(-D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
 endif()
 
 
 if (UNIX)
-   set ( _KDE4_PLATFORM_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE)
+   # 64-bit file offsets
+   add_definitions(-D_LARGEFILE64_SOURCE)
 endif (UNIX)
 
 
@@ -270,6 +275,4 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
-
-add_definitions(${_KDE4_PLATFORM_DEFINITIONS})
 
