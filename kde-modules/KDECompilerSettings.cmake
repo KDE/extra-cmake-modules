@@ -13,28 +13,34 @@ include(CheckCXXCompilerFlag)
 
 if (WIN32)
 
-   # limit win32 packaging to kdelibs at now
-   # don't know if package name, version and notes are always available
-
    # windows, microsoft compiler
    if(MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+      # FIXME: KDE_FULL_TEMPLATE_EXPORT_INSTANTIATION is a hangover from kdemacros.h
+      #        and should probably be removed
       set( _KDE4_PLATFORM_DEFINITIONS -DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION -DWIN32_LEAN_AND_MEAN )
 
+      # Disable warnings:
       # C4250: 'class1' : inherits 'class2::member' via dominance
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4250" )
-      # C4251: 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
+      # C4251: 'identifier' : class 'type' needs to have dll-interface to be
+      #        used by clients of class 'type2'
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4251" )
-      # C4396: 'identifier' : 'function' the inline specifier cannot be used when a friend declaration refers to a specialization of a function template
+      # C4396: 'identifier' : 'function' the inline specifier cannot be used
+      #        when a friend declaration refers to a specialization of a
+      #        function template
       set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4396" )
+      # C4661: 'identifier' : no suitable definition provided for explicit
+      #         template instantiation request
+      set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4661" )
+
       # to avoid a lot of deprecated warnings
+      # FIXME: this gets overridden below
       set(_KDE4_PLATFORM_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS}
                        -D_CRT_SECURE_NO_DEPRECATE
                        -D_CRT_SECURE_NO_WARNINGS
                        -D_CRT_NONSTDC_NO_DEPRECATE
                        -D_SCL_SECURE_NO_WARNINGS
                        )
-      # 'identifier' : no suitable definition provided for explicit template instantiation request
-      set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd4661" )
    endif()
 
 # TODO: we should not depend on Perl or Qt already been found here
@@ -60,15 +66,18 @@ if (WIN32)
 endif (WIN32)
 
 if (APPLE)
-  # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or maybe 10.3 to allow
-  # -undefined dynamic_lookup; in the future we should do this programmatically
+  # we need to set MACOSX_DEPLOYMENT_TARGET to (I believe) at least 10.2 or
+  # maybe 10.3 to allow -undefined dynamic_lookup; in the future we should do
+  # this programmatically
+
   # hmm... why doesn't this work?
   set (ENV{MACOSX_DEPLOYMENT_TARGET} 10.3)
 endif()
 
 
 if ("${CMAKE_SYSTEM_NAME}" MATCHES Linux OR "${CMAKE_SYSTEM_NAME}" STREQUAL GNU)
-   # _BSD_SOURCE: is/was needed by glibc for snprintf to be available when building C files.
+   # _BSD_SOURCE: is/was needed by glibc for snprintf to be available when
+   # building C files.
    # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
 
    set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
@@ -81,9 +90,10 @@ endif (UNIX)
 
 
 if (APPLE)
-  # "-undefined dynamic_lookup" means we don't care about missing symbols at link-time by default
-  # this is bad, but unavoidable until there is the equivalent of libtool -no-undefined implemented
-  # or perhaps it already is, and I just don't know where to look  ;)
+  # "-undefined dynamic_lookup" means we don't care about missing symbols at
+  # link-time by default this is bad, but unavoidable until there is the
+  # equivalent of libtool -no-undefined implemented or perhaps it already is,
+  # and I just don't know where to look  ;)
 
   set (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress ${CMAKE_SHARED_LINKER_FLAGS}")
   set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress ${CMAKE_MODULE_LINKER_FLAGS}")
@@ -127,7 +137,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR (WIN32 AND "${CMAKE_CXX_COMPIL
 
    set (KDE_ENABLE_EXCEPTIONS -EHsc)
 
-   # make sure that no header adds libcmt by default using #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
+   # make sure that no header adds libcmt by default using
+   # #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
    _kde_insert_flag("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "Release with Debug Info")
    _kde_insert_flag("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELEASE "release")
    _kde_insert_flag("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "release minsize")
