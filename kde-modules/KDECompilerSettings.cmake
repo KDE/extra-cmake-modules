@@ -11,34 +11,6 @@
 
 include(CheckCXXCompilerFlag)
 
-# TODO: what's up with this manifest stuff ?
-#       setting the CMAKE_MODULE_PATH like this is definitely wrong.
-#       FindKDEWin.cmake should probably come from ecm
-#
-# if (WIN32)
-#    list(APPEND CMAKE_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/share/apps/cmake/modules")
-#    find_package(KDEWin REQUIRED)
-#    option(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
-#    if (KDE4_ENABLE_UAC_MANIFEST)
-#       find_program(KDE4_MT_EXECUTABLE mt
-#          PATHS ${KDEWIN_INCLUDE_DIR}/../bin
-#          NO_DEFAULT_PATH
-#       )
-#       if (KDE4_MT_EXECUTABLE)
-#          message(STATUS "Found KDE manifest tool at ${KDE4_MT_EXECUTABLE} ")
-#       else (KDE4_MT_EXECUTABLE)
-#          message(STATUS "KDE manifest tool not found, manifest generating for Windows Vista disabled")
-#          set (KDE4_ENABLE_UAC_MANIFEST OFF)
-#       endif (KDE4_MT_EXECUTABLE)
-#    endif (KDE4_ENABLE_UAC_MANIFEST)
-# endif (WIN32)
-
-
-######################################################
-#  and now the platform specific stuff
-######################################################
-
-
 if (WIN32)
 
    # limit win32 packaging to kdelibs at now
