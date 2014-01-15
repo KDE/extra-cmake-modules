@@ -19,6 +19,9 @@
 #    <prefix>_VERSION_STRING = <major>.<minor>.<patch>
 #    <prefix>_SOVERSION is set to <major> if <soversion> has not been specified.
 #
+# It also sets PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH and
+# PROJECT_VERSION_STRING, for easier use with configure_file and file(GENERATE).
+#
 # If the VERSION_HEADER option is used, a simple C header is generated with the given
 # filename. If filename is a relative path, it is interpreted as relative to
 # CMAKE_CURRENT_BINARY_DIR.
@@ -92,5 +95,10 @@ function(ECM_SETUP_VERSION _version)
   set(${ESV_VARIABLE_PREFIX}_VERSION_PATCH  "${${ESV_VARIABLE_PREFIX}_VERSION_PATCH}"  PARENT_SCOPE)
   set(${ESV_VARIABLE_PREFIX}_SOVERSION      "${${ESV_VARIABLE_PREFIX}_SOVERSION}"      PARENT_SCOPE)
   set(${ESV_VARIABLE_PREFIX}_VERSION_STRING "${${ESV_VARIABLE_PREFIX}_VERSION_STRING}" PARENT_SCOPE)
+
+  set(PROJECT_VERSION_STRING "${PROJECT_VERSION_STRING}" PARENT_SCOPE)
+  set(PROJECT_VERSION_MAJOR  "${PROJECT_VERSION_MAJOR}"  PARENT_SCOPE)
+  set(PROJECT_VERSION_MINOR  "${PROJECT_VERSION_MINOR}"  PARENT_SCOPE)
+  set(PROJECT_VERSION_PATCH  "${PROJECT_VERSION_PATCH}"  PARENT_SCOPE)
 
 endfunction()
