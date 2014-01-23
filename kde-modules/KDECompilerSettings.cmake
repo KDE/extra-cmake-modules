@@ -2,12 +2,33 @@
 #
 # In particular, it enables many more warnings than the default,
 # and sets stricter modes for some compiler features.  By default,
-# it disables exceptions.
+# it disables exceptions; kde_target_enable_exceptions() can be used
+# to re-enable them for a specific target.
 #
-# This module provides the following variables:
-#   KDE_ENABLE_EXCEPTIONS - use this to enable exceptions, as in
-#                           set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE_ENABLE_EXCEPTIONS}")
 #
+# This module provides the following functions:
+#
+#   kde_source_files_enable_exceptions([file1 [file2 [...]]])
+#
+# Enables exceptions for specific source files.  This should not be
+# called on source files in a language other than C++.
+#
+#   kde_target_enable_exceptions(target <INTERFACE|PUBLIC|PRIVATE>)
+#
+# Enables exceptions for a specific target.  This should not be called
+# on a target that has source files in a language other than C++.
+#
+#   kde_enable_exceptions()
+#
+# Enables exceptions for C++ source files compiled for the CMakeLists.txt file
+# in the current directory and all subdirectories.
+#
+
+
+# TODO: Deal with QT_NO_EXCEPTIONS for non-gnu compilers?
+#       This should be defined if and only if exceptions are disabled.
+#       qglobal.h has some magic to set it when exceptions are disabled
+#       with gcc, but other compilers are unaccounted for.
 
 include(CheckCXXCompilerFlag)
 
@@ -148,8 +169,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR (WIN32 AND "${CMAKE_CXX_COMPIL
       endif()
    endmacro()
 
-   set (KDE_ENABLE_EXCEPTIONS -EHsc)
-
    # make sure that no header adds libcmt by default using
    # #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
    _kde_insert_flag("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "Release with Debug Info")
@@ -200,12 +219,9 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-# TODO: why do the other KDE_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
-   set (KDE_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
-
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
    # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -fno-check-new -fno-common")
 
    if (CMAKE_SYSTEM_NAME STREQUAL GNU)
       set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
@@ -241,7 +257,6 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-# TODO: why do the other KDE_ENABLE_EXCEPTIONS not have -UQT_NO_EXCEPTIONS ?
    # Note that exceptions are enabled by default when building with clang. That
    # is, -fno-exceptions is not set in CMAKE_CXX_FLAGS below. This is because a
    # lot of code in different KDE modules ends up including code that throws
@@ -252,7 +267,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
    # http://lists.kde.org/?l=kde-core-devel&m=138157459706783&w=2.
    # The generated code will be slightly bigger, but there is no way to avoid
    # it.
-   set (KDE_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
 
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-common -Werror=return-type")
@@ -273,9 +287,6 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-
-   set (KDE_ENABLE_EXCEPTIONS -fexceptions)
-
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -w1 -Wpointer-arith -fno-common")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -w1 -Wpointer-arith -fno-exceptions -fno-common")
 
@@ -283,4 +294,65 @@ endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+
+macro(_kdecompilersettings_append_exception_flag VAR)
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        set(${VAR} "${${VAR}} -EHsc")
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+        if (WIN32)
+            set(${VAR} "${${VAR}} -EHsc")
+        else()
+            set(${VAR} "${${VAR}} -fexceptions")
+        endif()
+    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        set(${VAR} "${${VAR}} -fexceptions")
+    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        # We never disabled exceptions for Clang anyway, but this makes it
+        # blindingly obvious to anyone building with make VERBOSE=1
+        set(${VAR} "${${VAR}} -fexceptions")
+    endif()
+    string(STRIP "${${VAR}}" ${VAR})
+endmacro()
+
+function(KDE_SOURCE_FILES_ENABLE_EXCEPTIONS)
+    foreach(source_file ${ARGV})
+        get_source_file_property(flags ${source_file} COMPILE_FLAGS)
+        _kdecompilersettings_append_exception_flag(flags)
+        set_source_files_properties(${source_file} COMPILE_FLAGS "${flags}")
+    endforeach()
+endfunction()
+
+function(KDE_TARGET_ENABLE_EXCEPTIONS target mode)
+    # TODO we need to unset QT_NO_EXCEPTIONS for non-GNU compilers
+    #      (although we currently do not set it anyway)
+    target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:MSVC>:-EHsc>")
+    if (WIN32)
+        target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Intel>:-EHsc>")
+    else()
+        target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Intel>:-fexceptions>")
+    endif()
+    # We never disabled exceptions for Clang anyway, but this makes it
+    # blindingly obvious to anyone building with make VERBOSE=1
+    target_compile_options(${target} ${mode}
+        "$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-fexceptions>")
+endfunction()
+
+function(KDE_ENABLE_EXCEPTIONS)
+
+    # We set CMAKE_CXX_FLAGS, rather than add_compile_options(), because
+    # we only want to affect the compilation of C++ source files.
+
+    # strip any occurrences of -DQT_NO_EXCEPTIONS; this should only be defined
+    # if exceptions are disabled
+    # the extra spaces mean we will not accentially mangle any other options
+    string(REPLACE " -DQT_NO_EXCEPTIONS " " " CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} ")
+    # this option is common to several compilers, so just always remove it
+    string(REPLACE " -fno-exceptions " " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    # strip undoes the extra spaces we put in above
+    string(STRIP "${CMAKE_CXX_FLAGS}" CMAKE_CXX_FLAGS)
+
+    _kdecompilersettings_append_exception_flag(CMAKE_CXX_FLAGS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" PARENT_SCOPE)
+
+endfunction()
 
