@@ -11,6 +11,14 @@
 
 include(CheckCXXCompilerFlag)
 
+# This macro is for adding definitions that affect the underlying
+# platform API.  It makes sure that configure checks will also have
+# the same defines, so that the checks match compiled code.
+macro (_KDE_ADD_PLATFORM_DEFINITIONS)
+    add_definitions(${ARGV})
+    set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS} ${ARGV})
+endmacro()
+
 if (WIN32)
 
    # windows, microsoft compiler
@@ -20,7 +28,7 @@ if (WIN32)
       add_definitions(-DKDE_FULL_TEMPLATE_EXPORT_INSTANTIATION)
 
       # Speeds up compile times by not including everything with windows.h
-      add_definitions(-DWIN32_LEAN_AND_MEAN)
+      _kde_add_platform_definitions(-DWIN32_LEAN_AND_MEAN)
 
       # Disable warnings:
       # C4250: 'class1' : inherits 'class2::member' via dominance
@@ -62,9 +70,9 @@ if (WIN32)
    set(CMAKE_DEBUG_POSTFIX "")
 
    # we don't support anything below w2k
-   add_definitions(-D_WIN32_WINNT=0x0501 -DWINVER=0x0501 -D_WIN32_IE=0x0501)
+   _kde_add_platform_definitions(-D_WIN32_WINNT=0x0501 -DWINVER=0x0501 -D_WIN32_IE=0x0501)
    # all winapi calls are unicodes
-   add_definitions(-DUNICODE)
+   _kde_add_platform_definitions(-DUNICODE)
 
 endif (WIN32)
 
@@ -84,13 +92,13 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES Linux OR "${CMAKE_SYSTEM_NAME}" STREQUAL GNU)
    # _BSD_SOURCE: is/was needed by glibc for snprintf to be available when
    # building C files.
    # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
-   add_definitions(-D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
+   _kde_add_platform_definitions(-D_XOPEN_SOURCE=500 -D_BSD_SOURCE -D_GNU_SOURCE)
 endif()
 
 
 if (UNIX)
    # 64-bit file offsets
-   add_definitions(-D_LARGEFILE64_SOURCE)
+   _kde_add_platform_definitions(-D_LARGEFILE64_SOURCE)
 endif (UNIX)
 
 
