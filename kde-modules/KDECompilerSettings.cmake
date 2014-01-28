@@ -328,13 +328,6 @@ if (APPLE)
     set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress ${CMAKE_MODULE_LINKER_FLAGS}")
 endif()
 
-if (UNIX AND NOT APPLE)
-    # We apparently need to explicitly link against libc
-    # FIXME: really!?
-    set(CMAKE_SHARED_LINKER_FLAGS "-lc ${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS "-lc ${CMAKE_MODULE_LINKER_FLAGS}")
-endif()
-
 if (WIN32)
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR
             (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
