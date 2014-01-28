@@ -29,37 +29,9 @@
 # Toolchain minimal requirements
 ############################################################
 
-set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
-
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.2.0")
         message(FATAL_ERROR "GCC 4.2 or later is required")
-    endif()
-
-    if (NOT WIN32)
-        # FIXME: This test was originally used to decide whether to
-        #        enable hidden vis for GCC >= 4.1 (it would not be
-        #        if GCC had the mt allocator).
-        #        1. Is this something that matters for GCC >= 4.2?
-        #        2. If so, do we actually want to change the value
-        #           of CMAKE_CXX_VISIBILITY_PRESET?
-        #        All I can find about this is
-        #        http://gcc.gnu.org/bugzilla/show_bug.cgi?id=19664,
-        #        esp. comments 90/91 and 104-108.  I think requiring
-        #        GCC 4.2 and some version of binutils (2.18?) should
-        #        be enough.
-        set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
-        exec_program(${CMAKE_C_COMPILER} ARGS ${CMAKE_C_COMPILER_ARG1} -v OUTPUT_VARIABLE _gcc_alloc_info)
-        string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
-    endif()
-endif()
-
-if (NOT WIN32 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR)
-    # FIXME: in practice, this target is never going to exist at this point
-    if (TARGET Qt5::Core)
-        if(NOT QT_VISIBILITY_AVAILABLE)
-            message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
-        endif()
     endif()
 endif()
 
