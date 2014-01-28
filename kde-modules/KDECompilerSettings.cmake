@@ -27,12 +27,42 @@
 
 ############################################################
 # Toolchain minimal requirements
+#
+# Note that only compilers officially supported by Qt are
+# supported by this file; workarounds for older compilers
+# will generally not be included.  See
+# https://qt-project.org/doc/qt-5/supported-platforms.html
+# and
+# https://community.kde.org/Frameworks/Policies#Frameworks_compiler_requirements_and_C.2B.2B11
+# for more details.
 ############################################################
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.2.0")
-        message(FATAL_ERROR "GCC 4.2 or later is required")
+macro(_kde_compiler_min_version min_version)
+    if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${min_version}")
+        message(WARNING "Version ${CMAKE_CXX_COMPILER_VERSION} of the ${CMAKE_CXX_COMPILER_ID} C++ compiler is not supported. Please use version ${min_version} or later.")
     endif()
+endmacro()
+
+if (MSVC)
+    # MSVC_VERSION 1600 = VS 10.0 = Windows SDK 7
+    # See: cmake --help-variable MSVC_VERSION
+    # and https://developer.mozilla.org/en-US/docs/Windows_SDK_versions
+    if (${MSVC_VERSION} LESS 1600)
+        message(WARNING "Your MSVC version (${MSVC_VERSION}) is not supported. Please use the Windows SDK version 7 or later (or Microsoft Visual Studio 2010 or later).")
+    endif()
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if (WIN32)
+        _kde_compiler_min_version("4.7")
+    elseif (APPLE)
+        # FIXME: Apple heavily modifies GCC, so checking the
+        # GCC version on OS/X is not very useful.
+    else()
+        _kde_compiler_min_version("4.5")
+    endif()
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    _kde_compiler_min_version("3.1")
+else()
+    message(WARNING "${CMAKE_CXX_COMPILER_ID} is not a supported C++ compiler.")
 endif()
 
 
