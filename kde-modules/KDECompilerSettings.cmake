@@ -79,17 +79,23 @@ endmacro()
 
 if (UNIX)
     # Enable basically everything portable across modern UNIX systems.
-    # See http://www.delorie.com/gnu/docs/glibc/libc_13.html
+    # See http://www.delorie.com/gnu/docs/glibc/libc_13.html, although
+    # this define is for the benefit of other libc implementations
+    # (since _GNU_SOURCE is defined below).
+    _kde_add_platform_definitions(-D_XOPEN_SOURCE=500)
+
+    # Enable everything in GNU libc.  Any code using non-portable features
+    # needs to perform feature tests, but this ensures that any such features
+    # will be found if they exist.
     #
     # NB: we do NOT define _BSD_SOURCE, as with GNU libc that requires linking
     # against the -lbsd-compat library (it changes the behaviour of some
     # functions).
-    _kde_add_platform_definitions(-D_XOPEN_SOURCE=500)
-    # FIXME: do we need this?
     _kde_add_platform_definitions(-D_GNU_SOURCE)
 
     # Enable extra API for using 64-bit file offsets on 32-bit systems.
-    # FIXME: do we need this? Does it make sense on non-glibc systems?
+    # FIXME: this is included in _GNU_SOURCE in glibc; do other libc
+    # implementation recognize it?
     _kde_add_platform_definitions(-D_LARGEFILE64_SOURCE)
 endif()
 
