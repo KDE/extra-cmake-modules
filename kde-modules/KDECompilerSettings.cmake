@@ -103,6 +103,17 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 endif()
 
+# Do not merge uninitialized global variables.
+# This is mostly a "principle of least surprise" thing, but also
+# has performance benefits.
+# See https://www.ibm.com/developerworks/community/blogs/zTPF/entry/benefits_of_the_fnocommon_compile_option_peter_lemieszewski?lang=en
+# Note that this only applies to C code; C++ already behaves like this.
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
+        "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
+        ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32))
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-common")
+endif()
+
 # Default to hidden visibility for symbols
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
@@ -292,11 +303,6 @@ endif()
 ############################################################
 
 if (APPLE)
-    # FIXME: is this still needed?
-    # Apple's Mach-O linker apparently does not like having uninitialized global
-    # variables in a common block (only relevant for C code)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-common")
-
     # FIXME: why are these needed?
     set (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress ${CMAKE_SHARED_LINKER_FLAGS}")
     set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress ${CMAKE_MODULE_LINKER_FLAGS}")
@@ -316,12 +322,5 @@ if (MINGW AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     #        maybe we only need this for modules?
     set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
     set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols")
-endif()
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
-        "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
-        ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32))
-    # FIXME: why?
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-common")
 endif()
 
