@@ -198,8 +198,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # it.
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
-#elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR
-#        (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
+#elseif (MSVC OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
     # Exceptions appear to be disabled by default for MSVC
     # http://msdn.microsoft.com/en-us/library/1deeycx5.aspx
 
@@ -207,7 +206,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
 endif()
 
 macro(_kdecompilersettings_append_exception_flag VAR)
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    if (MSVC)
         set(${VAR} "${${VAR}} -EHsc")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
         if (WIN32)
@@ -309,7 +308,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -w1 -Wpointer-arith")
 endif()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if (MSVC)
     # FIXME: do we not want to set the warning level up to level 3? (/W3)
     # Disable warnings:
     # C4250: 'class1' : inherits 'class2::member' via dominance
@@ -354,8 +353,7 @@ if (APPLE)
 endif()
 
 if (WIN32)
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR
-            (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
+    if (MSVC OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
         # make sure that no header adds libcmt by default using
         # #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
         set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
