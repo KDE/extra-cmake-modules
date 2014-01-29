@@ -122,8 +122,9 @@ endif()
 # Language and toolchain features
 ############################################################
 
-# Pick sensible versions of the C and C++ standards
-# FIXME: MSVC, Intel on windows?
+# Pick sensible versions of the C and C++ standards.
+# Note that MSVC does not have equivalent flags; the features are either
+# supported or they are not.
 if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
     # We use the C89 standard because that is what is common to all our
     # compilers (in particular, MSVC 2010 does not support C99)
@@ -199,7 +200,10 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 #elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR
 #        (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
-    # FIXME: are exceptions disabled by default on WIN32?
+    # Exceptions appear to be disabled by default for MSVC
+    # http://msdn.microsoft.com/en-us/library/1deeycx5.aspx
+
+    # FIXME: are exceptions disabled by default for Intel?
 endif()
 
 macro(_kdecompilersettings_append_exception_flag VAR)
@@ -305,10 +309,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -w1 -Wpointer-arith")
 endif()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" OR
-        (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # FIXME: do we not want to set the warning level up to level 3? (/W3)
-    # FIXME: does Intel really follow MSVC *this* closely on Windows?
     # Disable warnings:
     # C4250: 'class1' : inherits 'class2::member' via dominance
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250")
