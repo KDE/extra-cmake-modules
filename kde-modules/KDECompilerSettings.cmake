@@ -192,6 +192,13 @@ endmacro()
 function(KDE_SOURCE_FILES_ENABLE_EXCEPTIONS)
     foreach(source_file ${ARGV})
         get_source_file_property(flags ${source_file} COMPILE_FLAGS)
+        if(NOT flags)
+            # If COMPILE_FLAGS is not set, get_source_file_property() sets it to
+            # NOTFOUND, which breaks build if we concatenate anything to
+            # the "NOTFOUND" string.
+            # Note that NOTFOUND evaluates to False, so we do enter the if.
+            set(flags "")
+        endif()
         _kdecompilersettings_append_exception_flag(flags)
         set_source_files_properties(${source_file} COMPILE_FLAGS "${flags}")
     endforeach()
