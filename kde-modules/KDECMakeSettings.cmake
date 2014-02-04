@@ -34,11 +34,6 @@ if(NOT KDE_SKIP_RPATH_SETTINGS)
 
          # Append directories in the linker search path (but outside the project)
          set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-         # Ensure these default settings have not been overridden
-         # by careless users
-         set(CMAKE_SKIP_BUILD_RPATH FALSE)
-         set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
       endif ()
    endif (UNIX)
 
