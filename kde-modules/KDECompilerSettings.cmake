@@ -1,9 +1,9 @@
-# This module sets more useful CMAKE_CXX_FLAGS.
+# Set useful compile and link flags for C++ (and C) code.
 #
-# In particular, it enables many more warnings than the default,
-# and sets stricter modes for some compiler features.  By default,
-# it disables exceptions; kde_target_enable_exceptions() can be used
-# to re-enable them for a specific target.
+# Enables many more warnings than the default, and sets stricter modes
+# for some compiler features.  By default, exceptions are disabled;
+# kde_target_enable_exceptions() can be used to re-enable them for a
+# specific target.
 #
 #
 # This module provides the following functions:
@@ -92,7 +92,8 @@ if (UNIX)
     #
     # NB: we do NOT define _BSD_SOURCE, as with GNU libc that requires linking
     # against the -lbsd-compat library (it changes the behaviour of some
-    # functions).
+    # functions).  This, however, means that strlcat and strlcpy are not
+    # provided by glibc.
     _kde_add_platform_definitions(-D_GNU_SOURCE)
 
     # Enable extra API for using 64-bit file offsets on 32-bit systems.

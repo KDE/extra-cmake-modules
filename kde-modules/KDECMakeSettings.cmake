@@ -1,12 +1,52 @@
-# The following variables can be set to TRUE to skip parts of the functionality:
-#  KDE_SKIP_RPATH_SETTINGS
-#  KDE_SKIP_BUILD_SETTINGS
-#  KDE_SKIP_TEST_SETTINGS
+# Change various CMake settings to what the KDE community views as more
+# sensible defaults.
+#
+# It is split into three parts, which can be independently disabled if
+# desired.
+#
+# RPATH
+#
+#   The default runtime path (used on Unix systems to search for
+#   dynamically-linked libraries) is set to include the location that
+#   libraries will be installed to (as set in LIB_INSTALL_DIR), and also
+#   the linker search path.
+#
+#   Note that LIB_INSTALL_DIR needs to be set before including this
+#   module.  Typically, this is done by including the KDEInstallDirs
+#   module.
+#
+#   This section can be disabled by setting
+#     KDE_SKIP_RPATH_SETTINGS
+#   to TRUE before including this module.
+#
+#
+# TEST
+#
+#   Testing is enabled by default, and an option (BUILD_TESTING) is
+#   provided for users to control this. See the CTest module
+#   documentation in the CMake manual for more details.
+#
+#   This section can be disabled by setting
+#     KDE_SKIP_TEST_SETTINGS
+#   to TRUE before including this module.
+#
+#
+# BUILD
+#
+#   Various CMake build defaults are altered, such as searching source
+#   and build directories for includes first and enabling automoc by
+#   default.
+#
+#   This section can be disabled by setting
+#     KDE_SKIP_BUILD_SETTINGS
+#   to TRUE before including this module.
+#
 
 
 ################# RPATH handling ##################################
 
 if(NOT KDE_SKIP_RPATH_SETTINGS)
+
    # Set the default RPATH to point to useful locations, namely where the
    # libraries will be installed and the linker search path
 
@@ -43,7 +83,11 @@ endif()
 
 
 if(NOT KDE_SKIP_TEST_SETTINGS)
-   # support for cdash dashboards
+
+   # If there is a CTestConfig.cmake, include CTest.
+   # Otherwise, there will not be any useful settings, so just
+   # fake the functionality we care about from CTest.
+
    if (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
       include(CTest)
    else()
@@ -52,6 +96,7 @@ if(NOT KDE_SKIP_TEST_SETTINGS)
          enable_testing()
       endif ()
    endif ()
+
 endif()
 
 

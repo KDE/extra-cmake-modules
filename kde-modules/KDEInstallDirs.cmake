@@ -1,55 +1,68 @@
-# This module defines also a bunch of variables used as locations for install directories
-# for files of the package which is using this module. These variables don't say
-# anything about the location of the installed KDE.
-# They are all relative (to CMAKE_INSTALL_PREFIX).
+# Define KDE standard installation directories
 #
-#  BIN_INSTALL_DIR          - the directory where executables will be installed (default is prefix/bin)
-#  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE5 )
-#  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
-#  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
-#  CMAKECONFIG_INSTALL_PREFIX - the prefix under which packages will create their own subdirectory for their CMake configuration files
-#  CONFIG_INSTALL_DIR       - the directory where config files will be installed
-#  DATA_INSTALL_DIR         - the parent directory where applications can install their data
-#  HTML_INSTALL_DIR         - the directory where HTML documentation will be installed
-#  ICON_INSTALL_DIR         - the directory where the icons will be installed (default prefix/share/icons/)
-#  INFO_INSTALL_DIR         - the directory where info files will be installed (default prefix/info)
-#  KCFG_INSTALL_DIR         - the directory where kconfig files will be installed
-#  LOCALE_INSTALL_DIR       - the directory where translations will be installed
-#  MAN_INSTALL_DIR          - the directory where man pages will be installed (default prefix/man/)
-#  QT_PLUGIN_INSTALL_DIR    - the directory where Qt plugins will be installed (default is {LIB_INSTALL_DIR}/plugins)
-#  PLUGIN_INSTALL_DIR       - the directory where KDE plugins will be installed (default is ${QT_PLUGIN_INSTALL_DIR}/kf5)
-#  IMPORTS_INSTALL_DIR      - the directory where QML imports will be installed (default is ${QT_PLUGIN_INSTALL_DIR}/imports)
-#  QML_INSTALL_DIR          - the directory where QML2 imports will be installed (default is ${LIB_INSTALL_DIR}/qml)
-#  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
-#  SERVICETYPES_INSTALL_DIR - the directory where servicestypes desktop files will be installed
-#  SOUND_INSTALL_DIR        - the directory where sound files will be installed
-#  TEMPLATES_INSTALL_DIR    - the directory where templates (Create new file...) will be installed
-#  WALLPAPER_INSTALL_DIR    - the directory where wallpapers will be installed
-#  AUTOSTART_INSTALL_DIR    - the directory where autostart files will be installed
-#  DEMO_INSTALL_DIR         - the directory where demos will be installed
-#  KCONF_UPDATE_INSTALL_DIR - the directory where kconf_update files will be installed
-#  SYSCONF_INSTALL_DIR      - the directory where sysconfig files will be installed (default /etc)
-#  XDG_APPS_INSTALL_DIR     - the XDG apps dir
-#  XDG_DIRECTORY_INSTALL_DIR- the XDG directory
-#  XDG_MIME_INSTALL_DIR     - the XDG mimetypes install dir
-#  DBUS_INTERFACES_INSTALL_DIR - the directory where dbus interfaces will be installed (default is prefix/share/dbus-1/interfaces)
-#  DBUS_SERVICES_INSTALL_DIR        - the directory where dbus services will be installed (default is prefix/share/dbus-1/services )
-#  DBUS_SYSTEM_SERVICES_INSTALL_DIR        - the directory where dbus system services will be installed (default is prefix/share/dbus-1/system-services )
+# Inclusion of this module defines the following variables (default
+# values in parentheses):
 #
-# The variable INSTALL_TARGETS_DEFAULT_ARGS can be used when installing libraries
-# or executables into the default locations.
-# The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries are installed.
-# It should also be used when installing applications, since then
-# on OS X application bundles will be installed to BUNDLE_INSTALL_DIR.
-# The variable MUST NOT be used for installing plugins.
-# It also MUST NOT be used for executables which are intended to go into sbin/ or libexec/.
+#  BUNDLE_INSTALL_DIR               - (Mac only) application bundles (/Applications/KDE5)
+#  BIN_INSTALL_DIR                  - user executables (bin)
+#  SBIN_INSTALL_DIR                 - system admin executables (sbin)
+#  LIB_INSTALL_DIR                  - object code libraries (lib or lib64 or lib/<multiarch-tuple> on Debian)
+#  LIBEXEC_INSTALL_DIR              - internal executables (${LIB_INSTALL_DIR}/kde5/libexec)
+#  INSTALL_TARGETS_DEFAULT_ARGS     - combines BUNDLE_INSTALL_DIR, BIN_INSTALL_DIR and LIB_INSTALL_DIR; see below
 #
-# Usage is like this:
-#    install(TARGETS kdecore kdeui ${INSTALL_TARGETS_DEFAULT_ARGS} )
+#  INCLUDE_INSTALL_DIR              - C and C++ header files (include/KF5)
 #
-# This will install libraries correctly under UNIX, OSX and Windows (i.e. dll's go
-# into bin/.
-
+#  QT_PLUGIN_INSTALL_DIR            - Qt plugins (${LIB_INSTALL_DIR}/plugins)
+#  PLUGIN_INSTALL_DIR               - KDE plugins (${QT_PLUGIN_INSTALL_DIR}/kf5)
+#  IMPORTS_INSTALL_DIR              - QML imports (${QT_PLUGIN_INSTALL_DIR}/imports)
+#  QML_INSTALL_DIR                  - QML2 imports (${LIB_INSTALL_DIR}/qml)
+#
+#  CMAKECONFIG_INSTALL_PREFIX       - CMake configuration files (${LIB_INSTALL_DIR}/cmake)
+#
+#  DATA_INSTALL_DIR                 - read-only architecture-independent data (share)
+#  KCONF_UPDATE_INSTALL_DIR         - kconf_update files (${DATA_INSTALL_DIR}/kconf_update)
+#
+#  DBUS_INTERFACES_INSTALL_DIR      - dbus interfaces (share/dbus-1/interfaces)
+#  DBUS_SERVICES_INSTALL_DIR        - dbus services (share/dbus-1/services)
+#  DBUS_SYSTEM_SERVICES_INSTALL_DIR - dbus system services (share/dbus-1/system-services)
+#  HTML_INSTALL_DIR                 - HTML documentation (share/doc/HTML)
+#  ICON_INSTALL_DIR                 - the icons (share/icons)
+#  KCFG_INSTALL_DIR                 - kconfig files (share/config.kcfg)
+#  LOCALE_INSTALL_DIR               - translations (share/locale)
+#  MAN_INSTALL_DIR                  - man pages (share/man)
+#  SERVICES_INSTALL_DIR             - service (desktop, protocol, ...) files (share/kde5/services)
+#  SERVICETYPES_INSTALL_DIR         - service types desktop files (share/kde5/servicetypes)
+#  SOUND_INSTALL_DIR                - sound files (share/sounds)
+#  TEMPLATES_INSTALL_DIR            - templates (share/templates)
+#  WALLPAPER_INSTALL_DIR            - wallpapers (share/wallpapers)
+#  XDG_APPS_INSTALL_DIR             - application desktop files (share/applications/kde5)
+#  XDG_DIRECTORY_INSTALL_DIR        - XDG directory (share/desktop-directories)
+#  XDG_MIME_INSTALL_DIR             - mimetype XML files (share/mime/packages)
+#
+#  SYSCONF_INSTALL_DIR              - sysconfig files (etc)
+#  CONFIG_INSTALL_DIR               - config files (${SYSCONF_INSTALL_DIR}/xdg)
+#  AUTOSTART_INSTALL_DIR            - autostart files (${CONFIG_INSTALL_DIR}/autostart)
+#
+#  EXEC_INSTALL_PREFIX              - prefix for default values of BIN_INSTALL_DIR, SBIN_INSTALL_DIR and LIB_INSTALL_DIR (empty by default)
+#  SHARE_INSTALL_PREFIX             - replaces "share" in the other variables if set
+#
+# The *_INSTALL_DIR variables may be passed to the DESTINATION options of
+# install() commands for the corresponding file type.  They are set in the CMake
+# cache, and so the defaults above can be overridden by users.
+#
+# Note that these variables do not provide any information about the
+# location of already-installed KDE software.
+#
+# The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries or
+# user-executable applications are installed, in the following manner:
+#
+#    install(TARGETS mylib myapp ${INSTALL_TARGETS_DEFAULT_ARGS})
+#
+# It MUST NOT be used for installing plugins, system admin executables or
+# executables only intended for use internally by other code.  Those should use
+# one of the PLUGIN variables, SBIN_INSTALL_DIR or LIBEXEC_INSTALL_DIR
+# respectively.
+#
 
 
 # Figure out what the default install directory for libraries should be.
@@ -166,6 +179,7 @@ _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/syst
 #   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
+# FIXME: why is INCLUDES (only) set for ARCHIVE targets?
 set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
                                   LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
                                   ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel
