@@ -356,7 +356,13 @@ if (WIN32)
             (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
         # make sure that no header adds libcmt by default using
         # #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
-        set(CMAKE_EXE_LINKER_FLAGS "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS}")
+        set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
+        set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO}")
+        set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL}")
+        # use the debug versions of the libraries for debug builds
+        # if we just set /NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt unconditionally in CMAKE_EXE_LINKER_FLAGS we end up
+        # linking to the debug and the release C runtime at the same time which will cause crashes
+        set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
     endif()
 endif()
 
