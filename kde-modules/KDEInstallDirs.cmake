@@ -142,7 +142,7 @@ _set_fancy(TEMPLATES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/templates"        
 _set_fancy(WALLPAPER_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/wallpapers"          "The install dir for wallpapers")
 _set_fancy(KCONF_UPDATE_INSTALL_DIR  "${DATA_INSTALL_DIR}/kconf_update"            "The kconf_update install dir")
 
-_set_fancy(XDG_APPS_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/applications/kde5"   "The XDG apps dir")
+_set_fancy(XDG_APPS_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/applications"        "The XDG apps dir")
 _set_fancy(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories" "The XDG directory")
 _set_fancy(XDG_MIME_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/mime/packages"       "The install dir for the xdg mimetypes")
 
