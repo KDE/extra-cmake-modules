@@ -6,7 +6,8 @@
 # following the Freedesktop.org icon naming spec
 # http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
 
-# The files in the directory must be in the format in order to be installed
+# The filenames of the icons in the directory must be in the following format
+# in order to be installed
 # themeSize-Group-name.extension
 
 # The following file extensions are supported
