@@ -277,7 +277,7 @@ endfunction()
 ############################################################
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
-        "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
+        ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND NOT APPLE) OR
         ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32))
     # Linker warnings should be treated as errors
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_SHARED_LINKER_FLAGS}")
