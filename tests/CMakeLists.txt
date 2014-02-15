@@ -1,5 +1,8 @@
 # a macro for tests that have a simple format where the name matches the
 # directory and project
+
+add_subdirectory(ECMGenerateHeadersTest)
+
 macro(ADD_TEST_MACRO NAME COMMAND)
   string(REPLACE "." "/" dir "${NAME}")
   string(REGEX REPLACE "[^.]*\\." "" proj "${NAME}")
