@@ -94,38 +94,6 @@
 
 include(CMakeParseArguments)
 
-# FIXME: remove when all the frameworks are ported to the new syntax
-macro(_ECM_GENERATE_HEADERS_OLD)
-    if(NOT EGH_MODULE_NAME)
-        set(EGH_MODULE_NAME ${PROJECT_NAME})
-    endif()
-
-    string(TOLOWER ${EGH_MODULE_NAME} lowercasemodule)
-    foreach(_CLASSNAME ${EGH_UNPARSED_ARGUMENTS})
-        string(TOLOWER ${_CLASSNAME} lowercaseclassname)
-        set(FANCY_HEADER_NAME ${EGH_OUTPUT_DIR}/${EGH_MODULE_NAME}/${EGH_PREFIX}${_CLASSNAME})
-        set(_actualheader "${CMAKE_CURRENT_SOURCE_DIR}/${EGH_RELATIVE}${lowercaseclassname}.h")
-        if (NOT EXISTS ${_actualheader})
-            message(FATAL_ERROR "Could not find \"${_actualheader}\"")
-        endif()
-        if (NOT EXISTS ${FANCY_HEADER_NAME})
-            file(WRITE ${FANCY_HEADER_NAME} "#include \"${lowercaseprefix}${lowercaseclassname}.h\"\n")
-        endif()
-        list(APPEND REQUIRED_HEADERS "${_actualheader}")
-        if (EGH_PREFIX)
-            #local forwarding header, for namespaced headers, e.g. kparts/part.h
-            #this should not get installed, so we don't put it under EGH_MODULE_NAME
-            set(REGULAR_HEADER_NAME ${EGH_OUTPUT_DIR}/${lowercaseprefix}${lowercaseclassname}.h)
-            if (NOT EXISTS ${REGULAR_HEADER_NAME})
-                file(WRITE ${REGULAR_HEADER_NAME} "#include \"${_actualheader}\"\n")
-            endif()
-        endif()
-    endforeach()
-    if (NOT EGH_REQUIRED_HEADERS STREQUAL "")
-        set(${EGH_REQUIRED_HEADERS} ${${EGH_REQUIRED_HEADERS}} ${REQUIRED_HEADERS} PARENT_SCOPE)
-    endif ()
-endmacro()
-
 function(ECM_GENERATE_HEADERS)
     set(options)
     set(oneValueArgs OUTPUT_DIR PREFIX REQUIRED_HEADERS RELATIVE MODULE_NAME)
@@ -149,9 +117,7 @@ function(ECM_GENERATE_HEADERS)
     endif()
 
     if(NOT EGH_HEADER_NAMES)
-        message(AUTHOR_WARNING "Please update your usage of ECM_GENERATE_HEADERS to the new syntax")
-        _ecm_generate_headers_old()
-        return()
+       message(FATAL_ERROR "Missing header_names argument to ECM_GENERATE_HEADERS")
     endif()
 
     if (EGH_MODULE_NAME)
