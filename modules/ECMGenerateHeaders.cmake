@@ -94,11 +94,19 @@
 
 include(CMakeParseArguments)
 
-function(ECM_GENERATE_HEADERS)
+function(ECM_GENERATE_HEADERS camelcase_headers_var)
     set(options)
-    set(oneValueArgs OUTPUT_DIR PREFIX REQUIRED_HEADERS RELATIVE MODULE_NAME)
+    set(oneValueArgs OUTPUT_DIR PREFIX REQUIRED_HEADERS RELATIVE)
     set(multiValueArgs HEADER_NAMES)
     cmake_parse_arguments(EGH "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if (EGH_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Unexpected arguments to ECM_GENERATE_HEADERS: ${EGH_UNPARSED_ARGUMENTS}")
+    endif()
+
+    if(NOT EGH_HEADER_NAMES)
+       message(FATAL_ERROR "Missing header_names argument to ECM_GENERATE_HEADERS")
+    endif()
 
     if(NOT EGH_OUTPUT_DIR)
         set(EGH_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
@@ -114,25 +122,6 @@ function(ECM_GENERATE_HEADERS)
             set(EGH_PREFIX "${EGH_PREFIX}/")
         endif()
         string(TOLOWER "${EGH_PREFIX}" lowercaseprefix)
-    endif()
-
-    if(NOT EGH_HEADER_NAMES)
-       message(FATAL_ERROR "Missing header_names argument to ECM_GENERATE_HEADERS")
-    endif()
-
-    if (EGH_MODULE_NAME)
-        # this is not a valid argument in the new syntax
-        message(FATAL_ERROR "Unexpected MODULE_NAME argument for ECM_GENERATE_HEADERS")
-    endif()
-
-    if (NOT EGH_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "Missing camelcase_headers_var argument to ECM_GENERATE_HEADERS")
-    else()
-        list(GET EGH_UNPARSED_ARGUMENTS 0 camelcase_headers_var)
-        list(REMOVE_AT EGH_UNPARSED_ARGUMENTS 0)
-        if (EGH_UNPARSED_ARGUMENTS)
-            message(FATAL_ERROR "Unexpected arguments to ECM_GENERATE_HEADERS: ${EGH_UNPARSED_ARGUMENTS}")
-        endif()
     endif()
 
     foreach(_CLASSNAME ${EGH_HEADER_NAMES})
