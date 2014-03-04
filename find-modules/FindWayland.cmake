@@ -128,6 +128,7 @@ macro(_wayland_handle_component _comp)
         set(Wayland_VERSION_STRING ${Wayland_${_comp}_VERSION_STRING})
     endif()
 
+    set(Wayland_${_comp}_FIND_VERSION "${Wayland_FIND_VERSION}")
     find_package_handle_standard_args(Wayland_${_comp}
         FOUND_VAR
             Wayland_${_comp}_FOUND
@@ -158,7 +159,13 @@ if(NOT WIN32)
     # Use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
-    pkg_check_modules(PKG_Wayland QUIET ${pkgConfigModules})
+    # Invoke pkg_check_modules() in a loop because if we call it like this:
+    # pkg_check_modules(PKG_Wayland QUIET ${pkgConfigModules})
+    # and one of the components cannot be found, then it won't set any variable
+    # at all.
+    foreach(comp ${pkgConfigModules})
+        pkg_check_modules(PKG_Wayland_${comp} QUIET ${comp})
+    endforeach()
 
     set(Wayland_DEFINITIONS ${PKG_Wayland_CFLAGS_OTHER})
 
