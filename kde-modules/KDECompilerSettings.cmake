@@ -186,17 +186,8 @@ endif()
 # Turn off exceptions by default
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
-#elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    # Note that exceptions are enabled by default when building with clang. That
-    # is, -fno-exceptions is not set in CMAKE_CXX_FLAGS below. This is because a
-    # lot of code in different KDE modules ends up including code that throws
-    # exceptions. Most (or all) of the occurrences are in template code that
-    # never gets instantiated. Contrary to GCC, ICC and MSVC, clang (most likely
-    # rightfully) complains about that. Trying to work around the issue by
-    # passing -fdelayed-template-parsing brings other problems, as noted in
-    # http://lists.kde.org/?l=kde-core-devel&m=138157459706783&w=2.
-    # The generated code will be slightly bigger, but there is no way to avoid
-    # it.
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 #elseif (MSVC OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
@@ -218,8 +209,6 @@ macro(_kdecompilersettings_append_exception_flag VAR)
     elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         set(${VAR} "${${VAR}} -fexceptions")
     elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        # We never disabled exceptions for Clang anyway, but this makes it
-        # blindingly obvious to anyone building with make VERBOSE=1
         set(${VAR} "${${VAR}} -fexceptions")
     endif()
     string(STRIP "${${VAR}}" ${VAR})
@@ -247,8 +236,6 @@ function(KDE_TARGET_ENABLE_EXCEPTIONS target mode)
     else()
         target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Intel>:-fexceptions>")
     endif()
-    # We never disabled exceptions for Clang anyway, but this makes it
-    # blindingly obvious to anyone building with make VERBOSE=1
     target_compile_options(${target} ${mode}
         "$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-fexceptions>")
 endfunction()
