@@ -65,6 +65,18 @@ This module is organised as follows:
   modules.
 
 
+Creating Modules
+----------------
+
+Proposed new modules should be submitted using the
+[KDE Review Board instance][RB], and be assigned to the `buildsystem`,
+`extracmakemodules` and `kdeframeworks` groups.  You should be able to point to
+two separate projects that will make use of the module.  See the `docs/`
+directory for more information on writing the modules themselves.
+
+[RB]: https://git.reviewboard.kde.org/
+
+
 License
 -------
 
