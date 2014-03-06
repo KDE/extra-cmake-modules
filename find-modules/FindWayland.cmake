@@ -1,180 +1,95 @@
 # Try to find Wayland on a Unix system
 #
-# This will define:
+# This is a component-based find module, which makes use of the COMPONENTS
+# and OPTIONAL_COMPONENTS arguments to find_module.  The following components
+# are available:
 #
-#   Wayland_FOUND          - True if Wayland is available
-#   Wayland_LIBRARIES      - Link these to use Wayland
-#   Wayland_INCLUDE_DIRS   - Include directory for Wayland
-#   Wayland_DEFINITIONS    - Compiler flags for using Wayland
-#   Wayland_VERSION_STRING - Found Wayland version
+#   Client  Server  Cursor  Egl
 #
-# In addition the following more fine grained variables will be defined:
+# If no components are specified, this module will act as though all components
+# were passed to OPTIONAL_COMPONENTS.
 #
-#   Wayland_Client_FOUND  Wayland_Client_INCLUDE_DIR  Wayland_Client_LIBRARY Wayland_Client_VERSION_STRING
-#   Wayland_Server_FOUND  Wayland_Server_INCLUDE_DIR  Wayland_Server_LIBRARY Wayland_Server_VERSION_STRING
-#   Wayland_Cursor_FOUND  Wayland_Cursor_INCLUDE_DIR  Wayland_Cursor_LIBRARY Wayland_Cursor_VERSION_STRING
-#   Wayland_Egl_FOUND     Wayland_Egl_INCLUDE_DIR     Wayland_Egl_LIBRARY    Wayland_Egl_VERSION_STRING
+# This module will define the following variables, independently of the
+# components searched for or found:
 #
-# Additionally, the following imported targets will be defined:
+#   Wayland_FOUND      - True if (the requestion version of) Wayland is available
+#   Wayland_VERSION    - Found Wayland version
 #
-#   Wayland::Client
-#   Wayland::Server
-#   Wayland::Cursor
-#   Wayland::Egl
+# For each searched-for components, Wayland_<component>_FOUND will be set to true
+# if the corresponding Wayland library was found, and false otherwise.  If
+# Wayland_<component>_FOUND is true, the imported target Wayland::<component> will be
+# defined.  This module will also attempt to determine Wayland_*_VERSION variables
+# for each imported target, although Wayland_VERSION should normally be sufficient.
 #
-# Copyright (c) 2014 Martin Gräßlin <mgraesslin@kde.org>
+# The following variable will also be defined for convenience, and for
+# compatibility with old-style find module conventions:
 #
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+#   Wayland_LIBRARIES  - A list of all Wayland imported targets
 
-if(CMAKE_VERSION VERSION_LESS 2.8.12)
-    message(FATAL_ERROR "CMake 2.8.12 is required by FindWayland.cmake")
-endif()
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-    message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindWayland.cmake")
-endif()
+#=============================================================================
+# Copyright 2014 Martin Gräßlin <mgraesslin@kde.org>
+# Copyright 2014 Alex Merry <alex.merry@kde.org>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
-set(knownComponents Client
-                    Server
-                    Cursor
-                    Egl
-    )
+include(${CMAKE_CURRENT_LIST_DIR}/../modules/ECMFindModuleHelpers.cmake)
 
-unset(unknownComponents)
-
-set(pkgConfigModules)
-
-if (Wayland_FIND_COMPONENTS)
-  set(comps ${Wayland_FIND_COMPONENTS})
-else()
-  set(comps ${knownComponents})
-endif()
-
-# iterate through the list of requested components, and check that we know them all.
-# If not, fail.
-foreach(comp ${comps})
-    list(FIND knownComponents ${comp} index )
-    if("${index}" STREQUAL "-1")
-        list(APPEND unknownComponents "${comp}")
-    else()
-        if("${comp}" STREQUAL "Client")
-            list(APPEND pkgConfigModules "wayland-client")
-        elseif("${comp}" STREQUAL "Server")
-            list(APPEND pkgConfigModules "wayland-server")
-        elseif("${comp}" STREQUAL "Cursor")
-            list(APPEND pkgConfigModules "wayland-cursor")
-        elseif("${comp}" STREQUAL "Egl")
-            list(APPEND pkgConfigModules "wayland-egl")
-        endif()
-    endif()
-endforeach()
-
-
-if(DEFINED unknownComponents)
-   set(msgType STATUS)
-   if(Wayland_FIND_REQUIRED)
-      set(msgType FATAL_ERROR)
-   endif()
-   if(NOT Wayland_FIND_QUIETLY)
-      message(${msgType} "Wayland: requested unknown components ${unknownComponents}")
-   endif()
-   return()
-endif()
-
-macro(_wayland_handle_component _comp)
-    set(_header )
-    set(_lib )
-    set(_pkgconfig_module_var)
-    if("${_comp}" STREQUAL "Client")
-        set(_header "wayland-client.h")
-        set(_lib "wayland-client")
-        set(_pkgconfig_module_var "wayland-client")
-    elseif("${_comp}" STREQUAL "Server")
-        set(_header "wayland-server.h")
-        set(_lib "wayland-server")
-        set(_pkgconfig_module_var "wayland-server")
-    elseif("${_comp}" STREQUAL "Cursor")
-        set(_header "wayland-cursor.h")
-        set(_lib "wayland-cursor")
-        set(_pkgconfig_module_var "wayland-cursor")
-    elseif("${_comp}" STREQUAL "Egl")
-        set(_header "wayland-egl.h")
-        set(_lib "wayland-egl")
-        set(_pkgconfig_module_var "wayland-egl")
-    endif()
-
-    find_path(Wayland_${_comp}_INCLUDE_DIR
-        NAMES ${_header}
-        HINTS ${PKG_Wayland_INCLUDE_DIRS}
-    )
-    find_library(Wayland_${_comp}_LIBRARY
-        NAMES ${_lib}
-        HINTS ${PKG_Wayland_LIBRARY_DIRS}
-    )
-
-    if(Wayland_${_comp}_INCLUDE_DIR AND Wayland_${_comp}_LIBRARY)
-        list(APPEND Wayland_INCLUDE_DIRS ${Wayland_${_comp}_INCLUDE_DIR})
-        list(APPEND Wayland_LIBRARIES ${Wayland_${_comp}_LIBRARY})
-    endif()
-
-    if(PKG_Wayland_VERSION AND NOT PKG_Wayland_${_pkgconfig_module_var}_VERSION)
-        # this is what gets set if we only search for one module
-        set(Wayland_${_comp}_VERSION_STRING "${PKG_Wayland_VERSION}")
-    else()
-        set(Wayland_${_comp}_VERSION_STRING "${PKG_Wayland_${_pkgconfig_module_var}_VERSION}")
-    endif()
-
-    if(NOT Wayland_VERSION_STRING)
-        set(Wayland_VERSION_STRING ${Wayland_${_comp}_VERSION_STRING})
-    endif()
-
-    set(Wayland_${_comp}_FIND_VERSION "${Wayland_FIND_VERSION}")
-    find_package_handle_standard_args(Wayland_${_comp}
-        FOUND_VAR
-            Wayland_${_comp}_FOUND
-        REQUIRED_VARS
-            Wayland_${_comp}_LIBRARY
-            Wayland_${_comp}_INCLUDE_DIR
-        VERSION_VAR
-            Wayland_${_comp}_VERSION_STRING
-        )
-
-    mark_as_advanced(
-        Wayland_${_comp}_LIBRARY
-        Wayland_${_comp}_INCLUDE_DIR
-    )
-
-    if(Wayland_${_comp}_FOUND AND NOT TARGET Wayland::${_comp})
-        add_library(Wayland::${_comp} UNKNOWN IMPORTED)
-        set_target_properties(Wayland::${_comp} PROPERTIES
-            IMPORTED_LOCATION "${Wayland_${_comp}_LIBRARY}"
-            INTERFACE_COMPILE_OPTIONS "${Wayland_DEFINITIONS}"
-            INTERFACE_INCLUDE_DIRECTORIES "${Wayland_${_comp}_INCLUDE_DIR}"
-        )
-    endif()
-endmacro()
+ecm_find_package_version_check(Wayland)
 
 if(NOT WIN32)
-    include(FindPackageHandleStandardArgs)
-    # Use pkg-config to get the directories and then use these values
-    # in the FIND_PATH() and FIND_LIBRARY() calls
-    find_package(PkgConfig)
-    # Invoke pkg_check_modules() in a loop because if we call it like this:
-    # pkg_check_modules(PKG_Wayland QUIET ${pkgConfigModules})
-    # and one of the components cannot be found, then it won't set any variable
-    # at all.
-    foreach(comp ${pkgConfigModules})
-        pkg_check_modules(PKG_Wayland_${comp} QUIET ${comp})
+    set(Wayland_known_components
+        Client
+        Server
+        Cursor
+        Egl
+    )
+    foreach(_comp ${Wayland_known_components})
+        string(TOLOWER "${_comp}" _lc_comp)
+        set(Wayland_${_comp}_component_deps)
+        set(Wayland_${_comp}_pkg_config "wayland-${_lc_comp}")
+        set(Wayland_${_comp}_lib "wayland-${_lc_comp}")
+        set(Wayland_${_comp}_header "wayland-${_lc_comp}.h")
     endforeach()
+    set(Wayland_Egl_component_deps Client)
 
-    set(Wayland_DEFINITIONS ${PKG_Wayland_CFLAGS_OTHER})
+    ecm_find_package_parse_components(Wayland
+        RESULT_VAR Wayland_components
+        KNOWN_COMPONENTS ${Wayland_known_components}
+    )
+    ecm_find_package_handle_library_components(Wayland
+        COMPONENTS ${Wayland_components}
+    )
 
-    foreach(comp ${comps})
-        _wayland_handle_component(${comp})
-    endforeach()
-
-    if(Wayland_INCLUDE_DIRS)
-        list(REMOVE_DUPLICATES Wayland_INCLUDE_DIRS)
+    # If pkg-config didn't provide us with version information,
+    # try to extract it from wayland-version.h
+    # (Note that the version from wayland-egl.pc will probably be
+    # the Mesa version, rather than the Wayland version, but that
+    # version will be ignored as we always find wayland-client.pc
+    # first).
+    if(NOT Wayland_VERSION)
+        find_file(Wayland_VERSION_HEADER
+            NAMES wayland-version.h
+            HINTS ${Wayland_INCLUDE_DIRS}
+        )
+        mark_as_advanced(Wayland_VERSION_HEADER)
+        if(Wayland_VERSION_HEADER)
+            file(READ ${Wayland_VERSION_HEADER} _wayland_version_header_contents)
+            string(REGEX REPLACE
+                "^.*[ \\t]+WAYLAND_VERSION[ \\t]+\"([0-9.]*)\".*$"
+                "\\1"
+                Wayland_VERSION
+                "${_wayland_version_header_contents}"
+            )
+            unset(_wayland_version_header_contents)
+        endif()
     endif()
 
     find_package_handle_standard_args(Wayland
@@ -182,9 +97,8 @@ if(NOT WIN32)
             Wayland_FOUND
         REQUIRED_VARS
             Wayland_LIBRARIES
-            Wayland_INCLUDE_DIRS
         VERSION_VAR
-            Wayland_VERSION_STRING
+            Wayland_VERSION
         HANDLE_COMPONENTS
     )
 

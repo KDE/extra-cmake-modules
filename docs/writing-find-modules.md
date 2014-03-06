@@ -197,7 +197,7 @@ download it.
 
     include(FeatureSummary)
     set_package_properties(Foo PROPERTIES
-        URL http://www.foo.example.com/
+        URL "http://www.foo.example.com/"
         DESCRIPTION "A library for doing useful things")
 
 Most of the cache variables should be hidden in the `ccmake` interface unless
@@ -225,146 +225,69 @@ Components
 ----------
 
 If your find module has multiple components, such as a package that provides
-multiple libraries, the following pattern can be helpful.  First (after the
-version checks), define what components are available:
+multiple libraries, the ECMFindModulesHelpers module can do a lot of the work
+for you.  First, you need to include the module, and perform the version check.
+ECMFindModuleHelpers provides its own version check macro, which specifies the
+minimum required CMake version for the other macros in that module.
 
-    set(knownComponents
-        Bar
-        Baz
+    include(ECMFindModuleHelpers)
+    ecm_find_package_version_check(Foo)
+
+The important macros are `ecm_find_package_parse_components` and
+`ecm_find_package_handle_library_components`.  These take a list of components,
+and query other variables you provide to find out the information they require.
+The documentation for ECMFindModuleHelpers provides more information, but a
+simple setup might look like
+
+    set(Foo_known_components Bar Baz)
+    set(Foo_Bar_pkg_config "foo-bar")
+    set(Foo_Bar_lib "bar")
+    set(Foo_Bar_header "foo/bar.h")
+    set(Foo_Bar_pkg_config "foo-baz")
+    set(Foo_Baz_lib "baz")
+    set(Foo_Baz_header "foo/baz.h")
+
+If `Baz` depends on `Bar`, for example, you can specify this with
+
+    set(Foo_Baz_component_deps "Bar")
+
+Then call the macros:
+
+    ecm_find_package_parse_components(Foo
+        RESULT_VAR Foo_components
+        KNOWN_COMPONENTS ${Foo_known_components}
+    )
+    ecm_find_package_handle_library_components(Foo
+        COMPONENTS ${Foo_components}
     )
 
-Determine which components we need to find.  Note that `Foo_FIND_COMPONENTS` is
-defined if `find_package` was passed the `COMPONENTS` option.
+Of course, if your components need unusual handling, you may want to replace
+`ecm_find_package_handle_library_components` with, for example, a `foreach` loop
+over the components (the body of which should implement most of what a normal
+find module does, including setting `Foo_<component>_FOUND`).
 
-    if (Foo_FIND_COMPONENTS)
-        set(requiredComponents ${Foo_FIND_COMPONENTS})
-    else()
-        set(requiredComponents ${knownComponents})
-    endif()
-
-Translate component names into names to pass to `pkg-config`, and check for any
-unknown components:
-
-    unset(unknownComponents)
-    foreach(comp ${requiredComponents})
-        list(FIND knownComponents ${comp} index)
-        if("${index}" STREQUAL "-1")
-            list(APPEND unknownComponents "${comp}")
-        endif()
-    endforeach()
-    
-    if(DEFINED unknownComponents)
-        set(msgType STATUS)
-        if(Foo_FIND_REQUIRED)
-            set(msgType FATAL_ERROR)
-        endif()
-        if(NOT Foo_FIND_QUIETLY)
-            message(${msgType} "Foo: requested unknown components ${unknownComponents}")
-        endif()
-        return()
-    endif()
-
-Now we create a macro to handle each component.  The logic is very similar to
-that of a Find module without components; in fact, most of it could be replaced
-with `find_package` calls that use either other `Find*.cmake` files or
-`*Config.make` files.
+At this point, you should set `Foo_VERSION` using whatever information you have
+available (such as from parsing header files).  Note that
+`ecm_find_package_handle_library_components` will set it to the version reported
+by pkg-config of the first component found, but this depends on the presence of
+pkg-config files, and the version of a component may not be the same as the
+version of the whole package.  After that, finish off with
 
     include(FindPackageHandleStandardArgs)
-    find_package(PkgConfig)
-
-    macro(_foo_handle_component _comp)
-        set(_header)
-        set(_lib)
-        set(_pkgconfig_module)
-        if("${_comp}" STREQUAL "Bar")
-            set(_header "Foo/bar.h")
-            set(_lib "bar")
-            set(_pkgconfig_module "foo-bar")
-        elseif("${_comp}" STREQUAL "Baz")
-            set(_header "Foo/baz.h")
-            set(_lib "baz")
-            set(_pkgconfig_module "foo-baz")
-        endif()
-
-        pkg_check_modules(PC_Foo_${_comp} QUIET ${_pkgconfig_module})
-
-        find_path(Foo_${_comp}_INCLUDE_DIR
-            NAMES ${_header}
-            HINTS ${PC_Foo_${_comp}_INCLUDE_DIRS}
-        )
-        find_library(Foo_${_comp}_LIBRARY
-            NAMES ${_lib}
-            HINTS ${PC_Foo_${_comp}_LIBRARY_DIRS}
-        )
-        set(Foo_${_comp}_DEFINITIONS ${Foo_${_comp}_CFLAGS_OTHER})
-
-        # compatibility variables
-        if(Foo_${_comp}_INCLUDE_DIR AND Foo_${_comp}_LIBRARY)
-            list(APPEND Foo_DEFINITIONS ${Foo_${_comp}_DEFINITIONS})
-            list(APPEND Foo_INCLUDE_DIRS ${Foo_${_comp}_INCLUDE_DIR})
-            list(APPEND Foo_LIBRARIES ${Foo_${_comp}_LIBRARY})
-        endif()
-
-        set(Foo_${_comp}_VERSION "${PC_Foo_${_comp}_VERSION}")
-        if(NOT Foo_VERSION)
-            set(Foo_VERSION ${Foo_${_comp}_VERSION})
-        endif()
-
-        find_package_handle_standard_args(Foo_${_comp}
-            FOUND_VAR
-                Foo_${_comp}_FOUND
-            REQUIRED_VARS
-                Foo_${_comp}_LIBRARY
-                Foo_${_comp}_INCLUDE_DIR
-            VERSION_VAR
-                Foo_${_comp}_VERSION
-        )
-
-        mark_as_advanced(
-            Foo_${_comp}_LIBRARY
-            Foo_${_comp}_INCLUDE_DIR
-        )
-
-        if(Foo_${_comp}_FOUND AND NOT TARGET Foo::${_comp})
-            add_library(Foo::${_comp} UNKNOWN IMPORTED)
-            set_target_properties(Foo::${_comp} PROPERTIES
-                IMPORTED_LOCATION "${Foo_${_comp}_LIBRARY}"
-                INTERFACE_COMPILE_OPTIONS "${Foo_${_comp}_DEFINITIONS}"
-                INTERFACE_INCLUDE_DIRECTORIES "${Foo_${_comp}_INCLUDE_DIR}"
-            )
-        endif()
-    endmacro()
-
-And finish off with everything else:
-
-    foreach(comp ${requiredComponents})
-        _foo_handle_component(${comp})
-    endforeach()
-
-    # compatibility variables
-    if (Foo_INCLUDE_DIRS)
-        list(REMOVE_DUPLICATES Foo_INCLUDE_DIRS)
-    endif()
-    if (Foo_DEFINITIONS)
-        list(REMOVE_DUPLICATES Foo_DEFINITIONS)
-    endif()
-    set(Foo_VERSION_STRING ${Foo_VERSION})
-
     find_package_handle_standard_args(Foo
         FOUND_VAR
             Foo_FOUND
         REQUIRED_VARS
             Foo_LIBRARIES
-            Foo_INCLUDE_DIRS
         VERSION_VAR
             Foo_VERSION
         HANDLE_COMPONENTS
     )
-
+    
     include(FeatureSummary)
     set_package_properties(Foo PROPERTIES
-        URL http://www.foo.example.com/
-        DESCRIPTION "A set of libraries for doing useful things")
+        URL "http://www.foo.example.com/"
+        DESCRIPTION "A library for doing useful things")
 
 
 Other Macros

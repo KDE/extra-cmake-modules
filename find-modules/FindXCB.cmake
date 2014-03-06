@@ -1,325 +1,150 @@
 # Try to find XCB on a Unix system
 #
-# This will define:
+# This is a component-based find module, which makes use of the COMPONENTS
+# and OPTIONAL_COMPONENTS arguments to find_module.  The following components
+# are available:
 #
-#   XCB_FOUND        - True if xcb is available
-#   XCB_LIBRARIES    - Link these to use xcb
-#   XCB_INCLUDE_DIRS - Include directory for xcb
-#   XCB_DEFINITIONS  - Compiler flags for using xcb
+#   XCB
+#   ATOM         AUX          COMPOSITE    CURSOR       DAMAGE
+#   DPMS         DRI2         DRI3         EVENT        EWMH
+#   GLX          ICCCM        IMAGE        KEYSYMS      PRESENT
+#   RANDR        RECORD       RENDER       RENDERUTIL   RES
+#   SCREENSAVER  SHAPE        SHM          SYNC         UTIL
+#   XEVIE        XF86DRI      XFIXES       XINERAMA     XINPUT
+#   XKB          XPRINT       XTEST        XV           XVMC
 #
-# In addition the following more fine grained variables will be defined:
+# If no components are specified, this module will act as though all components
+# were passed to OPTIONAL_COMPONENTS.
 #
-#   XCB_XCB_FOUND        XCB_XCB_INCLUDE_DIR        XCB_XCB_LIBRARY
-#   XCB_UTIL_FOUND       XCB_UTIL_INCLUDE_DIR       XCB_UTIL_LIBRARY
-#   XCB_COMPOSITE_FOUND  XCB_COMPOSITE_INCLUDE_DIR  XCB_COMPOSITE_LIBRARY
-#   XCB_DAMAGE_FOUND     XCB_DAMAGE_INCLUDE_DIR     XCB_DAMAGE_LIBRARY
-#   XCB_XFIXES_FOUND     XCB_XFIXES_INCLUDE_DIR     XCB_XFIXES_LIBRARY
-#   XCB_RENDER_FOUND     XCB_RENDER_INCLUDE_DIR     XCB_RENDER_LIBRARY
-#   XCB_RANDR_FOUND      XCB_RANDR_INCLUDE_DIR      XCB_RANDR_LIBRARY
-#   XCB_SHAPE_FOUND      XCB_SHAPE_INCLUDE_DIR      XCB_SHAPE_LIBRARY
-#   XCB_DRI2_FOUND       XCB_DRI2_INCLUDE_DIR       XCB_DRI2_LIBRARY
-#   XCB_GLX_FOUND        XCB_GLX_INCLUDE_DIR        XCB_GLX_LIBRARY
-#   XCB_SHM_FOUND        XCB_SHM_INCLUDE_DIR        XCB_SHM_LIBRARY
-#   XCB_XV_FOUND         XCB_XV_INCLUDE_DIR         XCB_XV_LIBRARY
-#   XCB_SYNC_FOUND       XCB_SYNC_INCLUDE_DIR       XCB_SYNC_LIBRARY
-#   XCB_XTEST_FOUND      XCB_XTEST_INCLUDE_DIR      XCB_XTEST_LIBRARY
-#   XCB_ICCCM_FOUND      XCB_ICCCM_INCLUDE_DIR      XCB_ICCCM_LIBRARY
-#   XCB_EWMH_FOUND       XCB_EWMH_INCLUDE_DIR       XCB_EWMH_LIBRARY
-#   XCB_IMAGE_FOUND      XCB_IMAGE_INCLUDE_DIR      XCB_IMAGE_LIBRARY
-#   XCB_RENDERUTIL_FOUND XCB_RENDERUTIL_INCLUDE_DIR XCB_RENDERUTIL_LIBRARY
-#   XCB_KEYSYMS_FOUND    XCB_KEYSYMS_INCLUDE_DIR    XCB_KEYSYMS_LIBRARY
+# This module will define the following variables, independently of the
+# components searched for or found:
 #
-# Additionally, the following imported targets will be defined:
+#   XCB_FOUND      - True if (the requestion version of) xcb is available
+#   XCB_VERSION    - Found xcb version
 #
-#   XCB::XCB
-#   XCB::COMPOSITE
-#   XCB::DAMAGE
-#   XCB::DRI2
-#   XCB::EWMH
-#   XCB::GLX
-#   XCB::ICCCM
-#   XCB::IMAGE
-#   XCB::KEYSYMS
-#   XCB::RANDR
-#   XCB::RENDER
-#   XCB::RENDERUTIL
-#   XCB::SHAPE
-#   XCB::SHM
-#   XCB::SYNC
-#   XCB::UTIL
-#   XCB::XFIXES
-#   XCB::XTEST
-#   XCB::XV
+# For each searched-for components, XCB_<component>_FOUND will be set to true
+# if the corresponding xcb library was found, and false otherwise.  If
+# XCB_<component>_FOUND is true, the imported target XCB::<component> will be
+# defined.  This module will also attempt to determine XCB_*_VERSION variables
+# for each imported target, although XCB_VERSION should normally be sufficient.
 #
-# Copyright (c) 2011 Fredrik Höglund <fredrik@kde.org>
-# Copyright (c) 2013 Martin Gräßlin <mgraesslin@kde.org>
+# The following variable will also be defined for convenience, and for
+# compatibility with old-style find module conventions:
 #
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+#   XCB_LIBRARIES  - A list of all XCB imported targets
 
-if(CMAKE_VERSION VERSION_LESS 2.8.12)
-    message(FATAL_ERROR "CMake 2.8.12 is required by FindXCB.cmake")
-endif()
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-    message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindXCB.cmake")
-endif()
+#=============================================================================
+# Copyright 2011 Fredrik Höglund <fredrik@kde.org>
+# Copyright 2013 Martin Gräßlin <mgraesslin@kde.org>
+# Copyright 2014 Alex Merry <alex.merry@kde.org>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
-set(knownComponents XCB
-                    COMPOSITE
-                    DAMAGE
-                    DRI2
-                    EWMH
-                    GLX
-                    ICCCM
-                    IMAGE
-                    KEYSYMS
-                    RANDR
-                    RENDER
-                    RENDERUTIL
-                    SHAPE
-                    SHM
-                    SYNC
-                    UTIL
-                    XFIXES
-                    XTEST
-                    XV)
+include(${CMAKE_CURRENT_LIST_DIR}/../modules/ECMFindModuleHelpers.cmake)
 
-unset(unknownComponents)
+ecm_find_package_version_check(XCB)
 
-set(pkgConfigModules)
-
-if (XCB_FIND_COMPONENTS)
-  set(comps ${XCB_FIND_COMPONENTS})
-else()
-  set(comps ${knownComponents})
-endif()
-
-# iterate through the list of requested components, and check that we know them all.
-# If not, fail.
-foreach(comp ${comps})
-    list(FIND knownComponents ${comp} index )
-    if("${index}" STREQUAL "-1")
-        list(APPEND unknownComponents "${comp}")
-    else()
-        if("${comp}" STREQUAL "XCB")
-            list(APPEND pkgConfigModules "xcb")
-        elseif("${comp}" STREQUAL "COMPOSITE")
-            list(APPEND pkgConfigModules "xcb-composite")
-        elseif("${comp}" STREQUAL "DAMAGE")
-            list(APPEND pkgConfigModules "xcb-damage")
-        elseif("${comp}" STREQUAL "DRI2")
-            list(APPEND pkgConfigModules "xcb-dri2")
-        elseif("${comp}" STREQUAL "EWMH")
-            list(APPEND pkgConfigModules "xcb-ewmh")
-        elseif("${comp}" STREQUAL "GLX")
-            list(APPEND pkgConfigModules "xcb-glx")
-        elseif("${comp}" STREQUAL "ICCCM")
-            list(APPEND pkgConfigModules "xcb-icccm")
-        elseif("${comp}" STREQUAL "IMAGE")
-            list(APPEND pkgConfigModules "xcb-image")
-        elseif("${comp}" STREQUAL "KEYSYMS")
-            list(APPEND pkgConfigModules "xcb-keysyms")
-        elseif("${comp}" STREQUAL "RANDR")
-            list(APPEND pkgConfigModules "xcb-randr")
-        elseif("${comp}" STREQUAL "RENDER")
-            list(APPEND pkgConfigModules "xcb-render")
-        elseif("${comp}" STREQUAL "RENDERUTIL")
-            list(APPEND pkgConfigModules "xcb-renderutil")
-        elseif("${comp}" STREQUAL "SHAPE")
-            list(APPEND pkgConfigModules "xcb-shape")
-        elseif("${comp}" STREQUAL "SHM")
-            list(APPEND pkgConfigModules "xcb-shm")
-        elseif("${comp}" STREQUAL "SYNC")
-            list(APPEND pkgConfigModules "xcb-sync")
-        elseif("${comp}" STREQUAL "UTIL")
-            list(APPEND pkgConfigModules "xcb-util")
-        elseif("${comp}" STREQUAL "XFIXES")
-            list(APPEND pkgConfigModules "xcb-xfixes")
-        elseif("${comp}" STREQUAL "XTEST")
-            list(APPEND pkgConfigModules "xcb-xtest")
-        elseif("${comp}" STREQUAL "XV")
-            list(APPEND pkgConfigModules "xcb-xv")
-        endif()
-    endif()
-endforeach()
-
-
-if(DEFINED unknownComponents)
-   set(msgType STATUS)
-   if(XCB_FIND_REQUIRED)
-      set(msgType FATAL_ERROR)
-   endif()
-   if(NOT XCB_FIND_QUIETLY)
-      message(${msgType} "XCB: requested unknown components ${unknownComponents}")
-   endif()
-   return()
-endif()
-
-macro(_XCB_HANDLE_COMPONENT _comp)
-    set(_header )
-    set(_lib )
-    set(_pkgconfig_module_var)
-    if("${_comp}" STREQUAL "XCB")
-        set(_header "xcb/xcb.h")
-        set(_lib "xcb")
-        set(_pkgconfig_module_var "xcb")
-    elseif("${_comp}" STREQUAL "COMPOSITE")
-        set(_header "xcb/composite.h")
-        set(_lib "xcb-composite")
-        set(_pkgconfig_module_var "xcb-composite")
-    elseif("${_comp}" STREQUAL "DAMAGE")
-        set(_header "xcb/damage.h")
-        set(_lib "xcb-damage")
-        set(_pkgconfig_module_var "xcb-damage")
-    elseif("${_comp}" STREQUAL "DRI2")
-        set(_header "xcb/dri2.h")
-        set(_lib "xcb-dri2")
-        set(_pkgconfig_module_var "xcb-dri2")
-    elseif("${_comp}" STREQUAL "EWMH")
-        set(_header "xcb/xcb_ewmh.h")
-        set(_lib "xcb-ewmh")
-        set(_pkgconfig_module_var "xcb-ewmh")
-    elseif("${_comp}" STREQUAL "GLX")
-        set(_header "xcb/glx.h")
-        set(_lib "xcb-glx")
-        set(_pkgconfig_module_var "xcb-glx")
-    elseif("${_comp}" STREQUAL "ICCCM")
-        set(_header "xcb/xcb_icccm.h")
-        set(_lib "xcb-icccm")
-        set(_pkgconfig_module_var "xcb-icccm")
-    elseif("${_comp}" STREQUAL "IMAGE")
-        set(_header "xcb/xcb_image.h")
-        set(_lib "xcb-image")
-        set(_pkgconfig_module_var "xcb-image")
-    elseif("${_comp}" STREQUAL "KEYSYMS")
-        set(_header "xcb/xcb_keysyms.h")
-        set(_lib "xcb-keysyms")
-        set(_pkgconfig_module_var "xcb-keysyms")
-    elseif("${_comp}" STREQUAL "RANDR")
-        set(_header "xcb/randr.h")
-        set(_lib "xcb-randr")
-        set(_pkgconfig_module_var "xcb-randr")
-    elseif("${_comp}" STREQUAL "RENDER")
-        set(_header "xcb/render.h")
-        set(_lib "xcb-render")
-        set(_pkgconfig_module_var "xcb-render")
-    elseif("${_comp}" STREQUAL "RENDERUTIL")
-        set(_header "xcb/xcb_renderutil.h")
-        set(_lib "xcb-render-util")
-        set(_pkgconfig_module_var "xcb-renderutil")
-    elseif("${_comp}" STREQUAL "SHAPE")
-        set(_header "xcb/shape.h")
-        set(_lib "xcb-shape")
-        set(_pkgconfig_module_var "xcb-shape")
-    elseif("${_comp}" STREQUAL "SHM")
-        set(_header "xcb/shm.h")
-        set(_lib "xcb-shm")
-        set(_pkgconfig_module_var "xcb-shm")
-    elseif("${_comp}" STREQUAL "SYNC")
-        set(_header "xcb/sync.h")
-        set(_lib "xcb-sync")
-        set(_pkgconfig_module_var "xcb-sync")
-    elseif("${_comp}" STREQUAL "UTIL")
-        set(_header "xcb/xcb_util.h")
-        set(_lib "xcb-util")
-        set(_pkgconfig_module_var "xcb-util")
-    elseif("${_comp}" STREQUAL "XFIXES")
-        set(_header "xcb/xfixes.h")
-        set(_lib "xcb-xfixes")
-        set(_pkgconfig_module_var "xcb-xfixes")
-    elseif("${_comp}" STREQUAL "XTEST")
-        set(_header "xcb/xtest.h")
-        set(_lib "xcb-xtest")
-        set(_pkgconfig_module_var "xcb-xtest")
-    elseif("${_comp}" STREQUAL "XV")
-        set(_header "xcb/xv.h")
-        set(_lib "xcb-xv")
-        set(_pkgconfig_module_var "xcb-xv")
-    endif()
-
-    find_path(XCB_${_comp}_INCLUDE_DIR
-        NAMES ${_header}
-        HINTS ${PKG_XCB_INCLUDE_DIRS}
-    )
-    find_library(XCB_${_comp}_LIBRARY
-        NAMES ${_lib}
-        HINTS ${PKG_XCB_LIBRARY_DIRS}
-    )
-
-    if(XCB_${_comp}_INCLUDE_DIR AND XCB_${_comp}_LIBRARY)
-        list(APPEND XCB_INCLUDE_DIRS ${XCB_${_comp}_INCLUDE_DIR})
-        list(APPEND XCB_LIBRARIES ${XCB_${_comp}_LIBRARY})
-    endif()
-
-    if(PKG_XCB_VERSION AND NOT PKG_XCB_${_pkgconfig_module_var}_VERSION)
-        # this is what gets set if we only search for one module
-        set(XCB_${_comp}_VERSION_STRING "${PKG_XCB_VERSION}")
-    else()
-        set(XCB_${_comp}_VERSION_STRING "${PKG_XCB_${_pkgconfig_module_var}_VERSION}")
-    endif()
-
-    if(NOT XCB_VERSION_STRING)
-        set(XCB_VERSION_STRING ${XCB_${_comp}_VERSION_STRING})
-    endif()
-
-    find_package_handle_standard_args(XCB_${_comp}
-        FOUND_VAR
-            XCB_${_comp}_FOUND
-        REQUIRED_VARS
-            XCB_${_comp}_LIBRARY
-            XCB_${_comp}_INCLUDE_DIR
-        VERSION_VAR
-            XCB_${_comp}_VERSION_STRING
-        )
-
-    mark_as_advanced(XCB_${_comp}_LIBRARY XCB_${_comp}_INCLUDE_DIR)
-
-    if(XCB_${_comp}_FOUND AND NOT TARGET XCB::${_comp})
-        add_library(XCB::${_comp} UNKNOWN IMPORTED)
-        set_target_properties(XCB::${_comp} PROPERTIES
-            IMPORTED_LOCATION "${XCB_${_comp}_LIBRARY}"
-            INTERFACE_COMPILE_OPTIONS "${XCB_DEFINITIONS}"
-            INTERFACE_INCLUDE_DIRECTORIES "${XCB_${_comp}_INCLUDE_DIR}"
-        )
-    endif()
-
-    # compatibility for old variable naming
-    set(XCB_${_comp}_INCLUDE_DIRS ${XCB_${_comp}_INCLUDE_DIR})
-    set(XCB_${_comp}_LIBRARIES ${XCB_${_comp}_LIBRARY})
-endmacro()
-
-IF (NOT WIN32)
-    include(FindPackageHandleStandardArgs)
-    # Use pkg-config to get the directories and then use these values
-    # in the FIND_PATH() and FIND_LIBRARY() calls
-    find_package(PkgConfig)
-    pkg_check_modules(PKG_XCB QUIET ${pkgConfigModules})
-
-    set(XCB_DEFINITIONS ${PKG_XCB_CFLAGS})
-
-    foreach(comp ${comps})
-        _xcb_handle_component(${comp})
+if(NOT WIN32)
+    # Note that this list needs to be ordered such that any component
+    # appears after its dependencies
+    set(XCB_known_components
+        XCB
+        RENDER
+        SHAPE
+        XFIXES
+        SHM
+        ATOM
+        AUX
+        COMPOSITE
+        CURSOR
+        DAMAGE
+        DPMS
+        DRI2
+        DRI3
+        EVENT
+        EWMH
+        GLX
+        ICCCM
+        IMAGE
+        KEYSYMS
+        PRESENT
+        RANDR
+        RECORD
+        RENDERUTIL
+        RES
+        SCREENSAVER
+        SYNC
+        UTIL
+        XEVIE
+        XF86DRI
+        XINERAMA
+        XINPUT
+        XKB
+        XPRINT
+        XTEST
+        XV
+        XVMC)
+    # default component info: xcb components have fairly predictable
+    # header files, library names and pkg-config names
+    foreach(_comp ${XCB_known_components})
+        string(TOLOWER "${_comp}" _lc_comp)
+        set(XCB_${_comp}_component_deps XCB)
+        set(XCB_${_comp}_pkg_config "xcb-${_lc_comp}")
+        set(XCB_${_comp}_lib "xcb-${_lc_comp}")
+        set(XCB_${_comp}_header "xcb/${_lc_comp}.h")
     endforeach()
+    # exceptions
+    set(XCB_XCB_component_deps)
+    set(XCB_COMPOSITE_component_deps XCB XFIXES)
+    set(XCB_DAMAGE_component_deps XCB XFIXES)
+    set(XCB_IMAGE_component_deps XCB SHM)
+    set(XCB_RENDERUTIL_component_deps XCB RENDER)
+    set(XCB_XFIXES_component_deps XCB RENDER SHAPE)
+    set(XCB_XVMC_component_deps XCB XV)
+    set(XCB_XV_component_deps XCB SHM)
+    set(XCB_XCB_pkg_config "xcb")
+    set(XCB_XCB_lib "xcb")
+    set(XCB_ATOM_header "xcb/xcb_atom.h")
+    set(XCB_ATOM_lib "xcb-util")
+    set(XCB_AUX_header "xcb/xcb_aux.h")
+    set(XCB_AUX_lib "xcb-util")
+    set(XCB_CURSOR_header "xcb/xcb_cursor.h")
+    set(XCB_EVENT_header "xcb/xcb_event.h")
+    set(XCB_EVENT_lib "xcb-util")
+    set(XCB_EWMH_header "xcb/xcb_ewmh.h")
+    set(XCB_ICCCM_header "xcb/xcb_icccm.h")
+    set(XCB_IMAGE_header "xcb/xcb_image.h")
+    set(XCB_KEYSYMS_header "xcb/xcb_keysyms.h")
+    set(XCB_PIXEL_header "xcb/xcb_pixel.h")
+    set(XCB_RENDERUTIL_header "xcb/xcb_renderutil.h")
+    set(XCB_RENDERUTIL_lib "xcb-render-util")
+    set(XCB_UTIL_header "xcb/xcb_util.h")
 
-    if(XCB_INCLUDE_DIRS)
-        list(REMOVE_DUPLICATES XCB_INCLUDE_DIRS)
-    endif()
-
+    ecm_find_package_parse_components(XCB
+        RESULT_VAR XCB_components
+        KNOWN_COMPONENTS ${XCB_known_components}
+    )
+    ecm_find_package_handle_library_components(XCB
+        COMPONENTS ${XCB_components}
+    )
 
     find_package_handle_standard_args(XCB
         FOUND_VAR
             XCB_FOUND
         REQUIRED_VARS
             XCB_LIBRARIES
-            XCB_INCLUDE_DIRS
         VERSION_VAR
-            XCB_VERSION_STRING
+            XCB_VERSION
         HANDLE_COMPONENTS
     )
-
-    # compatibility for old variable naming
-    set(XCB_INCLUDE_DIR ${XCB_INCLUDE_DIRS})
-
 else()
     message(STATUS "XCB is not available on Windows.")
     set(XCB_FOUND FALSE)
