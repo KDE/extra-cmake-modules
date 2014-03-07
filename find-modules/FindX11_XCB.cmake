@@ -2,18 +2,37 @@
 # FindX11_XCB
 # -----------
 #
+# Try to find the X11 XCB compatibility library on a Unix system
+#
 # This will define the following variables:
 #
 # ``X11_XCB_FOUND``
-#     System has libX11-xcb
+#     True if (the requested version of) libX11-xcb is available
+# ``X11_XCB_VERSION``
+#     The version of libX11-xcb (this is not guaranteed to be set even when
+#     X11_XCB_FOUND is true)
 # ``X11_XCB_LIBRARIES``
-#     Link these to use libX11-xcb
+#     This can be passed to target_link_libraries() instead of the ``EGL::EGL``
+#     target
 # ``X11_XCB_INCLUDE_DIR``
-#     The libX11-xcb include dir
+#     This should be passed to target_include_directories() if the target is not
+#     used for linking
 # ``X11_XCB_DEFINITIONS``
-#     Compiler switches required for using libX11-xcb
+#     This should be passed to target_compile_options() if the target is not
+#     used for linking
+#
+# If ``X11_XCB_FOUND`` is TRUE, it will also define the following imported
+# target:
+#
+# ``X11::XCB``
+#     The X11 XCB compatibility library
+#
+# In general we recommend using the imported target, as it is easier to use.
+# Bear in mind, however, that if the target is in the link interface of an
+# exported library, it must be made available by the package config file.
 
 #=============================================================================
+# Copyright 2014 Alex Merry <alex.merry@kde.org>
 # Copyright 2011 Fredrik Höglund <fredrik@kde.org>
 # Copyright 2008 Helio Chissini de Castro <helio@kde.org>
 # Copyright 2007 Matthias Kretz <kretz@kde.org>
@@ -42,19 +61,65 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-IF (NOT WIN32)
-  # use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  FIND_PACKAGE(PkgConfig)
-  PKG_CHECK_MODULES(PKG_X11_XCB QUIET x11-xcb)
+if(CMAKE_VERSION VERSION_LESS 2.8.12)
+    message(FATAL_ERROR "CMake 2.8.12 is required by FindX11_XCB.cmake")
+endif()
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+    message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindX11_XCB.cmake")
+endif()
 
-  SET(X11_XCB_DEFINITIONS ${PKG_X11_XCB_CFLAGS})
+if(NOT WIN32)
+    # use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    find_package(PkgConfig)
+    pkg_check_modules(PKG_X11_XCB QUIET x11-xcb)
 
-  FIND_PATH(X11_XCB_INCLUDE_DIR  NAMES X11/Xlib-xcb.h HINTS ${PKG_X11_XCB_INCLUDE_DIRS})
-  FIND_LIBRARY(X11_XCB_LIBRARIES NAMES X11-xcb        HINTS ${PKG_X11_XCB_LIBRARY_DIRS})
+    set(X11_XCB_DEFINITIONS ${PKG_X11_XCB_CFLAGS_OTHER})
+    set(X11_XCB_VERSION ${PKG_X11_XCB_VERSION})
 
-  include(FindPackageHandleStandardArgs)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(X11_XCB DEFAULT_MSG X11_XCB_LIBRARIES X11_XCB_INCLUDE_DIR)
+    find_path(X11_XCB_INCLUDE_DIR
+        NAMES X11/Xlib-xcb.h
+        HINTS ${PKG_X11_XCB_INCLUDE_DIRS}
+    )
+    find_library(X11_XCB_LIBRARY
+        NAMES X11-xcb
+        HINTS ${PKG_X11_XCB_LIBRARY_DIRS}
+    )
 
-  MARK_AS_ADVANCED(X11_XCB_INCLUDE_DIR X11_XCB_LIBRARIES)
-ENDIF (NOT WIN32)
+    include(FindPackageHandleStandardArgs)
+    find_package_handle_standard_args(X11_XCB
+        FOUND_VAR
+            X11_XCB_FOUND
+        REQUIRED_VARS
+            X11_XCB_LIBRARY
+            X11_XCB_INCLUDE_DIR
+        VERSION_VAR
+            X11_XCB_VERSION
+    )
+
+    if(X11_XCB_FOUND AND NOT TARGET X11::XCB)
+        add_library(X11::XCB UNKNOWN IMPORTED)
+        set_target_properties(X11::XCB PROPERTIES
+            IMPORTED_LOCATION "${X11_XCB_LIBRARY}"
+            INTERFACE_COMPILE_OPTIONS "${X11_XCB_DEFINITIONS}"
+            INTERFACE_INCLUDE_DIRECTORIES "${X11_XCB_INCLUDE_DIR}"
+        )
+    endif()
+
+    mark_as_advanced(X11_XCB_INCLUDE_DIR X11_XCB_LIBRARY)
+
+    # compatibility variables
+    set(X11_XCB_LIBRARIES ${X11_XCB_LIBRARY})
+    set(X11_XCB_INCLUDE_DIRS ${X11_XCB_INCLUDE_DIR})
+    set(X11_XCB_VERSION_STRING ${X11_XCB_VERSION})
+
+else()
+    message(STATUS "FindX11_XCB.cmake cannot find X11-XCB on Windows systems.")
+    set(X11_XCB_FOUND FALSE)
+endif()
+
+include(FeatureSummary)
+set_package_properties(X11_XCB PROPERTIES
+    URL "http://xorg.freedesktop.org/"
+    DESCRIPTION "A compatibility library for code that translates Xlib API calls into XCB calls"
+)
