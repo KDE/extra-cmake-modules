@@ -51,7 +51,7 @@ targets are set by the module, such as
     #     Foo_LIBRARIES      - Link to these to use the Foo library
     #     Foo_INCLUDES_DIRS  - Include directory for the Foo library
     #     Foo_DEFINITIONS    - Compiler flags required to link against the Foo library
-    #     Foo_VERSION - The version of the Foo library which was found
+    #     Foo_VERSION_STRING - The version of the Foo library which was found
 
 Don't forget to add copyright and license notices.  Any module distributed with
 extra-cmake-modules must use the BSD 2-clause or 3-clause license:
