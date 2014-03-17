@@ -335,15 +335,24 @@ endif()
 ############################################################
 
 if (APPLE)
-    # FIXME: why are these needed?
+    # FIXME: why are these needed?  The commit log is unhelpful
+    # (it was introduced in svn path=/trunk/KDE/kdelibs/; revision=503025 -
+    # kdelibs git commit 4e4cb9cb9a2216b63d3eabf88b8fe94ee3c898cf -
+    # with the message "mac os x fixes for the cmake build")
     set (CMAKE_SHARED_LINKER_FLAGS "-single_module -multiply_defined suppress ${CMAKE_SHARED_LINKER_FLAGS}")
     set (CMAKE_MODULE_LINKER_FLAGS "-multiply_defined suppress ${CMAKE_MODULE_LINKER_FLAGS}")
 endif()
 
 if (WIN32)
-    if (MSVC OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
-        # make sure that no header adds libcmt by default using
+    if (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+        # Make sure that no header adds libcmt by default using
         # #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
+        # Error message this fixes:
+        #    "__thiscall type_info::type_info(class type_info const &)"
+        #    (??0type_info@@AAE@ABV0@@Z) already defined in LIBCMT.lib(typinfo.obj)
+        # See http://msdn.microsoft.com/en-us/library/aa267384%28VS.60%29.aspx
+        # and http://support.microsoft.com/kb/154753
+        # FIXME: is this still an issue with Visual Studio 2010 and later?
         set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
         set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO}")
         set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL}")
@@ -355,8 +364,11 @@ if (WIN32)
 endif()
 
 if (MINGW AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # This was copied from the Phonon build settings, where it had the comment
+    # "otherwise undefined symbol in phononcore.dll errors occurs", with the commit
+    # message "set linker flag --export-all-symbols for all targets, otherwise
+    # some depending targets could not be build"
     # FIXME: do our export macros not deal with this properly?
-    #        maybe we only need this for modules?
     set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
     set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols")
 endif()
