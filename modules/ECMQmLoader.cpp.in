@@ -13,10 +13,9 @@ static QTranslator *createTranslator()
     QString installSubDir = QStringLiteral("@data_install_sub_dir@");
     QString qmName = QStringLiteral("@qm_name@");
 
-    QString lang = QLocale::system().name();
     QString dir = QStandardPaths::locate(QStandardPaths::GenericDataLocation, installSubDir, QStandardPaths::LocateDirectory);
     QTranslator *translator = new QTranslator(QCoreApplication::instance());
-    translator->load(qmName + QStringLiteral("_") + lang, dir);
+    translator->load(QLocale::system(), qmName, QStringLiteral("-") /* prefix */, dir);
     return translator;
 }
 

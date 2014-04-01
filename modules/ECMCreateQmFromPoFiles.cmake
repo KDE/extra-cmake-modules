@@ -57,11 +57,8 @@ function(_ecm_qm_create_target po_dir pot_name data_install_dir data_install_sub
 
     file(GLOB po_files "${po_dir}/*.po")
     foreach (it ${po_files})
-        # PO files are foo-en_GB.po not foo_en_GB.po like Qt expects. Get a
-        # proper filename.
-        get_filename_component(it ${it} ABSOLUTE)
-        get_filename_component(file_with_dash ${it} NAME_WE)
-        string(REPLACE "-" "_" filename_base "${file_with_dash}")
+        get_filename_component(filename_base ${it} ABSOLUTE)
+        get_filename_component(filename_base ${it} NAME_WE)
 
         file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
         set(tsfile ${CMAKE_CURRENT_BINARY_DIR}/${filename_base}.ts)
