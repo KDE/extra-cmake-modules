@@ -1,35 +1,56 @@
-# - Function for installing icons
-# This module provides the function ECM_INSTALL_ICONS().
+#.rst:
+# ECMInstallIcons
+# ---------------
+#
+# Installs icons, sorting them into the correct directories according to the
+# FreeDesktop.org icon naming specification.
+#
+# ::
+#
+#   ecm_install_icons(<icon_install_dir> [<l10n_code>])
+#
+# Installs all icons found in ``CMAKE_CURRENT_SOURCE_DIR`` to the correct
+# subdirectory of ``<icon_install_dir>``.  ``<icon_install_dir>`` should
+# typically be something like ``share/icons``, although users of the
+# :kde-module:`KDEInstallDirs` module would normally do
+#
+# .. code-block:: cmake
+#
+#   ecm_install_icons(${ICON_INSTALL_DIR})
+#
+# The icons must be named in the form::
+#
+#   <theme><size>-<group>-<name>.<ext>
+#
+# where ``<theme>`` is one of
+# * ``hi`` for hicolor
+# * ``lo`` for locolor
+# * ``cr`` for the Crystal icon theme
+# * ``ox`` for the Oxygen icon theme
+#
+# ``<size>`` is a numeric pixel size (typically 16, 22, 32, 48, 64, 128 or 256)
+# or ``sc`` for scalable (SVG) files, ``<group>`` is one of the standard
+# FreeDesktop.org icon groups (actions, animations, apps, categories, devices,
+# emblems, emotes, intl, mimetypes, places, status) and ``<ext>`` is one of
+# ``.png``, ``.mng`` or ``.svgz``.
+#
+# For example the file ``hi22-action-menu_new.png`` would be installed into
+# ``<icon_install_dir>/hicolor/22x22/actions/menu_new.png``
 
-# ECM_INSTALL_ICONS installs all icons in the current path that
-# match a specific file naming convention into into the directory provided
-# following the Freedesktop.org icon naming spec
-# http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
-
-# The filenames of the icons in the directory must be in the following format
-# in order to be installed
-# themeSize-Group-name.extension
-
-# The following file extensions are supported
-# .png
-# .mng
-# .svgz
-
-# Where the theme is one of:
-# "hi" for hicolor
-# "lo" for locolor
-# "cr" for the crystal icon theme
-# "ox" for the oxygen icon theme
-
-# Size refers to the size of one dimension of the icon
-# Typically, 16, 22, 32, 48, 64, 128 or 256
-# For svgz files the size should be set to "sc"
-
-# For example the file
-# hi22-action-menu_new.png
-# would be installed into
-# PREFIX/hicolor/22x22/actions/menu_new.png
-
+#=============================================================================
+# Copyright 2013 David Edmundson <kde@davidedmundson.co.uk>
+# Copyright 2008 Chusslove Illich <caslav.ilic@gmx.net>
+# Copyright 2006 Alex Neundorf <neundorf@kde.org>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 
 # a "map" of short type names to the directories
@@ -47,6 +68,8 @@ set(_ECM_ICON_GROUP_emotes     "emotes")
 set(_ECM_ICON_GROUP_animations "animations")
 set(_ECM_ICON_GROUP_intl       "intl")
 
+# FIXME: this is too KDE-specific; we should keep this map for compatibility,
+#        but get users to specify the full theme name
 # a "map" of short theme names to the theme directory
 set(_ECM_ICON_THEME_ox "oxygen")
 set(_ECM_ICON_THEME_cr "crystalsvg")
@@ -73,6 +96,7 @@ macro (ECM_INSTALL_ICONS _defaultpath )
       set(_group "${CMAKE_MATCH_3}")
       set(_name  "${CMAKE_MATCH_4}")
 
+      # FIXME: don't use map
       set(_theme_GROUP ${_ECM_ICON_THEME_${_type}})
       if( _theme_GROUP)
          _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
@@ -127,6 +151,7 @@ macro (_ECM_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAM
    if (NOT ${_group} STREQUAL ${_install_NAME} )
       set(_icon_GROUP  ${_ECM_ICON_GROUP_${_group}})
       if(NOT _icon_GROUP)
+         # FIXME: print warning if not in map (and not "actions")
          set(_icon_GROUP "actions")
       endif(NOT _icon_GROUP)
 #      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name} l10n: ${_l10n_SUBDIR}")

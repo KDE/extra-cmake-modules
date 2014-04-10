@@ -1,13 +1,23 @@
-# Helper macros for find modules
+#.rst:
+# ECMFindModuleHelpers
+# --------------------
+#
+# Helper macros for find modules: ecm_find_package_version_check(),
+# ecm_find_package_parse_components() and
+# ecm_find_package_handle_library_components().
+#
+# ::
 #
 #   ecm_find_package_version_check(<name>)
 #
 # Prints warnings if the CMake version or the project's required CMake version
 # is older than that required by extra-cmake-modules.
 #
+# ::
+#
 #   ecm_find_package_parse_components(<name>
 #       RESULT_VAR <variable>
-#       KNOWN_COMPONENTS <component> [<component>]*
+#       KNOWN_COMPONENTS <component1> [<component2> [...]]
 #       [SKIP_DEPENDENCY_HANDLING])
 #
 # This macro will populate <variable> with a list of components found in
@@ -24,8 +34,10 @@
 # If <component> is listed in <name>_FIND_COMPONENTS, then all its (transitive)
 # dependencies will also be added to <variable>.
 #
+# ::
+#
 #   ecm_find_package_handle_library_components(<name>
-#       COMPONENTS <component> [<component>]*
+#       COMPONENTS <component> [<component> [...]]
 #       [SKIP_DEPENDENCY_HANDLING])
 #       [SKIP_PKG_CONFIG])
 #
@@ -64,6 +76,9 @@
 # <name>_VERSION will be set to the same as <name>_<component>_VERSION for
 # the component that is searched for first (note that components are searched
 # for in the order they are passed to the macro).
+
+# FIXME: we should actually set proper traditional variables, because it can
+#        be convenient to use them in the link interface of exported libraries
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>

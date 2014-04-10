@@ -1,17 +1,46 @@
-# - Try to find libX11-xcb
-# Once done this will define
+#.rst:
+# FindX11_XCB
+# -----------
 #
-#  X11_XCB_FOUND       - system has libX11-xcb
-#  X11_XCB_LIBRARIES   - Link these to use libX11-xcb
-#  X11_XCB_INCLUDE_DIR - the libX11-xcb include dir
-#  X11_XCB_DEFINITIONS - compiler switches required for using libX11-xcb
+# This will define the following variables:
+#
+# ``X11_XCB_FOUND``
+#     System has libX11-xcb
+# ``X11_XCB_LIBRARIES``
+#     Link these to use libX11-xcb
+# ``X11_XCB_INCLUDE_DIR``
+#     The libX11-xcb include dir
+# ``X11_XCB_DEFINITIONS``
+#     Compiler switches required for using libX11-xcb
 
-# Copyright (c) 2011 Fredrik Höglund <fredrik@kde.org>
-# Copyright (c) 2008 Helio Chissini de Castro, <helio@kde.org>
-# Copyright (c) 2007 Matthias Kretz, <kretz@kde.org>
+#=============================================================================
+# Copyright 2011 Fredrik Höglund <fredrik@kde.org>
+# Copyright 2008 Helio Chissini de Castro <helio@kde.org>
+# Copyright 2007 Matthias Kretz <kretz@kde.org>
 #
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. The name of the author may not be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#=============================================================================
 
 IF (NOT WIN32)
   # use pkg-config to get the directories and then use these values

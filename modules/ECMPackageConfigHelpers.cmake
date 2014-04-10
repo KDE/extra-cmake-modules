@@ -1,11 +1,28 @@
-# - ECM_CONFIGURE_PACKAGE_CONFIG_FILE(), WRITE_BASIC_PACKAGE_VERSION_FILE()
+#.rst:
+# ECMPackageConfigHelpers
+# -----------------------
 #
-# WRITE_BASIC_PACKAGE_VERSION_FILE() is actually just the macro from the
-# CMakePackageConfigHelpers module.
+# Helper macros for generating CMake package config files.
 #
-# ECM_CONFIGURE_PACKAGE_CONFIG_FILE() behaves like
-# CONFIGURE_PACKAGE_CONFIG_FILE() from CMake 2.8.12, except that it adds an
-# extra helper macro: find_dependency().
+# ``write_basic_package_version_file()`` is the same as the one provided by the
+# CMakePackageConfigHelpers module in CMake; see that module's documentation for
+# more information.
+#
+# ::
+#
+#   ecm_configure_package_config_file(<input> <output>
+#       INSTALL_DESTINATION <path>
+#       [PATH_VARS <var1> [<var2> [...]]
+#       [NO_SET_AND_CHECK_MACRO]
+#       [NO_CHECK_REQUIRED_COMPONENTS_MACRO])
+#
+#
+# This behaves in the same way as configure_package_config_file() from CMake
+# 2.8.12, except that it adds an extra helper macro: find_dependency().
+#
+# ::
+#
+#   find_dependency(<dep> [<version> [EXACT]])
 #
 # find_dependency() should be used instead of find_package() to find package
 # dependencies.  It forwards the correct parameters for EXACT, QUIET and
@@ -17,10 +34,23 @@
 # module directly.
 #
 # CMake 3.0.0 will include a CMakeFindDependencyMacro module that will provide
-# the find_dependency macro (which you can include() in your *Config.cmake
+# the find_dependency() macro (which you can include() in your package config
 # file), so this file is only useful for projects whose minimum required version
 # is 2.8.12.
+
+#=============================================================================
+# Copyright 2014 Alex Merry <alex.merry@kdemail.net>
+# Copyright 2013 Stephen Kelly <steveire@gmail.com>
 #
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 include(${CMAKE_ROOT}/Modules/CMakePackageConfigHelpers.cmake)
 

@@ -1,11 +1,29 @@
-# - Function for marking executables as being non-gui
-# This module provides the function ECM_MARK_NONGUI_EXECUTABLE().
+#.rst:
+# ECMMarkNonGuiExecutable
+# -----------------------
 #
-# The ECM_MARK_NONGUI_EXECUTABLE function is used to indicate that an executable
-# target should not be part of a MACOSX_BUNDLE, and should not be a WIN32_EXECUTABLE.
+# Marks an executable target as not being a GUI application.
 #
-# ECM_MARK_NONGUI_EXECUTABLE( target1 target2 ... targetN )
+# ::
 #
+#   ecm_mark_nongui_executable(<target1> [<target2> [...]])
+#
+# This will indicate to CMake that the specified targets should not be included
+# in a MACOSX_BUNDLE and should not be WIN32_EXECUTABLEs.  On platforms other
+# than MacOS X or Windows, this will have no effect.
+
+#=============================================================================
+# Copyright 2012 Stephen Kelly <steveire@gmail.com>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 function(ecm_mark_nongui_executable)
   foreach(_target ${ARGN})

@@ -1,28 +1,50 @@
+#.rst:
+# ECMAddTests
+# -----------
+#
+# Add test executables.
+#
+# ::
+#
+#   ecm_add_test(<sources> LINK_LIBRARIES <library> [<library> [...]]
+#                          [TEST_NAME <name>]
+#                          [NAME_PREFIX <prefix>]
+#                          [GUI])
+#
+# Add a new unit test using the passed source files. The parameter TEST_NAME is
+# used to set the name of the resulting test. It may be omitted if there is
+# exactly one source file. In that case the name of the source file (without the
+# file extension) will be used as the test name.  If the flag GUI is passed the
+# test binary will be a GUI executable, otherwise the resulting binary will be a
+# console application.  The test will be linked against the libraries and/or
+# targets passed to LINK_LIBRARIES.
+#
+#
+# ::
+#
+#   ecm_add_tests(<sources> LINK_LIBRARIES <library> [<library> [...]]
+#                           [NAME_PREFIX <prefix>]
+#                           [GUI])
+#
+# This is a convenient version of ecm_add_test() for when you have many tests
+# that consist of a single source file each.  It behaves like calling
+# ecm_add_test() once for each source file, with the same named arguments.
+
+#=============================================================================
+# Copyright 2013 Alexander Richardson <arichardson.kde@gmail.com>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
+
 include(ECMMarkAsTest)
 include(ECMMarkNonGuiExecutable)
-# This file provides the functions ecm_add_test() and ecm_add_tests().
-#
-# ecm_add_test(<sources> TEST_NAME <name> NAME_PREFIX <prefix> LINK_LIBRARIES <libraries/targets> [GUI])
-#
-# Add a new unit test using the passed source files. The parameter TEST_NAME is used to set the name
-# of the resulting test. It may be omitted if there is exactly one source file. In that case the name of
-# the source file (without the file extension) will be used as the test name.
-# If the flag GUI is passed the test binary will be a GUI executable, otherwise the resulting
-# binary will be a console application.
-#
-# ecm_add_tests(<sources> NAME_PREFIX <prefix> LINK_LIBRARIES <libraries/targets> [GUI])
-#
-# Add a new unit test for every source file passed. The name of the tests will be the name of the
-# corresponding source file minus the file extension. If NAME_PREFIX is set, that string will be
-# prepended to each of the unit test names. Each of the unit tests will be linked against the
-# libraries and/or targets passed in the LINK_LIBRARIES parameter.
-# If the flag GUI is passed the test binary will be a GUI executable, otherwise the resulting
-# binary will be a console application.
-#
-# Copyright (c) 2013, Alexander Richardson, <arichardson.kde@gmail.com>
-#
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 function(ecm_add_test)
   set(options GUI)

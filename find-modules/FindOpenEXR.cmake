@@ -1,17 +1,32 @@
-# Try to find the OpenEXR libraries
+#.rst:
+# FindOpenEXR
+# -----------
 #
-# This will define:
+# Try to find the OpenEXR libraries.
 #
-#   OpenEXR_FOUND        - True if OpenEXR is available
-#   OpenEXR_LIBRARIES    - Link to these to use OpenEXR
-#   OpenEXR_INCLUDE_DIRS - Include directory for OpenEXR
-#   OpenEXR_DEFINITIONS  - Compiler flags required to link against OpenEXR
-#   OpenEXR::IlmImf      - imported target to link against (instead of using the above variables)
+# This will define the following variables:
 #
+# ``OpenEXR_FOUND``
+#     True if OpenEXR is available
+# ``OpenEXR_LIBRARIES``
+#     Link to these to use OpenEXR
+# ``OpenEXR_INCLUDE_DIRS``
+#     Include directory for OpenEXR
+# ``OpenEXR_DEFINITIONS``
+#     Compiler flags required to link against OpenEXR
+#
+# and the following imported targets:
+#
+# ``OpenEXR::IlmImf``
+#     The OpenEXR core library
+#
+# In general we recommend using the imported target, as it is easier to use.
+# Bear in mind, however, that if the target is in the link interface of an
+# exported library, it must be made available by the package config file.
 
-
-# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
-# Copyright (c) 2013-2014, Alex Merry, <alex.merry@kdemail.net>
+#=============================================================================
+# Copyright 2013-2014 Alex Merry <alex.merry@kdemail.net>
+# Copyright 2006 Alexander Neundorf <neundorf@kde.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -35,6 +50,7 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#=============================================================================
 
 
 if(${CMAKE_VERSION} VERSION_LESS 2.8.12)

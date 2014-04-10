@@ -1,3 +1,7 @@
+#.rst:
+# KDECompilerSettings
+# -------------------
+#
 # Set useful compile and link flags for C++ (and C) code.
 #
 # Enables many more warnings than the default, and sets stricter modes
@@ -5,25 +9,44 @@
 # kde_target_enable_exceptions() can be used to re-enable them for a
 # specific target.
 #
-#
-# This module provides the following functions:
+# This module provides the following functions::
 #
 #   kde_source_files_enable_exceptions([file1 [file2 [...]]])
 #
 # Enables exceptions for specific source files.  This should not be
 # used on source files in a language other than C++.
 #
+# ::
+#
 #   kde_target_enable_exceptions(target <INTERFACE|PUBLIC|PRIVATE>)
 #
 # Enables exceptions for a specific target.  This should not be used
 # on a target that has source files in a language other than C++.
 #
+# ::
+#
 #   kde_enable_exceptions()
 #
 # Enables exceptions for C++ source files compiled for the
 # CMakeLists.txt file in the current directory and all subdirectories.
-#
 
+#=============================================================================
+# Copyright 2014      Alex Merry <alex.merry@kde.org>
+# Copyright 2013      Stephen Kelly <steveire@gmail.com>
+# Copyright 2012-2013 Raphael Kubo da Costa <rakuco@FreeBSD.org>
+# Copyright 2007      Matthias Kretz <kretz@kde.org>
+# Copyright 2006-2007 Laurent Montel <montel@kde.org>
+# Copyright 2006-2013 Alex Neundorf <neundorf@kde.org>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 ############################################################
 # Toolchain minimal requirements

@@ -1,15 +1,32 @@
-# - Function for marking targets as being only for testing
-# This module provides the function ECM_MARK_AS_TEST().
+#.rst:
+# ECMMarkAsTest
+# -------------
 #
-# The ECM_MARK_AS_TEST function is used to indicate that a target should only
-# be built if the BUILD_TESTING option (provided by CTest) is enabled.
+# Marks a target as only being required for tests.
 #
-# ECM_MARK_AS_TEST( target1 target2 ... targetN )
+# ::
 #
-# If BUILD_TESTING is False, then targets marked as tests are excluded from
-# the ALL target. They are all part of the 'buildtests' target though, so
-# even if building with BUILD_TESTING set to False, it is possible to build
-# all tests by invoking the 'buildtests' target.
+#   ecm_mark_as_test(<target1> [<target2> [...]])
+#
+# This will cause the specified targets to not be built unless either
+# BUILD_TESTING is set to ON or the user invokes the ``buildtests`` target.
+#
+# BUILD_TESTING is created as a cache variable by the CTest module and by the
+# :kde-module:`KDECMakeSettings` module.
+
+#=============================================================================
+# Copyright 2012 Stephen Kelly <steveire@gmail.com>
+# Copyright 2012 Alex Neundorf <neundorf@kde.org>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 if (NOT BUILD_TESTING)
   if(NOT TARGET buildtests)

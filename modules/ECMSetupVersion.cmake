@@ -1,49 +1,70 @@
-# This file provides the function ecm_setup_version().
-# ECM_SETUP_VERSION() bundles three things which are usually done for versioned libraries:
-#  - it sets a set of version variables
-#  - optionally it creates a C version header file, which can then be installed along with the library
-#  - optionally it creates a CMake package version file, which can then be installed along with a
-#    CMake package Config.cmake file
+#.rst:
+# ECMSetupVersion
+# ---------------
+#
+# Handle library version information.
+#
+# ::
 #
 #   ecm_setup_version(<version>
-#                     VARIABLE_PREFIX prefix
+#                     VARIABLE_PREFIX <prefix>
 #                     [SOVERSION <soversion>]
-#                     [VERSION_HEADER filename]
-#                     [PACKAGE_VERSION_FILE filename] )
+#                     [VERSION_HEADER <filename>]
+#                     [PACKAGE_VERSION_FILE <filename>] )
 #
+# This parses a version string and sets up a standard set of version variables.
+# It can optionally also create a C version header file and a CMake package
+# version file to install along with the library.
 #
-# ecm_setup_version() sets the following CMake variables
-#    <prefix>_VERSION_MAJOR = <version_major_component>
-#    <prefix>_VERSION_MINOR = <version_minor_component>
-#    <prefix>_VERSION_PATCH = <version_patch_component>
-#    <prefix>_VERSION_STRING = <major>.<minor>.<patch>
-#    <prefix>_SOVERSION is set to <major> if <soversion> has not been specified.
+# If the ``<version>`` argument is of the form ``<major>.<minor>.<patch>``
+# (or ``<major>.<minor>.<patch>.<tweak>``), The following CMake variables are
+# set::
 #
-# It also sets PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH and
-# PROJECT_VERSION_STRING, for easier use with configure_file and file(GENERATE).
+#   <prefix>_VERSION_MAJOR  - <major>
+#   <prefix>_VERSION_MINOR  - <minor>
+#   <prefix>_VERSION_PATCH  - <patch>
+#   <prefix>_VERSION_STRING - <version>
+#   <prefix>_SOVERSION      - <soversion>, or <major> if SOVERSION was not given
+#   PROJECT_VERSION_MAJOR   - <major>
+#   PROJECT_VERSION_MINOR   - <minor>
+#   PROJECT_VERSION_PATCH   - <patch>
+#   PROJECT_VERSION_STRING  - <version>
 #
-# If the VERSION_HEADER option is used, a simple C header is generated with the given
-# filename. If filename is a relative path, it is interpreted as relative to
-# CMAKE_CURRENT_BINARY_DIR.
-# The generated header contains the following macros:
-#    <prefix>_VERSION_MAJOR
-#    <prefix>_VERSION_MINOR
-#    <prefix>_VERSION_PATCH
-#    <prefix>_VERSION_STRING - containing the full version number as a C string
-#    <prefix>_VERSION - containing the full version combined into one integer
+# If the VERSION_HEADER option is used, a simple C header is generated with the
+# given filename. If filename is a relative path, it is interpreted as relative
+# to CMAKE_CURRENT_BINARY_DIR.  The generated header contains the following
+# macros::
+#
+#    <prefix>_VERSION_MAJOR  - <major> as an integer
+#    <prefix>_VERSION_MINOR  - <minor> as an integer
+#    <prefix>_VERSION_PATCH  - <patch> as an integer
+#    <prefix>_VERSION_STRING - <version> as a C string
+#    <prefix>_VERSION        - the version as an integer
+#
+# ``<prefix>_VERSION`` has ``<patch>`` in the bottom 8 bits, ``<minor>`` in the
+# next 8 bits and ``<major>`` in the remaining bits.  Note that ``<patch>`` and
+# ``<minor>`` must be less than 256.
 #
 # If the PACKAGE_VERSION_FILE option is used, a simple CMake package version
-# file is created using the write_basic_package_version_file() macro coming
-# with CMake. It should be installed along the Config.cmake file of the library
-# into the same directory where it can be found by find_package().
-# Also here, if the given filename is a relative path, it is interpreted as
-# relative to CMAKE_CURRENT_BINARY_DIR.
+# file is created using the write_basic_package_version_file() macro provided by
+# CMake. It should be installed in the same location as the Config.cmake file of
+# the library so that it can be found by find_package().  If the filename is a
+# relative path, it is interpreted as relative to CMAKE_CURRENT_BINARY_DIR.
 
-# Copyright (c) 2012, Alexander Neundorf, <neundorf@kde.org>
+#=============================================================================
+# Copyright 2012 Alexander Neundorf <neundorf@kde.org>
 #
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
+# FIXME: Figure out how this should interact with CMP0048 in CMake 3.0.0
 
 include(CMakePackageConfigHelpers)
 

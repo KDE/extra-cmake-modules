@@ -1,12 +1,20 @@
-#  ecm_create_qm_from_po_files(PO_DIR <po_dir>
-#                              POT_NAME <pot_name>
-#                              [DATA_INSTALL_DIR <data_install_dir>]
-#                              [DATA_INSTALL_SUB_DIR <data_install_sub_dir>]
-#                              [CREATE_LOADER <source_file_var>])
+#.rst:
+# ECMCreateQmFromPoFiles
+# ----------------------
 #
-# ecm_create_qm_from_po_files() creates the necessary rules to compile .po
-# files into .qm files, usable by QTranslator. It can also generate a C++ file
-# which takes care of automatically loading those translations.
+# Generate QTranslator (.qm) catalogs from Gettext (.po) catalogs.
+#
+# ::
+#
+#   ecm_create_qm_from_po_files(PO_DIR <po_dir>
+#                               POT_NAME <pot_name>
+#                               [DATA_INSTALL_DIR <data_install_dir>]
+#                               [DATA_INSTALL_SUB_DIR <data_install_sub_dir>]
+#                               [CREATE_LOADER <source_file_var>])
+#
+# Creates the necessary rules to compile .po files into .qm files, usable by
+# QTranslator. It can also generate a C++ file which takes care of automatically
+# loading those translations.
 #
 # PO_DIR is the path to a directory containing .po files.
 #
@@ -18,7 +26,9 @@
 # DATA_INSTALL_DIR defaults to ${DATA_INSTALL_DIR} if defined, otherwise it uses
 # "share". It must point to a directory which is in the list returned by:
 #
-#     QStandardPath::standardLocations(QStandardPath::GenericDataLocation)
+# .. code-block:: cpp
+#
+#   QStandardPath::standardLocations(QStandardPath::GenericDataLocation)
 #
 # otherwise the C++ loader will fail to load the translations.
 #
@@ -33,14 +43,24 @@
 # at startup. The path of the .cpp file is stored in <source_file_var>. This
 # variable must be added to the list of sources to build, like this:
 #
+# .. code-block:: cmake
+#
 #   ecm_create_qm_from_po_files(PO_DIR po POT_NAME mylib CREATE_LOADER myloader)
 #   set(mylib_SRCS foo.cpp bar.cpp ${myloader})
 #   add_library(mylib ${mylib_SRCS})
+
+#=============================================================================
+# Copyright 2014 Aurélien Gâteau <agateau@kde.org>
 #
-# Copyright (c) 2014, Aurélien Gâteau, <agateau@kde.org>
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
 #
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 # This gives us Qt5::lrelease and Qt5::lupdate but unfortunately no Qt5::lconvert
 # See https://bugreports.qt-project.org/browse/QTBUG-37937

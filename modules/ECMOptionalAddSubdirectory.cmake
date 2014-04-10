@@ -1,28 +1,42 @@
-# - ECM_OPTIONAL_ADD_SUBDIRECTORY() combines ADD_SUBDIRECTORY() with an OPTION()
+#.rst:
+# ECMOptionalAddSubdirectory
+# --------------------------
 #
-# ECM_OPTIONAL_ADD_SUBDIRECTORY(<dir>)
+# Make subdiretories optional.
 #
-# If you use ECM_OPTIONAL_ADD_SUBDIRECTORY() instead of ADD_SUBDIRECTORY(),
-# this will have two effects
+# ::
 #
-# 1 - CMake will not complain if the directory doesn't exist
-#     This makes sense if you want to distribute just one of the subdirs
-#     in a source package, e.g. just one of the subdirs in kdeextragear.
-# 2 - If the directory exists, it will offer an option to skip the
-#     subdirectory.
-#     This is useful if you want to compile only a subset of all
-#     directories.
+#   ecm_optional_add_subdirectory(<dir>)
 #
-# If the CMake variable DISABLE_ALL_OPTIONAL_SUBDIRECTORIES is set to TRUE
-# for the first CMake run on the project, all optional subdirectories will be disabled
-# by default (but can of course be enabled via the respective options).
-# E.g. the following will disable all optional subdirectories except the one named "kcalc":
-#   $ cmake -DDISABLE_ALL_OPTIONAL_SUBDIRECTORIES=TRUE -DBUILD_kcalc=TRUE <srcdir>
+# This behaves like add_subdirectory(), except that it does not complain if the
+# directory does not exist.  Additionally, if the directory does exist, it
+# creates an option to allow the user to skip it.
+#
+# This is useful for "meta-projects" that combine several mostly-independent
+# sub-projects.
+#
+# If the CMake variable DISABLE_ALL_OPTIONAL_SUBDIRECTORIES is set to TRUE for
+# the first CMake run on the project, all optional subdirectories will be
+# disabled by default (but can of course be enabled via the respective options).
+# For example, the following will disable all optional subdirectories except the
+# one named "foo":
+#
+# .. code-block:: sh
+#
+#   cmake -DDISABLE_ALL_OPTIONAL_SUBDIRECTORIES=TRUE -DBUILD_foo=TRUE myproject
 
-# Copyright (c) 2007, Alexander Neundorf, <neundorf@kde.org>
+#=============================================================================
+# Copyright 2007 Alexander Neundorf <neundorf@kde.org>
 #
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 
 function(ECM_OPTIONAL_ADD_SUBDIRECTORY _dir)

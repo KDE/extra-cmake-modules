@@ -1,8 +1,12 @@
-# Try to find XCB on a Unix system
+#.rst:
+# FindXCB
+# -------
 #
-# This is a component-based find module, which makes use of the COMPONENTS
-# and OPTIONAL_COMPONENTS arguments to find_module.  The following components
-# are available:
+# Try to find XCB on a Unix system.
+#
+# This is a component-based find module, which makes use of the COMPONENTS and
+# OPTIONAL_COMPONENTS arguments to find_module.  The following components are
+# available::
 #
 #   XCB
 #   ATOM         AUX          COMPOSITE    CURSOR       DAMAGE
@@ -19,34 +23,52 @@
 # This module will define the following variables, independently of the
 # components searched for or found:
 #
-#   XCB_FOUND      - True if (the requestion version of) xcb is available
-#   XCB_VERSION    - Found xcb version
+# ``XCB_FOUND``
+#     True if (the requestion version of) xcb is available
+# ``XCB_VERSION``
+#     Found xcb version
 #
-# For each searched-for components, XCB_<component>_FOUND will be set to true
-# if the corresponding xcb library was found, and false otherwise.  If
-# XCB_<component>_FOUND is true, the imported target XCB::<component> will be
-# defined.  This module will also attempt to determine XCB_*_VERSION variables
-# for each imported target, although XCB_VERSION should normally be sufficient.
+# For each searched-for components, ``XCB_<component>_FOUND`` will be set to
+# true if the corresponding xcb library was found, and false otherwise.  If
+# ``XCB_<component>_FOUND`` is true, the imported target ``XCB::<component>``
+# will be defined.  This module will also attempt to determine
+# ``XCB_*_VERSION`` variables for each imported target, although
+# ``XCB_VERSION`` should normally be sufficient.
 #
 # The following variable will also be defined for convenience, and for
 # compatibility with old-style find module conventions:
 #
-#   XCB_LIBRARIES  - A list of all XCB imported targets
+# ``XCB_LIBRARIES``
+#     A list of all XCB imported targets
 
 #=============================================================================
 # Copyright 2011 Fredrik Höglund <fredrik@kde.org>
 # Copyright 2013 Martin Gräßlin <mgraesslin@kde.org>
 # Copyright 2014 Alex Merry <alex.merry@kde.org>
 #
-# Distributed under the OSI-approved BSD License (the "License");
-# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
 #
-# This software is distributed WITHOUT ANY WARRANTY; without even the
-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the License for more information.
+# 1. Redistributions of source code must retain the copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. The name of the author may not be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
-# (To distribute this file outside of extra-cmake-modules, substitute the full
-#  License text for the above reference.)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/ECMFindModuleHelpers.cmake)
 

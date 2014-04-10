@@ -1,68 +1,122 @@
-# Define KDE standard installation directories
+#.rst:
+# KDEInstallDirs
+# --------------
 #
-# Inclusion of this module defines the following variables (default
-# values in parentheses):
+# Define KDE standard installation directories.
 #
-#  BUNDLE_INSTALL_DIR               - (Mac only) application bundles (/Applications/KDE5)
-#  BIN_INSTALL_DIR                  - user executables (bin)
-#  SBIN_INSTALL_DIR                 - system admin executables (sbin)
-#  LIB_INSTALL_DIR                  - object code libraries (lib or lib64 or lib/<multiarch-tuple> on Debian)
-#  LIBEXEC_INSTALL_DIR              - internal executables (${LIB_INSTALL_DIR}/kde5/libexec)
-#  INSTALL_TARGETS_DEFAULT_ARGS     - combines BUNDLE_INSTALL_DIR, BIN_INSTALL_DIR and LIB_INSTALL_DIR; see below
+# Inclusion of this module defines the following variables (default values in
+# parentheses):
 #
-#  INCLUDE_INSTALL_DIR              - C and C++ header files (include/KF5)
+# ``BUNDLE_INSTALL_DIR``
+#     (Mac only) application bundles (``/Applications/KDE5``)
+# ``BIN_INSTALL_DIR``
+#     user executables (``bin``)
+# ``SBIN_INSTALL_DIR``
+#     system admin executables (``sbin``)
+# ``LIB_INSTALL_DIR``
+#     object code libraries (``lib or lib64 or lib/<multiarch-tuple> on
+#     Debian``)
+# ``LIBEXEC_INSTALL_DIR``
+#     internal executables (``${LIB_INSTALL_DIR}/kde5/libexec``)
+# ``INSTALL_TARGETS_DEFAULT_ARGS``
+#     combines BUNDLE_INSTALL_DIR, BIN_INSTALL_DIR and LIB_INSTALL_DIR; see
+#     below
+# ``INCLUDE_INSTALL_DIR``
+#     C and C++ header files (``include/KF5``)
+# ``QT_PLUGIN_INSTALL_DIR``
+#     Qt plugins (``${LIB_INSTALL_DIR}/plugins``)
+# ``PLUGIN_INSTALL_DIR``
+#     KDE plugins (``${QT_PLUGIN_INSTALL_DIR}/kf5``)
+# ``IMPORTS_INSTALL_DIR``
+#     QML imports (``${QT_PLUGIN_INSTALL_DIR}/imports``)
+# ``QML_INSTALL_DIR``
+#     QML2 imports (``${LIB_INSTALL_DIR}/qml``)
+# ``CMAKECONFIG_INSTALL_PREFIX``
+#     CMake configuration files (``${LIB_INSTALL_DIR}/cmake``)
+# ``DATA_INSTALL_DIR``
+#     read-only architecture-independent data (``share``)
+# ``KCONF_UPDATE_INSTALL_DIR``
+#     kconf_update files (``${DATA_INSTALL_DIR}/kconf_update``)
+# ``DBUS_INTERFACES_INSTALL_DIR``
+#     dbus interfaces (``share/dbus-1/interfaces``)
+# ``DBUS_SERVICES_INSTALL_DIR``
+#     dbus services (``share/dbus-1/services``)
+# ``DBUS_SYSTEM_SERVICES_INSTALL_DIR``
+#     dbus system services (``share/dbus-1/system-services``)
+# ``HTML_INSTALL_DIR``
+#     HTML documentation (``share/doc/HTML``)
+# ``ICON_INSTALL_DIR``
+#     the icons (``share/icons``)
+# ``KCFG_INSTALL_DIR``
+#     kconfig files (``share/config.kcfg``)
+# ``LOCALE_INSTALL_DIR``
+#     translations (``share/locale``)
+# ``MAN_INSTALL_DIR``
+#     man pages (``share/man``)
+# ``SERVICES_INSTALL_DIR``
+#     service (desktop, protocol, ...) files (``share/kde5/services``)
+# ``SERVICETYPES_INSTALL_DIR``
+#     service types desktop files (``share/kde5/servicetypes``)
+# ``SOUND_INSTALL_DIR``
+#     sound files (``share/sounds``)
+# ``TEMPLATES_INSTALL_DIR``
+#     templates (``share/templates``)
+# ``WALLPAPER_INSTALL_DIR``
+#     wallpapers (``share/wallpapers``)
+# ``XDG_APPS_INSTALL_DIR``
+#     application desktop files (``share/applications/kde5``)
+# ``XDG_DIRECTORY_INSTALL_DIR``
+#     XDG directory (``share/desktop-directories``)
+# ``XDG_MIME_INSTALL_DIR``
+#     mimetype XML files (``share/mime/packages``)
+# ``SYSCONF_INSTALL_DIR``
+#     sysconfig files (``etc``)
+# ``CONFIG_INSTALL_DIR``
+#     config files (``${SYSCONF_INSTALL_DIR}/xdg``)
+# ``AUTOSTART_INSTALL_DIR``
+#     autostart files (``${CONFIG_INSTALL_DIR}/autostart``)
+# ``EXEC_INSTALL_PREFIX``
+#     prefix for default values of BIN_INSTALL_DIR, SBIN_INSTALL_DIR and
+#     LIB_INSTALL_DIR (``empty by default``)
+# ``SHARE_INSTALL_PREFIX``
+#     replaces "share" in the other variables if set
 #
-#  QT_PLUGIN_INSTALL_DIR            - Qt plugins (${LIB_INSTALL_DIR}/plugins)
-#  PLUGIN_INSTALL_DIR               - KDE plugins (${QT_PLUGIN_INSTALL_DIR}/kf5)
-#  IMPORTS_INSTALL_DIR              - QML imports (${QT_PLUGIN_INSTALL_DIR}/imports)
-#  QML_INSTALL_DIR                  - QML2 imports (${LIB_INSTALL_DIR}/qml)
+# The ``*_INSTALL_DIR`` variables may be passed to the DESTINATION options of
+# install() commands for the corresponding file type.  They are set in the
+# CMake cache, and so the defaults above can be overridden by users.
 #
-#  CMAKECONFIG_INSTALL_PREFIX       - CMake configuration files (${LIB_INSTALL_DIR}/cmake)
-#
-#  DATA_INSTALL_DIR                 - read-only architecture-independent data (share)
-#  KCONF_UPDATE_INSTALL_DIR         - kconf_update files (${DATA_INSTALL_DIR}/kconf_update)
-#
-#  DBUS_INTERFACES_INSTALL_DIR      - dbus interfaces (share/dbus-1/interfaces)
-#  DBUS_SERVICES_INSTALL_DIR        - dbus services (share/dbus-1/services)
-#  DBUS_SYSTEM_SERVICES_INSTALL_DIR - dbus system services (share/dbus-1/system-services)
-#  HTML_INSTALL_DIR                 - HTML documentation (share/doc/HTML)
-#  ICON_INSTALL_DIR                 - the icons (share/icons)
-#  KCFG_INSTALL_DIR                 - kconfig files (share/config.kcfg)
-#  LOCALE_INSTALL_DIR               - translations (share/locale)
-#  MAN_INSTALL_DIR                  - man pages (share/man)
-#  SERVICES_INSTALL_DIR             - service (desktop, protocol, ...) files (share/kde5/services)
-#  SERVICETYPES_INSTALL_DIR         - service types desktop files (share/kde5/servicetypes)
-#  SOUND_INSTALL_DIR                - sound files (share/sounds)
-#  TEMPLATES_INSTALL_DIR            - templates (share/templates)
-#  WALLPAPER_INSTALL_DIR            - wallpapers (share/wallpapers)
-#  XDG_APPS_INSTALL_DIR             - application desktop files (share/applications/kde5)
-#  XDG_DIRECTORY_INSTALL_DIR        - XDG directory (share/desktop-directories)
-#  XDG_MIME_INSTALL_DIR             - mimetype XML files (share/mime/packages)
-#
-#  SYSCONF_INSTALL_DIR              - sysconfig files (etc)
-#  CONFIG_INSTALL_DIR               - config files (${SYSCONF_INSTALL_DIR}/xdg)
-#  AUTOSTART_INSTALL_DIR            - autostart files (${CONFIG_INSTALL_DIR}/autostart)
-#
-#  EXEC_INSTALL_PREFIX              - prefix for default values of BIN_INSTALL_DIR, SBIN_INSTALL_DIR and LIB_INSTALL_DIR (empty by default)
-#  SHARE_INSTALL_PREFIX             - replaces "share" in the other variables if set
-#
-# The *_INSTALL_DIR variables may be passed to the DESTINATION options of
-# install() commands for the corresponding file type.  They are set in the CMake
-# cache, and so the defaults above can be overridden by users.
-#
-# Note that these variables do not provide any information about the
-# location of already-installed KDE software.
+# Note that these variables do not provide any information about the location of
+# already-installed KDE software.
 #
 # The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries or
 # user-executable applications are installed, in the following manner:
 #
-#    install(TARGETS mylib myapp ${INSTALL_TARGETS_DEFAULT_ARGS})
+# .. code-block:: cmake
+#
+#   install(TARGETS mylib myapp ${INSTALL_TARGETS_DEFAULT_ARGS})
 #
 # It MUST NOT be used for installing plugins, system admin executables or
 # executables only intended for use internally by other code.  Those should use
 # one of the PLUGIN variables, SBIN_INSTALL_DIR or LIBEXEC_INSTALL_DIR
 # respectively.
+
+#=============================================================================
+# Copyright 2014      Alex Merry <alex.merry@kde.org>
+# Copyright 2013      Stephen Kelly <steveire@gmail.com>
+# Copyright 2012      David Faure <faure@kde.org>
+# Copyright 2007      Matthias Kretz <kretz@kde.org>
+# Copyright 2006-2007 Laurent Montel <montel@kde.org>
+# Copyright 2006-2013 Alex Neundorf <neundorf@kde.org>
 #
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 
 # Figure out what the default install directory for libraries should be.

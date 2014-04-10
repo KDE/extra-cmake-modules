@@ -1,40 +1,62 @@
-# - Selectively use some of the Find-modules provided by extra-cmake-modules (ECM)
+#.rst:
+# ECMUseFindModules
+# -----------------
 #
-# ECM_USE_FIND_MODULES(DIR <dir> MODULES module1.cmake module2.cmake .. moduleN.cmake [NO_OVERRIDE] )
+# Selectively use some of the find modules provided by extra-cmake-modules.
 #
-# This macro is automatically available once extra-cmake-modules has been found, so it is not
-# necessary to include(ECMUseFindModules) explicitly.
+# This module is automatically available once extra-cmake-modules has been
+# found, so it is not necessary to ``include(ECMUseFindModules)`` explicitly.
 #
-# Use this macro instead of simply adding ${ECM_FIND_MODULE_DIR} to CMAKE_MODULE_PATH
-# if you want to use only a subset or some specific find-modules coming with extra-cmake-modules.
-# The given find-modules will be copied to the given directory. This directory should then be added
-# to CMAKE_MODULE_PATH. The given modules override modules of the same name coming with CMake, except
-# if the NO_OVERRIDE option has been used.
+# ::
 #
-#   DIR <dir> : the selected module files will be copied to that directory. The directory should be
-#               located somewhere inside ${CMAKE_BINARY_DIR}. It should then be added to CMAKE_MODULE_PATH .
-#               The directory is created if it does not exist yet.
-#   MODULES   : the list of find-modules to be used from extra-cmake-modules
-#   NO_OVERRIDE: if used, the given modules will only be used if they do not exist in the currently used
-#                CMake version
+#   ecm_use_find_modules(DIR <dir>
+#                        MODULES module1.cmake [module2.cmake [...]]
+#                        [NO_OVERRIDE])
+#
+# This allows selective use of the find modules provided by ECM, including
+# deferring to CMake's versions of those modules if it has them.  Rather than
+# adding ``${ECM_FIND_MODULE_DIR}`` to ``CMAKE_MODULE_PATH``, you use
+# ecm_use_find_modules() to copy the modules you want to a local (build)
+# directory, and add that to ``CMAKE_MODULE_PATH``.
+#
+# The find modules given to MODULES will be copied to the directory given by DIR
+# (which should be located in ``${CMAKE_BINARY_DIR}`` and added to
+# ``CMAKE_MODULE_PATH``).  If NO_OVERRIDE is given, only modules not also
+# provided by CMake will be copied.
 #
 # Example:
-#   find_package(ECM 0.0.4 REQUIRED)
-#   ecm_use_find_modules(DIR ${CMAKE_BINARY_DIR}/cmake/ Modules FindBlueZ.cmake NO_OVERRIDE )
-#   set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR}/cmake/ )
 #
-# This example will make FindBlueZ.cmake available in your project, but only as long as it
-# is not yet part of CMake. The file will be copied into ${CMAKE_BINARY_DIR}/cmake/, and then this
-# directory is added to CMAKE_MODULE_PATH.
+# .. code-block:: cmake
+#
+#   find_package(ECM REQUIRED)
+#   ecm_use_find_modules(
+#       DIR ${CMAKE_BINARY_DIR}/cmake
+#       MODULES FindEGL.cmake
+#       NO_OVERRIDE
+#   )
+#   set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR}/cmake)
+#
+# This example will make ``FindEGL.cmake`` available in your project, but only
+# as long as it is not yet part of CMake. Calls to ``find_package(EGL)`` will
+# then make use of this copied module (or the CMake module if it exists).
+#
+# Another possible use for this macro is to take copies of find modules that can
+# be installed along with config files if they are required as a dependency (for
+# example, if targets provided by the find module are in the link interface of a
+# library).
 
+#=============================================================================
 # Copyright 2011 Alexander Neundorf <neundorf@kde.org>
 #
 # Distributed under the OSI-approved BSD License (the "License");
-# see accompanying file Copyright.txt for details.
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
 #
 # This software is distributed WITHOUT ANY WARRANTY; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 include(CMakeParseArguments)
 

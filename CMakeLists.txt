@@ -11,26 +11,15 @@ set(ECM_VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION})
 enable_testing()
 add_subdirectory(tests)
 
-set(SHARE_INSTALL_DIR share/ECM )
-set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/modules/)
-set(KDE_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/kde-modules/)
-set(FIND_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/find-modules/)
-set(CMAKECONFIG_INSTALL_DIR ${SHARE_INSTALL_DIR}/cmake/)
-set(DOC_INSTALL_DIR ${SHARE_INSTALL_DIR}/doc/)
+set(SHARE_INSTALL_DIR share)
+set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/modules/)
+set(KDE_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/kde-modules/)
+set(FIND_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/find-modules/)
+set(CMAKECONFIG_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/cmake/)
+set(DOC_INSTALL_DIR ${SHARE_INSTALL_DIR}/doc/ECM)
+set(MAN_INSTALL_DIR ${SHARE_INSTALL_DIR}/man)
 
-# create and install docs
-# add_custom_target(ManPage ALL
-#                     COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.7"
-#                     COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
-#                     COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${CMAKE_SOURCE_DIR}/modules\;${CMAKE_SOURCE_DIR}/find-modules\;${CMAKE_SOURCE_DIR}/kde-modules --help-custom-modules "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt"
-#                     VERBATIM
-#                  )
-
-# install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.7" DESTINATION man/man7/)
-
-# install(FILES "${CMAKE_BINARY_DIR}/extra-cmake-modules.txt" "${CMAKE_BINARY_DIR}/extra-cmake-modules.html"
-#         DESTINATION ${DOC_INSTALL_DIR})
-
+add_subdirectory(docs)
 
 file(GLOB installModuleFiles ${CMAKE_SOURCE_DIR}/modules/*[^~])
 install(FILES ${installModuleFiles} DESTINATION ${MODULES_INSTALL_DIR})

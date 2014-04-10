@@ -1,46 +1,64 @@
-# Change various CMake settings to what the KDE community views as more
+#.rst:
+# KDECMakeSettings
+# ----------------
+#
+# Changes various CMake settings to what the KDE community views as more
 # sensible defaults.
 #
-# It is split into three parts, which can be independently disabled if
-# desired.
+# It is split into three parts, which can be independently disabled if desired.
 #
-# RPATH
+# Runtime Paths
+# ~~~~~~~~~~~~~
 #
-#   The default runtime path (used on Unix systems to search for
-#   dynamically-linked libraries) is set to include the location that
-#   libraries will be installed to (as set in LIB_INSTALL_DIR), and also
-#   the linker search path.
+# The default runtime path (used on Unix systems to search for
+# dynamically-linked libraries) is set to include the location that libraries
+# will be installed to (as set in LIB_INSTALL_DIR), and also the linker search
+# path.
 #
-#   Note that LIB_INSTALL_DIR needs to be set before including this
-#   module.  Typically, this is done by including the KDEInstallDirs
-#   module.
+# Note that ``LIB_INSTALL_DIR`` needs to be set before including this module.
+# Typically, this is done by including the :kde-module:`KDEInstallDirs` module.
 #
-#   This section can be disabled by setting
-#     KDE_SKIP_RPATH_SETTINGS
-#   to TRUE before including this module.
+# This section can be disabled by setting ``KDE_SKIP_RPATH_SETTINGS`` to TRUE
+# before including this module.
 #
 #
-# TEST
+# Testing
+# ~~~~~~~
 #
-#   Testing is enabled by default, and an option (BUILD_TESTING) is
-#   provided for users to control this. See the CTest module
-#   documentation in the CMake manual for more details.
+# Testing is enabled by default, and an option (BUILD_TESTING) is provided for
+# users to control this. See the CTest module documentation in the CMake manual
+# for more details.
 #
-#   This section can be disabled by setting
-#     KDE_SKIP_TEST_SETTINGS
-#   to TRUE before including this module.
+# This section can be disabled by setting ``KDE_SKIP_TEST_SETTINGS`` to TRUE
+# before including this module.
 #
 #
-# BUILD
+# Build Settings
+# ~~~~~~~~~~~~~~
 #
-#   Various CMake build defaults are altered, such as searching source
-#   and build directories for includes first and enabling automoc by
-#   default.
+# Various CMake build defaults are altered, such as searching source and build
+# directories for includes first and enabling automoc by default.
 #
-#   This section can be disabled by setting
-#     KDE_SKIP_BUILD_SETTINGS
-#   to TRUE before including this module.
+# This section can be disabled by setting ``KDE_SKIP_BUILD_SETTINGS`` to TRUE
+# before including this module.
+
+#=============================================================================
+# Copyright 2014      Alex Merry <alex.merry@kde.org>
+# Copyright 2013      Aleix Pol <aleixpol@kde.org>
+# Copyright 2012-2013 Stephen Kelly <steveire@gmail.com>
+# Copyright 2007      Matthias Kretz <kretz@kde.org>
+# Copyright 2006-2007 Laurent Montel <montel@kde.org>
+# Copyright 2006-2013 Alex Neundorf <neundorf@kde.org>
 #
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+# (To distribute this file outside of extra-cmake-modules, substitute the full
+#  License text for the above reference.)
 
 
 ################# RPATH handling ##################################
