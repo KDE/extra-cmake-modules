@@ -13,16 +13,19 @@
 
 # Distros sometimes rename Python executables to allow for parallel
 # installation of Python2 and Python3 versions
+message(STATUS "Looking for Sphinx Documentation Builder...")
 find_program(SPHINX_EXECUTABLE
     NAMES
         sphinx-build
         sphinx-build2
         sphinx-build3
-    DOC "Sphinx Documentation Builder (sphinx-doc.org)"
+    DOC "Sphinx Documentation Builder (http://sphinx-doc.org/)"
 )
 if(SPHINX_EXECUTABLE)
+    message(STATUS "Sphinx Documentation Builder found at ${SPHINX_EXECUTABLE} - building documentation")
     set(build_docs_default ON)
 else()
+    message(STATUS "Sphinx Documentation Builder not found - documentation will not be built (see http://sphinx-doc.org/)")
     set(build_docs_default OFF)
 endif()
 
