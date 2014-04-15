@@ -119,6 +119,14 @@
 #  License text for the above reference.)
 
 
+# TODO:
+# - Provide GNUInstallDirs-style names (CMAKE_INSTALL_*)
+#   (NB: need to be able to set current names on command line still)
+# - Make sure libdir logic is up-to-date
+# - Perhaps include GNUInstallDirs, to keep current with libdir logic?
+# - Try to figure out proper Qt-related dirs when installing to the same
+#   prefix as Qt (look for qtpaths)
+
 # Figure out what the default install directory for libraries should be.
 # This is the same logic as in cmake's GNUInstallDirs.cmake.
 set(_LIBDIR_DEFAULT "lib")
