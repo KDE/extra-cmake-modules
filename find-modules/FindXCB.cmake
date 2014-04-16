@@ -27,6 +27,18 @@
 #     True if (the requestion version of) xcb is available
 # ``XCB_VERSION``
 #     Found xcb version
+# ``XCB_TARGETS``
+#     A list of all targets imported by this module (note that there may be more
+#     than the components that were requested)
+# ``XCB_LIBRARIES``
+#     This can be passed to target_link_libraries() instead of the imported
+#     targets
+# ``XCB_INCLUDE_DIRS``
+#     This should be passed to target_include_directories() if the targets are
+#     not used for linking
+# ``XCB_DEFINITIONS``
+#     This should be passed to target_compile_options() if the targets are not
+#     used for linking
 #
 # For each searched-for components, ``XCB_<component>_FOUND`` will be set to
 # true if the corresponding xcb library was found, and false otherwise.  If
@@ -35,11 +47,10 @@
 # ``XCB_*_VERSION`` variables for each imported target, although
 # ``XCB_VERSION`` should normally be sufficient.
 #
-# The following variable will also be defined for convenience, and for
-# compatibility with old-style find module conventions:
-#
-# ``XCB_LIBRARIES``
-#     A list of all XCB imported targets
+# In general we recommend using the imported targets, as they are easier to use
+# and provide more control.  Bear in mind, however, that if any target is in the
+# link interface of an exported library, it must be made available by the
+# package config file.
 
 #=============================================================================
 # Copyright 2011 Fredrik Höglund <fredrik@kde.org>

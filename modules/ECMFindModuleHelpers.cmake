@@ -71,14 +71,27 @@
 # in <name>_<component>_component_deps to be listed before <component> in the
 # COMPONENTS argument.
 #
-# <name>_LIBRARIES will list the imported targets.
+# The following variables will be set:
 #
-# <name>_VERSION will be set to the same as <name>_<component>_VERSION for
-# the component that is searched for first (note that components are searched
-# for in the order they are passed to the macro).
-
-# FIXME: we should actually set proper traditional variables, because it can
-#        be convenient to use them in the link interface of exported libraries
+# ``<name>_TARGETS``
+#   the imported targets
+# ``<name>_LIBRARIES``
+#   the found libraries
+# ``<name>_INCLUDE_DIRS``
+#   the combined required include directories for the components
+# ``<name>_DEFINITIONS``
+#   the "other" CFLAGS provided by pkg-config, if any
+# ``<name>_VERSION``
+#   the value of ``<name>_<component>_VERSION`` for the first component that
+#   has this variable set (note that components are searched for in the order
+#   they are passed to the macro), although if it is already set, it will not
+#   be altered
+#
+# Note that these variables are never cleared, so if
+# ecm_find_package_handle_library_components() is called multiple times with
+# different components (typically because of multiple find_package() calls) then
+# ``<name>_TARGETS``, for example, will contain all the targets found in any
+# call (although no duplicates).
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>
@@ -184,11 +197,11 @@ macro(ecm_find_package_handle_library_components module_name)
     find_package(PkgConfig)
     foreach(ecm_fpwc_comp ${ECM_FPWC_COMPONENTS})
         set(ecm_fpwc_dep_vars)
-        set(ecm_fpwc_dep_libs)
+        set(ecm_fpwc_dep_targets)
         if(NOT SKIP_DEPENDENCY_HANDLING)
             foreach(ecm_fpwc_dep ${${module_name}_${ecm_fpwc_comp}_component_deps})
                 list(APPEND ecm_fpwc_dep_vars "${module_name}_${ecm_fpwc_dep}_FOUND")
-                list(APPEND ecm_fpwc_dep_libs "${module_name}::${ecm_fpwc_dep}")
+                list(APPEND ecm_fpwc_dep_targets "${module_name}::${ecm_fpwc_dep}")
             endforeach()
         endif()
 
@@ -227,16 +240,38 @@ macro(ecm_find_package_handle_library_components module_name)
             ${module_name}_${ecm_fpwc_comp}_INCLUDE_DIR
         )
 
-        if(${module_name}_${ecm_fpwc_comp}_FOUND AND NOT TARGET ${module_name}::${ecm_fpwc_comp})
-            add_library(${module_name}::${ecm_fpwc_comp} UNKNOWN IMPORTED)
-            set_target_properties(${module_name}::${ecm_fpwc_comp} PROPERTIES
-                IMPORTED_LOCATION "${${module_name}_${ecm_fpwc_comp}_LIBRARY}"
-                INTERFACE_COMPILE_OPTIONS "${PKG_${module_name}_${ecm_fpwc_comp}_DEFINITIONS}"
-                INTERFACE_INCLUDE_DIRECTORIES "${${module_name}_${ecm_fpwc_comp}_INCLUDE_DIR}"
-                INTERFACE_LINK_LIBRARIES "${ecm_fpwc_dep_libs}"
-            )
-            list(APPEND ${module_name}_LIBRARIES "${module_name}::${ecm_fpwc_comp}")
+        if(${module_name}_${ecm_fpwc_comp}_FOUND)
+            list(APPEND ${module_name}_LIBRARIES
+                        "${${module_name}_${ecm_fpwc_comp}_LIBRARY}")
+            list(APPEND ${module_name}_INCLUDE_DIRS
+                        "${${module_name}_${ecm_fpwc_comp}_INCLUDE_DIR}")
+            set(${module_name}_DEFINITIONS
+                    ${${module_name}_DEFINITIONS}
+                    ${PKG_${module_name}_${ecm_fpwc_comp}_DEFINITIONS})
+            if(NOT TARGET ${module_name}::${ecm_fpwc_comp})
+                add_library(${module_name}::${ecm_fpwc_comp} UNKNOWN IMPORTED)
+                set_target_properties(${module_name}::${ecm_fpwc_comp} PROPERTIES
+                    IMPORTED_LOCATION "${${module_name}_${ecm_fpwc_comp}_LIBRARY}"
+                    INTERFACE_COMPILE_OPTIONS "${PKG_${module_name}_${ecm_fpwc_comp}_DEFINITIONS}"
+                    INTERFACE_INCLUDE_DIRECTORIES "${${module_name}_${ecm_fpwc_comp}_INCLUDE_DIR}"
+                    INTERFACE_LINK_LIBRARIES "${ecm_fpwc_dep_targets}"
+                )
+            endif()
+            list(APPEND ${module_name}_TARGETS
+                        "${module_name}::${ecm_fpwc_comp}")
         endif()
     endforeach()
+    if(${module_name}_LIBRARIES)
+        list(REMOVE_DUPLICATES ${module_name}_LIBRARIES)
+    endif()
+    if(${module_name}_INCLUDE_DIRS)
+        list(REMOVE_DUPLICATES ${module_name}_INCLUDE_DIRS)
+    endif()
+    if(${module_name}_DEFINITIONS)
+        list(REMOVE_DUPLICATES ${module_name}_DEFINITIONS)
+    endif()
+    if(${module_name}_TARGETS)
+        list(REMOVE_DUPLICATES ${module_name}_TARGETS)
+    endif()
 endmacro()
 
