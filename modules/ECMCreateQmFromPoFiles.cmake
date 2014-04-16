@@ -6,47 +6,69 @@
 #
 # ::
 #
-#   ecm_create_qm_from_po_files(PO_DIR <po_dir>
-#                               POT_NAME <pot_name>
-#                               [DATA_INSTALL_DIR <data_install_dir>]
-#                               [DATA_INSTALL_SUB_DIR <data_install_sub_dir>]
-#                               [CREATE_LOADER <source_file_var>])
+#   ecm_create_qm_from_po_files(PO_FILES <file1>... <fileN>
+#                               [CATALOG_NAME <catalog_name>]
+#                               [INSTALL_DESTINATION <install_destination>])
 #
-# Creates the necessary rules to compile .po files into .qm files, usable by
-# QTranslator. It can also generate a C++ file which takes care of automatically
-# loading those translations.
+# Creates the necessary rules to compile .po files into .qm files, and install
+# them.
 #
-# PO_DIR is the path to a directory containing .po files.
+# The .qm files are installed in ``<install_destination>/<lang>/LC_MESSAGES``,
+# where <install_destination> is the INSTALL_DESTINATION argument and <lang> is
+# extracted from the "Language" field inside the .po file.
 #
-# POT_NAME is the name of the .pot file for the project. This file must be in
-# PO_DIR.
+# INSTALL_DESTINATION defaults to ``${LOCALE_INSTALL_DIR}`` if defined,
+# otherwise it uses "share/locale".
 #
-# .qm files are installed in "DATA_INSTALL_DIR/DATA_INSTALL_SUB_DIR".
+# CATALOG_NAME defines the name of the installed .qm files. If set, .qm files
+# will be installed as ``<catalog_name>.qm``. If not set .qm files will be named
+# after the name of their source .po file.
 #
-# DATA_INSTALL_DIR defaults to ${DATA_INSTALL_DIR} if defined, otherwise it uses
-# "share". It must point to a directory which is in the list returned by:
+# Setting the catalog name is useful when all .po files for a target are kept
+# in a single source directory. For example, the "mylib" probject might keep all
+# its translations in a "po" directory, like this::
 #
-# .. code-block:: cpp
+#   po/
+#       es.po
+#       fr.po
 #
-#   QStandardPath::standardLocations(QStandardPath::GenericDataLocation)
+# Without setting CATALOG_NAME, those .po will be turned into .qm and installed
+# as::
 #
-# otherwise the C++ loader will fail to load the translations.
+#   share/locale/fr/LC_MESSAGES/fr.qm
+#   share/locale/es/LC_MESSAGES/es.qm
 #
-# DATA_INSTALL_SUB_DIR defaults to the value of POT_NAME, without the ".pot"
-# extension.
+# If CATALOG_NAME is set to "mylib", they will be installed as::
+#
+#   share/locale/fr/LC_MESSAGES/mylib.qm
+#   share/locale/es/LC_MESSAGES/mylib.qm
+#
+# Which is what the loader created by ecm_create_qm_loader() expects.
 #
 # ecm_create_qm_from_po_files() creates a "translation" target. This target
 # builds all .po files into .qm files.
 #
-# If ecm_create_qm_from_po_files() is called with the CREATE_LOADER argument,
-# it generates a C++ file which ensures translations are automatically loaded
-# at startup. The path of the .cpp file is stored in <source_file_var>. This
-# variable must be added to the list of sources to build, like this:
+# ::
+#
+#   ecm_create_qm_loader(<source_file_var> <catalog_name>)
+#
+# ecm_create_qm_loader() generates a C++ file which ensures translations are
+# automatically loaded at startup. The path of the .cpp file is stored in
+# <source_file_var>. This variable must be added to the list of sources to
+# build. For example this call:
 #
 # .. code-block:: cmake
 #
-#   ecm_create_qm_from_po_files(PO_DIR po POT_NAME mylib CREATE_LOADER myloader)
-#   set(mylib_SRCS foo.cpp bar.cpp ${myloader})
+#   ecm_create_qm_loader(qmloader mylib)
+#
+# generates a C++ file which loads "mylib.qm" at startup, assuming it has been
+# installed by ecm_create_qm_from_po_files(). The name of the C++ file is
+# stored in the ``${qmloader}`` CMake variable. This variable must be integrated
+# in the list of source files for the library:
+#
+# .. code-block:: cmake
+#
+#   set(mylib_SRCS foo.cpp bar.cpp ${qmloader})
 #   add_library(mylib ${mylib_SRCS})
 
 #=============================================================================
@@ -66,7 +88,29 @@
 # See https://bugreports.qt-project.org/browse/QTBUG-37937
 find_package(Qt5LinguistTools CONFIG REQUIRED)
 
-function(_ecm_qm_create_target po_dir pot_name data_install_dir data_install_sub_dir)
+# Stolen from FindGettext.cmake
+function(_ECM_QM_GET_UNIQUE_TARGET_NAME _name _unique_name)
+   set(propertyName "_ECM_QM_UNIQUE_COUNTER_${_name}")
+   get_property(currentCounter GLOBAL PROPERTY "${propertyName}")
+   if(NOT currentCounter)
+      set(currentCounter 1)
+   endif()
+   set(${_unique_name} "${_name}_${currentCounter}" PARENT_SCOPE)
+   math(EXPR currentCounter "${currentCounter} + 1")
+   set_property(GLOBAL PROPERTY ${propertyName} ${currentCounter} )
+endfunction()
+
+function(_ECM_QM_EXTRACT_LANGUAGE out_language po_file)
+    file(READ ${po_file} content)
+    # msginit uses "Language: <lang>" but lconvert uses "X-Language: <lang>"
+    string(REGEX MATCH "\"(X-)?Language: ([a-z_A-Z]+)" match "${content}")
+    if (NOT match)
+        message(FATAL_ERROR "_ECM_QM_EXTRACT_LANGUAGE: Could not extract language from ${po_file}")
+    endif()
+    set(${out_language} ${CMAKE_MATCH_2} PARENT_SCOPE)
+endfunction()
+
+function(_ECM_QM_CREATE_TARGET install_destination catalog_name)
     # Find lconvert
     get_target_property(lrelease_location Qt5::lrelease LOCATION)
     get_filename_component(lrelease_path ${lrelease_location} PATH)
@@ -75,8 +119,13 @@ function(_ecm_qm_create_target po_dir pot_name data_install_dir data_install_sub
         PATHS ${lrelease_path}
         )
 
-    file(GLOB po_files "${po_dir}/*.po")
-    foreach (it ${po_files})
+    if (catalog_name)
+        set(install_args RENAME ${catalog_name}.qm)
+    else()
+        set(install_args)
+    endif()
+
+    foreach (it ${ARGN})
         get_filename_component(filename_base ${it} ABSOLUTE)
         get_filename_component(filename_base ${it} NAME_WE)
 
@@ -84,67 +133,103 @@ function(_ecm_qm_create_target po_dir pot_name data_install_dir data_install_sub
         set(tsfile ${CMAKE_CURRENT_BINARY_DIR}/${filename_base}.ts)
         set(qmfile ${CMAKE_CURRENT_BINARY_DIR}/${filename_base}.qm)
 
+        _ECM_QM_EXTRACT_LANGUAGE(language ${it})
+
         # lconvert from .po to .ts and then run lupdate to generate the correct
         # strings. Finally run lrelease to create the .qm files.
         add_custom_command(OUTPUT ${qmfile}
             COMMAND ${lconvert_executable}
                 ARGS -i ${it} -o ${tsfile}
-            COMMAND Qt5::lupdate
-                ARGS ${CMAKE_SOURCE_DIR}/src -silent -noobsolete -ts ${tsfile}
             COMMAND Qt5::lrelease
                 ARGS -compress -removeidentical -silent ${tsfile} -qm ${qmfile}
             DEPENDS ${it}
             )
+        install(
+            FILES ${qmfile}
+            DESTINATION ${install_destination}/${language}/LC_MESSAGES
+            ${install_args}
+        )
         set(qmfiles ${qmfiles} ${qmfile})
     endforeach()
 
     if(NOT TARGET translations)
         add_custom_target(translations ALL)
     endif()
-    add_custom_target(translations-${pot_name} DEPENDS ${qmfiles})
-    add_dependencies(translations translations-${pot_name})
-
-    install(FILES ${qmfiles} DESTINATION ${data_install_dir}/${data_install_sub_dir})
+    _ecm_qm_get_unique_target_name(translations target_name)
+    add_custom_target(${target_name} DEPENDS ${qmfiles})
+    add_dependencies(translations ${target_name})
 endfunction()
 
-function(_ecm_qm_create_loader pot_name data_install_sub_dir)
-    # data_install_sub_dir is used in ECMQmLoader.cpp.in
-    get_filename_component(qm_name ${pot_name} NAME_WE)
+function(ECM_CREATE_QM_LOADER out_var catalog_name)
+    # catalog_name is used in ECMQmLoader.cpp.in
     configure_file(${ECM_MODULE_DIR}/ECMQmLoader.cpp.in ECMQmLoader.cpp @ONLY)
+    set(${out_var} ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader.cpp PARENT_SCOPE)
 endfunction()
 
 function(ECM_CREATE_QM_FROM_PO_FILES)
+    foreach (arg ${ARGN})
+        if (arg STREQUAL "PO_DIR")
+            _ecm_create_qm_from_po_files_legacy(${ARGN})
+            return()
+        endif()
+    endforeach()
+
     set(options)
-    set(oneValueArgs PO_DIR POT_NAME DATA_INSTALL_DIR DATA_INSTALL_SUB_DIR CREATE_LOADER)
-    set(multiValueArgs)
+    set(oneValueArgs CATALOG_NAME INSTALL_DESTINATION)
+    set(multiValueArgs PO_FILES)
     cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(ARGS_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Unknown keywords given to ECM_CREATE_QM_FROM_PO_FILES(): \"${ARGS_UNPARSED_ARGUMENTS}\"")
     endif()
 
-    if(NOT ARGS_PO_DIR)
-        message(FATAL_ERROR "Required argument PO_DIR missing in ECM_CREATE_QM_FROM_PO_FILES() call")
+    if(NOT ARGS_PO_FILES)
+        message(FATAL_ERROR "ECM_CREATE_QM_FROM_PO_FILES(): Must be called with PO_FILES argument")
+    endif()
+
+    if(NOT ARGS_INSTALL_DESTINATION)
+        if (LOCALE_INSTALL_DIR)
+            set(ARGS_INSTALL_DESTINATION ${LOCALE_INSTALL_DIR})
+        else()
+            set(ARGS_INSTALL_DESTINATION share/locale)
+        endif()
+    endif()
+
+    _ecm_qm_create_target(${ARGS_INSTALL_DESTINATION} "${ARGS_CATALOG_NAME}" ${ARGS_PO_FILES})
+endfunction()
+
+# Handles the syntax exposed in ECM 0.0.12, shipped with KDE Frameworks 5.0beta1
+#
+# This is a macro so that the value written in ${ARGS_CREATE_LOADER} is
+# correctly propagated to ECM_CREATE_QM_FROM_PO_FILES parent scope. If it were
+# not a macro, ECM_CREATE_QM_FROM_PO_FILES would have to ckeck if
+# CREATE_LOADER is in the arguments and propagate the value itself.
+macro(_ECM_CREATE_QM_FROM_PO_FILES_LEGACY)
+    set(options)
+    set(oneValueArgs PO_DIR POT_NAME DATA_INSTALL_DIR DATA_INSTALL_SUB_DIR CREATE_LOADER)
+    set(multiValueArgs)
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if(ARGS_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Unknown keywords given to _ECM_CREATE_QM_FROM_PO_FILES_LEGACY(): \"${ARGS_UNPARSED_ARGUMENTS}\"")
     endif()
 
     if(NOT ARGS_POT_NAME)
-        message(FATAL_ERROR "Required argument POT_NAME missing in ECM_CREATE_QM_FROM_PO_FILES() call")
+        message(FATAL_ERROR "Required argument POT_NAME missing in _ECM_CREATE_QM_FROM_PO_FILES_LEGACY() call")
+    endif()
+    get_filename_component(catalog_name ${ARGS_POT_NAME} NAME_WE)
+
+    if (LOCALE_INSTALL_DIR)
+        set(install_destination ${LOCALE_INSTALL_DIR})
+    else()
+        set(install_destination share/locale)
     endif()
 
-    if(NOT ARGS_DATA_INSTALL_DIR)
-        if (DATA_INSTALL_DIR)
-            set(ARGS_DATA_INSTALL_DIR ${DATA_INSTALL_DIR})
-        else()
-            set(ARGS_DATA_INSTALL_DIR share)
-        endif()
-    endif()
-    if(NOT ARGS_DATA_INSTALL_SUB_DIR)
-        get_filename_component(ARGS_DATA_INSTALL_SUB_DIR "${ARGS_POT_NAME}" NAME_WE)
-    endif()
+    file(GLOB po_files "${ARGS_PO_DIR}/*.po")
+    _ecm_qm_create_target(${install_destination} "${catalog_name}" ${po_files})
 
-    _ecm_qm_create_target(${ARGS_PO_DIR} ${ARGS_POT_NAME} ${ARGS_DATA_INSTALL_DIR} ${ARGS_DATA_INSTALL_SUB_DIR})
     if (ARGS_CREATE_LOADER)
-        _ecm_qm_create_loader(${ARGS_POT_NAME} ${ARGS_DATA_INSTALL_SUB_DIR})
-        set(${ARGS_CREATE_LOADER} ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader.cpp PARENT_SCOPE)
+        ecm_create_qm_loader(loader ${catalog_name})
+        set(${ARGS_CREATE_LOADER} ${loader} PARENT_SCOPE)
     endif()
-endfunction()
+endmacro()

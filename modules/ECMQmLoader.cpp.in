@@ -8,25 +8,33 @@
 #include <QStandardPaths>
 #include <QTranslator>
 
-static QTranslator *createTranslator()
-{
-    QString installSubDir = QStringLiteral("@data_install_sub_dir@");
-    QString qmName = QStringLiteral("@qm_name@");
+#include <QDebug>
 
-    QString dir = QStandardPaths::locate(QStandardPaths::GenericDataLocation, installSubDir, QStandardPaths::LocateDirectory);
+static QTranslator *createTranslator(const QString &localeDirName)
+{
+    QString subPath = QStringLiteral("locale/") + localeDirName + QStringLiteral("/LC_MESSAGES/@catalog_name@.qm");
+    QString fullPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, subPath);
+    if (fullPath.isEmpty()) {
+        return 0;
+    }
     QTranslator *translator = new QTranslator(QCoreApplication::instance());
-    translator->load(QLocale::system(), qmName, QStringLiteral("-") /* prefix */, dir);
+    if (!translator->load(fullPath)) {
+        delete translator;
+        return 0;
+    }
     return translator;
 }
 
 static void load()
 {
-    QTranslator *translator = createTranslator();
-    if (translator->isEmpty()) {
-        delete translator;
-        return;
+    QLocale locale = QLocale::system();
+    QTranslator *translator = createTranslator(locale.name());
+    if (!translator) {
+        translator = createTranslator(locale.bcp47Name());
+        if (!translator) {
+            return;
+        }
     }
-    translator->setParent(QCoreApplication::instance());
     QCoreApplication::instance()->installTranslator(translator);
 }
 
