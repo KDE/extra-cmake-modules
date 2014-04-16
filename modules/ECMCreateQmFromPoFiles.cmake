@@ -51,26 +51,20 @@
 #
 # ::
 #
-#   ecm_create_qm_loader(<source_file_var> <catalog_name>)
+#   ecm_create_qm_loader(<source_files_var> <catalog_name>)
 #
 # ecm_create_qm_loader() generates a C++ file which ensures translations are
-# automatically loaded at startup. The path of the .cpp file is stored in
-# <source_file_var>. This variable must be added to the list of sources to
-# build. For example this call:
+# automatically loaded at startup. The path of the .cpp file is appended to
+# <source_files_var>.  Typical usage is like:
 #
 # .. code-block:: cmake
 #
-#   ecm_create_qm_loader(qmloader mylib)
-#
-# generates a C++ file which loads "mylib.qm" at startup, assuming it has been
-# installed by ecm_create_qm_from_po_files(). The name of the C++ file is
-# stored in the ``${qmloader}`` CMake variable. This variable must be integrated
-# in the list of source files for the library:
-#
-# .. code-block:: cmake
-#
-#   set(mylib_SRCS foo.cpp bar.cpp ${qmloader})
+#   set(mylib_SRCS foo.cpp bar.cpp)
+#   ecm_create_qm_loader(mylib_SRCS mylib)
 #   add_library(mylib ${mylib_SRCS})
+#
+# This generates a C++ file which loads "mylib.qm" at startup, assuming it has
+# been installed by ecm_create_qm_from_po_files(), and compiles it into ``mylib``.
 
 #=============================================================================
 # Copyright 2014 Aurélien Gâteau <agateau@kde.org>
@@ -164,7 +158,7 @@ endfunction()
 function(ECM_CREATE_QM_LOADER out_var catalog_name)
     # catalog_name is used in ECMQmLoader.cpp.in
     configure_file(${ECM_MODULE_DIR}/ECMQmLoader.cpp.in ECMQmLoader.cpp @ONLY)
-    set(${out_var} ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader.cpp PARENT_SCOPE)
+    set(${out_var} ${${out_var}} ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader.cpp PARENT_SCOPE)
 endfunction()
 
 function(ECM_CREATE_QM_FROM_PO_FILES)
