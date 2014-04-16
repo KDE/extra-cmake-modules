@@ -18,7 +18,8 @@
 # extracted from the "Language" field inside the .po file.
 #
 # INSTALL_DESTINATION defaults to ``${LOCALE_INSTALL_DIR}`` if defined,
-# otherwise it uses "share/locale".
+# otherwise it uses ``${CMAKE_INSTALL_LOCALEDIR}`` if that is defined, otherwise
+# it uses ``share/locale``.
 #
 # CATALOG_NAME defines the name of the installed .qm files. If set, .qm files
 # will be installed as ``<catalog_name>.qm``. If not set .qm files will be named
@@ -189,7 +190,9 @@ function(ECM_CREATE_QM_FROM_PO_FILES)
 
     if(NOT ARGS_INSTALL_DESTINATION)
         if (LOCALE_INSTALL_DIR)
-            set(ARGS_INSTALL_DESTINATION ${LOCALE_INSTALL_DIR})
+            set(ARGS_INSTALL_DESTINATION "${LOCALE_INSTALL_DIR}")
+        elseif (CMAKE_INSTALL_LOCALEDIR)
+            set(ARGS_INSTALL_DESTINATION "${CMAKE_INSTALL_LOCALEDIR}")
         else()
             set(ARGS_INSTALL_DESTINATION share/locale)
         endif()
@@ -220,7 +223,9 @@ macro(_ECM_CREATE_QM_FROM_PO_FILES_LEGACY)
     get_filename_component(catalog_name ${ARGS_POT_NAME} NAME_WE)
 
     if (LOCALE_INSTALL_DIR)
-        set(install_destination ${LOCALE_INSTALL_DIR})
+        set(install_destination "${LOCALE_INSTALL_DIR}")
+    elseif (CMAKE_INSTALL_LOCALEDIR)
+        set(install_destination "${CMAKE_INSTALL_LOCALEDIR}")
     else()
         set(install_destination share/locale)
     endif()
