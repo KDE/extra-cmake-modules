@@ -2,6 +2,7 @@
 # directory and project
 
 add_subdirectory(ECMGenerateHeadersTest)
+add_subdirectory(ECMSetupVersionTest)
 
 macro(ADD_TEST_MACRO NAME COMMAND)
   string(REPLACE "." "/" dir "${NAME}")

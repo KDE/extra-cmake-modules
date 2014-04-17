@@ -1,0 +1,37 @@
+cmake_minimum_required(VERSION 3.0.0)
+
+project(new_project_header_abspath VERSION 2.3.4)
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules)
+include(ECMSetupVersion)
+
+ecm_setup_version(PROJECT
+    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/../ecm_new_project_header_abspath_version.h"
+)
+
+macro(strcheck var val)
+    if(NOT ${var} STREQUAL "${val}")
+        message(FATAL_ERROR "${var} was ${${var}} instead of ${val}")
+    endif()
+endmacro()
+macro(numcheck var val)
+    if(NOT ${var} EQUAL "${val}")
+        message(FATAL_ERROR "${var} was ${${var}} instead of ${val}")
+    endif()
+endmacro()
+
+strcheck(PROJECT_VERSION "2.3.4")
+strcheck(PROJECT_VERSION_STRING "2.3.4")
+numcheck(PROJECT_VERSION_MAJOR 2)
+numcheck(PROJECT_VERSION_MINOR 3)
+numcheck(PROJECT_VERSION_PATCH 4)
+
+strcheck(new_project_header_abspath_VERSION "2.3.4")
+strcheck(new_project_header_abspath_VERSION_STRING "2.3.4")
+numcheck(new_project_header_abspath_VERSION_MAJOR 2)
+numcheck(new_project_header_abspath_VERSION_MINOR 3)
+numcheck(new_project_header_abspath_VERSION_PATCH 4)
+numcheck(new_project_header_abspath_SOVERSION 2)
+
+add_executable(check_header main.c)
+target_include_directories(check_header PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/..")
