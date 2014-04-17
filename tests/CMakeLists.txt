@@ -8,16 +8,23 @@ macro(ADD_TEST_MACRO NAME COMMAND)
   string(REGEX REPLACE "[^.]*\\." "" proj "${NAME}")
   add_test(${NAME} ${CMAKE_CTEST_COMMAND}
     --build-and-test
-    "${CMAKE_SOURCE_DIR}/tests/${dir}"
-    "${CMAKE_BINARY_DIR}/tests/${dir}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/${dir}"
+    "${CMAKE_CURRENT_BINARY_DIR}/${dir}"
     --build-two-config
     --build-generator ${CMAKE_GENERATOR}
     --build-makeprogram ${CMAKE_MAKE_PROGRAM}
     --build-project ${proj}
     ${${NAME}_EXTRA_OPTIONS}
     --test-command ${COMMAND} ${ARGN})
-#  list(APPEND TEST_BUILD_DIRS "${CMAKE_BINARY_DIR}/tests/${dir}")
 endmacro(ADD_TEST_MACRO)
 
-
 add_test_macro(ExecuteAllModules ExecuteAllModules)
+
+set(ECMInstallIconsTest_EXTRA_OPTIONS
+    --build-target install
+    --build-options
+        "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMInstallIconsTest/InstallDirectory"
+)
+add_test_macro(ECMInstallIconsTest
+    ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMInstallIconsTest/check_tree.cmake"
+)
