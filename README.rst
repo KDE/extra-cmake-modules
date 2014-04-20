@@ -27,8 +27,9 @@ To use ECM, add the following to your ``CMakeLists.txt``:
   set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 (note that you may want to append ``${ECM_MODULE_PATH}`` to
-``CMAKE_MODULE_PATH`` instead).  You can then just include the modules you
-require, or use ``find_package()`` as needed.  For example:
+``CMAKE_MODULE_PATH`` rather than discarding the existing value).  You can then
+just include the modules you require, or use ``find_package()`` as needed.  For
+example:
 
 .. code-block:: cmake
 
@@ -68,15 +69,11 @@ The ``${ECM_MODULE_DIR}``, ``${ECM_FIND_MODULE_DIR}`` and
 ``${ECM_MODULE_PATH}`` if you only need some of this functionality.
 
 
-Submitting Modules
-==================
+Development
+===========
 
-Proposed new modules should be submitted using the
-`KDE Review Board instance`_, and be assigned to the ``buildsystem``,
-``extracmakemodules`` and ``kdeframeworks`` groups.  You should be able to point to
-two separate projects that will make use of the module.
-
-.. _KDE Review Board instance: https://git.reviewboard.kde.org/
+The :manual:`ecm-developer(7)` manual contains more information about
+developing for Extra CMake Modules.
 
 
 License
@@ -87,12 +84,10 @@ All code is licensed under the `BSD 3-Clause license`_.
 .. _BSD 3-Clause license: http://opensource.org/licenses/BSD-3-Clause
 
 
-.. only:: html
+Links
+=====
 
-  Links
-  =====
-
-  * `Home page <https://projects.kde.org/projects/kdesupport/extra-cmake-modules>`_
-  * `Mailing list <https://mail.kde.org/mailman/listinfo/kde-buildsystem>`_
-  * IRC channel: #kde-devel on Freenode
-  * `Git repository <https://projects.kde.org/projects/kdesupport/extra-cmake-modules/repository>`_
+* Home page: https://projects.kde.org/projects/kdesupport/extra-cmake-modules
+* Mailing list: https://mail.kde.org/mailman/listinfo/kde-buildsystem
+* IRC channel: #kde-devel on Freenode
+* Git repository: https://projects.kde.org/projects/kdesupport/extra-cmake-modules/repository
