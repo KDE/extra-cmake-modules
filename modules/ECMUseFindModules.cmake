@@ -82,5 +82,8 @@ function(ecm_use_find_modules)
          configure_file("${ECM_FIND_MODULE_DIR}/${file}" "${EUFM_DIR}/${file}" COPYONLY)
       endif()
    endforeach()
+   # This is required by some of the find modules
+   file(WRITE "${EUFM_DIR}/ECMFindModuleHelpersStub.cmake"
+        "include(\"${ECM_MODULE_DIR}/ECMFindModuleHelpers.cmake\")")
 
 endfunction()
