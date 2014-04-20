@@ -19,7 +19,10 @@ macro(ADD_TEST_MACRO NAME COMMAND)
     --test-command ${COMMAND} ${ARGN})
 endmacro(ADD_TEST_MACRO)
 
-add_test_macro(ExecuteAllModules ExecuteAllModules)
+add_test_macro(ExecuteCoreModules dummy)
+add_test_macro(ExecuteKDEModules dummy)
+add_test_macro(FindModules dummy)
+add_test_macro(UseFindModules dummy)
 
 set(ECMInstallIconsTest_EXTRA_OPTIONS
     --build-target install

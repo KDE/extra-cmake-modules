@@ -1,0 +1,19 @@
+project(ExecuteKDEModules)
+cmake_minimum_required(VERSION 2.8.12)
+
+# order is important (install dirs before cmake settings)!
+set(all_kde_modules
+    KDEInstallDirs
+    KDECMakeSettings
+    KDECompilerSettings
+    KDEFrameworkCompilerSettings
+)
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../kde-modules)
+
+foreach(module ${all_kde_modules})
+    message(STATUS "module: ${module}")
+    include("${module}")
+endforeach()
+
+add_executable(dummy main.c)
