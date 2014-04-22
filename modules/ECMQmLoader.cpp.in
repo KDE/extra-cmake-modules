@@ -10,32 +10,36 @@
 
 #include <QDebug>
 
-static QTranslator *createTranslator(const QString &localeDirName)
+static bool loadTranslation(const QString &localeDirName)
 {
     QString subPath = QStringLiteral("locale/") + localeDirName + QStringLiteral("/LC_MESSAGES/@catalog_name@.qm");
     QString fullPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, subPath);
     if (fullPath.isEmpty()) {
-        return 0;
+        return false;
     }
     QTranslator *translator = new QTranslator(QCoreApplication::instance());
     if (!translator->load(fullPath)) {
         delete translator;
-        return 0;
+        return false;
     }
-    return translator;
+    QCoreApplication::instance()->installTranslator(translator);
+    return true;
 }
 
 static void load()
 {
+    // The way Qt translation system handles plural forms makes it necessary to
+    // have a translation file which contains only plural forms for `en`. That's
+    // why we load the `en` translation unconditionally, then load the
+    // translation for the current locale to overload it.
+    loadTranslation(QStringLiteral("en"));
+
     QLocale locale = QLocale::system();
-    QTranslator *translator = createTranslator(locale.name());
-    if (!translator) {
-        translator = createTranslator(locale.bcp47Name());
-        if (!translator) {
-            return;
+    if (locale.name() != QStringLiteral("en")) {
+        if (!loadTranslation(locale.name())) {
+            loadTranslation(locale.bcp47Name());
         }
     }
-    QCoreApplication::instance()->installTranslator(translator);
 }
 
 Q_COREAPP_STARTUP_FUNCTION(load)

@@ -134,7 +134,7 @@ function(_ECM_QM_CREATE_TARGET install_destination catalog_name)
         # strings. Finally run lrelease to create the .qm files.
         add_custom_command(OUTPUT ${qmfile}
             COMMAND ${lconvert_executable}
-                ARGS -i ${it} -o ${tsfile}
+                ARGS -i ${it} -o ${tsfile} -target-language ${language}
             COMMAND Qt5::lrelease
                 ARGS -compress -removeidentical -silent ${tsfile} -qm ${qmfile}
             DEPENDS ${it}
