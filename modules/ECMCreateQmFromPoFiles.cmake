@@ -79,10 +79,6 @@
 # (To distribute this file outside of extra-cmake-modules, substitute the full
 #  License text for the above reference.)
 
-# This gives us Qt5::lrelease and Qt5::lupdate but unfortunately no Qt5::lconvert
-# See https://bugreports.qt-project.org/browse/QTBUG-37937
-find_package(Qt5LinguistTools CONFIG REQUIRED)
-
 # Stolen from FindGettext.cmake
 function(_ECM_QM_GET_UNIQUE_TARGET_NAME _name _unique_name)
    set(propertyName "_ECM_QM_UNIQUE_COUNTER_${_name}")
@@ -162,6 +158,10 @@ function(ECM_CREATE_QM_LOADER out_var catalog_name)
 endfunction()
 
 function(ECM_CREATE_QM_FROM_PO_FILES)
+    # This gives us Qt5::lrelease and Qt5::lupdate but unfortunately no Qt5::lconvert
+    # See https://bugreports.qt-project.org/browse/QTBUG-37937
+    find_package(Qt5LinguistTools CONFIG REQUIRED)
+
     foreach (arg ${ARGN})
         if (arg STREQUAL "PO_DIR")
             _ecm_create_qm_from_po_files_legacy(${ARGN})
