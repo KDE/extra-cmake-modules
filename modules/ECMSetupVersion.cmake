@@ -105,7 +105,12 @@ function(ECM_SETUP_VERSION _version)
 
   set(project_manages_version FALSE)
   set(use_project_version FALSE)
-  cmake_policy(GET CMP0048 project_version_policy)
+  # CMP0048 only exists in CMake 3.0.0 and later
+  if(CMAKE_VERSION VERSION_LESS 3.0.0)
+      set(project_version_policy "OLD")
+  else()
+      cmake_policy(GET CMP0048 project_version_policy)
+  endif()
   if(project_version_policy STREQUAL "NEW")
     set(project_manages_version TRUE)
     if(_version STREQUAL "PROJECT")
