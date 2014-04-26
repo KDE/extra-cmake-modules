@@ -196,7 +196,8 @@ _set_fancy(LIB_INSTALL_DIR           "${EXEC_INSTALL_PREFIX}${_LIBDIR_DEFAULT}" 
 if(WIN32)
   _set_fancy(LIBEXEC_INSTALL_DIR     "${BIN_INSTALL_DIR}"                          "The install dir for libexec executables (default is ${BIN_INSTALL_DIR} on Windows)")
 else()
-  _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/kde5/libexec"             "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/kde5/libexec)")
+  _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/libexec"                  "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/libexec)")
+  _set_fancy(KF5_LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/libexec/kf5"              "The install dir for KF5 libexec executables (default is ${LIB_INSTALL_DIR}/libexec)")
 endif()
 _set_fancy(INCLUDE_INSTALL_DIR       "include"                                     "The install dir for header files")
 # this exists as a convenience for frameworks
