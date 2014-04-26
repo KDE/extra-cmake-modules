@@ -208,6 +208,7 @@ _set_fancy(IMPORTS_INSTALL_DIR       "${QT_PLUGIN_INSTALL_DIR}/imports"         
 _set_fancy(QML_INSTALL_DIR           "${LIB_INSTALL_DIR}/qml"                      "The install dir where QtQuick2 imports will be installed")
 _set_fancy(CMAKECONFIG_INSTALL_PREFIX "${LIB_INSTALL_DIR}/cmake"                   "The prefix under which packages will create their own subdirectory for their CMake configuration files")
 _set_fancy(DATA_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}"                     "The parent directory where applications can install their data")
+_set_fancy(KF5_DATA_INSTALL_DIR      "${DATA_INSTALL_DIR}/kf5"                     "The parent directory where frameworks can install their data")
 _set_fancy(HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/HTML"            "The HTML install dir for documentation")
 _set_fancy(ICON_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/icons"               "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
 _set_fancy(KCFG_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/config.kcfg"         "The install dir for kconfig files")
