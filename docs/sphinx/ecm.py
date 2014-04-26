@@ -277,9 +277,12 @@ class ECMDomain(Domain):
     }
 
     def clear_doc(self, docname):
+        to_clear = []
         for fullname, (fn, _) in self.data['objects'].items():
             if fn == docname:
-                del self.data['objects'][fullname]
+                to_clear.append(fullname)
+        for fullname in to_clear:
+            del self.data['objects'][fullname]
 
     def resolve_xref(self, env, fromdocname, builder,
                      typ, target, node, contnode):
