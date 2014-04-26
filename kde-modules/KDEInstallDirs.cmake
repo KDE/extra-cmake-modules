@@ -199,6 +199,8 @@ else()
   _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/kde5/libexec"             "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/kde5/libexec)")
 endif()
 _set_fancy(INCLUDE_INSTALL_DIR       "include/KF5"                                 "The install dir for header files")
+# this exists as a convenience for frameworks
+set(KF5_INCLUDE_INSTALL_DIR          "${INCLUDE_INSTALL_DIR}")
 
 _set_fancy(QT_PLUGIN_INSTALL_DIR     "${LIB_INSTALL_DIR}/plugins"                  "The install dir where Qt plugins will be installed (default is ${LIB_INSTALL_DIR}/plugins)")
 _set_fancy(PLUGIN_INSTALL_DIR        "${QT_PLUGIN_INSTALL_DIR}/kf5"                "The install dir where plugins (loaded via KPluginLoader) will be installed (default is ${LIB_INSTALL_DIR}/plugins/kf5)")
@@ -246,6 +248,11 @@ set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
                                   LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
                                   ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel
                                   INCLUDES DESTINATION "${INCLUDE_INSTALL_DIR}"
+)
+set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
+                                      LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
+                                      ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel
+                                      INCLUDES DESTINATION "${KF5_INCLUDE_INSTALL_DIR}"
 )
 
 
