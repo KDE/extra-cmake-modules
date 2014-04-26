@@ -212,6 +212,7 @@ _set_fancy(KF5_DATA_INSTALL_DIR      "${DATA_INSTALL_DIR}/kf5"                  
 _set_fancy(HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/HTML"            "The HTML install dir for documentation")
 _set_fancy(ICON_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/icons"               "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
 _set_fancy(KCFG_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/config.kcfg"         "The install dir for kconfig files")
+_set_fancy(KNOTIFYRC_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/knotifications5"     "The install dir for knotifyrc files")
 _set_fancy(LOCALE_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/locale"              "The install dir for translations")
 _set_fancy(SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/kservices5"          "The install dir for service (desktop, protocol, ...) files")
 _set_fancy(SERVICETYPES_INSTALL_DIR  "${SHARE_INSTALL_PREFIX}/kservicetypes5"      "The install dir for servicestypes desktop files")
