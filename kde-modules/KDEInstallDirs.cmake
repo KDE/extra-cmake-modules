@@ -17,7 +17,7 @@
 #     object code libraries (``lib or lib64 or lib/<multiarch-tuple> on
 #     Debian``)
 # ``LIBEXEC_INSTALL_DIR``
-#     internal executables (``${LIB_INSTALL_DIR}/kde5/libexec``)
+#     internal executables (``${LIB_INSTALL_DIR}/libexec``)
 # ``INSTALL_TARGETS_DEFAULT_ARGS``
 #     combines BUNDLE_INSTALL_DIR, BIN_INSTALL_DIR and LIB_INSTALL_DIR; see
 #     below
@@ -54,9 +54,9 @@
 # ``MAN_INSTALL_DIR``
 #     man pages (``share/man``)
 # ``SERVICES_INSTALL_DIR``
-#     service (desktop, protocol, ...) files (``share/kde5/services``)
+#     service (desktop, protocol, ...) files (``share/kservices5``)
 # ``SERVICETYPES_INSTALL_DIR``
-#     service types desktop files (``share/kde5/servicetypes``)
+#     service types desktop files (``share/kservicetypes5``)
 # ``SOUND_INSTALL_DIR``
 #     sound files (``share/sounds``)
 # ``TEMPLATES_INSTALL_DIR``
@@ -64,7 +64,7 @@
 # ``WALLPAPER_INSTALL_DIR``
 #     wallpapers (``share/wallpapers``)
 # ``XDG_APPS_INSTALL_DIR``
-#     application desktop files (``share/applications/kde5``)
+#     application desktop files (``share/applications``)
 # ``XDG_DIRECTORY_INSTALL_DIR``
 #     XDG directory (``share/desktop-directories``)
 # ``XDG_MIME_INSTALL_DIR``
@@ -197,7 +197,7 @@ if(WIN32)
   _set_fancy(LIBEXEC_INSTALL_DIR     "${BIN_INSTALL_DIR}"                          "The install dir for libexec executables (default is ${BIN_INSTALL_DIR} on Windows)")
 else()
   _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/libexec"                  "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/libexec)")
-  _set_fancy(KF5_LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/libexec/kf5"              "The install dir for KF5 libexec executables (default is ${LIB_INSTALL_DIR}/libexec)")
+  _set_fancy(KF5_LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/libexec/kf5"              "The install dir for KF5 libexec executables (default is ${LIB_INSTALL_DIR}/libexec/kf5)")
 endif()
 _set_fancy(INCLUDE_INSTALL_DIR       "include"                                     "The install dir for header files")
 # this exists as a convenience for frameworks
