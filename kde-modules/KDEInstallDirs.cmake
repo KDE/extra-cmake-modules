@@ -22,11 +22,11 @@
 #     combines BUNDLE_INSTALL_DIR, BIN_INSTALL_DIR and LIB_INSTALL_DIR; see
 #     below
 # ``INCLUDE_INSTALL_DIR``
-#     C and C++ header files (``include/KF5``)
+#     C and C++ header files (``include``)
 # ``QT_PLUGIN_INSTALL_DIR``
 #     Qt plugins (``${LIB_INSTALL_DIR}/plugins``)
 # ``PLUGIN_INSTALL_DIR``
-#     KDE plugins (``${QT_PLUGIN_INSTALL_DIR}/kf5``)
+#     KDE plugins (``${QT_PLUGIN_INSTALL_DIR}``)
 # ``IMPORTS_INSTALL_DIR``
 #     QML imports (``${QT_PLUGIN_INSTALL_DIR}/imports``)
 # ``QML_INSTALL_DIR``
@@ -49,6 +49,8 @@
 #     the icons (``share/icons``)
 # ``KCFG_INSTALL_DIR``
 #     kconfig files (``share/config.kcfg``)
+# ``KNOTIFYRC_INSTALL_DIR``
+#     install dir for knotifyrc files (``share/knotifications5``)
 # ``LOCALE_INSTALL_DIR``
 #     translations (``share/locale``)
 # ``MAN_INSTALL_DIR``
