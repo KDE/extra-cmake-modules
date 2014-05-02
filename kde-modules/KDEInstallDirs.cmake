@@ -197,6 +197,7 @@ _set_fancy(SBIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}sbin"               
 _set_fancy(LIB_INSTALL_DIR           "${EXEC_INSTALL_PREFIX}${_LIBDIR_DEFAULT}"    "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib[64], Debian multiarch is taken into account)")
 if(WIN32)
   _set_fancy(LIBEXEC_INSTALL_DIR     "${BIN_INSTALL_DIR}"                          "The install dir for libexec executables (default is ${BIN_INSTALL_DIR} on Windows)")
+  _set_fancy(KF5_LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}"                          "The install dir for KF5 libexec executables (default is ${BIN_INSTALL_DIR} on Windows)")
 else()
   _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/libexec"                  "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/libexec)")
   _set_fancy(KF5_LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/libexec/kf5"              "The install dir for KF5 libexec executables (default is ${LIB_INSTALL_DIR}/libexec/kf5)")
