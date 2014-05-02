@@ -123,6 +123,26 @@ if (UNIX)
     # FIXME: this is included in _GNU_SOURCE in glibc; do other libc
     # implementation recognize it?
     _kde_add_platform_definitions(-D_LARGEFILE64_SOURCE)
+
+    include(CheckCXXSourceCompiles)
+
+    # By default (in glibc, at least), on 32bit platforms off_t is 32 bits,
+    # which causes a SIGXFSZ when trying to manipulate files larger than 2Gb
+    # using libc calls (note that this issue does not occur when using QFile).
+    check_cxx_source_compiles("
+#include <sys/types.h>
+ /* Check that off_t can represent 2**63 - 1 correctly.
+    We can't simply define LARGE_OFF_T to be 9223372036854775807,
+    since some C++ compilers masquerading as C compilers
+    incorrectly reject 9223372036854775807.  */
+#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+  int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721 && LARGE_OFF_T % 2147483647 == 1) ? 1 : -1];
+  int main() { return 0; }
+" _OFFT_IS_64BIT)
+
+    if (NOT _OFFT_IS_64BIT)
+        _kde_add_platform_definitions(-D_FILE_OFFSET_BITS=64)
+    endif ()
 endif()
 
 if (WIN32)
