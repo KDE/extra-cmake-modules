@@ -163,18 +163,19 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
 
    unset(EXECUTABLE_OUTPUT_PATH)
    unset(LIBRARY_OUTPUT_PATH)
-   unset(ARCHIVE_OUTPUT_DIRECTORY)
-   unset(LIBRARY_OUTPUT_DIRECTORY)
-   unset(RUNTIME_OUTPUT_DIRECTORY)
+   unset(CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
+   unset(CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+   unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 
-   # under Windows, generate all executables and libraries into
-   # one common directory, so the executables find their dlls
+   # under Windows, output all executables and dlls into
+   # one common directory, and all static|import libraries and plugins
+   # into another one. This way test executables can find their dlls
+   # even without installation.
    if(WIN32)
-      set(ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-      set(LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-      set(RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
    endif()
 
 endif()
-
 ###################################################################
