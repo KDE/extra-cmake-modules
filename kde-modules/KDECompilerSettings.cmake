@@ -366,6 +366,12 @@ if (WIN32)
                    )
 endif()
 
+if (APPLE)
+    #full Single Unix Standard v3 (SUSv3) conformance (the Unix API)
+    _kde_add_platform_definitions(-D_DARWIN_C_SOURCE)
+    #Cocoa is unconditional since we only support OS X 10.6 and above
+    _kde_add_platform_definitions(-DQT_MAC_USE_COCOA)
+endif()
 
 
 ############################################################
