@@ -2,6 +2,9 @@
 # ECMCreateQmFromPoFiles
 # ----------------------
 #
+# .. warning:: This module is deprecated and will be removed by ECM 1.0. Use
+#              ECMPoQmTools instead.
+#
 # Generate QTranslator (.qm) catalogs from Gettext (.po) catalogs.
 #
 # ::
@@ -78,6 +81,8 @@
 #=============================================================================
 # (To distribute this file outside of extra-cmake-modules, substitute the full
 #  License text for the above reference.)
+
+message(AUTHOR_WARNING "ECMCreateQmFromPoFiles is deprecated and will be removed before the release of Extra CMake Modules 1.0. Use ECMPoQmTools instead.")
 
 # Stolen from FindGettext.cmake
 function(_ECM_QM_GET_UNIQUE_TARGET_NAME _name _unique_name)

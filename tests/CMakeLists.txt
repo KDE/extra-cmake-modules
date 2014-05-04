@@ -19,6 +19,8 @@ macro(ADD_TEST_MACRO NAME COMMAND)
     --test-command ${COMMAND} ${ARGN})
 endmacro(ADD_TEST_MACRO)
 
+find_package(Qt5LinguistTools CONFIG)
+
 add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
 add_test_macro(FindModules dummy)
@@ -32,3 +34,14 @@ set(ECMInstallIconsTest_EXTRA_OPTIONS
 add_test_macro(ECMInstallIconsTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMInstallIconsTest/check_tree.cmake"
 )
+
+if (Qt5LinguistTools_FOUND)
+    set(ECMPoQmToolsTest_EXTRA_OPTIONS
+        --build-target install
+        --build-options
+            "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/InstallDirectory"
+    )
+    add_test_macro(ECMPoQmToolsTest
+        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/check_tree.cmake"
+    )
+endif()
