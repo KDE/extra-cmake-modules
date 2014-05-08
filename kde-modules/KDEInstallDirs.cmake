@@ -4,94 +4,131 @@
 #
 # Define KDE standard installation directories.
 #
-# Inclusion of this module defines the following variables (default values in
-# parentheses):
+# Note that none of the variables defined by this module provide any
+# information about the location of already-installed KDE software.
 #
-# ``BUNDLE_INSTALL_DIR``
-#     (Mac only) application bundles (``/Applications/KDE5``)
-# ``BIN_INSTALL_DIR``
-#     user executables (``bin``)
-# ``SBIN_INSTALL_DIR``
-#     system admin executables (``sbin``)
-# ``LIB_INSTALL_DIR``
-#     object code libraries (``lib or lib64 or lib/<multiarch-tuple> on
-#     Debian``)
-# ``LIBEXEC_INSTALL_DIR``
-#     internal executables (``${LIB_INSTALL_DIR}/libexec``)
-# ``INSTALL_TARGETS_DEFAULT_ARGS``
-#     combines BUNDLE_INSTALL_DIR, BIN_INSTALL_DIR and LIB_INSTALL_DIR; see
-#     below
-# ``INCLUDE_INSTALL_DIR``
-#     C and C++ header files (``include``)
-# ``QT_PLUGIN_INSTALL_DIR``
-#     Qt plugins (``${LIB_INSTALL_DIR}/plugins``)
-# ``PLUGIN_INSTALL_DIR``
-#     KDE plugins (``${QT_PLUGIN_INSTALL_DIR}``)
-# ``IMPORTS_INSTALL_DIR``
-#     QML imports (``${QT_PLUGIN_INSTALL_DIR}/imports``)
-# ``QML_INSTALL_DIR``
-#     QML2 imports (``${LIB_INSTALL_DIR}/qml``)
-# ``CMAKECONFIG_INSTALL_PREFIX``
-#     CMake configuration files (``${LIB_INSTALL_DIR}/cmake``)
-# ``DATA_INSTALL_DIR``
-#     read-only architecture-independent data (``share``)
-# ``KCONF_UPDATE_INSTALL_DIR``
-#     kconf_update files (``${DATA_INSTALL_DIR}/kconf_update``)
-# ``DBUS_INTERFACES_INSTALL_DIR``
-#     dbus interfaces (``share/dbus-1/interfaces``)
-# ``DBUS_SERVICES_INSTALL_DIR``
-#     dbus services (``share/dbus-1/services``)
-# ``DBUS_SYSTEM_SERVICES_INSTALL_DIR``
-#     dbus system services (``share/dbus-1/system-services``)
-# ``HTML_INSTALL_DIR``
-#     HTML documentation (``share/doc/HTML``)
-# ``ICON_INSTALL_DIR``
-#     the icons (``share/icons``)
-# ``KCFG_INSTALL_DIR``
-#     kconfig files (``share/config.kcfg``)
-# ``KNOTIFYRC_INSTALL_DIR``
-#     install dir for knotifyrc files (``share/knotifications5``)
-# ``LOCALE_INSTALL_DIR``
-#     translations (``share/locale``)
-# ``MAN_INSTALL_DIR``
-#     man pages (``share/man``)
-# ``SERVICES_INSTALL_DIR``
-#     service (desktop, protocol, ...) files (``share/kservices5``)
-# ``SERVICETYPES_INSTALL_DIR``
-#     service types desktop files (``share/kservicetypes5``)
-# ``SOUND_INSTALL_DIR``
-#     sound files (``share/sounds``)
-# ``TEMPLATES_INSTALL_DIR``
-#     templates (``share/templates``)
-# ``WALLPAPER_INSTALL_DIR``
-#     wallpapers (``share/wallpapers``)
-# ``XDG_APPS_INSTALL_DIR``
-#     application desktop files (``share/applications``)
-# ``XDG_DIRECTORY_INSTALL_DIR``
-#     XDG directory (``share/desktop-directories``)
-# ``XDG_MIME_INSTALL_DIR``
-#     mimetype XML files (``share/mime/packages``)
-# ``SYSCONF_INSTALL_DIR``
-#     sysconfig files (``etc``)
-# ``CONFIG_INSTALL_DIR``
-#     config files (``${SYSCONF_INSTALL_DIR}/xdg``)
-# ``AUTOSTART_INSTALL_DIR``
-#     autostart files (``${CONFIG_INSTALL_DIR}/autostart``)
-# ``EXEC_INSTALL_PREFIX``
-#     prefix for default values of BIN_INSTALL_DIR, SBIN_INSTALL_DIR and
-#     LIB_INSTALL_DIR (``empty by default``)
-# ``SHARE_INSTALL_PREFIX``
-#     replaces "share" in the other variables if set
+# Inclusion of this module defines the following variables:
 #
-# The ``*_INSTALL_DIR`` variables may be passed to the DESTINATION options of
-# install() commands for the corresponding file type.  They are set in the
-# CMake cache, and so the defaults above can be overridden by users.
+# ``CMAKE_INSTALL_<dir>``
+#     destination for files of a given type
+# ``CMAKE_INSTALL_FULL_<dir>``
+#     corresponding absolute path
 #
-# Note that these variables do not provide any information about the location of
-# already-installed KDE software.
+# where ``<dir>`` is one of (default values in parentheses and alternative,
+# deprecated variable name in square brackets):
 #
-# The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries or
-# user-executable applications are installed, in the following manner:
+# ``BUNDLEDIR``
+#     application bundles (``/Applications/KDE``) [``BUNDLE_INSTALL_DIR``]
+# ``EXECROOTDIR``
+#     executables and libraries (``<empty>``) [``EXEC_INSTALL_PREFIX``]
+# ``BINDIR``
+#     user executables (``EXECROOTDIR/bin``) [``BIN_INSTALL_DIR``]
+# ``SBINDIR``
+#     system admin executables (``EXECROOTDIR/sbin``) [``SBIN_INSTALL_DIR``]
+# ``LIBDIR``
+#     object code libraries (``EXECROOTDIR/lib``, ``EXECROOTDIR/lib64`` or
+#     ``EXECROOTDIR/lib/<multiarch-tuple`` on Debian) [``LIB_INSTALL_DIR``]
+# ``LIBEXECDIR``
+#     executables for internal use by programs and libraries (``BINDIR`` on
+#     Windows, ``LIBDIR/libexec`` otherwise) [``LIBEXEC_INSTALL_DIR``]
+# ``CMAKEPACKAGEDIR``
+#     CMake packages, including config files (``LIBDIR/cmake``)
+#     [``CMAKECONFIG_INSTALL_PREFIX``]
+# ``QTPLUGINDIR``
+#     Qt plugins (``LIBDIR/plugins``) [``QT_PLUGIN_INSTALL_DIR``]
+# ``PLUGINDIR``
+#     Plugins (``QTPLUGINDIR``) [``PLUGIN_INSTALL_DIR``]
+# ``QTQUICKIMPORTSDIR``
+#     QtQuick1 imports (``QTPLUGINDIR/imports``) [``IMPORTS_INSTALL_DIR``]
+# ``QMLDIR``
+#     QtQuick2 imports (``LIBDIR/qml``) [``QML_INSTALL_DIR``]
+# ``INCLUDEDIR``
+#     C and C++ header files (``include``) [``INCLUDE_INSTALL_DIR``]
+# ``LOCALSTATEDIR``
+#     modifiable single-machine data (``var``)
+# ``SHAREDSTATEDIR``
+#     modifiable architecture-independent data (``com``)
+# ``DATAROOTDIR``
+#     read-only architecture-independent data root (``share``)
+#     [``SHARE_INSTALL_PREFIX``]
+# ``DATADIR``
+#     read-only architecture-independent data (``DATAROOTDIR``)
+#     [``DATA_INSTALL_DIR``]
+# ``DOCBUNDLEDIR``
+#     documentation bundles generated using kdoctools
+#     (``DATAROOTDIR/doc/HTML``) [``HTML_INSTALL_DIR``]
+# ``KCFGDIR``
+#     kconfig description files (``DATAROOTDIR/config.kcfg``)
+#     [``KCFG_INSTALL_DIR``]
+# ``KCONFUPDATEDIR``
+#     kconf_update scripts (``DATAROOTDIR/kconf_update``)
+#     [``KCONF_UPDATE_INSTALL_DIR``]
+# ``KSERVICES5DIR``
+#     services for KDE Frameworks 5 (``DATAROOTDIR/kservices5``)
+#     [``SERVICES_INSTALL_DIR``]
+# ``KSERVICETYPES5DIR``
+#     service types for KDE Frameworks 5 (``DATAROOTDIR/kservicetypes5``)
+#     [``SERVICETYPES_INSTALL_DIR``]
+# ``KNOTIFY5RCDIR``
+#     knotify description files (``DATAROOTDIR/knotifications5``)
+#     [``KNOTIFYRC_INSTALL_DIR``]
+# ``ICONDIR``
+#     icons (``DATAROOTDIR/icons``) [``ICON_INSTALL_DIR``]
+# ``LOCALEDIR``
+#     knotify description files (``DATAROOTDIR/locale``)
+#     [``LOCALE_INSTALL_DIR``]
+# ``SOUNDDIR``
+#     sound files (``DATAROOTDIR/sounds``) [``SOUND_INSTALL_DIR``]
+# ``TEMPLATEDIR``
+#     templates (``DATAROOTDIR/templates``) [``TEMPLATES_INSTALL_DIR``]
+# ``WALLPAPERDIR``
+#     desktop wallpaper images (``DATAROOTDIR/wallpapers``)
+#     [``WALLPAPER_INSTALL_DIR``]
+# ``APPDIR``
+#     application desktop files (``DATAROOTDIR/applications``)
+#     [``XDG_APPS_INSTALL_DIR``]
+# ``DESKTOPDIR``
+#     desktop directories (``DATAROOTDIR/desktop-directories``)
+#     [``XDG_DIRECTORY_INSTALL_DIR``]
+# ``MIMEDIR``
+#     mime description files (``DATAROOTDIR/mime/packages``)
+#     [``XDG_MIME_INSTALL_DIR``]
+# ``MANDIR``
+#     man documentation (``DATAROOTDIR/man``) [``MAN_INSTALL_DIR``]
+# ``INFODIR``
+#     info documentation (``DATAROOTDIR/info``)
+# ``DBUSDIR``
+#     D-Bus (``DATAROOTDIR/dbus-1``)
+# ``DBUSINTERFACEDIR``
+#     D-Bus interfaces (``DBUSDIR/interfaces``)
+#     [``DBUS_INTERFACES_INSTALL_DIR``]
+# ``DBUSSERVICEDIR``
+#     D-Bus session services (``DBUSDIR/services``)
+#     [``DBUS_SERVICES_INSTALL_DIR``]
+# ``DBUSSYSTEMSERVICEDIR``
+#     D-Bus system services (``DBUSDIR/system-services``)
+#     [``DBUS_SYSTEM_SERVICES_INSTALL_DIR``]
+# ``SYSCONFDIR``
+#     read-only single-machine data (``etc``) [``SYSCONF_INSTALL_DIR``]
+# ``CONFDIR``
+#     application configuration files (``SYSCONFDIR/xdg``)
+#     [``CONFIG_INSTALL_DIR``]
+# ``AUTOSTARTDIR``
+#     autostart files (``CONFDIR/autostart``) [``AUTOSTART_INSTALL_DIR``]
+#
+# The ``CMAKE_INSTALL_<dir>`` variables (or their deprecated counterparts) may
+# be passed to the DESTINATION options of ``install()`` commands for the
+# corresponding file type.  They are set in the CMake cache, and so the
+# defaults above can be overridden by users.
+#
+# Note that either the ``CMAKE_INSTALL_<dir>`` form of the variable or the
+# deprecated form can be changed using CMake command line variable definitions;
+# in either case, both forms of the variable will be affected. The effect of
+# passing both forms on the command line is undefined.
+#
+# The variable ``INSTALL_TARGETS_DEFAULT_ARGS`` is also defined.  This should
+# be used when libraries or user-executable applications are installed, in the
+# following manner:
 #
 # .. code-block:: cmake
 #
@@ -99,8 +136,8 @@
 #
 # It MUST NOT be used for installing plugins, system admin executables or
 # executables only intended for use internally by other code.  Those should use
-# one of the PLUGIN variables, SBIN_INSTALL_DIR or LIBEXEC_INSTALL_DIR
-# respectively.
+# ``CMAKE_INSTALL_PLUGINDIR``, ``CMAKE_INSTALL_SBINDIR`` or
+# ``CMAKE_INSTALL_LIBEXECDIR`` respectively.
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>
@@ -122,15 +159,13 @@
 
 
 # TODO:
-# - Provide GNUInstallDirs-style names (CMAKE_INSTALL_*)
-#   (NB: need to be able to set current names on command line still)
-# - Make sure libdir logic is up-to-date
-# - Perhaps include GNUInstallDirs, to keep current with libdir logic?
 # - Try to figure out proper Qt-related dirs when installing to the same
 #   prefix as Qt (look for qtpaths)
 
 # Figure out what the default install directory for libraries should be.
-# This is the same logic as in cmake's GNUInstallDirs.cmake.
+# This is based on the logic in GNUInstallDirs, but simplified (the
+# GNUInstallDirs code deals with re-configuring, but that is dealt with
+# by the _define_* macros in this module).
 set(_LIBDIR_DEFAULT "lib")
 # Override this default 'lib' with 'lib64' iff:
 #  - we are on Linux system but NOT cross-compiling
@@ -159,84 +194,250 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT CMAKE_CROSSCOMPILING)
 endif()
 
 
-# This macro implements some very special logic how to deal with the cache.
-# By default the various install locations inherit their value from their "parent" variable
-# so if you set CMAKE_INSTALL_PREFIX, then EXEC_INSTALL_PREFIX, PLUGIN_INSTALL_DIR will
-# calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX .
-# This would work completely without using the cache.
-# But if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
-# the cache, otherwise it will be forgotten on the next cmake run.
-# Once a variable is in the cache, it doesn't depend on its "parent" variables
-# anymore and you can only change it by editing it directly.
-# this macro helps in this regard, because as long as you don't set one of the
-# variables explicitely to some location, it will always calculate its value from its
-# parents. So modifying CMAKE_INSTALL_PREFIX later on will have the desired effect.
-# But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
-# this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
+# Macro for variables that are relative to another variable. We store an empty
+# value in the cache (for documentation/GUI cache editor purposes), and store
+# the default value in a local variable. If the cache variable is ever set to
+# something non-empty, the local variable will no longer be set. However, if
+# the cache variable remains (or is set to be) empty, the value will be
+# relative to that of the parent variable.
 #
-# additionally if installing to the same location as kdelibs, the other install
-# directories are reused from the installed kdelibs
-macro(_SET_FANCY _var _value _comment)
-  if (NOT DEFINED ${_var})
-      set(${_var} "${_value}")
-  else()
-      set(${_var} "${${_var}}" CACHE STRING "${_comment}")
-  endif()
-endmacro(_SET_FANCY)
+# varname:   the variable name suffix (eg: BINDIR for CMAKE_INSTALL_BINDIR)
+# parent:    the variable suffix of the variable this is relative to
+#            (eg: DATAROOTDIR for CMAKE_INSTALL_DATAROOTDIR)
+# subdir:    the path of the default value of CMAKE_INSTALL_${varname}
+#            relative to CMAKE_INSTALL_${parent}: no leading /
+# docstring: documentation about the variable (not including the default value)
+# oldstylename (optional): the old-style name of the variable
+macro(_define_relative varname parent subdir docstring)
+    set(_oldstylename)
+    if(${ARGC} GREATER 4)
+        set(_oldstylename "${ARGV4}")
+    endif()
+
+    # Surprisingly complex logic to deal with joining paths.
+    # Note that we cannot use arg vars directly in if() because macro args are
+    # not proper variables.
+    set(_parent "${parent}")
+    set(_subdir "${subdir}")
+    if(_parent AND _subdir)
+        set(_docpath "${_parent}/${_subdir}")
+        if(CMAKE_INSTALL_${_parent})
+            set(_realpath "${CMAKE_INSTALL_${_parent}}/${_subdir}")
+        else()
+            set(_realpath "${_subdir}")
+        endif()
+    elseif(_parent)
+        set(_docpath "${_parent}")
+        set(_realpath "${CMAKE_INSTALL_${_parent}}")
+    else()
+        set(_docpath "${_subdir}")
+        set(_realpath "${_subdir}")
+    endif()
+
+    if(${_oldstylename})
+        # The old name was given (probably on the command line): move
+        # it to the new name
+        set(CMAKE_INSTALL_${varname} "${${_oldstylename}}"
+            CACHE PATH
+                  "${docstring} (${_docpath})"
+                  FORCE)
+        unset(${_oldstylename} CACHE)
+    elseif(NOT CMAKE_INSTALL_${varname})
+        set(CMAKE_INSTALL_${varname} ""
+            CACHE PATH "${docstring} (${_docpath})")
+        set(CMAKE_INSTALL_${varname} "${_realpath}")
+    else()
+        # make sure the docs are still set if it was passed on the command line
+        set_property(CACHE CMAKE_INSTALL_${varname}
+            PROPERTY HELPSTRING "${docstring} (${_docpath})")
+        # make sure the type is correct if it was passed on the command line
+        set_property(CACHE CMAKE_INSTALL_${varname}
+            PROPERTY TYPE PATH)
+    endif()
+
+    if(_oldstylename)
+        set(${_oldstylename} "${CMAKE_INSTALL_${varname}}")
+    endif()
+
+    mark_as_advanced(CMAKE_INSTALL_${varname})
+
+    if(NOT IS_ABSOLUTE ${CMAKE_INSTALL_${varname}})
+        set(CMAKE_INSTALL_FULL_${varname}
+            "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_${varname}}")
+    else()
+        set(CMAKE_INSTALL_FULL_${varname} "${CMAKE_INSTALL_${varname}}")
+    endif()
+endmacro()
+
+# varname:   the variable name suffix (eg: BINDIR for CMAKE_INSTALL_BINDIR)
+# dir:       the relative path of the default value of CMAKE_INSTALL_${varname}
+#            relative to CMAKE_INSTALL_PREFIX: no leading /
+# docstring: documentation about the variable (not including the default value)
+# oldstylename (optional): the old-style name of the variable
+macro(_define_absolute varname dir docstring)
+    _define_relative("${varname}" "" "${dir}" "${docstring}" ${ARGN})
+endmacro()
 
 
 if(APPLE)
-  set(BUNDLE_INSTALL_DIR             "/Applications/KDE5" CACHE PATH               "Directory where application bundles will be installed to on OSX" )
+    _define_absolute(BUNDLEDIR "/Applications/KDE"
+        "application bundles"
+        BUNDLE_INSTALL_DIR)
 endif(APPLE)
 
-_set_fancy(EXEC_INSTALL_PREFIX       ""                                            "Base directory for executables and libraries")
-_set_fancy(SHARE_INSTALL_PREFIX      "share"                                       "Base directory for files which go to share/")
 
-_set_fancy(BIN_INSTALL_DIR           "${EXEC_INSTALL_PREFIX}bin"                   "The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)")
-_set_fancy(SBIN_INSTALL_DIR          "${EXEC_INSTALL_PREFIX}sbin"                  "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
-_set_fancy(LIB_INSTALL_DIR           "${EXEC_INSTALL_PREFIX}${_LIBDIR_DEFAULT}"    "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib[64], Debian multiarch is taken into account)")
+
+_define_absolute(EXECROOTDIR ""
+    "executables and libraries"
+    EXEC_INSTALL_PREFIX)
+
+_define_relative(BINDIR EXECROOTDIR "bin"
+    "user executables"
+    BIN_INSTALL_DIR)
+_define_relative(SBINDIR EXECROOTDIR "sbin"
+    "system admin executables"
+    SBIN_INSTALL_DIR)
+_define_relative(LIBDIR EXECROOTDIR "${_LIBDIR_DEFAULT}"
+    "object code libraries"
+    LIB_INSTALL_DIR)
+
 if(WIN32)
-  _set_fancy(LIBEXEC_INSTALL_DIR     "${BIN_INSTALL_DIR}"                          "The install dir for libexec executables (default is ${BIN_INSTALL_DIR} on Windows)")
-  _set_fancy(KF5_LIBEXEC_INSTALL_DIR "${LIBEXEC_INSTALL_DIR}"                      "The install dir for KF5 libexec executables (default is ${LIBEXEC_INSTALL_DIR} on Windows)")
+    _define_relative(LIBEXECDIR BINDIR ""
+        "executables for internal use by programs and libraries"
+        LIBEXEC_INSTALL_DIR)
+    set(CMAKE_INSTALL_LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}")
+    set(CMAKE_INSTALL_FULL_LIBEXECDIR_KF5 "${CMAKE_INSTALL_FULL_LIBEXECDIR}")
 else()
-  _set_fancy(LIBEXEC_INSTALL_DIR     "${LIB_INSTALL_DIR}/libexec"                  "The install dir for libexec executables (default is ${LIB_INSTALL_DIR}/libexec)")
-  _set_fancy(KF5_LIBEXEC_INSTALL_DIR "${LIBEXEC_INSTALL_DIR}/kf5"                  "The install dir for KF5 libexec executables (default is ${LIBEXEC_INSTALL_DIR}/kf5)")
+    _define_relative(LIBEXECDIR LIBDIR "libexec"
+        "executables for internal use by programs and libraries"
+        LIBEXEC_INSTALL_DIR)
+    set(CMAKE_INSTALL_LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}/kf5")
+    set(CMAKE_INSTALL_FULL_LIBEXECDIR_KF5 "${CMAKE_INSTALL_FULL_LIBEXECDIR}/kf5")
 endif()
-_set_fancy(INCLUDE_INSTALL_DIR       "include"                                     "The install dir for header files")
-# this exists as a convenience for frameworks
-set(KF5_INCLUDE_INSTALL_DIR          "${INCLUDE_INSTALL_DIR}/KF5")
+set(KF5_LIBEXEC_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR_KF5}")
+_define_relative(CMAKEPACKAGEDIR LIBDIR "cmake"
+    "CMake packages, including config files"
+    CMAKECONFIG_INSTALL_PREFIX)
 
-_set_fancy(QT_PLUGIN_INSTALL_DIR     "${LIB_INSTALL_DIR}/plugins"                  "The install dir where Qt plugins will be installed (default is ${LIB_INSTALL_DIR}/plugins)")
-_set_fancy(PLUGIN_INSTALL_DIR        "${QT_PLUGIN_INSTALL_DIR}"                    "The install dir where framework and application plugins will be installed (default is ${QT_PLUGIN_INSTALL_DIR})")
-_set_fancy(IMPORTS_INSTALL_DIR       "${QT_PLUGIN_INSTALL_DIR}/imports"            "The install dir where QtQuick1 imports will be installed")
-_set_fancy(QML_INSTALL_DIR           "${LIB_INSTALL_DIR}/qml"                      "The install dir where QtQuick2 imports will be installed")
-_set_fancy(CMAKECONFIG_INSTALL_PREFIX "${LIB_INSTALL_DIR}/cmake"                   "The prefix under which packages will create their own subdirectory for their CMake configuration files")
-_set_fancy(DATA_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}"                     "The parent directory where applications can install their data")
-_set_fancy(KF5_DATA_INSTALL_DIR      "${DATA_INSTALL_DIR}/kf5"                     "The parent directory where frameworks can install their data")
-_set_fancy(HTML_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/doc/HTML"            "The HTML install dir for documentation")
-_set_fancy(ICON_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/icons"               "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
-_set_fancy(KCFG_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/config.kcfg"         "The install dir for kconfig files")
-_set_fancy(KNOTIFYRC_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/knotifications5"     "The install dir for knotifyrc files")
-_set_fancy(LOCALE_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/locale"              "The install dir for translations")
-_set_fancy(SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/kservices5"          "The install dir for service (desktop, protocol, ...) files")
-_set_fancy(SERVICETYPES_INSTALL_DIR  "${SHARE_INSTALL_PREFIX}/kservicetypes5"      "The install dir for servicestypes desktop files")
-_set_fancy(SOUND_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/sounds"              "The install dir for sound files")
-_set_fancy(TEMPLATES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/templates"           "The install dir for templates (Create new file...)")
-_set_fancy(WALLPAPER_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/wallpapers"          "The install dir for wallpapers")
-_set_fancy(KCONF_UPDATE_INSTALL_DIR  "${DATA_INSTALL_DIR}/kconf_update"            "The kconf_update install dir")
+# Qt-specific vars
+_define_relative(QTPLUGINDIR LIBDIR "plugins"
+    "Qt plugins"
+    QT_PLUGIN_INSTALL_DIR)
+_define_relative(PLUGINDIR QTPLUGINDIR ""
+    "Plugins"
+    PLUGIN_INSTALL_DIR)
+_define_relative(QTQUICKIMPORTSDIR QTPLUGINDIR "imports"
+    "QtQuick1 imports"
+    IMPORTS_INSTALL_DIR)
+_define_relative(QMLDIR LIBDIR "qml"
+    "QtQuick2 imports"
+    QML_INSTALL_DIR)
 
-_set_fancy(XDG_APPS_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/applications"        "The XDG apps dir")
-_set_fancy(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories" "The XDG directory")
-_set_fancy(XDG_MIME_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/mime/packages"       "The install dir for the xdg mimetypes")
 
-_set_fancy(SYSCONF_INSTALL_DIR       "etc"                                         "The sysconfig install dir (default etc)")
-_set_fancy(CONFIG_INSTALL_DIR        "${SYSCONF_INSTALL_DIR}/xdg"                  "The config file install dir")
-_set_fancy(AUTOSTART_INSTALL_DIR     "${CONFIG_INSTALL_DIR}/autostart"             "The install dir for autostart files")
-_set_fancy(MAN_INSTALL_DIR           "${SHARE_INSTALL_PREFIX}/man"                 "The man install dir (default ${SHARE_INSTALL_PREFIX}/man)")
 
-_set_fancy(DBUS_INTERFACES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces"      "The dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
-_set_fancy(DBUS_SERVICES_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/dbus-1/services"        "The dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
-_set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/system-services" "The dbus system services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/system-services)")
+_define_absolute(INCLUDEDIR "include"
+    "C and C++ header files"
+    INCLUDE_INSTALL_DIR)
+set(CMAKE_INSTALL_INCLUDEDIR_KF5 "${CMAKE_INSTALL_INCLUDEDIR}/KF5")
+set(CMAKE_INSTALL_FULL_INCLUDEDIR_KF5 "${CMAKE_INSTALL_FULL_INCLUDEDIR}/KF5")
+set(KF5_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR_KF5}")
+
+_define_absolute(LOCALSTATEDIR "var"
+    "modifiable single-machine data")
+
+_define_absolute(SHAREDSTATEDIR "com"
+    "modifiable architecture-independent data")
+
+
+
+
+_define_absolute(DATAROOTDIR "share"
+    "read-only architecture-independent data root"
+    SHARE_INSTALL_PREFIX)
+
+_define_relative(DATADIR DATAROOTDIR ""
+    "read-only architecture-independent data"
+    DATA_INSTALL_DIR)
+set(CMAKE_INSTALL_DATADIR_KF5 "${CMAKE_INSTALL_DATADIR}/kf5")
+set(CMAKE_INSTALL_FULL_DATADIR_KF5 "${CMAKE_INSTALL_FULL_DATADIR}/kf5")
+set(KF5_DATA_INSTALL_DIR "${CMAKE_INSTALL_DATADIR_KF5}")
+
+# KDE Framework-specific things
+_define_relative(DOCBUNDLEDIR DATAROOTDIR "doc/HTML"
+    "documentation bundles generated using kdoctools"
+    HTML_INSTALL_DIR)
+_define_relative(KCFGDIR DATAROOTDIR "config.kcfg"
+    "kconfig description files"
+    KCFG_INSTALL_DIR)
+_define_relative(KCONFUPDATEDIR DATAROOTDIR "kconf_update"
+    "kconf_update scripts"
+    KCONF_UPDATE_INSTALL_DIR)
+_define_relative(KSERVICES5DIR DATAROOTDIR "kservices5"
+    "services for KDE Frameworks 5"
+    SERVICES_INSTALL_DIR)
+_define_relative(KSERVICETYPES5DIR DATAROOTDIR "kservicetypes5"
+    "service types for KDE Frameworks 5"
+    SERVICETYPES_INSTALL_DIR)
+_define_relative(KNOTIFY5RCDIR DATAROOTDIR "knotifications5"
+    "knotify description files"
+    KNOTIFYRC_INSTALL_DIR)
+
+# Cross-desktop or other system things
+_define_relative(ICONDIR DATAROOTDIR "icons"
+    "icons"
+    ICON_INSTALL_DIR)
+_define_relative(LOCALEDIR DATAROOTDIR "locale"
+    "knotify description files"
+    LOCALE_INSTALL_DIR)
+_define_relative(SOUNDDIR DATAROOTDIR "sounds"
+    "sound files"
+    SOUND_INSTALL_DIR)
+_define_relative(TEMPLATEDIR DATAROOTDIR "templates"
+    "templates"
+    TEMPLATES_INSTALL_DIR)
+_define_relative(WALLPAPERDIR DATAROOTDIR "wallpapers"
+    "desktop wallpaper images"
+    WALLPAPER_INSTALL_DIR)
+_define_relative(APPDIR DATAROOTDIR "applications"
+    "application desktop files"
+    XDG_APPS_INSTALL_DIR)
+_define_relative(DESKTOPDIR DATAROOTDIR "desktop-directories"
+    "desktop directories"
+    XDG_DIRECTORY_INSTALL_DIR)
+_define_relative(MIMEDIR DATAROOTDIR "mime/packages"
+    "mime description files"
+    XDG_MIME_INSTALL_DIR)
+_define_relative(MANDIR DATAROOTDIR "man"
+    "man documentation"
+    MAN_INSTALL_DIR)
+_define_relative(INFODIR DATAROOTDIR "info"
+    "info documentation")
+_define_relative(DBUSDIR DATAROOTDIR "dbus-1"
+    "D-Bus")
+_define_relative(DBUSINTERFACEDIR DBUSDIR "interfaces"
+    "D-Bus interfaces"
+    DBUS_INTERFACES_INSTALL_DIR)
+_define_relative(DBUSSERVICEDIR DBUSDIR "services"
+    "D-Bus session services"
+    DBUS_SERVICES_INSTALL_DIR)
+_define_relative(DBUSSYSTEMSERVICEDIR DBUSDIR "system-services"
+    "D-Bus system services"
+    DBUS_SYSTEM_SERVICES_INSTALL_DIR)
+
+
+
+
+
+
+_define_absolute(SYSCONFDIR "etc"
+    "read-only single-machine data"
+    SYSCONF_INSTALL_DIR)
+_define_relative(CONFDIR SYSCONFDIR "xdg"
+    "application configuration files"
+    CONFIG_INSTALL_DIR)
+_define_relative(AUTOSTARTDIR CONFDIR "autostart"
+    "autostart files"
+    AUTOSTART_INSTALL_DIR)
 
 
 
@@ -250,15 +451,15 @@ _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/syst
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
 # FIXME: why is INCLUDES (only) set for ARCHIVE targets?
-set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
-                                  LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
-                                  ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel
-                                  INCLUDES DESTINATION "${INCLUDE_INSTALL_DIR}"
+set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                                  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+                                  INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
-set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
-                                      LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
-                                      ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel
-                                      INCLUDES DESTINATION "${KF5_INCLUDE_INSTALL_DIR}"
+set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                                      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+                                      INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR_KF5}"
 )
 
 
