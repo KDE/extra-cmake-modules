@@ -178,7 +178,7 @@ endif()
 # directories are reused from the installed kdelibs
 macro(_SET_FANCY _var _value _comment)
   if (NOT DEFINED ${_var})
-      set(${_var} ${_value})
+      set(${_var} "${_value}")
   else()
       set(${_var} "${${_var}}" CACHE STRING "${_comment}")
   endif()
