@@ -24,10 +24,16 @@ endmacro()
 check_exists(${BINARY_DIR}/ECMQmLoader.cpp)
 check_strequal(QMLOADER_PATH "${BINARY_DIR}/ECMQmLoader.cpp")
 
-set(exp_files 
-    "share/locale/fr/LC_MESSAGES/test.qm"
-    "share/locale/fr/LC_MESSAGES/install-test.qm"
+check_exists(${BINARY_DIR}/fr/only-process.qm)
+
+set(exp_files
+    "share/locale/fr/LC_MESSAGES/process-and-install.qm"
     "share/locale/es/LC_MESSAGES/install-test.qm"
+    "share/locale/fr/LC_MESSAGES/install-test.qm"
+    "custom-dir1/es/LC_MESSAGES/custom-dir1-install-test.qm"
+    "custom-dir1/fr/LC_MESSAGES/custom-dir1-install-test.qm"
+    "custom-dir2/es/LC_MESSAGES/custom-dir2-install-test.qm"
+    "custom-dir2/fr/LC_MESSAGES/custom-dir2-install-test.qm"
 )
 file(GLOB_RECURSE actual_files RELATIVE "${ACTUAL_TREE}" "${ACTUAL_TREE}/*")
 list(SORT exp_files)
@@ -51,5 +57,5 @@ if(NOT exp_files STREQUAL actual_files)
 endif()
 
 if (fail)
-    message("Test failed!")
+    message(FATAL_ERROR "Test failed!")
 endif()
