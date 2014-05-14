@@ -247,12 +247,15 @@ macro(_define_relative varname parent subdir docstring)
             CACHE PATH "${docstring} (${_docpath})")
         set(CMAKE_INSTALL_${varname} "${_realpath}")
     else()
-        # make sure the docs are still set if it was passed on the command line
-        set_property(CACHE CMAKE_INSTALL_${varname}
-            PROPERTY HELPSTRING "${docstring} (${_docpath})")
-        # make sure the type is correct if it was passed on the command line
-        set_property(CACHE CMAKE_INSTALL_${varname}
-            PROPERTY TYPE PATH)
+        get_property(_iscached CACHE CMAKE_INSTALL_${varname} PROPERTY VALUE SET)
+        if (_iscached)
+            # make sure the docs are still set if it was passed on the command line
+            set_property(CACHE CMAKE_INSTALL_${varname}
+                PROPERTY HELPSTRING "${docstring} (${_docpath})")
+            # make sure the type is correct if it was passed on the command line
+            set_property(CACHE CMAKE_INSTALL_${varname}
+                PROPERTY TYPE PATH)
+        endif()
     endif()
 
     if(_oldstylename)

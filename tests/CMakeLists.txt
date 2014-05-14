@@ -3,6 +3,7 @@
 
 add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
+add_subdirectory(KDEInstallDirsTest)
 
 macro(ADD_TEST_MACRO NAME COMMAND)
   string(REPLACE "." "/" dir "${NAME}")
