@@ -177,3 +177,4 @@ foreach(variable ${absolute_path_vars})
 endforeach()
 
 add_executable(dummy main.c)
+set_target_properties(dummy PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
