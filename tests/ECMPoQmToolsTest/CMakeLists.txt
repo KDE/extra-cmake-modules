@@ -24,7 +24,9 @@ ecm_process_po_files_as_qm(fr ALL
     PO_FILES only-process.po
 )
 
-# Should create a bunch of .qm files and install them in share/locale
+# Should create a bunch of .qm files and install them in share/locale.
+# Should ignore files directly under po/ as well as directories under po/ which
+# do not contain any .po files.
 ecm_install_po_files_as_qm(po)
 
 # Should create a bunch of .qm files and install them in

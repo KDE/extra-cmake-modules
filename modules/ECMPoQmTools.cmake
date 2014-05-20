@@ -188,13 +188,13 @@ function(ecm_install_po_files_as_qm podir)
         set(install_destination share/locale)
     endif()
 
-    file(GLOB lang_dirs "${podir}/*")
-    foreach(lang_dir ${lang_dirs})
-        file(GLOB po_files "${lang_dir}/*.po")
-        get_filename_component(lang ${lang_dir} NAME)
+    file(GLOB po_files "${podir}/*/*.po")
+    foreach(po_file ${po_files})
+        get_filename_component(po_dir ${po_file} DIRECTORY)
+        get_filename_component(lang ${po_dir} NAME)
         ecm_process_po_files_as_qm(
             ${lang} ALL
-            PO_FILES ${po_files}
+            PO_FILES ${po_file}
             INSTALL_DESTINATION ${install_destination}
         )
     endforeach()
