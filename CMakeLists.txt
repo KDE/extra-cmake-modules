@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
-project(extra-cmake-modules NONE)
+# We need to set a language to find CMake packages installed in
+# architecture-dependent locations (like /usr/lib64)
+project(extra-cmake-modules C)
 
 set(ECM_MAJOR_VERSION 0)
 set(ECM_MINOR_VERSION 0)
