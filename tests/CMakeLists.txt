@@ -3,7 +3,6 @@
 
 add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
-add_subdirectory(KDEInstallDirsTest)
 
 macro(ADD_TEST_MACRO NAME COMMAND)
   string(REPLACE "." "/" dir "${NAME}")
@@ -24,6 +23,8 @@ find_package(Qt5LinguistTools CONFIG)
 
 add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
+add_test_macro(KDEInstallDirsTest.vars_defined dummy)
+add_test_macro(KDEInstallDirsTest.not_cache_variable dummy)
 add_test_macro(FindModules dummy)
 add_test_macro(UseFindModules dummy)
 
