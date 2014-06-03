@@ -1,9 +1,14 @@
-# a macro for tests that have a simple format where the name matches the
-# directory and project
+# We need to set a language to find CMake packages installed in
+# architecture-dependent locations (like /usr/lib64).
+# We only set this for the tests, making sure it does not interfere
+# with other files (as ECM itself is architecture-independent).
+project(ECMTests C)
 
 add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
 
+# a macro for tests that have a simple format where the name matches the
+# directory and project
 macro(ADD_TEST_MACRO NAME COMMAND)
   string(REPLACE "." "/" dir "${NAME}")
   string(REGEX REPLACE "[^.]*\\." "" proj "${NAME}")
