@@ -93,6 +93,7 @@ set(_ECM_ICON_GROUP_intl       "intl")
 
 # For the "compatibility" syntax: a "map" of short theme names to the theme
 # directory
+set(_ECM_ICON_THEME_br "breeze")
 set(_ECM_ICON_THEME_ox "oxygen")
 set(_ECM_ICON_THEME_cr "crystalsvg")
 set(_ECM_ICON_THEME_lo "locolor")
