@@ -129,6 +129,7 @@ function(ecm_process_po_files_as_qm lang)
     find_program(lconvert_executable
         NAMES lconvert-qt5 lconvert
         PATHS ${lrelease_path}
+        NO_DEFAULT_PATH
         )
 
     # Create commands to turn po files into qm files

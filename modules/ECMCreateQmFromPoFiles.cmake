@@ -113,6 +113,7 @@ function(_ECM_QM_CREATE_TARGET install_destination catalog_name)
     find_program(lconvert_executable
         NAMES lconvert-qt5 lconvert
         PATHS ${lrelease_path}
+        NO_DEFAULT_PATH
         )
 
     if (catalog_name)
