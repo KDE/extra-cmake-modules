@@ -13,11 +13,11 @@
 # users:
 #
 # PYQT4_VERSION - The version of PyQt4 found expressed as a 6 digit hex number
-#     suitable for comparision as a string
+#     suitable for comparison as a string
 #
 # PYQT4_VERSION_STR - The version of PyQt4 as a human readable string.
 #
-# PYQT4_VERSION_TAG - The PyQt version tag using by PyQt's sip files.
+# PYQT4_VERSION_TAG - The Qt4 version tag used by PyQt's sip files.
 #
 # PYQT4_SIP_DIR - The directory holding the PyQt4 .sip files. This can be unset
 # if PyQt4 was built using its new build system and pyqtconfig.py is not
@@ -50,12 +50,12 @@ ELSE(EXISTS PYQT4_VERSION)
     STRING(REGEX MATCH ".*\npyqt_sip_flags:([^\n]+).*$" _dummy ${pyqt_config})
     SET(PYQT4_SIP_FLAGS "${CMAKE_MATCH_1}" CACHE STRING "The SIP flags used to build PyQt4")
 
-    IF(NOT IS_DIRECTORY PYQT4_SIP_DIR)
+    IF(NOT IS_DIRECTORY "${PYQT4_SIP_DIR}")
       MESSAGE(WARNING "The base directory where PyQt4's SIP files are installed could not be determined. This usually means PyQt4 was built with its new build system and pyqtconfig.py is not present.\n"
                       "Please set the PYQT4_SIP_DIR variable manually.")
-    ELSE(NOT PYQT4_SIP_DIR)
+    ELSE(NOT IS_DIRECTORY "${PYQT4_SIP_DIR}")
       SET(PYQT4_FOUND TRUE)
-    ENDIF(NOT PYQT4_SIP_DIR)
+    ENDIF(NOT IS_DIRECTORY "${PYQT4_SIP_DIR}")
   ENDIF(pyqt_config)
 
   IF(PYQT4_FOUND)
