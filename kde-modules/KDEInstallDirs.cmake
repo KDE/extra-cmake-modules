@@ -96,6 +96,8 @@
 # ``MIMEDIR``
 #     mime description files (``DATAROOTDIR/mime/packages``)
 #     [``XDG_MIME_INSTALL_DIR``]
+# ``METAINFODIR``
+#     AppStream component metadata files (``DATAROOTDIR/appdata``)
 # ``MANDIR``
 #     man documentation (``DATAROOTDIR/man``) [``MAN_INSTALL_DIR``]
 # ``INFODIR``
@@ -416,6 +418,8 @@ _define_relative(DESKTOPDIR DATAROOTDIR "desktop-directories"
 _define_relative(MIMEDIR DATAROOTDIR "mime/packages"
     "mime description files"
     XDG_MIME_INSTALL_DIR)
+_define_relative(METAINFODIR DATAROOTDIR "appdata"
+    "AppStream component metadata")
 _define_relative(MANDIR DATAROOTDIR "man"
     "man documentation"
     MAN_INSTALL_DIR)
