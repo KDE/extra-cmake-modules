@@ -173,14 +173,15 @@
 # by the _define_* macros in this module).
 set(_LIBDIR_DEFAULT "lib")
 # Override this default 'lib' with 'lib64' iff:
-#  - we are on Linux system but NOT cross-compiling
+#  - we are on a Linux, kFreeBSD or Hurd system but NOT cross-compiling
 #  - we are NOT on debian
 #  - we are on a 64 bits system
 # reason is: amd64 ABI: http://www.x86-64.org/documentation/abi.pdf
 # For Debian with multiarch, use 'lib/${CMAKE_LIBRARY_ARCHITECTURE}' if
 # CMAKE_LIBRARY_ARCHITECTURE is set (which contains e.g. "i386-linux-gnu"
 # See http://wiki.debian.org/Multiarch
-if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT CMAKE_CROSSCOMPILING)
+if((CMAKE_SYSTEM_NAME MATCHES "Linux|kFreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "GNU")
+   AND NOT CMAKE_CROSSCOMPILING)
   if (EXISTS "/etc/debian_version") # is this a debian system ?
     if(CMAKE_LIBRARY_ARCHITECTURE)
       set(_LIBDIR_DEFAULT "lib/${CMAKE_LIBRARY_ARCHITECTURE}")
