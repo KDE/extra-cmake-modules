@@ -1,46 +1,22 @@
-# By Simon Edwards <simon@simonzone.com>
-# modified by Paul Giannaros <paul@giannaros.org> to add better PyKDE4
-# sip directory finding
-# This file is in the public domain.
+# Copyright (c) 2014, Raphael Kubo da Costa <rakuco@FreeBSD.org>
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-import sys
-import os
-import PyKDE4.pykdeconfig
-import PyQt4.pyqtconfig
+import PyKDE4.kdecore
 
-if "_pkg_config" in dir(PyKDE4.pykdeconfig):
-    _pkg_config = PyKDE4.pykdeconfig._pkg_config
+if __name__ == '__main__':
+    try:
+        import PyKDE4.pykdeconfig
+        pykdecfg = PyKDE4.pykdeconfig.Configuration()
+        sip_dir = pykdecfg.pykde_sip_dir
+        sip_flags = pykdecfg.pykde_kde_sip_flags
+    except ImportError:
+        # PyQt4 >= 4.10.0 was built with configure-ng.py instead of
+        # configure.py, so pyqtconfig.py and pykdeconfig.py are not installed.
+        sip_dir = PyKDE4.kdecore.PYKDE_CONFIGURATION['sip_dir']
+        sip_flags = PyKDE4.kdecore.PYKDE_CONFIGURATION['sip_flags']
 
-    for varname in [
-            'kde_version',
-            'kde_version_extra',
-            'kdebasedir',
-            'kdeincdir',
-            'kdelibdir',
-            'libdir',
-            'pykde_kde_sip_flags', 
-            'pykde_mod_dir',
-            'pykde_modules', 
-            'pykde_sip_dir',
-            'pykde_version',
-            'pykde_version_str']:
-        varvalue = _pkg_config[varname]
-        if varname == 'pykde_sip_dir':
-            d = os.path.join(_pkg_config[varname], 'PyKDE4')
-            if os.path.exists(d):
-                varvalue = d
-        print("%s:%s\n" % (varname, varvalue))
-    pykde_version_tag = ''
-    in_t = False
-    for item in _pkg_config['pykde_kde_sip_flags'].split():
-        if item == "-t":
-            in_t = True
-        elif in_t:
-            if item.startswith("KDE_"):
-                pykde_version_tag = item
-        else:
-            in_t = False
-    print("pykde_version_tag:%s" % pykde_version_tag)
-
-else:
-    sys.exit(1)
+    print('pykde_version:%06.x' % PyKDE4.kdecore.version())
+    print('pykde_version_str:%s' % PyKDE4.kdecore.versionString())
+    print('pykde_sip_dir:%s' % sip_dir)
+    print('pykde_sip_flags:%s' % sip_flags)

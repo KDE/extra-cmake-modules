@@ -25,7 +25,6 @@ IF(PYTHONINTERP_FOUND)
     STRING(REGEX REPLACE ".*\npykde_version_str:([^\n]+).*$" "\\1" PYKDE4_VERSION_STR ${pykde_config})
     STRING(REGEX REPLACE ".*\npykde_kde_sip_flags:([^\n]+).*$" "\\1" PYKDE4_SIP_FLAGS ${pykde_config})
     STRING(REGEX REPLACE ".*\npykde_sip_dir:([^\n]+).*$" "\\1" PYKDE4_SIP_DIR ${pykde_config})
-    STRING(REGEX REPLACE ".*\npykde_version_tag:([^\n]+).*$" "\\1" PYKDE4_VERSION_TAG ${pykde_config})
     MESSAGE(STATUS "Found PyKDE4 version ${PYKDE4_VERSION_STR} ${PYKDE4_SIP_DIR}")
 
     SET(PYKDE4_FOUND TRUE)
