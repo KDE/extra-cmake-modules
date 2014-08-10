@@ -102,13 +102,9 @@ macro (_KDE_ADD_PLATFORM_DEFINITIONS)
     set(CMAKE_REQUIRED_DEFINITIONS ${CMAKE_REQUIRED_DEFINITIONS} ${ARGV})
 endmacro()
 
-if (UNIX)
-    # Enable basically everything portable across modern UNIX systems.
-    # See http://www.delorie.com/gnu/docs/glibc/libc_13.html, although
-    # this define is for the benefit of other libc implementations
-    # (since _GNU_SOURCE is defined below).
-    _kde_add_platform_definitions(-D_XOPEN_SOURCE=500)
-
+include(CheckSymbolExists)
+check_symbol_exists("__GLIBC__" "stdlib.h" LIBC_IS_GLIBC)
+if (LIBC_IS_GLIBC)
     # Enable everything in GNU libc.  Any code using non-portable features
     # needs to perform feature tests, but this ensures that any such features
     # will be found if they exist.
@@ -118,7 +114,9 @@ if (UNIX)
     # functions).  This, however, means that strlcat and strlcpy are not
     # provided by glibc.
     _kde_add_platform_definitions(-D_GNU_SOURCE)
+endif ()
 
+if (UNIX)
     # Enable extra API for using 64-bit file offsets on 32-bit systems.
     # FIXME: this is included in _GNU_SOURCE in glibc; do other libc
     # implementation recognize it?
