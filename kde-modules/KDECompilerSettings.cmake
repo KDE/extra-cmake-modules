@@ -157,7 +157,7 @@ if (WIN32)
 
     # Use the Unicode versions of Windows API by default
     # See http://msdn.microsoft.com/en-us/library/windows/desktop/dd317766%28v=vs.85%29.aspx
-    _kde_add_platform_definitions(-DUNICODE)
+    _kde_add_platform_definitions(-DUNICODE -D_UNICODE)
 endif()
 
 
