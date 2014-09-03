@@ -1,0 +1,15 @@
+find_package(Qt5Core QUIET)
+
+if (TARGET Qt5::qmake)
+  get_target_property(QMAKE_EXECUTABLE Qt5::qmake LOCATION)
+else()
+  set(QMAKE_EXECUTABLE "qmake-qt5" CACHE)
+endif()
+
+function(QUERY_QMAKE RESULT VAR)
+    exec_program(${QMAKE_EXECUTABLE} ARGS "-query ${VAR}" RETURN_VALUE return_code OUTPUT_VARIABLE output )
+    if(NOT return_code)
+        file(TO_CMAKE_PATH "${output}" output)
+        set(${RESULT} ${output} PARENT_SCOPE)
+    endif()
+endfunction(QUERY_QMAKE)

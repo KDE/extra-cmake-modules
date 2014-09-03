@@ -162,11 +162,6 @@
 # (To distribute this file outside of extra-cmake-modules, substitute the full
 #  License text for the above reference.)
 
-
-# TODO:
-# - Try to figure out proper Qt-related dirs when installing to the same
-#   prefix as Qt (look for qtpaths)
-
 # Figure out what the default install directory for libraries should be.
 # This is based on the logic in GNUInstallDirs, but simplified (the
 # GNUInstallDirs code deals with re-configuring, but that is dealt with
@@ -198,7 +193,6 @@ if((CMAKE_SYSTEM_NAME MATCHES "Linux|kFreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "GN
     endif()
   endif()
 endif()
-
 
 # Macro for variables that are relative to another variable. We store an empty
 # value in the cache (for documentation/GUI cache editor purposes), and store
@@ -287,7 +281,6 @@ macro(_define_absolute varname dir docstring)
     _define_relative("${varname}" "" "${dir}" "${docstring}" ${ARGN})
 endmacro()
 
-
 if(APPLE)
     _define_absolute(BUNDLEDIR "/Applications/KDE"
         "application bundles"
@@ -328,21 +321,40 @@ _define_relative(CMAKEPACKAGEDIR LIBDIR "cmake"
     "CMake packages, including config files"
     CMAKECONFIG_INSTALL_PREFIX)
 
+option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, Plugins and Imports to the Qt 5 install dir")
+if(KDE_INSTALL_USE_QT_SYS_PATHS)
 # Qt-specific vars
-_define_relative(QTPLUGINDIR LIBDIR "plugins"
-    "Qt plugins"
-    QT_PLUGIN_INSTALL_DIR)
+    include(ECMQueryQmake)
+
+    query_qmake(qt_plugins_dir QT_INSTALL_PLUGINS)
+
+    _define_absolute(QTPLUGINDIR ${qt_plugins_dir}
+        "Qt plugins"
+         QT_PLUGIN_INSTALL_DIR)
+
+    query_qmake(qt_imports_dir QT_INSTALL_IMPORTS)
+
+    _define_absolute(QTQUICKIMPORTSDIR QTPLUGINDIR ${qt_imports_dir}
+        "QtQuick1 imports"
+        IMPORTS_INSTALL_DIR)
+
+else()
+    _define_relative(QTPLUGINDIR LIBDIR "plugins"
+        "Qt plugins"
+        QT_PLUGIN_INSTALL_DIR)
+
+    _define_relative(QTQUICKIMPORTSDIR QTPLUGINDIR "imports"
+        "QtQuick1 imports"
+        IMPORTS_INSTALL_DIR)
+endif()
+
 _define_relative(PLUGINDIR QTPLUGINDIR ""
     "Plugins"
     PLUGIN_INSTALL_DIR)
-_define_relative(QTQUICKIMPORTSDIR QTPLUGINDIR "imports"
-    "QtQuick1 imports"
-    IMPORTS_INSTALL_DIR)
+
 _define_relative(QMLDIR LIBDIR "qml"
     "QtQuick2 imports"
     QML_INSTALL_DIR)
-
-
 
 _define_absolute(INCLUDEDIR "include"
     "C and C++ header files"
