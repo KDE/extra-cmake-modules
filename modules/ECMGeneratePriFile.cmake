@@ -82,7 +82,7 @@
 # (To distribute this file outside of extra-cmake-modules, substitute the full
 #  License text for the above reference.)
 
-if(KDE_ECM_INSTALL_TO_QT_SYS_DIR)
+if(KDE_INSTALL_USE_QT_SYS_PATHS)
   include(ECMQueryQmake)
   query_qmake(qt_host_data_dir QT_HOST_DATA)
   set(ECM_MKSPECS_INSTALL_DIR ${qt_host_data_dir}/mkspecs/modules CACHE PATH "The directory where mkspecs will be installed to.")
