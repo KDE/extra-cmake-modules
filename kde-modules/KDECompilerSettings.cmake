@@ -420,3 +420,4 @@ if (MINGW AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols")
 endif()
 
+include ( ECMEnableSanitizers )
