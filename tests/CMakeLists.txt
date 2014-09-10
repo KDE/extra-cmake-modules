@@ -6,6 +6,7 @@ project(ECMTests C)
 
 add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
+add_subdirectory(ECMGeneratePkgConfigFile)
 
 # a macro for tests that have a simple format where the name matches the
 # directory and project
