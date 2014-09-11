@@ -13,6 +13,7 @@ function(query_qmake result_variable qt_variable)
         RESULT_VARIABLE return_code
         OUTPUT_VARIABLE output
     )
+    string(STRIP ${output} output)
     if(return_code EQUAL 0)
         file(TO_CMAKE_PATH "${output}" output_path)
         set(${result_variable} "${output_path}" PARENT_SCOPE)
