@@ -324,7 +324,7 @@ _define_relative(CMAKEPACKAGEDIR LIBDIR "cmake"
 option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, Plugins and Imports to the Qt 5 install dir")
 if(KDE_INSTALL_USE_QT_SYS_PATHS)
 # Qt-specific vars
-    include(ECMQueryQmake)
+    include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
 
     query_qmake(qt_plugins_dir QT_INSTALL_PLUGINS)
 
@@ -334,7 +334,7 @@ if(KDE_INSTALL_USE_QT_SYS_PATHS)
 
     query_qmake(qt_imports_dir QT_INSTALL_IMPORTS)
 
-    _define_absolute(QTQUICKIMPORTSDIR QTPLUGINDIR ${qt_imports_dir}
+    _define_absolute(QTQUICKIMPORTSDIR ${qt_imports_dir}
         "QtQuick1 imports"
         IMPORTS_INSTALL_DIR)
 

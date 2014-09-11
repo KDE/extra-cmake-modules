@@ -420,6 +420,6 @@ if (MINGW AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols")
 endif()
 
-include(ECMEnableSanitizers)
-include(ECMCoverageOption)
+include("${ECM_MODULE_DIR}/ECMEnableSanitizers.cmake")
+include("${ECM_MODULE_DIR}/ECMCoverageOption.cmake")
 

@@ -29,8 +29,16 @@ find_package(Qt5LinguistTools CONFIG)
 
 add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
+
 add_test_macro(KDEInstallDirsTest.vars_defined dummy)
 add_test_macro(KDEInstallDirsTest.not_cache_variable dummy)
+find_package(Qt5Core QUIET)
+if (TARGET Qt5::qmake)
+    set(KDEInstallDirsTest.qt_vars_defined_EXTRA_OPTIONS
+        --build-options -DKDE_INSTALL_USE_QT_SYS_PATHS=ON)
+    add_test_macro(KDEInstallDirsTest.qt_vars_defined dummy)
+endif ()
+
 add_test_macro(FindModules dummy)
 add_test_macro(UseFindModules dummy)
 

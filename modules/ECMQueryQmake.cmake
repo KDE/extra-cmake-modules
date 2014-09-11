@@ -6,10 +6,17 @@ else()
   set(QMAKE_EXECUTABLE "qmake-qt5" CACHE)
 endif()
 
-function(QUERY_QMAKE RESULT VAR)
-    exec_program(${QMAKE_EXECUTABLE} ARGS "-query ${VAR}" RETURN_VALUE return_code OUTPUT_VARIABLE output )
-    if(NOT return_code)
-        file(TO_CMAKE_PATH "${output}" output)
-        set(${RESULT} ${output} PARENT_SCOPE)
+# This is not public API (yet)!
+function(query_qmake result_variable qt_variable)
+    execute_process(
+        COMMAND ${QMAKE_EXECUTABLE} -query "${qt_variable}"
+        RESULT_VARIABLE return_code
+        OUTPUT_VARIABLE output
+    )
+    if(return_code EQUAL 0)
+        file(TO_CMAKE_PATH "${output}" output_path)
+        set(${result_variable} "${output_path}" PARENT_SCOPE)
+    else()
+        message(FATAL "QMake call failed: ${error}")
     endif()
-endfunction(QUERY_QMAKE)
+endfunction()

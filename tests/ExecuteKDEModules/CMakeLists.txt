@@ -9,7 +9,9 @@ set(all_kde_modules
     KDEFrameworkCompilerSettings
 )
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../kde-modules)
+set(ECM_KDE_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../kde-modules)
+set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
+set(CMAKE_MODULE_PATH "${ECM_KDE_MODULE_DIR}")
 
 foreach(module ${all_kde_modules})
     message(STATUS "module: ${module}")
