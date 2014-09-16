@@ -338,6 +338,11 @@ if(KDE_INSTALL_USE_QT_SYS_PATHS)
         "QtQuick1 imports"
         IMPORTS_INSTALL_DIR)
 
+    query_qmake(qt_qml_dir QT_INSTALL_QML)
+
+    _define_absolute(QMLDIR ${qt_qml_dir}
+        "QtQuick2 imports"
+        QML_INSTALL_DIR)
 else()
     _define_relative(QTPLUGINDIR LIBDIR "plugins"
         "Qt plugins"
@@ -346,15 +351,15 @@ else()
     _define_relative(QTQUICKIMPORTSDIR QTPLUGINDIR "imports"
         "QtQuick1 imports"
         IMPORTS_INSTALL_DIR)
+
+    _define_relative(QMLDIR LIBDIR "qml"
+        "QtQuick2 imports"
+        QML_INSTALL_DIR)
 endif()
 
 _define_relative(PLUGINDIR QTPLUGINDIR ""
     "Plugins"
     PLUGIN_INSTALL_DIR)
-
-_define_relative(QMLDIR LIBDIR "qml"
-    "QtQuick2 imports"
-    QML_INSTALL_DIR)
 
 _define_absolute(INCLUDEDIR "include"
     "C and C++ header files"
