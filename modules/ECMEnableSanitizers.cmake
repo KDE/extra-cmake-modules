@@ -59,7 +59,7 @@
 # cmake -DECM_ENABLE_SANITIZERS='address;leak;undefined' ..
 #
 # => Most of the sanitizers will require Clang. To enable it, use :
-# -DCMAKE_CXX_COMPILR=clang++
+# -DCMAKE_CXX_COMPILER=clang++
 #
 #=============================================================================
 # Copyright 2014 Mathieu Tarral <mathieu.tarral@gmail.com>
