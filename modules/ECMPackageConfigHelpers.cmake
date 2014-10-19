@@ -161,7 +161,10 @@ if (NOT _CMakeFindDependencyMacro_FOUND)
 
       if (NOT \${dep}_FOUND)
         set(\${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE \"\${CMAKE_FIND_PACKAGE_NAME} could not be found because dependency \${dep} could not be found.\")
+        set(\${CMAKE_FIND_PACKAGE_NAME}_FOUND False)
+        return()
       endif()
+
       set(ecm_fd_version)
       set(ecm_fd_required_arg)
       set(ecm_fd_quiet_arg)
