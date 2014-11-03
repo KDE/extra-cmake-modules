@@ -156,6 +156,10 @@ if (WIN32)
     # Use the Unicode versions of Windows API by default
     # See http://msdn.microsoft.com/en-us/library/windows/desktop/dd317766%28v=vs.85%29.aspx
     _kde_add_platform_definitions(-DUNICODE -D_UNICODE)
+    
+    # As stated in http://msdn.microsoft.com/en-us/library/4hwaceh6.aspx M_PI only gets defined
+    # if _USE_MATH_DEFINES is defined, with mingw this has a similar effect as -D_GNU_SOURCE on math.h
+    _kde_add_platform_definitions(-D_USE_MATH_DEFINES)
 endif()
 
 
