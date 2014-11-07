@@ -2,7 +2,7 @@
 # FindEGL
 # -------
 #
-# Try to find EGL on a Unix system.
+# Try to find EGL.
 #
 # This will define the following variables:
 #
@@ -65,89 +65,83 @@ if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
     message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindEGL.cmake")
 endif()
 
-if(NOT WIN32)
-    # Use pkg-config to get the directories and then use these values
-    # in the FIND_PATH() and FIND_LIBRARY() calls
-    find_package(PkgConfig)
-    pkg_check_modules(PKG_EGL QUIET egl)
+# Use pkg-config to get the directories and then use these values
+# in the FIND_PATH() and FIND_LIBRARY() calls
+find_package(PkgConfig)
+pkg_check_modules(PKG_EGL QUIET egl)
 
-    set(EGL_DEFINITIONS ${PKG_EGL_CFLAGS_OTHER})
+set(EGL_DEFINITIONS ${PKG_EGL_CFLAGS_OTHER})
 
-    find_path(EGL_INCLUDE_DIR
-        NAMES
-            egl.h
-        HINTS
-            ${PKG_EGL_INCLUDE_DIRS}
-        PATH_SUFFIXES
-            EGL
+find_path(EGL_INCLUDE_DIR
+    NAMES
+        egl.h
+    HINTS
+        ${PKG_EGL_INCLUDE_DIRS}
+    PATH_SUFFIXES
+        EGL
+)
+find_library(EGL_LIBRARY
+    NAMES
+        EGL
+    HINTS
+        ${PKG_EGL_LIBRARY_DIRS}
+)
+
+# NB: We do *not* use the version information from pkg-config, as that
+#     is the implementation version (eg: the Mesa version)
+if(EGL_INCLUDE_DIR)
+    # egl.h has defines of the form EGL_VERSION_x_y for each supported
+    # version; so the header for EGL 1.1 will define EGL_VERSION_1_0 and
+    # EGL_VERSION_1_1.  Finding the highest supported version involves
+    # finding all these defines and selecting the highest numbered.
+    file(READ "${EGL_INCLUDE_DIR}/egl.h" _EGL_header_contents)
+    string(REGEX MATCHALL
+        "[ \\t]EGL_VERSION_[0-9_]+"
+        _EGL_version_lines
+        "${_EGL_header_contents}"
     )
-    find_library(EGL_LIBRARY
-        NAMES
-            EGL
-        HINTS
-            ${PKG_EGL_LIBRARY_DIRS}
-    )
-
-    # NB: We do *not* use the version information from pkg-config, as that
-    #     is the implementation version (eg: the Mesa version)
-    if(EGL_INCLUDE_DIR)
-        # egl.h has defines of the form EGL_VERSION_x_y for each supported
-        # version; so the header for EGL 1.1 will define EGL_VERSION_1_0 and
-        # EGL_VERSION_1_1.  Finding the highest supported version involves
-        # finding all these defines and selecting the highest numbered.
-        file(READ "${EGL_INCLUDE_DIR}/egl.h" _EGL_header_contents)
-        string(REGEX MATCHALL
-            "[ \\t]EGL_VERSION_[0-9_]+"
-            _EGL_version_lines
-            "${_EGL_header_contents}"
+    unset(_EGL_header_contents)
+    foreach(_EGL_version_line ${_EGL_version_lines})
+        string(REGEX REPLACE
+            "[ \\t]EGL_VERSION_([0-9_]+)"
+            "\\1"
+            _version_candidate
+            "${_EGL_version_line}"
         )
-        unset(_EGL_header_contents)
-        foreach(_EGL_version_line ${_EGL_version_lines})
-            string(REGEX REPLACE
-                "[ \\t]EGL_VERSION_([0-9_]+)"
-                "\\1"
-                _version_candidate
-                "${_EGL_version_line}"
-            )
-            string(REPLACE "_" "." _version_candidate "${_version_candidate}")
-            if(NOT DEFINED EGL_VERSION OR EGL_VERSION VERSION_LESS _version_candidate)
-                set(EGL_VERSION "${_version_candidate}")
-            endif()
-        endforeach()
-        unset(_EGL_version_lines)
-    endif()
-
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(EGL
-        FOUND_VAR
-            EGL_FOUND
-        REQUIRED_VARS
-            EGL_LIBRARY
-            EGL_INCLUDE_DIR
-        VERSION_VAR
-            EGL_VERSION
-    )
-
-    if(EGL_FOUND AND NOT TARGET EGL::EGL)
-        add_library(EGL::EGL UNKNOWN IMPORTED)
-        set_target_properties(EGL::EGL PROPERTIES
-            IMPORTED_LOCATION "${EGL_LIBRARY}"
-            INTERFACE_COMPILE_OPTIONS "${EGL_DEFINITIONS}"
-            INTERFACE_INCLUDE_DIRECTORIES "${EGL_INCLUDE_DIR}"
-        )
-    endif()
-
-    mark_as_advanced(EGL_LIBRARY EGL_INCLUDE_DIR)
-
-    # compatibility variables
-    set(EGL_LIBRARIES ${EGL_LIBRARY})
-    set(EGL_INCLUDE_DIRS ${EGL_INCLUDE_DIR})
-    set(EGL_VERSION_STRING ${EGL_VERSION})
-
-else()
-    message(STATUS "FindEGL.cmake cannot find EGL on Windows systems. Try finding WGL instead.")
-    set(EGL_FOUND FALSE)
+        string(REPLACE "_" "." _version_candidate "${_version_candidate}")
+        if(NOT DEFINED EGL_VERSION OR EGL_VERSION VERSION_LESS _version_candidate)
+            set(EGL_VERSION "${_version_candidate}")
+        endif()
+    endforeach()
+    unset(_EGL_version_lines)
 endif()
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(EGL
+    FOUND_VAR
+        EGL_FOUND
+    REQUIRED_VARS
+        EGL_LIBRARY
+        EGL_INCLUDE_DIR
+    VERSION_VAR
+        EGL_VERSION
+)
+
+if(EGL_FOUND AND NOT TARGET EGL::EGL)
+    add_library(EGL::EGL UNKNOWN IMPORTED)
+    set_target_properties(EGL::EGL PROPERTIES
+        IMPORTED_LOCATION "${EGL_LIBRARY}"
+        INTERFACE_COMPILE_OPTIONS "${EGL_DEFINITIONS}"
+        INTERFACE_INCLUDE_DIRECTORIES "${EGL_INCLUDE_DIR}"
+    )
+endif()
+
+mark_as_advanced(EGL_LIBRARY EGL_INCLUDE_DIR)
+
+# compatibility variables
+set(EGL_LIBRARIES ${EGL_LIBRARY})
+set(EGL_INCLUDE_DIRS ${EGL_INCLUDE_DIR})
+set(EGL_VERSION_STRING ${EGL_VERSION})
 
 include(FeatureSummary)
 set_package_properties(EGL PROPERTIES

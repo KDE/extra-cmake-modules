@@ -2,7 +2,7 @@
 # FindQtWaylandScanner
 # --------------------
 #
-# Try to find qtwaylandscanner on a Unix system.
+# Try to find qtwaylandscanner.
 #
 # If the qtwaylandscanner executable is not in your PATH, you can provide
 # an alternative name or full path location with the ``QtWaylandScanner_EXECUTABLE``
@@ -87,29 +87,24 @@ include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 
 ecm_find_package_version_check(QtWaylandScanner)
 
-if(NOT WIN32)
-    # Find qtwaylandscanner
-    find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner)
+# Find qtwaylandscanner
+find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner)
 
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(QtWaylandScanner
-        FOUND_VAR
-            QtWaylandScanner_FOUND
-        REQUIRED_VARS
-            QtWaylandScanner_EXECUTABLE
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(QtWaylandScanner
+    FOUND_VAR
+        QtWaylandScanner_FOUND
+    REQUIRED_VARS
+        QtWaylandScanner_EXECUTABLE
+)
+
+mark_as_advanced(QtWaylandScanner_EXECUTABLE)
+
+if(NOT TARGET Wayland::QtScanner AND QtWaylandScanner_FOUND)
+    add_executable(Wayland::QtScanner IMPORTED)
+    set_target_properties(Wayland::QtScanner PROPERTIES
+        IMPORTED_LOCATION "${QtWaylandScanner_EXECUTABLE}"
     )
-
-    mark_as_advanced(QtWaylandScanner_EXECUTABLE)
-
-    if(NOT TARGET Wayland::QtScanner AND QtWaylandScanner_FOUND)
-        add_executable(Wayland::QtScanner IMPORTED)
-        set_target_properties(Wayland::QtScanner PROPERTIES
-            IMPORTED_LOCATION "${QtWaylandScanner_EXECUTABLE}"
-        )
-    endif()
-else()
-    message(STATUS "Wayland and QtWayland are not available on Windows.")
-    set(QtWaylandScanner_FOUND FALSE)
 endif()
 
 include(FeatureSummary)

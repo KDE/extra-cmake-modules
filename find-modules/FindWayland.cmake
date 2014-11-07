@@ -2,7 +2,7 @@
 # FindWayland
 # -----------
 #
-# Try to find Wayland on a Unix system.
+# Try to find Wayland.
 #
 # This is a component-based find module, which makes use of the COMPONENTS
 # and OPTIONAL_COMPONENTS arguments to find_module.  The following components
@@ -77,68 +77,62 @@ include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 
 ecm_find_package_version_check(Wayland)
 
-if(NOT WIN32)
-    set(Wayland_known_components
-        Client
-        Server
-        Cursor
-        Egl
-    )
-    foreach(_comp ${Wayland_known_components})
-        string(TOLOWER "${_comp}" _lc_comp)
-        set(Wayland_${_comp}_component_deps)
-        set(Wayland_${_comp}_pkg_config "wayland-${_lc_comp}")
-        set(Wayland_${_comp}_lib "wayland-${_lc_comp}")
-        set(Wayland_${_comp}_header "wayland-${_lc_comp}.h")
-    endforeach()
-    set(Wayland_Egl_component_deps Client)
+set(Wayland_known_components
+    Client
+    Server
+    Cursor
+    Egl
+)
+foreach(_comp ${Wayland_known_components})
+    string(TOLOWER "${_comp}" _lc_comp)
+    set(Wayland_${_comp}_component_deps)
+    set(Wayland_${_comp}_pkg_config "wayland-${_lc_comp}")
+    set(Wayland_${_comp}_lib "wayland-${_lc_comp}")
+    set(Wayland_${_comp}_header "wayland-${_lc_comp}.h")
+endforeach()
+set(Wayland_Egl_component_deps Client)
 
-    ecm_find_package_parse_components(Wayland
-        RESULT_VAR Wayland_components
-        KNOWN_COMPONENTS ${Wayland_known_components}
-    )
-    ecm_find_package_handle_library_components(Wayland
-        COMPONENTS ${Wayland_components}
-    )
+ecm_find_package_parse_components(Wayland
+    RESULT_VAR Wayland_components
+    KNOWN_COMPONENTS ${Wayland_known_components}
+)
+ecm_find_package_handle_library_components(Wayland
+    COMPONENTS ${Wayland_components}
+)
 
-    # If pkg-config didn't provide us with version information,
-    # try to extract it from wayland-version.h
-    # (Note that the version from wayland-egl.pc will probably be
-    # the Mesa version, rather than the Wayland version, but that
-    # version will be ignored as we always find wayland-client.pc
-    # first).
-    if(NOT Wayland_VERSION)
-        find_file(Wayland_VERSION_HEADER
-            NAMES wayland-version.h
-            HINTS ${Wayland_INCLUDE_DIRS}
-        )
-        mark_as_advanced(Wayland_VERSION_HEADER)
-        if(Wayland_VERSION_HEADER)
-            file(READ ${Wayland_VERSION_HEADER} _wayland_version_header_contents)
-            string(REGEX REPLACE
-                "^.*[ \\t]+WAYLAND_VERSION[ \\t]+\"([0-9.]*)\".*$"
-                "\\1"
-                Wayland_VERSION
-                "${_wayland_version_header_contents}"
-            )
-            unset(_wayland_version_header_contents)
-        endif()
-    endif()
-
-    find_package_handle_standard_args(Wayland
-        FOUND_VAR
-            Wayland_FOUND
-        REQUIRED_VARS
-            Wayland_LIBRARIES
-        VERSION_VAR
+# If pkg-config didn't provide us with version information,
+# try to extract it from wayland-version.h
+# (Note that the version from wayland-egl.pc will probably be
+# the Mesa version, rather than the Wayland version, but that
+# version will be ignored as we always find wayland-client.pc
+# first).
+if(NOT Wayland_VERSION)
+    find_file(Wayland_VERSION_HEADER
+        NAMES wayland-version.h
+        HINTS ${Wayland_INCLUDE_DIRS}
+    )
+    mark_as_advanced(Wayland_VERSION_HEADER)
+    if(Wayland_VERSION_HEADER)
+        file(READ ${Wayland_VERSION_HEADER} _wayland_version_header_contents)
+        string(REGEX REPLACE
+            "^.*[ \\t]+WAYLAND_VERSION[ \\t]+\"([0-9.]*)\".*$"
+            "\\1"
             Wayland_VERSION
-        HANDLE_COMPONENTS
-    )
-
-else()
-    message(STATUS "Wayland is not available on Windows.")
-    set(Wayland_FOUND FALSE)
+            "${_wayland_version_header_contents}"
+        )
+        unset(_wayland_version_header_contents)
+    endif()
 endif()
+
+find_package_handle_standard_args(Wayland
+    FOUND_VAR
+        Wayland_FOUND
+    REQUIRED_VARS
+        Wayland_LIBRARIES
+    VERSION_VAR
+        Wayland_VERSION
+    HANDLE_COMPONENTS
+)
 
 include(FeatureSummary)
 set_package_properties(Wayland PROPERTIES

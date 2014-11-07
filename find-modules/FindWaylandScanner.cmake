@@ -2,7 +2,7 @@
 # FindWaylandScanner
 # ------------------
 #
-# Try to find wayland-scanner on a Unix system.
+# Try to find wayland-scanner.
 #
 # If the wayland-scanner executable is not in your PATH, you can provide
 # an alternative name or full path location with the ``WaylandScanner_EXECUTABLE``
@@ -79,29 +79,24 @@ include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 
 ecm_find_package_version_check(WaylandScanner)
 
-if(NOT WIN32)
-    # Find wayland-scanner
-    find_program(WaylandScanner_EXECUTABLE NAMES wayland-scanner)
+# Find wayland-scanner
+find_program(WaylandScanner_EXECUTABLE NAMES wayland-scanner)
 
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(WaylandScanner
-        FOUND_VAR
-            WaylandScanner_FOUND
-        REQUIRED_VARS
-            WaylandScanner_EXECUTABLE
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(WaylandScanner
+    FOUND_VAR
+        WaylandScanner_FOUND
+    REQUIRED_VARS
+        WaylandScanner_EXECUTABLE
+)
+
+mark_as_advanced(WaylandScanner_EXECUTABLE)
+
+if(NOT TARGET Wayland::Scanner AND WaylandScanner_FOUND)
+    add_executable(Wayland::Scanner IMPORTED)
+    set_target_properties(Wayland::Scanner PROPERTIES
+        IMPORTED_LOCATION "${WaylandScanner_EXECUTABLE}"
     )
-
-    mark_as_advanced(WaylandScanner_EXECUTABLE)
-
-    if(NOT TARGET Wayland::Scanner AND WaylandScanner_FOUND)
-        add_executable(Wayland::Scanner IMPORTED)
-        set_target_properties(Wayland::Scanner PROPERTIES
-            IMPORTED_LOCATION "${WaylandScanner_EXECUTABLE}"
-        )
-    endif()
-else()
-    message(STATUS "Wayland is not available on Windows.")
-    set(WaylandScanner_FOUND FALSE)
 endif()
 
 include(FeatureSummary)

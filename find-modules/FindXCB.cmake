@@ -2,7 +2,7 @@
 # FindXCB
 # -------
 #
-# Try to find XCB on a Unix system.
+# Try to find XCB.
 #
 # This is a component-based find module, which makes use of the COMPONENTS and
 # OPTIONAL_COMPONENTS arguments to find_module.  The following components are
@@ -85,103 +85,98 @@ include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 
 ecm_find_package_version_check(XCB)
 
-if(NOT WIN32)
-    # Note that this list needs to be ordered such that any component
-    # appears after its dependencies
-    set(XCB_known_components
-        XCB
-        RENDER
-        SHAPE
-        XFIXES
-        SHM
-        ATOM
-        AUX
-        COMPOSITE
-        CURSOR
-        DAMAGE
-        DPMS
-        DRI2
-        DRI3
-        EVENT
-        EWMH
-        GLX
-        ICCCM
-        IMAGE
-        KEYSYMS
-        PRESENT
-        RANDR
-        RECORD
-        RENDERUTIL
-        RES
-        SCREENSAVER
-        SYNC
-        UTIL
-        XEVIE
-        XF86DRI
-        XINERAMA
-        XINPUT
-        XKB
-        XPRINT
-        XTEST
-        XV
-        XVMC)
-    # default component info: xcb components have fairly predictable
-    # header files, library names and pkg-config names
-    foreach(_comp ${XCB_known_components})
-        string(TOLOWER "${_comp}" _lc_comp)
-        set(XCB_${_comp}_component_deps XCB)
-        set(XCB_${_comp}_pkg_config "xcb-${_lc_comp}")
-        set(XCB_${_comp}_lib "xcb-${_lc_comp}")
-        set(XCB_${_comp}_header "xcb/${_lc_comp}.h")
-    endforeach()
-    # exceptions
-    set(XCB_XCB_component_deps)
-    set(XCB_COMPOSITE_component_deps XCB XFIXES)
-    set(XCB_DAMAGE_component_deps XCB XFIXES)
-    set(XCB_IMAGE_component_deps XCB SHM)
-    set(XCB_RENDERUTIL_component_deps XCB RENDER)
-    set(XCB_XFIXES_component_deps XCB RENDER SHAPE)
-    set(XCB_XVMC_component_deps XCB XV)
-    set(XCB_XV_component_deps XCB SHM)
-    set(XCB_XCB_pkg_config "xcb")
-    set(XCB_XCB_lib "xcb")
-    set(XCB_ATOM_header "xcb/xcb_atom.h")
-    set(XCB_ATOM_lib "xcb-util")
-    set(XCB_AUX_header "xcb/xcb_aux.h")
-    set(XCB_AUX_lib "xcb-util")
-    set(XCB_CURSOR_header "xcb/xcb_cursor.h")
-    set(XCB_EVENT_header "xcb/xcb_event.h")
-    set(XCB_EVENT_lib "xcb-util")
-    set(XCB_EWMH_header "xcb/xcb_ewmh.h")
-    set(XCB_ICCCM_header "xcb/xcb_icccm.h")
-    set(XCB_IMAGE_header "xcb/xcb_image.h")
-    set(XCB_KEYSYMS_header "xcb/xcb_keysyms.h")
-    set(XCB_PIXEL_header "xcb/xcb_pixel.h")
-    set(XCB_RENDERUTIL_header "xcb/xcb_renderutil.h")
-    set(XCB_RENDERUTIL_lib "xcb-render-util")
-    set(XCB_UTIL_header "xcb/xcb_util.h")
+# Note that this list needs to be ordered such that any component
+# appears after its dependencies
+set(XCB_known_components
+    XCB
+    RENDER
+    SHAPE
+    XFIXES
+    SHM
+    ATOM
+    AUX
+    COMPOSITE
+    CURSOR
+    DAMAGE
+    DPMS
+    DRI2
+    DRI3
+    EVENT
+    EWMH
+    GLX
+    ICCCM
+    IMAGE
+    KEYSYMS
+    PRESENT
+    RANDR
+    RECORD
+    RENDERUTIL
+    RES
+    SCREENSAVER
+    SYNC
+    UTIL
+    XEVIE
+    XF86DRI
+    XINERAMA
+    XINPUT
+    XKB
+    XPRINT
+    XTEST
+    XV
+    XVMC)
+# default component info: xcb components have fairly predictable
+# header files, library names and pkg-config names
+foreach(_comp ${XCB_known_components})
+    string(TOLOWER "${_comp}" _lc_comp)
+    set(XCB_${_comp}_component_deps XCB)
+    set(XCB_${_comp}_pkg_config "xcb-${_lc_comp}")
+    set(XCB_${_comp}_lib "xcb-${_lc_comp}")
+    set(XCB_${_comp}_header "xcb/${_lc_comp}.h")
+endforeach()
+# exceptions
+set(XCB_XCB_component_deps)
+set(XCB_COMPOSITE_component_deps XCB XFIXES)
+set(XCB_DAMAGE_component_deps XCB XFIXES)
+set(XCB_IMAGE_component_deps XCB SHM)
+set(XCB_RENDERUTIL_component_deps XCB RENDER)
+set(XCB_XFIXES_component_deps XCB RENDER SHAPE)
+set(XCB_XVMC_component_deps XCB XV)
+set(XCB_XV_component_deps XCB SHM)
+set(XCB_XCB_pkg_config "xcb")
+set(XCB_XCB_lib "xcb")
+set(XCB_ATOM_header "xcb/xcb_atom.h")
+set(XCB_ATOM_lib "xcb-util")
+set(XCB_AUX_header "xcb/xcb_aux.h")
+set(XCB_AUX_lib "xcb-util")
+set(XCB_CURSOR_header "xcb/xcb_cursor.h")
+set(XCB_EVENT_header "xcb/xcb_event.h")
+set(XCB_EVENT_lib "xcb-util")
+set(XCB_EWMH_header "xcb/xcb_ewmh.h")
+set(XCB_ICCCM_header "xcb/xcb_icccm.h")
+set(XCB_IMAGE_header "xcb/xcb_image.h")
+set(XCB_KEYSYMS_header "xcb/xcb_keysyms.h")
+set(XCB_PIXEL_header "xcb/xcb_pixel.h")
+set(XCB_RENDERUTIL_header "xcb/xcb_renderutil.h")
+set(XCB_RENDERUTIL_lib "xcb-render-util")
+set(XCB_UTIL_header "xcb/xcb_util.h")
 
-    ecm_find_package_parse_components(XCB
-        RESULT_VAR XCB_components
-        KNOWN_COMPONENTS ${XCB_known_components}
-    )
-    ecm_find_package_handle_library_components(XCB
-        COMPONENTS ${XCB_components}
-    )
+ecm_find_package_parse_components(XCB
+    RESULT_VAR XCB_components
+    KNOWN_COMPONENTS ${XCB_known_components}
+)
+ecm_find_package_handle_library_components(XCB
+    COMPONENTS ${XCB_components}
+)
 
-    find_package_handle_standard_args(XCB
-        FOUND_VAR
-            XCB_FOUND
-        REQUIRED_VARS
-            XCB_LIBRARIES
-        VERSION_VAR
-            XCB_VERSION
-        HANDLE_COMPONENTS
-    )
-else()
-    message(STATUS "XCB is not available on Windows.")
-    set(XCB_FOUND FALSE)
-endif()
+find_package_handle_standard_args(XCB
+    FOUND_VAR
+        XCB_FOUND
+    REQUIRED_VARS
+        XCB_LIBRARIES
+    VERSION_VAR
+        XCB_VERSION
+    HANDLE_COMPONENTS
+)
 
 include(FeatureSummary)
 set_package_properties(XCB PROPERTIES
