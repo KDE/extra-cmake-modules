@@ -114,7 +114,9 @@
 #     D-Bus system services (``DBUSDIR/system-services``)
 #     [``DBUS_SYSTEM_SERVICES_INSTALL_DIR``]
 # ``SYSCONFDIR``
-#     read-only single-machine data (``etc``) [``SYSCONF_INSTALL_DIR``]
+#     read-only single-machine data
+#     (``etc``, or ``/etc`` if ``CMAKE_INSTALL_DIR`` is ``/usr``)
+#     [``SYSCONF_INSTALL_DIR``]
 # ``CONFDIR``
 #     application configuration files (``SYSCONFDIR/xdg``)
 #     [``CONFIG_INSTALL_DIR``]
@@ -458,9 +460,13 @@ _define_relative(DBUSSYSTEMSERVICEDIR DBUSDIR "system-services"
 
 
 
+set(_default_sysconf_dir "etc")
+if (CMAKE_INSTALL_PREFIX STREQUAL "/usr")
+    set(_default_sysconf_dir "/etc")
+endif()
 
 
-_define_absolute(SYSCONFDIR "etc"
+_define_absolute(SYSCONFDIR "${_default_sysconf_dir}"
     "read-only single-machine data"
     SYSCONF_INSTALL_DIR)
 _define_relative(CONFDIR SYSCONFDIR "xdg"

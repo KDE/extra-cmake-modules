@@ -32,6 +32,9 @@ add_test_macro(ExecuteKDEModules dummy)
 
 add_test_macro(KDEInstallDirsTest.vars_defined dummy)
 add_test_macro(KDEInstallDirsTest.not_cache_variable dummy)
+set(KDEInstallDirsTest.usr_vars_defined_EXTRA_OPTIONS
+    --build-options -DCMAKE_INSTALL_PREFIX=/usr)
+add_test_macro(KDEInstallDirsTest.usr_vars_defined dummy)
 find_package(Qt5Core QUIET)
 if (TARGET Qt5::qmake)
     set(KDEInstallDirsTest.qt_vars_defined_EXTRA_OPTIONS
