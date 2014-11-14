@@ -396,20 +396,30 @@ endif()
 
 if (WIN32)
     if (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-        # Make sure that no header adds libcmt by default using
-        # #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
-        # Error message this fixes:
+        # MSVC has four incompatible C runtime libraries: static (libcmt),
+        # static debug (libcmtd), shared (msvcrt) and shared debug (msvcrtd):
+        # see http://support.microsoft.com/kb/154753
+        #
+        # By default, when you create static libraries, they are automatically
+        # linked against either libcmt or libcmtd, and when you create shared
+        # libraries, they are automatically linked against either msvcrt or
+        # msvcrtd. Trying to link to both a library that links to libcmt and
+        # library that links to mscvrt, for example, will produce a warning as
+        # described at
+        # http://msdn.microsoft.com/en-us/library/aa267384%28VS.60%29.aspx
+        # and can produce link errors like
         #    "__thiscall type_info::type_info(class type_info const &)"
         #    (??0type_info@@AAE@ABV0@@Z) already defined in LIBCMT.lib(typinfo.obj)
-        # See http://msdn.microsoft.com/en-us/library/aa267384%28VS.60%29.aspx
-        # and http://support.microsoft.com/kb/154753
-        # FIXME: is this still an issue with Visual Studio 2010 and later?
+        #
+        # It is actually the options passed to the compiler, rather than the
+        # linker, which control what will be linked (/MT, /MTd, /MD or /MDd),
+        # but we can override this by telling the linker to ignore any "libcmt"
+        # or "libcmtd" link suggestion embedded in the object files, and instead
+        # link against the shared versions. That way, everything will link
+        # against the same runtime library.
         set(CMAKE_EXE_LINKER_FLAGS_RELEASE "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
         set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO}")
         set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt ${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL}")
-        # use the debug versions of the libraries for debug builds
-        # if we just set /NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt unconditionally in CMAKE_EXE_LINKER_FLAGS we end up
-        # linking to the debug and the release C runtime at the same time which will cause crashes
         set(CMAKE_EXE_LINKER_FLAGS_DEBUG "/NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
     endif()
 endif()
