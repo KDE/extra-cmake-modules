@@ -1,10 +1,11 @@
 find_package(Qt5Core QUIET)
 
+set(_qmake_executable_default "qmake-qt5")
 if (TARGET Qt5::qmake)
-  get_target_property(QMAKE_EXECUTABLE Qt5::qmake LOCATION)
-else()
-  set(QMAKE_EXECUTABLE "qmake-qt5" CACHE)
+    get_target_property(_qmake_executable_default Qt5::qmake LOCATION)
 endif()
+set(QMAKE_EXECUTABLE "qmake-qt5"
+    CACHE FILEPATH "Location of the Qt5 qmake executable")
 
 # This is not public API (yet)!
 function(query_qmake result_variable qt_variable)
