@@ -1,4 +1,4 @@
-#include <ecm_old_header_abspath_version.h>
+#include <ecm_new_explicit_header_abspath_version.h>
 #include <string.h>
 #include <stdio.h>
 
