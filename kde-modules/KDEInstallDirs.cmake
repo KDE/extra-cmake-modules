@@ -9,9 +9,9 @@
 #
 # Inclusion of this module defines the following variables:
 #
-# ``CMAKE_INSTALL_<dir>``
+# ``KDE_INSTALL_<dir>``
 #     destination for files of a given type
-# ``CMAKE_INSTALL_FULL_<dir>``
+# ``KDE_INSTALL_FULL_<dir>``
 #     corresponding absolute path
 #
 # where ``<dir>`` is one of (default values in parentheses and alternative,
@@ -115,7 +115,7 @@
 #     [``DBUS_SYSTEM_SERVICES_INSTALL_DIR``]
 # ``SYSCONFDIR``
 #     read-only single-machine data
-#     (``etc``, or ``/etc`` if ``CMAKE_INSTALL_DIR`` is ``/usr``)
+#     (``etc``, or ``/etc`` if ``CMAKE_INSTALL_PREFIX`` is ``/usr``)
 #     [``SYSCONF_INSTALL_DIR``]
 # ``CONFDIR``
 #     application configuration files (``SYSCONFDIR/xdg``)
@@ -123,28 +123,44 @@
 # ``AUTOSTARTDIR``
 #     autostart files (``CONFDIR/autostart``) [``AUTOSTART_INSTALL_DIR``]
 #
-# The ``CMAKE_INSTALL_<dir>`` variables (or their deprecated counterparts) may
-# be passed to the DESTINATION options of ``install()`` commands for the
-# corresponding file type.  They are set in the CMake cache, and so the
-# defaults above can be overridden by users.
+# If ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE before including this
+# module, the deprecated variables (listed in the square brackets above) are
+# not defined.
 #
-# Note that either the ``CMAKE_INSTALL_<dir>`` form of the variable or the
-# deprecated form can be changed using CMake command line variable definitions;
-# in either case, both forms of the variable will be affected. The effect of
-# passing both forms on the command line is undefined.
+# In addition, for each ``KDE_INSTALL_*`` variable, an equivalent
+# ``CMAKE_INSTALL_*`` variable is defined. If
+# ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE, only those variables
+# defined by the ``GNUInstallDirs`` module (shipped with CMake) are defined.
+# If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to TRUE, no variables with
+# a ``CMAKE_`` prefix will be defined by this module.
 #
-# The variable ``INSTALL_TARGETS_DEFAULT_ARGS`` is also defined.  This should
-# be used when libraries or user-executable applications are installed, in the
+# The ``KDE_INSTALL_<dir>`` variables (or their ``CMAKE_INSTALL_<dir>`` or
+# deprecated counterparts) may be passed to the DESTINATION options of
+# ``install()`` commands for the corresponding file type.  They are set in the
+# CMake cache, and so the defaults above can be overridden by users.
+#
+# Note that the ``KDE_INSTALL_<dir>``, ``CMAKE_INSTALL_<dir>`` or deprecated
+# form of the variable can be changed using CMake command line variable
+# definitions; in either case, all forms of the variable will be affected. The
+# effect of passing multiple forms of the same variable on the command line
+# (such as ``KDE_INSTALL_BINDIR`` and ``CMAKE_INSTALL_BINDIR`` is undefined.
+#
+# The variable ``KDE_INSTALL_TARGETS_DEFAULT_ARGS`` is also defined (along with
+# the deprecated form ``INSTALL_TARGETS_DEFAULT_ARGS``).  This should be used
+# when libraries or user-executable applications are installed, in the
 # following manner:
 #
 # .. code-block:: cmake
 #
-#   install(TARGETS mylib myapp ${INSTALL_TARGETS_DEFAULT_ARGS})
+#   install(TARGETS mylib myapp ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 #
 # It MUST NOT be used for installing plugins, system admin executables or
 # executables only intended for use internally by other code.  Those should use
-# ``CMAKE_INSTALL_PLUGINDIR``, ``CMAKE_INSTALL_SBINDIR`` or
-# ``CMAKE_INSTALL_LIBEXECDIR`` respectively.
+# ``KDE_INSTALL_PLUGINDIR``, ``KDE_INSTALL_SBINDIR`` or
+# ``KDE_INSTALL_LIBEXECDIR`` respectively.
+#
+# Additionally, ``CMAKE_INSTALL_DEFAULT_COMPONENT_NAME`` will be set to
+# ``${PROJECT_NAME}`` to provide a sensible default for this CMake option.
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>
@@ -196,6 +212,23 @@ if((CMAKE_SYSTEM_NAME MATCHES "Linux|kFreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "GN
   endif()
 endif()
 
+set(_gnu_install_dirs_vars
+    BINDIR
+    SBINDIR
+    LIBEXECDIR
+    SYSCONFDIR
+    SHAREDSTATEDIR
+    LOCALSTATEDIR
+    LIBDIR
+    INCLUDEDIR
+    OLDINCLUDEDIR
+    DATAROOTDIR
+    DATADIR
+    INFODIR
+    LOCALEDIR
+    MANDIR
+    DOCDIR)
+
 # Macro for variables that are relative to another variable. We store an empty
 # value in the cache (for documentation/GUI cache editor purposes), and store
 # the default value in a local variable. If the cache variable is ever set to
@@ -203,17 +236,24 @@ endif()
 # the cache variable remains (or is set to be) empty, the value will be
 # relative to that of the parent variable.
 #
-# varname:   the variable name suffix (eg: BINDIR for CMAKE_INSTALL_BINDIR)
+# varname:   the variable name suffix (eg: BINDIR for KDE_INSTALL_BINDIR)
 # parent:    the variable suffix of the variable this is relative to
-#            (eg: DATAROOTDIR for CMAKE_INSTALL_DATAROOTDIR)
-# subdir:    the path of the default value of CMAKE_INSTALL_${varname}
-#            relative to CMAKE_INSTALL_${parent}: no leading /
+#            (eg: DATAROOTDIR for KDE_INSTALL_DATAROOTDIR)
+# subdir:    the path of the default value of KDE_INSTALL_${varname}
+#            relative to KDE_INSTALL_${parent}: no leading /
 # docstring: documentation about the variable (not including the default value)
 # oldstylename (optional): the old-style name of the variable
 macro(_define_relative varname parent subdir docstring)
     set(_oldstylename)
-    if(${ARGC} GREATER 4)
+    if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED AND ${ARGC} GREATER 4)
         set(_oldstylename "${ARGV4}")
+    endif()
+    set(_cmakename)
+    if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES)
+        list(FIND _gnu_install_dirs_vars "${varname}" _list_offset)
+        if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED OR NOT _list_offset EQUAL -1)
+            set(_cmakename CMAKE_INSTALL_${varname})
+        endif()
     endif()
 
     # Surprisingly complex logic to deal with joining paths.
@@ -223,14 +263,14 @@ macro(_define_relative varname parent subdir docstring)
     set(_subdir "${subdir}")
     if(_parent AND _subdir)
         set(_docpath "${_parent}/${_subdir}")
-        if(CMAKE_INSTALL_${_parent})
-            set(_realpath "${CMAKE_INSTALL_${_parent}}/${_subdir}")
+        if(KDE_INSTALL_${_parent})
+            set(_realpath "${KDE_INSTALL_${_parent}}/${_subdir}")
         else()
             set(_realpath "${_subdir}")
         endif()
     elseif(_parent)
         set(_docpath "${_parent}")
-        set(_realpath "${CMAKE_INSTALL_${_parent}}")
+        set(_realpath "${KDE_INSTALL_${_parent}}")
     else()
         set(_docpath "${_subdir}")
         set(_realpath "${_subdir}")
@@ -239,48 +279,82 @@ macro(_define_relative varname parent subdir docstring)
     if(${_oldstylename})
         # The old name was given (probably on the command line): move
         # it to the new name
-        set(CMAKE_INSTALL_${varname} "${${_oldstylename}}"
+        set(KDE_INSTALL_${varname} "${${_oldstylename}}"
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
         unset(${_oldstylename} CACHE)
-    elseif(NOT CMAKE_INSTALL_${varname})
-        set(CMAKE_INSTALL_${varname} ""
+        if(_cmakename AND ${_cmakename})
+            unset(${_cmakename} CACHE)
+        endif()
+    elseif(${_cmakename})
+        # The CMAKE_ name was given (probably on the command line): move
+        # it to the new name
+        set(KDE_INSTALL_${varname} "${${_cmakename}}"
+            CACHE PATH
+                  "${docstring} (${_docpath})"
+                  FORCE)
+        unset(${_cmakename} CACHE)
+    elseif(NOT KDE_INSTALL_${varname})
+        set(KDE_INSTALL_${varname} ""
             CACHE PATH "${docstring} (${_docpath})")
-        set(CMAKE_INSTALL_${varname} "${_realpath}")
+        set(KDE_INSTALL_${varname} "${_realpath}")
     else()
-        get_property(_iscached CACHE CMAKE_INSTALL_${varname} PROPERTY VALUE SET)
+        get_property(_iscached CACHE KDE_INSTALL_${varname} PROPERTY VALUE SET)
         if (_iscached)
             # make sure the docs are still set if it was passed on the command line
-            set_property(CACHE CMAKE_INSTALL_${varname}
+            set_property(CACHE KDE_INSTALL_${varname}
                 PROPERTY HELPSTRING "${docstring} (${_docpath})")
             # make sure the type is correct if it was passed on the command line
-            set_property(CACHE CMAKE_INSTALL_${varname}
+            set_property(CACHE KDE_INSTALL_${varname}
                 PROPERTY TYPE PATH)
         endif()
     endif()
 
-    if(_oldstylename)
-        set(${_oldstylename} "${CMAKE_INSTALL_${varname}}")
+    mark_as_advanced(KDE_INSTALL_${varname})
+
+    if(NOT IS_ABSOLUTE ${KDE_INSTALL_${varname}})
+        set(KDE_INSTALL_FULL_${varname}
+            "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_${varname}}")
+    else()
+        set(KDE_INSTALL_FULL_${varname} "${KDE_INSTALL_${varname}}")
     endif()
 
-    mark_as_advanced(CMAKE_INSTALL_${varname})
+    if(_cmakename)
+        set(${_cmakename} "${KDE_INSTALL_${varname}}")
+        set(CMAKE_INSTALL_FULL_${varname} "${KDE_INSTALL_FULL_${varname}}")
+    endif()
 
-    if(NOT IS_ABSOLUTE ${CMAKE_INSTALL_${varname}})
-        set(CMAKE_INSTALL_FULL_${varname}
-            "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_${varname}}")
-    else()
-        set(CMAKE_INSTALL_FULL_${varname} "${CMAKE_INSTALL_${varname}}")
+    if(_oldstylename)
+        set(${_oldstylename} "${KDE_INSTALL_${varname}}")
     endif()
 endmacro()
 
-# varname:   the variable name suffix (eg: BINDIR for CMAKE_INSTALL_BINDIR)
-# dir:       the relative path of the default value of CMAKE_INSTALL_${varname}
+# varname:   the variable name suffix (eg: BINDIR for KDE_INSTALL_BINDIR)
+# dir:       the relative path of the default value of KDE_INSTALL_${varname}
 #            relative to CMAKE_INSTALL_PREFIX: no leading /
 # docstring: documentation about the variable (not including the default value)
 # oldstylename (optional): the old-style name of the variable
 macro(_define_absolute varname dir docstring)
     _define_relative("${varname}" "" "${dir}" "${docstring}" ${ARGN})
+endmacro()
+
+macro(_define_non_cache varname value)
+    set(KDE_INSTALL_${varname} "${value}")
+    if(NOT IS_ABSOLUTE ${KDE_INSTALL_${varname}})
+        set(KDE_INSTALL_FULL_${varname}
+            "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_${varname}}")
+    else()
+        set(KDE_INSTALL_FULL_${varname} "${KDE_INSTALL_${varname}}")
+    endif()
+
+    if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES)
+        list(FIND _gnu_install_dirs_vars "${varname}" _list_offset)
+        if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED OR NOT _list_offset EQUAL -1)
+            set(CMAKE_INSTALL_${varname} "${KDE_INSTALL_${varname}}")
+            set(CMAKE_INSTALL_FULL_${varname} "${KDE_INSTALL_FULL_${varname}}")
+        endif()
+    endif()
 endmacro()
 
 if(APPLE)
@@ -309,16 +383,16 @@ if(WIN32)
     _define_relative(LIBEXECDIR BINDIR ""
         "executables for internal use by programs and libraries"
         LIBEXEC_INSTALL_DIR)
-    set(CMAKE_INSTALL_LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}")
-    set(CMAKE_INSTALL_FULL_LIBEXECDIR_KF5 "${CMAKE_INSTALL_FULL_LIBEXECDIR}")
+    _define_non_cache(LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}")
 else()
     _define_relative(LIBEXECDIR LIBDIR "libexec"
         "executables for internal use by programs and libraries"
         LIBEXEC_INSTALL_DIR)
-    set(CMAKE_INSTALL_LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}/kf5")
-    set(CMAKE_INSTALL_FULL_LIBEXECDIR_KF5 "${CMAKE_INSTALL_FULL_LIBEXECDIR}/kf5")
+    _define_non_cache(LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}/kf5")
 endif()
-set(KF5_LIBEXEC_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR_KF5}")
+if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
+    set(KF5_LIBEXEC_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR_KF5}")
+endif()
 _define_relative(CMAKEPACKAGEDIR LIBDIR "cmake"
     "CMake packages, including config files"
     CMAKECONFIG_INSTALL_PREFIX)
@@ -366,9 +440,10 @@ _define_relative(PLUGINDIR QTPLUGINDIR ""
 _define_absolute(INCLUDEDIR "include"
     "C and C++ header files"
     INCLUDE_INSTALL_DIR)
-set(CMAKE_INSTALL_INCLUDEDIR_KF5 "${CMAKE_INSTALL_INCLUDEDIR}/KF5")
-set(CMAKE_INSTALL_FULL_INCLUDEDIR_KF5 "${CMAKE_INSTALL_FULL_INCLUDEDIR}/KF5")
-set(KF5_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR_KF5}")
+_define_non_cache(INCLUDEDIR_KF5 "${CMAKE_INSTALL_INCLUDEDIR}/kf5")
+if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
+    set(KF5_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR_KF5}")
+endif()
 
 _define_absolute(LOCALSTATEDIR "var"
     "modifiable single-machine data")
@@ -386,9 +461,10 @@ _define_absolute(DATAROOTDIR "share"
 _define_relative(DATADIR DATAROOTDIR ""
     "read-only architecture-independent data"
     DATA_INSTALL_DIR)
-set(CMAKE_INSTALL_DATADIR_KF5 "${CMAKE_INSTALL_DATADIR}/kf5")
-set(CMAKE_INSTALL_FULL_DATADIR_KF5 "${CMAKE_INSTALL_FULL_DATADIR}/kf5")
-set(KF5_DATA_INSTALL_DIR "${CMAKE_INSTALL_DATADIR_KF5}")
+_define_non_cache(DATADIR_KF5 "${CMAKE_INSTALL_DATADIR}/kf5")
+if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
+    set(KF5_DATA_INSTALL_DIR "${CMAKE_INSTALL_DATADIR_KF5}")
+endif()
 
 # KDE Framework-specific things
 _define_relative(DOCBUNDLEDIR DATAROOTDIR "doc/HTML"
@@ -488,10 +564,10 @@ _define_relative(AUTOSTARTDIR CONFDIR "autostart"
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
 # FIXME: why is INCLUDES (only) set for ARCHIVE targets?
-set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-                                  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-                                  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
-                                  INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                                      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+                                      INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                       LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -499,17 +575,20 @@ set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDI
                                       INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR_KF5}"
 )
 
-
 # on the Mac support an extra install directory for application bundles
 if(APPLE)
-  set(INSTALL_TARGETS_DEFAULT_ARGS  ${INSTALL_TARGETS_DEFAULT_ARGS}
-                                    BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
-  set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
-                                    BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
+    set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  ${INSTALL_TARGETS_DEFAULT_ARGS}
+                                          BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
+    set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
+                                          BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
 endif(APPLE)
+
+if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
+    set(INSTALL_TARGETS_DEFAULT_ARGS ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+endif()
 
 # new in cmake 2.8.9: this is used for all installed files which do not have a component set
 # so set the default component name to the name of the project, if a project name has been set:
 if(NOT "${PROJECT_NAME}" STREQUAL "Project")
-  set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "${PROJECT_NAME}")
+    set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "${PROJECT_NAME}")
 endif()

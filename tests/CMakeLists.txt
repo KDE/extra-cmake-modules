@@ -10,20 +10,24 @@ add_subdirectory(ECMGeneratePkgConfigFile)
 
 # a macro for tests that have a simple format where the name matches the
 # directory and project
-macro(ADD_TEST_MACRO NAME COMMAND)
-  string(REPLACE "." "/" dir "${NAME}")
-  string(REGEX REPLACE "[^.]*\\." "" proj "${NAME}")
-  add_test(${NAME} ${CMAKE_CTEST_COMMAND}
-    --build-and-test
-    "${CMAKE_CURRENT_SOURCE_DIR}/${dir}"
-    "${CMAKE_CURRENT_BINARY_DIR}/${dir}"
-    --build-two-config
-    --build-generator ${CMAKE_GENERATOR}
-    --build-makeprogram ${CMAKE_MAKE_PROGRAM}
-    --build-project ${proj}
-    ${${NAME}_EXTRA_OPTIONS}
-    --test-command ${COMMAND} ${ARGN})
-endmacro(ADD_TEST_MACRO)
+macro(add_test_variant NAME BASE COMMAND)
+    string(REPLACE "." "/" src_dir "${BASE}")
+    string(REPLACE "." "/" build_dir "${NAME}")
+    string(REGEX REPLACE "[^.]*\\." "" proj "${NAME}")
+    add_test(${NAME} ${CMAKE_CTEST_COMMAND}
+        --build-and-test
+        "${CMAKE_CURRENT_SOURCE_DIR}/${src_dir}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${build_dir}"
+        --build-two-config
+        --build-generator ${CMAKE_GENERATOR}
+        --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+        --build-project ${proj}
+        ${${NAME}_EXTRA_OPTIONS}
+        --test-command ${COMMAND} ${ARGN})
+endmacro()
+macro(add_test_macro NAME)
+    add_test_variant("${NAME}" "${NAME}" ${ARGN})
+endmacro()
 
 find_package(Qt5LinguistTools CONFIG)
 
@@ -32,9 +36,22 @@ add_test_macro(ExecuteKDEModules dummy)
 
 add_test_macro(KDEInstallDirsTest.vars_defined dummy)
 add_test_macro(KDEInstallDirsTest.not_cache_variable dummy)
+
+add_test_variant(KDEInstallDirsTest.vars_in_sync_no_args
+                 KDEInstallDirsTest.vars_in_sync dummy)
+
+set(KDEInstallDirsTest.vars_in_sync_args_EXTRA_OPTIONS
+    --build-options -DCMAKE_INSTALL_DATADIR=altdata
+                    -DKDE_INSTALL_BINDIR=altbin
+                    -DLIB_INSTALL_DIR=altlib
+    )
+add_test_variant(KDEInstallDirsTest.vars_in_sync_args
+                 KDEInstallDirsTest.vars_in_sync dummy)
+
 set(KDEInstallDirsTest.usr_vars_defined_EXTRA_OPTIONS
     --build-options -DCMAKE_INSTALL_PREFIX=/usr)
 add_test_macro(KDEInstallDirsTest.usr_vars_defined dummy)
+
 find_package(Qt5Core QUIET)
 if (TARGET Qt5::qmake)
     set(KDEInstallDirsTest.qt_vars_defined_EXTRA_OPTIONS
