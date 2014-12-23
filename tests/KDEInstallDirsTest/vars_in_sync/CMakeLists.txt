@@ -6,168 +6,32 @@ set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules)
 set(CMAKE_MODULE_PATH "${ECM_KDE_MODULE_DIR}")
 include(KDEInstallDirs)
 
-set(var_suffixes
-    APPDIR
-    AUTOSTARTDIR
-    BINDIR
-    CMAKEPACKAGEDIR
-    CONFDIR
-    DATADIR
-    DATADIR_KF5
-    DATAROOTDIR
-    DBUSDIR
-    DBUSINTERFACEDIR
-    DBUSSERVICEDIR
-    DBUSSYSTEMSERVICEDIR
-    DESKTOPDIR
-    DOCBUNDLEDIR
-    EXECROOTDIR
-    ICONDIR
-    INCLUDEDIR
-    INCLUDEDIR_KF5
-    INFODIR
-    KCFGDIR
-    KCONFUPDATEDIR
-    KNOTIFY5RCDIR
-    KXMLGUI5DIR
-    KSERVICES5DIR
-    KSERVICETYPES5DIR
-    LIBDIR
-    LIBEXECDIR
-    LIBEXECDIR_KF5
-    LOCALEDIR
-    LOCALSTATEDIR
-    MANDIR
-    MIMEDIR
-    METAINFODIR
-    PLUGINDIR
-    QMLDIR
-    QTPLUGINDIR
-    QTQUICKIMPORTSDIR
-    SBINDIR
-    SHAREDSTATEDIR
-    SOUNDDIR
-    SYSCONFDIR
-    TEMPLATEDIR
-    WALLPAPERDIR)
-
-set(COMPAT_APPDIR XDG_APPS_INSTALL_DIR)
-set(COMPAT_AUTOSTARTDIR AUTOSTART_INSTALL_DIR)
-set(COMPAT_BINDIR BIN_INSTALL_DIR)
-set(COMPAT_CMAKEPACKAGEDIR CMAKECONFIG_INSTALL_PREFIX)
-set(COMPAT_CONFDIR CONFIG_INSTALL_DIR)
-set(COMPAT_DATADIR DATA_INSTALL_DIR)
-set(COMPAT_DATADIR_KF5 KF5_DATA_INSTALL_DIR)
-set(COMPAT_DATAROOTDIR SHARE_INSTALL_PREFIX)
-set(COMPAT_DBUSINTERFACEDIR DBUS_INTERFACES_INSTALL_DIR)
-set(COMPAT_DBUSSERVICEDIR DBUS_SERVICES_INSTALL_DIR)
-set(COMPAT_DBUSSYSTEMSERVICEDIR DBUS_SYSTEM_SERVICES_INSTALL_DIR)
-set(COMPAT_DESKTOPDIR XDG_DIRECTORY_INSTALL_DIR)
-set(COMPAT_DOCBUNDLEDIR HTML_INSTALL_DIR)
-set(COMPAT_EXECROOTDIR EXEC_INSTALL_PREFIX)
-set(COMPAT_ICONDIR ICON_INSTALL_DIR)
-set(COMPAT_INCLUDEDIR INCLUDE_INSTALL_DIR)
-set(COMPAT_INCLUDEDIR_KF5 KF5_INCLUDE_INSTALL_DIR)
-set(COMPAT_KCFGDIR KCFG_INSTALL_DIR)
-set(COMPAT_KCONFUPDATEDIR KCONF_UPDATE_INSTALL_DIR)
-set(COMPAT_KNOTIFY5RCDIR KNOTIFYRC_INSTALL_DIR)
-set(COMPAT_KXMLGUI5DIR KXMLGUI_INSTALL_DIR)
-set(COMPAT_KSERVICES5DIR SERVICES_INSTALL_DIR)
-set(COMPAT_KSERVICETYPES5DIR SERVICETYPES_INSTALL_DIR)
-set(COMPAT_LIBDIR LIB_INSTALL_DIR)
-set(COMPAT_LIBEXECDIR LIBEXEC_INSTALL_DIR)
-set(COMPAT_LIBEXECDIR_KF5 KF5_LIBEXEC_INSTALL_DIR)
-set(COMPAT_LOCALEDIR LOCALE_INSTALL_DIR)
-set(COMPAT_MANDIR MAN_INSTALL_DIR)
-set(COMPAT_MIMEDIR XDG_MIME_INSTALL_DIR)
-set(COMPAT_PLUGINDIR PLUGIN_INSTALL_DIR)
-set(COMPAT_QMLDIR QML_INSTALL_DIR)
-set(COMPAT_QTPLUGINDIR QT_PLUGIN_INSTALL_DIR)
-set(COMPAT_QTQUICKIMPORTSDIR IMPORTS_INSTALL_DIR)
-set(COMPAT_SBINDIR SBIN_INSTALL_DIR)
-set(COMPAT_SOUNDDIR SOUND_INSTALL_DIR)
-set(COMPAT_SYSCONFDIR SYSCONF_INSTALL_DIR)
-set(COMPAT_TEMPLATEDIR TEMPLATES_INSTALL_DIR)
-set(COMPAT_WALLPAPERDIR WALLPAPER_INSTALL_DIR)
-if(APPLE)
-    set(COMPAT_BUNDLEDIR BUNDLE_INSTALL_DIR)
-    list(APPEND var_suffixes BUNDLEDIR)
-endif()
-
-set(gnu_install_dirs_suffixes
-    BINDIR
-    SBINDIR
-    LIBEXECDIR
-    SYSCONFDIR
-    SHAREDSTATEDIR
-    LOCALSTATEDIR
-    LIBDIR
-    INCLUDEDIR
-    OLDINCLUDEDIR
-    DATAROOTDIR
-    DATADIR
-    INFODIR
-    LOCALEDIR
-    MANDIR
-    DOCDIR)
-
-macro(assert_defined varname)
-    if(NOT DEFINED ${varname})
-        message(SEND_ERROR "${varname} is not defined.")
-    endif()
-endmacro()
-macro(assert_non_empty varname)
-    assert_defined(${varname})
-    if(NOT ${varname})
-        message(SEND_ERROR "${varname} is empty")
-    endif()
-endmacro()
-macro(assert_str_equal varname exp_varname)
-    assert_defined(${varname})
-    if(NOT ${varname} STREQUAL ${exp_varname})
-        message(SEND_ERROR "${varname} is '${${varname}}', expecting '${${exp_varname}}'.")
-    endif()
-endmacro()
-set(FOO bax)
-assert_defined(FOO)
-set(BAR bax)
-assert_str_equal(FOO BAR)
+include(../var_list.cmake)
+include(../../test_helpers.cmake)
 
 foreach(suffix ${var_suffixes})
-    assert_defined(KDE_INSTALL_${suffix})
-    assert_defined(KDE_INSTALL_FULL_${suffix})
-
-    set(should_have_cmake_var TRUE)
-    if(KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES)
-        set(should_have_cmake_var FALSE)
-    elseif(KDE_INSTALL_DIRS_NO_DEPRECATED)
-        list(FIND gnu_install_dirs_suffixes "${suffix}" _list_offset)
-        if(_list_offset EQUAL -1)
-            set(should_have_cmake_var FALSE)
-        endif()
+    assert_var_defined(KDE_INSTALL_${suffix})
+    if(DEFINED ${suffix}_expected_value)
+        assert_vars_strequal(KDE_INSTALL_${suffix} ${suffix}_expected_value)
     endif()
-    if(should_have_cmake_var)
-        assert_str_equal(CMAKE_INSTALL_${suffix} KDE_INSTALL_${suffix})
-        assert_str_equal(CMAKE_INSTALL_FULL_${suffix} KDE_INSTALL_FULL_${suffix})
+    assert_var_defined(KDE_INSTALL_FULL_${suffix})
+
+    if(should_set_CMAKE_INSTALL_${suffix})
+        assert_vars_strequal(CMAKE_INSTALL_${suffix} KDE_INSTALL_${suffix})
+        assert_vars_strequal(CMAKE_INSTALL_FULL_${suffix} KDE_INSTALL_FULL_${suffix})
     endif()
 
-    set(should_have_compat_var TRUE)
-    if(NOT DEFINED COMPAT_${suffix})
-        set(should_have_compat_var FALSE)
-    elseif(KDE_INSTALL_DIRS_NO_DEPRECATED)
-        set(should_have_compat_var FALSE)
-    endif()
-    if(should_have_compat_var)
-        assert_str_equal(${COMPAT_${suffix}} KDE_INSTALL_${suffix})
+    if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED AND DEFINED compat_${suffix})
+        assert_vars_strequal(${compat_${suffix}} KDE_INSTALL_${suffix})
     endif()
 endforeach()
 
-assert_defined(KF5_INSTALL_TARGETS_DEFAULT_ARGS)
-assert_defined(KDE_INSTALL_TARGETS_DEFAULT_ARGS)
+assert_var_defined(KF5_INSTALL_TARGETS_DEFAULT_ARGS)
+assert_var_defined(KDE_INSTALL_TARGETS_DEFAULT_ARGS)
 if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES AND
    NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
-    assert_str_equal(INSTALL_TARGETS_DEFAULT_ARGS
-                     KDE_INSTALL_TARGETS_DEFAULT_ARGS)
+    assert_vars_strequal(INSTALL_TARGETS_DEFAULT_ARGS
+                         KDE_INSTALL_TARGETS_DEFAULT_ARGS)
 endif()
 
 add_executable(dummy main.c)

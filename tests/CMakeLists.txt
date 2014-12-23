@@ -34,29 +34,52 @@ find_package(Qt5LinguistTools CONFIG)
 add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
 
-add_test_macro(KDEInstallDirsTest.vars_defined dummy)
-add_test_macro(KDEInstallDirsTest.not_cache_variable dummy)
-
+add_test_macro(KDEInstallDirsTest.relative_or_absolute dummy)
 add_test_variant(KDEInstallDirsTest.vars_in_sync_no_args
                  KDEInstallDirsTest.vars_in_sync dummy)
+add_test_macro(KDEInstallDirsTest.not_cache_variable dummy)
 
-set(KDEInstallDirsTest.vars_in_sync_args_EXTRA_OPTIONS
-    --build-options -DCMAKE_INSTALL_DATADIR=altdata
-                    -DKDE_INSTALL_BINDIR=altbin
-                    -DLIB_INSTALL_DIR=altlib
+set(KDEInstallDirsTest.vars_in_sync_kde_arg_EXTRA_OPTIONS
+    --build-options -DKDE_INSTALL_BINDIR=altbin
+                    -DBINDIR_expected_value=altbin
     )
-add_test_variant(KDEInstallDirsTest.vars_in_sync_args
+add_test_variant(KDEInstallDirsTest.vars_in_sync_kde_arg
                  KDEInstallDirsTest.vars_in_sync dummy)
 
-set(KDEInstallDirsTest.usr_vars_defined_EXTRA_OPTIONS
-    --build-options -DCMAKE_INSTALL_PREFIX=/usr)
-add_test_macro(KDEInstallDirsTest.usr_vars_defined dummy)
+set(KDEInstallDirsTest.vars_in_sync_cmake_arg_EXTRA_OPTIONS
+    --build-options -DCMAKE_INSTALL_BINDIR=altbin
+                    -DBINDIR_expected_value=altbin
+    )
+add_test_variant(KDEInstallDirsTest.vars_in_sync_cmake_arg
+                 KDEInstallDirsTest.vars_in_sync dummy)
+
+set(KDEInstallDirsTest.vars_in_sync_oldstyle_arg_EXTRA_OPTIONS
+    --build-options -DBIN_INSTALL_DIR=altbin
+                    -DBINDIR_expected_value=altbin
+    )
+add_test_variant(KDEInstallDirsTest.vars_in_sync_oldstyle_arg
+                 KDEInstallDirsTest.vars_in_sync dummy)
+
+set(KDEInstallDirsTest.relative_or_absolute_usr_EXTRA_OPTIONS
+    --build-options -DCMAKE_INSTALL_PREFIX=/usr
+                    -DAUTOSTARTDIR_should_be_absolute=TRUE
+                    -DCONFDIR_should_be_absolute=TRUE
+                    -DSYSCONFDIR_should_be_absolute=TRUE
+    )
+add_test_variant(KDEInstallDirsTest.relative_or_absolute_usr
+                 KDEInstallDirsTest.relative_or_absolute dummy)
 
 find_package(Qt5Core QUIET)
 if (TARGET Qt5::qmake)
-    set(KDEInstallDirsTest.qt_vars_defined_EXTRA_OPTIONS
-        --build-options -DKDE_INSTALL_USE_QT_SYS_PATHS=ON)
-    add_test_macro(KDEInstallDirsTest.qt_vars_defined dummy)
+    set(KDEInstallDirsTest.relative_or_absolute_qt_EXTRA_OPTIONS
+        --build-options -DKDE_INSTALL_USE_QT_SYS_PATHS=TRUE
+                        -DPLUGINDIR_should_be_absolute=TRUE
+                        -DQMLDIR_should_be_absolute=TRUE
+                        -DQTPLUGINDIR_should_be_absolute=TRUE
+                        -DQTQUICKIMPORTSDIR_should_be_absolute=TRUE
+        )
+    add_test_variant(KDEInstallDirsTest.relative_or_absolute_qt
+                     KDEInstallDirsTest.relative_or_absolute dummy)
 endif ()
 
 add_test_macro(FindModules dummy)
