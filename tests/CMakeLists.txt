@@ -42,6 +42,7 @@ add_test_macro(KDEInstallDirsTest.not_cache_variable dummy)
 set(KDEInstallDirsTest.vars_in_sync_kde_arg_EXTRA_OPTIONS
     --build-options -DKDE_INSTALL_BINDIR=altbin
                     -DBINDIR_expected_value=altbin
+                    -DCMAKE_WARN_DEPRECATED=TRUE
     )
 add_test_variant(KDEInstallDirsTest.vars_in_sync_kde_arg
                  KDEInstallDirsTest.vars_in_sync dummy)
@@ -49,6 +50,7 @@ add_test_variant(KDEInstallDirsTest.vars_in_sync_kde_arg
 set(KDEInstallDirsTest.vars_in_sync_cmake_arg_EXTRA_OPTIONS
     --build-options -DCMAKE_INSTALL_BINDIR=altbin
                     -DBINDIR_expected_value=altbin
+                    -DCMAKE_WARN_DEPRECATED=TRUE
     )
 add_test_variant(KDEInstallDirsTest.vars_in_sync_cmake_arg
                  KDEInstallDirsTest.vars_in_sync dummy)
@@ -56,6 +58,7 @@ add_test_variant(KDEInstallDirsTest.vars_in_sync_cmake_arg
 set(KDEInstallDirsTest.vars_in_sync_oldstyle_arg_EXTRA_OPTIONS
     --build-options -DBIN_INSTALL_DIR=altbin
                     -DBINDIR_expected_value=altbin
+                    -DCMAKE_WARN_DEPRECATED=TRUE
     )
 add_test_variant(KDEInstallDirsTest.vars_in_sync_oldstyle_arg
                  KDEInstallDirsTest.vars_in_sync dummy)

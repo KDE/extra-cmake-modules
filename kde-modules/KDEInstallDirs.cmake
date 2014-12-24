@@ -251,8 +251,12 @@ macro(_define_relative varname parent subdir docstring)
     set(_cmakename)
     if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES)
         list(FIND _gnu_install_dirs_vars "${varname}" _list_offset)
+        set(_cmakename_is_deprecated FALSE)
         if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED OR NOT _list_offset EQUAL -1)
             set(_cmakename CMAKE_INSTALL_${varname})
+            if(_list_offset EQUAL -1)
+                set(_cmakename_is_deprecated TRUE)
+            endif()
         endif()
     endif()
 
@@ -277,6 +281,9 @@ macro(_define_relative varname parent subdir docstring)
     endif()
 
     if(${_oldstylename})
+        if(NOT CMAKE_VERSION VERSION_LESS 3.0.0)
+            message(DEPRECATION "${_oldstylename} is deprecated, use KDE_INSTALL_${varname} instead.")
+        endif()
         # The old name was given (probably on the command line): move
         # it to the new name
         set(KDE_INSTALL_${varname} "${${_oldstylename}}"
@@ -288,6 +295,9 @@ macro(_define_relative varname parent subdir docstring)
             unset(${_cmakename} CACHE)
         endif()
     elseif(${_cmakename})
+        if(_cmakename_is_deprecated AND NOT CMAKE_VERSION VERSION_LESS 3.0.0)
+            message(DEPRECATION "${_cmakename} is deprecated, use KDE_INSTALL_${varname} instead.")
+        endif()
         # The CMAKE_ name was given (probably on the command line): move
         # it to the new name
         set(KDE_INSTALL_${varname} "${${_cmakename}}"
