@@ -10,7 +10,7 @@
 #                     VARIABLE_PREFIX <prefix>
 #                     [SOVERSION <soversion>]
 #                     [VERSION_HEADER <filename>]
-#                     [PACKAGE_VERSION_FILE <filename>] )
+#                     [PACKAGE_VERSION_FILE <filename> [COMPATIBILITY <compat>]] )
 #
 # This parses a version string and sets up a standard set of version variables.
 # It can optionally also create a C version header file and a CMake package
@@ -55,7 +55,9 @@
 # file is created using the write_basic_package_version_file() macro provided by
 # CMake. It should be installed in the same location as the Config.cmake file of
 # the library so that it can be found by find_package().  If the filename is a
-# relative path, it is interpreted as relative to CMAKE_CURRENT_BINARY_DIR.
+# relative path, it is interpreted as relative to CMAKE_CURRENT_BINARY_DIR. The
+# optional COMPATIBILITY option is forwarded to
+# write_basic_package_version_file(), and defaults to AnyNewerVersion.
 #
 # If CMake policy CMP0048 is NEW, an alternative form of the command is
 # available::
@@ -94,7 +96,7 @@ set(_ECM_SETUP_VERSION_HEADER_TEMPLATE "${CMAKE_CURRENT_LIST_DIR}/ECMVersionHead
 
 function(ECM_SETUP_VERSION _version)
   set(options )
-  set(oneValueArgs VARIABLE_PREFIX SOVERSION VERSION_HEADER PACKAGE_VERSION_FILE)
+  set(oneValueArgs VARIABLE_PREFIX SOVERSION VERSION_HEADER PACKAGE_VERSION_FILE COMPATIBILITY)
   set(multiValueArgs )
 
   cmake_parse_arguments(ESV "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
@@ -175,7 +177,10 @@ function(ECM_SETUP_VERSION _version)
   endif()
 
   if(ESV_PACKAGE_VERSION_FILE)
-    write_basic_package_version_file("${ESV_PACKAGE_VERSION_FILE}" VERSION ${_version} COMPATIBILITY AnyNewerVersion)
+    if(NOT ESV_COMPATIBILITY)
+        set(ESV_COMPATIBILITY AnyNewerVersion)
+    endif()
+    write_basic_package_version_file("${ESV_PACKAGE_VERSION_FILE}" VERSION ${_version} COMPATIBILITY ${ESV_COMPATIBILITY})
   endif()
 
   if(should_set_prefixed_vars)
