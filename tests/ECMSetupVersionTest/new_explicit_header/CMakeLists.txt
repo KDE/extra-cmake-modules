@@ -10,29 +10,10 @@ ecm_setup_version(2.3.4
     VERSION_HEADER "ecm_new_explicit_header_version.h"
 )
 
-macro(strcheck var val)
-    if(NOT ${var} STREQUAL "${val}")
-        message(FATAL_ERROR "${var} was ${${var}} instead of ${val}")
-    endif()
-endmacro()
-macro(numcheck var val)
-    if(NOT ${var} EQUAL "${val}")
-        message(FATAL_ERROR "${var} was ${${var}} instead of ${val}")
-    endif()
-endmacro()
-
-strcheck(PROJECT_VERSION "1.5.6.7")
-strcheck(PROJECT_VERSION_STRING "1.5.6.7")
-numcheck(PROJECT_VERSION_MAJOR 1)
-numcheck(PROJECT_VERSION_MINOR 5)
-numcheck(PROJECT_VERSION_PATCH 6)
-
-strcheck(Foo_VERSION "2.3.4")
-strcheck(Foo_VERSION_STRING "2.3.4")
-numcheck(Foo_VERSION_MAJOR 2)
-numcheck(Foo_VERSION_MINOR 3)
-numcheck(Foo_VERSION_PATCH 4)
-numcheck(Foo_SOVERSION 2)
+include(../version_helpers.cmake)
+project_version_var_checks(1.5.6.7)
+version_var_checks(Foo 2.3.4)
+assert_var_num_value(Foo_SOVERSION 2)
 
 add_executable(check_header main.c)
 target_include_directories(check_header PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")

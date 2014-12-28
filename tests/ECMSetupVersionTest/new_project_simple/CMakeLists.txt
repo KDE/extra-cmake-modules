@@ -7,28 +7,8 @@ include(ECMSetupVersion)
 
 ecm_setup_version(PROJECT)
 
-macro(strcheck var val)
-    if(NOT ${var} STREQUAL "${val}")
-        message(FATAL_ERROR "${var} was ${${var}} instead of ${val}")
-    endif()
-endmacro()
-macro(numcheck var val)
-    if(NOT ${var} EQUAL "${val}")
-        message(FATAL_ERROR "${var} was ${${var}} instead of ${val}")
-    endif()
-endmacro()
-
-strcheck(PROJECT_VERSION "2.3.4")
-strcheck(PROJECT_VERSION_STRING "2.3.4")
-numcheck(PROJECT_VERSION_MAJOR 2)
-numcheck(PROJECT_VERSION_MINOR 3)
-numcheck(PROJECT_VERSION_PATCH 4)
-
-strcheck(new_project_simple_VERSION "2.3.4")
-strcheck(new_project_simple_VERSION_STRING "2.3.4")
-numcheck(new_project_simple_VERSION_MAJOR 2)
-numcheck(new_project_simple_VERSION_MINOR 3)
-numcheck(new_project_simple_VERSION_PATCH 4)
-numcheck(new_project_simple_SOVERSION 2)
+include(../version_helpers.cmake)
+# NB: name comes from project() command
+standard_version_var_checks(new_project_simple 2.3.4)
 
 add_executable(dummy main.c)
