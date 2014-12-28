@@ -450,7 +450,7 @@ _define_relative(PLUGINDIR QTPLUGINDIR ""
 _define_absolute(INCLUDEDIR "include"
     "C and C++ header files"
     INCLUDE_INSTALL_DIR)
-_define_non_cache(INCLUDEDIR_KF5 "${CMAKE_INSTALL_INCLUDEDIR}/kf5")
+_define_non_cache(INCLUDEDIR_KF5 "${CMAKE_INSTALL_INCLUDEDIR}/KF5")
 if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
     set(KF5_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR_KF5}")
 endif()
