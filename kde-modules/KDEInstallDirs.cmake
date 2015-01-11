@@ -162,6 +162,13 @@
 #
 # Additionally, ``CMAKE_INSTALL_DEFAULT_COMPONENT_NAME`` will be set to
 # ``${PROJECT_NAME}`` to provide a sensible default for this CMake option.
+#
+# Note that mixing absolute and relative paths, particularly for ``BINDIR``,
+# ``LIBDIR`` and ``INCLUDEDIR``, can cause issues with exported targets. Given
+# that the default values for these are relative paths, relative paths should
+# be used on the command line when possible (eg: use
+# ``-DKDE_INSTALL_LIBDIR=lib64`` instead of
+# ``-DKDE_INSTALL_LIBDIR=/usr/lib/lib64`` to override the library directory).
 
 #=============================================================================
 # Copyright 2014-2015 Alex Merry <alex.merry@kde.org>
@@ -565,6 +572,19 @@ _define_relative(AUTOSTARTDIR CONFDIR "autostart"
     "autostart files"
     AUTOSTART_INSTALL_DIR)
 
+set(_mixed_core_path_styles FALSE)
+if (IS_ABSOLUTE "${KDE_INSTALL_BINDIR}")
+    if (NOT IS_ABSOLUTE "${KDE_INSTALL_LIBDIR}" OR NOT IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR}")
+        set(_mixed_core_path_styles )
+    endif()
+else()
+    if (IS_ABSOLUTE "${KDE_INSTALL_LIBDIR}" OR IS_ABSOLUTE "${KDE_INSTALL_INCLUDEDIR}")
+        set(_mixed_core_path_styles TRUE)
+    endif()
+endif()
+if (_mixed_core_path_styles)
+    message(WARNING "KDE_INSTALL_BINDIR, KDE_INSTALL_LIBDIR and KDE_INSTALL_INCLUDEDIR should either all be absolute paths or all be relative paths.")
+endif()
 
 
 # For more documentation see above.
