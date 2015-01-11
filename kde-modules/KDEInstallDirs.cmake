@@ -163,7 +163,7 @@
 # ``${PROJECT_NAME}`` to provide a sensible default for this CMake option.
 
 #=============================================================================
-# Copyright 2014      Alex Merry <alex.merry@kde.org>
+# Copyright 2014-2015 Alex Merry <alex.merry@kde.org>
 # Copyright 2013      Stephen Kelly <steveire@gmail.com>
 # Copyright 2012      David Faure <faure@kde.org>
 # Copyright 2007      Matthias Kretz <kretz@kde.org>
@@ -280,7 +280,18 @@ macro(_define_relative varname parent subdir docstring)
         set(_realpath "${_subdir}")
     endif()
 
-    if(${_oldstylename})
+    if(KDE_INSTALL_${varname})
+        # make sure the cache documentation is set correctly
+        get_property(_iscached CACHE KDE_INSTALL_${varname} PROPERTY VALUE SET)
+        if (_iscached)
+            # make sure the docs are still set if it was passed on the command line
+            set_property(CACHE KDE_INSTALL_${varname}
+                PROPERTY HELPSTRING "${docstring} (${_docpath})")
+            # make sure the type is correct if it was passed on the command line
+            set_property(CACHE KDE_INSTALL_${varname}
+                PROPERTY TYPE PATH)
+        endif()
+    elseif(${_oldstylename})
         if(NOT CMAKE_VERSION VERSION_LESS 3.0.0)
             message(DEPRECATION "${_oldstylename} is deprecated, use KDE_INSTALL_${varname} instead.")
         endif()
@@ -290,10 +301,6 @@ macro(_define_relative varname parent subdir docstring)
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
-        unset(${_oldstylename} CACHE)
-        if(_cmakename AND ${_cmakename})
-            unset(${_cmakename} CACHE)
-        endif()
     elseif(${_cmakename})
         if(_cmakename_is_deprecated AND NOT CMAKE_VERSION VERSION_LESS 3.0.0)
             message(DEPRECATION "${_cmakename} is deprecated, use KDE_INSTALL_${varname} instead.")
@@ -304,21 +311,12 @@ macro(_define_relative varname parent subdir docstring)
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
-        unset(${_cmakename} CACHE)
-    elseif(NOT KDE_INSTALL_${varname})
+    else()
+        # insert an empty value into the cache, indicating the default
+        # should be used (including compatibility vars above)
         set(KDE_INSTALL_${varname} ""
             CACHE PATH "${docstring} (${_docpath})")
         set(KDE_INSTALL_${varname} "${_realpath}")
-    else()
-        get_property(_iscached CACHE KDE_INSTALL_${varname} PROPERTY VALUE SET)
-        if (_iscached)
-            # make sure the docs are still set if it was passed on the command line
-            set_property(CACHE KDE_INSTALL_${varname}
-                PROPERTY HELPSTRING "${docstring} (${_docpath})")
-            # make sure the type is correct if it was passed on the command line
-            set_property(CACHE KDE_INSTALL_${varname}
-                PROPERTY TYPE PATH)
-        endif()
     endif()
 
     mark_as_advanced(KDE_INSTALL_${varname})
@@ -330,6 +328,10 @@ macro(_define_relative varname parent subdir docstring)
         set(KDE_INSTALL_FULL_${varname} "${KDE_INSTALL_${varname}}")
     endif()
 
+    # Override compatibility vars at runtime, even though we don't touch
+    # them in the cache; this way, we keep the variables in sync where
+    # KDEInstallDirs is included, but don't interfere with, say,
+    # GNUInstallDirs in a parallel part of the CMake tree.
     if(_cmakename)
         set(${_cmakename} "${KDE_INSTALL_${varname}}")
         set(CMAKE_INSTALL_FULL_${varname} "${KDE_INSTALL_FULL_${varname}}")
