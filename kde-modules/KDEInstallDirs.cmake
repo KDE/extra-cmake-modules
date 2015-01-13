@@ -132,7 +132,8 @@
 # ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE, only those variables
 # defined by the ``GNUInstallDirs`` module (shipped with CMake) are defined.
 # If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to TRUE, no variables with
-# a ``CMAKE_`` prefix will be defined by this module.
+# a ``CMAKE_`` prefix will be defined by this module (other than
+# CMAKE_INSTALL_DEFAULT_COMPONENT_NAME - see below).
 #
 # The ``KDE_INSTALL_<dir>`` variables (or their ``CMAKE_INSTALL_<dir>`` or
 # deprecated counterparts) may be passed to the DESTINATION options of
