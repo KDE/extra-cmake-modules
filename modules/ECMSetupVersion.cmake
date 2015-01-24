@@ -10,9 +10,7 @@
 #                     VARIABLE_PREFIX <prefix>
 #                     [SOVERSION <soversion>]
 #                     [VERSION_HEADER <filename>]
-#                     [PACKAGE_VERSION_FILE <filename>
-#                           [COMPATIBILITY <compat>
-#                               [FIRST_PRERELEASE_VERSION <prerelease_version>]]] )
+#                     [PACKAGE_VERSION_FILE <filename> [COMPATIBILITY <compat>]] )
 #
 # This parses a version string and sets up a standard set of version variables.
 # It can optionally also create a C version header file and a CMake package
@@ -57,20 +55,9 @@
 # file is created using the write_basic_package_version_file() macro provided by
 # CMake. It should be installed in the same location as the Config.cmake file of
 # the library so that it can be found by find_package().  If the filename is a
-# relative path, it is interpreted as relative to CMAKE_CURRENT_BINARY_DIR.
-#
-# The optional COMPATIBILITY option is similar to that accepted by
-# write_basic_package_version_file(), except that it defaults to
-# AnyNewerVersion if it is omitted, and it also accepts
-# ``SameMajorVersionWithPrereleases`` as a value, in which case the
-# ``FIRST_PRERELEASE_VERSION`` option must also be given. This versioning
-# system behaves like SameMajorVersion, except that it treats all x.y releases,
-# where y is at least ``<prerelease_version>``, as (x+1) releases. So if
-# ``<prerelease_version>`` is 90, a request for version 2.90.0 will be satisfied
-# by 3.1.0, while a request for 2.89.0 will not be. Note that in this scenario,
-# version 2.90.0 of the software will not satisfy requests for version 2, version
-# version 2.1.1 *or* version 3 of the software, as prereleases are not considered
-# unless explicitly requested.
+# relative path, it is interpreted as relative to CMAKE_CURRENT_BINARY_DIR. The
+# optional COMPATIBILITY option is forwarded to
+# write_basic_package_version_file(), and defaults to AnyNewerVersion.
 #
 # If CMake policy CMP0048 is NEW, an alternative form of the command is
 # available::
@@ -106,47 +93,10 @@ include(CMakePackageConfigHelpers)
 # save the location of the header template while CMAKE_CURRENT_LIST_DIR
 # has the value we want
 set(_ECM_SETUP_VERSION_HEADER_TEMPLATE "${CMAKE_CURRENT_LIST_DIR}/ECMVersionHeader.h.in")
-set(_ECM_PACKAGE_VERSION_TEMPLATE_DIR "${CMAKE_CURRENT_LIST_DIR}")
-
-# like write_basic_package_version_file from CMake, but
-# looks for our template files as well
-function(ecm_write_package_version_file _filename)
-  set(options )
-  set(oneValueArgs VERSION COMPATIBILITY FIRST_PRERELEASE_VERSION)
-  set(multiValueArgs )
-
-  cmake_parse_arguments(CVF "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-  if(CVF_UNPARSED_ARGUMENTS)
-      message(FATAL_ERROR "Unknown keywords given to ecm_write_basic_package_version_file(): \"${CVF_UNPARSED_ARGUMENTS}\"")
-  endif()
-
-  set(versionTemplateFile "${_ECM_PACKAGE_VERSION_TEMPLATE_DIR}/BasicConfigVersion-${CVF_COMPATIBILITY}.cmake.in")
-  if(NOT EXISTS "${versionTemplateFile}")
-      write_basic_package_version_file("${_filename}" VERSION "${CVF_VERSION}" COMPATIBILITY "${CVF_COMPATIBILITY}")
-      return()
-  endif()
-
-  if("${CVF_COMPATIBILITY}" STREQUAL "SameMajorVersionWithPrereleases")
-      if("${CVF_FIRST_PRERELEASE_VERSION}" STREQUAL "")
-          message(FATAL_ERROR "No FIRST_PRERELEASE_VERSION specified for ecm_write_basic_package_version_file()")
-      endif()
-  endif()
-
-  if("${CVF_VERSION}" STREQUAL "")
-      if ("${PROJECT_VERSION}" STREQUAL "")
-          message(FATAL_ERROR "No VERSION specified for ecm_write_basic_package_version_file()")
-      else()
-          set(CVF_VERSION "${PROJECT_VERSION}")
-      endif()
-  endif()
-
-  configure_file("${versionTemplateFile}" "${_filename}" @ONLY)
-endfunction()
 
 function(ecm_setup_version _version)
     set(options )
-    set(oneValueArgs VARIABLE_PREFIX SOVERSION VERSION_HEADER PACKAGE_VERSION_FILE COMPATIBILITY FIRST_PRERELEASE_VERSION)
+    set(oneValueArgs VARIABLE_PREFIX SOVERSION VERSION_HEADER PACKAGE_VERSION_FILE COMPATIBILITY)
     set(multiValueArgs )
 
     cmake_parse_arguments(ESV "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
@@ -230,11 +180,7 @@ function(ecm_setup_version _version)
         if(NOT ESV_COMPATIBILITY)
             set(ESV_COMPATIBILITY AnyNewerVersion)
         endif()
-        ecm_write_package_version_file("${ESV_PACKAGE_VERSION_FILE}"
-            VERSION ${_version}
-            COMPATIBILITY ${ESV_COMPATIBILITY}
-            FIRST_PRERELEASE_VERSION "${ESV_FIRST_PRERELEASE_VERSION}"
-            )
+        write_basic_package_version_file("${ESV_PACKAGE_VERSION_FILE}" VERSION ${_version} COMPATIBILITY ${ESV_COMPATIBILITY})
     endif()
 
     if(should_set_prefixed_vars)
