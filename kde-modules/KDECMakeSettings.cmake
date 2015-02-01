@@ -41,6 +41,10 @@
 #
 # This section can be disabled by setting ``KDE_SKIP_BUILD_SETTINGS`` to TRUE
 # before including this module.
+#
+# This section also provides an "uninstall" target that can be individually
+# disabled by setting ``KDE_SKIP_UNINSTALL_TARGET`` to TRUE before including
+# this module.
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>
@@ -175,6 +179,11 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
       set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
       set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+   endif()
+
+   option(KDE_SKIP_UNINSTALL_TARGET "Prevent an \"uninstall\" target from being generated." OFF)
+   if(NOT KDE_SKIP_UNINSTALL_TARGET)
+       include("${ECM_MODULE_DIR}/ECMUninstallTarget.cmake")
    endif()
 
 endif()
