@@ -1,6 +1,6 @@
 #.rst:
 # FindLibGit2
-# -------
+# -----------
 #
 # Try to find libgit2 on a Unix system.
 #

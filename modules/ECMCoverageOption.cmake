@@ -11,10 +11,7 @@
 #
 # If it's on, the project will be compiled with code coverage support, using
 # gcov. Otherwise, it will be built normally.
-#
-# ::
-#
-#
+
 #=============================================================================
 # Copyright 2014 Aleix Pol Gonzalez <aleixpol@kde.org>
 #
