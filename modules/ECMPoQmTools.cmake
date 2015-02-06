@@ -65,6 +65,8 @@
 # ``<install_destination>`` defaults to ``${LOCALE_INSTALL_DIR}`` if defined,
 # otherwise it uses ``${CMAKE_INSTALL_LOCALEDIR}`` if that is defined, otherwise
 # it uses ``share/locale``.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2007-2009 Kitware, Inc.

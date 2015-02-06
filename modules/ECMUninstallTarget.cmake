@@ -27,6 +27,8 @@
 #   CMake deliberately does not provide an ``uninstall`` target by default on
 #   the basis that such a target has the potential to remove important files
 #   from a user's computer. Use with caution.
+#
+# Since 1.7.0.
 
 #=============================================================================
 # Copyright 2015 Alex Merry <alex.merry@kde.org>

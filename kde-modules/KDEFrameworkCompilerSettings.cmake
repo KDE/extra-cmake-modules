@@ -11,6 +11,8 @@
 # For example, constructions like QString("foo") are prohibited, instead
 # forcing the use of QLatin1String or QStringLiteral, and some
 # Qt-defined keywords like signals and slots will not be defined.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2013      Albert Astals Cid <aacid@kde.org>

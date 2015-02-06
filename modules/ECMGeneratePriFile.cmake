@@ -68,6 +68,8 @@
 #   QT += KArchive
 #
 # in their ``.pro`` file.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 David Faure <faure@kde.org>

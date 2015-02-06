@@ -61,6 +61,8 @@
 # => Most of the sanitizers will require Clang. To enable it, use :
 # -DCMAKE_CXX_COMPILER=clang++
 #
+# Since 1.3.0.
+
 #=============================================================================
 # Copyright 2014 Mathieu Tarral <mathieu.tarral@gmail.com>
 #

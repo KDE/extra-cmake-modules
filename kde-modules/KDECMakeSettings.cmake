@@ -45,6 +45,10 @@
 # This section also provides an "uninstall" target that can be individually
 # disabled by setting ``KDE_SKIP_UNINSTALL_TARGET`` to TRUE before including
 # this module.
+#
+# Since pre-1.0.0.
+#
+# Uninstall target functionality since 1.7.0.
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>

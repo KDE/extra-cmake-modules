@@ -37,6 +37,8 @@
 # the find_dependency() macro (which you can include() in your package config
 # file), so this file is only useful for projects whose minimum required version
 # is 2.8.12.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kdemail.net>

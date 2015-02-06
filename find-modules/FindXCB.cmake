@@ -51,6 +51,8 @@
 # and provide more control.  Bear in mind, however, that if any target is in the
 # link interface of an exported library, it must be made available by the
 # package config file.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2011 Fredrik Höglund <fredrik@kde.org>

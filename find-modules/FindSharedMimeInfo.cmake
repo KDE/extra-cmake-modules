@@ -23,6 +23,8 @@
 # Updates the XDG mime database at install time (unless the ``$DESTDIR``
 # environment variable is set, in which case it is up to package managers to
 # perform this task).
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2013-2014 Alex Merry <alex.merry@kdemail.net>

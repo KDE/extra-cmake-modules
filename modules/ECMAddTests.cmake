@@ -36,6 +36,8 @@
 # This is a convenient version of ecm_add_test() for when you have many tests
 # that consist of a single source file each.  It behaves like calling
 # ecm_add_test() once for each source file, with the same named arguments.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2013 Alexander Richardson <arichardson.kde@gmail.com>

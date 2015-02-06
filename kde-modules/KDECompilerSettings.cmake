@@ -29,6 +29,8 @@
 #
 # Enables exceptions for C++ source files compiled for the
 # CMakeLists.txt file in the current directory and all subdirectories.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>

@@ -59,6 +59,8 @@
 #
 # With this syntax, the file ``hi22-actions-menu_new.png`` would be installed
 # into ``<icon_install_dir>/hicolor/22x22/actions/menu_new.png``
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>

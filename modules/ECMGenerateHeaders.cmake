@@ -88,6 +88,8 @@
 #   install(FILES ${MyLib_HEADERS}
 #           DESTINATION ${CMAKE_INSTALL_PREFIX}/include/mylib
 #           COMPONENT Devel)
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2013 Aleix Pol Gonzalez <aleixpol@blue-systems.com>

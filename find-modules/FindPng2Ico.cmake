@@ -37,6 +37,7 @@
 #     while `Matthias Benkmann's tool
 #     <http://www.winterdrache.de/freeware/png2ico/>`_ does not.
 #
+# Since 1.7.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>

@@ -68,6 +68,8 @@
 #
 # This generates a C++ file which loads "mylib.qm" at startup, assuming it has
 # been installed by ecm_create_qm_from_po_files(), and compiles it into ``mylib``.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Aurélien Gâteau <agateau@kde.org>

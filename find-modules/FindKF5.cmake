@@ -16,6 +16,8 @@
 # If all the required components (those given in the COMPONENTS argument, but
 # not those given in the OPTIONAL_COMPONENTS argument) are found, ``KF5_FOUND``
 # will be set to true. Otherwise, it will be set to false.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>

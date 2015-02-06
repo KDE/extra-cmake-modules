@@ -55,6 +55,8 @@
 # names don't start with ``qt_`` or ``wl_``.
 #
 # WaylandScanner is required and will be searched for.
+#
+# Since 1.4.0.
 
 #=============================================================================
 # Copyright 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>

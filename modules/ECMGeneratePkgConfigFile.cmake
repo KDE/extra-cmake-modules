@@ -59,6 +59,7 @@
 #       INSTALL
 #   )
 #
+# Since 1.3.0.
 
 #=============================================================================
 # Copyright 2014 Aleix Pol Gonzalez <aleixpol@kde.org>

@@ -169,6 +169,11 @@
 # be used on the command line when possible (eg: use
 # ``-DKDE_INSTALL_LIBDIR=lib64`` instead of
 # ``-DKDE_INSTALL_LIBDIR=/usr/lib/lib64`` to override the library directory).
+#
+# Since pre-1.0.0.
+#
+# NB: The variables starting ``KDE_INSTALL_`` are only available since 1.6.0.
+# The ``APPDIR`` install variable is available since 1.1.0.
 
 #=============================================================================
 # Copyright 2014-2015 Alex Merry <alex.merry@kde.org>

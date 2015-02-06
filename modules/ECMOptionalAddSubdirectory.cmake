@@ -24,6 +24,8 @@
 # .. code-block:: sh
 #
 #   cmake -DDISABLE_ALL_OPTIONAL_SUBDIRECTORIES=TRUE -DBUILD_foo=TRUE myproject
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2007 Alexander Neundorf <neundorf@kde.org>

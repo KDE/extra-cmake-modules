@@ -42,6 +42,8 @@
 #      of the generated icns file, so that it will be used as the
 #      ``MACOSX_BUNDLE_ICON_FILE`` target property when you call
 #      ``add_executable``.
+#
+# Since 1.7.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>
