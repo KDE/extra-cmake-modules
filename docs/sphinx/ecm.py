@@ -154,6 +154,7 @@ _ecm_index_objs = {
     'module':      _ecm_index_entry('module'),
     'find-module': _ecm_index_entry('find-module'),
     'kde-module':  _ecm_index_entry('kde-module'),
+    'toolchain':   _ecm_index_entry('toolchain'),
     }
 
 def _ecm_object_inventory(env, document, line, objtype, targetid):
@@ -264,6 +265,7 @@ class ECMDomain(Domain):
         'kde-module':  ObjType('kde-module',  'kde-module'),
         'find-module': ObjType('find-module', 'find-module'),
         'manual':      ObjType('manual',      'manual'),
+        'toolchain':   ObjType('toolchain',   'toolchain'),
     }
     directives = {}
     roles = {
@@ -271,6 +273,7 @@ class ECMDomain(Domain):
         'kde-module':  XRefRole(),
         'find-module': XRefRole(),
         'manual':      XRefRole(),
+        'toolchain':   XRefRole(),
     }
     initial_data = {
         'objects': {},  # fullname -> docname, objtype
