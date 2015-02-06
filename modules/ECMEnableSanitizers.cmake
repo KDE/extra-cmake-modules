@@ -2,9 +2,10 @@
 # ECMEnableSanitizers
 # -------------------
 #
-# Enable compiler sanitizer flags
+# Enable compiler sanitizer flags.
 #
-# The following sanitizers are supported :
+# The following sanitizers are supported:
+#
 # - Address Sanitizer
 # - Memory Sanitizer
 # - Thread Sanitizer
@@ -14,52 +15,56 @@
 # All of them are implemented in Clang, depending on your version, and
 # there is an work in progress in GCC, where some of them are currently
 # implemented.
-# This module will check your current compiler version to see if it support
-# the sanitizers that you want to enable
 #
-# How to use it ?
-# ---------------
-# This module is included in KDECompilerSettings. Therefore you don't have
-# to change your CMakeLists.txt
+# This module will check your current compiler version to see if it
+# supports the sanitizers that you want to enable
 #
-# It introduce a new cached variable :
-#       ECM_ENABLE_SANITIZERS
+# Usage
+# =====
 #
-# which can take the following values :
+# Simply add::
+#
+#    include(ECMEnableSanitizers)
+#
+# to your ``CMakeLists.txt``. Note that this module is included in
+# KDECompilerSettings, so projects using that module do not need to also
+# include this one.
+#
+# The sanitizers are not enabled by default. Instead, you must set
+# ``ECM_ENABLE_SANITIZERS`` (either in your ``CMakeLists.txt`` or on the
+# command line) to a semicolon-separated list of sanitizers you wish to enable.
+# The options are:
+#
 # - address
 # - memory
 # - thread
 # - leak
 # - undefined
 #
-# You can enable two sanitizers in the same build, depending on their
-# compatibility by separating each one with a semicolon :
-#       ECM_ENABLE_SANITIZERS='address;undefined'
+# The sanitizers "address", "memory" and "thread" are mutually exclusive.  You
+# cannot enable two of them in the same build.
 #
+# "leak" requires the  "address" sanitizer.
 #
-# The sanitizers `address`, `memory` and `thread` are mutually exclusive.
-# You cannot enable two of them in the same build.
+# .. note::
 #
-# `undefined` can be used with every other sanitizers
-#
-# `leak` can be enable with the  `address` sanitizer.
-#
-# Finally, to reduce the overhead induced by the instrumentation of the
-# sanitizers, it is advised to use -O1, or higher to improve the performances.
+#   To reduce the overhead induced by the instrumentation of the sanitizers, it
+#   is advised to enable compiler optimizations (``-O1`` or higher).
 #
 # Example
-# -------
-# This is an example of usage :
-# mkdir _build
-# cd _build
-# cmake -DECM_ENABLE_SANITIZERS='address' ..
+# =======
 #
-# If you want to use multiple sanitizers
+# This is an example of usage::
 #
-# cmake -DECM_ENABLE_SANITIZERS='address;leak;undefined' ..
+#   mkdir build
+#   cd build
+#   cmake -DECM_ENABLE_SANITIZERS='address;leak;undefined' ..
 #
-# => Most of the sanitizers will require Clang. To enable it, use :
-# -DCMAKE_CXX_COMPILER=clang++
+# .. note::
+#
+#   Most of the sanitizers will require Clang. To enable it, use::
+#
+#     -DCMAKE_CXX_COMPILER=clang++
 #
 # Since 1.3.0.
 
