@@ -15,6 +15,7 @@ if(BUILD_TESTING)
 endif()
 
 set(SHARE_INSTALL_DIR share)
+set(TOOLCHAIN_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/toolchain/)
 set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/modules/)
 set(KDE_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/kde-modules/)
 set(FIND_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/find-modules/)
@@ -32,6 +33,9 @@ install(FILES ${installKdeModuleFiles} DESTINATION ${KDE_MODULES_INSTALL_DIR})
 
 file(GLOB installFindModuleFiles ${CMAKE_SOURCE_DIR}/find-modules/*[^~])
 install(FILES ${installFindModuleFiles} DESTINATION ${FIND_MODULES_INSTALL_DIR})
+
+file(GLOB installToolchainModuleFiles ${CMAKE_SOURCE_DIR}/toolchain/*[^~])
+install(FILES ${installToolchainModuleFiles} DESTINATION ${TOOLCHAIN_MODULES_INSTALL_DIR})
 
 
 include(CMakePackageConfigHelpers)
