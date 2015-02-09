@@ -161,6 +161,9 @@ set(CMAKE_CXX_LINK_EXECUTABLE
 ######### generation
 
 set(CREATEAPK_TARGET_NAME "create-apk-${QTANDROID_EXPORTED_TARGET}")
+# Need to ensure we only get in here once, as this file is included twice:
+# from CMakeDetermineSystem.cmake and from CMakeSystem.cmake generated within the
+# build directory.
 if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
     if(NOT EXISTS "${ANDROID_APK_DIR}/AndroidManifest.xml")
         message(FATAL_ERROR "Define an apk dir to initialize from using -DANDROID_APK_DIR=<path>. The specified directory must contain the AndroidManifest.xml file.")
@@ -184,6 +187,8 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
         string(REPLACE ";" "," _DEPS "${_DEPS_LIST}")
         configure_file("${_CMAKE_ANDROID_DIR}/deployment-file.json.in" "${QTANDROID_EXPORTED_TARGET}-deployment.json")
     endfunction()
+    #we want to call the function after the project has been set up
+    variable_watch(CMAKE_PARENT_LIST_FILE EOFHook)
 
 #   Create the target that will eventually generate the apk
     get_filename_component(QTDIR "${Qt5Core_DIR}/../../../" ABSOLUTE)
@@ -197,9 +202,6 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
         COMMAND cmake -E copy "$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "${EXECUTABLE_DESTINATION_PATH}"
         COMMAND ${ANDROID_DEPLOY_QT} --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --output "${EXPORT_DIR}" --deployment bundled "\\$(ARGS)"
     )
-
-    #we want to call the function after the project has been set up
-    variable_watch(CMAKE_PARENT_LIST_FILE EOFHook)
 else()
     message(STATUS "You can export a target by specifying -DQTANDROID_EXPORTED_TARGET=<targetname>")
 endif()
