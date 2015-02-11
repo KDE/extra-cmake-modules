@@ -90,7 +90,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 ecm_find_package_version_check(QtWaylandScanner)
 
 # Find qtwaylandscanner
-find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner)
+find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/qt5/bin/)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(QtWaylandScanner
