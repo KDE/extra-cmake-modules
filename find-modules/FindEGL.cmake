@@ -98,14 +98,14 @@ if(EGL_INCLUDE_DIR)
     # finding all these defines and selecting the highest numbered.
     file(READ "${EGL_INCLUDE_DIR}/egl.h" _EGL_header_contents)
     string(REGEX MATCHALL
-        "[ \\t]EGL_VERSION_[0-9_]+"
+        "[ \t]EGL_VERSION_[0-9_]+"
         _EGL_version_lines
         "${_EGL_header_contents}"
     )
     unset(_EGL_header_contents)
     foreach(_EGL_version_line ${_EGL_version_lines})
         string(REGEX REPLACE
-            "[ \\t]EGL_VERSION_([0-9_]+)"
+            "[ \t]EGL_VERSION_([0-9_]+)"
             "\\1"
             _version_candidate
             "${_EGL_version_line}"
