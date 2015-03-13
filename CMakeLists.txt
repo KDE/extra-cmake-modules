@@ -14,7 +14,7 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-set(SHARE_INSTALL_DIR share)
+set(SHARE_INSTALL_DIR share CACHE PATH "read-only architecture-independent data")
 set(TOOLCHAIN_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/toolchain/)
 set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/modules/)
 set(KDE_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/kde-modules/)
