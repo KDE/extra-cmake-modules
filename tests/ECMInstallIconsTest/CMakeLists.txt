@@ -20,7 +20,7 @@ ecm_install_icons(
     ICONS
         16-actions-computer.png
         16-animations-loading.mng
-        16-apps-cmake.png
+        subdir/16-apps-cmake.png
         16-categories-system-help.mng
         16-emotes-face-smile.png
         16-intl-something.png
@@ -36,7 +36,7 @@ ecm_install_icons(
     ICONS
         16-actions-computer.png
         16-animations-loading.mng
-        16-apps-cmake.png
+        subdir/16-apps-cmake.png
         16-categories-system-help.mng
         16-emotes-face-smile.png
         16-intl-something.png
@@ -53,7 +53,7 @@ ecm_install_icons(
     ICONS
         16-actions-computer.png
         16-animations-loading.mng
-        16-apps-cmake.png
+        subdir/16-apps-cmake.png
         16-categories-system-help.mng
         16-emotes-face-smile.png
         16-intl-something.png
@@ -70,7 +70,7 @@ ecm_install_icons(
     ICONS
         16-actions-computer.png
         16-animations-loading.mng
-        16-apps-cmake.png
+        subdir/16-apps-cmake.png
         16-categories-system-help.mng
         16-emotes-face-smile.png
         16-intl-something.png
@@ -87,9 +87,10 @@ ecm_install_icons(
 # all these should be warned about
 ecm_install_icons(
     ICONS
-        aa-actions-badsize.png  # ignored
-        badlynamedfile.png      # ignored
-        16-actions-badext.txt   # copied
+        aa-actions-badsize.png          # ignored
+        badlynamedfile.png              # ignored
+        16-actions-badext.txt           # copied
+        hi16-actions-old-style-name.png # copied
     DESTINATION badly-named-files-test
 )
 

@@ -223,8 +223,9 @@ function(ecm_install_icons)
     endif()
 
     foreach(icon ${ARG_ICONS})
+        get_filename_component(filename "${icon}" NAME)
         string(REGEX MATCH "([0-9sc]+)\\-([a-z]+)\\-([^/]+)\\.([a-z]+)$"
-                           _dummy "${icon}")
+                           complete_match "${filename}")
         set(size  "${CMAKE_MATCH_1}")
         set(group "${CMAKE_MATCH_2}")
         set(name  "${CMAKE_MATCH_3}")
@@ -234,6 +235,12 @@ function(ecm_install_icons)
         elseif(NOT size STREQUAL "sc" AND NOT size GREATER 0)
             message(WARNING "${icon} size (${size}) is invalid - ignoring")
         else()
+            if (NOT complete_match STREQUAL filename)
+                # We can't stop accepting filenames with leading characters,
+                # because that would break existing projects, so just warn
+                # about them instead.
+                message(AUTHOR_WARNING "\"${icon}\" has characters before the size; it should be renamed to \"${size}-${group}-${name}.${ext}\"")
+            endif()
             if(NOT _ECM_ICON_GROUP_${group})
                 message(WARNING "${icon} group (${group}) is not recognized")
             endif()
