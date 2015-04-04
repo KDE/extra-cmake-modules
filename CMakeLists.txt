@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 project(extra-cmake-modules NONE)
 
-set(ECM_MAJOR_VERSION 1)
+set(ECM_MAJOR_VERSION 5)
 set(ECM_MINOR_VERSION 9)
 set(ECM_PATCH_VERSION 0)
 
