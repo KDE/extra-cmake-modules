@@ -145,7 +145,7 @@ function(_ECM_QM_CREATE_TARGET install_destination catalog_name)
             COMMAND ${lconvert_executable}
                 ARGS -i ${it} -o ${tsfile} -target-language ${language}
             COMMAND Qt5::lrelease
-                ARGS -compress -removeidentical -silent ${tsfile} -qm ${qmfile}
+                ARGS -removeidentical -silent ${tsfile} -qm ${qmfile}
             DEPENDS ${it}
             )
         install(
