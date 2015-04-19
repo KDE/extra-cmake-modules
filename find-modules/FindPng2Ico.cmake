@@ -87,6 +87,7 @@ if (Png2Ico_FOUND)
     execute_process(
         COMMAND "${Png2Ico_EXECUTABLE}" --help
         OUTPUT_VARIABLE _png2ico_help_text
+        ERROR_QUIET
     )
     if (_png2ico_help_text MATCHES ".*--rcfile .*")
         set(Png2Ico_HAS_RCFILE_ARGUMENT TRUE)
