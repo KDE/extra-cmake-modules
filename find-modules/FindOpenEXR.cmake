@@ -54,10 +54,9 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
+include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 
-if(${CMAKE_VERSION} VERSION_LESS 2.8.12)
-    message(FATAL_ERROR "CMake 2.8.12 is required by FindOpenEXR.cmake")
-endif()
+ecm_find_package_version_check(OpenEXR)
 
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls

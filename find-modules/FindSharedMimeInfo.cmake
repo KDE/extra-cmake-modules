@@ -54,12 +54,9 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-if(CMAKE_VERSION VERSION_LESS 2.8.12)
-    message(FATAL_ERROR "CMake 2.8.12 is required by FindSharedMimeInfo.cmake")
-endif()
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-    message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindSharedMimeInfo.cmake")
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
+
+ecm_find_package_version_check(SharedMimeInfo)
 
 find_program (UPDATE_MIME_DATABASE_EXECUTABLE NAMES update-mime-database)
 
