@@ -23,8 +23,12 @@
 # give an indication of where to look for a failing test.
 #
 # If the flag GUI is passed the test binary will be a GUI executable, otherwise
-# the resulting binary will be a console application.  The test will be linked
+# the resulting binary will be a console application (regardless of the value
+# of CMAKE_WIN32_EXECUTABLE or CMAKE_MACOSX_BUNDLE).  The test will be linked
 # against the libraries and/or targets passed to LINK_LIBRARIES.
+#
+# The generated target executable will have the effects of ecm_mark_as_test()
+# (from the :module:`ECMMarkAsTest` module) applied to it.
 #
 #
 # ::
@@ -52,6 +56,7 @@
 # (To distribute this file outside of extra-cmake-modules, substitute the full
 #  License text for the above reference.)
 
+include(CMakeParseArguments)
 include(ECMMarkAsTest)
 include(ECMMarkNonGuiExecutable)
 
@@ -73,7 +78,11 @@ function(ecm_add_test)
   endif()
 
   set(_testname "${ECM_ADD_TEST_NAME_PREFIX}${_targetname}")
-  add_executable(${_targetname} ${_sources})
+  set(gui_args)
+  if(ECM_ADD_TEST_GUI)
+      set(gui_args WIN32 MACOSX_BUNDLE)
+  endif()
+  add_executable(${_targetname} ${gui_args} ${_sources})
   if(NOT ECM_ADD_TEST_GUI)
     ecm_mark_nongui_executable(${_targetname})
   endif()

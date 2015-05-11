@@ -4,6 +4,7 @@
 # with other files (as ECM itself is architecture-independent).
 project(ECMTests C)
 
+add_subdirectory(ECMAddTests)
 add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
 add_subdirectory(ECMGeneratePkgConfigFile)
