@@ -34,6 +34,7 @@ add_check(single_tests
     test4.txt
     test5.txt
     test6.txt
+    test7.txt
     )
 add_check(multi_tests
     test1.txt
@@ -45,5 +46,7 @@ add_check(multi_tests
     test7.txt
     test8.txt
     test9.txt
+    test10.txt
+    test11.txt
     )
 
