@@ -9,8 +9,7 @@
 #   ecm_add_test(<sources> LINK_LIBRARIES <library> [<library> [...]]
 #                          [TEST_NAME <name>]
 #                          [NAME_PREFIX <prefix>]
-#                          [GUI]
-#                          [PROPERTIES <prop1> <value1> [<prop2> <value2> [...]]])
+#                          [GUI])
 #
 # Add a new unit test using the passed source files. The parameter TEST_NAME is
 # used to set the name of the resulting test, and the target built for and run
@@ -28,8 +27,6 @@
 # of CMAKE_WIN32_EXECUTABLE or CMAKE_MACOSX_BUNDLE).  The test will be linked
 # against the libraries and/or targets passed to LINK_LIBRARIES.
 #
-# The PROPERTIES argument sets the given properties on the test.
-#
 # The generated target executable will have the effects of ecm_mark_as_test()
 # (from the :module:`ECMMarkAsTest` module) applied to it.
 #
@@ -38,8 +35,7 @@
 #
 #   ecm_add_tests(<sources> LINK_LIBRARIES <library> [<library> [...]]
 #                           [NAME_PREFIX <prefix>]
-#                           [GUI]
-#                           [PROPERTIES <prop1> <value1> [<prop2> <value2> [...]]])
+#                           [GUI])
 #
 # This is a convenient version of ecm_add_test() for when you have many tests
 # that consist of a single source file each.  It behaves like calling
@@ -67,7 +63,7 @@ include(ECMMarkNonGuiExecutable)
 function(ecm_add_test)
   set(options GUI)
   set(oneValueArgs TEST_NAME NAME_PREFIX)
-  set(multiValueArgs LINK_LIBRARIES PROPERTIES)
+  set(multiValueArgs LINK_LIBRARIES)
   cmake_parse_arguments(ECM_ADD_TEST "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
   set(_sources ${ECM_ADD_TEST_UNPARSED_ARGUMENTS})
   list(LENGTH _sources _sourceCount)
@@ -93,15 +89,12 @@ function(ecm_add_test)
   add_test(NAME ${_testname} COMMAND ${_targetname})
   target_link_libraries(${_targetname} ${ECM_ADD_TEST_LINK_LIBRARIES})
   ecm_mark_as_test(${_targetname})
-  if (ECM_ADD_TEST_PROPERTIES)
-    set_tests_properties(${_testname} PROPERTIES ${ECM_ADD_TEST_PROPERTIES})
-  endif()
 endfunction()
 
 function(ecm_add_tests)
   set(options GUI)
   set(oneValueArgs NAME_PREFIX)
-  set(multiValueArgs LINK_LIBRARIES PROPERTIES)
+  set(multiValueArgs LINK_LIBRARIES)
   cmake_parse_arguments(ECM_ADD_TESTS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
   if(ECM_ADD_TESTS_GUI)
     set(_exe_type GUI)
@@ -113,7 +106,6 @@ function(ecm_add_tests)
       NAME_PREFIX ${ECM_ADD_TESTS_NAME_PREFIX}
       LINK_LIBRARIES ${ECM_ADD_TESTS_LINK_LIBRARIES}
 	  ${_exe_type}
-      PROPERTIES ${ECM_ADD_TESTS_PROPERTIES}
     )
   endforeach()
 endfunction()
