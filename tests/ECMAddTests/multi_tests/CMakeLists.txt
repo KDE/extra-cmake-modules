@@ -10,6 +10,7 @@ target_include_directories(testhelper PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 enable_testing()
 
 include(ECMAddTests)
+include(../../test_helpers.cmake)
 
 # clean up to avoid false-positives from check_files.cmake
 file(REMOVE
@@ -24,12 +25,18 @@ file(REMOVE
     "${CMAKE_CURRENT_BINARY_DIR}/test9.txt"
     )
 
+set(exp_target_names "test1;test2;test3")
+set(exp_test_names "test1;test2;test3")
 ecm_add_tests(
     test1.cpp
     test2.cpp
     test3.cpp
     LINK_LIBRARIES testhelper
+    TARGET_NAMES_VAR target_names
+    TEST_NAMES_VAR test_names
     )
+assert_vars_setequal(target_names exp_target_names)
+assert_vars_setequal(test_names exp_test_names)
 # check targets exist
 get_property(_dummy TARGET test1 PROPERTY TYPE)
 get_property(_dummy TARGET test2 PROPERTY TYPE)
@@ -112,13 +119,19 @@ if (NOT _is_bundle)
 endif()
 
 
+set(exp_target_names "test8;test9")
+set(exp_test_names "p_test8;p_test9")
 ecm_add_tests(
     test8.cpp
     test9.cpp
     LINK_LIBRARIES testhelper
     NAME_PREFIX p_
     GUI
+    TARGET_NAMES_VAR target_names
+    TEST_NAMES_VAR test_names
     )
+assert_vars_setequal(target_names exp_target_names)
+assert_vars_setequal(test_names exp_test_names)
 get_property(_dummy TARGET test8 PROPERTY TYPE)
 get_property(_dummy TARGET test9 PROPERTY TYPE)
 get_property(_dummy TEST p_test8 PROPERTY TIMEOUT)

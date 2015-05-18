@@ -8,7 +8,9 @@
 #
 #   ecm_add_tests(<sources> LINK_LIBRARIES <library> [<library> [...]]
 #                           [NAME_PREFIX <prefix>]
-#                           [GUI])
+#                           [GUI]
+#                           [TARGET_NAMES_VAR <target_names_var>]
+#                           [TEST_NAMES_VAR <test_names_var>])
 #
 # A convenience function for adding multiple tests, each consisting of a
 # single source file. For each file in <sources>, an executable target will be
@@ -26,6 +28,11 @@
 # of CMAKE_WIN32_EXECUTABLE or CMAKE_MACOSX_BUNDLE). Be aware that this changes
 # the executable entry point on Windows (although some frameworks, such as Qt,
 # abstract this difference away).
+#
+# The TARGET_NAMES_VAR and TEST_NAMES_VAR arguments, if given, should specify a
+# variable name to receive the list of generated target and test names,
+# respectively. This makes it convenient to apply properties to them as a
+# whole, for example, using set_target_properties() or  set_tests_properties().
 #
 # The generated target executables will have the effects of ecm_mark_as_test()
 # (from the :module:`ECMMarkAsTest` module) applied to it.
@@ -47,6 +54,7 @@
 
 #=============================================================================
 # Copyright 2013 Alexander Richardson <arichardson.kde@gmail.com>
+# Copyright 2015 Alex Merry <alex.merry@kde.org>
 #
 # Distributed under the OSI-approved BSD License (the "License");
 # see accompanying file COPYING-CMAKE-SCRIPTS for details.
@@ -64,13 +72,15 @@ include(ECMMarkNonGuiExecutable)
 
 function(ecm_add_test)
   set(options GUI)
-  set(oneValueArgs TEST_NAME NAME_PREFIX)
+  # TARGET_NAME_VAR and TEST_NAME_VAR are undocumented args used by
+  # ecm_add_tests
+  set(oneValueArgs TEST_NAME NAME_PREFIX TARGET_NAME_VAR TEST_NAME_VAR)
   set(multiValueArgs LINK_LIBRARIES)
-  cmake_parse_arguments(ECM_ADD_TEST "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-  set(_sources ${ECM_ADD_TEST_UNPARSED_ARGUMENTS})
+  cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  set(_sources ${ARG_UNPARSED_ARGUMENTS})
   list(LENGTH _sources _sourceCount)
-  if(ECM_ADD_TEST_TEST_NAME)
-    set(_targetname ${ECM_ADD_TEST_TEST_NAME})
+  if(ARG_TEST_NAME)
+    set(_targetname ${ARG_TEST_NAME})
   elseif(${_sourceCount} EQUAL "1")
     #use the source file name without extension as the testname
     get_filename_component(_targetname ${_sources} NAME_WE)
@@ -79,35 +89,53 @@ function(ecm_add_test)
     message(FATAL_ERROR "ecm_add_test() called with multiple source files but without setting \"TEST_NAME\"")
   endif()
 
-  set(_testname "${ECM_ADD_TEST_NAME_PREFIX}${_targetname}")
+  set(_testname ${ARG_NAME_PREFIX}${_targetname})
   set(gui_args)
-  if(ECM_ADD_TEST_GUI)
+  if(ARG_GUI)
       set(gui_args WIN32 MACOSX_BUNDLE)
   endif()
   add_executable(${_targetname} ${gui_args} ${_sources})
-  if(NOT ECM_ADD_TEST_GUI)
+  if(NOT ARG_GUI)
     ecm_mark_nongui_executable(${_targetname})
   endif()
   add_test(NAME ${_testname} COMMAND ${_targetname})
-  target_link_libraries(${_targetname} ${ECM_ADD_TEST_LINK_LIBRARIES})
+  target_link_libraries(${_targetname} ${ARG_LINK_LIBRARIES})
   ecm_mark_as_test(${_targetname})
+  if (ARG_TARGET_NAME_VAR)
+    set(${ARG_TARGET_NAME_VAR} "${_targetname}" PARENT_SCOPE)
+  endif()
+  if (ARG_TEST_NAME_VAR)
+    set(${ARG_TEST_NAME_VAR} "${_testname}" PARENT_SCOPE)
+  endif()
 endfunction()
 
 function(ecm_add_tests)
   set(options GUI)
-  set(oneValueArgs NAME_PREFIX)
+  set(oneValueArgs NAME_PREFIX TARGET_NAMES_VAR TEST_NAMES_VAR)
   set(multiValueArgs LINK_LIBRARIES)
-  cmake_parse_arguments(ECM_ADD_TESTS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-  if(ECM_ADD_TESTS_GUI)
+  cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  if(ARG_GUI)
     set(_exe_type GUI)
   else()
     set(_exe_type "")
   endif()
-  foreach(_test_source ${ECM_ADD_TESTS_UNPARSED_ARGUMENTS})
+  set(test_names)
+  set(target_names)
+  foreach(_test_source ${ARG_UNPARSED_ARGUMENTS})
     ecm_add_test(${_test_source}
-      NAME_PREFIX ${ECM_ADD_TESTS_NAME_PREFIX}
-      LINK_LIBRARIES ${ECM_ADD_TESTS_LINK_LIBRARIES}
-	  ${_exe_type}
+      NAME_PREFIX ${ARG_NAME_PREFIX}
+      LINK_LIBRARIES ${ARG_LINK_LIBRARIES}
+      TARGET_NAME_VAR target_name
+      TEST_NAME_VAR test_name
+      ${_exe_type}
     )
+    list(APPEND _test_names "${test_name}")
+    list(APPEND _target_names "${target_name}")
   endforeach()
+  if (ARG_TARGET_NAMES_VAR)
+    set(${ARG_TARGET_NAMES_VAR} "${_target_names}" PARENT_SCOPE)
+  endif()
+  if (ARG_TEST_NAMES_VAR)
+    set(${ARG_TEST_NAMES_VAR} "${_test_names}" PARENT_SCOPE)
+  endif()
 endfunction()
