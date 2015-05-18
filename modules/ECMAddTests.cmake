@@ -2,7 +2,33 @@
 # ECMAddTests
 # -----------
 #
-# Add test executables.
+# Convenience functions for adding tests.
+#
+# ::
+#
+#   ecm_add_tests(<sources> LINK_LIBRARIES <library> [<library> [...]]
+#                           [NAME_PREFIX <prefix>]
+#                           [GUI])
+#
+# A convenience function for adding multiple tests, each consisting of a
+# single source file. For each file in <sources>, an executable target will be
+# created (the name of which will be the basename of the source file). This
+# will be linked against the libraries given with LINK_LIBRARIES. Each
+# executable will be added as a test with the same name.
+#
+# If NAME_PREFIX is given, this prefix will be prepended to the test names, but
+# not the target names. As a result, it will not prevent clashes between tests
+# with the same name in different parts of the project, but it can be used to
+# give an indication of where to look for a failing test.
+#
+# If the flag GUI is passed the test binaries will be GUI executables, otherwise
+# the resulting binaries will be console applications (regardless of the value
+# of CMAKE_WIN32_EXECUTABLE or CMAKE_MACOSX_BUNDLE). Be aware that this changes
+# the executable entry point on Windows (although some frameworks, such as Qt,
+# abstract this difference away).
+#
+# The generated target executables will have the effects of ecm_mark_as_test()
+# (from the :module:`ECMMarkAsTest` module) applied to it.
 #
 # ::
 #
@@ -11,35 +37,11 @@
 #                          [NAME_PREFIX <prefix>]
 #                          [GUI])
 #
-# Add a new unit test using the passed source files. The parameter TEST_NAME is
-# used to set the name of the resulting test, and the target built for and run
-# by the test. It may be omitted if there is exactly one source file. In that
-# case the name of the source file (without the file extension) will be used as
-# the test name.
+# This is a single-test form of ecm_add_tests that allows multiple source files
+# to be used for a single test. If using multiple source files, TEST_NAME must
+# be given; this will be used for both the target and test names (and, as with
+# ecm_add_tests(), the NAME_PREFIX argument will be prepended to the test name).
 #
-# If NAME_PREFIX is given, this prefix will be prepended to the test name, but
-# not the target name. As a result, it will not prevent clashes between tests
-# with the same name in different parts of the project, but it can be used to
-# give an indication of where to look for a failing test.
-#
-# If the flag GUI is passed the test binary will be a GUI executable, otherwise
-# the resulting binary will be a console application (regardless of the value
-# of CMAKE_WIN32_EXECUTABLE or CMAKE_MACOSX_BUNDLE).  The test will be linked
-# against the libraries and/or targets passed to LINK_LIBRARIES.
-#
-# The generated target executable will have the effects of ecm_mark_as_test()
-# (from the :module:`ECMMarkAsTest` module) applied to it.
-#
-#
-# ::
-#
-#   ecm_add_tests(<sources> LINK_LIBRARIES <library> [<library> [...]]
-#                           [NAME_PREFIX <prefix>]
-#                           [GUI])
-#
-# This is a convenient version of ecm_add_test() for when you have many tests
-# that consist of a single source file each.  It behaves like calling
-# ecm_add_test() once for each source file, with the same named arguments.
 #
 # Since pre-1.0.0.
 
