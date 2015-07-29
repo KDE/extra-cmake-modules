@@ -85,6 +85,9 @@ if (TARGET Qt5::qmake)
     add_test_variant(KDEInstallDirsTest.relative_or_absolute_qt
                      KDEInstallDirsTest.relative_or_absolute dummy)
 endif ()
+if (Qt5Core_FOUND)
+    add_test_macro(ECMQtDeclareLoggingCategoryTest testmain)
+endif()
 
 add_test_macro(FindModules dummy)
 add_test_macro(UseFindModules dummy)
