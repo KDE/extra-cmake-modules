@@ -44,3 +44,7 @@ add_definitions(-DQT_NO_CAST_TO_ASCII
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_definitions(-DQT_STRICT_ITERATORS)
 endif()
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
+endif()
