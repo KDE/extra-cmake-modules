@@ -40,11 +40,7 @@ add_definitions(-DQT_NO_CAST_TO_ASCII
                 -DQT_USE_FAST_OPERATOR_PLUS
                 -DQT_USE_QSTRINGBUILDER
                )
-if(NOT MSVC)
-    # QT_STRICT_ITERATORS breaks MSVC: it tries to link to QTypedArrayData symbols
-    # when using foreach. However these symbols don't actually exist.
-    # Not having QT_STRICT_ITERATORS defined fixes this issue.
-    # This is fixed by https://codereview.qt-project.org/#change,76311
-    # TODO: set QT_STRICT_ITERATORS on all platforms once we depend on Qt 5.3
-    add_definitions(-DQT_STRICT_ITERATORS)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_definitions(-DQT_STRICT_ITERATORS)
 endif()
