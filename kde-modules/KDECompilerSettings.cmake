@@ -196,6 +196,7 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR
 endif()
 
 # Default to hidden visibility for symbols
+set(CMAKE_C_VISIBILITY_PRESET hidden)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
