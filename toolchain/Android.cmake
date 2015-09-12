@@ -139,6 +139,9 @@ include_directories(SYSTEM
     "${ANDROID_LIBS_ROOT}/libs/${ANDROID_ABI}/include"
 )
 
+# needed for Qt to define Q_OS_ANDROID
+add_definitions(-DANDROID)
+
 link_directories(${CMAKE_SYSTEM_LIBRARY_PATH})
 
 set(CMAKE_C_COMPILER "${ANDROID_TOOLCHAIN_ROOT}/${ANDROID_TOOLCHAIN}-gcc")
