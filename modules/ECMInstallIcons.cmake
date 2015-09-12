@@ -186,7 +186,9 @@ endmacro()
 
 # Updates the mtime of the icon theme directory, so caches that
 # watch for changes to the directory will know to update.
+# If present, this also runs gtk-update-icon-cache (which despite the name is also used by Qt).
 function(_ecm_update_iconcache installdir theme)
+    find_program(GTK_UPDATE_ICON_CACHE_EXECUTABLE NAMES gtk-update-icon-cache)
     # We don't always have touch command (e.g. on Windows), so instead
     # create and delete a temporary file in the theme dir.
     install(CODE "
@@ -194,6 +196,10 @@ function(_ecm_update_iconcache installdir theme)
     if (NOT DESTDIR_VALUE)
         file(WRITE \"${installdir}/${theme}/temp.txt\" \"update\")
         file(REMOVE \"${installdir}/${theme}/temp.txt\")
+        set(HAVE_GTK_UPDATE_ICON_CACHE_EXEC ${GTK_UPDATE_ICON_CACHE_EXECUTABLE})
+        if (HAVE_GTK_UPDATE_ICON_CACHE_EXEC)
+            execute_process(COMMAND ${GTK_UPDATE_ICON_CACHE_EXECUTABLE} -q -t -i . WORKING_DIRECTORY \"${CMAKE_INSTALL_PREFIX}/${installdir}/${theme}\")
+        endif ()
     endif (NOT DESTDIR_VALUE)
     ")
 endfunction()
