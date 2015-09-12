@@ -1,5 +1,5 @@
 {
-   "qt": "@QTDIR@",
+   "qt": "@_qt5Core_install_prefix@",
    "sdk": "@ANDROID_SDK_ROOT@",
    "ndk": "@ANDROID_NDK@",
    "toolchain-prefix": "@ANDROID_TOOLCHAIN@",

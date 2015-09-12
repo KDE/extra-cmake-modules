@@ -172,6 +172,8 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
         message(FATAL_ERROR "Define an apk dir to initialize from using -DANDROID_APK_DIR=<path>. The specified directory must contain the AndroidManifest.xml file.")
     endif()
 
+    find_package(Qt5Core REQUIRED)
+
     function(EOFHook)
         if(CMAKE_PARENT_LIST_FILE STREQUAL "")
             generate_deployment_file()
