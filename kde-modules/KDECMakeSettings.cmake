@@ -46,9 +46,18 @@
 # disabled by setting ``KDE_SKIP_UNINSTALL_TARGET`` to TRUE before including
 # this module.
 #
+# By default on OS X, X11 and XCB related detections are disabled. However if
+# the need would arise to use these technologies, the detection can be enabled
+# by setting ``APPLE_FORCE_X11`` to ``ON``.
+#
+# A warning is printed for the developer to know that the detection is disabled on OS X.
+# This message can be turned off by setting ``APPLE_SUPPRESS_X11_WARNING`` to ``ON``.
+#
 # Since pre-1.0.0.
 #
-# Uninstall target functionality since 1.7.0.
+# - Uninstall target functionality since 1.7.0.
+# - ``APPLE_FORCE_X11`` option since 5.14.0 (detecting X11 was previously the default behavior)
+# - ``APPLE_SUPPRESS_X11_WARNING`` option since 5.14.0
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>
@@ -183,6 +192,21 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
       set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
       set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+   endif()
+
+   # Disable detection of X11 and related package on OS X because when using
+   # brew or macports, X11 can be installed and thus is detected.
+   option(APPLE_FORCE_X11 "Force enable X11 related detection on OS X" OFF)
+   option(APPLE_SUPPRESS_X11_WARNING "Suppress X11 and related technologies search disabling warning on OS X" OFF)
+
+   if(APPLE AND NOT APPLE_FORCE_X11)
+      if (NOT APPLE_SUPPRESS_X11_WARNING)
+         message(WARNING "Searching for X11 and related technologies is disabled on Apple systems. Set APPLE_FORCE_X11 to ON to change this behaviour. Set APPLE_SUPPRESS_X11_WARNING to ON to hide this warning.")
+      endif()
+
+      set(CMAKE_DISABLE_FIND_PACKAGE_X11 true)
+      set(CMAKE_DISABLE_FIND_PACKAGE_XCB true)
+      set(CMAKE_DISABLE_FIND_PACKAGE_Qt5X11Extras true)
    endif()
 
    option(KDE_SKIP_UNINSTALL_TARGET "Prevent an \"uninstall\" target from being generated." OFF)
