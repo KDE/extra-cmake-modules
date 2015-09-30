@@ -174,38 +174,16 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
 
     find_package(Qt5Core REQUIRED)
 
-    function(EOFHook)
-        if(CMAKE_PARENT_LIST_FILE STREQUAL "")
-            generate_deployment_file()
-        endif()
-    endfunction()
-
-    function(generate_deployment_file)
-        get_property(_DEPENDENCIES TARGET ${QTANDROID_EXPORTED_TARGET} PROPERTY INTERFACE_LINK_LIBRARIES)
-        set(_DEPS_LIST)
-        foreach(_DEP IN LISTS _DEPENDENCIES)
-            if(NOT _DEP MATCHES "Qt5::.*")
-                get_property(_DEP_LOCATION TARGET ${_DEP} PROPERTY "LOCATION_${CMAKE_BUILD_TYPE}")
-                list(APPEND _DEPS_LIST ${_DEP_LOCATION})
-            endif()
-        endforeach()
-        string(REPLACE ";" "," _DEPS "${_DEPS_LIST}")
-        configure_file("${_CMAKE_ANDROID_DIR}/deployment-file.json.in" "${QTANDROID_EXPORTED_TARGET}-deployment.json")
-    endfunction()
-    #we want to call the function after the project has been set up
-    variable_watch(CMAKE_PARENT_LIST_FILE EOFHook)
-
-#   Create the target that will eventually generate the apk
-    get_filename_component(QTDIR "${Qt5Core_DIR}/../../../" ABSOLUTE)
-    find_program(ANDROID_DEPLOY_QT androiddeployqt HINTS "${QTDIR}/bin")
     set(EXPORT_DIR "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}_build_apk/")
     set(EXECUTABLE_DESTINATION_PATH "${EXPORT_DIR}/libs/${ANDROID_ABI}/lib${QTANDROID_EXPORTED_TARGET}.so")
+    configure_file("${_CMAKE_ANDROID_DIR}/deployment-file.json.in" "${QTANDROID_EXPORTED_TARGET}-deployment.json.in")
 
     add_custom_target(${CREATEAPK_TARGET_NAME}
-        COMMAND cmake -E echo "Generating $<TARGET_NAME:${QTANDROID_EXPORTED_TARGET}> with ${ANDROID_DEPLOY_QT}"
+        COMMAND cmake -E echo "Generating $<TARGET_NAME:${QTANDROID_EXPORTED_TARGET}> with $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt"
         COMMAND cmake -E copy_directory "${ANDROID_APK_DIR}" "${EXPORT_DIR}"
         COMMAND cmake -E copy "$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "${EXECUTABLE_DESTINATION_PATH}"
-        COMMAND ${ANDROID_DEPLOY_QT} --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --output "${EXPORT_DIR}" --deployment bundled "\\$(ARGS)"
+        COMMAND cmake -DINPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json.in" -DOUTPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json" "-DTARGET_DIR=$<TARGET_FILE_DIR:${QTANDROID_EXPORTED_TARGET}>" "-DTARGET_NAME=${QTANDROID_EXPORTED_TARGET}" -P ${_CMAKE_ANDROID_DIR}/specifydependencies.cmake
+        COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --output "${EXPORT_DIR}" --deployment bundled "\\$(ARGS)"
     )
 else()
     message(STATUS "You can export a target by specifying -DQTANDROID_EXPORTED_TARGET=<targetname>")
