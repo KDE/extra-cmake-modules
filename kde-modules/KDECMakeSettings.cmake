@@ -95,21 +95,23 @@ if(NOT KDE_SKIP_RPATH_SETTINGS)
    endif()
 
    if (UNIX)
+      # for mac os: add install name dir in addition
+      # check: is the rpath stuff below really required on mac os? at least it seems so to use a stock qt from qt.io
       if (APPLE)
          set(CMAKE_INSTALL_NAME_DIR ${_abs_LIB_INSTALL_DIR})
-      else ()
-         # add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of
-         # the standard system link directories - such as /usr/lib on UNIX)
-         list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${_abs_LIB_INSTALL_DIR}" _isSystemLibDir)
-         list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES      "${_abs_LIB_INSTALL_DIR}" _isSystemCxxLibDir)
-         list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES        "${_abs_LIB_INSTALL_DIR}" _isSystemCLibDir)
-         if("${_isSystemLibDir}" STREQUAL "-1"  AND  "${_isSystemCxxLibDir}" STREQUAL "-1"  AND  "${_isSystemCLibDir}" STREQUAL "-1")
-            set(CMAKE_INSTALL_RPATH "${_abs_LIB_INSTALL_DIR}")
-         endif()
-
-         # Append directories in the linker search path (but outside the project)
-         set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
       endif ()
+
+      # add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of
+      # the standard system link directories - such as /usr/lib on UNIX)
+      list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${_abs_LIB_INSTALL_DIR}" _isSystemLibDir)
+      list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES      "${_abs_LIB_INSTALL_DIR}" _isSystemCxxLibDir)
+      list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES        "${_abs_LIB_INSTALL_DIR}" _isSystemCLibDir)
+      if("${_isSystemLibDir}" STREQUAL "-1"  AND  "${_isSystemCxxLibDir}" STREQUAL "-1"  AND  "${_isSystemCLibDir}" STREQUAL "-1")
+         set(CMAKE_INSTALL_RPATH "${_abs_LIB_INSTALL_DIR}")
+      endif()
+
+      # Append directories in the linker search path (but outside the project)
+      set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
    endif (UNIX)
 
 endif()
