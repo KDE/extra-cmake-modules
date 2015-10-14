@@ -94,5 +94,12 @@ ecm_install_icons(
     DESTINATION badly-named-files-test
 )
 
+find_program(icon_cache_generator NAMES gtk-update-icon-cache)
+if (icon_cache_generator)
+    set(GENERATE_ICON_CACHE TRUE)
+else()
+    set(GENERATE_ICON_CACHE FALSE)
+endif()
+
 # this will be run by CTest
 configure_file(check_tree.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/check_tree.cmake" @ONLY)

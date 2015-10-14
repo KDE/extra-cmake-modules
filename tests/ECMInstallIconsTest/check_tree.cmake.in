@@ -1,8 +1,15 @@
 set(EXP_TREE "@CMAKE_CURRENT_SOURCE_DIR@/expected-tree")
 set(ACTUAL_TREE "@CMAKE_INSTALL_PREFIX@")
+set(GENERATE_ICON_CACHE "@GENERATE_ICON_CACHE@")
 
 file(GLOB_RECURSE exp_files RELATIVE "${EXP_TREE}" "${EXP_TREE}/*")
 file(GLOB_RECURSE actual_files RELATIVE "${ACTUAL_TREE}" "${ACTUAL_TREE}/*")
+if (NOT GENERATE_ICON_CACHE)
+    file(GLOB_RECURSE cache_files RELATIVE "${EXP_TREE}" "${EXP_TREE}/*.cache")
+    foreach(f ${cache_files})
+        list(REMOVE_ITEM exp_files "${f}")
+    endforeach()
+endif()
 list(SORT exp_files)
 list(SORT actual_files)
 

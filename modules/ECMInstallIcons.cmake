@@ -111,6 +111,8 @@ macro(_ecm_install_icons_v1 _defaultpath)
       set(_l10n_SUBDIR ".")
    endif(_lang)
 
+   set(_themes)
+
    # first the png icons
    file(GLOB _icons *.png)
    foreach (_current_ICON ${_icons} )
@@ -123,6 +125,7 @@ macro(_ecm_install_icons_v1 _defaultpath)
 
       set(_theme_GROUP ${_ECM_ICON_THEME_${_type}})
       if( _theme_GROUP)
+         list(APPEND _themes "${_theme_GROUP}")
          _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                     ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
                     ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
@@ -141,6 +144,7 @@ macro(_ecm_install_icons_v1 _defaultpath)
 
       set(_theme_GROUP ${_ECM_ICON_THEME_${_type}})
       if( _theme_GROUP)
+         list(APPEND _themes "${_theme_GROUP}")
          _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                 ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
                 ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
@@ -158,13 +162,17 @@ macro(_ecm_install_icons_v1 _defaultpath)
 
       set(_theme_GROUP ${_ECM_ICON_THEME_${_type}})
       if( _theme_GROUP)
+         list(APPEND _themes "${_theme_GROUP}")
           _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                             ${_defaultpath}/${_theme_GROUP}/scalable
                             ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
       endif( _theme_GROUP)
    endforeach (_current_ICON)
 
-   _ecm_update_iconcache("${_defaultpath}" hicolor)
+   list(REMOVE_DUPLICATES _themes)
+   foreach(_theme ${_themes})
+       _ecm_update_iconcache("${_defaultpath}" "${_theme}")
+   endforeach()
 
 endmacro()
 
