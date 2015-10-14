@@ -12,9 +12,11 @@ include(ECMPoQmTools)
 include(../test_helpers.cmake)
 
 
-#
-# ecm_process_po_files_as_qm
-#
+##############################
+#                            #
+# ecm_process_po_files_as_qm #
+#                            #
+##############################
 
 
 # Should create a process-and-install.qm file and install it
@@ -30,9 +32,11 @@ ecm_process_po_files_as_qm(fr ALL
 
 
 
-#
-# ecm_install_po_files_as_qm
-#
+##############################
+#                            #
+# ecm_install_po_files_as_qm #
+#                            #
+##############################
 
 # Should create a bunch of .qm files and install them in share/locale.
 # Should ignore files directly under po/ as well as directories under po/ which
@@ -56,14 +60,19 @@ unset(LOCALE_INSTALL_DIR)
 
 
 
-#
-# ecm_create_qm_loader
-#
+########################
+#                      #
+# ecm_create_qm_loader #
+#                      #
+########################
 
 find_package(Qt5Core CONFIG REQUIRED)
 ecm_install_po_files_as_qm(tr_test-po)
 
 
+#
+# single-threaded test
+#
 set(tr_test_SRCS
     tr_test.cpp
 )
@@ -72,10 +81,24 @@ add_executable(tr_test ${tr_test_SRCS})
 target_link_libraries(tr_test PRIVATE Qt5::Core)
 
 
-# This is not something we want people to do (putting the ecm_create_qm_loader
-# call in one CMakeLists.txt file and the target it is used for in another),
-# but it's unfortunately something projects have done and we need to keep them
-# building
+#
+# single-threaded test (different catalog name)
+#
+# This is to check we don't overwrite previously-generated files.
+set(tr_test_2_SRCS
+    tr_test.cpp
+)
+ecm_create_qm_loader(tr_test_2_SRCS catalog2)
+add_executable(tr_test_2 ${tr_test_2_SRCS})
+target_link_libraries(tr_test_2 PRIVATE Qt5::Core)
+
+
+#
+# call to ecm_create_qm_loader is in a different CMakeLists.txt to where
+# the target it is added to is defined
+#
+# This is not something we want people to do, but it's unfortunately something
+# projects have done and we need to keep them building
 unset(QMLOADER_FILES)
 ecm_create_qm_loader(QMLOADER_FILES catalog)
 assert_var_defined(QMLOADER_FILES)

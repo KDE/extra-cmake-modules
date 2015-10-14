@@ -100,8 +100,8 @@ endfunction()
 
 function(ecm_create_qm_loader out_var catalog_name)
     # catalog_name is used in ECMQmLoader.cpp.in
-    configure_file(${ECM_MODULE_DIR}/ECMQmLoader.cpp.in ECMQmLoader.cpp @ONLY)
-    set(${out_var} ${${out_var}} ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader.cpp PARENT_SCOPE)
+    configure_file(${ECM_MODULE_DIR}/ECMQmLoader.cpp.in ECMQmLoader-${catalog_name}.cpp @ONLY)
+    set(${out_var} ${${out_var}} ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader-${catalog_name}.cpp PARENT_SCOPE)
 endfunction()
 
 

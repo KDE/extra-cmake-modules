@@ -23,7 +23,9 @@ set(exp_files
     "share/locale/es/LC_MESSAGES/install-test.qm"
     "share/locale/fr/LC_MESSAGES/install-test.qm"
     "share/locale/en/LC_MESSAGES/catalog.qm"
+    "share/locale/en/LC_MESSAGES/catalog2.qm"
     "share/locale/de/LC_MESSAGES/catalog.qm"
+    "share/locale/de/LC_MESSAGES/catalog2.qm"
     "custom-dir1/es/LC_MESSAGES/custom-dir1-install-test.qm"
     "custom-dir1/fr/LC_MESSAGES/custom-dir1-install-test.qm"
     "custom-dir2/es/LC_MESSAGES/custom-dir2-install-test.qm"
@@ -54,26 +56,37 @@ endif()
 
 # we know we can modify the executable environment on Linux
 if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
-    set(exp_output_en "english text:english plural form 5")
-    set(exp_output_de "german text:german plural form 5")
+    set(exp_output_catalog_en "english text:english plural form 5")
+    set(exp_output_catalog_de "german text:german plural form 5")
     # no french translation provided -> english fallback
-    set(exp_output_fr "${exp_output_en}")
-    foreach(exec TR_TEST TR_TEST_SUBDIR)
+    set(exp_output_catalog_fr "${exp_output_catalog_en}")
+
+    set(exp_output_catalog2_en "2nd english text:2nd english plural form 5")
+    set(exp_output_catalog2_de "2nd german text:2nd german plural form 5")
+    # no french translation provided -> english fallback
+    set(exp_output_catalog2_fr "${exp_output_catalog2_en}")
+
+    function(check_translations name exec catalog_name)
         foreach(lang en de fr)
             execute_process(
                 COMMAND "${CMAKE_COMMAND}" -E env "XDG_DATA_DIRS=${ACTUAL_TREE}/share"
-                    LANGUAGE=${lang} "${${exec}_EXEC}"
+                    LANGUAGE=${lang} "${exec}"
                 OUTPUT_VARIABLE output
             )
             string(STRIP "${output}" stripped_output)
-            if(NOT stripped_output STREQUAL exp_output_${lang})
-                message(WARNING "${exec}[${lang}] output was \"${stripped_output}\", but expected \"${exp_output_${lang}}\"")
+            if(NOT stripped_output STREQUAL exp_output_${catalog_name}_${lang})
+                message(WARNING "${name}[${lang}] output was \"${stripped_output}\", but expected \"${exp_output_${catalog_name}_${lang}}\"")
                 set(fail ON)
             else()
-                message(STATUS "${exec}[${lang}] output was \"${stripped_output}\", as expected")
+                message(STATUS "${name}[${lang}] output was \"${stripped_output}\", as expected")
             endif()
         endforeach()
-    endforeach()
+    endfunction()
+
+    check_translations(TR_TEST "${TR_TEST_EXEC}" catalog)
+    check_translations(TR_TEST_2 "${TR_TEST_2_EXEC}" catalog2)
+
+    check_translations(TR_TEST_SUBDIR "${TR_TEST_SUBDIR_EXEC}" catalog)
 endif()
 
 if (fail)
