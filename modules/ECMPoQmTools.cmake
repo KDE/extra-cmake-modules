@@ -99,9 +99,20 @@ endfunction()
 
 
 function(ecm_create_qm_loader out_var catalog_name)
+    set(loader_cpp ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader.cpp)
+    set(loader_moc ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader.moc)
+
     # catalog_name is used in ECMQmLoader.cpp.in
-    configure_file(${ECM_MODULE_DIR}/ECMQmLoader.cpp.in ECMQmLoader.cpp @ONLY)
-    set(${out_var} ${${out_var}} ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader.cpp PARENT_SCOPE)
+    configure_file(${ECM_MODULE_DIR}/ECMQmLoader.cpp.in "${loader_cpp}" @ONLY)
+    set(${out_var} "${${out_var}}" "${loader_cpp}" "${loader_moc}" PARENT_SCOPE)
+
+    # can't assume target has AUTOMOC turned on
+    if(NOT Qt5Core_FOUND)
+        find_package(Qt5Core)
+    endif()
+    if(Qt5Core_FOUND)
+        qt5_generate_moc("${loader_cpp}" "${loader_moc}")
+    endif()
 endfunction()
 
 

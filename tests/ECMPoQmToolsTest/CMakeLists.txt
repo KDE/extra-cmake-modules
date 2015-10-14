@@ -9,9 +9,14 @@ file(REMOVE_RECURSE "${CMAKE_INSTALL_PREFIX}")
 
 include(ECMPoQmTools)
 
-# Should create ${CMAKE_CURRENT_BINARY_DIR}/qmloader.cpp and set QMLOADER_PATH
-# to its path
-ecm_create_qm_loader(QMLOADER_PATH catalog)
+include(../test_helpers.cmake)
+
+unset(QMLOADER_FILES)
+ecm_create_qm_loader(QMLOADER_FILES catalog)
+assert_var_defined(QMLOADER_FILES)
+
+# These will be used to test the above-generated loader
+ecm_install_po_files_as_qm(tr_test-po)
 
 # Should create a process-and-install.qm file and install it
 ecm_process_po_files_as_qm(fr ALL
@@ -39,5 +44,22 @@ ecm_install_po_files_as_qm(po-custom-dir1)
 set(LOCALE_INSTALL_DIR custom-dir2)
 ecm_install_po_files_as_qm(po-custom-dir2)
 
-# this will be run by CTest
-configure_file(check_tree.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/check_tree.cmake" @ONLY)
+find_package(Qt5Core CONFIG REQUIRED)
+
+add_executable(tr_test tr_test.cpp ${QMLOADER_FILES})
+target_link_libraries(tr_test PRIVATE Qt5::Core)
+
+add_library(tr_thread_module MODULE tr_thread_test_module.cpp ${QMLOADER_FILES})
+target_link_libraries(tr_thread_module PRIVATE Qt5::Core)
+
+add_executable(tr_thread_test tr_thread_test.cpp)
+set_target_properties(tr_thread_test PROPERTIES AUTOMOC ON)
+target_include_directories(tr_thread_test PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+target_compile_definitions(tr_thread_test PRIVATE "MODULE_PATH=\"$<TARGET_FILE:tr_thread_module>\"")
+target_link_libraries(tr_thread_test PRIVATE Qt5::Core)
+
+file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/check_conf.cmake"
+    INPUT "${CMAKE_CURRENT_SOURCE_DIR}/check_conf.cmake.in"
+)
+configure_file(check.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/check.cmake" @ONLY)
