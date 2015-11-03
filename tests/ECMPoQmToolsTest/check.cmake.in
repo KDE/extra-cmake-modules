@@ -23,7 +23,7 @@ set(exp_files
     "share/locale/es/LC_MESSAGES/install-test.qm"
     "share/locale/fr/LC_MESSAGES/install-test.qm"
     "share/locale/en/LC_MESSAGES/catalog.qm"
-    "share/locale/en_GB/LC_MESSAGES/catalog.qm"
+    "share/locale/de/LC_MESSAGES/catalog.qm"
     "custom-dir1/es/LC_MESSAGES/custom-dir1-install-test.qm"
     "custom-dir1/fr/LC_MESSAGES/custom-dir1-install-test.qm"
     "custom-dir2/es/LC_MESSAGES/custom-dir2-install-test.qm"
@@ -55,11 +55,11 @@ endif()
 # we know we can modify the executable environment on Linux
 if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
     set(exp_output_en "english text:english plural form 5")
-    set(exp_output_en_GB "british english text:british english plural form 5")
+    set(exp_output_de "german text:german plural form 5")
     # no french translation provided -> english fallback
     set(exp_output_fr "${exp_output_en}")
     foreach(exec TR_TEST TR_THREAD_TEST)
-        foreach(lang en en_GB fr)
+        foreach(lang en de fr)
             execute_process(
                 COMMAND "${CMAKE_COMMAND}" -E env "XDG_DATA_DIRS=${ACTUAL_TREE}/share"
                     LC_ALL=${lang} "${${exec}_EXEC}"

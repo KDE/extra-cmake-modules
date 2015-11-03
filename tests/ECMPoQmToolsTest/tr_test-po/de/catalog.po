@@ -4,13 +4,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Language: en_GB\n"
+"X-Language: de\n"
 "X-Qt-Contexts: true\n"
 
 #: main.cpp:12
 msgctxt "testcontext|"
 msgid "test string"
-msgstr "british english text"
+msgstr "german text"
 
 #: main.cpp:13
 #, qt-format
@@ -18,5 +18,5 @@ msgstr "british english text"
 msgctxt "testcontext|"
 msgid "test plural %n"
 msgid_plural "test plural %n"
-msgstr[0] "british english singular form %n"
-msgstr[1] "british english plural form %n"
+msgstr[0] "german singular form %n"
+msgstr[1] "german plural form %n"
