@@ -169,10 +169,14 @@ macro(_ecm_install_icons_v1 _defaultpath)
       endif( _theme_GROUP)
    endforeach (_current_ICON)
 
-   list(REMOVE_DUPLICATES _themes)
-   foreach(_theme ${_themes})
-       _ecm_update_iconcache("${_defaultpath}" "${_theme}")
-   endforeach()
+   if (_themes)
+       list(REMOVE_DUPLICATES _themes)
+       foreach(_theme ${_themes})
+           _ecm_update_iconcache("${_defaultpath}" "${_theme}")
+       endforeach()
+   else()
+       message(AUTHOR_WARNING "No suitably-named icons found")
+   endif()
 
 endmacro()
 

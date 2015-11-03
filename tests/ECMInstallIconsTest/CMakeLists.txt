@@ -10,6 +10,7 @@ include(ECMInstallIcons)
 
 add_subdirectory(v1-syntax)
 add_subdirectory(v1-syntax-l10n)
+add_subdirectory(v1-syntax-no-icons)
 
 ecm_install_icons(
     ICONS 16-actions-computer.png
