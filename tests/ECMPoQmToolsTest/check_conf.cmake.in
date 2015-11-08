@@ -1,2 +1,0 @@
-set(TR_TEST_EXEC "$<TARGET_FILE:tr_test>")
-set(TR_THREAD_TEST_EXEC "$<TARGET_FILE:tr_thread_test>")

@@ -101,13 +101,13 @@ add_test_macro(ECMInstallIconsTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMInstallIconsTest/check_tree.cmake"
 )
 
-if (Qt5Core_FOUND AND Qt5LinguistTools_FOUND)
+if (Qt5LinguistTools_FOUND)
     set(ECMPoQmToolsTest_EXTRA_OPTIONS
         --build-target install
         --build-options
             "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/InstallDirectory"
     )
     add_test_macro(ECMPoQmToolsTest
-        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/check.cmake"
+        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/check_tree.cmake"
     )
 endif()

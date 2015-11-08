@@ -32,77 +32,41 @@
  */
 #include <QCoreApplication>
 #include <QLocale>
-#include <QMetaObject>
 #include <QStandardPaths>
-#include <QThread>
 #include <QTranslator>
 
-namespace {
+#include <QDebug>
 
-    bool loadTranslation(const QString &localeDirName)
-    {
-        QString subPath = QStringLiteral("locale/") + localeDirName + QStringLiteral("/LC_MESSAGES/@catalog_name@.qm");
-        QString fullPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, subPath);
-        if (fullPath.isEmpty()) {
-            return false;
-        }
-        QTranslator *translator = new QTranslator(QCoreApplication::instance());
-        if (!translator->load(fullPath)) {
-            delete translator;
-            return false;
-        }
-        QCoreApplication::instance()->installTranslator(translator);
-        return true;
+static bool loadTranslation(const QString &localeDirName)
+{
+    QString subPath = QStringLiteral("locale/") + localeDirName + QStringLiteral("/LC_MESSAGES/@catalog_name@.qm");
+    QString fullPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, subPath);
+    if (fullPath.isEmpty()) {
+        return false;
     }
-
-    void load()
-    {
-        // The way Qt translation system handles plural forms makes it necessary to
-        // have a translation file which contains only plural forms for `en`. That's
-        // why we load the `en` translation unconditionally, then load the
-        // translation for the current locale to overload it.
-        loadTranslation(QStringLiteral("en"));
-
-        QLocale locale = QLocale::system();
-        if (locale.name() != QStringLiteral("en")) {
-            if (!loadTranslation(locale.name())) {
-                loadTranslation(locale.bcp47Name());
-            }
-        }
+    QTranslator *translator = new QTranslator(QCoreApplication::instance());
+    if (!translator->load(fullPath)) {
+        delete translator;
+        return false;
     }
-
-    // helper to call load() on the correct thread
-    class Loader : public QObject
-    {
-        Q_OBJECT
-
-    public Q_SLOTS:
-        void callLoadAndDeleteSelf()
-        {
-            load();
-            this->deleteLater();
-        }
-    };
-
-    void loadOnMainThread()
-    {
-        // If this library is loaded after the QCoreApplication instance is created
-        // (eg: because it is brought in by a plugin), there is no guarantee this
-        // function will be called on the main thread.
-        // QCoreApplication::installTranslator needs to be called on the main
-        // thread, because it uses QCoreApplication::sendEvent.
-        if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
-            load();
-        } else {
-            // QObjects inherit their parent object's thread
-            Loader *loader = new Loader();
-            loader->moveToThread(QCoreApplication::instance()->thread());
-            QMetaObject::invokeMethod(loader, "callLoadAndDeleteSelf", Qt::AutoConnection);
-        }
-    }
-
+    QCoreApplication::instance()->installTranslator(translator);
+    return true;
 }
 
-Q_COREAPP_STARTUP_FUNCTION(loadOnMainThread)
+static void load()
+{
+    // The way Qt translation system handles plural forms makes it necessary to
+    // have a translation file which contains only plural forms for `en`. That's
+    // why we load the `en` translation unconditionally, then load the
+    // translation for the current locale to overload it.
+    loadTranslation(QStringLiteral("en"));
 
-#include "ECMQmLoader.moc"
+    QLocale locale = QLocale::system();
+    if (locale.name() != QStringLiteral("en")) {
+        if (!loadTranslation(locale.name())) {
+            loadTranslation(locale.bcp47Name());
+        }
+    }
+}
+
+Q_COREAPP_STARTUP_FUNCTION(load)
