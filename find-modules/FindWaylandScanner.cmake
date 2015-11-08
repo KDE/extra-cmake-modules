@@ -47,6 +47,8 @@
 # Generate Wayland server protocol files from ``<xmlfile>`` XML
 # definition for the ``<basename>`` interface and append those files
 # to ``<source_files_var>``.
+#
+# Since 1.4.0.
 
 #=============================================================================
 # Copyright 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>

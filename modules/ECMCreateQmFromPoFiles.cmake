@@ -68,6 +68,8 @@
 #
 # This generates a C++ file which loads "mylib.qm" at startup, assuming it has
 # been installed by ecm_create_qm_from_po_files(), and compiles it into ``mylib``.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Aurélien Gâteau <agateau@kde.org>
@@ -108,13 +110,18 @@ endfunction()
 
 function(_ECM_QM_CREATE_TARGET install_destination catalog_name)
     # Find lconvert
-    get_target_property(lrelease_location Qt5::lrelease LOCATION)
-    get_filename_component(lrelease_path ${lrelease_location} PATH)
-    find_program(lconvert_executable
-        NAMES lconvert-qt5 lconvert
-        PATHS ${lrelease_path}
-        NO_DEFAULT_PATH
-        )
+    if(TARGET Qt5::lconvert)
+        set(lconvert_executable Qt5::lconvert)
+    else()
+        # Qt < 5.3.1 does not define Qt5::lconvert
+        get_target_property(lrelease_location Qt5::lrelease LOCATION)
+        get_filename_component(lrelease_path ${lrelease_location} PATH)
+        find_program(lconvert_executable
+            NAMES lconvert-qt5 lconvert
+            PATHS ${lrelease_path}
+            NO_DEFAULT_PATH
+            )
+    endif()
 
     if (catalog_name)
         set(install_args RENAME ${catalog_name}.qm)
@@ -138,7 +145,7 @@ function(_ECM_QM_CREATE_TARGET install_destination catalog_name)
             COMMAND ${lconvert_executable}
                 ARGS -i ${it} -o ${tsfile} -target-language ${language}
             COMMAND Qt5::lrelease
-                ARGS -compress -removeidentical -silent ${tsfile} -qm ${qmfile}
+                ARGS -removeidentical -silent ${tsfile} -qm ${qmfile}
             DEPENDS ${it}
             )
         install(

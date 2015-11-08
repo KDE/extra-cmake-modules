@@ -2,19 +2,20 @@
 # ECMCoverageOption
 # --------------------
 #
-# Creates a BUILD_COVERAGE option, so the project can be built with code coverage
-# support.
+# Allow users to easily enable GCov code coverage support.
 #
-# ::
+# Code coverage allows you to check how much of your codebase is covered by
+# your tests. This module makes it easy to build with support for
+# `GCov <https://gcc.gnu.org/onlinedocs/gcc/Gcov.html>`_.
 #
-#   BUILD_COVERAGE
+# When this module is included, a ``BUILD_COVERAGE`` option is added (default
+# OFF). Turning this option on enables GCC's coverage instrumentation, and
+# links against ``libgcov``.
 #
-# If it's on, the project will be compiled with code coverage support, using
-# gcov. Otherwise, it will be built normally.
+# Note that this will probably break the build if you are not using GCC.
 #
-# ::
-#
-#
+# Since 1.3.0.
+
 #=============================================================================
 # Copyright 2014 Aleix Pol Gonzalez <aleixpol@kde.org>
 #

@@ -29,6 +29,8 @@
 # In general we recommend using the imported target, as it is easier to use.
 # Bear in mind, however, that if the target is in the link interface of an
 # exported library, it must be made available by the package config file.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>
@@ -58,12 +60,9 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-if(CMAKE_VERSION VERSION_LESS 2.8.12)
-    message(FATAL_ERROR "CMake 2.8.12 is required by FindEGL.cmake")
-endif()
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-    message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindEGL.cmake")
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
+
+ecm_find_package_version_check(EGL)
 
 # Use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
@@ -96,14 +95,14 @@ if(EGL_INCLUDE_DIR)
     # finding all these defines and selecting the highest numbered.
     file(READ "${EGL_INCLUDE_DIR}/egl.h" _EGL_header_contents)
     string(REGEX MATCHALL
-        "[ \\t]EGL_VERSION_[0-9_]+"
+        "[ \t]EGL_VERSION_[0-9_]+"
         _EGL_version_lines
         "${_EGL_header_contents}"
     )
     unset(_EGL_header_contents)
     foreach(_EGL_version_line ${_EGL_version_lines})
         string(REGEX REPLACE
-            "[ \\t]EGL_VERSION_([0-9_]+)"
+            "[ \t]EGL_VERSION_([0-9_]+)"
             "\\1"
             _version_candidate
             "${_EGL_version_line}"

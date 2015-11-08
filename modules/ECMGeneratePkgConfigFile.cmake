@@ -1,8 +1,11 @@
 #.rst:
 # ECMGeneratePkgConfigFile
-# ------------------
+# ------------------------
 #
-# Generate a ``.pc`` file for the benefit of autotools-based projects.
+# Generate a `pkg-config <http://www.freedesktop.org/wiki/Software/pkg-config/>`_
+# file for the benefit of
+# `autotools <http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html>`_-based
+# projects.
 #
 # ::
 #
@@ -15,38 +18,41 @@
 #                         [DEFINES -D<variable=value>...]
 #                         [INSTALL])
 #
-# BASE_NAME is the name of the module. It's the name projects will use to find
-# the module.
+# ``BASE_NAME`` is the name of the module. It's the name projects will use to
+# find the module.
 #
-# LIB_NAME is the name of the library that is being exported. If undefined, it
-# will default to the BASE_NAME. That means the LIB_NAME will be set as the name
-# field as well as the library to link to.
+# ``LIB_NAME`` is the name of the library that is being exported. If undefined,
+# it will default to the ``BASE_NAME``. That means the ``LIB_NAME`` will be set
+# as the name field as well as the library to link to.
 #
-# FILENAME_VAR is specified with a variable name. This variable will receive the
-# location of the generated file will be set, within the build directory. This
-# way it can be used in case some processing is required. See also INSTALL.
+# ``FILENAME_VAR`` is specified with a variable name. This variable will
+# receive the location of the generated file will be set, within the build
+# directory. This way it can be used in case some processing is required. See
+# also ``INSTALL``.
 #
-# INCLUDE_INSTALL_DIR specifies where the includes will be installed. If it's not
-# specified, it will default to INSTALL_INCLUDEDIR, CMAKE_INSTALL_INCLUDEDIR or just
-# "include/" in case they are specified, with the BASE_NAME postfixed.
+# ``INCLUDE_INSTALL_DIR`` specifies where the includes will be installed. If
+# it's not specified, it will default to ``INSTALL_INCLUDEDIR``,
+# ``CMAKE_INSTALL_INCLUDEDIR`` or just "include/" in case they are specified,
+# with the BASE_NAME postfixed.
 #
-# LIB_INSTALL_DIR specifies where the library is being installed. If it's not
-# specified, it will default to LIB_INSTALL_DIR, CMAKE_INSTALL_LIBDIR or just
-# "lib/" in case they are specified.
+# ``LIB_INSTALL_DIR`` specifies where the library is being installed. If it's
+# not specified, it will default to ``LIB_INSTALL_DIR``,
+# ``CMAKE_INSTALL_LIBDIR`` or just "lib/" in case they are specified.
 #
-# DEFINES is a list of preprocessor defines that it is recommended users of the
-# library pass to the compiler when using it.
+# ``DEFINES`` is a list of preprocessor defines that it is recommended users of
+# the library pass to the compiler when using it.
 #
-# INSTALL will cause the module to be installed to the ``pkgconfig`` subdirectory
-# of LIB_INSTALL_DIR, unless the ECM_PKGCONFIG_INSTALL_DIR cache variable is set
-# to something different. Note that the first call to ecm_generate_pkgconfig_file
-# with the INSTALL argument will cause ECM_PKGCONFIG_INSTALL_DIR to be set to the
-# cache, and will be used in any subsequent calls.
+# ``INSTALL`` will cause the module to be installed to the ``pkgconfig``
+# subdirectory of ``LIB_INSTALL_DIR``, unless the ``ECM_PKGCONFIG_INSTALL_DIR``
+# cache variable is set to something different. Note that the first call to
+# ecm_generate_pkgconfig_file with the ``INSTALL`` argument will cause
+# ``ECM_PKGCONFIG_INSTALL_DIR`` to be set to the cache, and will be used in any
+# subsequent calls.
 #
-# To properly use this macro a version needs to be set. To retrieve it ``ECM_PKGCONFIG_INSTALL_DIR``
-# uses PROJECT_VERSION. To set it, use the project() command (only available since CMake 3.0) or the
-# ecm_setup_version() macro.
-#
+# To properly use this macro a version needs to be set. To retrieve it,
+# ``ECM_PKGCONFIG_INSTALL_DIR`` uses ``PROJECT_VERSION``. To set it, use the
+# project() command (only available since CMake 3.0) or the ecm_setup_version()
+# macro.
 #
 # Example usage:
 #
@@ -59,6 +65,7 @@
 #       INSTALL
 #   )
 #
+# Since 1.3.0.
 
 #=============================================================================
 # Copyright 2014 Aleix Pol Gonzalez <aleixpol@kde.org>

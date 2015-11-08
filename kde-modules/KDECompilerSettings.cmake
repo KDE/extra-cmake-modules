@@ -29,6 +29,8 @@
 #
 # Enables exceptions for C++ source files compiled for the
 # CMakeLists.txt file in the current directory and all subdirectories.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>
@@ -194,6 +196,7 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR
 endif()
 
 # Default to hidden visibility for symbols
+set(CMAKE_C_VISIBILITY_PRESET hidden)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 

@@ -11,6 +11,8 @@
 # For example, constructions like QString("foo") are prohibited, instead
 # forcing the use of QLatin1String or QStringLiteral, and some
 # Qt-defined keywords like signals and slots will not be defined.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2013      Albert Astals Cid <aacid@kde.org>
@@ -38,11 +40,16 @@ add_definitions(-DQT_NO_CAST_TO_ASCII
                 -DQT_USE_FAST_OPERATOR_PLUS
                 -DQT_USE_QSTRINGBUILDER
                )
-if(NOT MSVC)
-    # QT_STRICT_ITERATORS breaks MSVC: it tries to link to QTypedArrayData symbols
-    # when using foreach. However these symbols don't actually exist.
-    # Not having QT_STRICT_ITERATORS defined fixes this issue.
-    # This is fixed by https://codereview.qt-project.org/#change,76311
-    # TODO: set QT_STRICT_ITERATORS on all platforms once we depend on Qt 5.3
-    add_definitions(-DQT_STRICT_ITERATORS)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_definitions(-DQT_STRICT_ITERATORS)
+endif()
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+   # -Wgnu-zero-variadic-macro-arguments is triggered by every qCDebug() call and therefore results
+   # in a lot of noise. This warning is only notifying us that clang is emulating the GCC behaviour
+   # instead of the exact standard wording so we can safely ignore it
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wno-gnu-zero-variadic-macro-arguments")
 endif()

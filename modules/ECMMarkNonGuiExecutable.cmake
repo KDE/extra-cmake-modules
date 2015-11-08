@@ -11,6 +11,8 @@
 # This will indicate to CMake that the specified targets should not be included
 # in a MACOSX_BUNDLE and should not be WIN32_EXECUTABLEs.  On platforms other
 # than MacOS X or Windows, this will have no effect.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2012 Stephen Kelly <steveire@gmail.com>

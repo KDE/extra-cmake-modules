@@ -44,6 +44,8 @@
 # be installed along with config files if they are required as a dependency (for
 # example, if targets provided by the find module are in the link interface of a
 # library).
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2011 Alexander Neundorf <neundorf@kde.org>

@@ -16,6 +16,8 @@
 # If all the required components (those given in the COMPONENTS argument, but
 # not those given in the OPTIONAL_COMPONENTS argument) are found, ``KF5_FOUND``
 # will be set to true. Otherwise, it will be set to false.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>
@@ -45,12 +47,9 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-if(CMAKE_VERSION VERSION_LESS 2.8.12)
-    message(FATAL_ERROR "CMake 2.8.12 is required by FindKF5.cmake")
-endif()
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-    message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindKF5.cmake")
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
+
+ecm_find_package_version_check(KF5)
 
 if (NOT KF5_FIND_COMPONENTS)
     set(KF5_NOT_FOUND_MESSAGE "The KF5 package requires at least one component")

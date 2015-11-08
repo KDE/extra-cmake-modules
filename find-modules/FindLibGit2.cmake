@@ -1,6 +1,6 @@
 #.rst:
 # FindLibGit2
-# -------
+# -----------
 #
 # Try to find libgit2 on a Unix system.
 #
@@ -28,6 +28,8 @@
 # In general we recommend using the imported target, as it is easier to use.
 # Bear in mind, however, that if the target is in the link interface of an
 # exported library, it must be made available by the package config file.
+#
+# Since 1.3.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>
@@ -58,12 +60,9 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-if(CMAKE_VERSION VERSION_LESS 2.8.12)
-    message(FATAL_ERROR "CMake 2.8.12 is required by FindLibGit2.cmake")
-endif()
-if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-    message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindLibGit2.cmake")
-endif()
+include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
+
+ecm_find_package_version_check(LibGit2)
 
 # Use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls

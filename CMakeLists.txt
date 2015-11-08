@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 project(extra-cmake-modules NONE)
 
-set(ECM_MAJOR_VERSION 1)
-set(ECM_MINOR_VERSION 6)
+set(ECM_MAJOR_VERSION 5)
+set(ECM_MINOR_VERSION 16)
 set(ECM_PATCH_VERSION 0)
 
 set(ECM_VERSION ${ECM_MAJOR_VERSION}.${ECM_MINOR_VERSION}.${ECM_PATCH_VERSION})
@@ -14,7 +14,8 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-set(SHARE_INSTALL_DIR share)
+set(SHARE_INSTALL_DIR share CACHE PATH "read-only architecture-independent data")
+set(TOOLCHAIN_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/toolchain/)
 set(MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/modules/)
 set(KDE_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/kde-modules/)
 set(FIND_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/find-modules/)
@@ -32,6 +33,9 @@ install(FILES ${installKdeModuleFiles} DESTINATION ${KDE_MODULES_INSTALL_DIR})
 
 file(GLOB installFindModuleFiles ${CMAKE_SOURCE_DIR}/find-modules/*[^~])
 install(FILES ${installFindModuleFiles} DESTINATION ${FIND_MODULES_INSTALL_DIR})
+
+file(GLOB installToolchainModuleFiles ${CMAKE_SOURCE_DIR}/toolchain/*[^~])
+install(FILES ${installToolchainModuleFiles} DESTINATION ${TOOLCHAIN_MODULES_INSTALL_DIR})
 
 
 include(CMakePackageConfigHelpers)

@@ -44,6 +44,8 @@
 # and provide more control.  Bear in mind, however, that if any target is in the
 # link interface of an exported library, it must be made available by the
 # package config file.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>
@@ -115,7 +117,7 @@ if(NOT Wayland_VERSION)
     if(Wayland_VERSION_HEADER)
         file(READ ${Wayland_VERSION_HEADER} _wayland_version_header_contents)
         string(REGEX REPLACE
-            "^.*[ \\t]+WAYLAND_VERSION[ \\t]+\"([0-9.]*)\".*$"
+            "^.*[ \t]+WAYLAND_VERSION[ \t]+\"([0-9.]*)\".*$"
             "\\1"
             Wayland_VERSION
             "${_wayland_version_header_contents}"

@@ -59,6 +59,8 @@
 #
 # With this syntax, the file ``hi22-actions-menu_new.png`` would be installed
 # into ``<icon_install_dir>/hicolor/22x22/actions/menu_new.png``
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>
@@ -109,6 +111,8 @@ macro(_ecm_install_icons_v1 _defaultpath)
       set(_l10n_SUBDIR ".")
    endif(_lang)
 
+   set(_themes)
+
    # first the png icons
    file(GLOB _icons *.png)
    foreach (_current_ICON ${_icons} )
@@ -121,6 +125,7 @@ macro(_ecm_install_icons_v1 _defaultpath)
 
       set(_theme_GROUP ${_ECM_ICON_THEME_${_type}})
       if( _theme_GROUP)
+         list(APPEND _themes "${_theme_GROUP}")
          _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                     ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
                     ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
@@ -139,6 +144,7 @@ macro(_ecm_install_icons_v1 _defaultpath)
 
       set(_theme_GROUP ${_ECM_ICON_THEME_${_type}})
       if( _theme_GROUP)
+         list(APPEND _themes "${_theme_GROUP}")
          _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                 ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
                 ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
@@ -156,13 +162,21 @@ macro(_ecm_install_icons_v1 _defaultpath)
 
       set(_theme_GROUP ${_ECM_ICON_THEME_${_type}})
       if( _theme_GROUP)
+         list(APPEND _themes "${_theme_GROUP}")
           _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                             ${_defaultpath}/${_theme_GROUP}/scalable
                             ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
       endif( _theme_GROUP)
    endforeach (_current_ICON)
 
-   _ecm_update_iconcache("${_defaultpath}" hicolor)
+   if (_themes)
+       list(REMOVE_DUPLICATES _themes)
+       foreach(_theme ${_themes})
+           _ecm_update_iconcache("${_defaultpath}" "${_theme}")
+       endforeach()
+   else()
+       message(AUTHOR_WARNING "No suitably-named icons found")
+   endif()
 
 endmacro()
 
@@ -184,7 +198,9 @@ endmacro()
 
 # Updates the mtime of the icon theme directory, so caches that
 # watch for changes to the directory will know to update.
+# If present, this also runs gtk-update-icon-cache (which despite the name is also used by Qt).
 function(_ecm_update_iconcache installdir theme)
+    find_program(GTK_UPDATE_ICON_CACHE_EXECUTABLE NAMES gtk-update-icon-cache)
     # We don't always have touch command (e.g. on Windows), so instead
     # create and delete a temporary file in the theme dir.
     install(CODE "
@@ -192,6 +208,10 @@ function(_ecm_update_iconcache installdir theme)
     if (NOT DESTDIR_VALUE)
         file(WRITE \"${installdir}/${theme}/temp.txt\" \"update\")
         file(REMOVE \"${installdir}/${theme}/temp.txt\")
+        set(HAVE_GTK_UPDATE_ICON_CACHE_EXEC ${GTK_UPDATE_ICON_CACHE_EXECUTABLE})
+        if (HAVE_GTK_UPDATE_ICON_CACHE_EXEC)
+            execute_process(COMMAND ${GTK_UPDATE_ICON_CACHE_EXECUTABLE} -q -t -i . WORKING_DIRECTORY \"${CMAKE_INSTALL_PREFIX}/${installdir}/${theme}\")
+        endif ()
     endif (NOT DESTDIR_VALUE)
     ")
 endfunction()
@@ -221,8 +241,9 @@ function(ecm_install_icons)
     endif()
 
     foreach(icon ${ARG_ICONS})
+        get_filename_component(filename "${icon}" NAME)
         string(REGEX MATCH "([0-9sc]+)\\-([a-z]+)\\-([^/]+)\\.([a-z]+)$"
-                           _dummy "${icon}")
+                           complete_match "${filename}")
         set(size  "${CMAKE_MATCH_1}")
         set(group "${CMAKE_MATCH_2}")
         set(name  "${CMAKE_MATCH_3}")
@@ -232,6 +253,12 @@ function(ecm_install_icons)
         elseif(NOT size STREQUAL "sc" AND NOT size GREATER 0)
             message(WARNING "${icon} size (${size}) is invalid - ignoring")
         else()
+            if (NOT complete_match STREQUAL filename)
+                # We can't stop accepting filenames with leading characters,
+                # because that would break existing projects, so just warn
+                # about them instead.
+                message(AUTHOR_WARNING "\"${icon}\" has characters before the size; it should be renamed to \"${size}-${group}-${name}.${ext}\"")
+            endif()
             if(NOT _ECM_ICON_GROUP_${group})
                 message(WARNING "${icon} group (${group}) is not recognized")
             endif()

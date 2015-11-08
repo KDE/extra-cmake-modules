@@ -73,6 +73,9 @@
 # first argument.  In all other respects, it behaves like the other form of the
 # command.
 #
+# Since pre-1.0.0.
+#
+# COMPATIBLITY option available since 1.6.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>

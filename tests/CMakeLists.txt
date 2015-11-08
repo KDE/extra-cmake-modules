@@ -4,6 +4,7 @@
 # with other files (as ECM itself is architecture-independent).
 project(ECMTests C)
 
+add_subdirectory(ECMAddTests)
 add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
 add_subdirectory(ECMGeneratePkgConfigFile)
@@ -84,6 +85,9 @@ if (TARGET Qt5::qmake)
     add_test_variant(KDEInstallDirsTest.relative_or_absolute_qt
                      KDEInstallDirsTest.relative_or_absolute dummy)
 endif ()
+if (Qt5Core_FOUND)
+    add_test_macro(ECMQtDeclareLoggingCategoryTest testmain)
+endif()
 
 add_test_macro(FindModules dummy)
 add_test_macro(UseFindModules dummy)
@@ -97,13 +101,13 @@ add_test_macro(ECMInstallIconsTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMInstallIconsTest/check_tree.cmake"
 )
 
-if (Qt5LinguistTools_FOUND)
+if (Qt5Core_FOUND AND Qt5LinguistTools_FOUND)
     set(ECMPoQmToolsTest_EXTRA_OPTIONS
         --build-target install
         --build-options
             "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/InstallDirectory"
     )
     add_test_macro(ECMPoQmToolsTest
-        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/check_tree.cmake"
+        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/check.cmake"
     )
 endif()

@@ -13,6 +13,8 @@
 #
 # BUILD_TESTING is created as a cache variable by the CTest module and by the
 # :kde-module:`KDECMakeSettings` module.
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2012 Stephen Kelly <steveire@gmail.com>

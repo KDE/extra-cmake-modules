@@ -92,6 +92,8 @@
 # different components (typically because of multiple find_package() calls) then
 # ``<name>_TARGETS``, for example, will contain all the targets found in any
 # call (although no duplicates).
+#
+# Since pre-1.0.0.
 
 #=============================================================================
 # Copyright 2014 Alex Merry <alex.merry@kde.org>

@@ -5,8 +5,9 @@ Introduction
 ============
 
 The Extra CMake Modules package, or ECM, adds to the modules provided by CMake,
-including both ones used by ``find_package()`` to find common software and ones
-that can be used directly in ``CMakeLists.txt`` files to perform common tasks.
+including ones used by ``find_package()`` to find common software, ones that
+can be used directly in ``CMakeLists.txt`` files to perform common tasks and
+toolchain files that must be specified on the commandline by the user.
 
 In addition, it provides common build settings used in software produced by the
 KDE community.
@@ -54,7 +55,7 @@ some of the settings.  Some of the functionality of
 Organization
 ------------
 
-ECM provides three different types of modules.
+ECM provides four different types of modules.
 
 * Core modules provide helpful macros for use in project CMake scripts.
   See :manual:`ecm-modules(7)` for more information.
@@ -63,6 +64,8 @@ ECM provides three different types of modules.
 * KDE modules provide common settings for software produced by KDE; much of this
   may also be useful to other projects.  See :manual:`ecm-kde-modules(7)` for
   more information.
+* Toolchain files change the build tools and targets used by CMake. See
+  :manual:`ecm-toolchains(7)` for more information.
 
 The ``${ECM_MODULE_DIR}``, ``${ECM_FIND_MODULE_DIR}`` and
 ``${ECM_KDE_MODULE_DIR}`` variables may be used instead of
