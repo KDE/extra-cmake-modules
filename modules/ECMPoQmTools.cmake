@@ -28,8 +28,8 @@
 #
 #   ecm_create_qm_loader(<source_files_var> <catalog_name>)
 #
-# Generates a C++ file which ensures translations are automatically loaded at
-# startup. The path of the .cpp file is appended to ``<source_files_var>``.
+# Generates C++ code which ensures translations are automatically loaded at
+# startup. The generated files are appended to ``<source_files_var>``.
 #
 # It assumes that the .qm file for the language code ``<lang>`` is installed as
 # ``<sharedir>/locale/<lang>/LC_MESSAGES/<catalog_name>.qm``, where
@@ -99,9 +99,16 @@ endfunction()
 
 
 function(ecm_create_qm_loader out_var catalog_name)
-    # catalog_name is used in ECMQmLoader.cpp.in
-    configure_file(${ECM_MODULE_DIR}/ECMQmLoader.cpp.in ECMQmLoader-${catalog_name}.cpp @ONLY)
-    set(${out_var} ${${out_var}} ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader-${catalog_name}.cpp PARENT_SCOPE)
+    set(loader_base ${CMAKE_CURRENT_BINARY_DIR}/ECMQmLoader-${catalog_name})
+
+    set(QM_LOADER_CATALOG_NAME "${catalog_name}")
+
+    configure_file(
+        ${ECM_MODULE_DIR}/ECMQmLoader.cpp.in
+        "${loader_base}.cpp"
+        @ONLY
+    )
+    set(${out_var} "${${out_var}}" "${loader_base}.cpp" PARENT_SCOPE)
 endfunction()
 
 

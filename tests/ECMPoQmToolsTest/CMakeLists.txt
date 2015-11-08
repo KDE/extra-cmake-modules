@@ -82,7 +82,7 @@ target_link_libraries(tr_test PRIVATE Qt5::Core)
 
 
 #
-# single-threaded test (different catalog name)
+# single-threaded test (different catalog name, automoc)
 #
 # This is to check we don't overwrite previously-generated files.
 set(tr_test_2_SRCS
@@ -90,7 +90,47 @@ set(tr_test_2_SRCS
 )
 ecm_create_qm_loader(tr_test_2_SRCS catalog2)
 add_executable(tr_test_2 ${tr_test_2_SRCS})
+set_target_properties(tr_test_2 PROPERTIES AUTOMOC ON)
+target_include_directories(tr_test_2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 target_link_libraries(tr_test_2 PRIVATE Qt5::Core)
+
+
+#
+# module for tr_thread_test
+#
+add_library(tr_thread_module MODULE tr_thread_test_module.cpp ${QMLOADER_FILES})
+target_link_libraries(tr_thread_module PRIVATE Qt5::Core)
+
+
+#
+# loading a module on a thread other than the main thread
+# (automoc)
+#
+set(tr_thread_test_SRCS
+    tr_thread_test.cpp
+)
+ecm_create_qm_loader(tr_thread_test_SRCS catalog)
+add_executable(tr_thread_test ${tr_thread_test_SRCS})
+set_target_properties(tr_thread_test PROPERTIES AUTOMOC ON)
+target_include_directories(tr_thread_test PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+target_compile_definitions(tr_thread_test PRIVATE "MODULE_PATH=\"$<TARGET_FILE:tr_thread_module>\"")
+target_link_libraries(tr_thread_test PRIVATE Qt5::Core)
+
+
+#
+# loading a module on a thread other than the main thread
+# (different catalog, no AUTOMOC)
+#
+qt5_generate_moc(tr_thread_test.cpp "${CMAKE_CURRENT_BINARY_DIR}/tr_thread_test.moc")
+set(tr_thread_test_2_SRCS
+    tr_thread_test.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/tr_thread_test.moc"
+)
+ecm_create_qm_loader(tr_thread_test_2_SRCS catalog2)
+add_executable(tr_thread_test_2 ${tr_thread_test_2_SRCS})
+target_include_directories(tr_thread_test_2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+target_compile_definitions(tr_thread_test_2 PRIVATE "MODULE_PATH=\"$<TARGET_FILE:tr_thread_module>\"")
+target_link_libraries(tr_thread_test_2 PRIVATE Qt5::Core)
 
 
 #
@@ -98,7 +138,7 @@ target_link_libraries(tr_test_2 PRIVATE Qt5::Core)
 # the target it is added to is defined
 #
 # This is not something we want people to do, but it's unfortunately something
-# projects have done and we need to keep them building
+# projects have done and we need to keep them building.
 unset(QMLOADER_FILES)
 ecm_create_qm_loader(QMLOADER_FILES catalog)
 assert_var_defined(QMLOADER_FILES)
