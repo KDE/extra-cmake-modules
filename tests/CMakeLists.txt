@@ -1,8 +1,40 @@
+#=============================================================================
+# Copyright 2011      Alex Neundorf <neundorf@kde.org>
+# Copyright 2014-2015 Alex Merry <alex.merry@kde.org>
+#
+# Distributed under the OSI-approved BSD License (the "License");
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the License for more information.
+#=============================================================================
+
 # We need to set a language to find CMake packages installed in
 # architecture-dependent locations (like /usr/lib64).
 # We only set this for the tests, making sure it does not interfere
 # with other files (as ECM itself is architecture-independent).
 project(ECMTests C)
+
+find_package(Qt5LinguistTools CONFIG)
+set_package_properties(
+    Qt5LinguistTools
+    PROPERTIES
+        URL "http://www.qt.io/"
+        DESCRIPTION "Qt5 linguist tools."
+        TYPE OPTIONAL
+        PURPOSE "Required to run tests for the ECMPoQmTools module."
+)
+
+find_package(Qt5Core CONFIG)
+set_package_properties(
+    Qt5Core
+    PROPERTIES
+        URL "http://www.qt.io/"
+        DESCRIPTION "Qt5 core library."
+        TYPE OPTIONAL
+        PURPOSE "Required to run tests for the ECMQtDeclareLoggingCategory module, and for some tests of the KDEInstallDirs module."
+)
 
 add_subdirectory(ECMAddTests)
 add_subdirectory(ECMGenerateHeadersTest)
@@ -29,8 +61,6 @@ endmacro()
 macro(add_test_macro NAME)
     add_test_variant("${NAME}" "${NAME}" ${ARGN})
 endmacro()
-
-find_package(Qt5LinguistTools CONFIG)
 
 add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
@@ -73,7 +103,6 @@ set(KDEInstallDirsTest.relative_or_absolute_usr_EXTRA_OPTIONS
 add_test_variant(KDEInstallDirsTest.relative_or_absolute_usr
                  KDEInstallDirsTest.relative_or_absolute dummy)
 
-find_package(Qt5Core QUIET)
 if (TARGET Qt5::qmake)
     set(KDEInstallDirsTest.relative_or_absolute_qt_EXTRA_OPTIONS
         --build-options -DKDE_INSTALL_USE_QT_SYS_PATHS=TRUE

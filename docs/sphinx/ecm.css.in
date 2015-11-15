@@ -1,5 +1,5 @@
 /* Import the Sphinx theme style.  */
-@import url("default.css");
+@import url("${sphinx_theme}.css");
 
 /* Wrap sidebar content even within words so that long
    document names do not escape sidebar borders.  */

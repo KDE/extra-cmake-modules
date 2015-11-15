@@ -1,51 +1,55 @@
 #=============================================================================
-# CMake - Cross Platform Makefile Generator
-# Copyright 2000-2013 Kitware, Inc., Insight Software Consortium
-# Copyright 2014 Alex Merry <alex.merry@kde.org>
+# Copyright 2000-2013 Kitware, Inc.
+# Copyright 2014-2015 Alex Merry <alex.merry@kde.org>
 #
 # Distributed under the OSI-approved BSD License (the "License");
-# see accompanying file Copyright.txt for details.
+# see accompanying file COPYING-CMAKE-SCRIPTS for details.
 #
 # This software is distributed WITHOUT ANY WARRANTY; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the License for more information.
 #=============================================================================
 
-# Distros sometimes rename Python executables to allow for parallel
-# installation of Python2 and Python3 versions
-message(STATUS "Looking for Sphinx Documentation Builder...")
-find_program(SPHINX_EXECUTABLE
-    NAMES
-        sphinx-build
-        sphinx-build2
-        sphinx-build3
-    DOC "Sphinx Documentation Builder (http://sphinx-doc.org/)"
+include(CMakeDependentOption)
+
+find_package(Sphinx 1.2 MODULE)
+set_package_properties(
+    Sphinx
+    PROPERTIES
+        URL "http://sphinx-doc.org/"
+        DESCRIPTION "Tool to generate documentation."
+        TYPE OPTIONAL
+        PURPOSE "Required to build documentation for Extra CMake Modules."
 )
-if(SPHINX_EXECUTABLE)
-    message(STATUS "Sphinx Documentation Builder found at ${SPHINX_EXECUTABLE} - building documentation")
-    set(build_docs_default ON)
-else()
-    message(STATUS "Sphinx Documentation Builder not found - documentation will not be built (see http://sphinx-doc.org/)")
-    set(build_docs_default OFF)
-endif()
 
-option(BUILD_HTML_DOCS "Build html help with Sphinx" ${build_docs_default})
-option(BUILD_MAN_DOCS "Build man pages with Sphinx" ${build_docs_default})
-option(BUILD_QTHELP_DOCS "Build Qt help with Sphinx" OFF)
+find_package(QCollectionGenerator MODULE)
+set_package_properties(
+    QCollectionGenerator
+    PROPERTIES
+        URL "http://www.qt.io/"
+        DESCRIPTION "Qt help collection generator."
+        TYPE OPTIONAL
+        PURPOSE "Required to build Extra CMake Modules documentation in Qt Help format."
+)
 
-if(NOT BUILD_HTML_DOCS AND NOT BUILD_MAN_DOCS AND NOT BUILD_QTHELP_DOCS)
-    return()
-elseif(NOT SPHINX_EXECUTABLE)
-    message(FATAL_ERROR "SPHINX_EXECUTABLE (sphinx-build) was not found!")
-endif()
+cmake_dependent_option(
+    BUILD_HTML_DOCS "Build html help with Sphinx" ON
+    "Sphinx_FOUND" OFF
+)
+add_feature_info(BUILD_HTML_DOCS BUILD_HTML_DOCS "Generate HTML documentation for installed modules.")
 
-# the docs/ directory
-set(conf_docs "${CMAKE_CURRENT_SOURCE_DIR}")
-# where cmake.py and other sphinx files are
-set(conf_path "${CMAKE_CURRENT_SOURCE_DIR}/sphinx")
-set(conf_version "${extra-cmake-modules_VERSION_MAJOR}.${extra-cmake-modules_VERSION_MINOR}.${extra-cmake-modules_VERSION_PATCH}")
-set(conf_release "${extra-cmake-modules_VERSION}")
-configure_file(sphinx/conf.py.in conf.py @ONLY)
+cmake_dependent_option(
+    BUILD_MAN_DOCS "Build man pages with Sphinx" ON
+    "Sphinx_FOUND" OFF
+)
+add_feature_info(BUILD_MAN_DOCS BUILD_MAN_DOCS "Generate man page documentation for installed modules.")
+
+cmake_dependent_option(
+    BUILD_QTHELP_DOCS "Build Qt help with Sphinx" OFF
+    "Sphinx_FOUND;QCollectionGenerator_FOUND" OFF
+)
+add_feature_info(BUILD_QTHELP_DOCS BUILD_QTHELP_DOCS "Generate QtHelp documentation for installed modules.")
+
 
 set(doc_formats "")
 if(BUILD_HTML_DOCS)
@@ -55,21 +59,25 @@ if(BUILD_MAN_DOCS)
     list(APPEND doc_formats man)
 endif()
 if(BUILD_QTHELP_DOCS)
-    find_program(QCOLLECTIONGENERATOR_EXECUTABLE
-        NAMES qcollectiongenerator
-        DOC "qcollectiongenerator tool"
-    )
-    if (NOT QCOLLECTIONGENERATOR_EXECUTABLE)
-        message(FATAL_ERROR "QCOLLECTIONGENERATOR_EXECUTABLE (qcollectiongenerator) not found!")
-    endif()
     list(APPEND doc_formats qthelp)
-
     set(qthelp_extra_commands
         COMMAND
-            qcollectiongenerator
-            ${CMAKE_CURRENT_BINARY_DIR}/qthelp/extra-cmake-modules.qhcp
+            QCollectionGenerator::Generator
+            ${CMAKE_CURRENT_BINARY_DIR}/qthelp/ExtraCMakeModules.qhcp
     )
 endif()
+
+if(NOT doc_formats)
+    return()
+endif()
+
+if (Sphinx_VERSION VERSION_LESS 1.3)
+    set(sphinx_theme default)
+else()
+    set(sphinx_theme classic)
+endif()
+configure_file(sphinx/conf.py.in conf.py @ONLY)
+configure_file(sphinx/ecm.css.in static/ecm.css)
 
 
 set(doc_format_outputs "")
@@ -80,13 +88,14 @@ foreach(format ${doc_formats})
     add_custom_command(
         OUTPUT ${doc_format_output}
         COMMAND
-            ${SPHINX_EXECUTABLE}
+            Sphinx::Build
             -c ${CMAKE_CURRENT_BINARY_DIR}
             -d ${CMAKE_CURRENT_BINARY_DIR}/doctrees
             -b ${format}
             ${CMAKE_CURRENT_SOURCE_DIR}
             ${CMAKE_CURRENT_BINARY_DIR}/${format}
             > ${doc_format_log} # log stdout, pass stderr
+        ${${format}_extra_commands}
         DEPENDS ${doc_format_last}
         COMMENT "sphinx-build ${format}: see ${CMAKE_CURRENT_BINARY_DIR}/${doc_format_log}"
         VERBATIM
@@ -99,8 +108,8 @@ endforeach()
 add_custom_target(documentation ALL DEPENDS ${doc_format_outputs})
 
 if(BUILD_MAN_DOCS)
-    file(GLOB man_rst RELATIVE ${extra-cmake-modules_SOURCE_DIR}/docs/manual
-    ${extra-cmake-modules_SOURCE_DIR}/docs/manual/*.[1-9].rst)
+    file(GLOB man_rst RELATIVE ${ECM_SOURCE_DIR}/docs/manual
+        ${ECM_SOURCE_DIR}/docs/manual/*.[1-9].rst)
     foreach(m ${man_rst})
         if("x${m}" MATCHES "^x(.+)\\.([1-9])\\.rst$")
             set(name "${CMAKE_MATCH_1}")
@@ -122,7 +131,7 @@ if(BUILD_HTML_DOCS)
 endif()
 if(BUILD_QTHELP_DOCS)
     install(
-        FILES ${CMAKE_CURRENT_BINARY_DIR}/qthelp/extra-cmake-modules.qch
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/qthelp/ExtraCMakeModules.qch
         DESTINATION ${DOC_INSTALL_DIR}
     )
 endif()

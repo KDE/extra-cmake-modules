@@ -1,4 +1,4 @@
-set(MODULES_DIR "${extra-cmake-modules_SOURCE_DIR}/modules")
+set(MODULES_DIR "${ECM_SOURCE_DIR}/modules")
 configure_file(run_test.cmake.config "${CMAKE_CURRENT_BINARY_DIR}/run_test.cmake" @ONLY)
 
 add_test(
