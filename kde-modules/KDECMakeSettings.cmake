@@ -55,6 +55,15 @@
 #
 # Since pre-1.0.0.
 #
+# ``ENABLE_CLAZY`` option is added (OFF by default) when clang is being used.
+# Turning this option on will force clang to load the clazy plugins for richer
+# warnings on Qt-related code.
+#
+# If clang is not being used, this won't have an effect.
+# See https://quickgit.kde.org/?p=clazy.git&a=blob&f=README&o=plain
+#
+# Since 5.17.0
+#
 # - Uninstall target functionality since 1.7.0.
 # - ``APPLE_FORCE_X11`` option since 5.14.0 (detecting X11 was previously the default behavior)
 # - ``APPLE_SUPPRESS_X11_WARNING`` option since 5.14.0
@@ -217,4 +226,13 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    endif()
 
 endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    option(ENABLE_CLAZY "Enable Clazy warnings" OFF)
+
+    if(ENABLE_CLAZY)
+        set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_CXX_COMPILE_OBJECT} -Xclang -load -Xclang ClangLazy.so -Xclang -add-plugin -Xclang clang-lazy")
+    endif()
+endif()
+
 ###################################################################
