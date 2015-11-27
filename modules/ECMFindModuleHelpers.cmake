@@ -47,7 +47,9 @@
 # The <name>_<component>_lib variable should contain the name of this library,
 # and <name>_<component>_header variable should contain the name of a header
 # file associated with it (whatever relative path is normally passed to
-# '#include').  ecm_find_package_components() will then search for the library
+# '#include'). <name>_<component>_header_subdir variable can be used to specify
+# which subdirectory of the include path the headers will be found in.
+# ecm_find_package_components() will then search for the library
 # and include directory (creating appropriate cache variables) and create an
 # imported library target named <name>::<component>.
 #
@@ -218,6 +220,7 @@ macro(ecm_find_package_handle_library_components module_name)
         find_path(${module_name}_${ecm_fpwc_comp}_INCLUDE_DIR
             NAMES ${${module_name}_${ecm_fpwc_comp}_header}
             HINTS ${PKG_${module_name}_${ecm_fpwc_comp}_INCLUDE_DIRS}
+            PATH_SUFFIXES ${${module_name}_${ecm_fpwc_comp}_header_subdir}
         )
         find_library(${module_name}_${ecm_fpwc_comp}_LIBRARY
             NAMES ${${module_name}_${ecm_fpwc_comp}_lib}
