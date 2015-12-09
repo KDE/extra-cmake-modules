@@ -130,6 +130,15 @@ add_test_macro(ECMInstallIconsTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMInstallIconsTest/check_tree.cmake"
 )
 
+set(KDEPackageAppTemplatesTest_EXTRA_OPTIONS
+    --build-target install
+    --build-options
+        "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/KDEPackageAppTemplatesTest/InstallDirectory"
+)
+add_test_macro(KDEPackageAppTemplatesTest
+    ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/KDEPackageAppTemplatesTest/check.cmake"
+)
+
 if (Qt5Core_FOUND AND Qt5LinguistTools_FOUND)
     set(ECMPoQmToolsTest_EXTRA_OPTIONS
         --build-target install

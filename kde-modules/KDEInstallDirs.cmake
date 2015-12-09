@@ -72,6 +72,8 @@
 # ``KXMLGUI5DIR``
 #     knotify description files (``DATAROOTDIR/kxmlgui5``)
 #     [``KXMLGUI_INSTALL_DIR``]
+# ``KTEMPLATESDIR``
+#     Kapptemplate and Kdevelop templates (``kdevappwizard/templates``)
 # ``KNOTIFY5RCDIR``
 #     knotify description files (``DATAROOTDIR/knotifications5``)
 #     [``KNOTIFYRC_INSTALL_DIR``]
@@ -513,6 +515,8 @@ _define_relative(KNOTIFY5RCDIR DATAROOTDIR "knotifications5"
 _define_relative(KXMLGUI5DIR DATAROOTDIR "kxmlgui5"
     "kxmlgui .rc files"
     KXMLGUI_INSTALL_DIR)
+_define_relative(KTEMPLATESDIR DATAROOTDIR "kdevappwizard/templates"
+    "Kapptemplate and Kdevelop templates")
 
 # Cross-desktop or other system things
 _define_relative(ICONDIR DATAROOTDIR "icons"
