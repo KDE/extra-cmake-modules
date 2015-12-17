@@ -75,7 +75,7 @@ if (MSVC)
     if (${MSVC_VERSION} LESS 1600)
         message(WARNING "Your MSVC version (${MSVC_VERSION}) is not supported. Please use the Windows SDK version 7 or later (or Microsoft Visual Studio 2010 or later).")
     endif()
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if (WIN32)
         _kde_compiler_min_version("4.7")
     elseif (APPLE)
@@ -84,7 +84,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     else()
         _kde_compiler_min_version("4.5")
     endif()
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     _kde_compiler_min_version("3.1")
 else()
     message(WARNING "${CMAKE_CXX_COMPILER_ID} is not a supported C++ compiler.")
@@ -158,7 +158,7 @@ if (WIN32)
     # Use the Unicode versions of Windows API by default
     # See http://msdn.microsoft.com/en-us/library/windows/desktop/dd317766%28v=vs.85%29.aspx
     _kde_add_platform_definitions(-DUNICODE -D_UNICODE)
-    
+
     # As stated in http://msdn.microsoft.com/en-us/library/4hwaceh6.aspx M_PI only gets defined
     # if _USE_MATH_DEFINES is defined, with mingw this has a similar effect as -D_GNU_SOURCE on math.h
     _kde_add_platform_definitions(-D_USE_MATH_DEFINES)
@@ -173,14 +173,14 @@ endif()
 # Pick sensible versions of the C and C++ standards.
 # Note that MSVC does not have equivalent flags; the features are either
 # supported or they are not.
-if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
     # We use the C89 standard because that is what is common to all our
     # compilers (in particular, MSVC 2010 does not support C99)
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=iso9899:1990")
 endif()
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 endif()
 
@@ -189,9 +189,9 @@ endif()
 # has performance benefits.
 # See https://www.ibm.com/developerworks/community/blogs/zTPF/entry/benefits_of_the_fnocommon_compile_option_peter_lemieszewski?lang=en
 # Note that this only applies to C code; C++ already behaves like this.
-if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR
-        "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" OR
-        ("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32))
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR
+        CMAKE_C_COMPILER_ID STREQUAL "Clang" OR
+        (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-common")
 endif()
 
@@ -232,13 +232,13 @@ endif()
 #       with gcc, but other compilers are unaccounted for.
 
 # Turn off exceptions by default
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
-#elseif (MSVC OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
+#elseif (MSVC OR (WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "Intel"))
     # Exceptions appear to be disabled by default for MSVC
     # http://msdn.microsoft.com/en-us/library/1deeycx5.aspx
 
@@ -248,15 +248,15 @@ endif()
 macro(_kdecompilersettings_append_exception_flag VAR)
     if (MSVC)
         set(${VAR} "${${VAR}} -EHsc")
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+    elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         if (WIN32)
             set(${VAR} "${${VAR}} -EHsc")
         else()
             set(${VAR} "${${VAR}} -fexceptions")
         endif()
-    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(${VAR} "${${VAR}} -fexceptions")
-    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         set(${VAR} "${${VAR}} -fexceptions")
     endif()
     string(STRIP "${${VAR}}" ${VAR})
@@ -311,9 +311,9 @@ endfunction()
 # Better diagnostics (warnings, errors)
 ############################################################
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
-        ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND NOT APPLE) OR
-        ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32))
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
+        (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT APPLE) OR
+        (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
     # Linker warnings should be treated as errors
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_SHARED_LINKER_FLAGS}")
     set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_MODULE_LINKER_FLAGS}")
@@ -324,12 +324,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
 endif()
 
 set(_KDE_GCC_COMMON_WARNING_FLAGS "-Wall -Wextra -Wcast-align -Wchar-subscripts -Wformat-security -Wno-long-long -Wpointer-arith -Wundef")
-if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_KDE_GCC_COMMON_WARNING_FLAGS} -Wmissing-format-attribute -Wwrite-strings")
     # Make some warnings errors
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror=implicit-function-declaration")
 endif()
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_KDE_GCC_COMMON_WARNING_FLAGS} -Wnon-virtual-dtor -Woverloaded-virtual")
     # Make some warnings errors
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
@@ -337,10 +337,10 @@ endif()
 
 # -w1 turns on warnings and errors
 # FIXME: someone needs to have a closer look at the Intel compiler options
-if ("${CMAKE_C_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
+if (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -w1 -Wpointer-arith")
 endif()
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel" AND NOT WIN32)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -w1 -Wpointer-arith")
 endif()
 
@@ -398,7 +398,7 @@ if (APPLE)
 endif()
 
 if (WIN32)
-    if (MSVC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+    if (MSVC OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         # MSVC has four incompatible C runtime libraries: static (libcmt),
         # static debug (libcmtd), shared (msvcrt) and shared debug (msvcrtd):
         # see http://support.microsoft.com/kb/154753
@@ -427,7 +427,7 @@ if (WIN32)
     endif()
 endif()
 
-if (MINGW AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # This was copied from the Phonon build settings, where it had the comment
     # "otherwise undefined symbol in phononcore.dll errors occurs", with the commit
     # message "set linker flag --export-all-symbols for all targets, otherwise
