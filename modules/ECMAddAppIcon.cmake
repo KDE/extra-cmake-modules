@@ -222,8 +222,8 @@ function(ecm_add_app_icon appsources)
 
             # Install the icon into the Resources dir in the bundle
             set_source_files_properties(${_outfilename}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-        else(ICONUTIL_EXECUTABLE)
+        else()
             message(STATUS "Unable to find the iconutil utility - application will not have an application icon!")
-        endif(ICONUTIL_EXECUTABLE)
+        endif()
     endif()
 endfunction()

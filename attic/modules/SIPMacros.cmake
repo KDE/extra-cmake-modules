@@ -53,9 +53,9 @@ MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
 
     if(_module_path STREQUAL "")
         set(CMAKE_CURRENT_SIP_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-    else(_module_path STREQUAL "")
+    else()
         set(CMAKE_CURRENT_SIP_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/${_module_path}")
-    endif(_module_path STREQUAL "")
+    endif()
 
     GET_FILENAME_COMPONENT(_abs_module_sip ${MODULE_SIP} ABSOLUTE)
 

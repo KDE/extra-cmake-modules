@@ -17,7 +17,7 @@ if (WIN32)
 
   if(WINCE)
     FIND_PACKAGE(WCECOMPAT REQUIRED)
-  endif(WINCE)
+  endif()
     
   if (NOT KDEWIN_LIBRARY)
  
@@ -34,7 +34,7 @@ if (WIN32)
     string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_TOLOWER)
     if (CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
         set (LIBRARY_NAME kdewind)
-    else(CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
+    else()
         set (LIBRARY_NAME kdewin)
     endif (CMAKE_BUILD_TYPE_TOLOWER MATCHES debug)
 
@@ -53,9 +53,9 @@ if (WIN32)
     # add needed system libs
     if(NOT WINCE)
         set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} user32 shell32 ws2_32 netapi32 userenv)
-    else(NOT WINCE)
+    else()
          set(KDEWIN_LIBRARIES ${KDEWIN_LIBRARY} ws2 ${WCECOMPAT_LIBRARIES})
-    endif(NOT WINCE)
+    endif()
 
     if (MINGW)
       #mingw compiler
@@ -66,9 +66,9 @@ if (WIN32)
       file(TO_CMAKE_PATH "$ENV{MSSDK}" MSSDK_DIR)
       if (WINCE)
         set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/msvc ${WCECOMPAT_INCLUDE_DIR} ${QT_INCLUDES} ${MSSDK_DIR})
-      else(WINCE)
+      else()
         set(KDEWIN_INCLUDES ${KDEWIN_INCLUDE_DIR} ${KDEWIN_INCLUDE_DIR}/msvc ${QT_INCLUDES} ${MSSDK_DIR})
-      endif(WINCE)
+      endif()
     endif (MINGW)
 
   endif (KDEWIN_LIBRARY AND KDEWIN_INCLUDE_DIR)

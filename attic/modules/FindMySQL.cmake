@@ -25,7 +25,7 @@ if(WIN32)
       $ENV{ProgramFiles}/MySQL/*/include
       $ENV{SystemDrive}/MySQL/*/include
    )
-else(WIN32)
+else()
    find_path(MYSQL_INCLUDE_DIR mysql.h
       PATHS
       $ENV{MYSQL_INCLUDE_DIR}
@@ -35,7 +35,7 @@ else(WIN32)
       PATH_SUFFIXES
       mysql
    )
-endif(WIN32)
+endif()
 
 if(WIN32)
    string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_TOLOWER)
@@ -46,11 +46,11 @@ if(WIN32)
    if(CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
       set(binary_dist debug)
       set(build_dist Debug)
-   else(CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
+   else()
       ADD_DEFINITIONS(-DDBUG_OFF)
       set(binary_dist opt)
       set(build_dist Release)
-   endif(CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
+   endif()
 
 #   find_library(MYSQL_LIBRARIES NAMES mysqlclient
    find_library(MYSQL_LIBRARIES NAMES libmysql
@@ -61,7 +61,7 @@ if(WIN32)
       $ENV{ProgramFiles}/MySQL/*/lib/${binary_dist}
       $ENV{SystemDrive}/MySQL/*/lib/${binary_dist}
    )
-else(WIN32)
+else()
 #   find_library(MYSQL_LIBRARIES NAMES mysqlclient
    find_library(MYSQL_LIBRARIES NAMES libmysql
       PATHS
@@ -73,7 +73,7 @@ else(WIN32)
       PATH_SUFFIXES 
       mysql
    )
-endif(WIN32)
+endif()
 
 if(WIN32)
    set(MYSQL_LIB_PATHS
@@ -86,7 +86,7 @@ if(WIN32)
       PATHS
       ${MYSQL_LIB_PATHS}
    )
-else(WIN32)
+else()
    set(MYSQL_LIB_PATHS
       $ENV{MYSQL_DIR}/libmysql_r/.libs
       $ENV{MYSQL_DIR}/lib
@@ -100,7 +100,7 @@ else(WIN32)
       PATHS
       ${MYSQL_LIB_PATHS}
    )
-endif(WIN32)
+endif()
 
 find_library(MYSQL_EMBEDDED_LIBRARIES NAMES mysqld
    PATHS
@@ -109,11 +109,11 @@ find_library(MYSQL_EMBEDDED_LIBRARIES NAMES mysqld
 
 if(MYSQL_LIBRARIES)
    get_filename_component(MYSQL_LIB_DIR ${MYSQL_LIBRARIES} PATH)
-endif(MYSQL_LIBRARIES)
+endif()
 
 if(MYSQL_EMBEDDED_LIBRARIES)
    get_filename_component(MYSQL_EMBEDDED_LIB_DIR ${MYSQL_EMBEDDED_LIBRARIES} PATH)
-endif(MYSQL_EMBEDDED_LIBRARIES)
+endif()
 
 macro_push_required_vars()
 set( CMAKE_REQUIRED_INCLUDES ${MYSQL_INCLUDE_DIR} )
@@ -124,17 +124,17 @@ macro_pop_required_vars()
 if(MYSQL_INCLUDE_DIR AND MYSQL_LIBRARIES)
    set(MYSQL_FOUND TRUE)
    message(STATUS "Found MySQL: ${MYSQL_INCLUDE_DIR}, ${MYSQL_LIBRARIES}")
-else(MYSQL_INCLUDE_DIR AND MYSQL_LIBRARIES)
+else()
    set(MYSQL_FOUND FALSE)
    message(STATUS "MySQL not found.")
-endif(MYSQL_INCLUDE_DIR AND MYSQL_LIBRARIES)
+endif()
 
 if(MYSQL_INCLUDE_DIR AND MYSQL_EMBEDDED_LIBRARIES AND HAVE_MYSQL_OPT_EMBEDDED_CONNECTION)
    set(MYSQL_EMBEDDED_FOUND TRUE)
    message(STATUS "Found MySQL Embedded: ${MYSQL_INCLUDE_DIR}, ${MYSQL_EMBEDDED_LIBRARIES}")
-else(MYSQL_INCLUDE_DIR AND MYSQL_EMBEDDED_LIBRARIES AND HAVE_MYSQL_OPT_EMBEDDED_CONNECTION)
+else()
    set(MYSQL_EMBEDDED_FOUND FALSE)
    message(STATUS "MySQL Embedded not found.")
-endif(MYSQL_INCLUDE_DIR AND MYSQL_EMBEDDED_LIBRARIES AND HAVE_MYSQL_OPT_EMBEDDED_CONNECTION)
+endif()
 
 mark_as_advanced(MYSQL_INCLUDE_DIR MYSQL_LIBRARIES MYSQL_EMBEDDED_LIBRARIES)

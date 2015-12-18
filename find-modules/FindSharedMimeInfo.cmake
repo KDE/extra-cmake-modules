@@ -92,9 +92,9 @@ function(UPDATE_XDG_MIMETYPES _path)
     get_filename_component(_xdgmimeDir "${_path}" NAME)
     if("${_xdgmimeDir}" STREQUAL packages )
         get_filename_component(_xdgmimeDir "${_path}" PATH)
-    else("${_xdgmimeDir}" STREQUAL packages )
+    else()
         set(_xdgmimeDir "${_path}")
-    endif("${_xdgmimeDir}" STREQUAL packages )
+    endif()
 
     # Note that targets and most variables are not available to install code
     install(CODE "

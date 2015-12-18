@@ -25,12 +25,12 @@
 # Support POLKITQT_MIN_VERSION for compatibility:
 if(NOT PolkitQt_FIND_VERSION)
   set(PolkitQt_FIND_VERSION "${POLKITQT_MIN_VERSION}")
-endif(NOT PolkitQt_FIND_VERSION)
+endif()
 
 # the minimum version of PolkitQt we require
 if(NOT PolkitQt_FIND_VERSION)
   set(PolkitQt_FIND_VERSION "0.9.3")
-endif(NOT PolkitQt_FIND_VERSION)
+endif()
 
 if (NOT WIN32)
    # use pkg-config to get the directories and then use these values
@@ -56,9 +56,9 @@ if(POLKITQT_VERSION_FILE  AND NOT  POLKITQT_VERSION)
 
   if(POLKITQT_VERSION_MATCH)
     string(REGEX REPLACE "POLKITQT_VERSION_STRING \"(.*)\"\n" "\\1" _POLKITQT_VERSION ${POLKITQT_VERSION_MATCH})
-  endif(POLKITQT_VERSION_MATCH)
+  endif()
   set(POLKITQT_VERSION "${_POLKITQT_VERSION}" CACHE STRING "Version number of PolkitQt" FORCE)
-endif(POLKITQT_VERSION_FILE  AND NOT  POLKITQT_VERSION)
+endif()
 
 find_library( POLKITQT_CORE_LIBRARY
     NAMES polkit-qt-core
@@ -90,5 +90,5 @@ if(POLKITQT_FOUND)
         message("WARNING: Installation prefix does not match PolicyKit install prefixes. You probably will need to move files installed "
                 "in ${CMAKE_INSTALL_PREFIX}/${POLKITQT_POLICY_FILES_INSTALL_DIR} and by dbus_add_activation_system_service to the ${_POLKITQT_INSTALL_PREFIX}/${POLKITQT_POLICY_FILES_INSTALL_DIR} prefix")
     endif (NOT _POLKITQT_INSTALL_PREFIX STREQUAL CMAKE_INSTALL_PREFIX)
-endif(POLKITQT_FOUND)
+endif()
 

@@ -16,7 +16,7 @@ if (NOT WIN32)
   # in the FIND_PATH() and FIND_LIBRARY() calls
   find_package(PkgConfig)
   pkg_check_modules(PC_LIBUSB QUIET libusb)
-endif(NOT WIN32)
+endif()
 
 find_path(LIBUSB_INCLUDE_DIR usb.h
   HINTS ${PC_LIBUSB_INCLUDEDIR} ${PC_LIBUSB_INCLUDE_DIRS})

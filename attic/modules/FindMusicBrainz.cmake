@@ -12,7 +12,7 @@
 
 if(MUSICBRAINZ_INCLUDE_DIR AND MUSICBRAINZ_LIBRARIES)
    set(MUSICBRAINZ_FIND_QUIETLY TRUE)
-endif(MUSICBRAINZ_INCLUDE_DIR AND MUSICBRAINZ_LIBRARIES)
+endif()
 
 FIND_PATH(MUSICBRAINZ_INCLUDE_DIR musicbrainz/musicbrainz.h)
 
@@ -22,7 +22,7 @@ FIND_LIBRARY( MUSICBRAINZ_LIBRARIES NAMES musicbrainz)
 FIND_PATH(MUSICBRAINZ3_INCLUDE_DIR musicbrainz3/musicbrainz.h)
 if(MUSICBRAINZ3_INCLUDE_DIR AND NOT MUSICBRAINZ_INCLUDE_DIR)
    message(STATUS "\nIncompatible version 3.x of the musicbrainz includes detected. Version 2.x is needed.\n")
-endif(MUSICBRAINZ3_INCLUDE_DIR AND NOT MUSICBRAINZ_INCLUDE_DIR)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args( MusicBrainz DEFAULT_MSG

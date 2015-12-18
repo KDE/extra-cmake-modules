@@ -31,7 +31,7 @@ MACRO(PYTHON_INSTALL SOURCE_FILE DESINATION_DIR)
 
   if(WIN32)
     string(REGEX REPLACE ".:/" "/" _basepath "${_basepath}")
-  endif(WIN32)
+  endif()
 
   SET(_bin_py ${CMAKE_CURRENT_BINARY_DIR}/${_basepath}/${_filename})
   SET(_bin_pyc ${CMAKE_CURRENT_BINARY_DIR}/${_basepath}/${_filenamebase}.pyc)

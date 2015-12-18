@@ -19,12 +19,12 @@
 # Support PULSEAUDIO_MINIMUM_VERSION for compatibility:
 if(NOT PulseAudio_FIND_VERSION)
   set(PulseAudio_FIND_VERSION "${PULSEAUDIO_MINIMUM_VERSION}")
-endif(NOT PulseAudio_FIND_VERSION)
+endif()
 
 # the minimum version of PulseAudio we require
 if(NOT PulseAudio_FIND_VERSION)
   set(PulseAudio_FIND_VERSION "0.9.9")
-endif(NOT PulseAudio_FIND_VERSION)
+endif()
 
 if (NOT WIN32)
    include(FindPkgConfig)

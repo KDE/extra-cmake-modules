@@ -16,7 +16,7 @@
 
 if(NOT STRIGI_MIN_VERSION)
     set(STRIGI_MIN_VERSION "0.5.9")
-endif(NOT STRIGI_MIN_VERSION)
+endif()
 
 file(TO_CMAKE_PATH "$ENV{STRIGI_HOME}" strigi_home)
 
@@ -35,30 +35,30 @@ if (STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
    if(STRIGI_VERSION VERSION_LESS ${STRIGI_MIN_VERSION})
       set(_strigiErrorMessage "Strigi version ${STRIGI_VERSION} found, but at least version ${STRIGI_MIN_VERSION} is required")
       set(STRIGI_VERSION_OK FALSE)
-   endif(STRIGI_VERSION VERSION_LESS ${STRIGI_MIN_VERSION})
+   endif()
 
    include(FindPackageHandleStandardArgs)
    find_package_handle_standard_args(Strigi 
        "${_strigiErrorMessage}"
        STRIGI_STREAMS_LIBRARY  STRIGI_STREAMANALYZER_LIBRARY  STRIGI_INCLUDE_DIR  STRIGI_VERSION_OK)
 
-else(STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
+else()
    # this else() branch is for finding strigi versions before November 16th, 2008. Alex
    include(FindLibraryWithDebug)
    include(MacroPushRequiredVars)
 
    if (WIN32)
        file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" _program_FILES_DIR)
-   endif(WIN32)
+   endif()
 
    if (NOT WIN32)
        if(NOT strigi_home)
            find_package(PkgConfig)
            if(PKG_CONFIG_EXECUTABLE)
                pkg_check_modules(STRIGI QUIET libstreamanalyzer>=${STRIGI_MIN_VERSION})
-           endif(PKG_CONFIG_EXECUTABLE)
-       endif(NOT strigi_home)
-   endif(NOT WIN32)
+           endif()
+       endif()
+   endif()
 
    if (NOT STRIGI_INCLUDEDIR)
        find_path(STRIGI_INCLUDE_DIR strigi/streamanalyzer.h 
@@ -124,11 +124,11 @@ if(WIN32)
   elseif(MINGW)
     set(STRIGI_LINE_ANALYZER_PREFIX mingw_strigila_)
     set(STRIGI_THROUGH_ANALYZER_PREFIX mingw_strigita_)
-  endif(MSVC)
-else(WIN32)
+  endif()
+else()
   set(STRIGI_LINE_ANALYZER_PREFIX strigila_)
   set(STRIGI_THROUGH_ANALYZER_PREFIX strigita_)
-endif(WIN32)
+endif()
 
 mark_as_advanced(
     STRIGI_INCLUDE_DIR

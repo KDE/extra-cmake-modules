@@ -64,7 +64,7 @@ if(DBUSMENUQT_INCLUDE_DIR  AND NOT DBUSMENUQT_VERSION)
       string(REGEX MATCH "#define +DBUSMENUQT_VERSION_PATCH +([0-9]+)"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
       set(DBUSMENUQT_VERSION_PATCH "${CMAKE_MATCH_1}")
 
-    else("${DBUSMENUQT_VERSION_CONTENT}" MATCHES "DBUSMENUQT_VERSION_MAJOR")
+    else()
       # In versions up to 0.6.4, the code for setting the version number in the header looked like
       # shopw below. This made version checking quite un-obvious:
       # #define DBUSMENUQT_VERSION \
@@ -80,11 +80,11 @@ if(DBUSMENUQT_INCLUDE_DIR  AND NOT DBUSMENUQT_VERSION)
 
       string(REGEX MATCH "\\| *([0-9]+) *\\)"  _dummy "${DBUSMENUQT_VERSION_CONTENT}")
       set(DBUSMENUQT_VERSION_PATCH "${CMAKE_MATCH_1}")
-    endif("${DBUSMENUQT_VERSION_CONTENT}" MATCHES "DBUSMENUQT_VERSION_MAJOR")
-  endif(EXISTS ${DBUSMENUQT_INCLUDE_DIR}/dbusmenu_version.h)
+    endif()
+  endif()
 
   set(DBUSMENUQT_VERSION "${DBUSMENUQT_VERSION_MAJOR}.${DBUSMENUQT_VERSION_MINOR}.${DBUSMENUQT_VERSION_PATCH}" CACHE STRING "Version number of DBusMenuQt" FORCE)
-endif(DBUSMENUQT_INCLUDE_DIR  AND NOT DBUSMENUQT_VERSION)
+endif()
 
 
 find_package_handle_standard_args(DBusMenuQt REQUIRED_VARS DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR

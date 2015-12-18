@@ -12,7 +12,7 @@ function(execute_one_test name)
    set(workingDir "${currentDir}/${name}/build")
    if(CLEAN_DIRS)
       file(REMOVE_RECURSE "${workingDir}")
-   endif(CLEAN_DIRS)
+   endif()
    file(MAKE_DIRECTORY "${workingDir}")
    execute_process(COMMAND ${CMAKE_COMMAND} "${currentDir}/${name}"
                    WORKING_DIRECTORY "${workingDir}")
@@ -20,7 +20,7 @@ function(execute_one_test name)
    set(workingDir "${currentDir}/${name}/build-no-pkgconfig")
    if(CLEAN_DIRS)
       file(REMOVE_RECURSE "${workingDir}")
-   endif(CLEAN_DIRS)
+   endif()
    file(MAKE_DIRECTORY "${workingDir}")
    execute_process(COMMAND ${CMAKE_COMMAND} -DPKG_CONFIG_EXECUTABLE=echo "${currentDir}/${name}"
                    WORKING_DIRECTORY "${workingDir}")
@@ -28,7 +28,7 @@ endfunction(execute_one_test)
 
 if(DEFINED MODULE)
    set(modulesToTest ${MODULE})
-else(DEFINED MODULE)
+else()
    set(modulesToTest AGG 
                      Blitz 
                      BlueZ
@@ -51,7 +51,7 @@ else(DEFINED MODULE)
                      USB 
                      Xine 
                      Xmms)
-endif(DEFINED MODULE)
+endif()
 
 foreach(currentModule ${modulesToTest})
    execute_one_test(${currentModule})

@@ -386,7 +386,7 @@ if(APPLE)
     _define_absolute(BUNDLEDIR "/Applications/KDE"
         "application bundles"
         BUNDLE_INSTALL_DIR)
-endif(APPLE)
+endif()
 
 
 
@@ -619,7 +619,7 @@ if(APPLE)
                                           BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
     set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
                                           BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
-endif(APPLE)
+endif()
 
 if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
     set(INSTALL_TARGETS_DEFAULT_ARGS ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

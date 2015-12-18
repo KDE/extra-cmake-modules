@@ -107,9 +107,9 @@ macro(_ecm_install_icons_v1 _defaultpath)
    set(_lang ${ARGV1})
    if(_lang)
       set(_l10n_SUBDIR l10n/${_lang})
-   else(_lang)
+   else()
       set(_l10n_SUBDIR ".")
-   endif(_lang)
+   endif()
 
    set(_themes)
 
@@ -129,7 +129,7 @@ macro(_ecm_install_icons_v1 _defaultpath)
          _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                     ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
                     ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
-      endif( _theme_GROUP)
+      endif()
    endforeach (_current_ICON)
 
    # mng icons
@@ -148,7 +148,7 @@ macro(_ecm_install_icons_v1 _defaultpath)
          _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                 ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
                 ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
-      endif( _theme_GROUP)
+      endif()
    endforeach (_current_ICON)
 
    # and now the svg icons
@@ -166,7 +166,7 @@ macro(_ecm_install_icons_v1 _defaultpath)
           _ECM_ADD_ICON_INSTALL_RULE(${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                             ${_defaultpath}/${_theme_GROUP}/scalable
                             ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR})
-      endif( _theme_GROUP)
+      endif()
    endforeach (_current_ICON)
 
    if (_themes)
@@ -189,7 +189,7 @@ macro(_ecm_add_icon_install_rule _install_SCRIPT _install_PATH _group _orig_NAME
       if(NOT _icon_GROUP)
          message(WARNING "Icon ${_install_NAME} uses invalid category ${_group}, setting to 'actions'")
          set(_icon_GROUP "actions")
-      endif(NOT _icon_GROUP)
+      endif()
 #      message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name} l10n: ${_l10n_SUBDIR}")
       install(FILES ${_orig_NAME} DESTINATION ${_install_PATH}/${_icon_GROUP}/${_l10n_SUBDIR}/ RENAME ${_install_NAME} )
    endif (NOT ${_group} STREQUAL ${_install_NAME} )

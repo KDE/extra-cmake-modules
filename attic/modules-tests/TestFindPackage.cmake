@@ -23,9 +23,9 @@ macro(TEST_FIND_PACKAGE package prefix )
    # but never return success.
    if("${PKG_CONFIG_EXECUTABLE}" STREQUAL "echo")
       message(STATUS ":: ***** Testing Find${package}.cmake, with pkg-config disabled *****")
-   else("${PKG_CONFIG_EXECUTABLE}" STREQUAL "echo")
+   else()
       message(STATUS ":: ***** Testing Find${package}.cmake *****")
-   endif("${PKG_CONFIG_EXECUTABLE}" STREQUAL "echo")
+   endif()
 
    find_package(${package})
    message(STATUS ":: ***** Results from Find${package}.cmake *****")

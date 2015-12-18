@@ -19,9 +19,9 @@ function(CHECK_INSTALLED_EXPORTS_FILE _filename)
    # get the absolute install directory, consider absolute and relative paths and also DESTDIR
    if(IS_ABSOLUTE "${EXPORT_INSTALL_DIR}")
       set(installDir "$ENV{DESTDIR}${EXPORT_INSTALL_DIR}")
-   else(IS_ABSOLUTE "${EXPORT_INSTALL_DIR}")
+   else()
       set(installDir "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${EXPORT_INSTALL_DIR}")
-   endif(IS_ABSOLUTE "${EXPORT_INSTALL_DIR}")
+   endif()
 
    set(installedExportsFile "${installDir}/${_filename}")
 
@@ -55,14 +55,14 @@ function(CHECK_INSTALLED_EXPORTS_FILE _filename)
                file(GLOB exportFiles "${installDir}/${CMAKE_MATCH_1}-*.cmake")
 #               message(STATUS "XXX files: ${exportFiles}")
                file(REMOVE ${exportFiles})
-            endif("${_filename}" MATCHES "^(.+)(\\.cmake)$")
-         else(NOT "${installedExportsFileContents}" STREQUAL "${binaryDirExportsFileContents}")
+            endif()
+         else()
 #            message(STATUS "XXX FILES ${_filename} are the same")
-         endif(NOT "${installedExportsFileContents}" STREQUAL "${binaryDirExportsFileContents}")
+         endif()
 
-      endif(EXISTS "${binaryDirExportsFile}") 
+      endif() 
 
-   endif(EXISTS "${installedExportsFile}")
+   endif()
 
 endfunction(CHECK_INSTALLED_EXPORTS_FILE)
 

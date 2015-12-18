@@ -15,7 +15,7 @@
 if(SAMBA_INCLUDE_DIR AND SAMBA_LIBRARIES)
     # Already in cache, be silent
     set(Samba_FIND_QUIETLY TRUE)
-endif(SAMBA_INCLUDE_DIR AND SAMBA_LIBRARIES)
+endif()
 
 find_path(SAMBA_INCLUDE_DIR NAMES libsmbclient.h )
 
@@ -42,21 +42,21 @@ if(SAMBA_INCLUDE_DIR AND SAMBA_LIBRARIES)
       set(SAMBA_FOUND FALSE)
    endif (SAMBA_REQUIRE_SMBC_OPTION_SET AND NOT SAMBA_HAVE_SMBC_OPTION_SET)
    
-else(SAMBA_INCLUDE_DIR AND SAMBA_LIBRARIES)
+else()
    set(SAMBA_FOUND FALSE)
    set(SAMBA_HAVE_SMBC_SET_CONTEXT FALSE)
-endif(SAMBA_INCLUDE_DIR AND SAMBA_LIBRARIES)
+endif()
 
 
 if(SAMBA_FOUND)
    if(NOT Samba_FIND_QUIETLY)
       message(STATUS "Found samba: ${SAMBA_LIBRARIES}")
-   endif(NOT Samba_FIND_QUIETLY)
-else(SAMBA_FOUND)
+   endif()
+else()
    if (Samba_FIND_REQUIRED)
       message(FATAL_ERROR "Could not find Samba library")
    endif (Samba_FIND_REQUIRED)
-endif(SAMBA_FOUND)
+endif()
 
 mark_as_advanced(SAMBA_INCLUDE_DIR SAMBA_LIBRARIES)
 

@@ -25,12 +25,12 @@
 # Support EXIV2_MIN_VERSION for compatibility:
 if(NOT Exiv2_FIND_VERSION)
   set(Exiv2_FIND_VERSION "${EXIV2_MIN_VERSION}")
-endif(NOT Exiv2_FIND_VERSION)
+endif()
 
 # the minimum version of exiv2 we require
 if(NOT Exiv2_FIND_VERSION)
   set(Exiv2_FIND_VERSION "0.12")
-endif(NOT Exiv2_FIND_VERSION)
+endif()
 
 
 if (NOT WIN32)
@@ -68,7 +68,7 @@ if(EXIV2_INCLUDE_DIR  AND NOT  EXIV2_VERSION)
   set(EXIV2_VERSION_PATCH "${CMAKE_MATCH_1}")
 
   set(EXIV2_VERSION "${EXIV2_VERSION_MAJOR}.${EXIV2_VERSION_MINOR}.${EXIV2_VERSION_PATCH}" CACHE STRING "Version number of Exiv2" FORCE)
-endif(EXIV2_INCLUDE_DIR  AND NOT  EXIV2_VERSION)
+endif()
 
 set(EXIV2_LIBRARIES "${EXIV2_LIBRARY}")
 

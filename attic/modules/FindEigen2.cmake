@@ -20,7 +20,7 @@ if(NOT Eigen2_FIND_VERSION)
   set(Eigen2_FIND_VERSION_PATCH 0)
 
   set(Eigen2_FIND_VERSION "${Eigen2_FIND_VERSION_MAJOR}.${Eigen2_FIND_VERSION_MINOR}.${Eigen2_FIND_VERSION_PATCH}")
-endif(NOT Eigen2_FIND_VERSION)
+endif()
 
 macro(_eigen2_get_version)
   file(READ "${EIGEN2_INCLUDE_DIR}/Eigen/src/Core/util/Macros.h" _eigen2_version_header LIMIT 5000 OFFSET 1000)
@@ -44,7 +44,7 @@ find_path(EIGEN2_INCLUDE_DIR NAMES Eigen/Core
 
 if(EIGEN2_INCLUDE_DIR)
   _eigen2_get_version()
-endif(EIGEN2_INCLUDE_DIR)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Eigen2 REQUIRED_VARS EIGEN2_INCLUDE_DIR

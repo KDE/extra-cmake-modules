@@ -23,7 +23,7 @@ if(NOT WIN32)
    find_package(PkgConfig)
    pkg_check_modules(PC_LCMS lcms)
    set(LCMS_DEFINITIONS ${PC_LCMS_CFLAGS_OTHER})
-endif(NOT WIN32)
+endif()
 
 find_path(LCMS_INCLUDE_DIR lcms.h
    HINTS
@@ -47,10 +47,10 @@ if(LCMS_INCLUDE_DIR  AND NOT  LCMS_VERSION)
       string(REGEX REPLACE "#define LCMS_VERSION[ ]*([0-9]*)\n" "\\1" _LCMS_VERSION ${LCMS_VERSION_MATCH})
       string(SUBSTRING ${_LCMS_VERSION} 0 1 LCMS_MAJOR_VERSION)
       string(SUBSTRING ${_LCMS_VERSION} 1 2 LCMS_MINOR_VERSION)
-   endif(LCMS_VERSION_MATCH)
+   endif()
    set(LCMS_VERSION "${LCMS_MAJOR_VERSION}${LCMS_MINOR_VERSION}" CACHE STRING "Version number of lcms" FORCE)
    set(LCMS_DOT_VERSION "${LCMS_MAJOR_VERSION}.${LCMS_MINOR_VERSION}" CACHE STRING "Version number of lcms split into components" FORCE)
-endif(LCMS_INCLUDE_DIR  AND NOT  LCMS_VERSION)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LCMS REQUIRED_VARS LCMS_LIBRARIES LCMS_INCLUDE_DIR

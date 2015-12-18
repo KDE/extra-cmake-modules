@@ -81,14 +81,14 @@ find_package_handle_standard_args(Nepomuk  DEFAULT_MSG
                                   Soprano_FOUND SOPRANO_PLUGIN_RAPTORPARSER_FOUND SOPRANO_PLUGIN_REDLANDBACKEND_FOUND
                                   SHAREDDESKTOPONTOLOGIES_FOUND
                                   )
-else(NOT WINCE)
+else()
 #FIXME: There are no backends at this time
 find_package_handle_standard_args(Nepomuk  DEFAULT_MSG
                                   NEPOMUK_LIBRARIES NEPOMUK_INCLUDE_DIR NEPOMUK_ADDONTOLOGYCLASSES_FILE
                                   Soprano_FOUND
                                   SHAREDDESKTOPONTOLOGIES_FOUND
                                   )
-endif(NOT WINCE)
+endif()
 
 #to retain backward compatibility
 set (Nepomuk_FOUND ${NEPOMUK_FOUND})

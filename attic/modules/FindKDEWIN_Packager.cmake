@@ -48,8 +48,8 @@ if (WIN32)
        			"${_progFiles}"
     		)
     		set(KDEWIN_PACKAGER_DIR ${KDEWIN_PACKAGER_DIR_tmp})
-    	endif(NOT KDEWIN_PACKAGER_DIR)
-    endif(NOT KDEWIN_PACKAGER_DIR)
+    	endif()
+    endif()
 
     if (KDEWIN_PACKAGER_DIR)
     

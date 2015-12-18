@@ -28,7 +28,7 @@ if( NOT WIN32 )
   pkg_check_modules(PC_SQLITE QUIET sqlite3)
 
   set(SQLITE_DEFINITIONS ${PC_SQLITE_CFLAGS_OTHER})
-endif( NOT WIN32 )
+endif()
 
 find_path(SQLITE_INCLUDE_DIR NAMES sqlite3.h
   PATHS

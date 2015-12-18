@@ -29,7 +29,7 @@ if(PHONON_INCLUDE_DIR AND PHONON_LIBRARY)
    set(PHONON_LIBS ${phonon_LIB_DEPENDS} ${PHONON_LIBRARY})
    set(PHONON_INCLUDES ${PHONON_INCLUDE_DIR}/KDE ${PHONON_INCLUDE_DIR})
    _phonon_find_version()
-endif(PHONON_INCLUDE_DIR AND PHONON_LIBRARY)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Phonon  DEFAULT_MSG  PHONON_INCLUDE_DIR PHONON_LIBRARY)

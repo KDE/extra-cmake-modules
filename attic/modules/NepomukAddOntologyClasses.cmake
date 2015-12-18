@@ -39,30 +39,30 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
       set(_current_arg_type "class")
     elseif(${_arg} STREQUAL "FAST")
       set(_fastmode "--fast")
-    else(${_arg} STREQUAL "ONTOLOGIES")
+    else()
       if(${_current_arg_type} STREQUAL "onto")
         list(APPEND _ontologies ${_arg})
         get_filename_component(_filename ${_arg} NAME)
         list(APPEND _ontofilenames ${_filename})
       elseif(${_current_arg_type} STREQUAL "class")
         list(APPEND _classes "--class" "${_arg}")
-      else(${_current_arg_type} STREQUAL "onto")
+      else()
         set(_visibility "--visibility" "${_arg}")
-      endif(${_current_arg_type} STREQUAL "onto")
-    endif(${_arg} STREQUAL "ONTOLOGIES")
+      endif()
+    endif()
   endforeach(_arg)
 
   # find our helper program (first in the install dir, then everywhere)
   if(NOT WINCE)
     find_program(RCGEN nepomuk-rcgen PATHS ${KDE4_BIN_INSTALL_DIR} ${BIN_INSTALL_DIR} NO_DEFAULT_PATH)
     find_program(RCGEN nepomuk-rcgen)
-  else(NOT WINCE)
+  else()
     find_program(RCGEN nepomuk-rcgen PATHS ${HOST_BINDIR} NO_DEFAULT_PATH)
-  endif(NOT WINCE)
+  endif()
 
   if(NOT RCGEN)
     message(SEND_ERROR "Failed to find the Nepomuk source generator" )
-  else(NOT RCGEN)
+  else()
     file(TO_NATIVE_PATH ${RCGEN} RCGEN)
 
     # we generate the files in the current binary dir
@@ -76,7 +76,7 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
       )
     if(NOT ${rcgen_result} EQUAL 0)
       message(SEND_ERROR "Running ${RCGEN} to generate list of headers failed with error code ${rcgen_result}")
-    endif(NOT ${rcgen_result} EQUAL 0)
+    endif()
 
     execute_process(
       COMMAND ${RCGEN} ${_fastmode} --listsources --prefix ${_targetdir}/ ${_classes} ${_visibility} ${_ontologies}
@@ -85,7 +85,7 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
       )
     if(NOT ${rcgen_result} EQUAL 0)
       message(SEND_ERROR "Running ${RCGEN} to generate list of sources failed with error code ${rcgen_result}")
-    endif(NOT ${rcgen_result} EQUAL 0)
+    endif()
 
     add_custom_command(OUTPUT ${_out_headers} ${_out_sources}
       COMMAND ${RCGEN} ${_fastmode} --writeall --target ${_targetdir}/ ${_classes} ${_visibility} ${_ontologies}
@@ -98,7 +98,7 @@ macro(NEPOMUK_ADD_ONTOLOGY_CLASSES _sources)
 
     # finally append the source files to the source list
     list(APPEND ${_sources} ${_out_sources})
-  endif(NOT RCGEN)
+  endif()
 
   # reset variable names used
   unset(_current_arg_type)

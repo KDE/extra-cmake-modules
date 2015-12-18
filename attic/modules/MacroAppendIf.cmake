@@ -18,5 +18,5 @@
 macro(macro_append_if _cond _list)
   if(${_cond})
     list(APPEND ${_list} ${ARGN})
-  endif(${_cond})
+  endif()
 endmacro(macro_append_if _cond _list)

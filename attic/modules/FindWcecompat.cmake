@@ -18,8 +18,8 @@ if(WCECOMPAT_INCLUDE_DIR)
 
     if(WCECOMPAT_LIBRARIES)
       set(WCECOMPAT_LIB_FOUND TRUE)
-    endif(WCECOMPAT_LIBRARIES)
-endif(WCECOMPAT_INCLUDE_DIR)
+    endif()
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Wcecompat  DEFAULT_MSG  WCECOMPAT_LIBRARIES  WCECOMPAT_LIB_FOUND)

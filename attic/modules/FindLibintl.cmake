@@ -18,7 +18,7 @@
 
 if(LIBINTL_INCLUDE_DIR AND LIBINTL_LIB_FOUND)
   set(Libintl_FIND_QUIETLY TRUE)
-endif(LIBINTL_INCLUDE_DIR AND LIBINTL_LIB_FOUND)
+endif()
 
 find_path(LIBINTL_INCLUDE_DIR libintl.h)
 
@@ -35,10 +35,10 @@ if(LIBINTL_INCLUDE_DIR)
     find_library(LIBINTL_LIBRARIES NAMES intl libintl )
     if(LIBINTL_LIBRARIES)
       set(LIBINTL_LIB_FOUND TRUE)
-    endif(LIBINTL_LIBRARIES)
+    endif()
   endif (LIBINTL_LIBC_HAS_DGETTEXT)
 
-endif(LIBINTL_INCLUDE_DIR)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Libintl  DEFAULT_MSG  LIBINTL_INCLUDE_DIR  LIBINTL_LIB_FOUND)

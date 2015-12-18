@@ -26,11 +26,11 @@
 # the 2.6.3 compatible location only ( share/cmake/SDO/ instead share/SDO/[cmake/] )
 if( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" VERSION_LESS "2.6.3")
   find_path(_SDO_CONFIG_DIR SharedDesktopOntologiesConfig.cmake PATH_SUFFIXES share/cmake/SharedDesktopOntologies/ )
-endif( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}" VERSION_LESS "2.6.3")
+endif()
 
 if(NOT SharedDesktopOntologies_FIND_VERSION)
   set(SharedDesktopOntologies_FIND_VERSION "${SDO_MIN_VERSION}")
-endif(NOT SharedDesktopOntologies_FIND_VERSION)
+endif()
 
 find_package(SharedDesktopOntologies ${SharedDesktopOntologies_FIND_VERSION} QUIET NO_MODULE HINTS "${_SDO_CONFIG_DIR}" )
 

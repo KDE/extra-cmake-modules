@@ -27,7 +27,7 @@ macro(NEPOMUK_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_sources 
 
     message(STATUS "Failed to find the Nepomuk source generator" )
 
-  else(NOT RCGEN)
+  else()
 
     FILE(TO_NATIVE_PATH ${RCGEN} RCGEN)
 
@@ -56,12 +56,12 @@ macro(NEPOMUK_GENERATE_FROM_ONTOLOGY ontofile targetdir out_headers out_sources 
 
       set(NEPOMUK_RESOURCES_GENERATED true)
 
-    else(${rcgen_result} EQUAL 0)
+    else()
 
       message(STATUS "Failed to generate Nepomuk resource classes.")
 
-    endif(${rcgen_result} EQUAL 0)
+    endif()
 
-  endif(NOT RCGEN)
+  endif()
   
 endmacro(NEPOMUK_GENERATE_FROM_ONTOLOGY)

@@ -46,7 +46,7 @@ if (XINE_INCLUDE_DIR AND XINE_LIBRARY AND XINECONFIG_EXECUTABLE)
    if("${XINE_VERSION}" VERSION_GREATER "1.1.0")   #if (... VERSION_GREATER) is new since cmake 2.6.2
       set(XINE_VERSION_OK TRUE)
       string(REGEX REPLACE "[0-9]\\.[0-9]\\." "" XINE_BUGFIX_VERSION ${XINE_VERSION})
-   endif("${XINE_VERSION}" VERSION_GREATER "1.1.0")
+   endif()
 endif (XINE_INCLUDE_DIR AND XINE_LIBRARY AND XINECONFIG_EXECUTABLE)
 
 
@@ -56,7 +56,7 @@ if( XINE_VERSION_OK)
   set(CMAKE_REQUIRED_LIBRARIES ${XINE_LIBRARY})
   check_c_source_compiles("#include <xine.h>\nint main()\n{\n  xine_open_video_driver(xine_new(), \"auto\", XINE_VISUAL_TYPE_XCB, NULL);\n  return 0;\n}\n" XINE_XCB_FOUND)
   set(XINE_FOUND TRUE)
-endif(XINE_VERSION_OK)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Xine  "Could NOT find XINE 1.1.1 or greater"  XINE_INCLUDE_DIR XINE_LIBRARY XINECONFIG_EXECUTABLE  XINE_VERSION_OK)

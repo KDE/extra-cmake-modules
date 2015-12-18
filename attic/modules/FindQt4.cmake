@@ -383,7 +383,7 @@ function(_QT4_QUERY_QMAKE VAR RESULT)
   if(NOT return_code)
     file(TO_CMAKE_PATH "${output}" output)
     set(${RESULT} ${output} PARENT_SCOPE)
-  endif(NOT return_code)
+  endif()
 endfunction(_QT4_QUERY_QMAKE)
 
 
@@ -638,7 +638,7 @@ IF (QT4_QMAKE_FOUND)
         NO_CMAKE_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH
         NO_CMAKE_SYSTEM_PATH)
       mark_as_advanced(QT_IMPORTS_DIR)
-    endif(qt_imports_dir)
+    endif()
   ENDIF (QT_LIBRARY_DIR AND NOT QT_IMPORTS_DIR  OR  QT_QMAKE_CHANGED)
 
   # Make variables changeble to the advanced user
@@ -1108,7 +1108,7 @@ if(NOT WINCE)
     PATHS ${QT_BINARY_DIR}
     NO_DEFAULT_PATH
     )
-else(NOT WINCE)
+else()
   FIND_PROGRAM(QT_DBUSCPP2XML_EXECUTABLE 
     NAMES qdbuscpp2xml
     PATHS ${HOST_BINDIR}
@@ -1120,7 +1120,7 @@ else(NOT WINCE)
     PATHS ${HOST_BINDIR}
     NO_DEFAULT_PATH
     )
-endif(NOT WINCE)
+endif()
 
   FIND_PROGRAM(QT_LUPDATE_EXECUTABLE
     NAMES lupdate-qt4 lupdate
