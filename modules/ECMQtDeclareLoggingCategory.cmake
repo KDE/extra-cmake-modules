@@ -30,6 +30,9 @@
 #
 # ``<identifier>`` may include namespaces (eg: ``foo::bar::IDENT``).
 #
+# Starting with Frameworks 5.18, the generated header also includes the <QDebug>
+# header, so you don't have to put extra #include <QDebug> anymore in your code.
+#
 # Since 5.14.0.
 
 #=============================================================================

@@ -4,6 +4,7 @@
 #define @GUARD_NAME@
 
 #include <QLoggingCategory>
+#include <QDebug>
 @OPEN_NAMESPACES@
 Q_DECLARE_LOGGING_CATEGORY(@IDENTIFIER@)
 @CLOSE_NAMESPACES@
