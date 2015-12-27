@@ -12,6 +12,9 @@
 # forcing the use of QLatin1String or QStringLiteral, and some
 # Qt-defined keywords like signals and slots will not be defined.
 #
+# NB: it is recommended to include this module with the NO_POLICY_SCOPE
+# flag, otherwise you may get spurious warnings with some versions of CMake.
+#
 # Since pre-1.0.0.
 
 #=============================================================================
@@ -30,7 +33,7 @@
 # (To distribute this file outside of extra-cmake-modules, substitute the full
 #  License text for the above reference.)
 
-include(KDECompilerSettings)
+include(KDECompilerSettings NO_POLICY_SCOPE)
 
 add_definitions(-DQT_NO_CAST_TO_ASCII
                 -DQT_NO_CAST_FROM_ASCII

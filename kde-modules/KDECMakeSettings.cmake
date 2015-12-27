@@ -5,6 +5,9 @@
 # Changes various CMake settings to what the KDE community views as more
 # sensible defaults.
 #
+# It is recommended to include this module with the NO_POLICY_SCOPE flag,
+# otherwise you may get spurious warnings with some versions of CMake.
+#
 # It is split into three parts, which can be independently disabled if desired.
 #
 # Runtime Paths
