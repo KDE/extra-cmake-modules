@@ -121,6 +121,15 @@ endif()
 add_test_macro(FindModules dummy)
 add_test_macro(UseFindModules dummy)
 
+set(ECMAddAppIconTest_EXTRA_OPTIONS
+    --build-target all
+    --build-options
+        "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMAddAppIconTest/InstallDirectory"
+)
+add_test_macro(ECMAddAppIconTest
+    ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMAddAppIconTest/check_files.cmake"
+)
+
 set(ECMInstallIconsTest_EXTRA_OPTIONS
     --build-target install
     --build-options
