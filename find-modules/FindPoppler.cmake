@@ -1,14 +1,14 @@
 #.rst:
-# FindWayland
+# FindPoppler
 # -----------
 #
-# Try to find Wayland.
+# Try to find Poppler.
 #
 # This is a component-based find module, which makes use of the COMPONENTS
 # and OPTIONAL_COMPONENTS arguments to find_module.  The following components
 # are available::
 #
-#   Client  Server  Cursor  Egl
+#   Core  Cpp  Qt5  Qt4 Glib
 #
 # If no components are specified, this module will act as though all components
 # were passed to OPTIONAL_COMPONENTS.
@@ -16,40 +16,39 @@
 # This module will define the following variables, independently of the
 # components searched for or found:
 #
-# ``Wayland_FOUND``
-#     TRUE if (the requested version of) Wayland is available
-# ``Wayland_VERSION``
-#     Found Wayland version
-# ``Wayland_TARGETS``
+# ``Poppler_FOUND``
+#     TRUE if (the requested version of) Poppler is available
+# ``Poppler_VERSION``
+#     Found Poppler version
+# ``Poppler_TARGETS``
 #     A list of all targets imported by this module (note that there may be more
 #     than the components that were requested)
-# ``Wayland_LIBRARIES``
+# ``Poppler_LIBRARIES``
 #     This can be passed to target_link_libraries() instead of the imported
 #     targets
-# ``Wayland_INCLUDE_DIRS``
+# ``Poppler_INCLUDE_DIRS``
 #     This should be passed to target_include_directories() if the targets are
 #     not used for linking
-# ``Wayland_DEFINITIONS``
+# ``Poppler_DEFINITIONS``
 #     This should be passed to target_compile_options() if the targets are not
 #     used for linking
 #
-# For each searched-for components, ``Wayland_<component>_FOUND`` will be set to
-# TRUE if the corresponding Wayland library was found, and FALSE otherwise.  If
-# ``Wayland_<component>_FOUND`` is TRUE, the imported target
-# ``Wayland::<component>`` will be defined.  This module will also attempt to
-# determine ``Wayland_*_VERSION`` variables for each imported target, although
-# ``Wayland_VERSION`` should normally be sufficient.
+# For each searched-for components, ``Poppler_<component>_FOUND`` will be set to
+# TRUE if the corresponding Poppler library was found, and FALSE otherwise.  If
+# ``Poppler_<component>_FOUND`` is TRUE, the imported target
+# ``Poppler::<component>`` will be defined.  This module will also attempt to
+# determine ``Poppler_*_VERSION`` variables for each imported target, although
+# ``Poppler_VERSION`` should normally be sufficient.
 #
 # In general we recommend using the imported targets, as they are easier to use
 # and provide more control.  Bear in mind, however, that if any target is in the
 # link interface of an exported library, it must be made available by the
 # package config file.
 #
-# Since pre-1.0.0.
+# Since 5.17
 
 #=============================================================================
-# Copyright 2014 Alex Merry <alex.merry@kde.org>
-# Copyright 2014 Martin Gräßlin <mgraesslin@kde.org>
+# Copyright 2015 Alex Richardson <arichardson.kde@gmail.com>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -74,70 +73,79 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
-
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 
-ecm_find_package_version_check(Wayland)
+ecm_find_package_version_check(Poppler)
 
-set(Wayland_known_components
-    Client
-    Server
-    Cursor
-    Egl
+set(Poppler_known_components
+    Cpp
+    Qt4
+    Qt5
+    Glib
 )
-foreach(_comp ${Wayland_known_components})
+foreach(_comp ${Poppler_known_components})
     string(TOLOWER "${_comp}" _lc_comp)
-    set(Wayland_${_comp}_component_deps)
-    set(Wayland_${_comp}_pkg_config "wayland-${_lc_comp}")
-    set(Wayland_${_comp}_lib "wayland-${_lc_comp}")
-    set(Wayland_${_comp}_header "wayland-${_lc_comp}.h")
+    set(Poppler_${_comp}_component_deps "Core")
+    set(Poppler_${_comp}_pkg_config "poppler-${_lc_comp}")
+    set(Poppler_${_comp}_lib "poppler-${_lc_comp}")
+    set(Poppler_${_comp}_header_subdir "poppler/${_lc_comp}")
 endforeach()
-set(Wayland_Egl_component_deps Client)
+set(Poppler_known_components Core ${Poppler_known_components})
 
-ecm_find_package_parse_components(Wayland
-    RESULT_VAR Wayland_components
-    KNOWN_COMPONENTS ${Wayland_known_components}
+set(Poppler_Core_component_deps "")
+set(Poppler_Core_pkg_config "poppler")
+# poppler-config.h header is only installed with --enable-xpdf-headers
+# fall back to using any header from a submodule with a path to make it work in that case too
+set(Poppler_Core_header "poppler-config.h" "cpp/poppler-version.h" "qt5/poppler-qt5.h" "qt4/poppler-qt4.h" "glib/poppler.h")
+set(Poppler_Core_header_subdir "poppler")
+set(Poppler_Core_lib "poppler")
+
+set(Poppler_Cpp_header "poppler-version.h")
+set(Poppler_Qt5_header "poppler-qt5.h")
+set(Poppler_Qt4_header "poppler-qt4.h")
+set(Poppler_Glib_header "poppler.h")
+
+ecm_find_package_parse_components(Poppler
+    RESULT_VAR Poppler_components
+    KNOWN_COMPONENTS ${Poppler_known_components}
 )
-ecm_find_package_handle_library_components(Wayland
-    COMPONENTS ${Wayland_components}
+ecm_find_package_handle_library_components(Poppler
+    COMPONENTS ${Poppler_components}
 )
 
 # If pkg-config didn't provide us with version information,
-# try to extract it from wayland-version.h
-# (Note that the version from wayland-egl.pc will probably be
-# the Mesa version, rather than the Wayland version, but that
-# version will be ignored as we always find wayland-client.pc
-# first).
-if(NOT Wayland_VERSION)
-    find_file(Wayland_VERSION_HEADER
-        NAMES wayland-version.h
-        HINTS ${Wayland_INCLUDE_DIRS}
+# try to extract it from poppler-version.h or poppler-config.h
+if(NOT Poppler_VERSION)
+    find_file(Poppler_VERSION_HEADER
+        NAMES "poppler-config.h" "cpp/poppler-version.h"
+        HINTS ${Poppler_INCLUDE_DIRS}
+        PATH_SUFFIXES ${Poppler_Core_header_subdir}
     )
-    mark_as_advanced(Wayland_VERSION_HEADER)
-    if(Wayland_VERSION_HEADER)
-        file(READ ${Wayland_VERSION_HEADER} _wayland_version_header_contents)
+    mark_as_advanced(Poppler_VERSION_HEADER)
+    if(Poppler_VERSION_HEADER)
+        file(READ ${Poppler_VERSION_HEADER} _poppler_version_header_contents)
         string(REGEX REPLACE
-            "^.*[ \t]+WAYLAND_VERSION[ \t]+\"([0-9.]*)\".*$"
+            "^.*[ \t]+POPPLER_VERSION[ \t]+\"([0-9d.]*)\".*$"
             "\\1"
-            Wayland_VERSION
-            "${_wayland_version_header_contents}"
+            Poppler_VERSION
+            "${_poppler_version_header_contents}"
         )
-        unset(_wayland_version_header_contents)
+        unset(_poppler_version_header_contents)
     endif()
 endif()
 
-find_package_handle_standard_args(Wayland
+find_package_handle_standard_args(Poppler
     FOUND_VAR
-        Wayland_FOUND
+        Poppler_FOUND
     REQUIRED_VARS
-        Wayland_LIBRARIES
+        Poppler_LIBRARIES
     VERSION_VAR
-        Wayland_VERSION
+        Poppler_VERSION
     HANDLE_COMPONENTS
 )
 
 include(FeatureSummary)
-set_package_properties(Wayland PROPERTIES
-    URL "http://wayland.freedesktop.org"
-    DESCRIPTION "C library implementation of the Wayland protocol: a protocol for a compositor to talk to its clients"
+set_package_properties(Poppler PROPERTIES
+    DESCRIPTION "A PDF rendering library"
+    URL "http://poppler.freedesktop.org"
 )
