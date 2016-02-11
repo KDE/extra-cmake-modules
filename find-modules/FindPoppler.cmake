@@ -45,7 +45,7 @@
 # link interface of an exported library, it must be made available by the
 # package config file.
 #
-# Since 5.17
+# Since 5.19
 
 #=============================================================================
 # Copyright 2015 Alex Richardson <arichardson.kde@gmail.com>
