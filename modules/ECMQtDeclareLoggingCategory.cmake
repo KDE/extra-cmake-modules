@@ -108,6 +108,10 @@ function(ecm_qt_declare_logging_category sources_var)
     string(REPLACE "::" "_" GUARD_NAME "${ARG_IDENTIFIER}_H")
     string(TOUPPER "${GUARD_NAME}" GUARD_NAME)
 
+    if (NOT _ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_CPP)
+       message(FATAL_ERROR "You must include(ECMQtDeclareLoggingCategory) before using ecm_qt_declare_logging_category")
+    endif()
+
     configure_file("${_ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_CPP}" "${cpp_filename}")
     configure_file("${_ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_H}" "${ARG_HEADER}")
 
