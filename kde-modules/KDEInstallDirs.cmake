@@ -424,11 +424,20 @@ _define_relative(CMAKEPACKAGEDIR LIBDIR "cmake"
     "CMake packages, including config files"
     CMAKECONFIG_INSTALL_PREFIX)
 
-option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, Plugins and Imports to the Qt 5 install dir")
-if(KDE_INSTALL_USE_QT_SYS_PATHS)
-# Qt-specific vars
-    include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
+include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
 
+set(_default_KDE_INSTALL_USE_QT_SYS_PATHS OFF)
+if(NOT DEFINED KDE_INSTALL_USE_QT_SYS_PATHS)
+    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX)
+    if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
+        message(STATUS "Installing in the same prefix as Qt, adopting their path scheme.")
+        set(_default_KDE_INSTALL_USE_QT_SYS_PATHS ON)
+    endif()
+endif()
+
+option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, Plugins and Imports to the Qt 5 install dir" "${_default_KDE_INSTALL_USE_QT_SYS_PATHS}")
+if(KDE_INSTALL_USE_QT_SYS_PATHS)
+    # Qt-specific vars
     query_qmake(qt_plugins_dir QT_INSTALL_PLUGINS)
 
     _define_absolute(QTPLUGINDIR ${qt_plugins_dir}
