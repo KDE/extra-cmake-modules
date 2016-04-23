@@ -79,6 +79,24 @@ macro(add_test_macro NAME)
     add_test_variant("${NAME}" "${NAME}" ${ARGN})
 endmacro()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/find-modules)
+
+find_package(PythonModuleGeneration REQUIRED)
+
+foreach(pyversion 2 3)
+  if (GPB_PYTHON${pyversion}_COMMAND)
+    if (pythonCommands)
+      list(APPEND pythonCommands " && ")
+    endif()
+    set(pythonCommands
+      ${GPB_PYTHON${pyversion}_COMMAND}
+      "${CMAKE_CURRENT_SOURCE_DIR}/GenerateSipBindings/testscript.py"
+      "${CMAKE_CURRENT_BINARY_DIR}/GenerateSipBindings/py${pyversion}"
+    )
+  endif()
+endforeach()
+add_test_macro(GenerateSipBindings ${pythonCommands})
+
 add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
 
