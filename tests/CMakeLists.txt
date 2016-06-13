@@ -40,6 +40,7 @@ add_subdirectory(ECMAddTests)
 add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
 add_subdirectory(ECMGeneratePkgConfigFile)
+add_subdirectory(ECMToolchainAndroidTest)
 
 # a macro for tests that have a simple format where the name matches the
 # directory and project
@@ -138,6 +139,8 @@ set(ECMInstallIconsTest_EXTRA_OPTIONS
 add_test_macro(ECMInstallIconsTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMInstallIconsTest/check_tree.cmake"
 )
+
+add_test_macro(ECMToolchainAndroidTest dummy)
 
 set(KDEPackageAppTemplatesTest_EXTRA_OPTIONS
     --build-target install
