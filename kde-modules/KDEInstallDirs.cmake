@@ -489,10 +489,15 @@ _define_absolute(SHAREDSTATEDIR "com"
 
 
 
-
-_define_absolute(DATAROOTDIR "share"
-    "read-only architecture-independent data root"
-    SHARE_INSTALL_PREFIX)
+if (WIN32)
+    _define_relative(DATAROOTDIR BINDIR "data"
+        "read-only architecture-independent data root"
+        SHARE_INSTALL_PREFIX)
+else()
+    _define_absolute(DATAROOTDIR "share"
+        "read-only architecture-independent data root"
+        SHARE_INSTALL_PREFIX)
+endif()
 
 _define_relative(DATADIR DATAROOTDIR ""
     "read-only architecture-independent data"
