@@ -25,7 +25,7 @@
 #
 # If the code is compiled against Qt 5.4 or later, by default it will only log
 # output that is at least the severity specified by ``DEFAULT_SEVERITY``, or
-# "Warning" level if ``DEFAULT_SEVERITY`` is not given. Note that, due to a
+# "Info" level if ``DEFAULT_SEVERITY`` is not given. Note that, due to a
 # bug in Qt 5.5, "Info" may be treated as more severe than "Fatal".
 #
 # ``<identifier>`` may include namespaces (eg: ``foo::bar::IDENT``).
@@ -82,7 +82,7 @@ function(ecm_qt_declare_logging_category sources_var)
         message(FATAL_ERROR "Missing CATEGORY_NAME argument for ecm_qt_declare_logging_category")
     endif()
     if(NOT ARG_DEFAULT_SEVERITY)
-        set(ARG_DEFAULT_SEVERITY Warning)
+        set(ARG_DEFAULT_SEVERITY Info)
     else()
         set(acceptible_severities Debug Info Warning Critical Fatal)
         list(FIND acceptible_severities "${ARG_DEFAULT_SEVERITY}" pos)
