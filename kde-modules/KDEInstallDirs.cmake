@@ -557,7 +557,7 @@ _define_relative(DESKTOPDIR DATAROOTDIR "desktop-directories"
 _define_relative(MIMEDIR DATAROOTDIR "mime/packages"
     "mime description files"
     XDG_MIME_INSTALL_DIR)
-_define_relative(METAINFODIR DATAROOTDIR "appdata"
+_define_relative(METAINFODIR DATAROOTDIR "metainfo"
     "AppStream component metadata")
 _define_relative(MANDIR DATAROOTDIR "man"
     "man documentation"
