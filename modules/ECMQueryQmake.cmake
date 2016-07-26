@@ -1,6 +1,8 @@
 find_package(Qt5Core QUIET)
 
-set(_qmake_executable_default "qmake-qt5")
+if (Qt5Core_FOUND)
+    set(_qmake_executable_default "qmake-qt5")
+endif ()
 if (TARGET Qt5::qmake)
     get_target_property(_qmake_executable_default Qt5::qmake LOCATION)
 endif()
