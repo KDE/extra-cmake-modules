@@ -99,7 +99,7 @@
 #     mime description files (``DATAROOTDIR/mime/packages``)
 #     [``XDG_MIME_INSTALL_DIR``]
 # ``METAINFODIR``
-#     AppStream component metadata files (``DATAROOTDIR/appdata``)
+#     AppStream component metadata files (``DATAROOTDIR/metainfo``)
 # ``MANDIR``
 #     man documentation (``DATAROOTDIR/man``) [``MAN_INSTALL_DIR``]
 # ``INFODIR``
