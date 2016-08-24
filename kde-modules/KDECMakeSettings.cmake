@@ -130,6 +130,15 @@ endif()
 
 ################ Testing setup ####################################
 
+find_program(APPSTREAMCLI appstreamcli)
+function(appstreamtest)
+    if(APPSTREAMCLI AND NOT _done)
+        set(_done TRUE)
+        add_test(NAME appstreamtest COMMAND cmake -DAPPSTREAMCLI=${APPSTREAMCLI} -DINSTALL_FILES=${CMAKE_BINARY_DIR}/install_manifest.txt -P ${CMAKE_CURRENT_LIST_DIR}/appstreamtest.cmake)
+    else()
+        message(STATUS "Could not set up the appstream test. appstreamcli is missing.")
+    endif()
+endfunction()
 
 if(NOT KDE_SKIP_TEST_SETTINGS)
 
@@ -143,6 +152,7 @@ if(NOT KDE_SKIP_TEST_SETTINGS)
       option(BUILD_TESTING "Build the testing tree." ON)
       if(BUILD_TESTING)
          enable_testing()
+         appstreamtest()
       endif ()
    endif ()
 
