@@ -81,6 +81,7 @@
 #
 # To install the apk to test. To generate a signed apk, one can do it with the
 # following syntax::
+#
 #   make create-apk-myapp ARGS="--sign ~/my.keystore alias_name"
 #
 # See Android documentation on how to create a keystore to use

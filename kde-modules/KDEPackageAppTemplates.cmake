@@ -1,6 +1,6 @@
 #.rst:
 # KDETemplateGenerator
-# -------------------
+# --------------------
 #
 # Packages KApptemplate/KDevelop compatible application templates
 #
