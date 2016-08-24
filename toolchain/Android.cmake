@@ -73,6 +73,17 @@
 #   make create-apk-myapp
 #
 # The APK would then be found in ``myapp_build_apk/bin`` in the build directory.
+#
+# The create-apk-myapp target will be able to take an ARGS parameter with further
+# arguments for androiddeployqt. For example, one can use::
+#
+#   make create-apk-myapp ARGS="--install"
+#
+# To install the apk to test. To generate a signed apk, one can do it with the
+# following syntax::
+#   make create-apk-myapp ARGS="--sign ~/my.keystore alias_name"
+#
+# See Android documentation on how to create a keystore to use
 
 # =============================================================================
 # Copyright 2014 Aleix Pol i Gonzalez <aleixpol@kde.org>
