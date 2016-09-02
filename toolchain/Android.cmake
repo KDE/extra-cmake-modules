@@ -30,7 +30,7 @@
 # ``ANDROID_NDK``
 #     The NSK root path.
 # ``ANDROID_SDK_ROOT``
-#     The SSK root path.
+#     The SDK root path.
 #
 # Additional options are specified as cache variables (eg: on the command line):
 #
