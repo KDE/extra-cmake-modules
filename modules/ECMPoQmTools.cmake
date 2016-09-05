@@ -175,7 +175,7 @@ function(ecm_process_po_files_as_qm lang)
             COMMAND ${lconvert_executable}
                 ARGS -i ${po_file} -o ${ts_file} -target-language ${lang}
             COMMAND Qt5::lrelease
-                ARGS -removeidentical -silent ${ts_file} -qm ${qm_file}
+                ARGS -removeidentical -nounfinished -silent ${ts_file} -qm ${qm_file}
             DEPENDS ${po_file}
             )
         if (ARGS_INSTALL_DESTINATION)
