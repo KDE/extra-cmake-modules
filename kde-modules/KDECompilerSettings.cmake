@@ -84,8 +84,6 @@ macro(_kde_compiler_min_version min_version)
     endif()
 endmacro()
 
-set(CLANG_AS_MSVC (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" AND "x${CMAKE_C_SIMULATE_ID}" STREQUAL "xMSVC"))
-
 if (MSVC)
     # MSVC_VERSION 1600 = VS 10.0 = Windows SDK 7
     # See: cmake --help-variable MSVC_VERSION
@@ -191,17 +189,15 @@ endif()
 # Pick sensible versions of the C and C++ standards.
 # Note that MSVC does not have equivalent flags; the features are either
 # supported or they are not.
-if (NOT CLANG_AS_MSVC)
-    if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
-        # We use the C89 standard because that is what is common to all our
-        # compilers (in particular, MSVC 2010 does not support C99)
-        set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=iso9899:1990")
-    endif()
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-    elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-    endif()
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    # We use the C89 standard because that is what is common to all our
+    # compilers (in particular, MSVC 2010 does not support C99)
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=iso9899:1990")
+endif()
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 endif()
 
 # Do not merge uninitialized global variables.
@@ -259,7 +255,7 @@ endif()
 # Turn off exceptions by default
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT CLANG_AS_MSVC)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
@@ -271,7 +267,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
 endif()
 
 macro(_kdecompilersettings_append_exception_flag VAR)
-    if (MSVC OR CLANG_AS_MSVC)
+    if (MSVC)
         set(${VAR} "${${VAR}} -EHsc")
     elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         if (WIN32)
@@ -304,17 +300,13 @@ endfunction()
 
 function(KDE_TARGET_ENABLE_EXCEPTIONS target mode)
     target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:MSVC>:-EHsc>")
-    target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:GNU>:-fexceptions>")
     if (WIN32)
         target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Intel>:-EHsc>")
     else()
         target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Intel>:-fexceptions>")
     endif()
-    if(CLANG_AS_MSVC)
-        target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Clang>:-EHsc>")
-    else()
-        target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Clang>:-fexceptions>")
-    endif()
+    target_compile_options(${target} ${mode}
+        "$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-fexceptions>")
 endfunction()
 
 function(KDE_ENABLE_EXCEPTIONS)
@@ -341,7 +333,7 @@ endfunction()
 ############################################################
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
-        (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT APPLE AND NOT "x${CMAKE_CXX_SIMULATE_ID}" STREQUAL "xMSVC") OR
+        (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT APPLE) OR
         (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
     # Linker warnings should be treated as errors
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_SHARED_LINKER_FLAGS}")
@@ -373,7 +365,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -w1 -Wpointer-arith")
 endif()
 
-if (MSVC OR CLANG_AS_MSVC)
+if (MSVC)
     # FIXME: do we not want to set the warning level up to level 3? (/W3)
     # Disable warnings:
     # C4250: 'class1' : inherits 'class2::member' via dominance
@@ -427,7 +419,7 @@ if (APPLE)
 endif()
 
 if (WIN32)
-    if (MSVC OR CLANG_AS_MSVC OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    if (MSVC OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
         # MSVC has four incompatible C runtime libraries: static (libcmt),
         # static debug (libcmtd), shared (msvcrt) and shared debug (msvcrtd):
         # see http://support.microsoft.com/kb/154753
