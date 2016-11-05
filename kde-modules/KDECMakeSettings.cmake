@@ -15,10 +15,11 @@
 #
 # The default runtime path (used on Unix systems to search for
 # dynamically-linked libraries) is set to include the location that libraries
-# will be installed to (as set in LIB_INSTALL_DIR), and also the linker search
-# path.
+# will be installed to (as set in LIB_INSTALL_DIR or, if the former is not set,
+# KDE_INSTALL_LIBDIR), and also the linker search path.
 #
-# Note that ``LIB_INSTALL_DIR`` needs to be set before including this module.
+# Note that ``LIB_INSTALL_DIR`` or alternatively ``KDE_INSTALL_LIBDIR`` needs
+# to be set before including this module.
 # Typically, this is done by including the :kde-module:`KDEInstallDirs` module.
 #
 # This section can be disabled by setting ``KDE_SKIP_RPATH_SETTINGS`` to TRUE
@@ -109,11 +110,17 @@ if(NOT KDE_SKIP_RPATH_SETTINGS)
    # Set the default RPATH to point to useful locations, namely where the
    # libraries will be installed and the linker search path
 
+   # First look for the old LIB_INSTALL_DIR, then fallback to newer KDE_INSTALL_LIBDIR
    if(NOT LIB_INSTALL_DIR)
-      message(FATAL_ERROR "LIB_INSTALL_DIR not set. This is necessary for using the RPATH settings.")
+      if(NOT KDE_INSTALL_LIBDIR)
+         message(FATAL_ERROR "Neither KDE_INSTALL_LIBDIR nor LIB_INSTALL_DIR is set. Setting one is necessary for using the RPATH settings.")
+      else()
+         set(_abs_LIB_INSTALL_DIR "${KDE_INSTALL_LIBDIR}")
+      endif()
+   else()
+      set(_abs_LIB_INSTALL_DIR "${LIB_INSTALL_DIR}")
    endif()
 
-   set(_abs_LIB_INSTALL_DIR "${LIB_INSTALL_DIR}")
    if (NOT IS_ABSOLUTE "${_abs_LIB_INSTALL_DIR}")
       set(_abs_LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
    endif()
