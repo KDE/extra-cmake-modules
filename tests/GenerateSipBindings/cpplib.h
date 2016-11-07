@@ -2,6 +2,8 @@
 #pragma once
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <QtCore/QMap>
 
 #include <functional>
