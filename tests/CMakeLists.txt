@@ -81,22 +81,33 @@ endmacro()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/find-modules)
 
-find_package(PythonModuleGeneration)
+# Skip if PyQt not available
+find_file(SIP_Qt5Core_Mod_FILE
+    NAMES QtCoremod.sip
+    PATH_SUFFIXES share/sip/PyQt5/QtCore
+)
 
-foreach(pyversion 2 3)
-  if (GPB_PYTHON${pyversion}_COMMAND)
-    if (pythonCommands)
-      list(APPEND pythonCommands " && ")
+if(NOT SIP_Qt5Core_Mod_FILE)
+    message(STATUS "WARNING: skipping tests that require PyQt")
+else()
+  find_package(PythonModuleGeneration)
+  foreach(pyversion 2 3)
+    if (GPB_PYTHON${pyversion}_COMMAND)
+      if (pythonCommands)
+        list(APPEND pythonCommands " && ")
+      endif()
+      set(pythonCommands
+        ${GPB_PYTHON${pyversion}_COMMAND}
+        "${CMAKE_CURRENT_SOURCE_DIR}/GenerateSipBindings/testscript.py"
+        "${CMAKE_CURRENT_BINARY_DIR}/GenerateSipBindings/py${pyversion}"
+      )
     endif()
-    set(pythonCommands
-      ${GPB_PYTHON${pyversion}_COMMAND}
-      "${CMAKE_CURRENT_SOURCE_DIR}/GenerateSipBindings/testscript.py"
-      "${CMAKE_CURRENT_BINARY_DIR}/GenerateSipBindings/py${pyversion}"
-    )
+  endforeach()
+  if (pythonCommands)
+    add_test_macro(GenerateSipBindings ${pythonCommands})
+ else()
+    message(STATUS "WARNING: skipping GenerateSipBindings test")
   endif()
-endforeach()
-if (pythonCommands)
-  add_test_macro(GenerateSipBindings ${pythonCommands})
 endif()
 
 add_test_macro(ExecuteCoreModules dummy)
