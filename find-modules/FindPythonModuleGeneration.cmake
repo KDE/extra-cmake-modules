@@ -231,7 +231,7 @@ set(GPB_Qt5_Tag Qt_5_${Qt5Core_VERSION_MINOR}_${Qt5Core_VERSION_PATCH})
 list(FIND _SIP_Qt5_VERSIONS ${GPB_Qt5_Tag} _SIP_Qt5_Version_Index)
 
 if(_SIP_Qt5_Version_Index EQUAL -1)
-  _report_NOT_FOUND("PyQt module does not support Qt version 5.${Qt5Core_VERSION_MINOR}.${Qt5Core_VERSION_PATCH} for the ${CMAKE_FIND_PACKAGE_NAME} Module. Found available Qt5 tags: \"${_SIP_Qt5_VERSIONS}\".")
+  _report_NOT_FOUND("PyQt module \"${SIP_Qt5Core_Mod_FILE}\" does not support Qt version 5.${Qt5Core_VERSION_MINOR}.${Qt5Core_VERSION_PATCH} for the ${CMAKE_FIND_PACKAGE_NAME} Module. Found available Qt5 tags: \"${_SIP_Qt5_VERSIONS}\".")
 endif()
 
 set(PythonModuleGeneration_FOUND TRUE)
