@@ -90,7 +90,8 @@ All code is licensed under the `BSD 3-Clause license`_.
 Links
 =====
 
-* Home page: https://projects.kde.org/projects/kdesupport/extra-cmake-modules
+* Home page: https://commits.kde.org/extra-cmake-modules
+* Documentation: https://api.kde.org/ecm/
 * Mailing list: https://mail.kde.org/mailman/listinfo/kde-buildsystem
 * IRC channel: #kde-devel on Freenode
 * Git repository: https://commits.kde.org/extra-cmake-modules
