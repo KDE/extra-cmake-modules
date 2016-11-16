@@ -93,4 +93,4 @@ Links
 * Home page: https://projects.kde.org/projects/kdesupport/extra-cmake-modules
 * Mailing list: https://mail.kde.org/mailman/listinfo/kde-buildsystem
 * IRC channel: #kde-devel on Freenode
-* Git repository: https://quickgit.kde.org/?p=extra-cmake-modules.git
+* Git repository: https://commits.kde.org/extra-cmake-modules

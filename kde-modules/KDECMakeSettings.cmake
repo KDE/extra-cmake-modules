@@ -64,7 +64,7 @@
 # warnings on Qt-related code.
 #
 # If clang is not being used, this won't have an effect.
-# See https://quickgit.kde.org/?p=clazy.git&a=blob&f=README&o=plain
+# See https://commits.kde.org/clazy?path=README.md
 #
 # Since 5.17.0
 #
