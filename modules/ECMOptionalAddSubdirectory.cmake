@@ -2,7 +2,7 @@
 # ECMOptionalAddSubdirectory
 # --------------------------
 #
-# Make subdiretories optional.
+# Make subdirectories optional.
 #
 # ::
 #
