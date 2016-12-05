@@ -158,6 +158,7 @@ if (TARGET Qt5::qmake)
         --build-options -DKDE_INSTALL_USE_QT_SYS_PATHS=TRUE
                         -DPLUGINDIR_should_be_absolute=TRUE
                         -DQMLDIR_should_be_absolute=TRUE
+                        -DQTQCHDIR_should_be_absolute=TRUE
                         -DQTPLUGINDIR_should_be_absolute=TRUE
                         -DQTQUICKIMPORTSDIR_should_be_absolute=TRUE
         )
