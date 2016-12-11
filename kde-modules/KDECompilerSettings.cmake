@@ -332,7 +332,7 @@ endfunction()
 # Better diagnostics (warnings, errors)
 ############################################################
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
+if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT APPLE) OR
         (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT APPLE) OR
         (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
     # Linker warnings should be treated as errors
