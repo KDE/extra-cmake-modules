@@ -154,9 +154,15 @@ set(CMAKE_SYSTEM_LIBRARY_PATH
 )
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
 set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+
+# Settling hard on gnustl_shared as C++ helper runtime for now,
+# given this is most similar to what is on GNU/Linux, which is what
+# the average software targetted by this toolchain is built against otherwise.
+# If requested by devs, the used helper runtime could be made an option later.
+# Related info: https://developer.android.com/ndk/guides/cpp-support.html
 find_library(GNUSTL_SHARED gnustl_shared)
 if(NOT GNUSTL_SHARED)
-    message(FATAL_ERROR "you need gnustl_shared: ${CMAKE_SYSTEM_LIBRARY_PATH}")
+    message(FATAL_ERROR "Selected Android platform does not provide gnustl_shared: ${CMAKE_SYSTEM_LIBRARY_PATH}")
 endif()
 include_directories(SYSTEM
     "${CMAKE_SYSROOT}/usr/include"
