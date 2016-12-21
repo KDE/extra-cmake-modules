@@ -58,7 +58,7 @@
 #
 # For example, for integrating a Qt5 for Android with armv7 target present at
 # ``/opt/android/Qt5/5.7/android_armv7`` and some other libraries installed to
-# the prefix ``/opt/android/foo``, you would use:
+# the prefix ``/opt/android/foo``, you would use::
 #
 #   cmake \
 #     -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/AndroidToolchain.cmake \
