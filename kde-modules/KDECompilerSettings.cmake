@@ -211,6 +211,14 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-common")
 endif()
 
+# Do not treat the operator name keywords and, bitand, bitor, compl, not, or and xor as synonyms as keywords.
+# They're not supported under Visual Studio out of the box thus using them limits the portability of code
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR
+        CMAKE_C_COMPILER_ID STREQUAL "Clang" OR
+        (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-operator-names")
+endif()
+
 # Default to hidden visibility for symbols
 set(CMAKE_C_VISIBILITY_PRESET hidden)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
