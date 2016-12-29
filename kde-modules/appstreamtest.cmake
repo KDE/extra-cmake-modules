@@ -1,5 +1,11 @@
-file(READ "${INSTALL_FILES}" out)
-string(REPLACE "\n" ";" out "${out}")
+file(GLOB install_done "${INSTALL_FILES}")
+if (install_done)
+    file(READ "${INSTALL_FILES}" out)
+    string(REPLACE "\n" ";" out "${out}")
+else()
+    message("Not installed yet, skipping")
+    set(out "")
+endif()
 
 set(metadatafiles)
 foreach(file IN LISTS out)
