@@ -151,6 +151,10 @@ foreach ( CUR_SANITIZER ${ECM_ENABLE_SANITIZERS} )
     string(TOLOWER ${CUR_SANITIZER} CUR_SANITIZER)
     # check option and enable appropriate flags
     enable_sanitizer_flags ( ${CUR_SANITIZER} )
+    # TODO: GCC will not link pthread library if enabled ASan
+    if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+      set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${XSAN_COMPILE_FLAGS}" )
+    endif()
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XSAN_COMPILE_FLAGS}" )
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
       link_libraries(${XSAN_LINKER_FLAGS})
