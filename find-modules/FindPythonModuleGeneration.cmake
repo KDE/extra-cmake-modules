@@ -185,7 +185,7 @@ if (NOT libclang_LIBRARY)
   find_library(libclang_LIBRARY clang-3.${_LIBCLANG3_MAX_VERSION})
 
   if (libclang_LIBRARY)
-    message(FATAL_ERROR "The max python version in ${CMAKE_FIND_PACKAGE_NAME} must be updated.")
+    message(FATAL_ERROR "The max libclang-3 version in ${CMAKE_FIND_PACKAGE_NAME} must be updated.")
   endif()
 
   set(_LIBCLANG3_FIND_VERSION ${_LIBCLANG3_MAX_VERSION})
