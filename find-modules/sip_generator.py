@@ -304,16 +304,19 @@ class SipGenerator(object):
             sip["decl"] = container_type
             sip["base_specifiers"] = ", ".join(base_specifiers)
             sip["body"] = body
-            self.rules.container_rules().apply(container, sip)
+            modifying_rule = self.rules.container_rules().apply(container, sip)
             pad = " " * (level * 4)
             if sip["name"]:
-                decl = pad + sip["decl"]
+                decl = ""
+                if modifying_rule:
+                    decl += "// Modified {} (by {}):\n".format(SipGenerator.describe(container), modifying_rule)
+                decl += pad + sip["decl"]
                 if "External" in sip["annotations"]:
                     #
                     # SIP /External/ does not seem to work as one might wish. Suppress.
                     #
                     body = decl + " /External/;\n"
-                    body = pad + "// Discarded {}\n".format(SipGenerator.describe(container))
+                    body = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(container), "/External/ handling")
                 else:
                     if sip["base_specifiers"]:
                         decl += ": " + sip["base_specifiers"]
@@ -325,7 +328,7 @@ class SipGenerator(object):
                     decl += "%TypeHeaderCode\n#include <{}>\n%End\n".format(include_filename)
                     body = decl + sip["body"] + pad + "};\n"
             else:
-                body = pad + "// Discarded {}\n".format(SipGenerator.describe(container))
+                body = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(container), modifying_rule)
         return body
 
     def _get_access_specifier(self, member, level):
@@ -378,6 +381,7 @@ class SipGenerator(object):
             "name": function.spelling,
         }
         parameters = []
+        parameter_modifying_rules = []
         template_parameters = []
         for child in function.get_children():
             if child.kind == CursorKind.PARM_DECL:
@@ -394,7 +398,9 @@ class SipGenerator(object):
                     "init": self._fn_get_parameter_default(function, child),
                     "annotations": set()
                 }
-                self.rules.parameter_rules().apply(container, function, child, child_sip)
+                modifying_rule = self.rules.parameter_rules().apply(container, function, child, child_sip)
+                if modifying_rule:
+                    parameter_modifying_rules.append("// Modified {} (by {}):\n".format(SipGenerator.describe(child), modifying_rule))
                 decl = child_sip["decl"]
                 if child_sip["annotations"]:
                     decl += " /" + ",".join(child_sip["annotations"]) + "/"
@@ -433,11 +439,18 @@ class SipGenerator(object):
             sip["fn_result"] = function.result_type.spelling
         sip["parameters"] = parameters
         sip["prefix"], sip["suffix"] = self._fn_get_decorators(function)
-        self.rules.function_rules().apply(container, function, sip)
+        modifying_rule = self.rules.function_rules().apply(container, function, sip)
         pad = " " * (level * 4)
         if sip["name"]:
+            decl = ""
+            if modifying_rule:
+                decl += "// Modified {} (by {}):\n".format(SipGenerator.describe(function), modifying_rule) + pad
+            decl += pad.join(parameter_modifying_rules)
+            if parameter_modifying_rules:
+                decl += pad
+
             sip["template_parameters"] = ", ".join(sip["template_parameters"])
-            decl = sip["name"] + "(" + ", ".join(sip["parameters"]) + ")"
+            decl += sip["name"] + "(" + ", ".join(sip["parameters"]) + ")"
             if sip["fn_result"]:
                 decl = sip["fn_result"] + " " + decl
             decl = pad + sip["prefix"] + decl + sip["suffix"]
@@ -445,7 +458,7 @@ class SipGenerator(object):
                 decl = pad + "template <" + sip["template_parameters"] + ">\n" + decl
             decl += ";\n"
         else:
-            decl = pad + "// Discarded {}\n".format(SipGenerator.describe(function))
+            decl = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(function), modifying_rule)
         return decl
 
     def _fn_get_decorators(self, function):
@@ -610,7 +623,7 @@ class SipGenerator(object):
         #
         decl = "{} {}".format(variable.type.spelling, variable.spelling)
         sip["decl"] = decl
-        self.rules.variable_rules().apply(container, variable, sip)
+        modifying_rule = self.rules.variable_rules().apply(container, variable, sip)
 
         pad = " " * (level * 4)
         if sip["name"]:
@@ -623,7 +636,7 @@ class SipGenerator(object):
             else:
                 decl = pad + decl + ";\n"
         else:
-            decl = pad + "// Discarded {}\n".format(SipGenerator.describe(variable))
+            decl = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(variable), modifying_rule)
         return decl
 
     def _read_source(self, extent):
