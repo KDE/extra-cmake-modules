@@ -69,7 +69,6 @@ def _parents(container):
 
 class Rule(object):
     def __init__(self, db, rule_number, fn, pattern_zip):
-        self.db = db
         self.rule_number = rule_number
         self.fn = fn
         self.usage = 0
