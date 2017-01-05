@@ -199,7 +199,7 @@ class ContainerRuleDb(AbstractCompiledRuleDb):
 
     def apply(self, container, sip):
         """
-        Walk over the rules database for functions, applying the first matching transformation.
+        Walk over the rules database for containers, applying the first matching transformation.
 
         :param container:           The clang.cindex.Cursor for the container.
         :param sip:                 The SIP dict.
