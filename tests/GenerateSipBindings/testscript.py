@@ -26,6 +26,12 @@ assert(mo.const_parameters(30, mo) == 10)
 assert(mo.qtEnumTest(QtCore.Qt.MatchContains | QtCore.Qt.MatchStartsWith) == 3)
 assert(mo.localEnumTest(PyTest.CppLib.MyObject.Val2) == 2)
 
+#
+# Verify that an enum with attributes can be read.
+#
+assert(PyTest.CppLib.Foo == 0)
+assert(PyTest.CppLib.Bar == 2)
+
 class Reactor(QtCore.QObject):
     def __init__(self, obj):
         QtCore.QObject.__init__(self)

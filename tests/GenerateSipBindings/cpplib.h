@@ -113,3 +113,8 @@ private:
 };
 
 }
+
+enum __attribute__((visibility("default"))) EnumWithAttributes {
+    Foo,
+    Bar = 2
+};
