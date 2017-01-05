@@ -47,6 +47,8 @@ public:
   int fwdDecl(const FwdDecl& f);
   int fwdDeclRef(FwdDecl& f);
 
+  mode_t dummyFunc(QObject* parent) { return 0; }
+
 signals:
   void publicSlotCalled();
 
@@ -92,6 +94,8 @@ public:
 private:
   Q_DISABLE_COPY(NonCopyableByMacro)
 };
+
+Q_DECLARE_METATYPE(NonCopyableByMacro*)
 
 class HasPrivateDefaultCtor
 {
