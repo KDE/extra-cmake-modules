@@ -91,3 +91,10 @@ assert(r.gotProtectedSlotCalledSignal)
 e.emitSignalForPublic()
 
 assert(r.gotPublicSlotCalledSignal)
+
+assert(PyTest.CppLib.SomeNS.EnumValueOne == 1)
+assert(PyTest.CppLib.SomeNS.EnumValueTwo == 2)
+
+assert(PyTest.CppLib.SomeNS.useEnum() == 1.0)
+assert(PyTest.CppLib.SomeNS.useEnum(PyTest.CppLib.SomeNS.EnumValueOne) == 1.0)
+assert(PyTest.CppLib.SomeNS.useEnum(PyTest.CppLib.SomeNS.EnumValueTwo) == 2.0)

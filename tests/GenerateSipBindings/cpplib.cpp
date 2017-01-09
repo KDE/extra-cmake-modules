@@ -141,3 +141,8 @@ void MyObject::privateSlot2()
 {
   Q_EMIT privateSlotCalled();
 }
+
+qreal SomeNS::useEnum(MyFlags flags)
+{
+  return flags;
+}

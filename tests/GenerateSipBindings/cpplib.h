@@ -116,6 +116,14 @@ private:
   int* const mNum;
 };
 
+enum MyFlagType {
+    EnumValueOne = 0x01,
+    EnumValueTwo = 0x02
+};
+Q_DECLARE_FLAGS(MyFlags, MyFlagType)
+
+qreal useEnum(MyFlags flags = EnumValueOne);
+
 }
 
 enum __attribute__((visibility("default"))) EnumWithAttributes {
