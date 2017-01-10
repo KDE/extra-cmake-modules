@@ -15,6 +15,8 @@
 #
 # will be added to the executable target whose sources are specified by
 # ``<sources_var>`` on platforms that support it (Windows and Mac OS X).
+# Other icon files are ignored but on Mac SVG files can be supported and
+# it is thus possible to mix those with png files in a single macro call.
 #
 # ``<size>`` is a numeric pixel size (typically 16, 32, 48, 64, 128 or 256).
 # ``<other_text>`` can be any other text. See the platform notes below for any
@@ -30,14 +32,17 @@
 # Mac OS X notes
 #    * The executable target must have the ``MACOSX_BUNDLE`` property set.
 #    * Icons are added to the bundle.
-#    * The tool iconutil (provided by Apple) is required.
-#    * Supported sizes: 16, 32, 64, 128, 256, 512, 1024.
-#    * At least a 128x128px icon is required.
+#    * If the ksvg2icns tool from KIconThemes is available, .svg and .svgz
+#      files are accepted; the first that is converted successfully to .icns
+#      will provide the application icon. SVG files are ignored otherwise.
+#    * The tool iconutil (provided by Apple) is required for bitmap icons.
+#    * Supported sizes: 16, 32, 64, 128, 256 (and 512, 1024 after OS X 10.9).
+#    * At least a 128x128px (or an SVG) icon is required.
 #    * Larger sizes are automatically used to substitute for smaller sizes on
 #      "Retina" (high-resolution) displays. For example, a 32px icon, if
 #      provided, will be used as a 32px icon on standard-resolution displays,
 #      and as a 16px-equivalent icon (with an "@2x" tag) on high-resolution
-#      displays.
+#      displays. ksvg2icns handles this internally.
 #    * This function sets the ``MACOSX_BUNDLE_ICON_FILE`` variable to the name
 #      of the generated icns file, so that it will be used as the
 #      ``MACOSX_BUNDLE_ICON_FILE`` target property when you call
