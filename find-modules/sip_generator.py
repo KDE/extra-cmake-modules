@@ -335,10 +335,22 @@ class SipGenerator(object):
         """
         Skip access specifiers embedded in the Q_OBJECT macro.
         """
-        access_specifier = self._read_source(member.extent)
-        if access_specifier == "Q_OBJECT":
+        access_specifier_text = self._read_source(member.extent)
+        if access_specifier_text == "Q_OBJECT":
             return ""
         pad = " " * ((level - 1) * 4)
+        access_specifier = ""
+        if (access_specifier_text in ("Q_SIGNALS:", "signals:",
+                                      "public Q_SLOTS:", "public slots:",
+                                      "protected Q_SLOTS:", "protected slots:")):
+            access_specifier = access_specifier_text
+        elif member.access_specifier == AccessSpecifier.PRIVATE:
+            access_specifier = "private:"
+        elif member.access_specifier == AccessSpecifier.PROTECTED:
+            access_specifier = "protected:"
+        elif member.access_specifier == AccessSpecifier.PUBLIC:
+            access_specifier = "public:"
+
         decl = pad + access_specifier + "\n"
         return decl
 

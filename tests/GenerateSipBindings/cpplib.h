@@ -5,6 +5,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QMap>
+#include <QtCore/QCoreApplication>
 
 #include <functional>
 
@@ -85,11 +86,12 @@ private:
   int* const mNum;
 };
 
-
 class NonCopyableByMacro
 {
 public:
   NonCopyableByMacro();
+
+  Q_DECLARE_TR_FUNCTIONS(NonCopyableByMacro)
 
 private:
   Q_DISABLE_COPY(NonCopyableByMacro)
