@@ -62,6 +62,32 @@ TEMPLATE_KINDS = [
                      CursorKind.TYPE_REF, CursorKind.TEMPLATE_REF, CursorKind.NAMESPACE_REF
                  ] + EXPR_KINDS
 
+def clang_diagnostic_to_logging_diagnostic(lvl):
+    """
+
+    The diagnostic levels in cindex.py are
+
+        Ignored = 0
+        Note    = 1
+        Warning = 2
+        Error   = 3
+        Fatal   = 4
+
+    and the leves in the python logging module are
+
+        NOTSET      0
+        DEBUG       10
+        INFO        20
+        WARNING     30
+        ERROR       40
+        CRITICAL    50
+
+    """
+    return (logging.NOTSET,
+        logging.INFO,
+        logging.WARNING,
+        logging.ERROR,
+        logging.CRITICAL)[lvl]
 
 class SipGenerator(object):
     def __init__(self, project_rules, compile_flags, verbose=False, dump_includes=False, dump_privates=False):
@@ -114,10 +140,12 @@ class SipGenerator(object):
             #
             loc = diag.location
             msg = "{}:{}[{}] {}".format(loc.file, loc.line, loc.column, diag.spelling)
+            if (diag.spelling == "#pragma once in main file"):
+                continue
             if msg in self.diagnostics:
                 continue
             self.diagnostics.add(msg)
-            logger.log(diag.severity, "Parse error {}".format(msg))
+            logger.log(clang_diagnostic_to_logging_diagnostic(diag.severity), "Parse error {}".format(msg))
         if self.dump_includes:
             for include in sorted(set(self.tu.get_includes())):
                 logger.debug(_("Used includes {}").format(include.include.name))
