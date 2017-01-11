@@ -89,6 +89,9 @@ def clang_diagnostic_to_logging_diagnostic(lvl):
         logging.ERROR,
         logging.CRITICAL)[lvl]
 
+def diagnostic_word(lvl):
+    return ("", "info", "warning", "error", "fatality")[lvl]
+
 class SipGenerator(object):
     def __init__(self, project_rules, compile_flags, verbose=False, dump_includes=False, dump_privates=False):
         """
@@ -145,7 +148,8 @@ class SipGenerator(object):
             if msg in self.diagnostics:
                 continue
             self.diagnostics.add(msg)
-            logger.log(clang_diagnostic_to_logging_diagnostic(diag.severity), "Parse error {}".format(msg))
+            logger.log(clang_diagnostic_to_logging_diagnostic(diag.severity),
+                "Parse {}: {}".format(diagnostic_word(diag.severity), msg))
         if self.dump_includes:
             for include in sorted(set(self.tu.get_includes())):
                 logger.debug(_("Used includes {}").format(include.include.name))
