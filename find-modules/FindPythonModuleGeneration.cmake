@@ -330,9 +330,11 @@ function(ecm_generate_python_binding
         endforeach()
         set(comp_defs "-D$<JOIN:$<TARGET_PROPERTY:${target_value},INTERFACE_COMPILE_DEFINITIONS>,;-D>")
 
-        foreach(stdVar 11 14)
-          set(stdFlag "$<$<STREQUAL:$<TARGET_PROPERTY:${target_value},CXX_STANDARD>,${stdVar}>:${CMAKE_CXX${stdVar}_EXTENSION_COMPILE_OPTION}>")
-        endforeach()
+        # We might like to use $<TARGET_PROPERTY:${target_value},CXX_STANDARD>, but
+        # unfortunately CMake does not populate that property as a side-effect of evaluating
+        # COMPILE_FEATURES (Qt specifies feature requirements in its INTERFACE_COMPILE_FEATURES, and
+        # those are consumed to set the CXX_STANDARD internally in CMake, but evidently too late)
+        set(stdFlag "-std=gnu++14")
 
         set(comp_flags "$<JOIN:$<TARGET_PROPERTY:${target_value},INTERFACE_COMPILE_OPTIONS>;${stdFlag},;>")
 
