@@ -228,7 +228,7 @@ class SipGenerator(object):
             elif member.kind == CursorKind.CXX_ACCESS_SPEC_DECL:
                 decl = self._get_access_specifier(member, level + 1)
             elif member.kind == CursorKind.TYPEDEF_DECL:
-                decl = self._typedef_get(member, level + 1)
+                decl = self._typedef_get(container, member, level + 1)
             elif member.kind == CursorKind.CXX_BASE_SPECIFIER:
                 #
                 # Strip off the leading "class". Except for TypeKind.UNEXPOSED...
@@ -627,7 +627,7 @@ class SipGenerator(object):
                 return _get_param_value(text, parameterType)
         return ""
 
-    def _typedef_get(self, typedef, level):
+    def _typedef_get(self, container, typedef, level):
         """
         Generate the translation for a typedef.
 
@@ -637,10 +637,19 @@ class SipGenerator(object):
         :return:                    A string.
         """
 
-        pad = " " * (level * 4)
+        sip = {
+            "name": typedef.displayname,
+            "annotations": set(),
+        }
 
-        decl = pad + "typedef {} {}".format(typedef.underlying_typedef_type.spelling, typedef.displayname)
-        decl += ";\n"
+        self.rules.typedef_rules().apply(container, typedef, sip)
+
+        pad = " " * (level * 4)
+        if sip["name"]:
+            decl = pad + "typedef {} {}".format(typedef.underlying_typedef_type.spelling, typedef.displayname)
+            decl += ";\n"
+        else:
+            decl = pad + "// Discarded {}\n".format(SipGenerator.describe(typedef))
         return decl
 
     def _var_get(self, container, variable, level):

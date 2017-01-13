@@ -128,7 +128,23 @@ qreal useEnum(MyFlags flags = EnumValueOne);
 
 int customMethod(QList<int> const& nums);
 
+typedef QString(*TagFormatter)(const QStringList &languages,
+                               const QString &tagName,
+                               const QHash<QString, QString> &attributes,
+                               const QString &text,
+                               const QStringList &tagPath,
+                               SomeNS::MyFlagType format);
+
 }
+
+class TypedefUser
+{
+public:
+
+  void setTagPattern(const QString &tagName,
+                     SomeNS::TagFormatter formatter = NULL,
+                     int leadingNewlines = 0);
+};
 
 int anotherCustomMethod(QList<int> const& nums);
 

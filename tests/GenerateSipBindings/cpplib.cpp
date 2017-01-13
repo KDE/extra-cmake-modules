@@ -161,3 +161,10 @@ int anotherCustomMethod(QList<int> const& nums)
 {
   return 0;
 }
+
+void TypedefUser::setTagPattern(const QString &tagName,
+                   SomeNS::TagFormatter formatter,
+                   int leadingNewlines)
+{
+
+}

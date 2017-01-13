@@ -104,6 +104,9 @@ def variable_rules():
         [".*", "d", ".*Private.*", rules_engine.variable_discard],
     ]
 
+def typedef_rules():
+    return []
+
 class RuleSet(rules_engine.RuleSet):
     """
     SIP file generator rules. This is a set of (short, non-public) functions
@@ -113,6 +116,7 @@ class RuleSet(rules_engine.RuleSet):
         self._container_db = rules_engine.ContainerRuleDb(container_rules)
         self._fn_db = rules_engine.FunctionRuleDb(function_rules)
         self._param_db = rules_engine.ParameterRuleDb(parameter_rules)
+        self._typedef_db = rules_engine.TypedefRuleDb(typedef_rules)
         self._var_db = rules_engine.VariableRuleDb(variable_rules)
         self._methodcode = rules_engine.MethodCodeDb({})
         self._modulecode = rules_engine.ModuleCodeDb({})
@@ -125,6 +129,9 @@ class RuleSet(rules_engine.RuleSet):
 
     def parameter_rules(self):
         return self._param_db
+
+    def typedef_rules(self):
+        return self._typedef_db
 
     def variable_rules(self):
         return self._var_db

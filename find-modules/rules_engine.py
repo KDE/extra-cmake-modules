@@ -386,6 +386,68 @@ class ParameterRuleDb(AbstractCompiledRuleDb):
         return None
 
 
+class TypedefRuleDb(AbstractCompiledRuleDb):
+    """
+    THE RULES FOR TYPEDEFS.
+
+    These are used to customise the behaviour of the SIP generator by allowing
+    the declaration for any typedef to be customised, for example to add SIP
+    compiler annotations.
+
+    Each entry in the raw rule database must be a list with members as follows:
+
+        0. A regular expression which matches the fully-qualified name of the
+        "container" enclosing the typedef.
+
+        1. A regular expression which matches the typedef name.
+
+        2. A function.
+
+    In use, the database is walked in order from the first entry. If the regular
+    expressions are matched, the function is called, and no further entries are
+    walked. The function is called with the following contract:
+
+        def typedef_xxx(container, typedef, sip, matcher):
+            '''
+            Return a modified declaration for the given function.
+
+            :param container:   The clang.cindex.Cursor for the container.
+            :param typedef:     The clang.cindex.Cursor for the typedef.
+            :param sip:         A dict with the following keys:
+
+                                    name                The name of the typedef.
+                                    annotations         Any SIP annotations.
+
+            :param matcher:         The re.Match object. This contains named
+                                    groups corresponding to the key names above
+                                    EXCEPT annotations.
+
+            :return: An updated set of sip.xxx values. Setting sip.name to the
+                     empty string will cause the container to be suppressed.
+            '''
+
+    :return: The compiled form of the rules.
+    """
+    def __init__(self, db):
+        super(TypedefRuleDb, self).__init__(db, ["container", "typedef"])
+
+    def apply(self, container, typedef, sip):
+        """
+        Walk over the rules database for typedefs, applying the first matching transformation.
+
+        :param container:           The clang.cindex.Cursor for the container.
+        :param typedef:             The clang.cindex.Cursor for the typedef.
+        :param sip:                 The SIP dict.
+        """
+        parents = _parents(typedef)
+        matcher, rule = self._match(parents, sip["name"])
+        if matcher:
+            before = deepcopy(sip)
+            rule.fn(container, typedef, sip, matcher)
+            return rule.trace_result(parents, typedef, before, sip)
+        return None
+
+
 class VariableRuleDb(AbstractCompiledRuleDb):
     """
     THE RULES FOR VARIABLES.
@@ -727,6 +789,15 @@ class RuleSet(object):
         raise NotImplemented(_("Missing subclass implementation"))
 
     @abstractmethod
+    def typedef_rules(self):
+        """
+        Return a compiled list of rules for typedefs.
+
+        :return: A TypedefRuleDb instance
+        """
+        raise NotImplemented(_("Missing subclass implementation"))
+
+    @abstractmethod
     def variable_rules(self):
         """
         Return a compiled list of rules for variables.
@@ -761,7 +832,7 @@ class RuleSet(object):
             else:
                 logger.warn(_("Rule {} was not used".format(rule)))
 
-        for db in [self.container_rules(), self.function_rules(), self.parameter_rules(),
+        for db in [self.container_rules(), self.function_rules(), self.parameter_rules(), self.typedef_rules(),
                    self.variable_rules(), self.methodcode_rules(), self.modulecode_rules()]:
             db.dump_usage(dumper)
 
@@ -807,6 +878,9 @@ def parameter_strip_class_enum(container, function, parameter, sip, matcher):
 def function_discard_impl(container, function, sip, matcher):
     if function.extent.start.column == 1:
         sip["name"] = ""
+
+def typedef_discard(container, typedef, sip, matcher):
+    sip["name"] = ""
 
 def rules(project_rules):
     """
