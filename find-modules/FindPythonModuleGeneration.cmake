@@ -272,7 +272,7 @@ function(ecm_generate_python_binding
     modulename_keyword modulename_value
     )
 
-    cmake_parse_arguments(GPB "" "RULES_FILE" "SIP_DEPENDS;SIP_INCLUDES;HEADERS"  ${ARGN})
+    cmake_parse_arguments(GPB "" "RULES_FILE;INSTALL_DIR_SUFFIX" "SIP_DEPENDS;SIP_INCLUDES;HEADERS"  ${ARGN})
 
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${modulename_value}mod.sip"
           "
@@ -306,6 +306,9 @@ function(ecm_generate_python_binding
       set(GPB_RULES_FILE "${GPB_MODULE_DIR}/Qt5Ruleset.py")
     endif()
 
+    if (NOT GPB_INSTALL_DIR_SUFFIX)
+      set(GPB_INSTALL_DIR_SUFFIX site-packages)
+    endif()
 
     list(APPEND generator_depends ${GPB_RULES_FILE})
 
@@ -430,7 +433,7 @@ headers = sipAPI${modulename_value}
         add_test(NAME Py${pyversion}Test COMMAND ${GPB_PYTHON${pyversion}_COMMAND} "${CMAKE_SOURCE_DIR}/autotests/pythontest.py" ${CMAKE_CURRENT_BINARY_DIR}/py${pyversion})
 
         install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}
-            DESTINATION lib/python${pyversion${pyversion}_maj_min}/dist-packages)
+            DESTINATION lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
         install(FILES ${sip_files} "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${modulename_value}mod.sip"
           DESTINATION share/sip/${pythonnamespace_value}/${modulename_value}
         )
