@@ -422,9 +422,11 @@ headers = sipAPI${modulename_value}
          "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}")
 
     foreach(pyversion ${_pyversions})
-        file(MAKE_DIRECTORY
-            "${CMAKE_CURRENT_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}")
-        execute_process(COMMAND "${CMAKE_COMMAND}" -E touch "${CMAKE_CURRENT_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/__init__.py")
+
+        execute_process(COMMAND "${CMAKE_COMMAND}"
+          "-DPYTHON_UMBRELLA_MODULE_FILE=${CMAKE_CURRENT_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/__init__.py"
+          -P "${GPB_MODULE_DIR}/GeneratePythonBindingUmbrellaModule.cmake"
+        )
 
         add_library(Py${pyversion}KF5${modulename_value} MODULE
           "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/unified${modulename_value}.cpp"
