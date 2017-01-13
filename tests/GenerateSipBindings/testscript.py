@@ -98,3 +98,7 @@ assert(PyTest.CppLib.SomeNS.EnumValueTwo == 2)
 assert(PyTest.CppLib.SomeNS.useEnum() == 1.0)
 assert(PyTest.CppLib.SomeNS.useEnum(PyTest.CppLib.SomeNS.EnumValueOne) == 1.0)
 assert(PyTest.CppLib.SomeNS.useEnum(PyTest.CppLib.SomeNS.EnumValueTwo) == 2.0)
+
+assert(PyTest.CppLib.SomeNS.customMethod([2, 3, 5]) == 10)
+
+assert(PyTest.CppLib.anotherCustomMethod([2, 3, 5]) == 52)

@@ -146,3 +146,18 @@ qreal SomeNS::useEnum(MyFlags flags)
 {
   return flags;
 }
+
+int customMethod(QList<int> const& nums)
+{
+  return nums.size();
+}
+
+int SomeNS::customMethod(QList<int> const& nums)
+{
+  return 0;
+}
+
+int anotherCustomMethod(QList<int> const& nums)
+{
+  return 0;
+}

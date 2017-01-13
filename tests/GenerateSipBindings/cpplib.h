@@ -126,7 +126,11 @@ Q_DECLARE_FLAGS(MyFlags, MyFlagType)
 
 qreal useEnum(MyFlags flags = EnumValueOne);
 
+int customMethod(QList<int> const& nums);
+
 }
+
+int anotherCustomMethod(QList<int> const& nums);
 
 enum __attribute__((visibility("default"))) EnumWithAttributes {
     Foo,

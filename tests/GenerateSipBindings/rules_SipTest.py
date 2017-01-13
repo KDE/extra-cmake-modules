@@ -11,7 +11,44 @@ def local_function_rules():
         ["MyObject", "fwdDeclRef", ".*", ".*", ".*", rules_engine.function_discard],
     ]
 
+def methodGenerator(function, sip, entry):
+    sip["code"] = """
+        %MethodCode
+            sipRes = {} + myAcumulate(a0);
+        %End
+    """.format(entry["param"])
+
+
 class RuleSet(Qt5Ruleset.RuleSet):
     def __init__(self):
         Qt5Ruleset.RuleSet.__init__(self)
         self._fn_db = rules_engine.FunctionRuleDb(lambda: local_function_rules() + Qt5Ruleset.function_rules())
+        self._modulecode = rules_engine.ModuleCodeDb({
+            "cpplib.h": {
+            "code": """
+%ModuleCode
+int myAcumulate(const QList<int> *list) {
+    return std::accumulate(list->begin(), list->end(), 0);
+}
+%End\n
+            """
+            }
+            })
+
+        self._methodcode = rules_engine.MethodCodeDb({
+            "SomeNS": {
+                "customMethod": {
+                    "code": """
+                    %MethodCode
+                        sipRes = myAcumulate(a0);
+                    %End
+                    """
+                }
+            },
+            "cpplib.h": {
+                "anotherCustomMethod": {
+                    "code": methodGenerator,
+                    "param": 42
+                }
+            }
+            })

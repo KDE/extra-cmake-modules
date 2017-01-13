@@ -454,6 +454,240 @@ class VariableRuleDb(AbstractCompiledRuleDb):
         return None
 
 
+class AbstractCompiledCodeDb(object):
+    __metaclass__ = ABCMeta
+
+    def __init__(self, db):
+        caller = os.path.basename(inspect.stack()[2][1])
+        self.name = "{}:{}".format(caller, type(self).__name__)
+        self.db = db
+
+    @abstractmethod
+    def apply(self, function, sip):
+        raise NotImplemented(_("Missing subclass"))
+
+    def trace_result(self, parents, item, original, modified):
+        """
+        Record any modification both in the log and the returned result. If a rule fired, but
+        caused no modification, that is logged.
+
+        :return: Modifying rule or None.
+        """
+        fqn = parents + "::" + original["name"] + "[" + str(item.extent.start.line) + "]"
+        self._trace_result(fqn, original, modified)
+
+    def _trace_result(self, fqn, original, modified):
+        """
+        Record any modification both in the log and the returned result. If a rule fired, but
+        caused no modification, that is logged.
+
+        :return: Modifying rule or None.
+        """
+        if not modified["name"]:
+            logger.debug(_("Rule {} suppressed {}, {}").format(self, fqn, original))
+        else:
+            delta = False
+            for k, v in original.iteritems():
+                if v != modified[k]:
+                    delta = True
+                    break
+            if delta:
+                logger.debug(_("Rule {} modified {}, {}->{}").format(self, fqn, original, modified))
+            else:
+                logger.warn(_("Rule {} did not modify {}, {}").format(self, fqn, original))
+                return None
+        return self
+
+    @abstractmethod
+    def dump_usage(self, fn):
+        raise NotImplemented(_("Missing subclass"))
+
+    def __str__(self):
+        return self.name
+
+class MethodCodeDb(AbstractCompiledCodeDb):
+    """
+    THE RULES FOR INJECTING METHOD-RELATED CODE (such as %MethodCode,
+    %VirtualCatcherCode, %VirtualCallCode and other method-level directives).
+
+    These are used to customise the behaviour of the SIP generator by allowing
+    method-level code injection.
+
+    The raw rule database must be an outer dictionary as follows:
+
+        0. Each key is the fully-qualified name of a "container" enclosing
+        methods.
+
+        1. Each value is an inner dictionary, each of whose keys is the name
+        of a method.
+
+    Each inner dictionary has entries which update the declaration as follows:
+
+        "parameters":   Optional list. If present, update the argument list.
+
+        "fn_result":    Optional string. If present, update the return type.
+
+        "code":         Required. Either a string, with the %XXXCode content,
+                        or a callable.
+
+    In use, the database is directly indexed by "container" and then method
+    name. If "code" entry is a string, then the other optional keys are
+    interpreted as above. If "code" is a callable, it is called with the
+    following contract:
+
+        def methodcode_xxx(function, sip, entry):
+            '''
+            Return a modified declaration for the given function.
+
+            :param function:    The clang.cindex.Cursor for the function.
+            :param sip:         A dict with keys as for function rules and (string)
+                                "code" keys described above.
+            :param entry:       The inner dictionary entry.
+
+            :return: An updated set of sip.xxx values.
+            '''
+
+    :return: The compiled form of the rules.
+    """
+    __metaclass__ = ABCMeta
+
+    def __init__(self, db):
+        super(MethodCodeDb, self).__init__(db)
+
+        for k, v in self.db.items():
+            for l in v.keys():
+                v[l]["usage"] = 0
+
+    def _get(self, item, name):
+
+        parents = _parents(item)
+        entries = self.db.get(parents, None)
+        if not entries:
+            return None
+
+        entry = entries.get(name, None)
+        if not entry:
+            return None
+        entry["usage"] += 1
+        return entry
+
+    def apply(self, function, sip):
+        """
+        Walk over the code database for functions, applying the first matching transformation.
+
+        :param function:            The clang.cindex.Cursor for the function.
+        :param sip:                 The SIP dict (may be modified on return).
+        :return:                    Modifying rule or None (even if a rule matched, it may not modify things).
+        """
+        entry = self._get(function, sip["name"])
+        sip.setdefault("code", "")
+        if entry:
+            before = deepcopy(sip)
+            if callable(entry["code"]):
+                fn = entry["code"]
+                fn_file = os.path.basename(inspect.getfile(fn))
+                trace = "// Generated (by {}:{}): {}\n".format(fn_file, fn.__name__, {k:v for (k,v) in entry.items() if k != "code"})
+                fn(function, sip, entry)
+            else:
+                trace = "// Inserted (by {}:{}): {}\n".format(_parents(function), function.spelling, {k:v for (k,v) in entry.items() if k != "code"})
+                sip["code"] = entry["code"]
+                sip["parameters"] = entry.get("parameters", sip["parameters"])
+                sip["fn_result"] = entry.get("fn_result", sip["fn_result"])
+            #
+            # Fetch/format the code.
+            #
+            sip["code"] = trace + textwrap.dedent(sip["code"]).strip() + "\n"
+            return self.trace_result(_parents(function), function, before, sip)
+        return None
+
+    def dump_usage(self, fn):
+        """ Dump the usage counts."""
+        for k in sorted(self.db.keys()):
+            vk = self.db[k]
+            for l in sorted(vk.keys()):
+                vl = vk[l]
+                fn(str(self) + " for " + k + "," + l, vl["usage"])
+
+class ModuleCodeDb(AbstractCompiledCodeDb):
+    """
+    THE RULES FOR INJECTING MODULE-RELATED CODE (such as %ExportedHeaderCode,
+    %ModuleCode, %ModuleHeaderCode or other module-level directives).
+
+    These are used to customise the behaviour of the SIP generator by allowing
+    module-level code injection.
+
+    The raw rule database must be a dictionary as follows:
+
+        0. Each key is the basenanme of a module file.
+
+        1. Each value has entries which update the declaration as follows:
+
+        "code":         Required. Either a string, with the %XXXCode content,
+                        or a callable.
+
+    If "code" is a callable, it is called with the following contract:
+
+        def module_xxx(filename, sip, entry):
+            '''
+            Return a string to insert for the file.
+
+            :param filename:    The filename.
+            :param sip:         A dict with the key "name" for the module name
+                                plus the "code" key described above.
+            :param entry:       The dictionary entry.
+
+            :return: A string.
+            '''
+
+    :return: The compiled form of the rules.
+    """
+    __metaclass__ = ABCMeta
+
+    def __init__(self, db):
+        super(ModuleCodeDb, self).__init__(db)
+        #
+        # Add a usage count for each item in the database.
+        #
+        for k, v in self.db.items():
+            v["usage"] = 0
+
+    def _get(self, filename):
+        #
+        # Lookup for an actual hit.
+        #
+        entry = self.db.get(filename, None)
+        if not entry:
+            return None
+        entry["usage"] += 1
+        return entry
+
+    def apply(self, filename, sip):
+        entry = self._get(filename)
+        sip.setdefault("code", "")
+        if entry:
+            before = deepcopy(sip)
+            if callable(entry["code"]):
+                fn = entry["code"]
+                fn_file = os.path.basename(inspect.getfile(fn))
+                trace = "\n// Generated (by {}:{}): {}".format(fn_file, fn.__name__, {k:v for (k,v) in entry.items() if k != "code"})
+                fn(filename, sip, entry)
+                sip["code"] = trace + sip["code"]
+            else:
+                sip["code"] = entry["code"]
+            #
+            # Fetch/format the code.
+            #
+            sip["code"] = textwrap.dedent(sip["code"]).strip() + "\n"
+            fqn = filename + "::" + before["name"]
+            self._trace_result(fqn, before, sip)
+
+    def dump_usage(self, fn):
+        """ Dump the usage counts."""
+        for k in sorted(self.db.keys()):
+            v = self.db[k]
+            fn(str(self) + " for " + k, v["usage"])
+
+
 class RuleSet(object):
     """
     To implement your own binding, create a subclass of RuleSet, also called
@@ -501,6 +735,24 @@ class RuleSet(object):
         """
         raise NotImplemented(_("Missing subclass implementation"))
 
+    @abstractmethod
+    def methodcode_rules(self):
+        """
+        Return a compiled list of rules for method-related code.
+
+        :return: A MethodCodeDb instance
+        """
+        raise NotImplemented(_("Missing subclass implementation"))
+
+    @abstractmethod
+    def modulecode_rules(self):
+        """
+        Return a compiled list of rules for module-related code.
+
+        :return: A ModuleCodeDb instance
+        """
+        raise NotImplemented(_("Missing subclass implementation"))
+
     def dump_unused(self):
         """Usage statistics, to identify unused rules."""
         def dumper(rule, usage):
@@ -510,8 +762,22 @@ class RuleSet(object):
                 logger.warn(_("Rule {} was not used".format(rule)))
 
         for db in [self.container_rules(), self.function_rules(), self.parameter_rules(),
-                   self.variable_rules()]:
+                   self.variable_rules(), self.methodcode_rules(), self.modulecode_rules()]:
             db.dump_usage(dumper)
+
+    @abstractmethod
+    def methodcode(self, container, function):
+        """
+        Lookup %MethodCode.
+        """
+        raise NotImplemented(_("Missing subclass implementation"))
+
+    @abstractmethod
+    def modulecode(self, filename):
+        """
+        Lookup %ModuleCode and friends.
+        """
+        raise NotImplemented(_("Missing subclass implementation"))
 
 
 def container_discard(container, sip, matcher):

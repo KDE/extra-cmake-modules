@@ -114,6 +114,8 @@ class RuleSet(rules_engine.RuleSet):
         self._fn_db = rules_engine.FunctionRuleDb(function_rules)
         self._param_db = rules_engine.ParameterRuleDb(parameter_rules)
         self._var_db = rules_engine.VariableRuleDb(variable_rules)
+        self._methodcode = rules_engine.MethodCodeDb({})
+        self._modulecode = rules_engine.ModuleCodeDb({})
 
     def container_rules(self):
         return self._container_db
@@ -126,3 +128,15 @@ class RuleSet(rules_engine.RuleSet):
 
     def variable_rules(self):
         return self._var_db
+
+    def methodcode_rules(self):
+        return self._methodcode
+
+    def modulecode_rules(self):
+        return self._modulecode
+
+    def methodcode(self, function, sip):
+        return self._methodcode.apply(function, sip)
+
+    def modulecode(self, filename, sip):
+        return self._modulecode.apply(filename, sip)

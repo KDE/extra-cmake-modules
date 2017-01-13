@@ -186,6 +186,20 @@ class SipGenerator(object):
                 return True
             SipGenerator._report_ignoring(container, member, text)
 
+        if container.kind.is_translation_unit():
+            #
+            # Any module-related manual code (%ExportedHeaderCode, %ModuleCode, %ModuleHeaderCode or other
+            # module-level directives?
+            #
+            sip = {
+                "name": include_filename,
+                "decl": ""
+            }
+            self.rules.modulecode(include_filename, sip)
+            body = sip["code"]
+        else:
+            body = ""
+
         sip = {
             "name": container.displayname,
             "annotations": set()
@@ -195,7 +209,6 @@ class SipGenerator(object):
             if self.dump_privates:
                 logger.debug("Ignoring private {}".format(SipGenerator.describe(container)))
             return ""
-        body = ""
         base_specifiers = []
         template_type_parameters = []
         had_copy_constructor = False
@@ -486,6 +499,11 @@ class SipGenerator(object):
         modifying_rule = self.rules.function_rules().apply(container, function, sip)
         pad = " " * (level * 4)
         if sip["name"]:
+            #
+            # Any method-related code (%MethodCode, %VirtualCatcherCode, VirtualCallCode
+            # or other method-related directives)?
+            #
+            self.rules.methodcode(function, sip)
             decl = ""
             if modifying_rule:
                 decl += "// Modified {} (by {}):\n".format(SipGenerator.describe(function), modifying_rule) + pad
@@ -501,6 +519,7 @@ class SipGenerator(object):
             if sip["template_parameters"]:
                 decl = pad + "template <" + sip["template_parameters"] + ">\n" + decl
             decl += ";\n"
+            decl += sip["code"]
         else:
             decl = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(function), modifying_rule)
         return decl
