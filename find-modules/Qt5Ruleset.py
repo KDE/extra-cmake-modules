@@ -107,6 +107,9 @@ def variable_rules():
 def typedef_rules():
     return []
 
+def forward_declaration_rules():
+    return []
+
 class RuleSet(rules_engine.RuleSet):
     """
     SIP file generator rules. This is a set of (short, non-public) functions
@@ -114,6 +117,7 @@ class RuleSet(rules_engine.RuleSet):
     """
     def __init__(self):
         self._container_db = rules_engine.ContainerRuleDb(container_rules)
+        self._forward_declaration_db = rules_engine.ForwardDeclarationRuleDb(forward_declaration_rules)
         self._fn_db = rules_engine.FunctionRuleDb(function_rules)
         self._param_db = rules_engine.ParameterRuleDb(parameter_rules)
         self._typedef_db = rules_engine.TypedefRuleDb(typedef_rules)
@@ -123,6 +127,9 @@ class RuleSet(rules_engine.RuleSet):
 
     def container_rules(self):
         return self._container_db
+
+    def forward_declaration_rules(self):
+        return self._forward_declaration_db
 
     def function_rules(self):
         return self._fn_db

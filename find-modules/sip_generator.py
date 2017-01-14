@@ -313,30 +313,51 @@ class SipGenerator(object):
                     pad = " " * ((level + 1) * 4)
                     body += pad + "// {}\n".format(SipGenerator.describe(member))
                 body += decl
+
+
+        if container.kind == CursorKind.TRANSLATION_UNIT:
+            return body
+
+        if container.kind == CursorKind.NAMESPACE:
+            container_type = "namespace " + name
+        elif container.kind in [CursorKind.CLASS_DECL, CursorKind.CLASS_TEMPLATE,
+                                CursorKind.CLASS_TEMPLATE_PARTIAL_SPECIALIZATION]:
+            container_type = "class " + name
+        elif container.kind == CursorKind.STRUCT_DECL:
+            container_type = "struct " + name
+        elif container.kind == CursorKind.UNION_DECL:
+            container_type = "union " + name
+        else:
+            raise AssertionError(
+                _("Unexpected container {}: {}[{}]").format(container.kind, name, container.extent.start.line))
+
+        sip["decl"] = container_type
+        sip["template_parameters"] = template_type_parameters
+
+        pad = " " * (level * 4)
+
         #
         # Empty containers are still useful if they provide namespaces or forward declarations.
         #
-        if not body and level >= 0:
-            body = "\n"
+        if not body:
             text = self._read_source(container.extent)
             if not text.endswith("}"):
                 #
                 # Forward declaration.
                 #
-                sip["annotations"].add("External")
-        if body and level >= 0:
-            if container.kind == CursorKind.NAMESPACE:
-                container_type = "namespace " + name
-            elif container.kind in [CursorKind.CLASS_DECL, CursorKind.CLASS_TEMPLATE,
-                                    CursorKind.CLASS_TEMPLATE_PARTIAL_SPECIALIZATION]:
-                container_type = "class " + name
-            elif container.kind == CursorKind.STRUCT_DECL:
-                container_type = "struct " + name
-            elif container.kind == CursorKind.UNION_DECL:
-                container_type = "union " + name
-            else:
-                raise AssertionError(
-                    _("Unexpected container {}: {}[{}]").format(container.kind, name, container.extent.start.line))
+                modifying_rule = self.rules.forward_declaration_rules().apply(container, sip)
+                if sip["name"]:
+                    if modifying_rule:
+                        body += "// Modified {} (by {}):\n".format(SipGenerator.describe(container), modifying_rule)
+                    if "External" in sip["annotations"]:
+                        body += pad + sip["decl"]
+                        body += " /External/;\n"
+                    else:
+                        body = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(container), "default forward declaration handling")
+
+                else:
+                    body = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(container), modifying_rule)
+        else:
             #
             # Generate private copy constructor for non-copyable types.
             #
@@ -345,33 +366,24 @@ class SipGenerator(object):
             #
             # Flesh out the SIP context for the rules engine.
             #
-            sip["template_parameters"] = template_type_parameters
-            sip["decl"] = container_type
             sip["base_specifiers"] = base_specifiers
             sip["body"] = body
             modifying_rule = self.rules.container_rules().apply(container, sip)
-            pad = " " * (level * 4)
             if sip["name"]:
                 decl = ""
                 if modifying_rule:
                     decl += "// Modified {} (by {}):\n".format(SipGenerator.describe(container), modifying_rule)
                 decl += pad + sip["decl"]
-                if "External" in sip["annotations"]:
-                    #
-                    # SIP /External/ does not seem to work as one might wish. Suppress.
-                    #
-                    body = decl + " /External/;\n"
-                    body = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(container), "/External/ handling")
-                else:
-                    if sip["base_specifiers"]:
-                        decl += ": " + ", ".join(sip["base_specifiers"])
-                    if sip["annotations"]:
-                        decl += " /" + ",".join(sip["annotations"]) + "/"
-                    if sip["template_parameters"]:
-                        decl = pad + "template <" + ", ".join(sip["template_parameters"]) + ">\n" + decl
-                    decl += "\n" + pad + "{\n"
-                    decl += "%TypeHeaderCode\n#include <{}>\n%End\n".format(include_filename)
-                    body = decl + sip["body"] + pad + "};\n"
+
+                if sip["base_specifiers"]:
+                    decl += ": " + ", ".join(sip["base_specifiers"])
+                if sip["annotations"]:
+                    decl += " /" + ",".join(sip["annotations"]) + "/"
+                if sip["template_parameters"]:
+                    decl = pad + "template <" + ", ".join(sip["template_parameters"]) + ">\n" + decl
+                decl += "\n" + pad + "{\n"
+                decl += "%TypeHeaderCode\n#include <{}>\n%End\n".format(include_filename)
+                body = decl + sip["body"] + pad + "};\n"
             else:
                 body = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(container), modifying_rule)
         return body

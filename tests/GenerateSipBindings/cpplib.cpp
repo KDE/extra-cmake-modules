@@ -1,6 +1,8 @@
 
 #include "cpplib.h"
 
+#include "external_lib.h"
+
 MyObject::MyObject(QObject* parent)
   : QObject(parent)
 {
@@ -65,19 +67,21 @@ int MyObject::groups(unsigned int maxCount) const
   return maxCount;
 }
 
-class FwdDecl
+int MyObject::externalFwdDecl(const ExternalFwdDecl& f)
 {
-
-};
-
-int MyObject::fwdDecl(const FwdDecl&)
-{
-  return 42;
+  return f.getValue();
 }
 
-int MyObject::fwdDeclRef(FwdDecl&)
+int MyObject::externalFwdDeclRef(ExternalFwdDecl& f)
 {
-  return 42;
+  return f.getValue();
+}
+
+int MyObject::localDeclListDecl(const QList<LocalFwdDecl>& l)
+{
+  return std::accumulate(l.begin(), l.end(), 0, [](int current, LocalFwdDecl const& next){
+    return current + next.getValue();
+  });
 }
 
 int MyObject::const_parameters(const int input, QObject* const obj) const
@@ -85,6 +89,28 @@ int MyObject::const_parameters(const int input, QObject* const obj) const
   if (obj) return input / 3;
   return input / 2;
 }
+
+int MyObject::localFwdDecl(const LocalFwdDecl& f)
+{
+  return f.getValue();
+}
+
+int MyObject::localListDecl(const QList<int>& l)
+{
+  return std::accumulate(l.begin(), l.end(), 0);
+}
+
+LocalFwdDecl::LocalFwdDecl(int value)
+  : m_value(value)
+{
+
+}
+
+int LocalFwdDecl::getValue() const
+{
+  return m_value;
+}
+
 
 NonCopyable::NonCopyable()
   : mNum(new int(42))

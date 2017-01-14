@@ -235,6 +235,71 @@ class ContainerRuleDb(AbstractCompiledRuleDb):
         return None
 
 
+class ForwardDeclarationRuleDb(AbstractCompiledRuleDb):
+    """
+    THE RULES FOR FORWARD DECLARATIONS.
+
+    These are used to customise the behaviour of the SIP generator by allowing
+    the forward declaration for any container (class, struct, union) to be
+    customised, for example to add SIP compiler annotations.
+
+    Each entry in the raw rule database must be a list with members as follows:
+
+        0. A regular expression which matches the fully-qualified name of the
+        "container" enclosing the container.
+
+        1. A regular expression which matches the container name.
+
+        2. A regular expression which matches any template parameters.
+
+        3. A function.
+
+    In use, the database is walked in order from the first entry. If the regular
+    expressions are matched, the function is called, and no further entries are
+    walked. The function is called with the following contract:
+
+        def declaration_xxx(container, sip, matcher):
+            '''
+            Return a modified declaration for the given container.
+
+            :param container:   The clang.cindex.Cursor for the container.
+            :param sip:         A dict with the following keys:
+
+                                    name                The name of the container.
+                                    template_parameters Any template parameters.
+                                    annotations         Any SIP annotations.
+
+            :param matcher:         The re.Match object. This contains named
+                                    groups corresponding to the key names above
+                                    EXCEPT body and annotations.
+
+            :return: An updated set of sip.xxx values. Setting sip.name to the
+                     empty string will cause the container to be suppressed.
+            '''
+
+    :return: The compiled form of the rules.
+    """
+    def __init__(self, db):
+        super(ForwardDeclarationRuleDb, self).__init__(db, ["parents", "container", "template_parameters"])
+
+    def apply(self, container, sip):
+        """
+        Walk over the rules database for containers, applying the first matching transformation.
+
+        :param container:           The clang.cindex.Cursor for the container.
+        :param sip:                 The SIP dict (may be modified on return).
+        :return:                    Modifying rule or None (even if a rule matched, it may not modify things).
+        """
+        parents = _parents(container)
+        matcher, rule = self._match(parents, sip["name"],
+                                    ", ".join(sip["template_parameters"]))
+        if matcher:
+            before = deepcopy(sip)
+            rule.fn(container, sip, matcher)
+            return rule.trace_result(parents, container, before, sip)
+        return None
+
+
 class FunctionRuleDb(AbstractCompiledRuleDb):
     """
     THE RULES FOR FUNCTIONS.
@@ -774,6 +839,15 @@ class RuleSet(object):
         raise NotImplemented(_("Missing subclass implementation"))
 
     @abstractmethod
+    def forward_declaration_rules(self):
+        """
+        Return a compiled list of rules for containers.
+
+        :return: A ForwardDeclarationRuleDb instance
+        """
+        raise NotImplemented(_("Missing subclass implementation"))
+
+    @abstractmethod
     def function_rules(self):
         """
         Return a compiled list of rules for functions.
@@ -887,6 +961,9 @@ def typedef_discard(container, typedef, sip, matcher):
 
 def discard_QSharedData_base(container, sip, matcher):
     sip["base_specifiers"].remove("QSharedData")
+
+def mark_forward_declaration_external(container, sip, matcher):
+    sip["annotations"].add("External")
 
 def rules(project_rules):
     """

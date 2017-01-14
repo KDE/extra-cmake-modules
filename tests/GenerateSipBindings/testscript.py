@@ -26,6 +26,22 @@ assert(mo.const_parameters(30, mo) == 10)
 assert(mo.qtEnumTest(QtCore.Qt.MatchContains | QtCore.Qt.MatchStartsWith) == 3)
 assert(mo.localEnumTest(PyTest.CppLib.MyObject.Val2) == 2)
 
+lfd = PyTest.CppLib.LocalFwdDecl(18)
+
+assert(mo.localFwdDecl(lfd) == 18)
+
+import PyTest.ExternalLib
+
+efd = PyTest.ExternalLib.ExternalFwdDecl(18)
+
+assert(mo.externalFwdDecl(efd) == 18)
+
+assert(mo.localListDecl([1, 5, 7]) == 13)
+
+lfdl = [PyTest.CppLib.LocalFwdDecl(3), PyTest.CppLib.LocalFwdDecl(6)]
+
+assert(mo.localDeclListDecl(lfdl) == 9)
+
 #
 # Verify that an enum with attributes can be read.
 #

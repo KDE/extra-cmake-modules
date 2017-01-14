@@ -10,7 +10,10 @@
 
 #include <functional>
 
-class FwdDecl;
+class ExternalFwdDecl;
+class LocalFwdDecl;
+
+template<typename T> class QList;
 
 class MyObject : public QObject
 {
@@ -46,8 +49,14 @@ public:
 
   int const_parameters(const int input, QObject* const obj = 0) const;
 
-  int fwdDecl(const FwdDecl& f);
-  int fwdDeclRef(FwdDecl& f);
+  int externalFwdDecl(const ExternalFwdDecl& f);
+  int externalFwdDeclRef(ExternalFwdDecl& f);
+
+  int localFwdDecl(const LocalFwdDecl& f);
+
+  int localListDecl(const QList<int>& l);
+
+  int localDeclListDecl(const QList<LocalFwdDecl>& l);
 
   mode_t dummyFunc(QObject* parent) { return 0; }
 
@@ -75,6 +84,17 @@ private slots:
 
 private Q_SLOTS:
   void privateSlot2();
+};
+
+class LocalFwdDecl
+{
+public:
+  LocalFwdDecl(int value);
+
+  int getValue() const;
+
+private:
+  int m_value;
 };
 
 class NonCopyable

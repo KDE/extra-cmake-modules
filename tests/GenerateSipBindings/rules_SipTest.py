@@ -10,10 +10,13 @@ def local_container_rules():
         [".*", "Shared", ".*", ".*", ".*", rules_engine.discard_QSharedData_base]
     ]
 
+def local_forward_declaration_rules():
+    return [
+        [".*", "ExternalFwdDecl", ".*", rules_engine.mark_forward_declaration_external]
+    ]
+
 def local_function_rules():
     return [
-        ["MyObject", "fwdDecl", ".*", ".*", ".*", rules_engine.function_discard],
-        ["MyObject", "fwdDeclRef", ".*", ".*", ".*", rules_engine.function_discard],
         ["TypedefUser", "setTagPattern", ".*", ".*", ".*", rules_engine.function_discard],
     ]
 
@@ -34,6 +37,7 @@ class RuleSet(Qt5Ruleset.RuleSet):
     def __init__(self):
         Qt5Ruleset.RuleSet.__init__(self)
         self._container_db = rules_engine.ContainerRuleDb(lambda: local_container_rules() + Qt5Ruleset.container_rules())
+        self._forward_declaration_db = rules_engine.ForwardDeclarationRuleDb(lambda: local_forward_declaration_rules() + Qt5Ruleset.forward_declaration_rules())
         self._fn_db = rules_engine.FunctionRuleDb(lambda: local_function_rules() + Qt5Ruleset.function_rules())
         self._typedef_db = rules_engine.TypedefRuleDb(lambda: local_typedef_rules() + Qt5Ruleset.typedef_rules())
         self._modulecode = rules_engine.ModuleCodeDb({
