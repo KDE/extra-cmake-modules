@@ -173,3 +173,8 @@ void TypedefUser::setTagPattern(const QString &tagName,
 {
 
 }
+
+Shared::Shared(const Shared& other)
+{
+
+}

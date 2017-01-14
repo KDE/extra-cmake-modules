@@ -224,7 +224,10 @@ class ContainerRuleDb(AbstractCompiledRuleDb):
         :return:                    Modifying rule or None (even if a rule matched, it may not modify things).
         """
         parents = _parents(container)
-        matcher, rule = self._match(parents, sip["name"], sip["template_parameters"], sip["decl"], sip["base_specifiers"])
+        matcher, rule = self._match(parents, sip["name"],
+                                    ", ".join(sip["template_parameters"]),
+                                    sip["decl"],
+                                    ", ".join(sip["base_specifiers"]))
         if matcher:
             before = deepcopy(sip)
             rule.fn(container, sip, matcher)
@@ -881,6 +884,9 @@ def function_discard_impl(container, function, sip, matcher):
 
 def typedef_discard(container, typedef, sip, matcher):
     sip["name"] = ""
+
+def discard_QSharedData_base(container, sip, matcher):
+    sip["base_specifiers"].remove("QSharedData")
 
 def rules(project_rules):
     """

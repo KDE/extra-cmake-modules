@@ -5,6 +5,11 @@ import rules_engine
 sys.path.append(os.path.dirname(os.path.dirname(rules_engine.__file__)))
 import Qt5Ruleset
 
+def local_container_rules():
+    return [
+        [".*", "Shared", ".*", ".*", ".*", rules_engine.discard_QSharedData_base]
+    ]
+
 def local_function_rules():
     return [
         ["MyObject", "fwdDecl", ".*", ".*", ".*", rules_engine.function_discard],
@@ -28,6 +33,7 @@ def methodGenerator(function, sip, entry):
 class RuleSet(Qt5Ruleset.RuleSet):
     def __init__(self):
         Qt5Ruleset.RuleSet.__init__(self)
+        self._container_db = rules_engine.ContainerRuleDb(lambda: local_container_rules() + Qt5Ruleset.container_rules())
         self._fn_db = rules_engine.FunctionRuleDb(lambda: local_function_rules() + Qt5Ruleset.function_rules())
         self._typedef_db = rules_engine.TypedefRuleDb(lambda: local_typedef_rules() + Qt5Ruleset.typedef_rules())
         self._modulecode = rules_engine.ModuleCodeDb({

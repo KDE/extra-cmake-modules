@@ -6,6 +6,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QMap>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QSharedData>
 
 #include <functional>
 
@@ -104,6 +105,12 @@ class HasPrivateDefaultCtor
 public:
 private:
   HasPrivateDefaultCtor(int param = 0);
+};
+
+class Shared : public QSharedData
+{
+public:
+  Shared(const Shared& other);
 };
 
 namespace SomeNS {

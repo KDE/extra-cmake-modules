@@ -345,9 +345,9 @@ class SipGenerator(object):
             #
             # Flesh out the SIP context for the rules engine.
             #
-            sip["template_parameters"] = ", ".join(template_type_parameters)
+            sip["template_parameters"] = template_type_parameters
             sip["decl"] = container_type
-            sip["base_specifiers"] = ", ".join(base_specifiers)
+            sip["base_specifiers"] = base_specifiers
             sip["body"] = body
             modifying_rule = self.rules.container_rules().apply(container, sip)
             pad = " " * (level * 4)
@@ -364,11 +364,11 @@ class SipGenerator(object):
                     body = pad + "// Discarded {} (by {})\n".format(SipGenerator.describe(container), "/External/ handling")
                 else:
                     if sip["base_specifiers"]:
-                        decl += ": " + sip["base_specifiers"]
+                        decl += ": " + ", ".join(sip["base_specifiers"])
                     if sip["annotations"]:
                         decl += " /" + ",".join(sip["annotations"]) + "/"
                     if sip["template_parameters"]:
-                        decl = pad + "template <" + sip["template_parameters"] + ">\n" + decl
+                        decl = pad + "template <" + ", ".join(sip["template_parameters"]) + ">\n" + decl
                     decl += "\n" + pad + "{\n"
                     decl += "%TypeHeaderCode\n#include <{}>\n%End\n".format(include_filename)
                     body = decl + sip["body"] + pad + "};\n"
@@ -511,13 +511,12 @@ class SipGenerator(object):
             if parameter_modifying_rules:
                 decl += pad
 
-            sip["template_parameters"] = ", ".join(sip["template_parameters"])
             decl += sip["name"] + "(" + ", ".join(sip["parameters"]) + ")"
             if sip["fn_result"]:
                 decl = sip["fn_result"] + " " + decl
             decl = pad + sip["prefix"] + decl + sip["suffix"]
             if sip["template_parameters"]:
-                decl = pad + "template <" + sip["template_parameters"] + ">\n" + decl
+                decl = pad + "template <" + ", ".join(sip["template_parameters"]) + ">\n" + decl
             decl += ";\n"
             decl += sip["code"]
         else:
