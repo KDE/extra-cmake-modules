@@ -75,6 +75,11 @@ int MyObject::fwdDecl(const FwdDecl&)
   return 42;
 }
 
+int MyObject::fwdDeclRef(FwdDecl&)
+{
+  return 42;
+}
+
 int MyObject::const_parameters(const int input, QObject* const obj) const
 {
   if (obj) return input / 3;
