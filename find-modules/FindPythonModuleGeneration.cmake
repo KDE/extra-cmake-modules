@@ -443,7 +443,15 @@ headers = sipAPI${modulename_value}
         set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY
             OUTPUT_NAME "${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/${modulename_value}")
 
-        add_test(NAME Py${pyversion}Test${modulename_value} COMMAND ${GPB_PYTHON${pyversion}_COMMAND} "${CMAKE_SOURCE_DIR}/autotests/pythontest.py" ${CMAKE_BINARY_DIR}/py${pyversion})
+        if (GPB_SIP_DEPENDS MATCHES PyKF5)
+          set(_kf5_python_prefix ${CMAKE_INSTALL_PREFIX}/lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
+        else()
+          set(_kf5_python_prefix ${CMAKE_BINARY_DIR}/py${pyversion})
+        endif()
+        add_test(NAME Py${pyversion}Test${modulename_value} COMMAND
+            ${GPB_PYTHON${pyversion}_COMMAND} "${CMAKE_SOURCE_DIR}/autotests/pythontest.py"
+            ${_kf5_python_prefix}
+        )
 
         install(DIRECTORY ${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}
             DESTINATION lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
