@@ -656,6 +656,7 @@ class SipGenerator(object):
 
         sip = {
             "name": typedef.displayname,
+            "decl": typedef.underlying_typedef_type.spelling,
             "annotations": set(),
         }
 
@@ -663,7 +664,7 @@ class SipGenerator(object):
 
         pad = " " * (level * 4)
         if sip["name"]:
-            decl = pad + "typedef {} {}".format(typedef.underlying_typedef_type.spelling, typedef.displayname)
+            decl = pad + "typedef {} {}".format(sip["decl"], sip["name"])
             decl += ";\n"
         else:
             decl = pad + "// Discarded {}\n".format(SipGenerator.describe(typedef))
