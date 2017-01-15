@@ -424,7 +424,7 @@ headers = sipAPI${modulename_value}
     foreach(pyversion ${_pyversions})
 
         execute_process(COMMAND "${CMAKE_COMMAND}"
-          "-DPYTHON_UMBRELLA_MODULE_FILE=${CMAKE_CURRENT_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/__init__.py"
+          "-DPYTHON_UMBRELLA_MODULE_FILE=${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/__init__.py"
           -P "${GPB_MODULE_DIR}/GeneratePythonBindingUmbrellaModule.cmake"
         )
 
@@ -440,11 +440,12 @@ headers = sipAPI${modulename_value}
 
         set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY AUTOMOC OFF)
         set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY PREFIX "")
-        set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY OUTPUT_NAME py${pyversion}/${pythonnamespace_value}/${modulename_value})
+        set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY
+            OUTPUT_NAME "${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/${modulename_value}")
 
         add_test(NAME Py${pyversion}Test${modulename_value} COMMAND ${GPB_PYTHON${pyversion}_COMMAND} "${CMAKE_SOURCE_DIR}/autotests/pythontest.py" ${CMAKE_BINARY_DIR}/py${pyversion})
 
-        install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}
+        install(DIRECTORY ${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}
             DESTINATION lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
         install(FILES ${sip_files} "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${modulename_value}mod.sip"
           DESTINATION share/sip/${pythonnamespace_value}/${modulename_value}
