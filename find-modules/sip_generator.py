@@ -434,6 +434,12 @@ class SipGenerator(object):
         :param level:               Recursion level controls indentation.
         :return:                    A string.
         """
+        if container.kind == CursorKind.TRANSLATION_UNIT and \
+                (function.semantic_parent.kind == CursorKind.CLASS_DECL or
+                 function.semantic_parent.kind == CursorKind.STRUCT_DECL) and \
+                function.is_definition():
+            # Skip inline methods
+            return
 
         def skippable_attribute(member, text):
             """

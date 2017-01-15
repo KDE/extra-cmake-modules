@@ -21,6 +21,8 @@ class MyObject : public QObject
 public:
   MyObject(QObject* parent = nullptr);
 
+  inline MyObject(const QString& inlineCtor, QObject* parent = nullptr);
+
   enum LocalEnum {
     Val1 = 1,
     Val2
@@ -43,6 +45,8 @@ public:
 
   int qtEnumTest(QFlags<Qt::MatchFlag> flags);
   int localEnumTest(QFlags<MyObject::LocalEnum> flags);
+
+  inline int inlineMethod(int arg);
 
   int functionParam(std::function<int()> fn);
   int groups(unsigned int maxCount = std::numeric_limits<uint>::max()) const;
@@ -85,6 +89,17 @@ private slots:
 private Q_SLOTS:
   void privateSlot2();
 };
+
+inline MyObject::MyObject(const QString& inlineCtor, QObject* parent)
+  : MyObject(parent)
+{
+
+}
+
+inline int MyObject::inlineMethod(int arg)
+{
+  return arg;
+}
 
 class LocalFwdDecl
 {
