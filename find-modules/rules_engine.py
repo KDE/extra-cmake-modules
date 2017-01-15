@@ -965,6 +965,9 @@ def discard_QSharedData_base(container, sip, matcher):
 def mark_forward_declaration_external(container, sip, matcher):
     sip["annotations"].add("External")
 
+def container_mark_abstract(container, sip, matcher):
+    sip["annotations"].add("Abstract")
+
 def rules(project_rules):
     """
     Constructor.
