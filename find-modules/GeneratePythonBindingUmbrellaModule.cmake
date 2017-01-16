@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 get_filename_component(PYTHON_UMBRELLA_MODULE_DIR ${PYTHON_UMBRELLA_MODULE_FILE} PATH)
 
