@@ -125,6 +125,11 @@ void MyObject::intBraces(int i)
 
 }
 
+void MyObject::intRefBraces(int const& s)
+{
+
+}
+
 void MyObject::pointerBraces(int* p)
 {
 

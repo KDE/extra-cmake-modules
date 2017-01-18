@@ -57,6 +57,7 @@ public:
   void stringBraces(QString s = {});
   void stringRefBraces(QString const& s = {});
   void intBraces(int i = {});
+  void intRefBraces(int const& i = {});
   void pointerBraces(int* p = {});
 
   int const_parameters(const int input, QObject* const obj = 0) const;

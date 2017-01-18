@@ -579,7 +579,9 @@ class SipGenerator(object):
             result = parameter.type.get_declaration().type
 
             if parameter.type.kind == TypeKind.LVALUEREFERENCE:
-                return parameter.type.get_pointee().get_declaration().type
+                if parameter.type.get_pointee().get_declaration().type.kind != TypeKind.INVALID:
+                    return parameter.type.get_pointee().get_declaration().type
+                return parameter.type.get_pointee()
 
             if parameter.type.get_declaration().type.kind == TypeKind.INVALID:
                 return parameter.type
@@ -603,6 +605,8 @@ class SipGenerator(object):
                     return "0"
                 if parameterType.kind == TypeKind.POINTER:
                     return "nullptr"
+                if parameterType.spelling.startswith("const "):
+                    return parameterType.spelling[6:] + "()"
                 return parameterType.spelling + "()"
             if not "::" in parameterType.spelling:
                 return text
