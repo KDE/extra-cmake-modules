@@ -578,7 +578,7 @@ class SipGenerator(object):
         def _get_param_type(parameter):
             result = parameter.type.get_declaration().type
 
-            if parameter.type.kind == TypeKind.LVALUEREFERENCE:
+            if result.kind != TypeKind.ENUM and result.kind != TypeKind.TYPEDEF and parameter.type.kind == TypeKind.LVALUEREFERENCE:
                 if parameter.type.get_pointee().get_declaration().type.kind != TypeKind.INVALID:
                     return parameter.type.get_pointee().get_declaration().type
                 return parameter.type.get_pointee()
