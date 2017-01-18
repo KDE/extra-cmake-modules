@@ -105,6 +105,26 @@ void MyObject::enumNullptr(Qt::WindowFlags f)
 
 }
 
+void MyObject::enumBraces(Qt::WindowFlags f)
+{
+
+}
+
+void MyObject::stringBraces(QString s)
+{
+
+}
+
+void MyObject::intBraces(int i)
+{
+
+}
+
+void MyObject::pointerBraces(int* p)
+{
+
+}
+
 LocalFwdDecl::LocalFwdDecl(int value)
   : m_value(value)
 {

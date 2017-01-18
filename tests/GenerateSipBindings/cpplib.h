@@ -53,6 +53,11 @@ public:
 
   void enumNullptr(Qt::WindowFlags f = nullptr);
 
+  void enumBraces(Qt::WindowFlags f = {});
+  void stringBraces(QString s = {});
+  void intBraces(int i = {});
+  void pointerBraces(int* p = {});
+
   int const_parameters(const int input, QObject* const obj = 0) const;
 
   int externalFwdDecl(const ExternalFwdDecl& f);

@@ -578,6 +578,9 @@ class SipGenerator(object):
         def _get_param_type(parameter):
             result = parameter.type.get_declaration().type
 
+            if parameter.type.get_declaration().type.kind == TypeKind.INVALID:
+                return parameter.type
+
             if (parameter.type.get_declaration().type.kind == TypeKind.TYPEDEF):
                 isQFlags = False
                 for member in parameter.type.get_declaration().get_children():
@@ -592,6 +595,12 @@ class SipGenerator(object):
         def _get_param_value(text, parameterType):
             if text == "0" or text == "nullptr":
                 return text
+            if text == "{}":
+                if parameterType.kind == TypeKind.ENUM:
+                    return "0"
+                if parameterType.kind == TypeKind.POINTER:
+                    return "nullptr"
+                return parameterType.spelling + "()"
             if not "::" in parameterType.spelling:
                 return text
             try:
