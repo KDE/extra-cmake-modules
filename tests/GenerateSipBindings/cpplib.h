@@ -55,6 +55,7 @@ public:
 
   void enumBraces(Qt::WindowFlags f = {});
   void stringBraces(QString s = {});
+  void stringRefBraces(QString const& s = {});
   void intBraces(int i = {});
   void pointerBraces(int* p = {});
 

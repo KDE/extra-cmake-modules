@@ -578,6 +578,9 @@ class SipGenerator(object):
         def _get_param_type(parameter):
             result = parameter.type.get_declaration().type
 
+            if parameter.type.kind == TypeKind.LVALUEREFERENCE:
+                return parameter.type.get_pointee().get_declaration().type
+
             if parameter.type.get_declaration().type.kind == TypeKind.INVALID:
                 return parameter.type
 

@@ -115,6 +115,11 @@ void MyObject::stringBraces(QString s)
 
 }
 
+void MyObject::stringRefBraces(QString const& s)
+{
+
+}
+
 void MyObject::intBraces(int i)
 {
 
