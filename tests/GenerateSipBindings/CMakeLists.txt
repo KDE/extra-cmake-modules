@@ -14,12 +14,16 @@ add_library(ExternalLib SHARED external_lib.cpp)
 target_link_libraries(ExternalLib PUBLIC Qt5::Core)
 target_compile_features(ExternalLib PUBLIC cxx_nullptr)
 
-add_library(CppLib SHARED cpplib.cpp)
+add_library(CppLib SHARED
+  cpplib.cpp
+  subdir/subdirfile.cpp
+)
 target_link_libraries(CppLib
     PUBLIC Qt5::Core
     PRIVATE ExternalLib
 )
 target_compile_features(CppLib PUBLIC cxx_nullptr)
+target_include_directories(CppLib PUBLIC subdir)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../find-modules)
 
@@ -44,4 +48,5 @@ ecm_generate_python_binding(
     QtCore/QtCoremod.sip
   HEADERS
     cpplib.h
+    subdir/subdirfile.h
 )

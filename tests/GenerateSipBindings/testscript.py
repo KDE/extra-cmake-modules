@@ -118,3 +118,6 @@ assert(PyTest.CppLib.SomeNS.useEnum(PyTest.CppLib.SomeNS.EnumValueTwo) == 2.0)
 assert(PyTest.CppLib.SomeNS.customMethod([2, 3, 5]) == 10)
 
 assert(PyTest.CppLib.anotherCustomMethod([2, 3, 5]) == 52)
+
+sdo = PyTest.CppLib.SubdirObject()
+assert(sdo.mul(5, 6) == 30)
