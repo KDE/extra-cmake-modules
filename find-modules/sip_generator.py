@@ -590,7 +590,7 @@ class SipGenerator(object):
             return result
 
         def _get_param_value(text, parameterType):
-            if text == "0":
+            if text == "0" or text == "nullptr":
                 return text
             if not "::" in parameterType.spelling:
                 return text

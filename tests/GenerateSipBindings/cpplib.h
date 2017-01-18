@@ -51,6 +51,8 @@ public:
   int functionParam(std::function<int()> fn);
   int groups(unsigned int maxCount = std::numeric_limits<uint>::max()) const;
 
+  void enumNullptr(Qt::WindowFlags f = nullptr);
+
   int const_parameters(const int input, QObject* const obj = 0) const;
 
   int externalFwdDecl(const ExternalFwdDecl& f);

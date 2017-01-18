@@ -100,6 +100,11 @@ int MyObject::localListDecl(const QList<int>& l)
   return std::accumulate(l.begin(), l.end(), 0);
 }
 
+void MyObject::enumNullptr(Qt::WindowFlags f)
+{
+
+}
+
 LocalFwdDecl::LocalFwdDecl(int value)
   : m_value(value)
 {
