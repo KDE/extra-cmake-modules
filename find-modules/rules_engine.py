@@ -909,7 +909,8 @@ class RuleSet(object):
             else:
                 logger.warn(_("Rule {} was not used".format(rule)))
 
-        for db in [self.container_rules(), self.function_rules(), self.parameter_rules(), self.typedef_rules(),
+        for db in [self.container_rules(), self.forward_declaration_rules(), self.function_rules(),
+                   self.parameter_rules(), self.typedef_rules(),
                    self.variable_rules(), self.methodcode_rules(), self.modulecode_rules()]:
             db.dump_usage(dumper)
 
