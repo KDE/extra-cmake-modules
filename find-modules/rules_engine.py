@@ -80,7 +80,10 @@ class Rule(object):
         try:
             groups = ["(?P<{}>{})".format(name, pattern) for pattern, name in pattern_zip]
             groups = _SEPARATOR.join(groups)
-            self.matcher = re.compile(groups)
+            #
+            # We'll use re.match to anchor the start of the match, and so need a $ to anchor the end.
+            #
+            self.matcher = re.compile(groups + "$")
         except Exception as e:
             groups = ["{} '{}'".format(name, pattern) for pattern, name in pattern_zip]
             groups = ", ".join(groups)
