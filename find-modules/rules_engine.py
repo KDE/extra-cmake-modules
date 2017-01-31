@@ -748,7 +748,7 @@ class ModuleCodeDb(AbstractCompiledCodeDb):
 
     The raw rule database must be a dictionary as follows:
 
-        0. Each key is the basenanme of a module file.
+        0. Each key is the basename of a header file.
 
         1. Each value has entries which update the declaration as follows:
 
@@ -762,8 +762,9 @@ class ModuleCodeDb(AbstractCompiledCodeDb):
             Return a string to insert for the file.
 
             :param filename:    The filename.
-            :param sip:         A dict with the key "name" for the module name
-                                plus the "code" key described above.
+            :param sip:         A dict with the key "name" for the filename,
+                                "decl" for the module body plus the "code" key
+                                described above.
             :param entry:       The dictionary entry.
 
             :return: A string.
@@ -776,7 +777,7 @@ class ModuleCodeDb(AbstractCompiledCodeDb):
     def __init__(self, db):
         super(ModuleCodeDb, self).__init__(db)
         #
-        # Add a usage count for each item in the database.
+        # Add a usage count and other diagnostic support for each item in the database.
         #
         for k, v in self.db.items():
             v["usage"] = 0
@@ -792,6 +793,13 @@ class ModuleCodeDb(AbstractCompiledCodeDb):
         return entry
 
     def apply(self, filename, sip):
+        """
+        Walk over the code database for modules, applying the first matching transformation.
+
+        :param filename:            The file for the module.
+        :param sip:                 The SIP dict (may be modified on return).
+        :return:                    Modifying rule or None (even if a rule matched, it may not modify things).
+        """
         entry = self._get(filename)
         sip.setdefault("code", "")
         if entry:
