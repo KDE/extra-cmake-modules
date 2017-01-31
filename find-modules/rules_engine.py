@@ -653,6 +653,8 @@ class MethodCodeDb(AbstractCompiledCodeDb):
 
     Each inner dictionary has entries which update the declaration as follows:
 
+        "name":         Optional string. If present, overrides the name of the
+                        method.
         "parameters":   Optional list. If present, update the argument list.
 
         "fn_result":    Optional string. If present, update the return type.
