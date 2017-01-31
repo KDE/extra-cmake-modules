@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#=============================================================================
+#
 # Copyright 2016 by Shaheed Haque (srhaque@theiet.org)
 # Copyright 2016 by Stephen Kelly (steveire@gmail.com)
 #
@@ -25,7 +25,7 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#=============================================================================
+#
 
 """SIP file generator for PyQt."""
 

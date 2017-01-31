@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#=============================================================================
+#
 # Copyright 2016 Shaheed Haque <srhaque@theiet.org>
 # Copyright 2016 Stephen Kelly <steveire@gmail.com>
 #
@@ -25,7 +25,7 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#=============================================================================
+#
 
 from __future__ import print_function
 
