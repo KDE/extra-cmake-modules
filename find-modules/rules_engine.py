@@ -339,7 +339,7 @@ class FunctionRuleDb(AbstractCompiledRuleDb):
                                     name                The name of the function.
                                     template_parameters Any template parameters.
                                     fn_result           Result, if not a constructor.
-                                    decl                The declaration.
+                                    parameters          The parameters.
                                     prefix              Leading keyworks ("static"). Separated by space,
                                                         ends with a space.
                                     suffix              Trailing keywords ("const"). Separated by space, starts with
