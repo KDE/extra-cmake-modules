@@ -263,7 +263,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     option(ENABLE_CLAZY "Enable Clazy warnings" OFF)
 
     if(ENABLE_CLAZY)
-        set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_CXX_COMPILE_OBJECT} -Xclang -load -Xclang ClangLazy.so -Xclang -add-plugin -Xclang clang-lazy")
+        set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_CXX_COMPILE_OBJECT} -Xclang -load -Xclang ClangLazy${CMAKE_SHARED_LIBRARY_SUFFIX} -Xclang -add-plugin -Xclang clang-lazy")
     endif()
 endif()
 
