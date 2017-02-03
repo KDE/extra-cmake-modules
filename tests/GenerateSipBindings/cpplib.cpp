@@ -239,3 +239,23 @@ Shared::Shared(const Shared& other)
 {
 
 }
+
+int Abstract::callableMultiply(int i, int j)
+{
+  return i * j;
+}
+
+Abstract::~Abstract()
+{
+
+}
+
+int Concrete::callableAdd(int i, int j)
+{
+  return i + j;
+}
+
+void Concrete::virtualInterface()
+{
+
+}
