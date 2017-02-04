@@ -173,18 +173,6 @@ class SipGenerator(object):
         :return:                    A string.
         """
 
-        def skippable_attribute(member, text):
-            """
-            We don't seem to have access to the __attribute__(())s, but at least we can look for stuff we care about.
-
-            :param member:          The attribute.
-            :param text:            The raw source corresponding to the region of member.
-            """
-            if text.find("_DEPRECATED") != -1:
-                sip["annotations"].add("Deprecated")
-                return True
-            SipGenerator._report_ignoring(container, member, text)
-
         if container.kind.is_translation_unit():
             #
             # Any module-related manual code (%ExportedHeaderCode, %ModuleCode, %ModuleHeaderCode or other
