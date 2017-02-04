@@ -203,3 +203,13 @@ enum __attribute__((visibility("default"))) EnumWithAttributes {
     Foo,
     Bar = 2
 };
+
+#define EXPORT __attribute__((visibility("default")))
+#define NO_EXPORT __attribute__((visibility("hidden")))
+
+class EXPORT Visible
+{
+public:
+  EXPORT int visible_fn() { return 1; }
+  NO_EXPORT int invisible_fn() { return 1; }
+};

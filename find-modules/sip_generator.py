@@ -159,11 +159,8 @@ class SipGenerator(object):
         return body, self.tu.get_includes
 
     CONTAINER_SKIPPABLE_UNEXPOSED_DECL = re.compile("_DECLARE_PRIVATE|friend|;")
-    FN_SKIPPABLE_ATTR = re.compile("_EXPORT|Q_REQUIRED_RESULT|format\(printf")
-    VAR_SKIPPABLE_ATTR = re.compile("_EXPORT")
-    TYPEDEF_SKIPPABLE_ATTR = re.compile("_EXPORT")
 
-    def skippable_attribute(self, parent, member, text, skippable_re):
+    def skippable_attribute(self, parent, member, text, sip):
         """
         We don't seem to have access to the __attribute__(())s, but at least we can look for stuff we care about.
 
@@ -172,7 +169,10 @@ class SipGenerator(object):
         """
         if member.kind != CursorKind.VISIBILITY_ATTR:
             return False
-        if skippable_re.search(text):
+        if member.spelling == "hidden":
+            if self.dump_privates:
+                logger.debug("Ignoring private {}".format(SipGenerator.describe(parent)))
+            sip["name"] = ""
             return True
         return False
 
@@ -488,8 +488,9 @@ class SipGenerator(object):
                 template_parameters.append(child.type.spelling + " " + child.displayname)
             else:
                 text = self._read_source(child.extent)
-                if self.skippable_attribute(function, child, text, SipGenerator.FN_SKIPPABLE_ATTR):
-                    pass
+                if self.skippable_attribute(function, child, text, sip):
+                    if not sip["name"]:
+                        return ""
                 else:
                     SipGenerator._report_ignoring(function, child)
         #
@@ -697,8 +698,9 @@ class SipGenerator(object):
                 pass
             else:
                 text = self._read_source(child.extent)
-                if self.skippable_attribute(variable, child, text, SipGenerator.VAR_SKIPPABLE_ATTR):
-                    pass
+                if self.skippable_attribute(variable, child, text, sip):
+                    if not sip["name"]:
+                        return ""
                 else:
                     SipGenerator._report_ignoring(variable, child)
         #

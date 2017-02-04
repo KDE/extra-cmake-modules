@@ -121,3 +121,12 @@ assert(PyTest.CppLib.anotherCustomMethod([2, 3, 5]) == 52)
 
 sdo = PyTest.CppLib.SubdirObject()
 assert(sdo.mul(5, 6) == 30)
+
+visible = PyTest.CppLib.Visible()
+assert visible.visible_fn()
+
+try:
+    assert visible.invisible_fn()
+    assert False
+except AttributeError as e:
+    assert str(e) == "'Visible' object has no attribute 'invisible_fn'"
