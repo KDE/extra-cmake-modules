@@ -158,8 +158,6 @@ class SipGenerator(object):
         body = self._container_get(self.tu.cursor, -1, h_file, include_filename)
         return body, self.tu.get_includes
 
-    CONTAINER_SKIPPABLE_UNEXPOSED_DECL = re.compile("_DECLARE_PRIVATE|friend|;")
-
     def skippable_attribute(self, parent, member, text, sip):
         """
         We don't seem to have access to the __attribute__(())s, but at least we can look for stuff we care about.
