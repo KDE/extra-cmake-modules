@@ -256,7 +256,12 @@ class SipGenerator(object):
                 #
                 pass
             else:
-                SipGenerator._report_ignoring(container, member)
+                text = self._read_source(member.extent)
+                if self.skippable_attribute(container, member, text, sip):
+                    if not sip["name"]:
+                        return ""
+                else:
+                    SipGenerator._report_ignoring(container, member)
 
             def is_copy_constructor(member):
                 if member.kind != CursorKind.CONSTRUCTOR:

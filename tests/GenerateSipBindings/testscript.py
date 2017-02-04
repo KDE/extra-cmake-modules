@@ -130,3 +130,8 @@ try:
     assert False
 except AttributeError as e:
     assert str(e) == "'Visible' object has no attribute 'invisible_fn'"
+try:
+    invisible = PyTest.CppLib.Invisible()
+    assert False
+except AttributeError as e:
+    assert str(e) == "module 'PyTest.CppLib' has no attribute 'Invisible'"

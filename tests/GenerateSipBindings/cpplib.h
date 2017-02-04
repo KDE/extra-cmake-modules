@@ -213,3 +213,9 @@ public:
   EXPORT int visible_fn() { return 1; }
   NO_EXPORT int invisible_fn() { return 1; }
 };
+
+class NO_EXPORT Invisible
+{
+public:
+  int someApi() { return 1; }
+};
