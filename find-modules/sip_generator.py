@@ -163,6 +163,19 @@ class SipGenerator(object):
     VAR_SKIPPABLE_ATTR = re.compile("_EXPORT")
     TYPEDEF_SKIPPABLE_ATTR = re.compile("_EXPORT")
 
+    def skippable_attribute(self, parent, member, text, skippable_re):
+        """
+        We don't seem to have access to the __attribute__(())s, but at least we can look for stuff we care about.
+
+        :param member:          The attribute.
+        :param text:            The raw source corresponding to the region of member.
+        """
+        if member.kind != CursorKind.VISIBILITY_ATTR:
+            return False
+        if skippable_re.search(text):
+            return True
+        return False
+
     def _container_get(self, container, level, h_file, include_filename):
         """
         Generate the (recursive) translation for a class or namespace.
@@ -428,17 +441,6 @@ class SipGenerator(object):
             # Skip inline methods
             return
 
-        def skippable_attribute(member, text):
-            """
-            We don't seem to have access to the __attribute__(())s, but at least we can look for stuff we care about.
-
-            :param member:          The attribute.
-            :param text:            The raw source corresponding to the region of member.
-            """
-            if SipGenerator.FN_SKIPPABLE_ATTR.search(text):
-                return True
-            SipGenerator._report_ignoring(function, member, text)
-
         sip = {
             "name": function.spelling,
         }
@@ -486,8 +488,7 @@ class SipGenerator(object):
                 template_parameters.append(child.type.spelling + " " + child.displayname)
             else:
                 text = self._read_source(child.extent)
-                if child.kind in [CursorKind.UNEXPOSED_ATTR, CursorKind.VISIBILITY_ATTR] and skippable_attribute(child,
-                                                                                                                 text):
+                if self.skippable_attribute(function, child, text, SipGenerator.FN_SKIPPABLE_ATTR):
                     pass
                 else:
                     SipGenerator._report_ignoring(function, child)
@@ -683,17 +684,6 @@ class SipGenerator(object):
         :return:                    A string.
         """
 
-        def skippable_attribute(member, text):
-            """
-            We don't seem to have access to the __attribute__(())s, but at least we can look for stuff we care about.
-
-            :param member:          The attribute.
-            :param text:            The raw source corresponding to the region of member.
-            """
-            if SipGenerator.VAR_SKIPPABLE_ATTR.search(text):
-                return True
-            SipGenerator._report_ignoring(container, member, text)
-
         sip = {
             "name": variable.spelling
         }
@@ -707,7 +697,7 @@ class SipGenerator(object):
                 pass
             else:
                 text = self._read_source(child.extent)
-                if child.kind == CursorKind.VISIBILITY_ATTR and skippable_attribute(child, text):
+                if self.skippable_attribute(variable, child, text, SipGenerator.VAR_SKIPPABLE_ATTR):
                     pass
                 else:
                     SipGenerator._report_ignoring(variable, child)
