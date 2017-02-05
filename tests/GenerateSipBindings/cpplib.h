@@ -219,23 +219,3 @@ class NO_EXPORT Invisible
 public:
   int someApi() { return 1; }
 };
-
-class Abstract
-{
-public:
-  virtual ~Abstract();
-
-  int callableMultiply(int i, int j);
-
-protected:
-  virtual void virtualInterface() = 0;
-};
-
-class Concrete : public Abstract
-{
-public:
-  int callableAdd(int i, int j);
-
-protected:
-  void virtualInterface() override;
-};

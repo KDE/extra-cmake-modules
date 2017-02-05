@@ -135,8 +135,3 @@ try:
     assert False
 except AttributeError as e:
     assert str(e) == "module 'PyTest.CppLib' has no attribute 'Invisible'"
-
-concrete = PyTest.CppLib.Concrete()
-
-assert(concrete.callableMultiply(2, 3) == 6)
-assert(concrete.callableAdd(2, 3) == 5)
