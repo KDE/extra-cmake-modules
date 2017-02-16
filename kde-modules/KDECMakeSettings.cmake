@@ -237,22 +237,23 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
       set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
    endif()
 
-   # Disable detection of X11 and related package on OS X because when using
-   # brew or macports, X11 can be installed and thus is detected.
-   option(APPLE_FORCE_X11 "Force enable X11 related detection on OS X" OFF)
-   option(APPLE_SUPPRESS_X11_WARNING "Suppress X11 and related technologies search disabling warning on OS X" OFF)
+   if (APPLE)
+       # Disable detection of X11 and related package on OS X because when using
+       # brew or macports, X11 can be installed and thus is detected.
+       option(APPLE_FORCE_X11 "Force enable X11 related detection on OS X" OFF)
+       option(APPLE_SUPPRESS_X11_WARNING "Suppress X11 and related technologies search disabling warning on OS X" OFF)
 
-   if(APPLE AND NOT APPLE_FORCE_X11)
-      if (NOT APPLE_SUPPRESS_X11_WARNING)
-         message(WARNING "Searching for X11 and related technologies is disabled on Apple systems. Set APPLE_FORCE_X11 to ON to change this behaviour. Set APPLE_SUPPRESS_X11_WARNING to ON to hide this warning.")
-      endif()
+       if(NOT APPLE_FORCE_X11)
+           if (NOT APPLE_SUPPRESS_X11_WARNING)
+               message(WARNING "Searching for X11 and related technologies is disabled on Apple systems. Set APPLE_FORCE_X11 to ON to change this behaviour. Set APPLE_SUPPRESS_X11_WARNING to ON to hide this warning.")
+           endif()
+           set(CMAKE_DISABLE_FIND_PACKAGE_X11 true)
+           set(CMAKE_DISABLE_FIND_PACKAGE_XCB true)
+           set(CMAKE_DISABLE_FIND_PACKAGE_Qt5X11Extras true)
+       endif()
+    endif()
 
-      set(CMAKE_DISABLE_FIND_PACKAGE_X11 true)
-      set(CMAKE_DISABLE_FIND_PACKAGE_XCB true)
-      set(CMAKE_DISABLE_FIND_PACKAGE_Qt5X11Extras true)
-   endif()
-
-   option(KDE_SKIP_UNINSTALL_TARGET "Prevent an \"uninstall\" target from being generated." OFF)
+    option(KDE_SKIP_UNINSTALL_TARGET "Prevent an \"uninstall\" target from being generated." OFF)
    if(NOT KDE_SKIP_UNINSTALL_TARGET)
        include("${ECM_MODULE_DIR}/ECMUninstallTarget.cmake")
    endif()
