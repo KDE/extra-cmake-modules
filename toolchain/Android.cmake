@@ -216,6 +216,7 @@ set(CMAKE_CXX_LINK_EXECUTABLE
 # needed for Qt to define Q_OS_ANDROID
 add_definitions(-DANDROID)
 
+set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/.." CACHE STRING "")
 
 ######### generation
 
@@ -241,6 +242,10 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
         COMMAND cmake -E copy "$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "${EXECUTABLE_DESTINATION_PATH}"
         COMMAND cmake -DINPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json.in" -DOUTPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json" "-DTARGET_DIR=$<TARGET_FILE_DIR:${QTANDROID_EXPORTED_TARGET}>" "-DTARGET_NAME=${QTANDROID_EXPORTED_TARGET}" "-DEXPORT_DIR=${CMAKE_INSTALL_PREFIX}" -P ${_CMAKE_ANDROID_DIR}/specifydependencies.cmake
         COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --output "${EXPORT_DIR}" --deployment bundled "\\$(ARGS)"
+    )
+
+    add_custom_target(install-apk-${QTANDROID_EXPORTED_TARGET}
+        COMMAND adb install -r "${EXPORT_DIR}/bin/QtApp-debug.apk"
     )
 else()
     message(STATUS "You can export a target by specifying -DQTANDROID_EXPORTED_TARGET=<targetname>")
