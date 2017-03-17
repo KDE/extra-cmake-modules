@@ -225,8 +225,10 @@ set(CREATEAPK_TARGET_NAME "create-apk-${QTANDROID_EXPORTED_TARGET}")
 # from CMakeDetermineSystem.cmake and from CMakeSystem.cmake generated within the
 # build directory.
 if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
-    if(NOT EXISTS "${ANDROID_APK_DIR}/AndroidManifest.xml")
+    if(NOT DEFINED ANDROID_APK_DIR)
         message(FATAL_ERROR "Define an apk dir to initialize from using -DANDROID_APK_DIR=<path>. The specified directory must contain the AndroidManifest.xml file.")
+    elseif(NOT EXISTS "${ANDROID_APK_DIR}/AndroidManifest.xml")
+        message(FATAL_ERROR "Cannot find ${ANDROID_APK_DIR}/AndroidManifest.xml according to ANDROID_APK_DIR")
     endif()
 
     find_package(Qt5Core REQUIRED)
