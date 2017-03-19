@@ -100,7 +100,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     else()
         _kde_compiler_min_version("4.5")
     endif()
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     _kde_compiler_min_version("3.1")
 else()
     message(WARNING "${CMAKE_CXX_COMPILER_ID} is not a supported C++ compiler.")
@@ -189,12 +189,12 @@ endif()
 # Pick sensible versions of the C and C++ standards.
 # Note that MSVC does not have equivalent flags; the features are either
 # supported or they are not.
-if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
     # We use the C89 standard because that is what is common to all our
     # compilers (in particular, MSVC 2010 does not support C99)
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=iso9899:1990")
 endif()
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
@@ -206,7 +206,7 @@ endif()
 # See https://www.ibm.com/developerworks/community/blogs/zTPF/entry/benefits_of_the_fnocommon_compile_option_peter_lemieszewski?lang=en
 # Note that this only applies to C code; C++ already behaves like this.
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR
-        CMAKE_C_COMPILER_ID STREQUAL "Clang" OR
+        CMAKE_C_COMPILER_ID MATCHES "Clang" OR
         (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-common")
 endif()
@@ -214,7 +214,7 @@ endif()
 # Do not treat the operator name keywords and, bitand, bitor, compl, not, or and xor as synonyms as keywords.
 # They're not supported under Visual Studio out of the box thus using them limits the portability of code
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR
-        CMAKE_C_COMPILER_ID STREQUAL "Clang" OR
+        CMAKE_C_COMPILER_ID MATCHES "Clang" OR
         (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-operator-names")
 endif()
@@ -263,7 +263,7 @@ endif()
 # Turn off exceptions by default
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
@@ -285,7 +285,7 @@ macro(_kdecompilersettings_append_exception_flag VAR)
         endif()
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(${VAR} "${${VAR}} -fexceptions")
-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         set(${VAR} "${${VAR}} -fexceptions")
     endif()
     string(STRIP "${${VAR}}" ${VAR})
@@ -353,12 +353,12 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT APPLE) OR
 endif()
 
 set(_KDE_GCC_COMMON_WARNING_FLAGS "-Wall -Wextra -Wcast-align -Wchar-subscripts -Wformat-security -Wno-long-long -Wpointer-arith -Wundef")
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_KDE_GCC_COMMON_WARNING_FLAGS} -Wmissing-format-attribute -Wwrite-strings")
     # Make some warnings errors
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror=implicit-function-declaration")
 endif()
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_KDE_GCC_COMMON_WARNING_FLAGS} -Wnon-virtual-dtor -Woverloaded-virtual")
     # Make some warnings errors
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
