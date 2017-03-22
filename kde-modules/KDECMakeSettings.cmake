@@ -71,6 +71,19 @@
 # - Uninstall target functionality since 1.7.0.
 # - ``APPLE_FORCE_X11`` option since 5.14.0 (detecting X11 was previously the default behavior)
 # - ``APPLE_SUPPRESS_X11_WARNING`` option since 5.14.0
+#
+# Translations
+# ~~~~~~~~~~~~
+# A fetch-translations target will be set up that will download translations
+# for projects using l10n.kde.org.
+#
+# ``KDE_L10N_BRANCH`` will be responsible for choosing which l10n branch to use
+# for the translations.
+#
+# ``KDE_L10N_AUTO_TRANSLATIONS`` (OFF by default) will indicate whether translations
+# should be downloaded when building the project.
+#
+# Since 5.34.0
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>
@@ -269,3 +282,49 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif()
 
 ###################################################################
+# Download translations
+
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po)
+    option(KDE_L10N_AUTO_TRANSLATIONS "Automatically 'make fetch-translations`" OFF)
+    set(KDE_L10N_BRANCH "trunk" CACHE STRING "Branch from l10n.kde.org to fetch from: trunk | stable | lts | trunk_kde4 | stable_kde4")
+
+    if(KDE_L10N_DOWNLOAD_TRANSLATIONS)
+        set(_EXTRA_ARGS "ALL")
+    else()
+        set(_EXTRA_ARGS)
+    endif()
+
+    execute_process(COMMAND git config --get remote.origin.url
+        OUTPUT_VARIABLE giturl
+        RESULT_VARIABLE exitCode
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+
+    if(exitCode EQUAL 0)
+        string(REGEX MATCHALL ".+[:\\/]([\\w\\-\\d])(.git)?\\s*" "" ${giturl})
+        set(reponame ${CMAKE_MATCH_1})
+    endif()
+
+    if(NOT reponame)
+        set(reponame ${CMAKE_PROJECT_NAME})
+    endif()
+
+    add_custom_command(
+        OUTPUT "${CMAKE_BINARY_DIR}/releaseme"
+        COMMAND git clone --depth 1 "https://anongit.kde.org/releaseme.git"
+        COMMENT "Fetching releaseme scripts to download translations..."
+    )
+
+    if(CMAKE_VERSION VERSION_GREATER 3.2)
+        set(extra BYPRODUCTS "${CMAKE_BINARY_DIR}/po")
+    endif()
+
+    add_custom_target(fetch-translations ${_EXTRA_ARGS}
+        COMMENT "Downloading translations for ${reponame} branch ${KDE_L10N_BRANCH}..."
+        COMMAND git -C "${CMAKE_BINARY_DIR}/releaseme" pull
+        COMMAND cmake -E remove_directory ${CMAKE_BINARY_DIR}/po
+        COMMAND ruby "${CMAKE_BINARY_DIR}/releaseme/fetchpo.rb" --origin ${KDE_L10N_BRANCH} --project "${reponame}" "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/po"
+        ${extra}
+        DEPENDS "${CMAKE_BINARY_DIR}/releaseme"
+    )
+endif()
