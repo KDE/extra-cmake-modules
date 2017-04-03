@@ -251,7 +251,7 @@ include(CMakeParseArguments)
 set(GPB_MODULE_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 function(_compute_implicit_include_dirs)
-  find_program(_GBP_CLANG_CXX_DRIVER_PATH clang++-${_GPB_CLANG_SUFFIX})
+  find_program(_GBP_CLANG_CXX_DRIVER_PATH NAMES clang++-${_GPB_CLANG_SUFFIX} clang++)
   if (NOT _GBP_CLANG_CXX_DRIVER_PATH)
     message(FATAL_ERROR "Failed to find clang driver corresponding to ${libclang_LIBRARY}")
   endif()
