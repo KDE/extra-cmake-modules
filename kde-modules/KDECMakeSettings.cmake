@@ -301,7 +301,7 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po)
     )
 
     if(exitCode EQUAL 0)
-        string(REGEX MATCHALL ".+[:\\/]([\\w\\-\\d])(.git)?\\s*" "" ${giturl})
+        string(REGEX MATCHALL ".+[:\\/]([A-Za-z\\-\\d]+)(.git)?\\s*" "" ${giturl})
         set(reponame ${CMAKE_MATCH_1})
     endif()
 
