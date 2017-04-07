@@ -284,6 +284,23 @@ endif()
 ###################################################################
 # Download translations
 
+function(_repository_name reponame)
+    execute_process(COMMAND git config --get remote.origin.url
+        OUTPUT_VARIABLE giturl
+        RESULT_VARIABLE exitCode
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+
+    if(exitCode EQUAL 0)
+        string(REGEX MATCHALL ".+[:\\/]([A-Za-z\\-\\d]+)(.git)?\\s*" "" ${giturl})
+        set(${reponame} ${CMAKE_MATCH_1} PARENT_SCOPE)
+    endif()
+
+    if(NOT ${reponame})
+        set(${reponame} ${CMAKE_PROJECT_NAME} PARENT_SCOPE)
+    endif()
+endfunction()
+
 if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po)
     option(KDE_L10N_AUTO_TRANSLATIONS "Automatically 'make fetch-translations`" OFF)
     set(KDE_L10N_BRANCH "trunk" CACHE STRING "Branch from l10n.kde.org to fetch from: trunk | stable | lts | trunk_kde4 | stable_kde4")
@@ -294,20 +311,7 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po)
         set(_EXTRA_ARGS)
     endif()
 
-    execute_process(COMMAND git config --get remote.origin.url
-        OUTPUT_VARIABLE giturl
-        RESULT_VARIABLE exitCode
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    )
-
-    if(exitCode EQUAL 0)
-        string(REGEX MATCHALL ".+[:\\/]([A-Za-z\\-\\d]+)(.git)?\\s*" "" ${giturl})
-        set(reponame ${CMAKE_MATCH_1})
-    endif()
-
-    if(NOT reponame)
-        set(reponame ${CMAKE_PROJECT_NAME})
-    endif()
+    _repository_name(reponame)
 
     add_custom_command(
         OUTPUT "${CMAKE_BINARY_DIR}/releaseme"
