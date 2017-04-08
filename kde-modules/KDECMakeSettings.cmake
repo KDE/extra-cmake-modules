@@ -284,21 +284,21 @@ endif()
 ###################################################################
 # Download translations
 
-function(_repository_name reponame)
+function(_repository_name reponame dir)
     execute_process(COMMAND git config --get remote.origin.url
         OUTPUT_VARIABLE giturl
         RESULT_VARIABLE exitCode
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    )
+        WORKING_DIRECTORY "${dir}")
 
     if(exitCode EQUAL 0)
-        string(REGEX MATCHALL ".+[:\\/]([A-Za-z\\-\\d]+)(.git)?\\s*" "" ${giturl})
-        set(${reponame} ${CMAKE_MATCH_1} PARENT_SCOPE)
+        string(REGEX MATCHALL ".+[:\\/]([-A-Za-z\\d]+)(.git)?\\s*" "" ${giturl})
+        set(${reponame} ${CMAKE_MATCH_1})
     endif()
 
     if(NOT ${reponame})
-        set(${reponame} ${CMAKE_PROJECT_NAME} PARENT_SCOPE)
+        set(${reponame} ${CMAKE_PROJECT_NAME})
     endif()
+    set(${reponame} ${${reponame}} PARENT_SCOPE)
 endfunction()
 
 if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
@@ -311,7 +311,8 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
         set(_EXTRA_ARGS)
     endif()
 
-    _repository_name(reponame)
+    set(_reponame "")
+    _repository_name(_reponame "${CMAKE_SOURCE_DIR}")
 
     add_custom_command(
         OUTPUT "${CMAKE_BINARY_DIR}/releaseme"
@@ -324,10 +325,10 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
     endif()
 
     add_custom_target(fetch-translations ${_EXTRA_ARGS}
-        COMMENT "Downloading translations for ${reponame} branch ${KDE_L10N_BRANCH}..."
+        COMMENT "Downloading translations for ${_reponame} branch ${KDE_L10N_BRANCH}..."
         COMMAND git -C "${CMAKE_BINARY_DIR}/releaseme" pull
         COMMAND cmake -E remove_directory ${CMAKE_BINARY_DIR}/po
-        COMMAND ruby "${CMAKE_BINARY_DIR}/releaseme/fetchpo.rb" --origin ${KDE_L10N_BRANCH} --project "${reponame}" "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/po"
+        COMMAND ruby "${CMAKE_BINARY_DIR}/releaseme/fetchpo.rb" --origin ${KDE_L10N_BRANCH} --project "${_reponame}" "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/po"
         ${extra}
         DEPENDS "${CMAKE_BINARY_DIR}/releaseme"
     )

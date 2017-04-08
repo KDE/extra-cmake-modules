@@ -112,6 +112,7 @@ endif()
 
 add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
+add_test_macro(KDEFetchTranslations dummy)
 
 add_test_macro(KDEInstallDirsTest.relative_or_absolute dummy)
 add_test_variant(KDEInstallDirsTest.vars_in_sync_no_args
