@@ -314,7 +314,7 @@ function(KDE_TARGET_ENABLE_EXCEPTIONS target mode)
         target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Intel>:-fexceptions>")
     endif()
     target_compile_options(${target} ${mode}
-        "$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-fexceptions>")
+        "$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-fexceptions>")
 endfunction()
 
 function(KDE_ENABLE_EXCEPTIONS)
