@@ -64,7 +64,7 @@ function(ecm_generate_qmltypes)
     set(generatedFile ${CMAKE_CURRENT_SOURCE_DIR}/plugins.qmltypes)
     add_custom_target(${targetname}
         BYPRODUCTS ${generatedFile}
-        COMMAND qmlplugindump -nonrelocatable ${ARG_UNPARSED_ARGUMENTS} ${KDE_INSTALL_QMLDIR} -output ${generatedFile}
+        COMMAND qmlplugindump -nonrelocatable ${ARG_UNPARSED_ARGUMENTS} ${KDE_INSTALL_QMLDIR} > ${generatedFile}
     )
     add_dependencies(qmltypes ${targetname})
     if (EXISTS ${generatedFile})
