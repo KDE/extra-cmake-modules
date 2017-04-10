@@ -55,7 +55,7 @@ function(ecm_generate_qmltypes)
     endif ()
 
     set(options)
-    set(oneValueArgs DESTINATION)
+    set(oneValueArgs DESTINATION TEST_ENABLED)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "" ${ARGN})
 
     set(targetname "qmltypes-${ARG_UNPARSED_ARGUMENTS}")
@@ -73,7 +73,10 @@ function(ecm_generate_qmltypes)
 
     string(REPLACE ";" / processedArgs "${ARG_UNPARSED_ARGUMENTS}")
 
-    add_test(NAME ${targetname} COMMAND
-        cmake -DARG_UNPARSED_ARGUMENTS=${processedArgs} -DKDE_INSTALL_QMLDIR=${KDE_INSTALL_QMLDIR} -DINPUT=${generatedFile} -P ${ECM_MODULE_DIR}/test_execute_and_compare.cmake
-    )
+    # sometimes qmlplugindump output isn't reproducible, we better have it opt in for now
+    if(ARG_TEST_ENABLED)
+        add_test(NAME ${targetname} COMMAND
+            cmake -DARG_UNPARSED_ARGUMENTS=${processedArgs} -DKDE_INSTALL_QMLDIR=${KDE_INSTALL_QMLDIR} -DINPUT=${generatedFile} -P ${ECM_MODULE_DIR}/test_execute_and_compare.cmake
+        )
+    endif()
 endfunction()
