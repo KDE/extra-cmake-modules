@@ -114,6 +114,9 @@ endif()
 file(GLOB installModuleFiles ${CMAKE_SOURCE_DIR}/modules/*[^~])
 install(FILES ${installModuleFiles} DESTINATION ${MODULES_INSTALL_DIR})
 
+file(GLOB installTestModuleFiles ${CMAKE_SOURCE_DIR}/test-modules/*[^~])
+install(FILES ${installTestModuleFiles} DESTINATION ${SHARE_INSTALL_DIR}/ECM/test-modules)
+
 file(GLOB installKdeModuleFiles ${CMAKE_SOURCE_DIR}/kde-modules/*[^~])
 install(FILES ${installKdeModuleFiles} DESTINATION ${KDE_MODULES_INSTALL_DIR})
 

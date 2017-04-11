@@ -76,7 +76,7 @@ function(ecm_generate_qmltypes)
     # sometimes qmlplugindump output isn't reproducible, we better have it opt in for now
     if(ARG_TEST_ENABLED)
         add_test(NAME ${targetname} COMMAND
-            cmake -DARG_UNPARSED_ARGUMENTS=${processedArgs} -DKDE_INSTALL_QMLDIR=${KDE_INSTALL_QMLDIR} -DINPUT=${generatedFile} -P ${ECM_MODULE_DIR}/test_execute_and_compare.cmake
+            cmake -DARG_UNPARSED_ARGUMENTS=${processedArgs} -DKDE_INSTALL_QMLDIR=${KDE_INSTALL_QMLDIR} -DINPUT=${generatedFile} -P ${ECM_MODULE_DIR}/../test-modules/test_execute_and_compare.cmake
         )
     endif()
 endfunction()
