@@ -369,6 +369,16 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"
     # Make some warnings errors
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
 endif()
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
+    (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5))
+    # -Wvla: use of variable-length arrays (an extension to C++)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wvla")
+endif()
+if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0) OR
+    (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5))
+    # -Wdate-time: warn if we use __DATE__ or __TIME__ (we want to be able to reproduce the exact same binary)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wdate-time")
+endif()
 
 # -w1 turns on warnings and errors
 # FIXME: someone needs to have a closer look at the Intel compiler options
