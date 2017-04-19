@@ -46,8 +46,11 @@
 # ``%{VERSION}``
 #     project version ex: 0.1
 #
+# Deprecated:
+#
 # ``%{dest}``
-#    used in .kdevtemplate
+#    path of generated project base folder, used in .kdevtemplate with the ShowFilesAfterGeneration entry
+#    KDevelop >= 5.1.1 supports relative paths with that entry, making this placeholder obsolete
 #
 # Multiple templates can be passed at once.
 #
