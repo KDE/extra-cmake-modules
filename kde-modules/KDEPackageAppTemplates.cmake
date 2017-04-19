@@ -26,7 +26,7 @@
 # the text files replaced by the following placeholders when needed:
 #
 # ``%{PROJECTDIRNAME}``
-#     %{APPNAMELC}-%{VERSION} for KAppTemplate
+#     name of generated project base folder ex: %{APPNAMELC} for KAppTemplate
 # ``%{APPNAME}``
 #     project name as entered by user ex: MyKApp
 # ``%{APPNAMELC}``
