@@ -48,8 +48,6 @@
 #
 # ``%{dest}``
 #    used in .kdevtemplate
-# ``%{src}``
-#    used in .kdevtemplate
 #
 # Multiple templates can be passed at once.
 #
