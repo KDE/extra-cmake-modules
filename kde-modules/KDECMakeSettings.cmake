@@ -320,15 +320,24 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
         COMMENT "Fetching releaseme scripts to download translations..."
     )
 
+    set(_l10n_po_dir "${CMAKE_BINARY_DIR}/po")
+    set(_l10n_poqm_dir "${CMAKE_BINARY_DIR}/poqm")
+
     if(CMAKE_VERSION VERSION_GREATER 3.2)
-        set(extra BYPRODUCTS "${CMAKE_BINARY_DIR}/po")
+        set(extra BYPRODUCTS ${_l10n_po_dir} ${_l10n_poqm_dir})
     endif()
 
     add_custom_target(fetch-translations ${_EXTRA_ARGS}
         COMMENT "Downloading translations for ${_reponame} branch ${KDE_L10N_BRANCH}..."
         COMMAND git -C "${CMAKE_BINARY_DIR}/releaseme" pull
-        COMMAND cmake -E remove_directory ${CMAKE_BINARY_DIR}/po
-        COMMAND ruby "${CMAKE_BINARY_DIR}/releaseme/fetchpo.rb" --origin ${KDE_L10N_BRANCH} --project "${_reponame}" "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/po"
+        COMMAND cmake -E remove_directory ${_l10n_po_dir}
+        COMMAND cmake -E remove_directory ${_l10n_poqm_dir}
+        COMMAND ruby "${CMAKE_BINARY_DIR}/releaseme/fetchpo.rb"
+            --origin ${KDE_L10N_BRANCH}
+            --project "${_reponame}"
+            --output-dir "${_l10n_po_dir}"
+            --output-poqm-dir "${_l10n_poqm_dir}"
+            "${CMAKE_CURRENT_SOURCE_DIR}"
         ${extra}
         DEPENDS "${CMAKE_BINARY_DIR}/releaseme"
     )
