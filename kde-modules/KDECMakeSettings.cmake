@@ -305,7 +305,7 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
     option(KDE_L10N_AUTO_TRANSLATIONS "Automatically 'make fetch-translations`" OFF)
     set(KDE_L10N_BRANCH "trunk" CACHE STRING "Branch from l10n.kde.org to fetch from: trunk | stable | lts | trunk_kde4 | stable_kde4")
 
-    if(KDE_L10N_DOWNLOAD_TRANSLATIONS)
+    if(KDE_L10N_AUTO_TRANSLATIONS)
         set(_EXTRA_ARGS "ALL")
     else()
         set(_EXTRA_ARGS)
