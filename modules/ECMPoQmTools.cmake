@@ -60,7 +60,7 @@
 #    fr/
 #      mylib.po
 #
-# ``ecm_install_po_files_as_qm(po)`` compiles ``mylib.po`` into ``mylib.mo`` and
+# ``ecm_install_po_files_as_qm(po)`` compiles ``mylib.po`` into ``mylib.qm`` and
 # installs it in ``<install_destination>/fr/LC_MESSAGES``.
 # ``<install_destination>`` defaults to ``${LOCALE_INSTALL_DIR}`` if defined,
 # otherwise it uses ``${CMAKE_INSTALL_LOCALEDIR}`` if that is defined, otherwise
