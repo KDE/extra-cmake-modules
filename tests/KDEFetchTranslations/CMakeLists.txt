@@ -1,4 +1,4 @@
-project(KDEFetchTranslations)
+project(extra-cmake-modules)
 cmake_minimum_required(VERSION 2.8.12)
 
 # order is important (install dirs before cmake settings)!
