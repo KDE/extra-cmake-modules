@@ -118,8 +118,9 @@ function(ecm_qt_declare_logging_category sources_var)
 
     get_filename_component(HEADER_NAME "${ARG_HEADER}" NAME)
 
-    string(REPLACE "::" "_" GUARD_NAME "${ARG_IDENTIFIER}_H")
-    string(TOUPPER "${GUARD_NAME}" GUARD_NAME)
+    string(REGEX REPLACE "[^a-zA-Z0-9]" "_" GUARD_NAME "${HEADER_NAME}")
+    string(REPLACE "::" "_" GUARD_PREFIX "ECM_QLOGGINGCATEGORY_${ARG_IDENTIFIER}")
+    string(TOUPPER "${GUARD_PREFIX}_${GUARD_NAME}" GUARD_NAME)
 
     if (NOT _ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_CPP)
        message(FATAL_ERROR "You must include(ECMQtDeclareLoggingCategory) before using ecm_qt_declare_logging_category")
