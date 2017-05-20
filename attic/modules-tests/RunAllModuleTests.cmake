@@ -30,19 +30,12 @@ if(DEFINED MODULE)
    set(modulesToTest ${MODULE})
 else()
    set(modulesToTest AGG 
-                     Blitz 
                      BlueZ
                      ENCHANT
-                     Eigen2 
                      FFmpeg
                      Flac 
-                     Flex 
                      GObject 
-                     GStreamer
-                     LCMS 
                      LibArt 
-                     LibXslt 
-                     OpenEXR 
                      PCRE 
                      QCA2 
                      QImageBlitz
