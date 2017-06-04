@@ -21,6 +21,7 @@ if (NOT ${name} STREQUAL "extra-cmake-modules")
     message(FATAL_ERROR "Wrong repository name: ${name}, should be 'extra-cmake-modules'")
 endif()
 add_executable(dummy ../ExecuteKDEModules/main.c)
+ecm_mark_nongui_executable(dummy)
 
 if(NOT TARGET fetch-translations)
     message(FATAL_ERROR "should have a fetch-translations target")
