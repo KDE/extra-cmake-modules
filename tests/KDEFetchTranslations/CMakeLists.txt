@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 2.8.12)
 set(all_kde_modules
     KDEInstallDirs
     KDECMakeSettings
+    ECMMarkNonGuiExecutable
 )
 
 set(ECM_KDE_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../kde-modules)
