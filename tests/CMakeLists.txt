@@ -145,6 +145,7 @@ add_test_variant(KDEInstallDirsTest.vars_in_sync_oldstyle_arg
 
 set(KDEInstallDirsTest.relative_or_absolute_usr_EXTRA_OPTIONS
     --build-options -DCMAKE_INSTALL_PREFIX=/usr
+                    -DKDE_INSTALL_USE_QT_SYS_PATHS=FALSE
                     -DAUTOSTARTDIR_should_be_absolute=TRUE
                     -DCONFDIR_should_be_absolute=TRUE
                     -DSYSCONFDIR_should_be_absolute=TRUE
