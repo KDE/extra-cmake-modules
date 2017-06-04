@@ -24,6 +24,8 @@ endif()
 add_executable(dummy ../ExecuteKDEModules/main.c)
 ecm_mark_nongui_executable(dummy)
 
+set_target_properties(dummy PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
 if(NOT TARGET fetch-translations)
     message(FATAL_ERROR "should have a fetch-translations target")
 endif()
