@@ -32,7 +32,7 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 # Preliminary setup
 #
 
-set(VERSION "5.35.0") # handled by release scripts
+set(VERSION "5.36.0") # handled by release scripts
 
 if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
