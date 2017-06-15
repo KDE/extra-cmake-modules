@@ -376,6 +376,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
 endif()
 if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0) OR
     (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5))
+    include(CheckCXXCompilerFlag)
     check_cxx_compiler_flag(-Wdate-time HAVE_DATE_TIME)
     if (HAVE_DATE_TIME)
         # -Wdate-time: warn if we use __DATE__ or __TIME__ (we want to be able to reproduce the exact same binary)
