@@ -131,7 +131,7 @@
 # CONFIG_TEMPLATE specifies a custom cmake template file for the config file
 # that is created to control the execution of the API dox generation tool.
 # The following CMake variables need to be used:
-# ECM_QCH_DOXYGEN_PERL_EXECUTABLE, ECM_QCH_DOXYGEN_QHELPGENERATOR_EXECUTABLE,
+# ECM_QCH_DOXYGEN_QHELPGENERATOR_EXECUTABLE,
 # ECM_QCH_DOXYGEN_FILEPATH, ECM_QCH_DOXYGEN_TAGFILE.
 # The following CMake variables can be used:
 # ECM_QCH_DOXYGEN_PROJECTNAME, ECM_QCH_DOXYGEN_PROJECTVERSION,
@@ -427,12 +427,6 @@ function(ecm_add_qch target_name)
     endif()
 
     # find required tools
-    # TODO: check with doxygen author if perl is really still required, PERL_PATH seems unused in doxygen
-    find_package(Perl)
-    set_package_properties(Perl PROPERTIES
-        PURPOSE "Needed for API dox QCH file generation"
-        TYPE OPTIONAL
-    )
     if (NOT DOXYGEN_PATCHED_JSFILESADDED)
         set(REQUIRED_DOXYGEN_VERSION 1.8.13)
     endif()
@@ -451,9 +445,6 @@ function(ecm_add_qch target_name)
         DESCRIPTION "Part of Qt5 tools"
     )
     set(_missing_tools)
-    if (NOT PERL_FOUND)
-        list(APPEND _missing_tools "Perl")
-    endif()
     if (NOT DOXYGEN_FOUND)
         list(APPEND _missing_tools "Doxygen")
     endif()
@@ -600,7 +591,6 @@ function(ecm_add_qch target_name)
         else()
             set(ECM_QCH_DOXYGEN_QUIET "YES")
         endif()
-        set(ECM_QCH_DOXYGEN_PERL_EXECUTABLE "${PERL_EXECUTABLE}")
         set(ECM_QCH_DOXYGEN_QHELPGENERATOR_EXECUTABLE ${QHelpGenerator_EXECUTABLE})
 
         # finally create doxygen config file

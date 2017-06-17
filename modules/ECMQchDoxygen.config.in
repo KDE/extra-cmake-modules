@@ -156,7 +156,6 @@ SKIP_FUNCTION_MACROS   = YES
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = YES
 TAGFILES               = @ECM_QCH_DOXYGEN_TAGFILES@
-PERL_PATH              = @ECM_QCH_DOXYGEN_PERL_EXECUTABLE@
 #---------------------------------------------------------------------------
 # Configuration options related to the dot tool   
 #---------------------------------------------------------------------------
