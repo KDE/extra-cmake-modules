@@ -39,10 +39,6 @@
 # file, which enables creating links from other documentation into the
 # generated QCH file.
 #
-# If the required tools are not found, the macro will skip creation of the
-# target and only emit a warning, so the use of the macro can be introduced
-# without requiring anyone to also have the needed tools present at that time.
-# This behaviour might change in future versions to result in a fail instead.
 # It is recommended to make the use of this macro optional, by depending
 # the call to ``ecm_add_qch`` on a CMake option being set, with a name like
 # ``BUILD_QCH`` and being TRUE by default. This will allow the developers to
@@ -430,17 +426,17 @@ function(ecm_add_qch target_name)
     if (NOT DOXYGEN_PATCHED_JSFILESADDED)
         set(REQUIRED_DOXYGEN_VERSION 1.8.13)
     endif()
-    find_package(Doxygen ${REQUIRED_DOXYGEN_VERSION})
+    find_package(Doxygen ${REQUIRED_DOXYGEN_VERSION} REQUIRED)
     if (NOT DOXYGEN_FOUND AND NOT DOXYGEN_PATCHED_JSFILESADDED)
         set(doxygen_description_addition " (Or older version patched with https://github.com/doxygen/doxygen/commit/bf9415698e53d79b, pass -DDOXYGEN_PATCHED_JSFILESADDED=ON to cmake if patched)")
     endif()
     set_package_properties(Doxygen PROPERTIES
-        TYPE OPTIONAL
+        TYPE REQUIRED
         PURPOSE "Needed for API dox QCH file generation${doxygen_description_addition}"
     )
-    find_package(QHelpGenerator)
+    find_package(QHelpGenerator REQUIRED)
     set_package_properties(QHelpGenerator PROPERTIES
-        TYPE OPTIONAL
+        TYPE REQUIRED
         PURPOSE "Needed for API dox QCH file generation"
         DESCRIPTION "Part of Qt5 tools"
     )
