@@ -44,13 +44,13 @@ else()
     else()
         set(_path)
     endif()
-    # TODO: prevent that the Qt4 version is picked up
     find_program(QHelpGenerator_EXECUTABLE
         NAMES
             qhelpgenerator-qt5
             qhelpgenerator
-        PATH
+        PATHS
             ${_path}
+        NO_DEFAULT_PATH
     )
 endif()
 mark_as_advanced(QHelpGenerator_EXECUTABLE)
