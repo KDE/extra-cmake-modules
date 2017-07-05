@@ -31,7 +31,12 @@
 
 #include <iostream>
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
+    // Make the unit test more reliable on system which have these env vars set
+    qunsetenv("QT_LOGGING_CONF");
+    qunsetenv("QT_LOGGING_RULES");
+
     QCoreApplication qapp(argc, argv);
 
     bool success = true;
