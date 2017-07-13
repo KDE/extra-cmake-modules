@@ -28,7 +28,7 @@
 # the variable names are:
 #
 # ``ANDROID_NDK``
-#     The NSK root path.
+#     The NDK root path.
 # ``ANDROID_SDK_ROOT``
 #     The SDK root path.
 #
@@ -216,7 +216,7 @@ set(CMAKE_CXX_LINK_EXECUTABLE
 # needed for Qt to define Q_OS_ANDROID
 add_definitions(-DANDROID)
 
-set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/.." CACHE STRING "")
+set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/../cmake" CACHE STRING "")
 
 ######### generation
 
