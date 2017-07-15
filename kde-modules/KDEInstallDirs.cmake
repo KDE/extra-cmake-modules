@@ -101,7 +101,7 @@
 # ``METAINFODIR``
 #     AppStream component metadata files (``DATAROOTDIR/metainfo``)
 # ``QTQCHDIR``
-#     documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc``) Since 5.36.0.
+#     documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc/qch``) Since 5.36.0.
 # ``QCHDIR``
 #     documentation bundles in QCH format (``DATAROOTDIR/doc/qch``) Since 5.36.0.
 # ``MANDIR``
