@@ -455,7 +455,7 @@ include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
 
 set(_default_KDE_INSTALL_USE_QT_SYS_PATHS OFF)
 if(NOT DEFINED KDE_INSTALL_USE_QT_SYS_PATHS)
-    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX)
+    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
     if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
         message(STATUS "Installing in the same prefix as Qt, adopting their path scheme.")
         set(_default_KDE_INSTALL_USE_QT_SYS_PATHS ON)

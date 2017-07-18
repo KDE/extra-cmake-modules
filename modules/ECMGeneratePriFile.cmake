@@ -102,7 +102,7 @@
 set(_askqmake OFF)
 if(NOT DEFINED KDE_INSTALL_USE_QT_SYS_PATHS)
     include(ECMQueryQmake)
-    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX)
+    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
     if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
         set(_askqmake ON)
     endif()

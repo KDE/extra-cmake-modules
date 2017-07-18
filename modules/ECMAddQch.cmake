@@ -289,7 +289,7 @@ function(_ecm_ensure_qt_qch_targets)
         # get Qt version, if any
         find_package(Qt5Core CONFIG QUIET)
         # lookup tag files
-        query_qmake(qt_docs_dir QT_INSTALL_DOCS)
+        query_qmake(qt_docs_dir QT_INSTALL_DOCS TRY)
         find_path(_qtcoreTagsPath qtcore/qtcore.tags
             PATHS
                 ${qt_docs_dir}
