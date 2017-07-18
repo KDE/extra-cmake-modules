@@ -35,13 +35,13 @@
 #     CMake packages, including config files (``LIBDIR/cmake``)
 #     [``CMAKECONFIG_INSTALL_PREFIX``]
 # ``QTPLUGINDIR``
-#     Qt plugins (``LIBDIR/plugins``) [``QT_PLUGIN_INSTALL_DIR``]
+#     Qt plugins (``LIBDIR/plugins`` or qmake-qt5's ``QT_INSTALL_PLUGINS``) [``QT_PLUGIN_INSTALL_DIR``]
 # ``PLUGINDIR``
 #     Plugins (``QTPLUGINDIR``) [``PLUGIN_INSTALL_DIR``]
 # ``QTQUICKIMPORTSDIR``
-#     QtQuick1 imports (``QTPLUGINDIR/imports``) [``IMPORTS_INSTALL_DIR``]
+#     QtQuick1 imports (``QTPLUGINDIR/imports`` or qmake-qt5's ``QT_INSTALL_IMPORTS``) [``IMPORTS_INSTALL_DIR``]
 # ``QMLDIR``
-#     QtQuick2 imports (``LIBDIR/qml``) [``QML_INSTALL_DIR``]
+#     QtQuick2 imports (``LIBDIR/qml`` or qmake-qt5's ``QT_INSTALL_QML``) [``QML_INSTALL_DIR``]
 # ``INCLUDEDIR``
 #     C and C++ header files (``include``) [``INCLUDE_INSTALL_DIR``]
 # ``LOCALSTATEDIR``
@@ -101,7 +101,7 @@
 # ``METAINFODIR``
 #     AppStream component metadata files (``DATAROOTDIR/metainfo``)
 # ``QTQCHDIR``
-#     documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc/qch``) Since 5.36.0.
+#     documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc/qch`` or qmake-qt5's ``QT_INSTALL_DOCS``) Since 5.36.0.
 # ``QCHDIR``
 #     documentation bundles in QCH format (``DATAROOTDIR/doc/qch``) Since 5.36.0.
 # ``MANDIR``
@@ -128,6 +128,16 @@
 #     [``CONFIG_INSTALL_DIR``]
 # ``AUTOSTARTDIR``
 #     autostart files (``CONFDIR/autostart``) [``AUTOSTART_INSTALL_DIR``]
+#
+# If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
+# module, the default values for some variables are instead queried from
+# Qt5's qmake (where mentioned in the parentheses above).
+# If not set, it will default to TRUE if Qt5's qmake is found and
+# it's ``QT_INSTALL_PREFIX`` is the same as ``CMAKE_INSTALL_PREFIX``,
+# otherwise default to FALSE.
+# This variable should NOT be set from within CMakeLists.txt files, instead
+# is intended to be set manually when configuring a project which uses
+# KDEInstallDirs (e.g. by packagers).
 #
 # If ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE before including this
 # module, the deprecated variables (listed in the square brackets above) are
