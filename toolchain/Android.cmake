@@ -247,7 +247,7 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
     )
 
     add_custom_target(install-apk-${QTANDROID_EXPORTED_TARGET}
-        COMMAND adb install -r "${EXPORT_DIR}/bin/QtApp-debug.apk"
+        COMMAND adb install -r "${EXPORT_DIR}/build/outputs/apk/${QTANDROID_EXPORTED_TARGET}_build_apk-debug.apk"
     )
 else()
     message(STATUS "You can export a target by specifying -DQTANDROID_EXPORTED_TARGET=<targetname>")
