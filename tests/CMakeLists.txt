@@ -211,3 +211,16 @@ if (Qt5Core_FOUND AND Qt5LinguistTools_FOUND)
         ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMPoQmToolsTest/check.cmake"
     )
 endif()
+
+find_package(Qt5Quick CONFIG)
+set_package_properties(
+    Qt5Quick
+    PROPERTIES
+        URL "http://www.qt.io/"
+        DESCRIPTION "Qt5 Quick library."
+        TYPE OPTIONAL
+        PURPOSE "Required to run tests for the ECMQMLModules module."
+)
+if (TARGET Qt5::Quick)
+    add_test_macro(ECMQMLModules dummy)
+endif()
