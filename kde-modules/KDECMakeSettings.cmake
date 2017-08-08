@@ -41,7 +41,10 @@
 # ~~~~~~~~~~~~~~
 #
 # Various CMake build defaults are altered, such as searching source and build
-# directories for includes first and enabling automoc by default.
+# directories for includes first, enabling automoc by default.
+#
+# When find_package(ECM 5.38) or higher is called, this also selects
+# a layout for the build dir that helps running executables without installing.
 #
 # This section can be disabled by setting ``KDE_SKIP_BUILD_SETTINGS`` to TRUE
 # before including this module.
@@ -244,10 +247,12 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # one common directory, and all static|import libraries and plugins
    # into another one. This way test executables can find their dlls
    # even without installation.
-   if(WIN32)
-      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
-      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
+   # We do the same under Unix to make it possible to run tests and apps without installing
+   if (WIN32 OR "${ECM_GLOBAL_FIND_VERSION}" VERSION_GREATER_EQUAL "5.38.0")
+       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+       set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+       set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
    endif()
 
    if (APPLE)
