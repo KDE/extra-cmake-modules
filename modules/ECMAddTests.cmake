@@ -49,12 +49,6 @@
 # be given; this will be used for both the target and test names (and, as with
 # ecm_add_tests(), the NAME_PREFIX argument will be prepended to the test name).
 #
-# If BUILD_TESTING is set to OFF, ecm_add_test will turn into a no-op and thus
-# will not add any test-related targets
-#
-# BUILD_TESTING is created as a cache variable by the CTest module and by the
-# :kde-module:`KDECMakeSettings` module.
-#
 #
 # Since pre-1.0.0.
 
@@ -90,10 +84,6 @@ include(ECMMarkAsTest)
 include(ECMMarkNonGuiExecutable)
 
 function(ecm_add_test)
-  if(NOT BUILD_TESTING)
-      return() # turn this function into a no-op
-  endif()
-
   set(options GUI)
   # TARGET_NAME_VAR and TEST_NAME_VAR are undocumented args used by
   # ecm_add_tests
