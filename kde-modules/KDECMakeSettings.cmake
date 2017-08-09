@@ -249,7 +249,7 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # even without installation.
 
    # We do the same under Unix to make it possible to run tests and apps without installing
-   if (WIN32 OR "${ECM_GLOBAL_FIND_VERSION}" NOT VERSION_LESS "5.38.0")
+   if (WIN32 OR NOT ("${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.38.0"))
        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
