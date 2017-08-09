@@ -50,7 +50,7 @@
 # ecm_add_tests(), the NAME_PREFIX argument will be prepended to the test name).
 #
 # If BUILD_TESTING is set to OFF, ecm_add_test will turn into a no-op and thus
-# will not add any test-related targets. Since 5.38.0.
+# will not add any test-related targets
 #
 # BUILD_TESTING is created as a cache variable by the CTest module and by the
 # :kde-module:`KDECMakeSettings` module.
