@@ -44,7 +44,11 @@
 # directories for includes first, enabling automoc by default.
 #
 # When find_package(ECM 5.38) or higher is called, this also selects
-# a layout for the build dir that helps running executables without installing.
+# a layout for the build dir that helps running executables without installing:
+# all executables are built into a toplevel "bin" dir, making it possible to find
+# helper binaries, and to find uninstalled plugins (provided that you use
+# kcoreaddons_add_plugin or set LIBRARY_OUTPUT_DIRECTORY as documented on
+# https://community.kde.org/Guidelines_and_HOWTOs/Making_apps_run_uninstalled).
 #
 # This section can be disabled by setting ``KDE_SKIP_BUILD_SETTINGS`` to TRUE
 # before including this module.
