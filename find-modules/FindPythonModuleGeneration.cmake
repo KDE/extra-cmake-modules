@@ -440,8 +440,9 @@ headers = sipAPI${modulename_value}
 
         set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY AUTOMOC OFF)
         set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY PREFIX "")
+        set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}")
         set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY
-            OUTPUT_NAME "${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/${modulename_value}")
+            OUTPUT_NAME "${modulename_value}")
 
         if (GPB_SIP_DEPENDS MATCHES PyKF5)
           set(_kf5_python_prefix ${CMAKE_INSTALL_PREFIX}/lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
