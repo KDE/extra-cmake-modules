@@ -237,13 +237,17 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
     set(EXECUTABLE_DESTINATION_PATH "${EXPORT_DIR}/libs/${ANDROID_ABI}/lib${QTANDROID_EXPORTED_TARGET}.so")
     configure_file("${_CMAKE_ANDROID_DIR}/deployment-file.json.in" "${QTANDROID_EXPORTED_TARGET}-deployment.json.in")
 
+    if (CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+        set(arguments "\\$(ARGS)")
+    endif()
+
     add_custom_target(${CREATEAPK_TARGET_NAME}
         COMMAND cmake -E echo "Generating $<TARGET_NAME:${QTANDROID_EXPORTED_TARGET}> with $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt"
         COMMAND cmake -E remove_directory "${EXPORT_DIR}"
         COMMAND cmake -E copy_directory "${ANDROID_APK_DIR}" "${EXPORT_DIR}"
         COMMAND cmake -E copy "$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "${EXECUTABLE_DESTINATION_PATH}"
         COMMAND cmake -DINPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json.in" -DOUTPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json" "-DTARGET_DIR=$<TARGET_FILE_DIR:${QTANDROID_EXPORTED_TARGET}>" "-DTARGET_NAME=${QTANDROID_EXPORTED_TARGET}" "-DEXPORT_DIR=${CMAKE_INSTALL_PREFIX}" -P ${_CMAKE_ANDROID_DIR}/specifydependencies.cmake
-        COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --gradle --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --output "${EXPORT_DIR}" --deployment bundled "\\$(ARGS)"
+        COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --gradle --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --output "${EXPORT_DIR}" --deployment bundled ${arguments}
     )
 
     add_custom_target(install-apk-${QTANDROID_EXPORTED_TARGET}
