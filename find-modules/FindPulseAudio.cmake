@@ -102,14 +102,16 @@ if (PulseAudio_INCLUDE_DIRS AND NOT PulseAudio_VERSION)
    set(PulseAudio_VERSION "${_PulseAudio_VERSION}" CACHE STRING "Version number of PulseAudio" FORCE)
 endif()
 
-# Deprecated synonyms
-set(PulseAudio_INCLUDE_DIR "${PulseAudio_INCLUDE_DIRS}")
-set(PulseAudio_LIBRARY "${PulseAudio_LIBRARIES}")
-
 # Use the new extended syntax of find_package_handle_standard_args(), which also handles version checking:
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(PulseAudio REQUIRED_VARS PulseAudio_LIBRARIES PulseAudio_INCLUDE_DIRS
                                              VERSION_VAR PulseAudio_VERSION)
+
+# Deprecated synonyms
+set(PULSEAUDIO_INCLUDE_DIR "${PulseAudio_INCLUDE_DIRS}")
+set(PULSEAUDIO_LIBRARY "${PulseAudio_LIBRARIES}")
+set(PULSEAUDIO_MAINLOOP_LIBRARY "${PulseAudio_MAINLOOP_LIBRARY}")
+set(PULSEAUDIO_FOUND "${PulseAudio_FOUND}")
 
 if(PulseAudio_FOUND AND NOT TARGET PulseAudio::PulseAudio)
   add_library(PulseAudio::PulseAudio UNKNOWN IMPORTED)
@@ -118,9 +120,9 @@ if(PulseAudio_FOUND AND NOT TARGET PulseAudio::PulseAudio)
 			INTERFACE_INCLUDE_DIRECTORIES "${PulseAudio_INCLUDE_DIRS}")
 endif()
 
-mark_as_advanced(PulseAudio_INCLUDE_DIRS PulseAudio_INCLUDE_DIR
-                 PulseAudio_LIBRARIES PulseAudio_LIBRARY
-		 PulseAudio_MAINLOOP_LIBRARY)
+mark_as_advanced(PulseAudio_INCLUDE_DIRS PULSEAUDIO_INCLUDE_DIR
+                 PulseAudio_LIBRARIES PULSEAUDIO_LIBRARY
+		 PulseAudio_MAINLOOP_LIBRARY PULSEAUDIO_MAINLOOP_LIBRARY)
 set_package_properties(PulseAudio PROPERTIES
   URL "https://www.freedesktop.org/wiki/Software/PulseAudio"
   DESCRIPTION "Sound server, for sound stream routing and mixing")
