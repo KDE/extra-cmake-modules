@@ -1,5 +1,6 @@
 
 Name: KF5CoreAddons
+Description: KF5CoreAddons test
 Version: 5.43
 Libs: -L/usr/lib -lKF5CoreAddons
 Cflags: -I/usr/KCoreAddons 

@@ -1,0 +1,7 @@
+
+Name: KF5CoreAddons3
+Description: KF5CoreAddons3 library.
+Version: 5.43
+Libs: -L/usr/lib -lKF5CoreAddons3
+Cflags: -I/usr/KCoreAddons 
+Requires: Qt5Core

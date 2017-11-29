@@ -16,6 +16,7 @@
 #                         [INCLUDE_INSTALL_DIR <dir>]
 #                         [LIB_INSTALL_DIR <dir>]
 #                         [DEFINES -D<variable=value>...]
+#                         [DESCRIPTION <library description>]
 #                         [INSTALL])
 #
 # ``BASE_NAME`` is the name of the module. It's the name projects will use to
@@ -42,6 +43,10 @@
 # ``DEFINES`` is a list of preprocessor defines that it is recommended users of
 # the library pass to the compiler when using it.
 #
+# ``DESCRIPTION`` describes what this library is. If it's not specified, CMake
+# will first try to get the description from the metainfo.yaml file or will
+# create one based on ``LIB_NAME``.
+#
 # ``INSTALL`` will cause the module to be installed to the ``pkgconfig``
 # subdirectory of ``LIB_INSTALL_DIR``, unless the ``ECM_PKGCONFIG_INSTALL_DIR``
 # cache variable is set to something different. Note that the first call to
@@ -66,6 +71,8 @@
 #   )
 #
 # Since 1.3.0.
+# ``DESCRIPTION`` available since 5.1.41
+#
 
 #=============================================================================
 # Copyright 2014 Aleix Pol Gonzalez <aleixpol@kde.org>
@@ -96,7 +103,7 @@
 
 function(ECM_GENERATE_PKGCONFIG_FILE)
   set(options INSTALL)
-  set(oneValueArgs BASE_NAME LIB_NAME FILENAME_VAR INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
+  set(oneValueArgs BASE_NAME LIB_NAME FILENAME_VAR INCLUDE_INSTALL_DIR LIB_INSTALL_DIR DESCRIPTION)
   set(multiValueArgs DEPS DEFINES)
 
   cmake_parse_arguments(EGPF "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -132,6 +139,17 @@ function(ECM_GENERATE_PKGCONFIG_FILE)
           set(EGPF_LIB_INSTALL_DIR "lib")
       endif()
   endif()
+  if(NOT EGPF_DESCRIPTION)
+      if(EXISTS ${CMAKE_SOURCE_DIR}/metainfo.yaml)
+          file(STRINGS "${CMAKE_SOURCE_DIR}/metainfo.yaml" _EGPF_METAINFO_DESCRIPTION_STRING REGEX "^description:.*$")
+          if(_EGPF_METAINFO_DESCRIPTION_STRING)
+              string(REGEX REPLACE "^description:[ ]*(.*)" "\\1" EGPF_DESCRIPTION ${_EGPF_METAINFO_DESCRIPTION_STRING})
+          endif()
+      endif()
+      if("${EGPF_DESCRIPTION}" STREQUAL "")
+          set(EGPF_DESCRIPTION "${EGPF_LIB_NAME} library.")
+      endif()
+  endif()
 
   set(PKGCONFIG_TARGET_BASENAME ${EGPF_BASE_NAME})
   set(PKGCONFIG_TARGET_LIBNAME ${EGPF_LIB_NAME})
@@ -148,6 +166,7 @@ function(ECM_GENERATE_PKGCONFIG_FILE)
   else()
       set(PKGCONFIG_TARGET_LIBS "${CMAKE_INSTALL_PREFIX}/${EGPF_LIB_INSTALL_DIR}")
   endif()
+  set(PKGCONFIG_TARGET_DESCRIPTION "${EGPF_DESCRIPTION}")
   set(PKGCONFIG_TARGET_DEFINES "")
   if(EGPF_DEFINES)
     set(PKGCONFIG_TARGET_DEFINES "${EGPF_DEFINE}")
@@ -161,6 +180,7 @@ function(ECM_GENERATE_PKGCONFIG_FILE)
   file(WRITE ${PKGCONFIG_FILENAME}
 "
 Name: ${PKGCONFIG_TARGET_LIBNAME}
+Description: ${PKGCONFIG_TARGET_DESCRIPTION}
 Version: ${PROJECT_VERSION}
 Libs: -L${CMAKE_INSTALL_PREFIX}/${EGPF_LIB_INSTALL_DIR} -l${PKGCONFIG_TARGET_LIBNAME}
 Cflags: ${PKGCONFIG_TARGET_INCLUDES} ${PKGCONFIG_TARGET_DEFINES}

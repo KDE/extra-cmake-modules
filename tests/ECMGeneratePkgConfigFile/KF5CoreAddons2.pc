@@ -1,0 +1,7 @@
+
+Name: KF5CoreAddons2
+Description: Addons to QtCore
+Version: 5.43
+Libs: -L/usr/lib -lKF5CoreAddons2
+Cflags: -I/usr/KCoreAddons 
+Requires: Qt5Core
