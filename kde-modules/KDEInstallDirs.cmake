@@ -190,6 +190,11 @@
 #
 # NB: The variables starting ``KDE_INSTALL_`` are available since 1.6.0,
 # unless otherwise noted with the variable.
+#
+# The ``KDE_INSTALL_PREFIX_SCRIPT`` option will install a ${CMAKE_INSTALL_PREFIX}/prefix.sh
+# file that allows to easily incorporate the necessary environment variables
+# for the prefix into a process.
+#
 
 #=============================================================================
 # Copyright 2014-2015 Alex Merry <alex.merry@kde.org>
@@ -688,4 +693,15 @@ endif()
 # so set the default component name to the name of the project, if a project name has been set:
 if(NOT "${PROJECT_NAME}" STREQUAL "Project")
     set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "${PROJECT_NAME}")
+endif()
+
+
+###################################################################
+# Prefix set up
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.sh @ONLY)
+
+option(KDE_INSTALL_PREFIX_SCRIPT "Installs ${CMAKE_INSTALL_PREFIX}/prefix.sh that sets up the necessary environment variables" OFF)
+if(KDE_INSTALL_PREFIX_SCRIPT)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/prefix.sh DESTINATION ${CMAKE_INSTALL_PREFIX} PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)
 endif()
