@@ -1,27 +1,29 @@
-file(READ "${TARGET_DIR}/CMakeFiles/${TARGET_NAME}.dir/link.txt" out)
+execute_process(COMMAND readelf --wide --dynamic ${TARGET} ERROR_VARIABLE readelf_errors OUTPUT_VARIABLE out RESULT_VARIABLE result)
 
-string(FIND "${out}" "-o ${TARGET_NAME}" POS) #we trim the initial arguments, we want the ones in the end. we find the target
-string(SUBSTRING "${out}" ${POS} -1 out) #we
-string(REGEX MATCHALL "(/|\\.\\./|\\./)[^ ]+\\.so" outout "${out}")
-string(STRIP "${outout}" outout)
-string(REPLACE " /" ";/" outout "${outout}")
+if (NOT result EQUAL 0)
+    message(FATAL_ERROR "readelf failed on ${TARGET} exit(${result}): ${readelf_errors}")
+endif()
 
+string(REPLACE "\n" ";" lines "${out}")
 set(extralibs)
-foreach(lib IN LISTS outout) #now we filter Qt5 libraries, because Qt wants to take care about these itself
-    if(NOT ${lib} MATCHES ".*/libQt5.*")
-        # resolve relative paths
-        if(${lib} MATCHES "^(\\.\\./|\\./)")
-            set(lib "${TARGET_DIR}/${lib}")
-        endif()
-        if(extralibs)
-            set(extralibs "${extralibs},${lib}")
+foreach(line ${lines})
+    string(REGEX MATCH ".*\\(NEEDED\\) +Shared library: +\\[(.+)\\]$" matched ${line})
+    set(currentLib ${CMAKE_MATCH_1})
+
+    if(NOT ${currentLib} MATCHES "libQt5.*" AND matched)
+        find_file(ourlib-${currentLib} ${currentLib} HINTS ${OUTPUT_DIR} ${EXPORT_DIR} ${ECM_ADDITIONAL_FIND_ROOT_PATH} NO_DEFAULT_PATH PATH_SUFFIXES lib)
+
+        if(ourlib-${currentLib})
+            list(APPEND extralibs "${ourlib-${currentLib}}")
         else()
-            set(extralibs "${lib}")
+            message(STATUS "could not find ${currentLib} in ${OUTPUT_DIR} ${EXPORT_DIR}/lib/ ${ECM_ADDITIONAL_FIND_ROOT_PATH}")
         endif()
     endif()
 endforeach()
+
 if(extralibs)
-    set(extralibs "\"android-extra-libs\": \"${extralibs}\",")
+    string(REPLACE ";" "," libs "${extralibs}")
+    set(extralibs "\"android-extra-libs\": \"${libs}\",")
 endif()
 
 set(extraplugins)
