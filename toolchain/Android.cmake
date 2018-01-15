@@ -177,6 +177,8 @@ include_directories(SYSTEM
     "${CMAKE_SYSROOT}/usr/include"
     "${ANDROID_LIBS_ROOT}/include/"
     "${ANDROID_LIBS_ROOT}/libs/${ANDROID_ABI}/include"
+    "${ANDROID_NDK}/sysroot/usr/include"
+    "${ANDROID_NDK}/sysroot/usr/include/${ANDROID_TOOLCHAIN}"
 )
 
 # libraries
