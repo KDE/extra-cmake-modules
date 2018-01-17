@@ -65,7 +65,12 @@ namespace {
         QLocale locale = QLocale::system();
         if (locale.name() != QStringLiteral("en")) {
             if (!loadTranslation(locale.name())) {
-                loadTranslation(locale.bcp47Name());
+                if (!loadTranslation(locale.bcp47Name())) {
+                    const int i = locale.name().indexOf(QLatin1Char('_'));
+                    if (i > 0) {
+                        loadTranslation(locale.name().left(i));
+                    }
+                }
             }
         }
     }

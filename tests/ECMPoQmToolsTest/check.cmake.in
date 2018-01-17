@@ -58,16 +58,20 @@ endif()
 if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
     set(exp_output_catalog_en "english text:english plural form 5")
     set(exp_output_catalog_de "german text:german plural form 5")
+    # no de_AT translation -> should fall back to de
+    set(exp_output_catalog_de_AT "${exp_output_catalog_de}")
     # no french translation provided -> english fallback
     set(exp_output_catalog_fr "${exp_output_catalog_en}")
 
     set(exp_output_catalog2_en "2nd english text:2nd english plural form 5")
     set(exp_output_catalog2_de "2nd german text:2nd german plural form 5")
+    # no de_AT translation -> should fall back to de
+    set(exp_output_catalog2_de_AT "${exp_output_catalog2_de}")
     # no french translation provided -> english fallback
     set(exp_output_catalog2_fr "${exp_output_catalog2_en}")
 
     function(check_translations name exec catalog_name)
-        foreach(lang en de fr)
+        foreach(lang en de de_AT fr)
             execute_process(
                 COMMAND "${CMAKE_COMMAND}" -E env "XDG_DATA_DIRS=${ACTUAL_TREE}/share"
                     LANGUAGE=${lang} "${exec}"
