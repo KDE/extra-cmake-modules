@@ -189,8 +189,6 @@ add_test_macro(ECMInstallIconsTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMInstallIconsTest/check_tree.cmake"
 )
 
-add_test_macro(ECMToolchainAndroidTest dummy)
-
 set(KDEPackageAppTemplatesTest_EXTRA_OPTIONS
     --build-target install
     --build-options
