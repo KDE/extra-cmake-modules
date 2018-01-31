@@ -86,11 +86,14 @@
 #=============================================================================
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
+include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
 
 ecm_find_package_version_check(QtWaylandScanner)
 
+query_qmake(qt_binaries_dir QT_INSTALL_BINS)
+
 # Find qtwaylandscanner
-find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/qt5/bin/)
+find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS ${qt_binaries_dir})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(QtWaylandScanner
