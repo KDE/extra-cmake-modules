@@ -39,7 +39,7 @@
 # ``${CMAKE_INSTALL_PREFIX}/share/icons/<theme>/22x22/actions/menu_new.png``
 #
 # Users of the :kde-module:`KDEInstallDirs` module would normally use
-# ``${ICON_INSTALL_DIR}`` as the DESTINATION, while users of the GNUInstallDirs
+# ``${KDE_INSTALL_ICONDIR}`` as the DESTINATION, while users of the GNUInstallDirs
 # module should use ``${CMAKE_INSTALL_DATAROOTDIR}/icons``.
 #
 # An old form of arguments will also be accepted::
