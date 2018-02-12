@@ -39,6 +39,9 @@
 # ``ANDROID_TOOLCHAIN``
 #     The toolchain to use. See the ``toolchains`` directory of the NDK.
 #     Default: ``arm-linux-androideabi``.
+# ``ANDROID_COMPILER_PREFIX``
+#     The prefix for the gcc and g++ executables. See the ``toolchains/$ANDROID_TOOLCHAIN/prebuilt/*/bin/*-gcc`` in the NDK.
+#     Default: ``arm-linux-androideabi``.
 # ``ANDROID_ABI``
 #     The ABI to use. See the ``sources/cxx-stl/gnu-libstdc++/*/libs``
 #     directories in the NDK. Default: ``armeabi-v7a``.
@@ -137,6 +140,7 @@ set(ANDROID_NDK "$ENV{ANDROID_NDK}" CACHE path "Android NDK path")
 set(ANDROID_SDK_ROOT "$ENV{ANDROID_SDK_ROOT}" CACHE path "Android SDK path")
 set(ANDROID_ARCHITECTURE "arm" CACHE string "Used Architecture, related to the ABI and TOOLCHAIN")
 set(ANDROID_TOOLCHAIN "arm-linux-androideabi" CACHE string "Used SDK")
+set(ANDROID_COMPILER_PREFIX "arm-linux-androideabi" CACHE string "Prefix for gcc/g++/etc")
 set(ANDROID_ABI "armeabi-v7a" CACHE string "Used ABI")
 set(ANDROID_GCC_VERSION "4.9" CACHE string "Used GCC version" )
 set(ANDROID_API_LEVEL "14" CACHE string "Android API Level")
@@ -203,8 +207,8 @@ endif()
 
 link_directories(${CMAKE_SYSTEM_LIBRARY_PATH})
 
-set(CMAKE_C_COMPILER "${ANDROID_TOOLCHAIN_ROOT}/${ANDROID_TOOLCHAIN}-gcc")
-set(CMAKE_CXX_COMPILER "${ANDROID_TOOLCHAIN_ROOT}/${ANDROID_TOOLCHAIN}-g++")
+set(CMAKE_C_COMPILER "${ANDROID_TOOLCHAIN_ROOT}/${ANDROID_COMPILER_PREFIX}-gcc")
+set(CMAKE_CXX_COMPILER "${ANDROID_TOOLCHAIN_ROOT}/${ANDROID_COMPILER_PREFIX}-g++")
 
 set(CMAKE_EXE_LINKER_FLAGS "${GNUSTL_SHARED} -Wl,-rpath-link,${ANDROID_LIBRARIES_PATH} -llog -lz -lm -ldl -lc -lgcc" CACHE STRING "")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}" CACHE STRING "")
