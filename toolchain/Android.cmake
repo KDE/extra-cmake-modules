@@ -151,9 +151,6 @@ string(TOLOWER "${_HOST}" _HOST)
 
 get_filename_component(_CMAKE_ANDROID_DIR "${CMAKE_TOOLCHAIN_FILE}" PATH)
 
-cmake_policy(SET CMP0011 OLD)
-cmake_policy(SET CMP0017 OLD)
-
 set(CMAKE_SYSROOT
     "${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_ARCHITECTURE}")
 if(NOT EXISTS ${CMAKE_SYSROOT})
