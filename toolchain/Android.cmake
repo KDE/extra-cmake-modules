@@ -182,7 +182,7 @@ include_directories(SYSTEM
     "${ANDROID_LIBS_ROOT}/include/"
     "${ANDROID_LIBS_ROOT}/libs/${ANDROID_ABI}/include"
     "${ANDROID_NDK}/sysroot/usr/include"
-    "${ANDROID_NDK}/sysroot/usr/include/${ANDROID_TOOLCHAIN}"
+    "${ANDROID_NDK}/sysroot/usr/include/${ANDROID_COMPILER_PREFIX}"
 )
 
 # libraries
