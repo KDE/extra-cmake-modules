@@ -3,7 +3,7 @@
    "sdk": "@ANDROID_SDK_ROOT@",
    "ndk": "@ANDROID_NDK@",
    "toolchain-prefix": "@ANDROID_TOOLCHAIN@",
-   "tool-prefix": "@ANDROID_TOOLCHAIN@",
+   "tool-prefix": "@ANDROID_COMPILER_PREFIX@",
    "toolchain-version": "@ANDROID_GCC_VERSION@",
    "ndk-host": "@_HOST@",
    "target-architecture": "@ANDROID_ABI@",
