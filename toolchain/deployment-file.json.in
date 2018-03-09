@@ -9,6 +9,7 @@
    "target-architecture": "@ANDROID_ABI@",
    "application-binary": "@EXECUTABLE_DESTINATION_PATH@",
    "qml-root-path": "@CMAKE_SOURCE_DIR@",
+   "qml-import-paths": "@QML_IMPORT_PATHS@",
    ##EXTRALIBS##
    ##EXTRAPLUGINS##
    "android-package-source-directory": "@ANDROID_APK_DIR@",
