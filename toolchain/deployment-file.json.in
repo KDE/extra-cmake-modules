@@ -14,5 +14,6 @@
    ##EXTRAPLUGINS##
    "android-package-source-directory": "@ANDROID_APK_DIR@",
    "stdcpp-path": "@GNUSTL_SHARED@",
-   "sdkBuildToolsRevision": "@ANDROID_SDK_BUILD_TOOLS_REVISION@"
+   "sdkBuildToolsRevision": "@ANDROID_SDK_BUILD_TOOLS_REVISION@",
+   "extraPrefixDirs": [ @EXTRA_PREFIX_DIRS@ ]
 }
