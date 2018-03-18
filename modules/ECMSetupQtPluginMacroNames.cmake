@@ -43,7 +43,9 @@
 #
 # Given some plugin-oriented Qt-based software which defines a custom C++ preprocessor
 # macro ``EXPORT_MYPLUGIN`` for declaring the central plugin object:
+#
 # .. code-block:: c++
+#
 #   #define EXPORT_MYPLUGIN_WITH_JSON(classname, jsonFile) \
 #   class classname : public QObject \
 #   { \
@@ -53,6 +55,7 @@
 #   };
 #
 # In the CMake buildsystem of the library one calls
+#
 # .. code-block:: cmake
 #
 #   ecm_setup_qtplugin_macro_names(
@@ -68,6 +71,7 @@
 # plugins by linking against the library, one passes additionally the name of
 # a variable which shall be set as value the CMake code needed to instruct
 # automoc about the usage of that macro.
+#
 # .. code-block:: cmake
 #
 #   ecm_setup_qtplugin_macro_names(
@@ -81,6 +85,7 @@
 # ``MyProjectConfig.cmake.in``) for the libary's installed CMake config file
 # and that way will ensure that in the 3rd-party plugin's buildsystem
 # automoc is instructed as well as needed:
+#
 # .. code-block:: cmake
 #
 #   @PACKAGE_SETUP_AUTOMOC_VARIABLES@
