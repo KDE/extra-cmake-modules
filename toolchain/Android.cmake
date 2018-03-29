@@ -133,7 +133,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-cmake_minimum_required(VERSION "3.1")
+cmake_minimum_required(VERSION "3.7")
 
 #input
 set(ANDROID_NDK "$ENV{ANDROID_NDK}" CACHE path "Android NDK path")
@@ -146,21 +146,18 @@ set(ANDROID_GCC_VERSION "4.9" CACHE string "Used GCC version" )
 set(ANDROID_API_LEVEL "14" CACHE string "Android API Level")
 set(ANDROID_SDK_BUILD_TOOLS_REVISION "21.1.1" CACHE string "Android API Level")
 
-set(_HOST "${CMAKE_HOST_SYSTEM_NAME}-${CMAKE_HOST_SYSTEM_PROCESSOR}")
-string(TOLOWER "${_HOST}" _HOST)
 
-get_filename_component(_CMAKE_ANDROID_DIR "${CMAKE_TOOLCHAIN_FILE}" PATH)
-
-set(CMAKE_SYSROOT
-    "${ANDROID_NDK}/platforms/android-${ANDROID_API_LEVEL}/arch-${ANDROID_ARCHITECTURE}")
-if(NOT EXISTS ${CMAKE_SYSROOT})
-    message(FATAL_ERROR "Couldn't find the Android NDK Root in ${CMAKE_SYSROOT}")
+set(CMAKE_ANDROID_NDK ${ANDROID_NDK})
+set(CMAKE_SYSTEM_VERSION ${ANDROID_API_LEVEL})
+set(CMAKE_ANDROID_ARCH ${ANDROID_ARCHITECTURE})
+set(CMAKE_ANDROID_ARCH_ABI ${ANDROID_ABI})
+set(CMAKE_SYSTEM_NAME Android)
+if (NOT CMAKE_ANDROID_STL_TYPE)
+    set(CMAKE_ANDROID_STL_TYPE gnustl_shared)
 endif()
 
-#actual code
-SET(CMAKE_SYSTEM_NAME Android)
-SET(CMAKE_SYSTEM_VERSION 1)
-SET(ANDROID TRUE)
+include(${CMAKE_ROOT}/Modules/Platform/Android-GNU.cmake REQUIRED)
+include(${CMAKE_ROOT}/Modules/Platform/Android-Initialize.cmake REQUIRED)
 
 if (NOT DEFINED ECM_ADDITIONAL_FIND_ROOT_PATH)
     SET(ECM_ADDITIONAL_FIND_ROOT_PATH ${CMAKE_PREFIX_PATH})
@@ -171,54 +168,10 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-set(ANDROID_TOOLCHAIN_ROOT "${ANDROID_NDK}/toolchains/${ANDROID_TOOLCHAIN}-${ANDROID_GCC_VERSION}/prebuilt/${_HOST}/bin")
-set(ANDROID_LIBS_ROOT "${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/${ANDROID_GCC_VERSION}")
-
-# includes
-include_directories(SYSTEM
-    "${CMAKE_SYSROOT}/usr/include"
-    "${ANDROID_LIBS_ROOT}/include/"
-    "${ANDROID_LIBS_ROOT}/libs/${ANDROID_ABI}/include"
-    "${ANDROID_NDK}/sysroot/usr/include"
-    "${ANDROID_NDK}/sysroot/usr/include/${ANDROID_COMPILER_PREFIX}"
-)
-
-# libraries
-set(ANDROID_LIBRARIES_PATH
-    "${CMAKE_SYSROOT}/usr/lib")
-set(CMAKE_SYSTEM_LIBRARY_PATH
-    ${ANDROID_LIBRARIES_PATH}
-    "${ANDROID_LIBS_ROOT}/libs/${ANDROID_ABI}/"
-)
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
-set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
-
-# Settling hard on gnustl_shared as C++ helper runtime for now,
-# given this is most similar to what is on GNU/Linux, which is what
-# the average software targetted by this toolchain is built against otherwise.
-# If requested by devs, the used helper runtime could be made an option later.
-# Related info: https://developer.android.com/ndk/guides/cpp-support.html
-find_library(GNUSTL_SHARED gnustl_shared)
-if(NOT GNUSTL_SHARED)
-    message(FATAL_ERROR "Selected Android platform does not provide gnustl_shared: ${CMAKE_SYSTEM_LIBRARY_PATH}")
-endif()
-
-link_directories(${CMAKE_SYSTEM_LIBRARY_PATH})
-
-set(CMAKE_C_COMPILER "${ANDROID_TOOLCHAIN_ROOT}/${ANDROID_COMPILER_PREFIX}-gcc")
-set(CMAKE_CXX_COMPILER "${ANDROID_TOOLCHAIN_ROOT}/${ANDROID_COMPILER_PREFIX}-g++")
-
-set(CMAKE_EXE_LINKER_FLAGS "${GNUSTL_SHARED} -Wl,-rpath-link,${ANDROID_LIBRARIES_PATH} -llog -lz -lm -ldl -lc -lgcc" CACHE STRING "")
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}" CACHE STRING "")
-set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}" CACHE STRING "")
-
 #we want executables to be shared libraries, hooks will invoke the exported cmake function
 set(CMAKE_CXX_LINK_EXECUTABLE
     "<CMAKE_CXX_COMPILER> <CMAKE_SHARED_LIBRARY_CXX_FLAGS> <LINK_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS> <SONAME_FLAG><TARGET_SONAME> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
 )
-
-# ANDROID is needed for Qt to define Q_OS_ANDROID, __ANDROID_API__ is expected by the Android NDK
-add_definitions(-DANDROID -D__ANDROID_API__=${ANDROID_API_LEVEL})
 
 set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/../cmake" CACHE STRING "")
 
@@ -229,6 +182,7 @@ set(CREATEAPK_TARGET_NAME "create-apk-${QTANDROID_EXPORTED_TARGET}")
 # from CMakeDetermineSystem.cmake and from CMakeSystem.cmake generated within the
 # build directory.
 if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
+    get_filename_component(_CMAKE_ANDROID_DIR "${CMAKE_TOOLCHAIN_FILE}" PATH)
     if(NOT DEFINED ANDROID_APK_DIR)
         message(FATAL_ERROR "Define an apk dir to initialize from using -DANDROID_APK_DIR=<path>. The specified directory must contain the AndroidManifest.xml file.")
     elseif(NOT EXISTS "${ANDROID_APK_DIR}/AndroidManifest.xml")
@@ -259,11 +213,19 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
             set(EXTRA_PREFIX_DIRS "\"${prefix}\"")
         endif()
     endforeach()
+    string(TOLOWER "${CMAKE_HOST_SYSTEM_NAME}" _LOWER_CMAKE_HOST_SYSTEM_NAME)
     configure_file("${_CMAKE_ANDROID_DIR}/deployment-file.json.in" "${QTANDROID_EXPORTED_TARGET}-deployment.json.in")
 
     if (CMAKE_GENERATOR STREQUAL "Unix Makefiles")
         set(arguments "\\$(ARGS)")
     endif()
+
+    function(havestl var access VALUE)
+        if (NOT VALUE STREQUAL "")
+            file(WRITE ${CMAKE_BINARY_DIR}/stl "${VALUE}")
+        endif()
+    endfunction()
+    variable_watch(CMAKE_CXX_STANDARD_LIBRARIES havestl)
 
     add_custom_target(${CREATEAPK_TARGET_NAME}
         COMMAND cmake -E echo "Generating $<TARGET_NAME:${QTANDROID_EXPORTED_TARGET}> with $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt"

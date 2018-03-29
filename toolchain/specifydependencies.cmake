@@ -42,6 +42,9 @@ if(extraplugins)
 endif()
 
 file(READ "${INPUT_FILE}" CONTENTS)
+file(READ "stl" stl_contents)
+
 string(REPLACE "##EXTRALIBS##" "${extralibs}" NEWCONTENTS "${CONTENTS}")
 string(REPLACE "##EXTRAPLUGINS##" "${extraplugins}" NEWCONTENTS "${NEWCONTENTS}")
+string(REPLACE "##CMAKE_CXX_STANDARD_LIBRARIES##" "${stl_contents}" NEWCONTENTS "${NEWCONTENTS}")
 file(WRITE "${OUTPUT_FILE}" ${NEWCONTENTS})
