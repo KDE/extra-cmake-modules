@@ -78,11 +78,12 @@
 # After building the application, you will need to generate an APK that can be
 # deployed to an Android device. This module integrates androiddeployqt support
 # to help with this for Qt-based projects. To enable this, set the
-# ``QTANDROID_EXPORTED_TARGET`` variable to the target you wish to export as an
-# APK, as well as ``ANDROID_APK_DIR`` to a directory containing some basic
-# information. This will create a ``create-apk-<target>`` target that will
-# generate the APK file.  See the `Qt on Android deployment documentation
-# <http://doc.qt.io/qt-5/deployment-android.html>`_ for more information.
+# ``QTANDROID_EXPORTED_TARGET`` variable to the targets you wish to export as an
+# APK (in a ;-separed list), as well as ``ANDROID_APK_DIR`` to a directory
+# containing some basic information. This will create a ``create-apk-<target>``
+# target that will generate the APK file.  See the `Qt on Android deployment
+# documentation <http://doc.qt.io/qt-5/deployment-android.html>`_ for more
+# information.
 #
 # For example, you could do::
 #
@@ -165,6 +166,7 @@ include(${CMAKE_ROOT}/Modules/Platform/Android-Initialize.cmake REQUIRED)
 if (NOT DEFINED ECM_ADDITIONAL_FIND_ROOT_PATH)
     SET(ECM_ADDITIONAL_FIND_ROOT_PATH ${CMAKE_PREFIX_PATH})
 endif()
+
 SET(CMAKE_FIND_ROOT_PATH ${CMAKE_ANDROID_NDK} ${CMAKE_ANDROID_NDK}/sysroot ${CMAKE_SYSROOT} ${ECM_ADDITIONAL_FIND_ROOT_PATH})
 SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
@@ -180,69 +182,24 @@ set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/../cmake" CACHE STRING "")
 
 ######### generation
 
-set(CREATEAPK_TARGET_NAME "create-apk-${QTANDROID_EXPORTED_TARGET}")
 # Need to ensure we only get in here once, as this file is included twice:
 # from CMakeDetermineSystem.cmake and from CMakeSystem.cmake generated within the
 # build directory.
-if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET ${CREATEAPK_TARGET_NAME})
+if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk")
     get_filename_component(_CMAKE_ANDROID_DIR "${CMAKE_TOOLCHAIN_FILE}" PATH)
-    if(NOT DEFINED ANDROID_APK_DIR)
-        message(FATAL_ERROR "Define an apk dir to initialize from using -DANDROID_APK_DIR=<path>. The specified directory must contain the AndroidManifest.xml file.")
-    elseif(NOT EXISTS "${ANDROID_APK_DIR}/AndroidManifest.xml")
-        message(FATAL_ERROR "Cannot find ${ANDROID_APK_DIR}/AndroidManifest.xml according to ANDROID_APK_DIR")
-    endif()
+    list(LENGTH QTANDROID_EXPORTED_TARGET targetsCount)
+    include(${_CMAKE_ANDROID_DIR}/ECMAndroidDeployQt.cmake)
 
-    find_package(Qt5Core REQUIRED)
-
-    set(EXPORT_DIR "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}_build_apk/")
-    set(EXECUTABLE_DESTINATION_PATH "${EXPORT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${QTANDROID_EXPORTED_TARGET}.so")
-    set(QML_IMPORT_PATHS "")
-    foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
-        # qmlimportscanner chokes on symlinks, so we need to resolve those first
-        get_filename_component(qml_path "${prefix}/lib/qml" REALPATH)
-        if(EXISTS ${qml_path})
-            if (QML_IMPORT_PATHS)
-                set(QML_IMPORT_PATHS "${QML_IMPORT_PATHS},${qml_path}")
-            else()
-                set(QML_IMPORT_PATHS "${qml_path}")
-            endif()
+    math(EXPR last "${targetsCount}-1")
+    foreach(idx RANGE 0 ${last})
+        list(GET QTANDROID_EXPORTED_TARGET ${idx} exportedTarget)
+        list(GET ANDROID_APK_DIR ${idx} APK_DIR)
+        if(APK_DIR AND NOT EXISTS "${APK_DIR}/AndroidManifest.xml")
+            message(FATAL_ERROR "Cannot find ${APK_DIR}/AndroidManifest.xml according to ANDROID_APK_DIR. ${ANDROID_APK_DIR} ${exportedTarget}")
         endif()
+        message(WARNING "${idx} ${last} -- ecm_androiddeployqt(\"${exportedTarget}\" \"${ECM_ADDITIONAL_FIND_ROOT_PATH}\" \"${APK_DIR}\")")
+        ecm_androiddeployqt("${exportedTarget}" "${ECM_ADDITIONAL_FIND_ROOT_PATH}" "${APK_DIR}")
     endforeach()
-    set(EXTRA_PREFIX_DIRS "")
-    foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
-        if (EXTRA_PREFIX_DIRS)
-            set(EXTRA_PREFIX_DIRS "${EXTRA_PREFIX_DIRS}, \"${prefix}\"")
-        else()
-            set(EXTRA_PREFIX_DIRS "\"${prefix}\"")
-        endif()
-    endforeach()
-    string(TOLOWER "${CMAKE_HOST_SYSTEM_NAME}" _LOWER_CMAKE_HOST_SYSTEM_NAME)
-    configure_file("${_CMAKE_ANDROID_DIR}/deployment-file.json.in" "${QTANDROID_EXPORTED_TARGET}-deployment.json.in")
-
-    if (CMAKE_GENERATOR STREQUAL "Unix Makefiles")
-        set(arguments "\\$(ARGS)")
-    endif()
-
-    function(havestl var access VALUE)
-        if (NOT VALUE STREQUAL "")
-            file(WRITE ${CMAKE_BINARY_DIR}/stl "${VALUE}")
-        endif()
-    endfunction()
-    variable_watch(CMAKE_CXX_STANDARD_LIBRARIES havestl)
-
-    add_custom_target(${CREATEAPK_TARGET_NAME}
-        COMMAND cmake -E echo "Generating $<TARGET_NAME:${QTANDROID_EXPORTED_TARGET}> with $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt"
-        COMMAND cmake -E remove_directory "${EXPORT_DIR}"
-        COMMAND cmake -E copy_directory "${ANDROID_APK_DIR}" "${EXPORT_DIR}"
-        COMMAND cmake -E copy "$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "${EXECUTABLE_DESTINATION_PATH}"
-        COMMAND LANG=C cmake "-DTARGET=$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" -P ${_CMAKE_ANDROID_DIR}/hasMainSymbol.cmake
-        COMMAND LANG=C cmake -DINPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json.in" -DOUTPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json" "-DTARGET=$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "-DOUTPUT_DIR=$<TARGET_FILE_DIR:${QTANDROID_EXPORTED_TARGET}>" "-DEXPORT_DIR=${CMAKE_INSTALL_PREFIX}" "-DECM_ADDITIONAL_FIND_ROOT_PATH=\"${ECM_ADDITIONAL_FIND_ROOT_PATH}\"" -P ${_CMAKE_ANDROID_DIR}/specifydependencies.cmake
-        COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --gradle --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --output "${EXPORT_DIR}" --deployment bundled ${arguments}
-    )
-
-    add_custom_target(install-apk-${QTANDROID_EXPORTED_TARGET}
-        COMMAND adb install -r "${EXPORT_DIR}/build/outputs/apk/${QTANDROID_EXPORTED_TARGET}_build_apk-debug.apk"
-    )
 else()
-    message(STATUS "You can export a target by specifying -DQTANDROID_EXPORTED_TARGET=<targetname>")
+    message(STATUS "You can export a target by specifying -DQTANDROID_EXPORTED_TARGET=<targetname> and -DANDROID_APK_DIR=<paths>")
 endif()
