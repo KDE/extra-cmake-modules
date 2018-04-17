@@ -1,8 +1,8 @@
 find_package(Qt5Core REQUIRED)
 
 function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_PATH ANDROID_APK_DIR)
+    get_filename_component(_qt5Core_install_prefix "${Qt5_DIR}/../../../" ABSOLUTE)
     if(NOT ANDROID_APK_DIR)
-        get_filename_component(_qt5Core_install_prefix "${Qt5_DIR}/../../../" ABSOLUTE)
         set(ANDROID_APK_DIR "${_qt5Core_install_prefix}/src/android/templates/")
     endif()
 
