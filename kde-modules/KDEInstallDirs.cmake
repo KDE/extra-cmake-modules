@@ -488,7 +488,12 @@ if(KDE_INSTALL_USE_QT_SYS_PATHS)
         "QtQuick2 imports"
         QML_INSTALL_DIR)
 else()
-    _define_relative(QTPLUGINDIR LIBDIR "plugins"
+    set(_pluginsDirParent LIBDIR)
+    if (ANDROID)
+        set(_pluginsDirParent)
+        #androiddeployqt wants plugins right in the prefix
+    endif()
+    _define_relative(QTPLUGINDIR "${_pluginsDirParent}" "plugins"
         "Qt plugins"
         QT_PLUGIN_INSTALL_DIR)
 
