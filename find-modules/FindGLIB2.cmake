@@ -93,6 +93,8 @@ endif()
 
 mark_as_advanced(GLIB2_INCLUDE_DIRS GLIB2_INCLUDE_DIR
                  GLIB2_LIBRARIES GLIB2_LIBRARY)
+
+include(FeatureSummary)
 set_package_properties(GLIB2 PROPERTIES
   URL "https://wiki.gnome.org/Projects/GLib"
   DESCRIPTION "Event loop and utility library")

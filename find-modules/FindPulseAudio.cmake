@@ -123,6 +123,8 @@ endif()
 mark_as_advanced(PulseAudio_INCLUDE_DIRS PULSEAUDIO_INCLUDE_DIR
                  PulseAudio_LIBRARIES PULSEAUDIO_LIBRARY
 		 PulseAudio_MAINLOOP_LIBRARY PULSEAUDIO_MAINLOOP_LIBRARY)
+
+include(FeatureSummary)
 set_package_properties(PulseAudio PROPERTIES
   URL "https://www.freedesktop.org/wiki/Software/PulseAudio"
   DESCRIPTION "Sound server, for sound stream routing and mixing")
