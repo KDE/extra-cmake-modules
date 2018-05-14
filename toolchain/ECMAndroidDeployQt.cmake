@@ -21,7 +21,7 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
         endif()
     endforeach()
     if (QML_IMPORT_PATHS)
-        set(DEFINE_QML_IMPORT_PATHS ""qml-import-paths": \"${QML_IMPORT_PATHS}\",")
+        set(DEFINE_QML_IMPORT_PATHS "\"qml-import-paths\": \"${QML_IMPORT_PATHS}\",")
     endif()
 
     set(EXTRA_PREFIX_DIRS "")
