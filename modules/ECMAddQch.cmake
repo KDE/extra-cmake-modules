@@ -105,7 +105,7 @@
 # Needs to be used when NAMESPACE is not used.
 #
 # LINK_QCHS specifies a list of other QCH targets which should be used for
-# creating references to API documenation of code in external libraries.
+# creating references to API documentation of code in external libraries.
 # For each target <qch> in the list these target properties are expected to be
 # defined: DOXYGEN_TAGFILE, QHP_NAMESPACE and QHP_VIRTUALFOLDER.
 # If any of these is not existing, <qch> will be ignored.
