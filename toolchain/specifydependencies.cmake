@@ -21,6 +21,13 @@ foreach(line ${lines})
     endif()
 endforeach()
 
+if (ANDROID_EXTRA_LIBS)
+    foreach (extralib ${ANDROID_EXTRA_LIBS})
+        message(STATUS "manually specified extra library: " ${extralib})
+        list(APPEND extralibs ${extralib})
+    endforeach()
+endif()
+
 if(extralibs)
     string(REPLACE ";" "," libs "${extralibs}")
     set(extralibs "\"android-extra-libs\": \"${libs}\",")

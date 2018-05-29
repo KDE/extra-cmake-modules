@@ -53,6 +53,8 @@
 #     directories in the NDK. Default: ``armeabi-v7a``.
 # ``ANDROID_SDK_BUILD_TOOLS_REVISION``
 #     The build tools version to use. Default: ``21.1.1``.
+# ``ANDROID_EXTRA_LIBS``
+#     The ";"-separated list of full paths to libs to include in resulting APK.
 #
 # For integrating other libraries which are not part of the Android toolchain,
 # like Qt5, and installed to a separate prefix on the host system, the install
