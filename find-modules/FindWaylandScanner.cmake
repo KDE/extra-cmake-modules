@@ -125,6 +125,7 @@ function(ecm_add_wayland_client_protocol out_var)
 
     set_source_files_properties(${_client_header} GENERATED)
     set_source_files_properties(${_code} GENERATED)
+    set_property(SOURCE ${_client_header} PROPERTY SKIP_AUTOMOC ON)
 
     add_custom_command(OUTPUT "${_client_header}"
         COMMAND ${WaylandScanner_EXECUTABLE} client-header < ${_infile} > ${_client_header}
@@ -154,7 +155,7 @@ function(ecm_add_wayland_server_protocol out_var)
 
     get_filename_component(_infile ${ARGS_PROTOCOL} ABSOLUTE)
     set(_server_header "${CMAKE_CURRENT_BINARY_DIR}/wayland-${ARGS_BASENAME}-server-protocol.h")
-
+    set_property(SOURCE ${_server_header} PROPERTY SKIP_AUTOMOC ON)
     set_source_files_properties(${_server_header} GENERATED)
 
     add_custom_command(OUTPUT "${_server_header}"
