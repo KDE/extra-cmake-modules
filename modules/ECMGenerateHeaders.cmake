@@ -9,6 +9,7 @@
 #   ecm_generate_headers(<camelcase_forwarding_headers_var>
 #       HEADER_NAMES <CamelCaseName> [<CamelCaseName> [...]]
 #       [ORIGINAL <CAMELCASE|LOWERCASE>]
+#       [HEADER_EXTENSION <header_extension>]
 #       [OUTPUT_DIR <output_dir>]
 #       [PREFIX <prefix>]
 #       [REQUIRED_HEADERS <variable>]
@@ -16,7 +17,8 @@
 #       [RELATIVE <relative_path>])
 #
 # For each CamelCase header name passed to HEADER_NAMES, a file of that name
-# will be generated that will include a version with ``.h`` appended.
+# will be generated that will include a version with ``.h`` or, if set,
+# ``.<header_extension>`` appended.
 # For example, the generated header ``ClassA`` will include ``classa.h`` (or
 # ``ClassA.h``, see ORIGINAL).
 # If a CamelCaseName consists of multiple comma-separated files, e.g.
@@ -27,6 +29,9 @@
 #
 # ORIGINAL specifies how the name of the original header is written: lowercased
 # or also camelcased.  The default is LOWERCASE. Since 1.8.0.
+#
+# HEADER_EXTENSION specifies what file name extension is used for the header
+# files.  The default is "h". Since 5.48.0.
 #
 # PREFIX places the generated headers in subdirectories.  This should be a
 # CamelCase name like ``KParts``, which will cause the CamelCase forwarding
@@ -138,7 +143,7 @@ include(CMakeParseArguments)
 
 function(ECM_GENERATE_HEADERS camelcase_forwarding_headers_var)
     set(options)
-    set(oneValueArgs ORIGINAL OUTPUT_DIR PREFIX REQUIRED_HEADERS COMMON_HEADER RELATIVE)
+    set(oneValueArgs ORIGINAL HEADER_EXTENSION OUTPUT_DIR PREFIX REQUIRED_HEADERS COMMON_HEADER RELATIVE)
     set(multiValueArgs HEADER_NAMES)
     cmake_parse_arguments(EGH "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -156,6 +161,10 @@ function(ECM_GENERATE_HEADERS camelcase_forwarding_headers_var)
     endif()
     if(NOT EGH_ORIGINAL STREQUAL "LOWERCASE" AND NOT EGH_ORIGINAL STREQUAL "CAMELCASE")
         message(FATAL_ERROR "Unexpected value for original argument to ECM_GENERATE_HEADERS: ${EGH_ORIGINAL}")
+    endif()
+
+    if(NOT EGH_HEADER_EXTENSION)
+        set(EGH_HEADER_EXTENSION "h")
     endif()
 
     if(NOT EGH_OUTPUT_DIR)
@@ -188,7 +197,7 @@ function(ECM_GENERATE_HEADERS camelcase_forwarding_headers_var)
             string(TOLOWER "${_baseclass}" originalbasename)
         endif()
 
-        set(_actualheader "${CMAKE_CURRENT_SOURCE_DIR}/${EGH_RELATIVE}${originalbasename}.h")
+        set(_actualheader "${CMAKE_CURRENT_SOURCE_DIR}/${EGH_RELATIVE}${originalbasename}.${EGH_HEADER_EXTENSION}")
         if (NOT EXISTS ${_actualheader})
             message(FATAL_ERROR "Could not find \"${_actualheader}\"")
         endif()
@@ -196,7 +205,7 @@ function(ECM_GENERATE_HEADERS camelcase_forwarding_headers_var)
         foreach(_CLASSNAME ${_classnames})
             set(FANCY_HEADER_FILE "${EGH_OUTPUT_DIR}/${EGH_PREFIX}${_CLASSNAME}")
             if (NOT EXISTS ${FANCY_HEADER_FILE})
-                file(WRITE ${FANCY_HEADER_FILE} "#include \"${originalprefix}${originalbasename}.h\"\n")
+                file(WRITE ${FANCY_HEADER_FILE} "#include \"${originalprefix}${originalbasename}.${EGH_HEADER_EXTENSION}\"\n")
             endif()
             list(APPEND ${camelcase_forwarding_headers_var} "${FANCY_HEADER_FILE}")
             if (EGH_PREFIX)
@@ -206,7 +215,7 @@ function(ECM_GENERATE_HEADERS camelcase_forwarding_headers_var)
                 else()
                     string(TOLOWER "${_CLASSNAME}" originalclassname)
                 endif()
-                set(REGULAR_HEADER_NAME ${EGH_OUTPUT_DIR}/${originalprefix}${originalclassname}.h)
+                set(REGULAR_HEADER_NAME ${EGH_OUTPUT_DIR}/${originalprefix}${originalclassname}.${EGH_HEADER_EXTENSION})
                 if (NOT EXISTS ${REGULAR_HEADER_NAME})
                     file(WRITE ${REGULAR_HEADER_NAME} "#include \"${_actualheader}\"\n")
                 endif()
