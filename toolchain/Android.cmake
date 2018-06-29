@@ -108,6 +108,10 @@
 #
 #   make create-apk-myapp ARGS="--sign ~/my.keystore alias_name"
 #
+# In case it's needed for your application to set the APK directory from cmake
+# scripting you can also set the directory as the ANDROID_APK_DIR property of
+# the create-apk-myapp target.
+#
 # See Android documentation on how to create a keystore to use
 
 # =============================================================================
@@ -198,8 +202,13 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk")
         list(GET ANDROID_APK_DIR ${idx} APK_DIR)
         if(APK_DIR AND NOT EXISTS "${APK_DIR}/AndroidManifest.xml")
             message(FATAL_ERROR "Cannot find ${APK_DIR}/AndroidManifest.xml according to ANDROID_APK_DIR. ${ANDROID_APK_DIR} ${exportedTarget}")
+        elseif(NOT APK_DIR)
+            get_filename_component(_qt5Core_install_prefix "${Qt5Core_DIR}/../../../" ABSOLUTE)
+            set(ANDROID_APK_DIR "${_qt5Core_install_prefix}/src/android/templates/")
         endif()
-        ecm_androiddeployqt("${exportedTarget}" "${ECM_ADDITIONAL_FIND_ROOT_PATH}" "${APK_DIR}")
+
+        ecm_androiddeployqt("${exportedTarget}" "${ECM_ADDITIONAL_FIND_ROOT_PATH}")
+        set_target_properties(create-apk-${exportedTarget} PROPERTIES ANDROID_APK_DIR "${APK_DIR}")
     endforeach()
 else()
     message(STATUS "You can export a target by specifying -DQTANDROID_EXPORTED_TARGET=<targetname> and -DANDROID_APK_DIR=<paths>")

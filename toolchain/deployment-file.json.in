@@ -12,7 +12,7 @@
    @DEFINE_QML_IMPORT_PATHS@
    ##EXTRALIBS##
    ##EXTRAPLUGINS##
-   "android-package-source-directory": "@ANDROID_APK_DIR@",
+   "android-package-source-directory": "$<TARGET_PROPERTY:create-apk-${QTANDROID_EXPORTED_TARGET},ANDROID_APK_DIR>",
    "stdcpp-path":##CMAKE_CXX_STANDARD_LIBRARIES##,
    "sdkBuildToolsRevision": "@ANDROID_SDK_BUILD_TOOLS_REVISION@",
    "extraPrefixDirs": [ @EXTRA_PREFIX_DIRS@ ]
