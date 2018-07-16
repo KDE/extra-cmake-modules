@@ -8,8 +8,8 @@
 #
 #  ecm_add_app_icon(<sources_var>
 #                   ICONS <icon> [<icon> [...]]
-#                   [SIDEBAR_ICONS <icon> [<icon> [...]] # Since 5.48
-#                   [OUTFILE_BASENAME <name>]) # Since 5.48
+#                   [SIDEBAR_ICONS <icon> [<icon> [...]] # Since 5.49
+#                   [OUTFILE_BASENAME <name>]) # Since 5.49
 #                   )
 #
 # The given icons, whose names must match the pattern::
@@ -27,12 +27,12 @@
 #
 # ``SIDEBAR_ICONS`` can be used to add Mac OS X sidebar
 # icons to the generated iconset. They are used when a folder monitored by the
-# application is dragged into Finder's sidebar. Since 5.48.
+# application is dragged into Finder's sidebar. Since 5.49.
 #
 # ``OUTFILE_BASENAME`` will be used as the basename for the icon file. If
 # you specify it, the icon file will be called ``<OUTFILE_BASENAME>.icns`` on Mac OS X
 # and ``<OUTFILE_BASENAME>.ico`` on Windows. If you don't specify it, it defaults
-# to ``<sources_var>.<ext>``. Since 5.48.
+# to ``<sources_var>.<ext>``. Since 5.49.
 #
 #
 # Windows notes

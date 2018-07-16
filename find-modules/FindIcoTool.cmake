@@ -22,7 +22,7 @@
 # ``IcoTool::IcoTool``
 #     The icotool executable.
 #
-# Since 5.48.
+# Since 5.49.
 
 #=============================================================================
 # Copyright 2017 Vincent Pinon <vpinon@kde.org>
