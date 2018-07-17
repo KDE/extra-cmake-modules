@@ -144,7 +144,7 @@ cmake_minimum_required(VERSION "3.7")
 
 macro(set_deprecated_variable actual_variable deprecated_variable default_value)
     set(${deprecated_variable} "${default_value}" CACHE STRING "Deprecated. Use ${actual_variable}")
-    if (NOT DEFINED ${${actual_variable}})
+    if (NOT DEFINED ${actual_variable})
         set(${actual_variable} ${${deprecated_variable}})
     endif()
 endmacro()
