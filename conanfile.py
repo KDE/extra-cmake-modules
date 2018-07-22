@@ -1,0 +1,20 @@
+from conans import ConanFile, CMake
+
+class ExtracmakemodulesConan(ConanFile):
+    name = "extra-cmake-modules"
+    version = "5.58.0"
+    license = "GPLv2"
+    url = "https://api.kde.org/ecm/"
+    description = "KDE's CMake modules"
+    settings = "os", "compiler", "build_type", "arch"
+    generators = "cmake"
+    exports_sources = "*"
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+        cmake.install()
+
+    def package_info(self):
+        self.cpp_info.resdirs = ["share"]
