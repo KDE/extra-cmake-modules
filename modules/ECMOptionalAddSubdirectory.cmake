@@ -10,7 +10,8 @@
 #
 # This behaves like add_subdirectory(), except that it does not complain if the
 # directory does not exist.  Additionally, if the directory does exist, it
-# creates an option to allow the user to skip it.
+# creates an option to allow the user to skip it. The option will be named
+# BUILD_<dir>.
 #
 # This is useful for "meta-projects" that combine several mostly-independent
 # sub-projects.
