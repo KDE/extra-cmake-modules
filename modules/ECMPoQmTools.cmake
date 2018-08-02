@@ -213,6 +213,20 @@ function(ecm_install_po_files_as_qm podir)
         set(install_destination share/locale)
     endif()
 
+    get_filename_component(absolute_podir ${podir} ABSOLUTE)
+
+    # we try to find the po directory in the binary directory, in case it was downloaded
+    # using ECM
+    if (NOT (EXISTS "${absolute_podir}" AND IS_DIRECTORY "${absolute_podir}"))
+        get_filename_component(absolute_podir ${CMAKE_BINARY_DIR}/${podir} ABSOLUTE)
+    endif()
+
+    if (NOT (EXISTS "${absolute_podir}" AND IS_DIRECTORY "${absolute_podir}"))
+        # Nothing to do if there's no podir and it would create an empty
+        # LOCALE_INSTALL_DIR in that case.
+        return()
+    endif()
+
     file(GLOB po_files "${podir}/*/*.po")
     foreach(po_file ${po_files})
         get_filename_component(po_dir ${po_file} DIRECTORY)

@@ -91,6 +91,13 @@
 # should be downloaded when building the project.
 #
 # Since 5.34.0
+#
+# ``KDE_L10N_SYNC_TRANSLATIONS`` (OFF by default) will download the translations at configuration
+# time instead of build time.
+#
+# Since 5.50.0
+#
+#
 
 #=============================================================================
 # Copyright 2014      Alex Merry <alex.merry@kde.org>
@@ -312,9 +319,10 @@ endfunction()
 
 if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
     option(KDE_L10N_AUTO_TRANSLATIONS "Automatically 'make fetch-translations`" OFF)
+    option(KDE_L10N_SYNC_TRANSLATIONS "Fetch translations when KDECMakeSettings.cmake is processed." OFF)
     set(KDE_L10N_BRANCH "trunk" CACHE STRING "Branch from l10n.kde.org to fetch from: trunk | stable | lts | trunk_kde4 | stable_kde4")
 
-    if(KDE_L10N_AUTO_TRANSLATIONS)
+    if(KDE_L10N_AUTO_TRANSLATIONS AND NOT KDE_L10N_SYNC_TRANSLATIONS)
         set(_EXTRA_ARGS "ALL")
     else()
         set(_EXTRA_ARGS)
@@ -323,9 +331,12 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
     set(_reponame "")
     _repository_name(_reponame "${CMAKE_SOURCE_DIR}")
 
+    set(releaseme_clone_commands
+        COMMAND git clone --depth 1 https://anongit.kde.org/releaseme.git
+    )
     add_custom_command(
         OUTPUT "${CMAKE_BINARY_DIR}/releaseme"
-        COMMAND git clone --depth 1 "https://anongit.kde.org/releaseme.git"
+        ${releaseme_clone_commands}
         COMMENT "Fetching releaseme scripts to download translations..."
     )
 
@@ -336,18 +347,27 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
         set(extra BYPRODUCTS ${_l10n_po_dir} ${_l10n_poqm_dir})
     endif()
 
-    add_custom_target(fetch-translations ${_EXTRA_ARGS}
-        COMMENT "Downloading translations for ${_reponame} branch ${KDE_L10N_BRANCH}..."
-        COMMAND git -C "${CMAKE_BINARY_DIR}/releaseme" pull
-        COMMAND cmake -E remove_directory ${_l10n_po_dir}
-        COMMAND cmake -E remove_directory ${_l10n_poqm_dir}
+    set(fetch_commands
         COMMAND ruby "${CMAKE_BINARY_DIR}/releaseme/fetchpo.rb"
             --origin ${KDE_L10N_BRANCH}
             --project "${_reponame}"
             --output-dir "${_l10n_po_dir}"
             --output-poqm-dir "${_l10n_poqm_dir}"
             "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+
+    add_custom_target(fetch-translations ${_EXTRA_ARGS}
+        COMMENT "Downloading translations for ${_reponame} branch ${KDE_L10N_BRANCH}..."
+        COMMAND git -C "${CMAKE_BINARY_DIR}/releaseme" pull
+        COMMAND cmake -E remove_directory ${_l10n_po_dir}
+        COMMAND cmake -E remove_directory ${_l10n_poqm_dir}
+        ${fetch_commands}
         ${extra}
         DEPENDS "${CMAKE_BINARY_DIR}/releaseme"
     )
+
+    if (KDE_L10N_SYNC_TRANSLATIONS AND (NOT EXISTS ${_l10n_po_dir} OR NOT EXISTS ${_l10n_poqm_dir}))
+        execute_process(${releaseme_clone_commands})
+        execute_process(${fetch_commands})
+    endif()
 endif()
