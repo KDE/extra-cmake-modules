@@ -18,6 +18,16 @@ class ExtracmakemodulesConan(ConanFile):
         "revision": "auto"
      }
 
+    requires = (
+        # sphinx/1.2@foo/bar
+
+        "Qt/5.11.1@bincrafters/stable"
+        # "qt-core/5.8.0@foo/bar",
+        # "qt-testing/5.8.0@foo/bar",
+
+        # gperf/latest@foo/bar,
+    )
+
     def build(self):
         cmake = CMake(self)
         cmake.configure()
