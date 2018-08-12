@@ -1,8 +1,11 @@
 from conans import ConanFile, CMake
 
+def getVersion():
+    return "5.50.0"
+
 class ExtracmakemodulesConan(ConanFile):
     name = "extra-cmake-modules"
-    version = "5.50.0"
+    version = getVersion()
     license = "GPLv2"
     url = "https://api.kde.org/ecm/"
     description = "KDE's CMake modules"
