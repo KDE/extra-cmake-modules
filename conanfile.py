@@ -1,14 +1,33 @@
 from conans import ConanFile, CMake
+import yaml
+import re
+import os.path
 
+# Fetching the package version from CMakeLists.txt
 def getVersion():
-    return "5.50.0"
+    if(os.path.exists("CMakeLists.txt")):
+        regx = re.compile(r"^set\(.*VERSION\s(\"|')[0-9.]+(\"|')\)")
+        with open("CMakeLists.txt") as f:
+            for line in f:
+                if regx.match(line):
+                    version = re.search("[0-9.]+", line)
+                    return version.group()
+    return None
 
-class ExtracmakemodulesConan(ConanFile):
-    name = "extra-cmake-modules"
+def getMetaField(field):
+    if(os.path.exists("metainfo.yaml")):
+        with open("metainfo.yaml") as f:
+            metainfo = yaml.load(f.read())
+        return metainfo[field]
+    return None
+
+class ExtraCMakeModulesConan(ConanFile):
+
+    name = getMetaField('name')
     version = getVersion()
-    license = "GPLv2"
-    url = "https://api.kde.org/ecm/"
-    description = "KDE's CMake modules"
+    license = getMetaField('license')
+    url = getMetaField('url')
+    description = getMetaField('description')
 
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
@@ -16,7 +35,7 @@ class ExtracmakemodulesConan(ConanFile):
         "type": "git",
         "url": "auto",
         "revision": "auto"
-     }
+    }
 
     requires = (
         # sphinx/1.2@foo/bar
