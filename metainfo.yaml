@@ -1,5 +1,8 @@
 maintainer: skelly
+name: extra-cmake-modules
 description: Extra CMake modules
+license: COPYING-CMAKE-SCRIPTS
+url: https://api.kde.org/ecm/
 tier: 1
 type: functional
 platforms:
