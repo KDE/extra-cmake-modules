@@ -201,6 +201,9 @@ if (NOT libclang_LIBRARY)
       find_library(libclang_LIBRARY clang-3.8)
     endif()
   endif()
+  if (NOT libclang_LIBRARY)
+    find_library(libclang_LIBRARY clang)
+  endif()
 else()
   string(REGEX MATCH ".*clang-([0-9]+\\.[0-9]+).*" _GPB_CLANG_SUFFIX ${libclang_LIBRARY})
   set(_GPB_CLANG_SUFFIX ${CMAKE_MATCH_1})
@@ -208,6 +211,8 @@ endif()
 
 if (NOT libclang_LIBRARY)
   _report_NOT_FOUND("Could not find libclang version 3.8 or greater.")
+else()
+  message(STATUS "Found ${libclang_LIBRARY}")
 endif()
 
 execute_process(
