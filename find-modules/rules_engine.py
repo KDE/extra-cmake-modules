@@ -113,7 +113,7 @@ class Rule(object):
             logger.debug(_("Rule {} suppressed {}, {}").format(self, fqn, original))
         else:
             delta = False
-            for k, v in original.iteritems():
+            for k, v in original.items():
                 if v != modified[k]:
                     delta = True
                     break
@@ -620,7 +620,7 @@ class AbstractCompiledCodeDb(object):
             logger.debug(_("Rule {} suppressed {}, {}").format(self, fqn, original))
         else:
             delta = False
-            for k, v in original.iteritems():
+            for k, v in original.items():
                 if v != modified[k]:
                     delta = True
                     break
