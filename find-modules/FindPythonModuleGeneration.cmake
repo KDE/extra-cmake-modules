@@ -174,10 +174,6 @@ if (NOT GBP_SIP_COMMAND)
   _report_NOT_FOUND("The sip executable must be available to use ${CMAKE_FIND_PACKAGE_NAME}.")
 endif()
 
-if (NOT GPB_PYTHON2_COMMAND)
-  _report_NOT_FOUND("The python2 executable is required by clang-python for the ${CMAKE_FIND_PACKAGE_NAME} Module.")
-endif()
-
 if (NOT libclang_LIBRARY)
   set(_LIBCLANG_MAX_MAJOR_VERSION 7)
   set(_LIBCLANG_MIN_MAJOR_VERSION 5)
@@ -209,13 +205,30 @@ else()
   message(STATUS "Found ${libclang_LIBRARY}")
 endif()
 
-execute_process(
-  COMMAND ${GPB_PYTHON2_COMMAND} ${CMAKE_CURRENT_LIST_DIR}/sip_generator.py --self-check ${libclang_LIBRARY}
-  RESULT_VARIABLE selfCheckErrors
-)
+foreach (pyversion "2" "3")
+  set(GPB_PYTHON_COMMAND ${GPB_PYTHON${pyversion}_COMMAND})
+  if (NOT GPB_PYTHON_COMMAND)
+    continue()
+  endif()
+  message(STATUS "Testing if ${GPB_PYTHON_COMMAND} can be used to run sip_generator")
 
-if (selfCheckErrors)
-  _report_NOT_FOUND("sip_generator failed a self-check for the ${CMAKE_FIND_PACKAGE_NAME} Module.")
+  execute_process(
+    COMMAND ${GPB_PYTHON_COMMAND} ${CMAKE_CURRENT_LIST_DIR}/sip_generator.py --self-check ${libclang_LIBRARY}
+    RESULT_VARIABLE selfCheckErrors
+    ERROR_QUIET
+  )
+
+  if (selfCheckErrors)
+    message(STATUS "sip_generator self-check for ${GPB_PYTHON_COMMAND} failed")
+    unset(GPB_PYTHON_COMMAND)
+  else()
+    message(STATUS "Self-check passed, Using ${GPB_PYTHON_COMMAND} to generate bindings")
+    break()
+  endif()
+endforeach()
+
+if (NOT GPB_PYTHON_COMMAND)
+   _report_NOT_FOUND("No usable python version found to run sip_generator for the ${CMAKE_FIND_PACKAGE_NAME} Module.")
 endif()
 
 get_filename_component(libclang_file "${libclang_file}" REALPATH)
@@ -351,7 +364,7 @@ function(ecm_generate_python_binding
         set(comp_flags "$<JOIN:$<TARGET_PROPERTY:${target_value},INTERFACE_COMPILE_OPTIONS>;${stdFlag},;>")
 
         add_custom_command(OUTPUT ${sip_file}
-            COMMAND ${GPB_PYTHON2_COMMAND} ${GPB_MODULE_DIR}/sip_generator.py
+            COMMAND ${GPB_PYTHON_COMMAND} ${GPB_MODULE_DIR}/sip_generator.py
               --flags " ${inc_dirs};${sys_inc_dirs};${comp_defs};${comp_flags}"
               --include_filename "${hdr_filename}"
               ${libclang_LIBRARY}
@@ -399,7 +412,7 @@ headers = sipAPI${modulename_value}
 
     add_custom_command(OUTPUT
       "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/unified${modulename_value}.cpp"
-      COMMAND ${GPB_PYTHON2_COMMAND} "${GPB_MODULE_DIR}/run-sip.py" --sip ${GBP_SIP_COMMAND}
+      COMMAND ${GPB_PYTHON_COMMAND} "${GPB_MODULE_DIR}/run-sip.py" --sip ${GBP_SIP_COMMAND}
        --unify "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/unified${modulename_value}.cpp"
        --module-name "${modulename_value}"
        -c "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}"
