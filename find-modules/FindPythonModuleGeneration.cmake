@@ -100,13 +100,22 @@ macro(_find_python version minor_version)
         python${_CURRENT_VERSION}u
         python${_CURRENT_VERSION}
     )
+    # sip.h is version agnostic, it may be located in the version specific path
+    # or one of the default locations
+    find_path(GPB_PYTHON${version}_SIP_DIR
+       NAMES sip.h
+       PATHS
+         ${GPB_PYTHON${version}_INCLUDE_DIR}
+    )
   endif()
 
   find_program(GPB_PYTHON${version}_COMMAND python${version})
 endmacro()
 
 macro(_create_imported_python_target version)
-  if(GPB_PYTHON${version}_LIBRARY AND GPB_PYTHON${version}_INCLUDE_DIR AND EXISTS "${GPB_PYTHON${version}_INCLUDE_DIR}/patchlevel.h")
+  if(GPB_PYTHON${version}_LIBRARY AND GPB_PYTHON${version}_INCLUDE_DIR AND
+     EXISTS "${GPB_PYTHON${version}_INCLUDE_DIR}/patchlevel.h" AND
+     EXISTS "${GPB_PYTHON${version}_SIP_DIR}/sip.h")
     list(APPEND _pyversions ${version})
 
     file(STRINGS "${GPB_PYTHON${version}_INCLUDE_DIR}/patchlevel.h" python_version_define
@@ -434,6 +443,7 @@ headers = sipAPI${modulename_value}
          "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}")
 
     foreach(pyversion ${_pyversions})
+        message(STATUS "Found dependencies for python${pyversion}, generating bindings")
 
         execute_process(COMMAND "${CMAKE_COMMAND}"
           "-DPYTHON_UMBRELLA_MODULE_FILE=${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/__init__.py"
