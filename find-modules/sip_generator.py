@@ -129,7 +129,7 @@ class SipGenerator(object):
         #
         source = h_file
         self.unpreprocessed_source = []
-        with open(source, "rU") as f:
+        with open(source, "rb") as f:
             for line in f:
                 self.unpreprocessed_source.append(line)
 
@@ -739,6 +739,7 @@ class SipGenerator(object):
 
         :param extent:              The range of text required.
         """
+        # Extent columns are specified in bytes
         extract = self.unpreprocessed_source[extent.start.line - 1:extent.end.line]
         if extent.start.line == extent.end.line:
             extract[0] = extract[0][extent.start.column - 1:extent.end.column - 1]
@@ -747,8 +748,9 @@ class SipGenerator(object):
             extract[-1] = extract[-1][:extent.end.column - 1]
         #
         # Return a single line of text.
+        # Replace all kinds of newline variants (DOS, UNIX, MAC style) by single spaces
         #
-        return "".join(extract).replace("\n", " ")
+        return b''.join(extract).decode('utf-8').replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
 
     @staticmethod
     def _report_ignoring(parent, child, text=None):
