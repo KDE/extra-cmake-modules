@@ -27,9 +27,9 @@
 # =====
 #
 # To use this file, you need to set the ``CMAKE_TOOLCHAIN_FILE`` to point to
-# ``AndroidToolchain.cmake`` on the command line::
+# ``Android.cmake`` on the command line::
 #
-#   cmake -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/AndroidToolchain.cmake
+#   cmake -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake
 #
 # You will also need to provide the locations of the Android NDK and SDK. This
 # can be done on the commandline or with environment variables; in either case
@@ -66,7 +66,7 @@
 # the prefix ``/opt/android/foo``, you would use::
 #
 #   cmake \
-#     -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/AndroidToolchain.cmake \
+#     -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
 #     -DECM_ADDITIONAL_FIND_ROOT_PATH="/opt/android/Qt5/5.7/android_armv7;/opt/android/foo"
 #
 # If your project uses ``find_package()`` to locate build tools on the host
@@ -90,7 +90,7 @@
 # For example, you could do::
 #
 #   cmake \
-#     -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/AndroidToolchain.cmake \
+#     -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
 #     -DQTANDROID_EXPORTED_TARGET=myapp \
 #     -DANDROID_APK_DIR=myapp-apk
 #   make
