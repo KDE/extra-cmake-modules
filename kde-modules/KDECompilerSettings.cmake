@@ -140,6 +140,9 @@ if (UNIX)
     # implementation recognize it?
     _kde_add_platform_definitions(-D_LARGEFILE64_SOURCE)
 
+    # Non-glibc platforms need this since we specify -std=iso9899:1990
+    _kde_add_platform_definitions(-D_XOPEN_SOURCE=600)
+
     include(CheckCXXSourceCompiles)
 
     # By default (in glibc, at least), on 32bit platforms off_t is 32 bits,
