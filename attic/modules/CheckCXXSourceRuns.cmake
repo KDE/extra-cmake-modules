@@ -57,7 +57,7 @@ MACRO(CHECK_CXX_SOURCE_RUNS SOURCE VAR)
       SET(${VAR} 1 CACHE INTERNAL "Test ${VAR}")
       MESSAGE(STATUS "Performing Test ${VAR} - Success")
       FILE(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeOutput.log 
-        "Performing C++ SOURCE FILE Test ${VAR} succeded with the following output:\n"
+        "Performing C++ SOURCE FILE Test ${VAR} succeeded with the following output:\n"
         "${OUTPUT}\n" 
         "Return value: ${${VAR}}\n"
         "Source file was:\n${SOURCE}\n")

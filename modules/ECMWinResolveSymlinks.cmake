@@ -52,7 +52,7 @@ function(ECM_WIN_RESOLVE_SYMLINKS _dir)
   endforeach()
   message(STATUS "Resolving symlinks in ${dir}... Done.")
 
-  # touch cache every build to force CMake to re-run these functions everytime
+  # touch cache every build to force CMake to re-run these functions every time
   if(NOT TARGET wrs_touch_cache)
     add_custom_target(wrs_touch_cache ALL
       COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_BINARY_DIR}/CMakeCache.txt

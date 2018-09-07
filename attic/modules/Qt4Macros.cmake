@@ -130,7 +130,7 @@ MACRO (QT4_GENERATE_MOC infile outfile )
    QT4_GET_MOC_FLAGS(moc_flags)
    GET_FILENAME_COMPONENT(abs_infile ${infile} ABSOLUTE)
    QT4_CREATE_MOC_COMMAND(${abs_infile} ${outfile} "${moc_flags}" "")
-   SET_SOURCE_FILES_PROPERTIES(${outfile} PROPERTIES SKIP_AUTOMOC TRUE)  # dont run automoc on this file
+   SET_SOURCE_FILES_PROPERTIES(${outfile} PROPERTIES SKIP_AUTOMOC TRUE)  # don't run automoc on this file
 
    MACRO_ADD_FILE_DEPENDENCIES(${abs_infile} ${outfile})
 ENDMACRO (QT4_GENERATE_MOC)

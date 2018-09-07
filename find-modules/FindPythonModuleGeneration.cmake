@@ -20,7 +20,7 @@
 #
 # The optional rules file specifies the rules for creating the bindings
 #
-# A simple invokation would be:
+# A simple invocation would be:
 #
 #   ecm_generate_python_binding(KMyTarget
 #     PYTHONNAMESPACE PyKF5

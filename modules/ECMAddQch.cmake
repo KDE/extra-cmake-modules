@@ -222,7 +222,7 @@
 # installed. It usually is the same as the one where the CMake config files
 # for this software are installed.
 #
-# COMPONENT specifies the the installation component name with which the
+# COMPONENT specifies the installation component name with which the
 # install rule is associated.
 #
 # Example usage:

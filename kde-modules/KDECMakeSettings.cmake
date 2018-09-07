@@ -217,7 +217,7 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
 
    # put the include dirs which are in the source or build tree
    # before all other include dirs, so the headers in the sources
-   # are prefered over the already installed ones
+   # are preferred over the already installed ones
    # since cmake 2.4.1
    set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
 
@@ -231,7 +231,7 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # Since CMake 2.8.11
    set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
 
-   # Default to shared libs for KDE, if no type is explicitely given to add_library():
+   # Default to shared libs for KDE, if no type is explicitly given to add_library():
    set(BUILD_SHARED_LIBS TRUE CACHE BOOL "If enabled, shared libs will be built by default, otherwise static libs")
 
    # Enable automoc in cmake

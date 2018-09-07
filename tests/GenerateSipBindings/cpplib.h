@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QMap>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QSharedData>
+#include <QObject>
+#include <QString>
+#include <QStringList>
+#include <QMap>
+#include <QCoreApplication>
+#include <QSharedData>
 
 #include <functional>
 

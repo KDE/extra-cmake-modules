@@ -38,7 +38,7 @@
 
 if (WIN32)
     if(NOT KDEWIN_PACKAGER_DIR)
-        # check for enviroment variable
+        # check for environment variable
     	file(TO_CMAKE_PATH "$ENV{KDEWIN_PACKAGER_DIR}" KDEWIN_PACKAGER_DIR)
     	if(NOT KDEWIN_PACKAGER_DIR)
     		# search in the default program install folder
