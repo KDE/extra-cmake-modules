@@ -12,6 +12,9 @@
 #   ecm_generate_python_binding(TARGET <target>
 #                               PYTHONNAMESPACE <namespace>
 #                               MODULENAME <modulename>
+#                               RULES_FILE <rulesfile>
+#                               SIP_DEPENDS <dependencies>
+#                               SIP_INCLUDES <includes>
 #                               HEADERS <headers>)
 #
 # Invoking the function will create bindings for the <target> for python 2 and 3,
@@ -22,7 +25,7 @@
 #
 # A simple invocation would be:
 #
-#   ecm_generate_python_binding(KMyTarget
+#   ecm_generate_python_binding(TARGET KMyTarget
 #     PYTHONNAMESPACE PyKF5
 #     MODULENAME MyTarget
 #     SIP_DEPENDS QtCore/QtCoremod.sip
@@ -297,17 +300,16 @@ function(_compute_implicit_include_dirs)
   set(_GPB_IMPLICIT_INCLUDE_DIRS ${_resultIncludeDirs} PARENT_SCOPE)
 endfunction()
 
-function(ecm_generate_python_binding
-    target_keyword target_value
-    pythonnamespace_keyword pythonnamespace_value
-    modulename_keyword modulename_value
-    )
+function(ecm_generate_python_binding)
 
-    cmake_parse_arguments(GPB "" "RULES_FILE;INSTALL_DIR_SUFFIX" "SIP_DEPENDS;SIP_INCLUDES;HEADERS"  ${ARGN})
+    set(oneValueArgs TARGET PYTHONNAMESPACE MODULENAME RULES_FILE INSTALL_DIR_SUFFIX)
+    set(multiValueArgs SIP_DEPENDS SIP_INCLUDES HEADERS)
 
-    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${modulename_value}mod.sip"
+    cmake_parse_arguments(GPB "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/${GPB_MODULENAME}mod.sip"
           "
-%Module ${pythonnamespace_value}.${modulename_value}
+%Module ${GPB_PYTHONNAMESPACE}.${GPB_MODULENAME}
 
 %ModuleHeaderCode
 #pragma GCC visibility push(default)
@@ -326,7 +328,7 @@ function(ecm_generate_python_binding
         if (IS_ABSOLUTE ${dep})
           list(APPEND generator_depends "${dep}")
         endif()
-        file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${modulename_value}mod.sip"
+        file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/${GPB_MODULENAME}mod.sip"
           "%Import ${dep}\n\n")
     endforeach()
 
@@ -354,23 +356,23 @@ function(ecm_generate_python_binding
           message(FATAL_ERROR "File not found: ${hdr_file}")
         endif()
 
-        set(sip_file "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${hdr}.sip")
+        set(sip_file "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/${hdr}.sip")
         list(APPEND sip_files ${sip_file})
 
-        set(inc_dirs "-I$<JOIN:$<TARGET_PROPERTY:${target_value},INTERFACE_INCLUDE_DIRECTORIES>,;-I>")
+        set(inc_dirs "-I$<JOIN:$<TARGET_PROPERTY:${GPB_TARGET},INTERFACE_INCLUDE_DIRECTORIES>,;-I>")
         set(sys_inc_dirs)
         foreach(d ${_GPB_IMPLICIT_INCLUDE_DIRS})
            list(APPEND sys_inc_dirs "-isystem" "${d}")
         endforeach()
-        set(comp_defs "-D$<JOIN:$<TARGET_PROPERTY:${target_value},INTERFACE_COMPILE_DEFINITIONS>,;-D>")
+        set(comp_defs "-D$<JOIN:$<TARGET_PROPERTY:${GPB_TARGET},INTERFACE_COMPILE_DEFINITIONS>,;-D>")
 
-        # We might like to use $<TARGET_PROPERTY:${target_value},CXX_STANDARD>, but
+        # We might like to use $<TARGET_PROPERTY:${GPB_TARGET},CXX_STANDARD>, but
         # unfortunately CMake does not populate that property as a side-effect of evaluating
         # COMPILE_FEATURES (Qt specifies feature requirements in its INTERFACE_COMPILE_FEATURES, and
         # those are consumed to set the CXX_STANDARD internally in CMake, but evidently too late)
         set(stdFlag "-std=gnu++14")
 
-        set(comp_flags "$<JOIN:$<TARGET_PROPERTY:${target_value},INTERFACE_COMPILE_OPTIONS>;${stdFlag},;>")
+        set(comp_flags "$<JOIN:$<TARGET_PROPERTY:${GPB_TARGET},INTERFACE_COMPILE_OPTIONS>;${stdFlag},;>")
 
         add_custom_command(OUTPUT ${sip_file}
             COMMAND ${GPB_PYTHON_COMMAND} ${GPB_MODULE_DIR}/sip_generator.py
@@ -384,15 +386,15 @@ function(ecm_generate_python_binding
             VERBATIM
         )
 
-        file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${modulename_value}mod.sip"
+        file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/${GPB_MODULENAME}mod.sip"
           "%Include ${hdr}.sip\n")
     endforeach()
 
-    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/module.sbf"
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/module.sbf"
         "
-target = ${modulename_value}
-sources = sip${modulename_value}cmodule.cpp
-headers = sipAPI${modulename_value}
+target = ${GPB_MODULENAME}
+sources = sip${GPB_MODULENAME}cmodule.cpp
+headers = sipAPI${GPB_MODULENAME}
 "
     )
 
@@ -417,69 +419,69 @@ headers = sipAPI${modulename_value}
       set(GPB_WS_Tag -t WS_X11)
     endif()
 
-    add_custom_target(generate_${modulename_value}_sip_files ALL DEPENDS ${sip_files})
+    add_custom_target(generate_${GPB_MODULENAME}_sip_files ALL DEPENDS ${sip_files})
 
     add_custom_command(OUTPUT
-      "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/unified${modulename_value}.cpp"
+      "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/unified${GPB_MODULENAME}.cpp"
       COMMAND ${GPB_PYTHON_COMMAND} "${GPB_MODULE_DIR}/run-sip.py" --sip ${GBP_SIP_COMMAND}
-       --unify "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/unified${modulename_value}.cpp"
-       --module-name "${modulename_value}"
-       -c "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}"
-       -b "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/module.sbf"
+       --unify "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/unified${GPB_MODULENAME}.cpp"
+       --module-name "${GPB_MODULENAME}"
+       -c "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}"
+       -b "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/module.sbf"
        -t ${GPB_Qt5_Tag} ${GPB_WS_Tag}
 
        -x VendorID -x Py_v3
 
-       -I "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}"
+       -I "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}"
        ${sip_includes}
-       "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${modulename_value}mod.sip"
-       DEPENDS generate_${modulename_value}_sip_files "${GPB_MODULE_DIR}/run-sip.py" ${generator_depends}
+       "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/${GPB_MODULENAME}mod.sip"
+       DEPENDS generate_${GPB_MODULENAME}_sip_files "${GPB_MODULE_DIR}/run-sip.py" ${generator_depends}
     )
 
-    add_custom_target(sip_generated_${modulename_value}_files ALL
-          DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/unified${modulename_value}.cpp")
+    add_custom_target(sip_generated_${GPB_MODULENAME}_files ALL
+          DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/unified${GPB_MODULENAME}.cpp")
 
-    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}"
-         "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}")
+    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}"
+         "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}")
 
     foreach(pyversion ${_pyversions})
         message(STATUS "Found dependencies for python${pyversion}, generating bindings")
 
         execute_process(COMMAND "${CMAKE_COMMAND}"
-          "-DPYTHON_UMBRELLA_MODULE_FILE=${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}/__init__.py"
+          "-DPYTHON_UMBRELLA_MODULE_FILE=${CMAKE_BINARY_DIR}/py${pyversion}/${GPB_PYTHONNAMESPACE}/__init__.py"
           -P "${GPB_MODULE_DIR}/GeneratePythonBindingUmbrellaModule.cmake"
         )
 
-        add_library(Py${pyversion}KF5${modulename_value} MODULE
-          "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${pythonnamespace_value}/${modulename_value}/unified${modulename_value}.cpp"
+        add_library(Py${pyversion}KF5${GPB_MODULENAME} MODULE
+          "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/unified${GPB_MODULENAME}.cpp"
         )
-        add_dependencies(Py${pyversion}KF5${modulename_value} sip_generated_${modulename_value}_files)
-        target_link_libraries(Py${pyversion}KF5${modulename_value} PRIVATE ${target_value} Python::Libs${pyversion})
+        add_dependencies(Py${pyversion}KF5${GPB_MODULENAME} sip_generated_${GPB_MODULENAME}_files)
+        target_link_libraries(Py${pyversion}KF5${GPB_MODULENAME} PRIVATE ${GPB_TARGET} Python::Libs${pyversion})
 
-        target_compile_options(Py${pyversion}KF5${modulename_value} PRIVATE -fstack-protector-strong -Wno-deprecated-declarations -Wno-overloaded-virtual)
-        target_include_directories(Py${pyversion}KF5${modulename_value} PRIVATE ${GPB_SIP_INCLUDES})
-        target_link_libraries(Py${pyversion}KF5${modulename_value} PRIVATE -Wl,-Bsymbolic-functions -Wl,-z,relro)
+        target_compile_options(Py${pyversion}KF5${GPB_MODULENAME} PRIVATE -fstack-protector-strong -Wno-deprecated-declarations -Wno-overloaded-virtual)
+        target_include_directories(Py${pyversion}KF5${GPB_MODULENAME} PRIVATE ${GPB_SIP_INCLUDES})
+        target_link_libraries(Py${pyversion}KF5${GPB_MODULENAME} PRIVATE -Wl,-Bsymbolic-functions -Wl,-z,relro)
 
-        set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY AUTOMOC OFF)
-        set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY PREFIX "")
-        set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}")
-        set_property(TARGET Py${pyversion}KF5${modulename_value} PROPERTY
-            OUTPUT_NAME "${modulename_value}")
+        set_property(TARGET Py${pyversion}KF5${GPB_MODULENAME} PROPERTY AUTOMOC OFF)
+        set_property(TARGET Py${pyversion}KF5${GPB_MODULENAME} PROPERTY PREFIX "")
+        set_property(TARGET Py${pyversion}KF5${GPB_MODULENAME} PROPERTY LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/py${pyversion}/${GPB_PYTHONNAMESPACE}")
+        set_property(TARGET Py${pyversion}KF5${GPB_MODULENAME} PROPERTY
+            OUTPUT_NAME "${GPB_MODULENAME}")
 
         if (GPB_SIP_DEPENDS MATCHES PyKF5)
           set(_kf5_python_prefix ${CMAKE_INSTALL_PREFIX}/lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
         else()
           set(_kf5_python_prefix ${CMAKE_BINARY_DIR}/py${pyversion})
         endif()
-        add_test(NAME Py${pyversion}Test${modulename_value} COMMAND
+        add_test(NAME Py${pyversion}Test${GPB_MODULENAME} COMMAND
             ${GPB_PYTHON${pyversion}_COMMAND} "${CMAKE_SOURCE_DIR}/autotests/pythontest.py"
             ${_kf5_python_prefix}
         )
 
-        install(DIRECTORY ${CMAKE_BINARY_DIR}/py${pyversion}/${pythonnamespace_value}
+        install(DIRECTORY ${CMAKE_BINARY_DIR}/py${pyversion}/${GPB_PYTHONNAMESPACE}
             DESTINATION lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
-        install(FILES ${sip_files} "${CMAKE_CURRENT_BINARY_DIR}/sip/${pythonnamespace_value}/${modulename_value}/${modulename_value}mod.sip"
-          DESTINATION share/sip/${pythonnamespace_value}/${modulename_value}
+        install(FILES ${sip_files} "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/${GPB_MODULENAME}mod.sip"
+          DESTINATION share/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}
         )
     endforeach()
 endfunction()
