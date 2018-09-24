@@ -35,16 +35,25 @@
 #include <QStandardPaths>
 #include <QThread>
 #include <QTranslator>
+#include <QDir>
 
 namespace {
 
     bool loadTranslation(const QString &localeDirName)
     {
         QString subPath = QStringLiteral("locale/") + localeDirName + QStringLiteral("/LC_MESSAGES/@QM_LOADER_CATALOG_NAME@.qm");
-        QString fullPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, subPath);
+
+#if defined(Q_OS_ANDROID)
+        const QString fullPath = QDir::homePath()+QStringLiteral("/../qt-reserved-files/share/") + subPath;
+        if (!QFile::exists(fullPath)) {
+            return false;
+        }
+#else
+        const QString fullPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, subPath);
         if (fullPath.isEmpty()) {
             return false;
         }
+#endif
         QTranslator *translator = new QTranslator(QCoreApplication::instance());
         if (!translator->load(fullPath)) {
             delete translator;
