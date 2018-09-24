@@ -38,7 +38,10 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
 
     function(havestl var access VALUE)
         if (NOT VALUE STREQUAL "")
-            file(WRITE ${CMAKE_BINARY_DIR}/stl "${VALUE}")
+            string(FIND "${VALUE}" ".so\"" OUT)
+            math(EXPR OUT "${OUT}+4")
+            string(SUBSTRING "${VALUE}" 0 ${OUT} OUTSTR)
+            file(WRITE ${CMAKE_BINARY_DIR}/stl "${OUTSTR}")
         endif()
     endfunction()
     variable_watch(CMAKE_CXX_STANDARD_LIBRARIES havestl)
