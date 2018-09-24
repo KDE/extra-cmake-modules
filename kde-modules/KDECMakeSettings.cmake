@@ -307,7 +307,7 @@ function(_repository_name reponame dir)
         WORKING_DIRECTORY "${dir}")
 
     if(exitCode EQUAL 0)
-        string(REGEX MATCHALL ".+[:\\/]([-A-Za-z\\d]+)(.git)?\\s*" "" ${giturl})
+        string(REGEX MATCHALL ".+[:\\/]([-A-Za-z0-9]+)(.git)?\\s*" "" ${giturl})
         set(${reponame} ${CMAKE_MATCH_1})
     endif()
 
