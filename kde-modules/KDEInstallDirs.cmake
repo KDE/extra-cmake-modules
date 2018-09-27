@@ -428,27 +428,27 @@ endif()
 
 _define_absolute(EXECROOTDIR ""
     "executables and libraries"
-    EXEC_INSTALL_PREFIX)
+    KDE_INSTALL_EXECROOTDIR)
 
 _define_relative(BINDIR EXECROOTDIR "bin"
     "user executables"
-    BIN_INSTALL_DIR)
+    KDE_INSTALL_BINDIR)
 _define_relative(SBINDIR EXECROOTDIR "sbin"
     "system admin executables"
-    SBIN_INSTALL_DIR)
+    KDE_INSTALL_SBINDIR)
 _define_relative(LIBDIR EXECROOTDIR "${_LIBDIR_DEFAULT}"
     "object code libraries"
-    LIB_INSTALL_DIR)
+    KDE_INSTALL_LIBDIR)
 
 if(WIN32)
     _define_relative(LIBEXECDIR BINDIR ""
         "executables for internal use by programs and libraries"
-        LIBEXEC_INSTALL_DIR)
+        KDE_INSTALL_LIBEXECDIR)
     _define_non_cache(LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}")
 else()
     _define_relative(LIBEXECDIR LIBDIR "libexec"
         "executables for internal use by programs and libraries"
-        LIBEXEC_INSTALL_DIR)
+        KDE_INSTALL_LIBEXECDIR)
     _define_non_cache(LIBEXECDIR_KF5 "${CMAKE_INSTALL_LIBEXECDIR}/kf5")
 endif()
 if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
@@ -514,7 +514,7 @@ _define_relative(PLUGINDIR QTPLUGINDIR ""
 
 _define_absolute(INCLUDEDIR "include"
     "C and C++ header files"
-    INCLUDE_INSTALL_DIR)
+    KDE_INSTALL_INCLUDEDIR)
 _define_non_cache(INCLUDEDIR_KF5 "${CMAKE_INSTALL_INCLUDEDIR}/KF5")
 if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
     set(KF5_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR_KF5}")
@@ -531,16 +531,16 @@ _define_absolute(SHAREDSTATEDIR "com"
 if (WIN32)
     _define_relative(DATAROOTDIR BINDIR "data"
         "read-only architecture-independent data root"
-        SHARE_INSTALL_PREFIX)
+        KDE_INSTALL_DATAROOTDIR)
 else()
     _define_absolute(DATAROOTDIR "share"
         "read-only architecture-independent data root"
-        SHARE_INSTALL_PREFIX)
+        KDE_INSTALL_DATAROOTDIR)
 endif()
 
 _define_relative(DATADIR DATAROOTDIR ""
     "read-only architecture-independent data"
-    DATA_INSTALL_DIR)
+    KDE_INSTALL_DATADIR)
 _define_non_cache(DATADIR_KF5 "${CMAKE_INSTALL_DATADIR}/kf5")
 if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
     set(KF5_DATA_INSTALL_DIR "${CMAKE_INSTALL_DATADIR_KF5}")
@@ -561,7 +561,7 @@ endif()
 # KDE Framework-specific things
 _define_relative(DOCBUNDLEDIR DATAROOTDIR "doc/HTML"
     "documentation bundles generated using kdoctools"
-    HTML_INSTALL_DIR)
+    KDE_INSTALL_DOCBUNDLEDIR)
 _define_relative(KCFGDIR DATAROOTDIR "config.kcfg"
     "kconfig description files"
     KCFG_INSTALL_DIR)
@@ -586,13 +586,13 @@ _define_relative(KTEMPLATESDIR DATAROOTDIR "kdevappwizard/templates"
 # Cross-desktop or other system things
 _define_relative(ICONDIR DATAROOTDIR "icons"
     "icons"
-    ICON_INSTALL_DIR)
+    KDE_INSTALL_ICONDIR)
 _define_relative(LOCALEDIR DATAROOTDIR "locale"
     "knotify description files"
-    LOCALE_INSTALL_DIR)
+    KDE_INSTALL_LOCALEDIR)
 _define_relative(SOUNDDIR DATAROOTDIR "sounds"
     "sound files"
-    SOUND_INSTALL_DIR)
+    KDE_INSTALL_SOUNDDIR)
 _define_relative(TEMPLATEDIR DATAROOTDIR "templates"
     "templates"
     TEMPLATES_INSTALL_DIR)
@@ -614,7 +614,7 @@ _define_relative(QCHDIR DATAROOTDIR "doc/qch"
     "documentation bundles in QCH format")
 _define_relative(MANDIR DATAROOTDIR "man"
     "man documentation"
-    MAN_INSTALL_DIR)
+    KDE_INSTALL_MANDIR)
 _define_relative(INFODIR DATAROOTDIR "info"
     "info documentation")
 _define_relative(DBUSDIR DATAROOTDIR "dbus-1"
@@ -640,7 +640,7 @@ endif()
 
 _define_absolute(SYSCONFDIR "${_default_sysconf_dir}"
     "read-only single-machine data"
-    SYSCONF_INSTALL_DIR)
+    KDE_INSTALL_SYSCONFDIR)
 _define_relative(CONFDIR SYSCONFDIR "xdg"
     "application configuration files"
     CONFIG_INSTALL_DIR)
