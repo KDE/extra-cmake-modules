@@ -207,7 +207,7 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk")
             message(FATAL_ERROR "Cannot find ${APK_DIR}/AndroidManifest.xml according to ANDROID_APK_DIR. ${ANDROID_APK_DIR} ${exportedTarget}")
         elseif(NOT APK_DIR)
             get_filename_component(_qt5Core_install_prefix "${Qt5Core_DIR}/../../../" ABSOLUTE)
-            set(ANDROID_APK_DIR "${_qt5Core_install_prefix}/src/android/templates/")
+            set(APK_DIR "${_qt5Core_install_prefix}/src/android/templates/")
         endif()
 
         ecm_androiddeployqt("${exportedTarget}" "${ECM_ADDITIONAL_FIND_ROOT_PATH}")
