@@ -288,7 +288,7 @@ endfunction()
 
 function(ecm_generate_python_binding)
 
-    set(oneValueArgs TARGET PYTHONNAMESPACE MODULENAME RULES_FILE INSTALL_DIR_SUFFIX)
+    set(oneValueArgs TARGET PYTHONNAMESPACE MODULENAME RULES_FILE)
     set(multiValueArgs SIP_DEPENDS SIP_INCLUDES HEADERS)
 
     cmake_parse_arguments(GPB "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -323,10 +323,6 @@ function(ecm_generate_python_binding)
 
     if (NOT GPB_RULES_FILE)
       set(GPB_RULES_FILE "${GPB_MODULE_DIR}/Qt5Ruleset.py")
-    endif()
-
-    if (NOT GPB_INSTALL_DIR_SUFFIX)
-      set(GPB_INSTALL_DIR_SUFFIX site-packages)
     endif()
 
     list(APPEND generator_depends ${GPB_RULES_FILE})
@@ -446,7 +442,7 @@ headers = sipAPI${GPB_MODULENAME}
             OUTPUT_NAME "${GPB_MODULENAME}")
 
         if (GPB_SIP_DEPENDS MATCHES PyKF5)
-          set(_kf5_python_prefix ${CMAKE_INSTALL_PREFIX}/lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
+          set(_kf5_python_prefix ${CMAKE_INSTALL_PREFIX}/lib/python${pyversion${pyversion}_maj_min}/site-packages)
         else()
           set(_kf5_python_prefix ${CMAKE_BINARY_DIR}/py${pyversion})
         endif()
@@ -456,7 +452,7 @@ headers = sipAPI${GPB_MODULENAME}
         )
 
         install(DIRECTORY ${CMAKE_BINARY_DIR}/py${pyversion}/${GPB_PYTHONNAMESPACE}
-            DESTINATION lib/python${pyversion${pyversion}_maj_min}/${GPB_INSTALL_DIR_SUFFIX})
+            DESTINATION lib/python${pyversion${pyversion}_maj_min}/site-packages)
         install(FILES ${sip_files} "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/${GPB_MODULENAME}mod.sip"
           DESTINATION share/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}
         )
