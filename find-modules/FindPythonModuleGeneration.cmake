@@ -36,6 +36,24 @@
 #
 #   import PyKF5.MyTarget
 #
+# Inclusion of this module defines the following variables:
+#
+# ``KDE_INSTALL_PYTHON2DIR``, ``KDE_INSTALL_PYTHON3DIR``
+#     destination for generated bindings
+# ``KDE_INSTALL_FULL_PYTHON2DIR``, ``KDE_INSTALL_FULL_PYTHON3DIR``
+#     corresponding absolute path
+#
+# If ``KDE_INSTALL_USE_PYTHON2_SYS_PATHS`` is set to TRUE before including this
+# module, the default value for ``KDE_INSTALL_PYTHON2DIR`` is instead queried from
+# pythons distutil.sysconfig.get_python_lib().
+# If not set, it will default to TRUE if pythons ``sysconfig.PREFIX`` is the same
+# as ``CMAKE_INSTALL_PREFIX``, otherwise it defaults to FALSE.
+# This variable should NOT be set from within CMakeLists.txt files, instead it
+# is intended to be set manually when configuring a project which uses this
+# module (e.g. by packagers).
+#
+# Likewise for ``KDE_INSTALL_USE_PYTHON3_SYS_PATHS`` and ``KDE_INSTALL_PYTHON3DIR``.
+#
 
 #=============================================================================
 # Copyright 2016 Stephen Kelly <steveire@gmail.com>
@@ -132,6 +150,21 @@ macro(_create_imported_python_target version)
     add_library(Python::Libs${version} UNKNOWN IMPORTED)
     set_property(TARGET Python::Libs${version} PROPERTY IMPORTED_LOCATION ${GPB_PYTHON${version}_LIBRARY})
     set_property(TARGET Python::Libs${version} PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${GPB_PYTHON${version}_INCLUDE_DIR})
+
+    set(_default_KDE_INSTALL_USE_PYTHON${version}_SYS_PATHS OFF)
+    if(NOT DEFINED KDE_INSTALL_USE_PYTHON${version}_SYS_PATHS)
+      execute_process (
+        COMMAND "${GPB_PYTHON${version}_COMMAND}" -c "import sys; from distutils import sysconfig;sys.stdout.write(sysconfig.PREFIX)"
+        OUTPUT_VARIABLE gpb_python${version}_prefix
+      )
+      if(gpb_python${version}_prefix STREQUAL "${CMAKE_INSTALL_PREFIX}")
+        message(STATUS "Installing in the same prefix as Python${version}, adopting their path scheme.")
+        set(_default_KDE_INSTALL_USE_PYTHON${version}_SYS_PATHS ON)
+      else()
+        message(STATUS "NOT installing in the same prefix as Python${version}.")
+      endif()
+    endif()
+
   endif()
 endmacro()
 
@@ -176,9 +209,38 @@ _create_imported_python_target(3)
 _find_python(2 7)
 _create_imported_python_target(2)
 
+option (KDE_INSTALL_USE_PYTHON3_SYS_PATHS "Install Python3 bindings to the Python3 install dir"
+        "${_default_KDE_INSTALL_USE_PYTHON3_SYS_PATHS}")
+option (KDE_INSTALL_USE_PYTHON2_SYS_PATHS "Install Python2 bindings to the Python2 install dir"
+        "${_default_KDE_INSTALL_USE_PYTHON2_SYS_PATHS}")
+
 if (NOT _pyversions)
   _report_NOT_FOUND("At least one python version must be available to use ${CMAKE_FIND_PACKAGE_NAME}.")
 endif()
+
+foreach(pyversion ${_pyversions})
+
+  if(KDE_INSTALL_PYTHON${pyversion}DIR)
+     # Use dir from command line
+
+  elseif(KDE_INSTALL_USE_PYTHON${pyversion}_SYS_PATHS)
+    execute_process (
+      COMMAND "${GPB_PYTHON${pyversion}_COMMAND}" -c "import sys; from distutils import sysconfig;sys.stdout.write(sysconfig.get_python_lib(plat_specific=True,standard_lib=False))"
+      OUTPUT_VARIABLE KDE_INSTALL_PYTHON${pyversion}DIR
+    )
+
+  else()
+    set(KDE_INSTALL_PYTHON${pyversion}DIR lib/python${pyversion${pyversion}_maj_min}/site-packages)
+  endif()
+
+  if(NOT IS_ABSOLUTE ${KDE_INSTALL_PYTHON${pyversion}DIR})
+    set(KDE_INSTALL_FULL_PYTHON${pyversion}DIR
+        "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_PYTHON${pyversion}DIR}")
+  else()
+    set(KDE_INSTALL_FULL_PYTHON${pyversion}DIR "${KDE_INSTALL_PYTHON${pyversion}DIR}")
+  endif()
+
+endforeach()
 
 find_program(GBP_SIP_COMMAND sip)
 
@@ -419,6 +481,7 @@ headers = sipAPI${GPB_MODULENAME}
 
     foreach(pyversion ${_pyversions})
         message(STATUS "Found dependencies for python${pyversion}, generating bindings")
+        message(STATUS "Python${pyversion} install dir: ${KDE_INSTALL_FULL_PYTHON${pyversion}DIR}")
 
         execute_process(COMMAND "${CMAKE_COMMAND}"
           "-DPYTHON_UMBRELLA_MODULE_FILE=${CMAKE_BINARY_DIR}/py${pyversion}/${GPB_PYTHONNAMESPACE}/__init__.py"
@@ -442,7 +505,7 @@ headers = sipAPI${GPB_MODULENAME}
             OUTPUT_NAME "${GPB_MODULENAME}")
 
         if (GPB_SIP_DEPENDS MATCHES PyKF5)
-          set(_kf5_python_prefix ${CMAKE_INSTALL_PREFIX}/lib/python${pyversion${pyversion}_maj_min}/site-packages)
+          set(_kf5_python_prefix ${KDE_INSTALL_FULL_PYTHON${pyversion}DIR})
         else()
           set(_kf5_python_prefix ${CMAKE_BINARY_DIR}/py${pyversion})
         endif()
@@ -452,7 +515,7 @@ headers = sipAPI${GPB_MODULENAME}
         )
 
         install(DIRECTORY ${CMAKE_BINARY_DIR}/py${pyversion}/${GPB_PYTHONNAMESPACE}
-            DESTINATION lib/python${pyversion${pyversion}_maj_min}/site-packages)
+          DESTINATION ${KDE_INSTALL_PYTHON${pyversion}DIR})
         install(FILES ${sip_files} "${CMAKE_CURRENT_BINARY_DIR}/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/${GPB_MODULENAME}mod.sip"
           DESTINATION share/sip/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}
         )
