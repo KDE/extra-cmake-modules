@@ -254,20 +254,6 @@ if(NOT SIP_Qt5Core_Mod_FILE)
   _report_NOT_FOUND("PyQt module files not found for the ${CMAKE_FIND_PACKAGE_NAME} Module.")
 endif()
 
-file(STRINGS "${SIP_Qt5Core_Mod_FILE}" _SIP_Qt5_VERSIONS
-  REGEX "^%Timeline"
-)
-
-string(REGEX MATCHALL "Qt_5_[^ }]+" _SIP_Qt5_VERSIONS "${_SIP_Qt5_VERSIONS}")
-
-set(GPB_Qt5_Tag Qt_5_${Qt5Core_VERSION_MINOR}_${Qt5Core_VERSION_PATCH})
-
-list(FIND _SIP_Qt5_VERSIONS ${GPB_Qt5_Tag} _SIP_Qt5_Version_Index)
-
-if(_SIP_Qt5_Version_Index EQUAL -1)
-  _report_NOT_FOUND("PyQt module \"${SIP_Qt5Core_Mod_FILE}\" does not support Qt version 5.${Qt5Core_VERSION_MINOR}.${Qt5Core_VERSION_PATCH} for the ${CMAKE_FIND_PACKAGE_NAME} Module. Found available Qt5 tags: \"${_SIP_Qt5_VERSIONS}\".")
-endif()
-
 set(PythonModuleGeneration_FOUND TRUE)
 
 include(CMakeParseArguments)
@@ -411,14 +397,6 @@ headers = sipAPI${GPB_MODULENAME}
       endif()
     endforeach()
 
-    if (WIN32)
-      set(GPB_WS_Tag -t WS_WIN)
-    elif(APPLE)
-      set(GPB_WS_Tag -t WS_MACX)
-    else()
-      set(GPB_WS_Tag -t WS_X11)
-    endif()
-
     add_custom_target(generate_${GPB_MODULENAME}_sip_files ALL DEPENDS ${sip_files})
 
     add_custom_command(OUTPUT
@@ -428,7 +406,6 @@ headers = sipAPI${GPB_MODULENAME}
        --module-name "${GPB_MODULENAME}"
        -c "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}"
        -b "${CMAKE_CURRENT_BINARY_DIR}/pybuild/${GPB_PYTHONNAMESPACE}/${GPB_MODULENAME}/module.sbf"
-       -t ${GPB_Qt5_Tag} ${GPB_WS_Tag}
 
        -x VendorID -x Py_v3
 

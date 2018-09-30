@@ -6,6 +6,9 @@ import subprocess
 
 sipArgs = sys.argv[1:]
 
+from PyQt5.Qt import PYQT_CONFIGURATION
+sipArgs = PYQT_CONFIGURATION["sip_flags"].split(' ') + sipArgs
+
 idx = sipArgs.index("--module-name")
 modname = sipArgs[idx + 1]
 del sipArgs[idx]
