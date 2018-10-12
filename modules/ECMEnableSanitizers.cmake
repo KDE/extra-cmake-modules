@@ -40,6 +40,7 @@
 # - thread
 # - leak
 # - undefined
+# - fuzzer
 #
 # The sanitizers "address", "memory" and "thread" are mutually exclusive.  You
 # cannot enable two of them in the same build.
@@ -140,6 +141,9 @@ macro (enable_sanitizer_flags sanitize_option)
     elseif (${sanitize_option} MATCHES "undefined")
         check_compiler_version("4.9" "3.1")
         set(XSAN_COMPILE_FLAGS "-fsanitize=undefined -fno-omit-frame-pointer -fno-optimize-sibling-calls")
+    elseif (${sanitize_option} MATCHES "fuzzer")
+        check_compiler_version("99.99" "6.0")
+        set(XSAN_COMPILE_FLAGS "-fsanitize=fuzzer")
     else ()
         message(FATAL_ERROR "Compiler sanitizer option \"${sanitize_option}\" not supported.")
     endif ()
