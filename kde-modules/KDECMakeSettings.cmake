@@ -289,7 +289,7 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
 
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     option(ENABLE_CLAZY "Enable Clazy warnings" OFF)
 
     if(ENABLE_CLAZY)
