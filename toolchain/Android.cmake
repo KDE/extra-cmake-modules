@@ -42,12 +42,6 @@
 #
 # Additional options are specified as cache variables (eg: on the command line):
 #
-# ``ANDROID_TOOLCHAIN``
-#     The toolchain to use. See the ``toolchains`` directory of the NDK.
-#     Default: ``arm-linux-androideabi``.
-# ``ANDROID_COMPILER_PREFIX``
-#     The prefix for the gcc and g++ executables. See the ``toolchains/$ANDROID_TOOLCHAIN/prebuilt/*/bin/*-gcc`` in the NDK.
-#     Default: ``arm-linux-androideabi``.
 # ``ANDROID_ABI``
 #     The ABI to use. See the ``sources/cxx-stl/gnu-libstdc++/*/libs``
 #     directories in the NDK. Default: ``armeabi-v7a``.
@@ -156,8 +150,6 @@ set_deprecated_variable(CMAKE_ANDROID_ARCH_ABI ANDROID_ABI "armeabi-v7a")
 set_deprecated_variable(CMAKE_ANDROID_API ANDROID_API_LEVEL "14")
 
 set(ANDROID_SDK_ROOT "$ENV{ANDROID_SDK_ROOT}" CACHE path "Android SDK path")
-set(ANDROID_TOOLCHAIN "arm-linux-androideabi" CACHE string "Used SDK")
-set(ANDROID_COMPILER_PREFIX "arm-linux-androideabi" CACHE string "Prefix for gcc/g++/etc")
 
 file(GLOB build-tools LIST_DIRECTORIES TRUE RELATIVE ${ANDROID_SDK_ROOT}/build-tools ${ANDROID_SDK_ROOT}/build-tools/*)
 list(GET build-tools 0 _default_sdk)

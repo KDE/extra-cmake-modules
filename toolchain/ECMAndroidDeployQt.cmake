@@ -44,7 +44,13 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
             file(WRITE ${CMAKE_BINARY_DIR}/stl "${OUTSTR}")
         endif()
     endfunction()
+    function(haveranlib var access VALUE)
+        if (NOT VALUE STREQUAL "")
+            file(WRITE ${CMAKE_BINARY_DIR}/ranlib "${VALUE}")
+        endif()
+    endfunction()
     variable_watch(CMAKE_CXX_STANDARD_LIBRARIES havestl)
+    variable_watch(CMAKE_RANLIB haveranlib)
 
     if (NOT TARGET create-apk)
         add_custom_target(create-apk)
