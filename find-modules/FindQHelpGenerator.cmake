@@ -33,7 +33,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-find_package(Qt5Core QUIET)
+find_package(Qt5Help QUIET)
 if (TARGET Qt5::qhelpgenerator)
     get_target_property(QHelpGenerator_EXECUTABLE Qt5::qhelpgenerator LOCATION)
 else()
