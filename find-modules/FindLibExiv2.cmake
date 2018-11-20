@@ -1,34 +1,33 @@
 #.rst:
-# FindExiv2
-# ---------
+# FindLibExiv2
+# ------------
 #
 # Try to find the Exiv2 library.
 #
 # This will define the following variables:
 #
-# ``Exiv2_FOUND``
-#     System has Exiv2.
+# ``LibExiv2_FOUND``
+#     System has LibExiv2.
 #
-# ``Exiv2_VERSION``
-#     The version of Exiv2.
+# ``LibExiv2_VERSION``
+#     The version of LibExiv2.
 #
-# ``Exiv2_INCLUDE_DIRS``
+# ``LibExiv2_INCLUDE_DIRS``
 #     This should be passed to target_include_directories() if
 #     the target is not used for linking.
 #
-# ``Exiv2_LIBRARIES``
-#     The Exiv2 library.
+# ``LibExiv2_LIBRARIES``
+#     The LibExiv2 library.
 #     This can be passed to target_link_libraries() instead of
-#     the ``Exiv2::Exiv2`` target
+#     the ``LibExiv2::LibExiv2`` target
 #
-# If ``Exiv2_FOUND`` is TRUE, the following imported target
+# If ``LibExiv2_FOUND`` is TRUE, the following imported target
 # will be available:
 #
-# ``Exiv2::Exiv2``
+# ``LibExiv2::LibExiv2``
 #     The Exiv2 library
 #
 # Since 5.53.0.
-# TODO KF6: Rename to FindLibExiv2.cmake
 #
 #=============================================================================
 # Copyright (c) 2018, Christophe Giboudeaux, <christophe@krop.fr>
@@ -63,21 +62,21 @@
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_EXIV2 QUIET exiv2)
 
-find_path(Exiv2_INCLUDE_DIRS NAMES exiv2/exif.hpp
+find_path(LibExiv2_INCLUDE_DIRS NAMES exiv2/exif.hpp
     HINTS ${PC_EXIV2_INCLUDEDIR}
 )
 
-find_library(Exiv2_LIBRARIES NAMES exiv2 libexiv2
+find_library(LibExiv2_LIBRARIES NAMES exiv2 libexiv2
     HINTS ${PC_EXIV2_LIBRARY_DIRS}
 )
 
-set(Exiv2_VERSION ${PC_EXIV2_VERSION})
+set(LibExiv2_VERSION ${PC_EXIV2_VERSION})
 
-if(NOT Exiv2_VERSION AND DEFINED Exiv2_INCLUDE_DIRS)
+if(NOT LibExiv2_VERSION AND DEFINED LibExiv2_INCLUDE_DIRS)
     # With exiv >= 0.27, the version #defines are in exv_conf.h instead of version.hpp
     foreach(_exiv2_version_file "version.hpp" "exv_conf.h")
-        if(EXISTS "${Exiv2_INCLUDE_DIRS}/exiv2/${_exiv2_version_file}")
-            file(READ "${Exiv2_INCLUDE_DIRS}/exiv2/${_exiv2_version_file}" _exiv_version_file_content)
+        if(EXISTS "${LibExiv2_INCLUDE_DIRS}/exiv2/${_exiv2_version_file}")
+            file(READ "${LibExiv2_INCLUDE_DIRS}/exiv2/${_exiv2_version_file}" _exiv_version_file_content)
             string(REGEX MATCH "#define EXIV2_MAJOR_VERSION[ ]+\\([0-9]+\\)" EXIV2_MAJOR_VERSION_MATCH ${_exiv_version_file_content})
             string(REGEX MATCH "#define EXIV2_MINOR_VERSION[ ]+\\([0-9]+\\)" EXIV2_MINOR_VERSION_MATCH ${_exiv_version_file_content})
             string(REGEX MATCH "#define EXIV2_PATCH_VERSION[ ]+\\([0-9]+\\)" EXIV2_PATCH_VERSION_MATCH ${_exiv_version_file_content})
@@ -89,33 +88,28 @@ if(NOT Exiv2_VERSION AND DEFINED Exiv2_INCLUDE_DIRS)
         endif()
     endforeach()
 
-    set(Exiv2_VERSION "${EXIV2_MAJOR_VERSION}.${EXIV2_MINOR_VERSION}.${EXIV2_PATCH_VERSION}")
+    set(LibExiv2_VERSION "${EXIV2_MAJOR_VERSION}.${EXIV2_MINOR_VERSION}.${EXIV2_PATCH_VERSION}")
 endif()
 
-# Deprecated, for backward compatibility
-set(EXIV2_INCLUDE_DIR "${Exiv2_INCLUDE_DIRS}")
-set(EXIV2_LIBRARIES "${Exiv2_LIBRARIES}")
-set(EXIV2_VERSION "${Exiv2_VERSION}")
-
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Exiv2
-    FOUND_VAR Exiv2_FOUND
-    REQUIRED_VARS  Exiv2_LIBRARIES Exiv2_INCLUDE_DIRS
-    VERSION_VAR  Exiv2_VERSION
+find_package_handle_standard_args(LibExiv2
+    FOUND_VAR LibExiv2_FOUND
+    REQUIRED_VARS  LibExiv2_LIBRARIES LibExiv2_INCLUDE_DIRS
+    VERSION_VAR  LibExiv2_VERSION
 )
 
-mark_as_advanced(Exiv2_INCLUDE_DIRS Exiv2_LIBRARIES)
+mark_as_advanced(LibExiv2_INCLUDE_DIRS LibExiv2_LIBRARIES)
 
-if(Exiv2_FOUND AND NOT TARGET Exiv2::Exiv2)
-    add_library(Exiv2::Exiv2 UNKNOWN IMPORTED)
-    set_target_properties(Exiv2::Exiv2 PROPERTIES
-        IMPORTED_LOCATION "${Exiv2_LIBRARIES}"
-        INTERFACE_INCLUDE_DIRECTORIES "${Exiv2_INCLUDE_DIRS}"
+if(LibExiv2_FOUND AND NOT TARGET LibExiv2::LibExiv2)
+    add_library(LibExiv2::LibExiv2 UNKNOWN IMPORTED)
+    set_target_properties(LibExiv2::LibExiv2 PROPERTIES
+        IMPORTED_LOCATION "${LibExiv2_LIBRARIES}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LibExiv2_INCLUDE_DIRS}"
     )
 endif()
 
 include(FeatureSummary)
-set_package_properties(Exiv2 PROPERTIES
+set_package_properties(LibExiv2 PROPERTIES
     URL "http://www.exiv2.org"
     DESCRIPTION "Image metadata support"
 )
