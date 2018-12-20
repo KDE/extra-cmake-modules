@@ -72,7 +72,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-   if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0.1")
+   if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0.0")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant" )
    endif()
 endif()
