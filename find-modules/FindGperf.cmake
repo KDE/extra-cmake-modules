@@ -121,6 +121,7 @@ function(ecm_gperf_generate input_file output_file out_var)
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         VERBATIM
     )
+    set_property(SOURCE ${output_file} PROPERTY SKIP_AUTOMOC ON)
 
     list(APPEND ${out_var} "${output_file}")
     set(${out_var} ${${out_var}} PARENT_SCOPE)
