@@ -1,4 +1,4 @@
-#.rest:
+#.rst:
 # FindInotify
 # --------------
 #
@@ -19,6 +19,8 @@
 # even though Inotify_FOUND may be set to TRUE. This is because
 # no special includes or libraries are needed. On other systems
 # these may be needed to use inotify.
+#
+# Since 5.32.0.
 
 #=============================================================================
 # Copyright 2016 Tobias C. Berner <tcberner@FreeBSD.org>
