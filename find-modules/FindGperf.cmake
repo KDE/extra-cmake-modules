@@ -35,6 +35,8 @@
 #
 # A simple invocation would be:
 #
+# .. code-block:: cmake
+#
 #   ecm_gperf_generate(simple.gperf ${CMAKE_CURRENT_BINARY_DIR}/simple.h MySources)
 #
 # Since 5.35.0.
