@@ -1,6 +1,6 @@
 #.rst:
 # ECMGenerateQmlTypes
-# -----------
+# -------------------
 #
 # Generates plugins.qmltypes files for QML plugins.
 #
