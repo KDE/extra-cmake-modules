@@ -196,6 +196,6 @@ find_package_handle_standard_args(XCB
 
 include(FeatureSummary)
 set_package_properties(XCB PROPERTIES
-    URL "http://xcb.freedesktop.org"
+    URL "https://xcb.freedesktop.org/"
     DESCRIPTION "X protocol C-language Binding"
 )

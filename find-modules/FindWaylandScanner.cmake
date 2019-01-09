@@ -103,7 +103,7 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(WaylandScanner PROPERTIES
-    URL "http://wayland.freedesktop.org"
+    URL "https://wayland.freedesktop.org/"
     DESCRIPTION "Executable that converts XML protocol files to C code"
 )
 

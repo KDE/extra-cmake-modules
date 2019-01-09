@@ -110,5 +110,5 @@ endfunction()
 
 include(FeatureSummary)
 set_package_properties(SharedMimeInfo PROPERTIES
-    URL http://freedesktop.org/wiki/Software/shared-mime-info/
+    URL https://freedesktop.org/wiki/Software/shared-mime-info/
     DESCRIPTION "A database of common MIME types")

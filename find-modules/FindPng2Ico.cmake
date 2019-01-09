@@ -26,16 +26,16 @@
 #
 # ``Png2Ico_HAS_COLORS_ARGUMENT``
 #     Whether png2ico accepts a ``--colors`` argument. `Matthias Benkmann's
-#     tool <http://www.winterdrache.de/freeware/png2ico/>`_ does, while the
+#     tool <https://www.winterdrache.de/freeware/png2ico/>`_ does, while the
 #     version of png2ico from the `"KDE On Windows" (kdewin)
-#     <https://projects.kde.org/projects/kdesupport/kdewin>`_ project does not.
+#     <https://commits.kde.org/kdewin>`_ project does not.
 #
 # ``Png2Ico_HAS_RCFILE_ARGUMENT``
 #     Whether png2ico accepts an ``--rcfile`` argument. The version of png2ico
 #     from the `"KDE On Windows" (kdewin)
-#     <https://projects.kde.org/projects/kdesupport/kdewin>`_ project does,
+#     <https://commits.kde.org/kdewin>`_ project does,
 #     while `Matthias Benkmann's tool
-#     <http://www.winterdrache.de/freeware/png2ico/>`_ does not.
+#     <https://www.winterdrache.de/freeware/png2ico/>`_ does not.
 #
 # Since 1.7.0.
 
@@ -111,7 +111,7 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(Png2Ico PROPERTIES
-    URL "http://www.winterdrache.de/freeware/png2ico/ or https://projects.kde.org/projects/kdesupport/kdewin"
+    URL "https://www.winterdrache.de/freeware/png2ico/ or https://commits.kde.org/kdewin"
     DESCRIPTION "Executable that converts a collection of PNG files into a Windows icon file"
 )
 

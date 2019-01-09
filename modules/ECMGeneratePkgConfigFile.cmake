@@ -2,9 +2,9 @@
 # ECMGeneratePkgConfigFile
 # ------------------------
 #
-# Generate a `pkg-config <http://www.freedesktop.org/wiki/Software/pkg-config/>`_
+# Generate a `pkg-config <https://www.freedesktop.org/wiki/Software/pkg-config/>`_
 # file for the benefit of
-# `autotools <http://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html>`_-based
+# `autotools <https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html>`_-based
 # projects.
 #
 # ::

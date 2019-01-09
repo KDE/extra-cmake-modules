@@ -147,5 +147,5 @@ find_package_handle_standard_args(Poppler
 include(FeatureSummary)
 set_package_properties(Poppler PROPERTIES
     DESCRIPTION "A PDF rendering library"
-    URL "http://poppler.freedesktop.org"
+    URL "https://poppler.freedesktop.org/"
 )

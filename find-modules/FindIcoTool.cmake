@@ -75,6 +75,6 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(IcoTool PROPERTIES
-    URL "http://www.nongnu.org/icoutils/"
+    URL "https://www.nongnu.org/icoutils/"
     DESCRIPTION "Executable that converts a collection of PNG files into a Windows icon file"
 )

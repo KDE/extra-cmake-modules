@@ -114,7 +114,7 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(QtWaylandScanner PROPERTIES
-    URL "http://qt.io"
+    URL "https://qt.io/"
     DESCRIPTION "Executable that converts XML protocol files to C++ code"
 )
 

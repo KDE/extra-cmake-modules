@@ -6,7 +6,7 @@
 #
 # ``write_basic_package_version_file()`` is the same as the one provided by the
 # `CMakePackageConfigHelpers
-# <http://www.cmake.org/cmake/help/v2.8.12/cmake.html#module:CMakePackageConfigHelpers>`_
+# <https://www.cmake.org/cmake/help/v2.8.12/cmake.html#module:CMakePackageConfigHelpers>`_
 # module in CMake; see that module's documentation for
 # more information.
 #
@@ -23,7 +23,7 @@
 # 2.8.12, except that it adds an extra helper macro: find_dependency(). It is
 # highly recommended that you read the `documentation for
 # CMakePackageConfigHelpers
-# <http://www.cmake.org/cmake/help/v2.8.12/cmake.html#module:CMakePackageConfigHelpers>`_
+# <https://www.cmake.org/cmake/help/v2.8.12/cmake.html#module:CMakePackageConfigHelpers>`_
 # for more information, particularly with regard to the PATH_VARS argument.
 #
 # Note that there is no argument that will disable the find_dependency() macro;

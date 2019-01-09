@@ -196,13 +196,13 @@ ALIASES                = "intern=\par<b>Internal use only.</b>" \
                          "FIXME=\xrefitem fixme \"Fixme\" \"Fixme\"" \
                          "bc=\xrefitem bc \"Binary Compatible\" \"Binary Compatible\"" \
                          "threadsafe=\xrefitem threadsafe \"Threadsafe\" \"Threadsafe\"" \
-                         "artistic=<a href=\"http://www.opensource.org/licenses/artistic-license.php\">Artistic</a>" \
-                         "bsd=<a href=\"http://www.xfree86.org/3.3.6/COPYRIGHT2.html#5\">BSD</a>" \
-                         "x11=<a href=\"http://www.xfree86.org/3.3.6/COPYRIGHT2.html#3\">X11</a>" \
-                         "gpl=<a href=\"http://www.gnu.org/licenses/old-licenses/gpl-2.0.html#SEC1\">GPLv2</a>" \
-                         "lgpl=<a href=\"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC1\">LGPLv2</a>" \
-                         "mit=<a href=\"http://www.opensource.org/licenses/mit-license.php\">MIT</a>" \
-                         "qpl=<a href=\"http://doc.trolltech.com/3.0/license.html\">QPL</a>"
+                         "artistic=<a href=\"https://opensource.org/licenses/artistic-license.php\">Artistic</a>" \
+                         "bsd=<a href=\"https://www.xfree86.org/3.3.6/COPYRIGHT2.html#5\">BSD</a>" \
+                         "x11=<a href=\"https://www.xfree86.org/3.3.6/COPYRIGHT2.html#3\">X11</a>" \
+                         "gpl=<a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html#SEC1\">GPLv2</a>" \
+                         "lgpl=<a href=\"https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html#SEC1\">LGPLv2</a>" \
+                         "mit=<a href=\"https://www.opensource.org/licenses/mit-license.php\">MIT</a>" \
+                         "qpl=<a href=\"https://opensource.org/licenses/QPL-1.0\">QPL</a>"
 
 PREDEFINED = DOXYGEN_SHOULD_SKIP_THIS \
 \

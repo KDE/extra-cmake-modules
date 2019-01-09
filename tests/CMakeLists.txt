@@ -36,7 +36,7 @@ find_package(Qt5LinguistTools CONFIG)
 set_package_properties(
     Qt5LinguistTools
     PROPERTIES
-        URL "http://www.qt.io/"
+        URL "https://www.qt.io/"
         DESCRIPTION "Qt5 linguist tools."
         TYPE OPTIONAL
         PURPOSE "Required to run tests for the ECMPoQmTools module."
@@ -46,7 +46,7 @@ find_package(Qt5Core CONFIG)
 set_package_properties(
     Qt5Core
     PROPERTIES
-        URL "http://www.qt.io/"
+        URL "https://www.qt.io/"
         DESCRIPTION "Qt5 core library."
         TYPE OPTIONAL
         PURPOSE "Required to run tests for the ECMQtDeclareLoggingCategory module, and for some tests of the KDEInstallDirs module."
@@ -213,7 +213,7 @@ find_package(Qt5Quick CONFIG)
 set_package_properties(
     Qt5Quick
     PROPERTIES
-        URL "http://www.qt.io/"
+        URL "https://www.qt.io/"
         DESCRIPTION "Qt5 Quick library."
         TYPE OPTIONAL
         PURPOSE "Required to run tests for the ECMQMLModules module."

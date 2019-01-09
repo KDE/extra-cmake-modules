@@ -96,7 +96,7 @@
 #
 # NAMESPACE can be used to set a custom namespace <namespace> of the generated
 # QCH file. The namepspace is used as the unique id by QHelpEngine (cmp.
-# http://doc.qt.io/qt-5/qthelpproject.html#namespace).
+# https://doc.qt.io/qt-5/qthelpproject.html#namespace).
 # The default namespace is ``<domain>.<name>``.
 # Needs to be used when ORG_DOMAIN is not used.
 #

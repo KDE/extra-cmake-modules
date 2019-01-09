@@ -240,7 +240,7 @@ set(_LIBDIR_DEFAULT "lib")
 # reason is: amd64 ABI: http://www.x86-64.org/documentation/abi.pdf
 # For Debian with multiarch, use 'lib/${CMAKE_LIBRARY_ARCHITECTURE}' if
 # CMAKE_LIBRARY_ARCHITECTURE is set (which contains e.g. "i386-linux-gnu"
-# See http://wiki.debian.org/Multiarch
+# See https://wiki.debian.org/Multiarch
 if((CMAKE_SYSTEM_NAME MATCHES "Linux|kFreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "GNU")
    AND NOT CMAKE_CROSSCOMPILING
    AND NOT DEFINED ENV{FLATPAK_ID})

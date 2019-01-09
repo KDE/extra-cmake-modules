@@ -113,6 +113,6 @@ set(X11_XCB_VERSION_STRING ${X11_XCB_VERSION})
 
 include(FeatureSummary)
 set_package_properties(X11_XCB PROPERTIES
-    URL "http://xorg.freedesktop.org/"
+    URL "https://xorg.freedesktop.org/"
     DESCRIPTION "A compatibility library for code that translates Xlib API calls into XCB calls"
 )

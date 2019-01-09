@@ -42,7 +42,7 @@ find_package(QCollectionGenerator MODULE)
 set_package_properties(
     QCollectionGenerator
     PROPERTIES
-        URL "http://www.qt.io/"
+        URL "https://www.qt.io/"
         DESCRIPTION "Qt help collection generator."
         TYPE OPTIONAL
         PURPOSE "Required to build Extra CMake Modules documentation in Qt Help format."

@@ -224,7 +224,7 @@ as the version of the whole package.  After that, finish off with
 
   include(FeatureSummary)
   set_package_properties(Foo PROPERTIES
-      URL "http://www.foo.example.com/"
+      URL "https://www.foo.example.com/"
       DESCRIPTION "A library for doing useful things")
 
 
@@ -241,4 +241,4 @@ https://mail.kde.org/mailman/listinfo/kde-buildsystem\ .
 
 
 .. _KDE Review Board instance: https://git.reviewboard.kde.org/
-.. _cmake-developer(7): http://www.cmake.org/cmake/help/git-master/manual/cmake-developer.7.html
+.. _cmake-developer(7): https://www.cmake.org/cmake/help/git-master/manual/cmake-developer.7.html

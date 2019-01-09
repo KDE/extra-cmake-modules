@@ -96,7 +96,7 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(Gperf PROPERTIES
-    URL "http://www.gnu.org/software/gperf/"
+    URL "https://www.gnu.org/software/gperf/"
     DESCRIPTION "Perfect hash function generator"
 )
 
