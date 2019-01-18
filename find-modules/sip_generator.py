@@ -39,7 +39,7 @@ import re
 import sys
 import traceback
 from clang import cindex
-from clang.cindex import AccessSpecifier, CursorKind, SourceRange, StorageClass, TokenKind, TypeKind, TranslationUnit
+from clang.cindex import AccessSpecifier, AvailabilityKind, CursorKind, SourceRange, StorageClass, TokenKind, TypeKind, TranslationUnit
 
 import rules_engine
 
@@ -210,6 +210,7 @@ class SipGenerator(object):
         base_specifiers = []
         template_type_parameters = []
         had_copy_constructor = False
+        had_deleted_copy_constructor = False;
         had_const_member = False
         for member in container.get_children():
             #
@@ -291,7 +292,13 @@ class SipGenerator(object):
                     numParams += 1
                 return numParams == 0
 
-            had_copy_constructor = had_copy_constructor or is_copy_constructor(member)
+            if is_copy_constructor(member):
+                had_copy_constructor = True
+                # We need to generate a fake private copy constructor for deleted constructors
+                if member.availability == AvailabilityKind.NOT_AVAILABLE and member.access_specifier != AccessSpecifier.PRIVATE:
+                    had_deleted_copy_constructor = True
+                    continue
+
             #
             # Discard almost anything which is private.
             #
@@ -364,7 +371,7 @@ class SipGenerator(object):
             #
             # Generate private copy constructor for non-copyable types.
             #
-            if had_const_member and not had_copy_constructor:
+            if (had_deleted_copy_constructor) or (had_const_member and not had_copy_constructor):
                 body += "    private:\n        {}(const {} &); // Generated\n".format(name, container.type.get_canonical().spelling)
             #
             # Flesh out the SIP context for the rules engine.
