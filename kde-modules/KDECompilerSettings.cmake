@@ -384,6 +384,12 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_CXX_COMPILER_VERSION VER
     endif()
 endif()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+   if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0.0")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsuggest-override -Wlogical-op" )
+   endif()
+endif()
+
 # -w1 turns on warnings and errors
 # FIXME: someone needs to have a closer look at the Intel compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
