@@ -293,7 +293,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     option(ENABLE_CLAZY "Enable Clazy warnings" OFF)
 
     if(ENABLE_CLAZY)
-        set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_CXX_COMPILE_OBJECT} -Xclang -load -Xclang ClangLazy${CMAKE_SHARED_LIBRARY_SUFFIX} -Xclang -add-plugin -Xclang clang-lazy")
+        find_library(CLAZY_v1_5_FOUND ClazyPlugin${CMAKE_SHARED_LIBRARY_SUFFIX})
+        if(CLAZY_v1_5_FOUND) # clazy >= 1.5
+            set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_CXX_COMPILE_OBJECT} -Xclang -load -Xclang ClazyPlugin${CMAKE_SHARED_LIBRARY_SUFFIX} -Xclang -add-plugin -Xclang clazy")
+        else() # clazy < 1.5
+            set(CMAKE_CXX_COMPILE_OBJECT "${CMAKE_CXX_COMPILE_OBJECT} -Xclang -load -Xclang ClangLazy${CMAKE_SHARED_LIBRARY_SUFFIX} -Xclang -add-plugin -Xclang clang-lazy")
+        endif()
     endif()
 endif()
 
