@@ -90,6 +90,8 @@ int main(int argc, char** argv)
 
     app.exec();
 
+    thread.wait();
+
     return 0;
 }
 
