@@ -16,7 +16,7 @@
 #                         [INCLUDE_INSTALL_DIR <dir>]
 #                         [LIB_INSTALL_DIR <dir>]
 #                         [DEFINES -D<variable=value>...]
-#                         [DESCRIPTION <library description>]
+#                         [DESCRIPTION <library description>] # since 5.41.0
 #                         [INSTALL])
 #
 # ``BASE_NAME`` is the name of the module. It's the name projects will use to
@@ -45,7 +45,7 @@
 #
 # ``DESCRIPTION`` describes what this library is. If it's not specified, CMake
 # will first try to get the description from the metainfo.yaml file or will
-# create one based on ``LIB_NAME``.
+# create one based on ``LIB_NAME``. Since 5.41.0.
 #
 # ``INSTALL`` will cause the module to be installed to the ``pkgconfig``
 # subdirectory of ``LIB_INSTALL_DIR``, unless the ``ECM_PKGCONFIG_INSTALL_DIR``
@@ -71,7 +71,6 @@
 #   )
 #
 # Since 1.3.0.
-# ``DESCRIPTION`` available since 5.1.41
 #
 
 #=============================================================================
