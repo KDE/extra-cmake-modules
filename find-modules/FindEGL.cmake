@@ -61,6 +61,8 @@
 #=============================================================================
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
+include(CheckCXXSourceCompiles)
+include(CMakePushCheckState)
 
 ecm_find_package_version_check(EGL)
 
@@ -115,6 +117,20 @@ if(EGL_INCLUDE_DIR)
     unset(_EGL_version_lines)
 endif()
 
+cmake_push_check_state(RESET)
+list(APPEND CMAKE_REQUIRED_LIBRARIES "${EGL_LIBRARY}")
+list(APPEND CMAKE_REQUIRED_INCLUDES "${EGL_INCLUDE_DIR}")
+
+check_cxx_source_compiles("
+#include <EGL/egl.h>
+
+int main(int argc, char *argv[]) {
+    EGLint x = 0; EGLDisplay dpy = 0; EGLContext ctx = 0;
+    eglDestroyContext(dpy, ctx);
+}" HAVE_EGL)
+
+cmake_pop_check_state()
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(EGL
     FOUND_VAR
@@ -122,6 +138,7 @@ find_package_handle_standard_args(EGL
     REQUIRED_VARS
         EGL_LIBRARY
         EGL_INCLUDE_DIR
+        HAVE_EGL
     VERSION_VAR
         EGL_VERSION
 )
@@ -135,7 +152,7 @@ if(EGL_FOUND AND NOT TARGET EGL::EGL)
     )
 endif()
 
-mark_as_advanced(EGL_LIBRARY EGL_INCLUDE_DIR)
+mark_as_advanced(EGL_LIBRARY EGL_INCLUDE_DIR HAVE_EGL)
 
 # compatibility variables
 set(EGL_LIBRARIES ${EGL_LIBRARY})
