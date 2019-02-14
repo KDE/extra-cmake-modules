@@ -145,9 +145,9 @@ endmacro()
 
 set_deprecated_variable(CMAKE_ANDROID_NDK ANDROID_NDK "$ENV{ANDROID_NDK}")
 set_deprecated_variable(CMAKE_ANDROID_ARCH ANDROID_ARCHITECTURE "arm")
-set_deprecated_variable(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION ANDROID_GCC_VERSION "4.9")
+set_deprecated_variable(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION ANDROID_GCC_VERSION "clang")
 set_deprecated_variable(CMAKE_ANDROID_ARCH_ABI ANDROID_ABI "armeabi-v7a")
-set_deprecated_variable(CMAKE_ANDROID_API ANDROID_API_LEVEL "14")
+set_deprecated_variable(CMAKE_ANDROID_API ANDROID_API_LEVEL "21")
 
 set(ANDROID_SDK_ROOT "$ENV{ANDROID_SDK_ROOT}" CACHE path "Android SDK path")
 
@@ -158,7 +158,7 @@ set(ANDROID_SDK_BUILD_TOOLS_REVISION "${_default_sdk}" CACHE string "Android API
 set(CMAKE_SYSTEM_VERSION ${CMAKE_ANDROID_API})
 set(CMAKE_SYSTEM_NAME Android)
 if (NOT CMAKE_ANDROID_STL_TYPE)
-    set(CMAKE_ANDROID_STL_TYPE gnustl_shared)
+    set(CMAKE_ANDROID_STL_TYPE c++_shared)
 endif()
 
 include(${CMAKE_ROOT}/Modules/Platform/Android-GNU.cmake REQUIRED)
