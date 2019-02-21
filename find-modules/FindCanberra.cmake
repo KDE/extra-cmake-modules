@@ -101,7 +101,7 @@ set_package_properties(Canberra PROPERTIES
 # Compatibility variables. In a previous life FindCanberra lived
 # in a number of different repos: don't break them if they use ECM but have not
 # been updated for this finder.
-set(CANBERRA_FOUND ${Canberra_Found})
+set(CANBERRA_FOUND ${Canberra_FOUND})
 set(CANBERRA_VERSION ${Canberra_VERSION})
 set(CANBERRA_LIBRARIES ${Canberra_LIBRARIES})
 set(CANBERRA_INCLUDE_DIRS ${Canberra_INCLUDE_DIRS})
