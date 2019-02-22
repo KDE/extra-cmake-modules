@@ -342,6 +342,7 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
     add_custom_command(
         OUTPUT "${CMAKE_BINARY_DIR}/releaseme"
         ${releaseme_clone_commands}
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
         COMMENT "Fetching releaseme scripts to download translations..."
     )
 
