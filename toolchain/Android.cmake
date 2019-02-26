@@ -161,7 +161,7 @@ if (NOT CMAKE_ANDROID_STL_TYPE)
     set(CMAKE_ANDROID_STL_TYPE c++_shared)
 endif()
 
-include(${CMAKE_ROOT}/Modules/Platform/Android-GNU.cmake REQUIRED)
+include(${CMAKE_ROOT}/Modules/Platform/Android-Clang.cmake REQUIRED)
 include(${CMAKE_ROOT}/Modules/Platform/Android-Initialize.cmake REQUIRED)
 
 if (NOT DEFINED ECM_ADDITIONAL_FIND_ROOT_PATH)
