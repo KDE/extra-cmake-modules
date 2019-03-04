@@ -1,6 +1,6 @@
 #.rst:
 # FindCanberra
-# -------
+# ------------
 #
 # Try to find Canberra event sound library.
 #

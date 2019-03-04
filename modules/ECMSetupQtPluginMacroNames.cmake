@@ -1,6 +1,6 @@
 #.rst:
 # ECMSetupQtPluginMacroNames
-# ---------------
+# --------------------------
 #
 # Instruct CMake's automoc about C++ preprocessor macros used to define Qt-style plugins.
 #
