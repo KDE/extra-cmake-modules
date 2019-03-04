@@ -105,6 +105,12 @@ if(Fontconfig_FOUND AND NOT TARGET Fontconfig::Fontconfig)
     )
 endif()
 
+# backward compatibility, remove in kf6
+set(FONTCONFIG_INCLUDE_DIR "${Fontconfig_INCLUDE_DIRS}")
+set(FONTCONFIG_LIBRARIES "${Fontconfig_LIBRARIES}")
+set(FONTCONFIG_DEFINITIONS "${Fontconfig_DEFINITIONS}")
+mark_as_advanced(FONTCONFIG_INCLUDE_DIR FONTCONFIG_LIBRARIES FONTCONFIG_DEFINITIONS)
+
 include(FeatureSummary)
 set_package_properties(Fontconfig PROPERTIES
     URL "https://www.fontconfig.org/"
