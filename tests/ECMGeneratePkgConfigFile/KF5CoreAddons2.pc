@@ -1,3 +1,7 @@
+prefix=/usr
+exec_prefix=/usr
+libdir=/usr/lib
+includedir=/usr/KCoreAddons
 
 Name: KF5CoreAddons2
 Description: Addons to QtCore
