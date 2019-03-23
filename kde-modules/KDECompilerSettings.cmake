@@ -194,7 +194,7 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
     # compilers (in particular, MSVC 2010 does not support C99)
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=iso9899:1990")
 endif()
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_SIMULATE_ID MATCHES "MSVC"))
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
@@ -214,7 +214,7 @@ endif()
 # Do not treat the operator name keywords and, bitand, bitor, compl, not, or and xor as synonyms as keywords.
 # They're not supported under Visual Studio out of the box thus using them limits the portability of code
 if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR
-        CMAKE_C_COMPILER_ID MATCHES "Clang" OR
+        (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_SIMULATE_ID MATCHES "MSVC") OR
         (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-operator-names")
 endif()
@@ -263,7 +263,7 @@ endif()
 # Turn off exceptions by default
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_SIMULATE_ID MATCHES "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
@@ -285,7 +285,7 @@ macro(_kdecompilersettings_append_exception_flag VAR)
         endif()
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(${VAR} "${${VAR}} -fexceptions")
-    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_SIMULATE_ID MATCHES "MSVC")
         set(${VAR} "${${VAR}} -fexceptions")
     endif()
     string(STRIP "${${VAR}}" ${VAR})
@@ -309,12 +309,14 @@ endfunction()
 function(KDE_TARGET_ENABLE_EXCEPTIONS target mode)
     target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:MSVC>:-EHsc>")
     if (WIN32)
-        target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Intel>:-EHsc>")
+        target_compile_options(${target} ${mode} "$<$<OR:$<$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:Intel>>:-EHsc>")
     else()
         target_compile_options(${target} ${mode} "$<$<CXX_COMPILER_ID:Intel>:-fexceptions>")
     endif()
-    target_compile_options(${target} ${mode}
+    if (NOT (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_SIMULATE_ID MATCHES "MSVC"))
+        target_compile_options(${target} ${mode}
         "$<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-fexceptions>")
+    endif()
 endfunction()
 
 function(KDE_ENABLE_EXCEPTIONS)
@@ -341,7 +343,7 @@ endfunction()
 ############################################################
 
 if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT APPLE) OR
-        (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT APPLE) OR
+        (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT APPLE AND NOT CMAKE_CXX_SIMULATE_ID MATCHES "MSVC") OR
         (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
     # Linker warnings should be treated as errors
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_SHARED_LINKER_FLAGS}")
@@ -353,7 +355,7 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT APPLE) OR
 endif()
 
 set(_KDE_GCC_COMMON_WARNING_FLAGS "-Wall -Wextra -Wcast-align -Wchar-subscripts -Wformat-security -Wno-long-long -Wpointer-arith -Wundef")
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_SIMULATE_ID MATCHES "MSVC")
     # -Wgnu-zero-variadic-macro-arguments (part of -pedantic) is triggered by every qCDebug() call and therefore results
     # in a lot of noise. This warning is only notifying us that clang is emulating the GCC behaviour
     # instead of the exact standard wording so we can safely ignore it
@@ -364,7 +366,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
     # Make some warnings errors
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror=implicit-function-declaration")
 endif()
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_SIMULATE_ID MATCHES "MSVC"))
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_KDE_GCC_COMMON_WARNING_FLAGS} -Wnon-virtual-dtor -Woverloaded-virtual")
     # Make some warnings errors
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
