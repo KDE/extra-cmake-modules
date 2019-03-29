@@ -128,11 +128,11 @@ function(ecm_add_wayland_client_protocol out_var)
     set_property(SOURCE ${_client_header} PROPERTY SKIP_AUTOMOC ON)
 
     add_custom_command(OUTPUT "${_client_header}"
-        COMMAND ${WaylandScanner_EXECUTABLE} client-header < ${_infile} > ${_client_header}
+        COMMAND ${WaylandScanner_EXECUTABLE} client-header ${_infile} ${_client_header}
         DEPENDS ${_infile} VERBATIM)
 
     add_custom_command(OUTPUT "${_code}"
-        COMMAND ${WaylandScanner_EXECUTABLE} code < ${_infile} > ${_code}
+        COMMAND ${WaylandScanner_EXECUTABLE} code ${_infile} ${_code}
         DEPENDS ${_infile} ${_client_header} VERBATIM)
 
     list(APPEND ${out_var} "${_client_header}" "${_code}")
@@ -159,7 +159,7 @@ function(ecm_add_wayland_server_protocol out_var)
     set_source_files_properties(${_server_header} GENERATED)
 
     add_custom_command(OUTPUT "${_server_header}"
-        COMMAND ${WaylandScanner_EXECUTABLE} server-header < ${_infile} > ${_server_header}
+        COMMAND ${WaylandScanner_EXECUTABLE} server-header ${_infile} ${_server_header}
         DEPENDS ${_infile} VERBATIM)
 
     list(APPEND ${out_var} "${_server_header}")
