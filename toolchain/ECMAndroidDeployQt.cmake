@@ -1,3 +1,4 @@
+cmake_minimum_required (VERSION 3.7 FATAL_ERROR)
 find_package(Qt5Core REQUIRED)
 
 function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_PATH)
@@ -38,10 +39,9 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
 
     function(havestl var access VALUE)
         if (NOT VALUE STREQUAL "")
-            string(FIND "${VALUE}" ".so\"" OUT)
-            math(EXPR OUT "${OUT}+4")
-            string(SUBSTRING "${VALUE}" 0 ${OUT} OUTSTR)
-            file(WRITE ${CMAKE_BINARY_DIR}/stl "${OUTSTR}")
+            # look for ++ and .so as in libc++.so
+            string (REGEX MATCH "\"[^ ]+\\+\\+[^ ]*\.so\"" OUT ${VALUE})
+            file(WRITE ${CMAKE_BINARY_DIR}/stl "${OUT}")
         endif()
     endfunction()
     function(haveranlib var access VALUE)
