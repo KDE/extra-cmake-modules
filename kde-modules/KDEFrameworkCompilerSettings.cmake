@@ -55,8 +55,15 @@ add_definitions(-DQT_NO_CAST_TO_ASCII
                 -DQT_NO_SIGNALS_SLOTS_KEYWORDS
                 -DQT_USE_QSTRINGBUILDER
                 -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT
-                -DQT_STRICT_ITERATORS
                )
+
+if (NOT WIN32)
+    # Strict iterators can't be used on Windows, they lead to a link error
+    # when application code iterates over a QVector<QPoint> for instance, unless
+    # Qt itself was also built with strict iterators.
+    # See example at https://bugreports.qt.io/browse/AUTOSUITE-946
+    add_definitions(-DQT_STRICT_ITERATORS)
+endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
