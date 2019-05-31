@@ -128,6 +128,8 @@
 #     [``CONFIG_INSTALL_DIR``]
 # ``AUTOSTARTDIR``
 #     autostart files (``CONFDIR/autostart``) [``AUTOSTART_INSTALL_DIR``]
+# ``LOGGINGCATEGORIESDIR``
+#     Qt logging categories files directory (``DATAROOTDIR/qlogging-categories5``) Since 5.59.0
 #
 # If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
 # module, the default values for some variables are instead queried from
@@ -582,6 +584,8 @@ _define_relative(KXMLGUI5DIR DATAROOTDIR "kxmlgui5"
     KXMLGUI_INSTALL_DIR)
 _define_relative(KTEMPLATESDIR DATAROOTDIR "kdevappwizard/templates"
     "Kapptemplate and Kdevelop templates")
+_define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories5"
+    "Qt Logging categories files")
 
 # Cross-desktop or other system things
 _define_relative(ICONDIR DATAROOTDIR "icons"
