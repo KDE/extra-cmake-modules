@@ -16,7 +16,7 @@
 # ``Fontconfig_VERSION``
 #     The version of Fontconfig that has been found
 #
-# If ``Fontconfig_FOUND`` is True, it will also define the following
+# If ``Fontconfig_FOUND`` is TRUE, it will also define the following
 # imported target:
 #
 # ``Fontconfig::Fontconfig``

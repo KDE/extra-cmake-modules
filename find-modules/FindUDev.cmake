@@ -2,13 +2,15 @@
 # FindUDev
 # --------
 #
-# Try to find the UDev library, once done this will define:
+# Try to find the UDev library.
 #
-#  ``UDev_FOUND``
-#      System has UDev.
+# This will define the following variables:
 #
-#  ``UDev_INCLUDE_DIRS``
-#      The libudev include directory.
+# ``UDev_FOUND``
+#     System has UDev.
+#
+# ``UDev_INCLUDE_DIRS``
+#     The libudev include directory.
 #
 # ``UDev_LIBRARIES``
 #     The libudev libraries.
@@ -16,8 +18,8 @@
 # ``UDev_VERSION``
 #     The libudev version.
 #
-# If ``UDev_FOUND`` is TRUE, the following imported target
-# will be available:
+# If ``UDev_FOUND`` is TRUE, it will also define the following imported
+# target:
 #
 # ``UDev::UDev``
 #     The UDev library

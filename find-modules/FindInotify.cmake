@@ -3,7 +3,7 @@
 # --------------
 #
 # Try to find inotify on this system. This finds:
-#  - libinotiy on Unix like systems, or 
+#  - libinotify on Unix like systems, or
 #  - the kernel's inotify on Linux systems.
 #
 # This will define the following variables:
@@ -16,7 +16,7 @@
 #    This has to be passed to target_include_directories()
 #
 # On Linux, the libraries and include directories are empty,
-# even though Inotify_FOUND may be set to TRUE. This is because
+# even though ``Inotify_FOUND`` may be set to TRUE. This is because
 # no special includes or libraries are needed. On other systems
 # these may be needed to use inotify.
 #

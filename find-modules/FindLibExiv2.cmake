@@ -7,25 +7,28 @@
 # This will define the following variables:
 #
 # ``LibExiv2_FOUND``
-#     System has LibExiv2.
+#     True if (the requested version of) Exiv2 is available
 #
 # ``LibExiv2_VERSION``
-#     The version of LibExiv2.
+#     The version of Exiv2
 #
 # ``LibExiv2_INCLUDE_DIRS``
-#     This should be passed to target_include_directories() if
-#     the target is not used for linking.
+#     The include dirs of Exiv2 for use with target_include_directories()
 #
 # ``LibExiv2_LIBRARIES``
-#     The LibExiv2 library.
+#     The Exiv2 library for use with target_link_libraries().
 #     This can be passed to target_link_libraries() instead of
 #     the ``LibExiv2::LibExiv2`` target
 #
-# If ``LibExiv2_FOUND`` is TRUE, the following imported target
-# will be available:
+# If ``LibExiv2_FOUND`` is TRUE, it will also define the following imported
+# target:
 #
 # ``LibExiv2::LibExiv2``
 #     The Exiv2 library
+#
+# In general we recommend using the imported target, as it is easier to use.
+# Bear in mind, however, that if the target is in the link interface of an
+# exported library, it must be made available by the package config file.
 #
 # Since 5.53.0.
 #

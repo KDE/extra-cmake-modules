@@ -2,14 +2,13 @@
 # FindPhoneNumber
 # ---------------
 #
-# This module finds if PhoneNumber is installed.
+# Try to find PhoneNumber.
 #
 # This is a component-based find module, which makes use of the COMPONENTS and
 # OPTIONAL_COMPONENTS arguments to find_module.  The following components are
-# available:
+# available::
 #
-#   PhoneNumber
-#   GeoCoding
+#   PhoneNumber  GeoCoding
 #
 # If no components are specified, this module will act as though all components
 # were passed to OPTIONAL_COMPONENTS.

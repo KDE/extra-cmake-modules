@@ -8,7 +8,7 @@
 # and OPTIONAL_COMPONENTS arguments to find_module.  The following components
 # are available::
 #
-#   Core  Cpp  Qt5  Qt4 Glib
+#   Core  Cpp  Qt5  Qt4  Glib
 #
 # If no components are specified, this module will act as though all components
 # were passed to OPTIONAL_COMPONENTS.

@@ -3,7 +3,8 @@
 # -----------
 #
 # Try to locate the libseccomp library.
-# If found, this will define the following variables:
+#
+# This will define the following variables:
 #
 # ``Seccomp_FOUND``
 #     True if the seccomp library is available
