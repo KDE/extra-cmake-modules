@@ -149,11 +149,11 @@ set_deprecated_variable(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION ANDROID_GCC_VERSION 
 set_deprecated_variable(CMAKE_ANDROID_ARCH_ABI ANDROID_ABI "armeabi-v7a")
 set_deprecated_variable(CMAKE_ANDROID_API ANDROID_API_LEVEL "21")
 
-set(ANDROID_SDK_ROOT "$ENV{ANDROID_SDK_ROOT}" CACHE path "Android SDK path")
+set(ANDROID_SDK_ROOT "$ENV{ANDROID_SDK_ROOT}" CACHE PATH "Android SDK path")
 
 file(GLOB build-tools LIST_DIRECTORIES TRUE RELATIVE ${ANDROID_SDK_ROOT}/build-tools ${ANDROID_SDK_ROOT}/build-tools/*)
 list(GET build-tools 0 _default_sdk)
-set(ANDROID_SDK_BUILD_TOOLS_REVISION "${_default_sdk}" CACHE string "Android API Level")
+set(ANDROID_SDK_BUILD_TOOLS_REVISION "${_default_sdk}" CACHE STRING "Android API Level")
 
 set(CMAKE_SYSTEM_VERSION ${CMAKE_ANDROID_API})
 set(CMAKE_SYSTEM_NAME Android)
