@@ -67,6 +67,23 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ############################################################
+# Default build type
+# If no build type was specified, default to using a debug build if the
+# source directory is a git clone.
+# Otherwise, leave it empty, to let distro packagers choose the flags.
+############################################################
+if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+        set(default_build_type "Debug")
+        message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
+        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE "${default_build_type}")
+        # Set the possible values of build type for cmake-gui
+        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+            "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+    endif()
+endif()
+
+############################################################
 # Toolchain minimal requirements
 #
 # Note that only compilers officially supported by Qt are
