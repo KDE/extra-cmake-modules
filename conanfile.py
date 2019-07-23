@@ -4,6 +4,8 @@ import re
 import os.path
 
 # Fetching the package version from CMakeLists.txt
+
+
 def getVersion():
     if(os.path.exists("CMakeLists.txt")):
         regx = re.compile(r"^set\(.*VERSION\s(\"|')[0-9.]+(\"|')\)")
@@ -14,12 +16,14 @@ def getVersion():
                     return version.group()
     return None
 
+
 def getMetaField(field):
     if(os.path.exists("metainfo.yaml")):
         with open("metainfo.yaml") as f:
             metainfo = yaml.load(f.read())
         return metainfo[field]
     return None
+
 
 class ExtraCMakeModulesConan(ConanFile):
 
@@ -40,7 +44,7 @@ class ExtraCMakeModulesConan(ConanFile):
     requires = (
         # sphinx/1.2@foo/bar
 
-        "Qt/5.11.1@bincrafters/stable"
+        "qt/5.13.0@bincrafters/stable"
         # "qt-core/5.8.0@foo/bar",
         # "qt-testing/5.8.0@foo/bar",
 
