@@ -44,7 +44,7 @@ class ExtraCMakeModulesConan(ConanFile):
     requires = (
         # sphinx/1.2@foo/bar
 
-        "qt/5.13.0@bincrafters/stable"
+        "qt/[>=5.11.3]@bincrafters/stable"
         # "qt-core/5.8.0@foo/bar",
         # "qt-testing/5.8.0@foo/bar",
 
