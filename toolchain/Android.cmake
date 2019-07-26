@@ -144,10 +144,16 @@ macro(set_deprecated_variable actual_variable deprecated_variable default_value)
 endmacro()
 
 set_deprecated_variable(CMAKE_ANDROID_NDK ANDROID_NDK "$ENV{ANDROID_NDK}")
-set_deprecated_variable(CMAKE_ANDROID_ARCH ANDROID_ARCHITECTURE "arm")
 set_deprecated_variable(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION ANDROID_GCC_VERSION "clang")
-set_deprecated_variable(CMAKE_ANDROID_ARCH_ABI ANDROID_ABI "armeabi-v7a")
 set_deprecated_variable(CMAKE_ANDROID_API ANDROID_API_LEVEL "21")
+if(NOT DEFINED ENV{ANDROID_ARCH})
+    set(ENV{ANDROID_ARCH} "arm")
+endif()
+set_deprecated_variable(CMAKE_ANDROID_ARCH ANDROID_ARCHITECTURE $ENV{ANDROID_ARCH})
+if(NOT DEFINED ENV{ANDROID_ARCH_ABI})
+    set(ENV{ANDROID_ARCH_ABI} "armeabi-v7a")
+endif()
+set_deprecated_variable(CMAKE_ANDROID_ARCH_ABI ANDROID_ABI "$ENV{ANDROID_ARCH_ABI}")
 
 set(ANDROID_SDK_ROOT "$ENV{ANDROID_SDK_ROOT}" CACHE PATH "Android SDK path")
 
