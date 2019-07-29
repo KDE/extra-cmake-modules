@@ -78,6 +78,8 @@
 # - Uninstall target functionality since 1.7.0.
 # - ``APPLE_FORCE_X11`` option since 5.14.0 (detecting X11 was previously the default behavior)
 # - ``APPLE_SUPPRESS_X11_WARNING`` option since 5.14.0
+# - CMAKE_AUTORCC and CMAKE_AUTOUIC enabled by default when supported by cmake
+#   (>= 3.0) since 5.62.0
 #
 # Translations
 # ~~~~~~~~~~~~
@@ -237,6 +239,13 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # Enable automoc in cmake
    # Since CMake 2.8.6
    set(CMAKE_AUTOMOC ON)
+
+   # Enable autorcc and autouic in cmake so qrc and ui files get generated.
+   # Since CMake 3.0
+   if(NOT CMAKE_VERSION VERSION_LESS 3.0)
+      set(CMAKE_AUTORCC ON)
+      set(CMAKE_AUTOUIC ON)
+   endif()
 
    # By default, create 'GUI' executables. This can be reverted on a per-target basis
    # using ECMMarkNonGuiExecutable
