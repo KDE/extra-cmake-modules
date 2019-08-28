@@ -247,6 +247,7 @@ set(_LIBDIR_DEFAULT "lib")
 # See https://wiki.debian.org/Multiarch
 if((CMAKE_SYSTEM_NAME MATCHES "Linux|kFreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "GNU")
    AND NOT CMAKE_CROSSCOMPILING
+   AND NOT EXISTS "/etc/arch-release"
    AND NOT DEFINED ENV{FLATPAK_ID})
   if (EXISTS "/etc/debian_version") # is this a debian system ?
     if(CMAKE_LIBRARY_ARCHITECTURE)
