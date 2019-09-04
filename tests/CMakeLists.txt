@@ -53,6 +53,7 @@ set_package_properties(
 )
 
 add_subdirectory(ECMAddTests)
+add_subdirectory(ECMGenerateExportHeaderTest)
 add_subdirectory(ECMGenerateHeadersTest)
 add_subdirectory(ECMSetupVersionTest)
 add_subdirectory(ECMGeneratePkgConfigFile)
