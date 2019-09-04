@@ -72,11 +72,12 @@
 #       [TOOLTIP <tooltip>]
 #       [WHATSTHIS <whatsthis>]
 #       [GROUP <group>]
-#       [CREATE_WIDGET_CODE <create_widget_code>]
-#       [INITIALIZE_CODE <initialize_code]
-#       [DOM_XML <dom_xml>]
+#       [CREATE_WIDGET_CODE_FROM_VARIABLE <create_widget_code_variable>]
+#       [INITIALIZE_CODE_FROM_VARIABLE <initialize_code_variable]
+#       [DOM_XML_FROM_VARIABLE <dom_xml_variable>]
 #       [IMPL_CLASS_NAME <impl_class_name>]
 #       [CONSTRUCTOR_ARGS_CODE <constructor_args_code>]
+#       [CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE <constructor_args_code_variable>]
 #   )
 #
 # ``CLASS_NAME`` specifies the name of the widget class, including namespaces.
@@ -105,31 +106,34 @@
 # The default is set as configured by the ``DEFAULT_GROUP`` option of
 # ``ecm_add_qtdesignerplugin``.
 #
-# ``CREATE_WIDGET_CODE`` specifies C++ code to use as factory code to create
-# an instance of the widget, for the override of
+# ``CREATE_WIDGET_CODE_FROM_VARIABLE`` specifies the variable to get from the
+# C++ code to use as factory code to create an instance of the widget,
+# for the override of
 # ``QDesignerCustomWidgetInterface::createWidget(QWidget* parent)``.
-# Replace any occurence of ";" with "@SEMICOLON@", as needed to pass the raw
-# code via CMake. The default is
-# "return new <impl_class_name><constructor_args_code>;".
+# The default is "return new <impl_class_name><constructor_args_code>;".
 #
-# ``INITIALIZE_CODE`` specifies C++ code to use with the override of
+# ``INITIALIZE_CODE_FROM_VARIABLE`` specifies the variable to get from the C++
+# code to use with the override of
 # ``QDesignerCustomWidgetInterface::initialize(QDesignerFormEditorInterface* core)``.
 # The code has to use the present class member ``m_initialized`` to track and
-# update the state. Replace any occurence of ";" with "@SEMICOLON@", as needed
-# to pass the raw code via CMake. The default code simply sets
-# ``m_initialized`` to ``true``, if it was not before.
+# update the state. The default code simply sets ``m_initialized`` to
+# ``true``, if it was not before.
 #
-# ``DOM_XML`` specifies the string to use with the optional override of
-# ``QDesignerCustomWidgetInterface::domXml()``. Replace any occurence of ";"
-# with "@SEMICOLON@", as needed to pass the raw XML string via CMake.
+# ``DOM_XML_FROM_VARIABLE`` specifies the variable to get from the string to
+# use with the optional override of
+# ``QDesignerCustomWidgetInterface::domXml()``.
 # Default does not override.
 #
 # ``IMPL_CLASS_NAME`` specifies the name of the widget class to use for the
 # widget instance with Qt Designer. The default is "<class_name>".
 #
 # ``CONSTRUCTOR_ARGS_CODE`` specifies the C++ code to use for the constructor
-# arguments with the default of <create_widget_code>. Note that the
-# parentheses are required. The default is "(parent)".
+# arguments with the default of ``CREATE_WIDGET_CODE_FROM_VARIABLE``. Note
+# that the parentheses are required. The default is "(parent)".
+#
+# ``CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE`` specifies the variable to get from
+# the C++ code instead of passing it directly via ``CONSTRUCTOR_ARGS_CODE``.
+# This can be needed if the code is more complex and e.g. includes ";" chars.
 #
 #
 #
@@ -141,10 +145,18 @@
 #       TOOLTIP "Enables to browse foo."
 #       GROUP "Views (Foo)"
 #   )
-#   
+#
+#   set(BarWidget_CREATE_WIDGET_CODE
+#   "
+#       auto* widget = new BarWidget(parent);
+#       widget->setBar("Example bar");
+#       return widget;
+#   ")
+#
 #   ecm_qtdesignerplugin_widget(BarWidget
 #       TOOLTIP "Displays bars."
 #       GROUP "Display (Foo)"
+#       CREATE_WIDGET_CODE_FROM_VARIABLE BarWidget_CREATE_WIDGET_CODE
 #   )
 #
 #   ecm_add_qtdesignerplugin(foowidgets
@@ -190,13 +202,6 @@
 include(CMakeParseArguments)
 
 # helper method
-# unescapes "@SEMICOLON@" into ";"
-function(_ecm_qtdesignerplugin_unescape_code _varName input)
-    string(REPLACE "@SEMICOLON@" ";" _code ${input})
-    set(${_varName} "${_code}" PARENT_SCOPE)
-endfunction()
-
-# helper method
 # escapes string for C++ code
 function(_ecm_qtdesignerplugin_escape_cpp_string _varName input)
     string(REPLACE "\"" "\\\"" _string ${input})
@@ -218,11 +223,12 @@ function(ecm_qtdesignerplugin_widget widget)
         TOOLTIP
         WHATSTHIS
         GROUP
-        CREATE_WIDGET_CODE
-        INITIALIZE_CODE
-        DOM_XML
+        CREATE_WIDGET_CODE_FROM_VARIABLE
+        INITIALIZE_CODE_FROM_VARIABLE
+        DOM_XML_FROM_VARIABLE
         IMPL_CLASS_NAME
         CONSTRUCTOR_ARGS_CODE
+        CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE
     )
     set(multiValueArgs
     )
@@ -242,16 +248,23 @@ function(ecm_qtdesignerplugin_widget widget)
     else()
         set(_is_container FALSE)
     endif()
-    if(NOT ARGS_CREATE_WIDGET_CODE)
+    if(ARGS_CONSTRUCTOR_ARGS_CODE AND ARGS_CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE)
+        message(FATAL_ERROR "Either CONSTRUCTOR_ARGS_CODE or CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE can be passed when calling ecm_qtdesignerplugin_widget().")
+    endif()
+    if(NOT ARGS_CREATE_WIDGET_CODE_FROM_VARIABLE)
         if(NOT ARGS_IMPL_CLASS_NAME)
             set(ARGS_IMPL_CLASS_NAME "${ARGS_CLASS_NAME}")
         endif()
-        if(NOT ARGS_CONSTRUCTOR_ARGS_CODE)
-            set(ARGS_CONSTRUCTOR_ARGS_CODE "(parent)")
+        if(ARGS_CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE)
+            set(_constructor_args "${${ARGS_CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE}}")
+        elseif(ARGS_CONSTRUCTOR_ARGS_CODE)
+            set(_constructor_args "${ARGS_CONSTRUCTOR_ARGS_CODE}")
+        else()
+            set(_constructor_args "(parent)")
         endif()
-        set(ARGS_CREATE_WIDGET_CODE "        return new ${ARGS_IMPL_CLASS_NAME}${ARGS_CONSTRUCTOR_ARGS_CODE};")
+        set(_create_widget_code "        return new ${ARGS_IMPL_CLASS_NAME}${_constructor_args};")
     else()
-        _ecm_qtdesignerplugin_unescape_code(ARGS_CREATE_WIDGET_CODE "${ARGS_CREATE_WIDGET_CODE}")
+        set(_create_widget_code "${${ARGS_CREATE_WIDGET_CODE_FROM_VARIABLE}}")
     endif()
     if(ARGS_ICON)
         if (NOT IS_ABSOLUTE ${ARGS_ICON})
@@ -270,9 +283,9 @@ function(ecm_qtdesignerplugin_widget widget)
     set(ECM_QTDESIGNERPLUGIN_${widget}_GROUP "${ARGS_GROUP}" PARENT_SCOPE)
     set(ECM_QTDESIGNERPLUGIN_${widget}_ICON "${ARGS_ICON}" PARENT_SCOPE)
     set(ECM_QTDESIGNERPLUGIN_${widget}_IS_CONTAINER "${_is_container}" PARENT_SCOPE)
-    set(ECM_QTDESIGNERPLUGIN_${widget}_CREATE_WIDGET_CODE "${ARGS_CREATE_WIDGET_CODE}" PARENT_SCOPE)
-    set(ECM_QTDESIGNERPLUGIN_${widget}_INITIALIZE_CODE "${ARGS_INITIALIZE_CODE}" PARENT_SCOPE)
-    set(ECM_QTDESIGNERPLUGIN_${widget}_DOM_XML "${ARGS_DOM_XML}" PARENT_SCOPE)
+    set(ECM_QTDESIGNERPLUGIN_${widget}_CREATE_WIDGET_CODE "${_create_widget_code}" PARENT_SCOPE)
+    set(ECM_QTDESIGNERPLUGIN_${widget}_INITIALIZE_CODE "${${INITIALIZE_CODE_FROM_VARIABLE}}" PARENT_SCOPE)
+    set(ECM_QTDESIGNERPLUGIN_${widget}_DOM_XML "${${ARGS_DOM_XML_FROM_VARIABLE}}" PARENT_SCOPE)
 endfunction()
 
 # helper method
@@ -296,7 +309,6 @@ function(_ecm_qtdesignerplugin_write_widget designer_src_file widget default_gro
     _ecm_qtdesignerplugin_escape_cpp_string(_group "${_group}")
     set(_dom_xml "${ECM_QTDESIGNERPLUGIN_${widget}_DOM_XML}")
     if(_dom_xml)
-        _ecm_qtdesignerplugin_unescape_code(_dom_xml "${_dom_xml}")
         string(REPLACE "\"" "\\\"" _dom_xml "${_dom_xml}")
         set(_dom_xml_method "    QString domXml() const override { return QStringLiteral(\"${_dom_xml}\"); }")
     else()
@@ -318,8 +330,6 @@ function(_ecm_qtdesignerplugin_write_widget designer_src_file widget default_gro
 
         m_initialized = true;"
         )
-    else()
-        _ecm_qtdesignerplugin_unescape_code(_initialize_code "${_initialize_code}")
     endif()
 
     # write code
