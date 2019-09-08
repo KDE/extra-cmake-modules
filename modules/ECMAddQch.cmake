@@ -20,6 +20,7 @@
 #       [SOURCE_DIRS <dir> [<dir2> [...]]]
 #       [SOURCES <file> [<file2> [...]]]
 #       |MD_MAINPAGE <md_file>]
+#       [INCLUDE_DIRS <incdir> [<incdir2> [...]]]
 #       [IMAGE_DIRS <idir> [<idir2> [...]]]
 #       [EXAMPLE_DIRS <edir> [<edir2> [...]]]
 #       [ORG_DOMAIN <domain>]
@@ -78,6 +79,9 @@
 # MD_MAINPAGE specifies a file in Markdown format that should be used as main
 # page. This page will overrule any ``\mainpage`` command in the included
 # sources.
+#
+# INCLUDE_DIRS specifies the dirs which should be searched for included
+# headers. Dirs can be relative to the current source dir. Since 5.63.
 #
 # IMAGE_DIRS specifies the dirs which contain images that are included in the
 # documentation. Dirs can be relative to the current source dir.
@@ -403,7 +407,7 @@ function(ecm_add_qch target_name)
     # Parse arguments
     set(options VERBOSE)
     set(oneValueArgs NAME BASE_NAME QCH_INSTALL_DESTINATION TAGFILE_INSTALL_DESTINATION COMPONENT VERSION NAMESPACE MD_MAINPAGE ORG_DOMAIN CONFIG_TEMPLATE)
-    set(multiValueArgs SOURCE_DIRS SOURCES IMAGE_DIRS EXAMPLE_DIRS PREDEFINED_MACROS BLANK_MACROS LINK_QCHS)
+    set(multiValueArgs SOURCE_DIRS SOURCES INCLUDE_DIRS IMAGE_DIRS EXAMPLE_DIRS PREDEFINED_MACROS BLANK_MACROS LINK_QCHS)
     cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     # check required args
@@ -487,6 +491,14 @@ function(ecm_add_qch target_name)
         set(ECM_QCH_DOXYGEN_OUTPUTDIR "\"${_apidox_builddir}\"")
         set(ECM_QCH_DOXYGEN_TAGFILE "\"${_tags_buildpath}\"")
         set(ECM_QCH_DOXYGEN_LAYOUTFILE "\"${_doxygen_layout_file}\"")
+        set(ECM_QCH_DOXYGEN_INCLUDE_PATH)
+        foreach(_include_DIR IN LISTS ARGS_INCLUDE_DIRS)
+            if (NOT IS_ABSOLUTE ${_include_DIR})
+                set(_include_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${_include_DIR}")
+            endif()
+            # concat dirs separated by a break, it is no issue that first has also a leading break
+            set(ECM_QCH_DOXYGEN_INCLUDE_PATH "${ECM_QCH_DOXYGEN_INCLUDE_PATH} \\\n\"${_include_DIR}\"")
+        endforeach()
         set(ECM_QCH_DOXYGEN_IMAGEDIRS)
         foreach(_image_DIR IN LISTS ARGS_IMAGE_DIRS)
             if (NOT IS_ABSOLUTE ${_image_DIR})
