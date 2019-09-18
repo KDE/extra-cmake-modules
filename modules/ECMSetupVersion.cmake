@@ -28,7 +28,7 @@
 #   <prefix>_SOVERSION      - <soversion>, or <major> if SOVERSION was not given
 #
 # If CMake policy CMP0048 is not NEW, the following CMake variables will also
-# be set:
+# be set::
 #
 #   PROJECT_VERSION_MAJOR   - <major>
 #   PROJECT_VERSION_MINOR   - <minor>
