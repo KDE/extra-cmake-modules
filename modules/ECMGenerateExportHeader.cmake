@@ -466,7 +466,7 @@ function(ecm_generate_export_header target)
     if(NOT ARGS_EXPORT_FILE_NAME)
         set(ARGS_EXPORT_FILE_NAME "${_lower_base_name}_export.h")
     endif()
-    string(REPLACE "." ", " _commaed_version "${ARGS_VERSION}")
+    _ecm_geh_generate_hex_number(_version_hexnumber "${ARGS_VERSION}")
     if (ARGS_DEPRECATED_BASE_VERSION STREQUAL "0")
         set(_default_disabled_deprecated_version_hexnumber "0")
     else()
@@ -568,10 +568,10 @@ function(ecm_generate_export_header target)
         message(STATUS "Excluding from build all API deprecated before and at: ${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}")
         # TODO: the generated code ideally would emit a warning if some consumer used a value
         # smaller then what the the build was done with
-        string(REPLACE "." ", " _commaed_excluded_before_version "${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}")
+        _ecm_geh_generate_hex_number(_excluded_before_and_at_version_hexnumber "${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}")
         string(APPEND _output "
 // Build was done with the API removed deprecated before: ${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}
-#define ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT ECM_GENERATEEXPORTHEADER_VERSION_VALUE(${_commaed_excluded_before_version})
+#define ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT ${_excluded_before_and_at_version_hexnumber}
 
 #ifdef ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT
 #  if ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT < ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT
@@ -594,7 +594,7 @@ function(ecm_generate_export_header target)
     endif()
     string(APPEND _output "
 #ifdef ${_macro_base_name}_NO_DEPRECATED
-#  define ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT ECM_GENERATEEXPORTHEADER_VERSION_VALUE(${_commaed_version})
+#  define ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT ${_version_hexnumber}
 #endif
 #ifdef ${_macro_base_name}_NO_DEPRECATED_WARNINGS
 #  define ${_macro_base_name}_DEPRECATED_WARNINGS_SINCE 0
@@ -604,7 +604,7 @@ function(ecm_generate_export_header target)
 #  ifdef ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT
 #    define ${_macro_base_name}_DEPRECATED_WARNINGS_SINCE ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT
 #  else
-#    define ${_macro_base_name}_DEPRECATED_WARNINGS_SINCE ECM_GENERATEEXPORTHEADER_VERSION_VALUE(${_commaed_version})
+#    define ${_macro_base_name}_DEPRECATED_WARNINGS_SINCE ${_version_hexnumber}
 #  endif
 #endif
 
@@ -622,7 +622,7 @@ function(ecm_generate_export_header target)
     if (DEFINED ARGS_DEPRECATION_VERSIONS)
         set(_major_versions)
         foreach(_version ${ARGS_DEPRECATION_VERSIONS})
-            string(REPLACE "." ", " _commaed_version "${_version}")
+            _ecm_geh_generate_hex_number(_version_hexnumber "${_version}.0")
             string(REPLACE "." "_" _underscored_version "${_version}")
             string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)$" "\\1"
  _version_major "${_version}")
@@ -639,7 +639,7 @@ function(ecm_generate_export_header target)
             endif()
 
             string(APPEND _output "
-#if ${_macro_base_name}_DEPRECATED_WARNINGS_SINCE >= ECM_GENERATEEXPORTHEADER_VERSION_VALUE(${_commaed_version}, 0)
+#if ${_macro_base_name}_DEPRECATED_WARNINGS_SINCE >= ${_version_hexnumber}
 #  define ${_macro_base_name}_DEPRECATED_VERSION_${_underscored_version}(text) ${_macro_base_name}_DECL_DEPRECATED_TEXT(text)
 #else
 #  define ${_macro_base_name}_DEPRECATED_VERSION_${_underscored_version}(text)
