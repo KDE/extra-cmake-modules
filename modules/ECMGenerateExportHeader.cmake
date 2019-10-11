@@ -42,8 +42,8 @@
 # ``<group_base_name>_NO_DEPRECATED`` (see below).
 # If not set, the generated code will ignore any such macros.
 #
-# ``DEPRECATED_BASE_VERSION`` specifies the default version for warnings
-# about API deprecated before and at. The default is the value of
+# ``DEPRECATED_BASE_VERSION`` specifies the default version before and at which
+# deprecated API is disabled. The default is the value of
 # "<exclude_deprecated_before_and_at_version>" if set, or "<major>.0.0", with
 # <major> taken from <version>.
 #
@@ -444,7 +444,7 @@ function(ecm_generate_export_header target)
     elseif(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT STREQUAL "CURRENT")
         set(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT ${ARGS_VERSION})
     endif()
-    if (NOT ARGS_DEPRECATED_BASE_VERSION)
+    if (NOT DEFINED ARGS_DEPRECATED_BASE_VERSION)
         if (ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
             set(ARGS_DEPRECATED_BASE_VERSION "${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}")
         else()
@@ -467,7 +467,11 @@ function(ecm_generate_export_header target)
         set(ARGS_EXPORT_FILE_NAME "${_lower_base_name}_export.h")
     endif()
     string(REPLACE "." ", " _commaed_version "${ARGS_VERSION}")
-    string(REPLACE "." ", " _commaed_deprecatedbaseversion "${ARGS_DEPRECATED_BASE_VERSION}")
+    if (ARGS_DEPRECATED_BASE_VERSION STREQUAL "0")
+        set(_default_disabled_deprecated_version_hexnumber "0")
+    else()
+        _ecm_geh_generate_hex_number(_default_disabled_deprecated_version_hexnumber "${ARGS_DEPRECATED_BASE_VERSION}")
+    endif()
 
     set(_macro_base_name "${ARGS_PREFIX_NAME}${_upper_base_name}")
     if (ARGS_EXPORT_MACRO_NAME)
@@ -605,7 +609,7 @@ function(ecm_generate_export_header target)
 #endif
 
 #ifndef ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT
-#  define ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT ECM_GENERATEEXPORTHEADER_VERSION_VALUE(${_commaed_deprecatedbaseversion})
+#  define ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT ${_default_disabled_deprecated_version_hexnumber}
 #endif
 
 #ifdef ${_deprecated_macro_name}
