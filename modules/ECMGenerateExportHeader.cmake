@@ -527,7 +527,7 @@ function(ecm_generate_export_header target)
     if (ARGS_GROUP_BASE_NAME)
         string(TOUPPER "${ARGS_GROUP_BASE_NAME}" _upper_group_name)
         string(APPEND _output "
-// Take any defaults from group settings
+/* Take any defaults from group settings */
 #if !defined(${_macro_base_name}_NO_DEPRECATED) && !defined(${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT)
 #  ifdef ${_upper_group_name}_NO_DEPRECATED
 #    define ${_macro_base_name}_NO_DEPRECATED
@@ -574,7 +574,7 @@ function(ecm_generate_export_header target)
         # smaller then what the the build was done with
         _ecm_geh_generate_hex_number(_excluded_before_and_at_version_hexnumber "${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}")
         string(APPEND _output "
-// Build was done with the API removed deprecated before: ${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}
+/* Build was done with the API removed deprecated before: ${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT} */
 #define ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT ${_excluded_before_and_at_version_hexnumber}
 
 #ifdef ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT
@@ -589,7 +589,7 @@ function(ecm_generate_export_header target)
         )
     else()
         string(APPEND _output "
-// No deprecated API had been removed from build
+/* No deprecated API had been removed from build */
 #define ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT 0
 
 #define ${_macro_base_name}_BUILD_DEPRECATED_SINCE(major, minor) 1
@@ -724,7 +724,7 @@ function(ecm_generate_export_header target)
 
 ${_output}
 
-#endif // ${_include_guard}
+#endif /* ${_include_guard} */
 "
         )
     endif()
