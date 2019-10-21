@@ -204,18 +204,9 @@ endif()
 ############################################################
 
 # Pick sensible versions of the C and C++ standards.
-# Note that MSVC does not have equivalent flags; the features are either
-# supported or they are not.
-if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
-    # We use the C89 standard because that is what is common to all our
-    # compilers (in particular, MSVC 2010 does not support C99)
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=iso9899:1990")
-endif()
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-endif()
+set(CMAKE_C_STANDARD 90)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Do not merge uninitialized global variables.
 # This is mostly a "principle of least surprise" thing, but also
