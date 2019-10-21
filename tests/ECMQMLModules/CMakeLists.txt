@@ -1,5 +1,5 @@
 project(extra-cmake-modules)
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5)
 
 set(ECM_FIND_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../find-modules)
 set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
