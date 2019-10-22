@@ -658,9 +658,8 @@ function(ecm_generate_export_header target)
             )
         endforeach()
 
-        # TODO: any way to prefix "Since major.minor. " to text without getting text context wrapped with ""?
         string(APPEND _output
-"#define ${_macro_base_name}_DEPRECATED_VERSION(major, minor, text) ${_macro_base_name}_DEPRECATED_VERSION_##major(minor, \"Since \"#major\".\"#minor\". \"#text)
+"#define ${_macro_base_name}_DEPRECATED_VERSION(major, minor, text) ${_macro_base_name}_DEPRECATED_VERSION_##major(minor, \"Since \"#major\".\"#minor\". \" text)
 "
         )
     endif()
