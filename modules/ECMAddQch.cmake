@@ -565,12 +565,16 @@ function(ecm_add_qch target_name)
         set(ECM_QCH_DOXYGEN_PREDEFINED_MACROS)
         foreach(_macro IN LISTS ARGS_PREDEFINED_MACROS)
             # concat dirs separated by a break, it is no issue that first has also a leading break
-            set(ECM_QCH_DOXYGEN_PREDEFINED_MACROS "${ECM_QCH_DOXYGEN_PREDEFINED_MACROS} \\\n${_macro}")
+            # wrap each macro in quotes, to handle potential blanks and commas
+            string(REPLACE "\"" "\\\"" _macro "${_macro}")
+            set(ECM_QCH_DOXYGEN_PREDEFINED_MACROS "${ECM_QCH_DOXYGEN_PREDEFINED_MACROS} \\\n\"${_macro}\"")
         endforeach()
         set(ECM_QCH_DOXYGEN_BLANK_MACROS)
         foreach(_macro IN LISTS ARGS_BLANK_MACROS)
             # concat dirs separated by a break, it is no issue that first has also a leading break
-            set(ECM_QCH_DOXYGEN_BLANK_MACROS "${ECM_QCH_DOXYGEN_BLANK_MACROS} \\\n${_macro}=\"\"")
+            # wrap each macro in quotes, to handle potential blanks and commas
+            string(REPLACE "\"" "\\\"" _macro "${_macro}")
+            set(ECM_QCH_DOXYGEN_BLANK_MACROS "${ECM_QCH_DOXYGEN_BLANK_MACROS} \\\n\"${_macro}=\"")
         endforeach()
 
         # create list of tag files for linking other QCH files
