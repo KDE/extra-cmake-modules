@@ -204,9 +204,13 @@ endif()
 ############################################################
 
 # Pick sensible versions of the C and C++ standards.
-set(CMAKE_C_STANDARD 90)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+if (NOT CMAKE_C_STANDARD)
+    set(CMAKE_C_STANDARD 90)
+endif()
+if (NOT CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED True)
+endif()
 
 # Do not merge uninitialized global variables.
 # This is mostly a "principle of least surprise" thing, but also
