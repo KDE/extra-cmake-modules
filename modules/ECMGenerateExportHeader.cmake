@@ -383,14 +383,14 @@ function(ecm_export_header_format_version _version)
     )
     cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (NOT ARGS_CURRENT_VERSION)
-        message(FATAL_ERROR "No CURRENT_VERSION passed when calling ecm_export_header_format_version().")
-    endif()
     if (NOT ARGS_STRING_VAR AND NOT ARGS_HEXNUMBER_VAR)
         message(FATAL_ERROR "No STRING_VAR or HEXNUMBER_VAR passed when calling ecm_export_header_format_version().")
     endif()
 
     if(_version STREQUAL "CURRENT")
+        if (NOT ARGS_CURRENT_VERSION )
+            message(FATAL_ERROR "\"CURRENT\" as version value not supported when CURRENT_VERSION not passed on calling ecm_export_header_format_version().")
+        endif()
         set(_version ${ARGS_CURRENT_VERSION})
     endif()
 
