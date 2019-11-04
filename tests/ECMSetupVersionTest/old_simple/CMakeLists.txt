@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
+cmake_policy(SET CMP0048 OLD)
 project(old_simple)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules)
