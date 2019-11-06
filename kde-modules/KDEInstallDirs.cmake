@@ -136,7 +136,7 @@
 #     Systemd Units (``LIBDIR/systemd``)
 #     [``SYSTEMD_UNIT_INSTALL_DIR``]. Since 5.FIXME
 # ``SYSTEMDUSERUNITDIR``
-#     Systemd uSER Units (``LIBDIR/systemd/user``)
+#     Systemd User Units (``LIBDIR/systemd/user``)
 #     [``SYSTEMD_USER_UNIT_INSTALL_DIR``]. Since 5.FIXME
 #
 # If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
