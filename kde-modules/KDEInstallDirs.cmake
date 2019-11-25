@@ -133,11 +133,11 @@
 # ``JARDIR``
 #     Java AAR/JAR files for Android. Since 5.62.0
 # ``SYSTEMDUNITDIR``
-#     Systemd Units (``LIBDIR/systemd``)
-#     [``SYSTEMD_UNIT_INSTALL_DIR``]. Since 5.FIXME
+#     Systemd Units (``lib/systemd``)
+#     [``SYSTEMD_UNIT_INSTALL_DIR``]. Since 5.65
 # ``SYSTEMDUSERUNITDIR``
-#     Systemd User Units (``LIBDIR/systemd/user``)
-#     [``SYSTEMD_USER_UNIT_INSTALL_DIR``]. Since 5.FIXME
+#     Systemd User Units (``lib/systemd/user``)
+#     [``SYSTEMD_USER_UNIT_INSTALL_DIR``]. Since 5.65
 #
 # If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
 # module, the default values for some variables are instead queried from
@@ -646,7 +646,7 @@ _define_relative(DBUSSERVICEDIR DBUSDIR "services"
 _define_relative(DBUSSYSTEMSERVICEDIR DBUSDIR "system-services"
     "D-Bus system services"
     DBUS_SYSTEM_SERVICES_INSTALL_DIR)
-_define_relative(SYSTEMDUNITDIR LIBDIR "systemd"
+_define_relative(SYSTEMDUNITDIR CMAKE_INSTALL_PREFIX "lib/systemd"
     "Systemd units"
     SYSTEMD_UNIT_INSTALL_DIR)
 _define_relative(SYSTEMDUSERUNITDIR SYSTEMDUNITDIR "user"
