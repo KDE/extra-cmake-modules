@@ -242,7 +242,7 @@
 # GNUInstallDirs code deals with re-configuring, but that is dealt with
 # by the _define_* macros in this module).
 set(_LIBDIR_DEFAULT "lib")
-# Override this default 'lib' with 'lib64' iff:
+# Override this default 'lib' with 'lib64' if:
 #  - we are on a Linux, kFreeBSD or Hurd system but NOT cross-compiling
 #  - we are NOT on debian
 #  - we are NOT on flatpak
