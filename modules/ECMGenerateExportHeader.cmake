@@ -27,6 +27,7 @@
 #       [DEPRECATED_BASE_VERSION <deprecated_base_version>]
 #       [DEPRECATION_VERSIONS <deprecation_version> [<deprecation_version2> [...]]]
 #       [EXCLUDE_DEPRECATED_BEFORE_AND_AT <exclude_deprecated_before_and_at_version>]
+#       [NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE]
 #       [NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE]
 #       [CUSTOM_CONTENT_FROM_VARIABLE <variable>]
 #   )
@@ -57,12 +58,25 @@
 # Possible values are "0" (default), "CURRENT" (which resolves to <version>)
 # and a version string in the format "<major>.<minor>.<patchlevel>".
 #
+# ``NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE`` specifies that the definition
+# ``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE`` will
+# not be set for the library inside its own build, and thus will be defined
+# by either explicit definition in the build system configuration or by the
+# default value mechanism (see below).
+# The default is that it is set for the build, to the version specified by
+# ``EXCLUDE_DEPRECATED_BEFORE_AND_AT``, so no deprecation warnings are
+# done for any own deprecated API used in the library implementation itself.
+#
 # ``NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE`` specifies that the definition
 # ``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT`` will
-# not be set in the public interface of the library inside its own build.
-# The default is that it is set, to the version specified by
+# not be set in the public interface of the library inside its own build, and
+# the same for the definition
+# ``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE`` (if not
+# disabled by ``NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE`` already).
+# The default is that they are set, to the version specified by
 # ``EXCLUDE_DEPRECATED_BEFORE_AND_AT``, so e.g. test and examples part of the
-# project automatically build against the full API included in the build.
+# project automatically build against the full API included in the build and
+# without any deprecation warnings for it.
 #
 #
 # The function ``ecm_generate_export_header`` defines C++ preprocessor macros
@@ -411,6 +425,7 @@ endfunction()
 function(ecm_generate_export_header target)
     set(options
         NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE
+        NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE
     )
     set(oneValueArgs
         BASE_NAME
@@ -501,10 +516,17 @@ function(ecm_generate_export_header target)
     set_property(TARGET ${target} APPEND PROPERTY AUTOGEN_TARGET_DEPENDS "${ARGS_EXPORT_FILE_NAME}")
     # build with all the API not excluded, ensure all deprecated API is visible in the build itselt
     _ecm_geh_generate_hex_number(_hexnumber ${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT})
-    set(_disabling_definition "${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT=${_hexnumber}")
-    target_compile_definitions(${target} PRIVATE "${_disabling_definition}")
+    set(_disabling_visibility_definition "${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT=${_hexnumber}")
+    target_compile_definitions(${target} PRIVATE "${_disabling_visibility_definition}")
     if (NOT ARGS_NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE)
-        target_compile_definitions(${target} INTERFACE "$<BUILD_INTERFACE:${_disabling_definition}>")
+        target_compile_definitions(${target} INTERFACE "$<BUILD_INTERFACE:${_disabling_visibility_definition}>")
+    endif()
+    if(NOT ARGS_NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE)
+        set(_enabling_warnings_definition "${_macro_base_name}_DEPRECATED_WARNINGS_SINCE=${_hexnumber}")
+        target_compile_definitions(${target} PRIVATE "${_enabling_warnings_definition}")
+        if (NOT ARGS_NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE)
+            target_compile_definitions(${target} INTERFACE "$<BUILD_INTERFACE:${_enabling_warnings_definition}>")
+        endif()
     endif()
 
     # for the set of compiler versions supported by ECM/KF we can assume those attributes supported
