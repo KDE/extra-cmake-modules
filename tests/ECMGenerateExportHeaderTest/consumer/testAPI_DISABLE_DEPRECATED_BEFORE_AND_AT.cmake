@@ -62,7 +62,13 @@ int main(int, char**)
             set(_dep_warning_result_expected TRUE)
         endif()
 
-        set(CMAKE_REQUIRED_FLAGS "-Werror=deprecated-declarations")
+        if(MSVC)
+            # warning C4996 warns about deprecated declarations
+            set(CMAKE_REQUIRED_FLAGS "-we4996")
+        else()
+            set(CMAKE_REQUIRED_FLAGS "-Werror=deprecated-declarations")
+        endif()
+
         set(CMAKE_REQUIRED_DEFINITIONS) # unset LIBRARY_DISABLE_DEPRECATED_BEFORE_AND_AT, as LIBRARY_DEPRECATED_WARNINGS_SINCE defaults to it
         unset(_dep_warning_result CACHE) # clear out as check_cxx_source_compiles caches the result
         check_cxx_source_compiles("${_code}" _dep_warning_result)
