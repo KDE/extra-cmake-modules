@@ -26,7 +26,7 @@
 # Style for C++
 Language: Cpp
 
-# base is WebKit coding style: http://www.webkit.org/coding/coding-style.html
+# base is WebKit coding style: https://webkit.org/code-style-guidelines/
 # below are only things set that diverge from this style!
 BasedOnStyle: WebKit
 

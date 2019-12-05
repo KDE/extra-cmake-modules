@@ -56,7 +56,7 @@ find_program(Sphinx_BUILD_EXECUTABLE
         sphinx-build
         sphinx-build2
         sphinx-build3
-    DOC "Sphinx Documentation Builder (http://sphinx-doc.org/)"
+    DOC "Sphinx Documentation Builder (https://www.sphinx-doc.org/)"
 )
 
 if (Sphinx_BUILD_EXECUTABLE)

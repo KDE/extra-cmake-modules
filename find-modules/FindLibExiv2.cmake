@@ -113,6 +113,6 @@ endif()
 
 include(FeatureSummary)
 set_package_properties(LibExiv2 PROPERTIES
-    URL "http://www.exiv2.org"
+    URL "https://www.exiv2.org"
     DESCRIPTION "Image metadata support"
 )
