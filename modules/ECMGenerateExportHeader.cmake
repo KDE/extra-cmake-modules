@@ -138,7 +138,7 @@
 #
 # When the ``GROUP_BASE_NAME`` has been used, the same macros but with the
 # given ``<group_base_name>`` prefix are available to define the defaults of
-# these macros, if not explicitely set.
+# these macros, if not explicitly set.
 #
 # Note: The tricks applied here for hiding deprecated API to the compiler
 # when building against a library do not work for all deprecated API:
@@ -302,7 +302,7 @@
 # When using the ``NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE`` and the project
 # for the "Foo" library includes also tests and examples linking against the
 # library and using deprecated API (like tests covering it), one better
-# explicitely sets ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` for those targets
+# explicitly sets ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` for those targets
 # to the version before and at which all deprecated API has been excluded from
 # the build.
 # Even more when building against other libraries from the same group "Bar" and

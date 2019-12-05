@@ -770,7 +770,7 @@ def main(argv=None):
     """
     Take a single C++ header file and generate the corresponding SIP file.
     Beyond simple generation of the SIP file from the corresponding C++
-    header file, a set of rules can be used to customise the generated
+    header file, a set of rules can be used to customize the generated
     SIP file.
 
     Examples:

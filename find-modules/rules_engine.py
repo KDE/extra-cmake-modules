@@ -167,9 +167,9 @@ class ContainerRuleDb(AbstractCompiledRuleDb):
     """
     THE RULES FOR CONTAINERS.
 
-    These are used to customise the behaviour of the SIP generator by allowing
+    These are used to customize the behaviour of the SIP generator by allowing
     the declaration for any container (class, namespace, struct, union) to be
-    customised, for example to add SIP compiler annotations.
+    customized, for example to add SIP compiler annotations.
 
     Each entry in the raw rule database must be a list with members as follows:
 
@@ -242,9 +242,9 @@ class ForwardDeclarationRuleDb(AbstractCompiledRuleDb):
     """
     THE RULES FOR FORWARD DECLARATIONS.
 
-    These are used to customise the behaviour of the SIP generator by allowing
+    These are used to customize the behaviour of the SIP generator by allowing
     the forward declaration for any container (class, struct, union) to be
-    customised, for example to add SIP compiler annotations.
+    customized, for example to add SIP compiler annotations.
 
     Each entry in the raw rule database must be a list with members as follows:
 
@@ -307,8 +307,8 @@ class FunctionRuleDb(AbstractCompiledRuleDb):
     """
     THE RULES FOR FUNCTIONS.
 
-    These are used to customise the behaviour of the SIP generator by allowing
-    the declaration for any function to be customised, for example to add SIP
+    These are used to customize the behaviour of the SIP generator by allowing
+    the declaration for any function to be customized, for example to add SIP
     compiler annotations.
 
     Each entry in the raw rule database must be a list with members as follows:
@@ -385,8 +385,8 @@ class ParameterRuleDb(AbstractCompiledRuleDb):
     """
     THE RULES FOR FUNCTION PARAMETERS.
 
-    These are used to customise the behaviour of the SIP generator by allowing
-    the declaration for any parameter in any function to be customised, for
+    These are used to customize the behaviour of the SIP generator by allowing
+    the declaration for any parameter in any function to be customized, for
     example to add SIP compiler annotations.
 
     Each entry in the raw rule database must be a list with members as follows:
@@ -461,8 +461,8 @@ class TypedefRuleDb(AbstractCompiledRuleDb):
     """
     THE RULES FOR TYPEDEFS.
 
-    These are used to customise the behaviour of the SIP generator by allowing
-    the declaration for any typedef to be customised, for example to add SIP
+    These are used to customize the behaviour of the SIP generator by allowing
+    the declaration for any typedef to be customized, for example to add SIP
     compiler annotations.
 
     Each entry in the raw rule database must be a list with members as follows:
@@ -523,8 +523,8 @@ class VariableRuleDb(AbstractCompiledRuleDb):
     """
     THE RULES FOR VARIABLES.
 
-    These are used to customise the behaviour of the SIP generator by allowing
-    the declaration for any variable to be customised, for example to add SIP
+    These are used to customize the behaviour of the SIP generator by allowing
+    the declaration for any variable to be customized, for example to add SIP
     compiler annotations.
 
     Each entry in the raw rule database must be a list with members as follows:
@@ -643,7 +643,7 @@ class MethodCodeDb(AbstractCompiledCodeDb):
     THE RULES FOR INJECTING METHOD-RELATED CODE (such as %MethodCode,
     %VirtualCatcherCode, %VirtualCallCode and other method-level directives).
 
-    These are used to customise the behaviour of the SIP generator by allowing
+    These are used to customize the behaviour of the SIP generator by allowing
     method-level code injection.
 
     The raw rule database must be an outer dictionary as follows:
@@ -748,7 +748,7 @@ class ModuleCodeDb(AbstractCompiledCodeDb):
     THE RULES FOR INJECTING MODULE-RELATED CODE (such as %ExportedHeaderCode,
     %ModuleCode, %ModuleHeaderCode or other module-level directives).
 
-    These are used to customise the behaviour of the SIP generator by allowing
+    These are used to customize the behaviour of the SIP generator by allowing
     module-level code injection.
 
     The raw rule database must be a dictionary as follows:

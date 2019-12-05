@@ -102,7 +102,7 @@ foreach(_group_test_mode ${group_test_modes})
     foreach(_exclude_index RANGE ${_last_index})
         list(GET library_versions ${_exclude_index} _exclude_deprecated_before_and_at)
         # using disabled API limit below the excluded API limit is not supported and
-        # catched by the code generated from the ecm_generate_export_header,
+        # caught by the code generated from the ecm_generate_export_header,
         # so testing those combination will not work, so start from the excluded API limit
         foreach(_disable_index RANGE ${_exclude_index} ${_last_index})
             list(GET library_versions ${_disable_index} _disable_deprecated_before_and_at)
