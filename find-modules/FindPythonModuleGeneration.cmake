@@ -309,6 +309,7 @@ get_filename_component(libclang_file "${libclang_file}" REALPATH)
 
 find_file(SIP_Qt5Core_Mod_FILE
   NAMES QtCoremod.sip
+  HINTS ${KDE_INSTALL_PYTHON3DIR}/PyQt5/bindings/QtCore
   PATH_SUFFIXES share/sip/PyQt5/QtCore
 )
 
