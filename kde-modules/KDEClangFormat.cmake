@@ -12,10 +12,12 @@
 #
 #   kde_clang_format(<files>)
 #
-#   Using this function will create a clang-format target that will format all
-#   <files> passed to the function with the predefined KDE clang-format style.
+# Using this function will create a clang-format target that will format all
+# ``<files>`` passed to the function with the predefined KDE clang-format style.
 #
-#   Example usage:
+# Example usage:
+#
+# .. code-block:: cmake
 #
 #   include(KDEClangFormat)
 #   file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES src/*.cpp src/*.h)
