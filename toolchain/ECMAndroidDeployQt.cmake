@@ -68,7 +68,7 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
     )
 
     add_custom_target(install-apk-${QTANDROID_EXPORTED_TARGET}
-        COMMAND adb install -r "${EXPORT_DIR}/build/outputs/apk/${QTANDROID_EXPORTED_TARGET}_build_apk-debug.apk"
+        COMMAND adb install -r "${EXPORT_DIR}/build/outputs/apk/debug/${QTANDROID_EXPORTED_TARGET}_build_apk-debug.apk"
     )
     add_dependencies(create-apk ${CREATEAPK_TARGET_NAME})
 endfunction()
