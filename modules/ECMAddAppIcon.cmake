@@ -374,7 +374,7 @@ macro(_ecm_add_app_icon_categorize_icons icons type known_sizes)
             message(AUTHOR_WARNING "${icon_full} does not exist, ignoring")
         else()
             get_filename_component(icon_name ${icon} NAME)
-            string(REGEX MATCH "([0-9]+)\\-[^/]+\\.([a-z]+)$"
+            string(REGEX MATCH "([0-9]+|sc)\\-[^/]+\\.([a-z]+)$"
                                _dummy "${icon_name}")
             set(size  "${CMAKE_MATCH_1}")
             set(ext   "${CMAKE_MATCH_2}")
