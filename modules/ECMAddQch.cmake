@@ -145,6 +145,12 @@
 # VERBOSE tells the API dox generation tool to be more verbose about its
 # activity.
 #
+# The default config file for the API dox generation tool, so the one when not
+# using CONFIG_TEMPLATE, allows code to handle the case of being processed by
+# the tool by defining the C/C++ preprocessor macro ``K_DOXYGEN`` when run
+# (since v5.67.0). For backward-compatibility also the definition
+# ``DOXYGEN_SHOULD_SKIP_THIS`` is set, but its usage is deprecated.
+#
 # Example usage:
 #
 # .. code-block:: cmake

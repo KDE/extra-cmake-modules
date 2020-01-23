@@ -204,7 +204,10 @@ ALIASES                = "intern=\par<b>Internal use only.</b>" \
                          "mit=<a href=\"https://www.opensource.org/licenses/mit-license.php\">MIT</a>" \
                          "qpl=<a href=\"https://opensource.org/licenses/QPL-1.0\">QPL</a>"
 
+# K_DOXYGEN set to have preprocessor macros know that kapidox/doxygen processes them
+# DOXYGEN_SHOULD_SKIP_THIS is the deprecated variant (remove for KF6)
 PREDEFINED = DOXYGEN_SHOULD_SKIP_THIS \
+        K_DOXYGEN \
 \
         Q_WS_X11= \
         Q_WS_WIN= \
