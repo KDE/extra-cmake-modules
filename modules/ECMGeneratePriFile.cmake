@@ -180,9 +180,15 @@ function(ECM_GENERATE_PRI_FILE)
   endif()
 
   set(PRI_TARGET_MODULE_CONFIG "")
-  get_target_property(target_type ${EGPF_LIB_NAME} TYPE)
-  if (target_type STREQUAL "STATIC_LIBRARY")
-      set(PRI_TARGET_MODULE_CONFIG "staticlib")
+  # backward compat: it was not obvious LIB_NAME needs to be a target name,
+  # and some projects where the target name was not the actual library output name
+  # passed the output name for LIB_NAME, so .name & .module prperties are correctly set.
+  # TODO: improve API dox, allow control over module name if target name != output name
+  if(TARGET ${EGPF_LIB_NAME})
+    get_target_property(target_type ${EGPF_LIB_NAME} TYPE)
+    if (target_type STREQUAL "STATIC_LIBRARY")
+        set(PRI_TARGET_MODULE_CONFIG "staticlib")
+    endif()
   endif()
 
   file(GENERATE
