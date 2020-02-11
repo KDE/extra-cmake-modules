@@ -377,7 +377,7 @@ function(ecm_qt_install_logging_categories)
     set(_renamed_cats_file)
     if (_renamed_categories)
         get_filename_component(_dir ${ARGS_FILE} DIRECTORY)
-        get_filename_component(_base_name ${ARGS_FILE} NAME_WLE)
+        get_filename_component(_base_name ${ARGS_FILE} NAME_WE)
         set(_renamed_cats_file "${_dir}/${_base_name}.renamecategories")
         file(WRITE ${_renamed_cats_file}
 "# KDebugSettings data file
