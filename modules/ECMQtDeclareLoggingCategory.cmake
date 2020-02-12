@@ -335,7 +335,7 @@ function(ecm_qt_install_logging_categories)
     get_property(has_category GLOBAL PROPERTY "${_propertyprefix}_CATEGORIES" SET)
 
     if (NOT has_category)
-        message(FATAL_ERROR "${ARGS_EXPORT} is an unknown qt logging category export name.")
+        message(AUTHOR_WARNING "No Qt logging categories exported for \"${ARGS_EXPORT}\", generating & installing an empty file.")
     endif()
 
     get_property(_categories GLOBAL PROPERTY "${_propertyprefix}_CATEGORIES")
