@@ -167,18 +167,24 @@ if (NOT CMAKE_ANDROID_STL_TYPE)
     set(CMAKE_ANDROID_STL_TYPE c++_shared)
 endif()
 
-include(${CMAKE_ROOT}/Modules/Platform/Android-Clang.cmake REQUIRED)
-include(${CMAKE_ROOT}/Modules/Platform/Android-Initialize.cmake REQUIRED)
+# let the Android NDK toolchain file do the actual work
+set(ANDROID_PLATFORM "android-${CMAKE_ANDROID_API}")
+set(ANDROID_STL ${CMAKE_ANDROID_STL_TYPE})
+include(${CMAKE_ANDROID_NDK}/build/cmake/android.toolchain.cmake REQUIRED)
+
+# these aren't set yet at this point by the Android toolchain, but without
+# those the find_package() call in ECMAndroidDeployQt will fail
+set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
+
+# determine STL architecture, which is using a different format than ANDROID_ARCH_ABI
+string(REGEX REPLACE "-(clang)?([0-9].[0-9])?$" "" ECM_ANDROID_STL_ARCH ${ANDROID_TOOLCHAIN_NAME})
 
 if (NOT DEFINED ECM_ADDITIONAL_FIND_ROOT_PATH)
     SET(ECM_ADDITIONAL_FIND_ROOT_PATH ${CMAKE_PREFIX_PATH})
 endif()
 
-SET(CMAKE_FIND_ROOT_PATH ${CMAKE_ANDROID_NDK} ${CMAKE_ANDROID_NDK}/sysroot ${CMAKE_SYSROOT} ${ECM_ADDITIONAL_FIND_ROOT_PATH})
-SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+LIST(APPEND CMAKE_FIND_ROOT_PATH ${ECM_ADDITIONAL_FIND_ROOT_PATH})
 
 #we want executables to be shared libraries, hooks will invoke the exported cmake function
 set(CMAKE_CXX_LINK_EXECUTABLE

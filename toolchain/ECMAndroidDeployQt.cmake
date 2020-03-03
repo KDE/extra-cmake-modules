@@ -3,7 +3,11 @@ find_package(Qt5Core REQUIRED)
 
 function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_PATH)
     set(EXPORT_DIR "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}_build_apk/")
-    set(EXECUTABLE_DESTINATION_PATH "${EXPORT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${QTANDROID_EXPORTED_TARGET}.so")
+    if (Qt5Core_VERSION VERSION_LESS 5.14.0)
+        set(EXECUTABLE_DESTINATION_PATH "${EXPORT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${QTANDROID_EXPORTED_TARGET}.so")
+    else()
+        set(EXECUTABLE_DESTINATION_PATH "${EXPORT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${QTANDROID_EXPORTED_TARGET}_${CMAKE_ANDROID_ARCH_ABI}.so")
+    endif()
     set(QML_IMPORT_PATHS "")
     foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
         # qmlimportscanner chokes on symlinks, so we need to resolve those first
@@ -28,8 +32,14 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
             set(EXTRA_PREFIX_DIRS "\"${prefix}\"")
         endif()
     endforeach()
+
+    if (Qt5Core_VERSION VERSION_LESS 5.14.0)
+        set(_deployment_file_template "${_CMAKE_ANDROID_DIR}/deployment-file.json.in")
+    else()
+        set(_deployment_file_template "${_CMAKE_ANDROID_DIR}/deployment-file-qt514.json.in")
+    endif()
     string(TOLOWER "${CMAKE_HOST_SYSTEM_NAME}" _LOWER_CMAKE_HOST_SYSTEM_NAME)
-    configure_file("${_CMAKE_ANDROID_DIR}/deployment-file.json.in" "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}-deployment.json.in1")
+    configure_file("${_deployment_file_template}" "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}-deployment.json.in1")
     file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}-deployment.json.in2"
                   INPUT  "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}-deployment.json.in1")
 
