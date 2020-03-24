@@ -121,14 +121,20 @@ target_link_libraries(tr_thread_test PRIVATE Qt5::Core)
 # loading a module on a thread other than the main thread
 # (different catalog, no AUTOMOC)
 #
-qt5_generate_moc(tr_thread_test.cpp "${CMAKE_CURRENT_BINARY_DIR}/tr_thread_test.moc")
+# make sure the moc file is only visible to this test/target
+set(MOC_DIR "${CMAKE_CURRENT_BINARY_DIR}/tr_thread_test_2_moc")
+qt5_generate_moc(tr_thread_test.cpp "${MOC_DIR}/tr_thread_test.moc")
+# Unset SKIP_AUTOMOC again, to not interfer with AUTOMOC as set for tr_thread_test
+set_source_files_properties(tr_thread_test PROPERTIES SKIP_AUTOMOC OFF)
+
 set(tr_thread_test_2_SRCS
     tr_thread_test.cpp
-    "${CMAKE_CURRENT_BINARY_DIR}/tr_thread_test.moc"
+    "${MOC_DIR}/tr_thread_test.moc"
 )
 ecm_create_qm_loader(tr_thread_test_2_SRCS catalog2)
 add_executable(tr_thread_test_2 ${tr_thread_test_2_SRCS})
-target_include_directories(tr_thread_test_2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+set_target_properties(tr_thread_test_2 PROPERTIES AUTOMOC OFF)
+target_include_directories(tr_thread_test_2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}" "${MOC_DIR}")
 target_compile_definitions(tr_thread_test_2 PRIVATE "MODULE_PATH=\"$<TARGET_FILE:tr_thread_module>\"")
 target_link_libraries(tr_thread_test_2 PRIVATE Qt5::Core)
 
