@@ -114,7 +114,6 @@ add_test_macro(ExecuteCoreModules dummy)
 add_test_macro(ExecuteKDEModules dummy)
 add_test_macro(KDEFetchTranslations dummy)
 
-add_test_macro(KDEInstallDirsTest.relative_or_absolute dummy)
 add_test_variant(KDEInstallDirsTest.vars_in_sync_no_args
                  KDEInstallDirsTest.vars_in_sync dummy)
 add_test_macro(KDEInstallDirsTest.not_cache_variable dummy)
@@ -155,7 +154,8 @@ add_test_variant(KDEInstallDirsTest.relative_or_absolute_usr
 
 if (TARGET Qt5::qmake)
     set(KDEInstallDirsTest.relative_or_absolute_qt_EXTRA_OPTIONS
-        --build-options -DKDE_INSTALL_USE_QT_SYS_PATHS=TRUE
+        --build-options -DCMAKE_INSTALL_PREFIX=/tmp
+                        -DKDE_INSTALL_USE_QT_SYS_PATHS=TRUE
                         -DPLUGINDIR_should_be_absolute=TRUE
                         -DQMLDIR_should_be_absolute=TRUE
                         -DQTQCHDIR_should_be_absolute=TRUE
