@@ -125,7 +125,7 @@ function(ecm_add_wayland_client_protocol out_var)
 
     set_source_files_properties(${_client_header} GENERATED)
     set_source_files_properties(${_code} GENERATED)
-    set_property(SOURCE ${_client_header} PROPERTY SKIP_AUTOMOC ON)
+    set_property(SOURCE ${_client_header} ${_code} PROPERTY SKIP_AUTOMOC ON)
 
     add_custom_command(OUTPUT "${_client_header}"
         COMMAND ${WaylandScanner_EXECUTABLE} client-header ${_infile} ${_client_header}
