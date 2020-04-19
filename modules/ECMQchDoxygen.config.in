@@ -229,6 +229,7 @@ PREDEFINED = DOXYGEN_SHOULD_SKIP_THIS \
 \
         Q_SLOTS="slots" \
         Q_SIGNALS="signals" \
+        "Q_DECLARE_FLAGS(Flags, Enum)=typedef QFlags<Enum> Flags;" \
         Q_DECL_CONSTEXPR= \
         Q_DECL_RELAXED_CONSTEXPR= \
         Q_DECL_OVERRIDE="override" \
