@@ -75,7 +75,12 @@ foreach(_module ${KF5_FIND_COMPONENTS})
         ${_exact_arg} ${_quiet_arg}
         CONFIG
     )
-    find_package_handle_standard_args(KF5${_module} CONFIG_MODE)
+    # CMake >= 3.17 wants to be explictly told we are fine with name mismatch here
+    set(_name_mismatched_arg)
+    if(NOT CMAKE_VERSION VERSION_LESS 3.17)
+       set(_name_mismatched_arg NAME_MISMATCHED)
+    endif()
+    find_package_handle_standard_args(KF5${_module} CONFIG_MODE ${_name_mismatched_arg})
     if (KF5_FIND_REQUIRED AND KF5_FIND_REQUIRED_${_module})
         # If the component was required, we tell FeatureSummary so that it
         # will be displayed in the correct list. We do not use the REQUIRED
