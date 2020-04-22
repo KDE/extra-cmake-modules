@@ -74,11 +74,11 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
         COMMAND cmake -E copy "$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "${EXECUTABLE_DESTINATION_PATH}"
         COMMAND LANG=C cmake "-DTARGET=$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" -P ${_CMAKE_ANDROID_DIR}/hasMainSymbol.cmake
         COMMAND LANG=C cmake -DINPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json.in2" -DOUTPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json" "-DTARGET=$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "-DOUTPUT_DIR=$<TARGET_FILE_DIR:${QTANDROID_EXPORTED_TARGET}>" "-DEXPORT_DIR=${CMAKE_INSTALL_PREFIX}" "-DECM_ADDITIONAL_FIND_ROOT_PATH=\"${ECM_ADDITIONAL_FIND_ROOT_PATH}\"" "-DANDROID_EXTRA_LIBS=\"${ANDROID_EXTRA_LIBS}\"" -P ${_CMAKE_ANDROID_DIR}/specifydependencies.cmake
-        COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --gradle --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --output "${EXPORT_DIR}" --deployment bundled ${arguments}
+        COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --gradle --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --apk "${EXPORT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk" --output "${EXPORT_DIR}" --deployment bundled ${arguments}
     )
 
     add_custom_target(install-apk-${QTANDROID_EXPORTED_TARGET}
-        COMMAND adb install -r "${EXPORT_DIR}/build/outputs/apk/debug/${QTANDROID_EXPORTED_TARGET}_build_apk-debug.apk"
+        COMMAND adb install -r "${EXPORT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk"
     )
     add_dependencies(create-apk ${CREATEAPK_TARGET_NAME})
 endfunction()
