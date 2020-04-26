@@ -227,15 +227,15 @@ PREDEFINED = DOXYGEN_SHOULD_SKIP_THIS \
         Q_OS_SOLARIS= \
         Q_OS_IRIX= \
 \
-        Q_SLOTS="slots" \
-        Q_SIGNALS="signals" \
+        Q_SLOTS=slots \
+        Q_SIGNALS=signals \
         "Q_DECLARE_FLAGS(Flags, Enum)=typedef QFlags<Enum> Flags;" \
-        Q_DECL_CONSTEXPR= \
+        Q_DECL_CONSTEXPR=constexpr \
         Q_DECL_RELAXED_CONSTEXPR= \
-        Q_DECL_OVERRIDE="override" \
-        Q_DECL_FINAL="final" \
-        Q_DECL_EQ_DEFAULT="= default" \
-        Q_DECL_EQ_DELETE="= delete" \
+        Q_DECL_OVERRIDE=override \
+        Q_DECL_FINAL=final \
+        "Q_DECL_EQ_DEFAULT= = default" \
+        "Q_DECL_EQ_DELETE= = delete" \
         Q_DECL_NOEXCEPT= \
         Q_DECL_DEPRECATED= \
         Q_DECL_UNUSED_MEMBER= \
@@ -243,7 +243,7 @@ PREDEFINED = DOXYGEN_SHOULD_SKIP_THIS \
         Q_DECL_EXPORT= \
         Q_DECL_IMPORT= \
         Q_DECL_HIDDEN= \
-        Q_DECL_NULLPTR="nullptr" \
+        Q_DECL_NULLPTR=nullptr \
         Q_REQUIRED_RESULT= \
         Q_SCRIPTABLE= \
         Q_INVOKABLE= \
