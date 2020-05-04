@@ -245,6 +245,7 @@ macro(ecm_find_package_handle_library_components module_name)
             set(${module_name}_VERSION ${${module_name}_${ecm_fpwc_comp}_VERSION})
         endif()
 
+        set(FPHSA_NAME_MISMATCHED 1)
         find_package_handle_standard_args(${module_name}_${ecm_fpwc_comp}
             FOUND_VAR
                 ${module_name}_${ecm_fpwc_comp}_FOUND
@@ -255,6 +256,7 @@ macro(ecm_find_package_handle_library_components module_name)
             VERSION_VAR
                 ${module_name}_${ecm_fpwc_comp}_VERSION
             )
+        unset(FPHSA_NAME_MISMATCHED)
 
         mark_as_advanced(
             ${module_name}_${ecm_fpwc_comp}_LIBRARY
