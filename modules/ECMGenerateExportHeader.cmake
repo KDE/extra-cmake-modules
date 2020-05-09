@@ -51,6 +51,7 @@
 # ``DEPRECATION_VERSIONS`` specifies versions in "<major>.<minor>" format in
 # which API was declared deprecated. Any version used with the generated
 # macro ``<prefix_name><base_name>_DEPRECATED_VERSION(major, minor, text)``
+# or ``<prefix_name><base_name>_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
 # needs to be listed here, otherwise the macro will fail to work.
 #
 # ``EXCLUDE_DEPRECATED_BEFORE_AND_AT`` specifies the version for which all API
@@ -93,6 +94,16 @@
 #   ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for a class, struct
 #   or function (other elements to be supported in future versions), depending
 #   on the visibility macro flags set (see below)
+#
+# ``<prefix_name><uppercase_base_name>_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
+#   to use to conditionally set a
+#   ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for a class, struct
+#   or function (other elements to be supported in future versions), depending
+#   on the visibility macro flags set (see below), with ``major`` & ``minor``
+#   applied for the logic and ``textmajor`` & ``textminor`` for the warnings message.
+#   Useful for retroactive tagging of API for the compiler without injecting the
+#   API into the compiler warning conditions of already released versions.
+#   Since 5.71.
 #
 # ``<prefix_name><uppercase_base_name>_ENABLE_DEPRECATED_SINCE(major, minor)``
 #   evaluates to ``TRUE`` or ``FALSE`` depending on the visibility macro flags
@@ -682,6 +693,10 @@ function(ecm_generate_export_header target)
 
         string(APPEND _output
 "#define ${_macro_base_name}_DEPRECATED_VERSION(major, minor, text) ${_macro_base_name}_DEPRECATED_VERSION_##major(minor, \"Since \"#major\".\"#minor\". \" text)
+"
+        )
+        string(APPEND _output
+"#define ${_macro_base_name}_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text) ${_macro_base_name}_DEPRECATED_VERSION_##major(minor, \"Since \"#textmajor\".\"#textminor\". \" text)
 "
         )
     endif()
