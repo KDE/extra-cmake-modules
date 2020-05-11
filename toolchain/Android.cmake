@@ -90,7 +90,8 @@
 #   make
 #   make create-apk-myapp
 #
-# The APK would then be found in ``myapp_build_apk/bin`` in the build directory.
+# You can specify the APK output directory by setting ``ANDROID_APK_OUTPUT_DIR``.
+# Otherwise the APK can be found in ``myapp_build_apk/`` in the build directory.
 #
 # The create-apk-myapp target will be able to take an ARGS parameter with further
 # arguments for androiddeployqt. For example, one can use::

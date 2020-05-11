@@ -66,6 +66,10 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
         add_custom_target(create-apk)
     endif()
 
+    if (NOT DEFINED ANDROID_APK_OUTPUT_DIR)
+        set(ANDROID_APK_OUTPUT_DIR ${EXPORT_DIR})
+    endif()
+
     set(CREATEAPK_TARGET_NAME "create-apk-${QTANDROID_EXPORTED_TARGET}")
     add_custom_target(${CREATEAPK_TARGET_NAME}
         COMMAND cmake -E echo "Generating $<TARGET_NAME:${QTANDROID_EXPORTED_TARGET}> with $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt"
@@ -74,11 +78,11 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
         COMMAND cmake -E copy "$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "${EXECUTABLE_DESTINATION_PATH}"
         COMMAND LANG=C cmake "-DTARGET=$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" -P ${_CMAKE_ANDROID_DIR}/hasMainSymbol.cmake
         COMMAND LANG=C cmake -DINPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json.in2" -DOUTPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json" "-DTARGET=$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "-DOUTPUT_DIR=$<TARGET_FILE_DIR:${QTANDROID_EXPORTED_TARGET}>" "-DEXPORT_DIR=${CMAKE_INSTALL_PREFIX}" "-DECM_ADDITIONAL_FIND_ROOT_PATH=\"${ECM_ADDITIONAL_FIND_ROOT_PATH}\"" "-DANDROID_EXTRA_LIBS=\"${ANDROID_EXTRA_LIBS}\"" -P ${_CMAKE_ANDROID_DIR}/specifydependencies.cmake
-        COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --gradle --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --apk "${EXPORT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk" --output "${EXPORT_DIR}" --deployment bundled ${arguments}
+        COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --gradle --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --apk "${ANDROID_APK_OUTPUT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk" --output "${EXPORT_DIR}" --deployment bundled ${arguments}
     )
 
     add_custom_target(install-apk-${QTANDROID_EXPORTED_TARGET}
-        COMMAND adb install -r "${EXPORT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk"
+        COMMAND adb install -r "${ANDROID_APK_OUTPUT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk"
     )
     add_dependencies(create-apk ${CREATEAPK_TARGET_NAME})
 endfunction()
