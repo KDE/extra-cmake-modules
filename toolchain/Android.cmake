@@ -55,13 +55,13 @@
 # prefixes of those libraries would be passed as alternative roots as list via
 # ``ECM_ADDITIONAL_FIND_ROOT_PATH``. Since 5.30.0.
 #
-# For example, for integrating a Qt5 for Android with armv7 target present at
-# ``/opt/android/Qt5/5.7/android_armv7`` and some other libraries installed to
+# For example, for integrating a Qt5 for Android present at
+# ``~/Qt/5.14.2/android/`` and some other libraries installed to
 # the prefix ``/opt/android/foo``, you would use::
 #
 #   cmake \
 #     -DCMAKE_TOOLCHAIN_FILE=/usr/share/ECM/toolchain/Android.cmake \
-#     -DECM_ADDITIONAL_FIND_ROOT_PATH="/opt/android/Qt5/5.7/android_armv7;/opt/android/foo"
+#     -DECM_ADDITIONAL_FIND_ROOT_PATH="~/Qt/5.14.2/android/;/opt/android/foo"
 #
 # If your project uses ``find_package()`` to locate build tools on the host
 # system, make sure to pass ``CMAKE_FIND_ROOT_PATH_BOTH`` or
