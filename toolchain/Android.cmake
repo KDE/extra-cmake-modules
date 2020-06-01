@@ -155,7 +155,17 @@ include(${CMAKE_ANDROID_NDK}/build/cmake/android.toolchain.cmake REQUIRED)
 # these aren't set yet at this point by the Android toolchain, but without
 # those the find_package() call in ECMAndroidDeployQt will fail
 set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
+set(CMAKE_FIND_LIBRARY_SUFFIXES "_${CMAKE_ANDROID_ARCH_ABI}.so" ".so" ".a")
+
+# Work around Qt messing with CMAKE_SHARED_LIBRARY_SUFFIX and thus breaking find_library()
+# Unfortunately, just setting CMAKE_FIND_LIBRARY_SUFFIXES here won't help, as this will
+# be subsequently overwritten.
+macro(addAbiSuffix _var _access)
+     if (${_access} STREQUAL "MODIFIED_ACCESS")
+         list(PREPEND CMAKE_FIND_LIBRARY_SUFFIXES "_${CMAKE_ANDROID_ARCH_ABI}.so")
+     endif()
+endmacro()
+variable_watch(CMAKE_FIND_LIBRARY_SUFFIXES addAbiSuffix)
 
 # determine STL architecture, which is using a different format than ANDROID_ARCH_ABI
 string(REGEX REPLACE "-(clang)?([0-9].[0-9])?$" "" ECM_ANDROID_STL_ARCH ${ANDROID_TOOLCHAIN_NAME})
