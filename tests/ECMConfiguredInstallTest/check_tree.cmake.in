@@ -1,0 +1,20 @@
+set(EXPECTED "@CMAKE_CURRENT_SOURCE_DIR@/expected")
+set(ACTUAL "@CMAKE_INSTALL_PREFIX@")
+
+# Compares files in two directories, emits a fatal error if the top level files are different
+# Takes a directory of expected files, and a directory of output files
+function(compare_dirs expected output )
+    file(GLOB files "${expected}/*")
+    foreach(file ${files})
+        get_filename_component(name ${file} NAME)
+
+        execute_process(COMMAND ${CMAKE_COMMAND} -E compare_files ${file} "${output}/${name}"
+                                        RESULT_VARIABLE test_result
+        )
+        If (NOT test_result EQUAL 0)
+            message(FATAL_ERROR "Test failed: ${file} doesn't match ${output}/${name}!")
+        endif()
+    endforeach()
+endfunction()
+
+compare_dirs(${EXPECTED} ${ACTUAL}/test )

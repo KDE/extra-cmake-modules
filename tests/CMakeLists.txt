@@ -201,3 +201,13 @@ set_package_properties(
 if (TARGET Qt5::Quick)
     add_test_macro(ECMQMLModules dummy)
 endif()
+
+set(ECMConfiguredInstallTest_EXTRA_OPTIONS
+    --build-target install
+    --build-options
+        "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMConfiguredInstallTest/InstallDirectory"
+)
+add_test_macro(ECMConfiguredInstallTest
+    ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMConfiguredInstallTest/check_tree.cmake"
+)
+
