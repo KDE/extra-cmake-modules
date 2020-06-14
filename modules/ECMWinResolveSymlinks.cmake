@@ -21,14 +21,9 @@
 # Since 5.28
 
 #=============================================================================
-# Copyright 2016 Gleb Popov <6yearold@gmail.com>
+# SPDX-FileCopyrightText: 2016 Gleb Popov <6yearold@gmail.com>
 #
-# Distributed under the OSI-approved BSD License (the "License");
-# see accompanying file COPYING-CMAKE-SCRIPTS for details.
-#
-# This software is distributed WITHOUT ANY WARRANTY; without even the
-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the License for more information.
+# SPDX-License-Identifier: BSD-3-Clause
 #=============================================================================
 # (To distribute this file outside of extra-cmake-modules, substitute the full
 #  License text for the above reference.)
