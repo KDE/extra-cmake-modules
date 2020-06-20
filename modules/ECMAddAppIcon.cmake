@@ -39,8 +39,7 @@
 #    * Icons are compiled into the executable using a resource file.
 #    * Icons may not show up in Windows Explorer if the executable
 #      target does not have the ``WIN32_EXECUTABLE`` property set.
-#    * One of the tools png2ico (See :find-module:`FindPng2Ico`) or
-#      icotool (see :find-module:`FindIcoTool`) is required.
+#    * Icotool (see :find-module:`FindIcoTool`) is required.
 #    * Supported sizes: 16, 24, 32, 48, 64, 128, 256, 512 and 1024.
 #
 # Mac OS X notes
@@ -170,7 +169,6 @@ function(ecm_add_app_icon appsources)
     if (WIN32 AND (windows_icons_modern OR windows_icons_classic))
         set(saved_CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}")
         set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_FIND_MODULE_DIR})
-        find_package(Png2Ico)
         find_package(IcoTool)
         set(CMAKE_MODULE_PATH "${saved_CMAKE_MODULE_PATH}")
 
@@ -223,33 +221,8 @@ function(ecm_add_app_icon appsources)
 
             create_windows_icon_and_rc(IcoTool::IcoTool "${icotool_args}" "${windows_icons_modern}")
             set(${appsources} "${${appsources}};${_outfilename}.rc" PARENT_SCOPE)
-
-        # standard png2ico has no rcfile argument
-        elseif(Png2Ico_FOUND AND NOT Png2Ico_HAS_RCFILE_ARGUMENT AND windows_icons_classic)
-            set(png2ico_args)
-            list(APPEND png2ico_args "${_outfilename}.ico")
-            list(APPEND png2ico_args "${windows_icons_classic}")
-
-            create_windows_icon_and_rc(Png2Ico::Png2Ico "${png2ico_args}" "${windows_icons_classic}")
-            set(${appsources} "${${appsources}};${_outfilename}.rc" PARENT_SCOPE)
-
-        # png2ico from kdewin provides rcfile argument
-        elseif(Png2Ico_FOUND AND windows_icons_classic)
-            add_custom_command(
-                  OUTPUT "${_outfilename}.rc" "${_outfilename}.ico"
-                  COMMAND Png2Ico::Png2Ico
-                  ARGS
-                      --rcfile "${_outfilename}.rc"
-                      "${_outfilename}.ico"
-                      ${windows_icons_classic}
-                  DEPENDS ${windows_icons_classic}
-                  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-              )
-
-            set(${appsources} "${${appsources}};${_outfilename}.rc" PARENT_SCOPE)
-        # else none of the supported tools was found
         else()
-            message(WARNING "Unable to find the png2ico or icotool utilities or icons in matching sizes - application will not have an application icon!")
+            message(WARNING "Unable to find the icotool utilities or icons in matching sizes - application will not have an application icon!")
         endif()
     elseif (APPLE AND (mac_icons OR mac_sidebar_icons))
         # first generate .iconset directory structure, then convert to .icns format using the Mac OS X "iconutil" utility,
