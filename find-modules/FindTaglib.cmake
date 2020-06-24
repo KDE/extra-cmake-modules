@@ -1,6 +1,6 @@
 #.rst:
 # FindTaglib
-#-----------
+# ----------
 #
 # Try to find the Taglib library.
 #
