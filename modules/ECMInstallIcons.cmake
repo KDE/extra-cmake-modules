@@ -51,11 +51,11 @@
 #   <theme><size>-<group>-<name>.<ext>
 #
 # where ``<theme>`` is one of
-#  * ``hi`` for hicolor
-#  * ``lo`` for locolor
-#  * ``cr`` for the Crystal icon theme
-#  * ``ox`` for the Oxygen icon theme
-#  * ``br`` for the Breeze icon theme
+# * ``hi`` for hicolor
+# * ``lo`` for locolor
+# * ``cr`` for the Crystal icon theme
+# * ``ox`` for the Oxygen icon theme
+# * ``br`` for the Breeze icon theme
 #
 # With this syntax, the file ``hi22-actions-menu_new.png`` would be installed
 # into ``<icon_install_dir>/hicolor/22x22/actions/menu_new.png``
