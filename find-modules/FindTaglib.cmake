@@ -16,7 +16,7 @@
 # ``Taglib_VERSION``
 #       The version of taglib that was found
 #
-# If ``Taglib_FOUND is TRUE, it will also define the following imported
+# If ``Taglib_FOUND`` is TRUE, it will also define the following imported
 # target:
 #
 # ``Taglib::Taglib``
