@@ -51,6 +51,7 @@
 #   <theme><size>-<group>-<name>.<ext>
 #
 # where ``<theme>`` is one of
+#
 # * ``hi`` for hicolor
 # * ``lo`` for locolor
 # * ``cr`` for the Crystal icon theme
