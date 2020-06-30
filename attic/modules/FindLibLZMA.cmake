@@ -25,7 +25,7 @@ SET(LIBLZMA_INCLUDE_DIRS ${LIBLZMA_INCLUDE_DIR})
 
 
 # We're using new code known now as XZ, even library still been called LZMA
-# it can be found in http://tukaani.org/xz/
+# it can be found in https://tukaani.org/xz/
 # Avoid using old codebase
 IF (LIBLZMA_LIBRARIES)
    INCLUDE(CheckLibraryExists)

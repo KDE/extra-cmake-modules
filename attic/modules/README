@@ -8,11 +8,11 @@ Changes to any files should follow the
 
 cmake commit policy 
 
-    at http://techbase.kde.org/Policies/CMake_Commit_Policy
+    at https://community.kde.org/Policies/CMake_Commit_Policy
 
 and the cmake coding style 
 
-    at http://techbase.kde.org/Policies/CMake_Coding_Style
+    at https://community.kde.org/Policies/CMake_Coding_Style
 
 
 Alex <neundorf@kde.org>

@@ -4,7 +4,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
-# SIP website: http://www.riverbankcomputing.co.uk/sip/index.php
+# SIP website: https://riverbankcomputing.com/software/sip
 #
 # This file defines the following macros:
 #

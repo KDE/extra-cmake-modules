@@ -11,7 +11,7 @@ find_package(Sphinx 1.2 MODULE)
 set_package_properties(
     Sphinx
     PROPERTIES
-        URL "http://sphinx-doc.org/"
+        URL "https://www.sphinx-doc.org/"
         DESCRIPTION "Tool to generate documentation."
         TYPE OPTIONAL
         PURPOSE "Required to build documentation for Extra CMake Modules."

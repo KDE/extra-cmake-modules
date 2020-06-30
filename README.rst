@@ -84,7 +84,7 @@ License
 
 All code is licensed under the `BSD 3-Clause license`_.
 
-.. _BSD 3-Clause license: http://opensource.org/licenses/BSD-3-Clause
+.. _BSD 3-Clause license: https://opensource.org/licenses/BSD-3-Clause
 
 
 Links

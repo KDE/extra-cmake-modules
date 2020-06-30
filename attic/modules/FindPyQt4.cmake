@@ -4,7 +4,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
-# PyQt4 website: http://www.riverbankcomputing.co.uk/pyqt/index.php
+# PyQt4 website: https://riverbankcomputing.com/software/pyqt
 #
 # Find the installed version of PyQt4. FindPyQt4 should only be called after
 # Python has been found.

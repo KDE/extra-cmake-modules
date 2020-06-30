@@ -1,7 +1,7 @@
 # Find SIP
 # ~~~~~~~~
 #
-# SIP website: http://www.riverbankcomputing.co.uk/sip/index.php
+# SIP website: https://riverbankcomputing.com/software/sip
 #
 # Find the installed version of SIP. FindSIP should be called after Python
 # has been found.
