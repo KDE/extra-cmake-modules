@@ -86,7 +86,7 @@
 # and that way will ensure that in the 3rd-party plugin's buildsystem
 # automoc is instructed as well as needed:
 #
-# .. code-block:: cmake
+# ::
 #
 #   @PACKAGE_SETUP_AUTOMOC_VARIABLES@
 #
