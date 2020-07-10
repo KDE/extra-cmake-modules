@@ -211,3 +211,11 @@ add_test_macro(ECMConfiguredInstallTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMConfiguredInstallTest/check_tree.cmake"
 )
 
+set(ECMGenerateDBusServiceFileTest_EXTRA_OPTIONS
+    --build-target install
+    --build-options
+        "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/ECMGenerateDBusServiceFileTest/InstallDirectory"
+)
+add_test_macro(ECMGenerateDBusServiceFileTest
+    ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMGenerateDBusServiceFileTest/check_tree.cmake"
+)
