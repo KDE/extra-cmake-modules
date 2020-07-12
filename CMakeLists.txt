@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 # Preliminary setup
 #
 
-set(VERSION "5.72.0") # handled by release scripts
+set(VERSION "5.73.0") # handled by release scripts
 
 if (POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
