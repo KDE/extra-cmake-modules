@@ -32,9 +32,6 @@ PointerAlignment: Right
 # horizontally aligns arguments after an open bracket.
 AlignAfterOpenBracket: Align
 
-# align trailing comments
-AlignTrailingComments: true
-
 # don't move all parameters to new line
 AllowAllParametersOfDeclarationOnNextLine: false
 
@@ -67,3 +64,6 @@ SpaceAfterTemplateKeyword: false
 
 # macros for which the opening brace stays attached.
 ForEachMacros: [ foreach, Q_FOREACH, BOOST_FOREACH, forever, Q_FOREVER, QBENCHMARK, QBENCHMARK_ONCE ]
+
+# keep lambda formatting multi-line if not empty
+AllowShortLambdasOnASingleLine: Empty
