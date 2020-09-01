@@ -12,10 +12,11 @@
 #       EXECUTABLE <executable>
 #       [SYSTEMD_SERVICE <systemd service>]
 #       DESTINATION <install_path>
+#       [RENAME <dbus service filename>]
 #   )
 #
 # A D-Bus service file ``<service name>.service`` will be generated and installed
-# in the relevant D-Bus config location.
+# in the relevant D-Bus config location. This filename can be customized with RENAME.
 #
 # ``<executable>`` must be an absolute path to the installed service executable. When using it with
 # ``KDEInstallDirs`` it needs to be the ``_FULL_`` variant of the path variable.
@@ -43,12 +44,14 @@
 #       EXECUTABLE ${KDE_INSTALL_FULL_BINDIR}/kded5
 #       SYSTEMD_SERVICE plasma-kded.service
 #       DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR}
+#       RENAME org.kde.daemon.service
 #   )
 #
 # Since 5.73.0.
 
 #=============================================================================
 # SPDX-FileCopyrightText: 2020 Kai Uwe Broulik <kde@broulik.de>
+# SPDX-FileCopyrightText: 2020 Henri Chain <henri.chain@enioka.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -56,7 +59,7 @@ include(CMakeParseArguments)
 
 function(ecm_generate_dbus_service_file)
     set(options)
-    set(oneValueArgs EXECUTABLE NAME SYSTEMD_SERVICE DESTINATION)
+    set(oneValueArgs EXECUTABLE NAME SYSTEMD_SERVICE DESTINATION RENAME)
     set(multiValueArgs)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -95,5 +98,9 @@ Exec=${_exec}
         file(APPEND ${_service_file} "SystemdService=${ARG_SYSTEMD_SERVICE}\n")
     endif()
 
-    install(FILES ${_service_file} DESTINATION ${ARG_DESTINATION})
+    if (ARG_RENAME)
+        install(FILES ${_service_file} DESTINATION ${ARG_DESTINATION} RENAME ${ARG_RENAME})
+    else()
+        install(FILES ${_service_file} DESTINATION ${ARG_DESTINATION})
+    endif()
 endfunction()

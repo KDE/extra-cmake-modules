@@ -19,6 +19,7 @@ ecm_generate_dbus_service_file(
    EXECUTABLE /usr/bin/kded5
    SYSTEMD_SERVICE plasma-kded.service
    DESTINATION ${CMAKE_INSTALL_PREFIX}/test
+   RENAME org.kde.kded5.withSystemD.renamed.service
 )
 
 # this will be run by CTest
