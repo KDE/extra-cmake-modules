@@ -15,5 +15,7 @@
    "android-package-source-directory": "$<TARGET_PROPERTY:create-apk-${QTANDROID_EXPORTED_TARGET},ANDROID_APK_DIR>",
    "stdcpp-path":##CMAKE_CXX_STANDARD_LIBRARIES##,
    "sdkBuildToolsRevision": "@ANDROID_SDK_BUILD_TOOLS_REVISION@",
+   "android-min-sdk-version": "@ANDROID_API_LEVEL@",
+   "android-target-sdk-version": "@ANDROID_SDK_COMPILE_API@",
    "extraPrefixDirs": [ @EXTRA_PREFIX_DIRS@ ]
 }
