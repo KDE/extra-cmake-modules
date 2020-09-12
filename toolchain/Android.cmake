@@ -165,6 +165,23 @@ set(ANDROID_PLATFORM "android-${CMAKE_ANDROID_API}")
 set(ANDROID_STL ${CMAKE_ANDROID_STL_TYPE})
 include(${CMAKE_ANDROID_NDK}/build/cmake/android.toolchain.cmake REQUIRED)
 
+## HACK: Remove when we can depend on NDK r22
+# Workaround issue https://github.com/android/ndk/issues/929
+if(ANDROID_NDK_MAJOR VERSION_LESS 22)
+    unset(CMAKE_SYSROOT)
+    set(ANDROID_SYSROOT_PREFIX "${ANDROID_TOOLCHAIN_ROOT}/sysroot/usr")
+
+    list(APPEND CMAKE_SYSTEM_INCLUDE_PATH
+      "${ANDROID_SYSROOT_PREFIX}/include/${CMAKE_LIBRARY_ARCHITECTURE}")
+    list(APPEND CMAKE_SYSTEM_INCLUDE_PATH "${ANDROID_SYSROOT_PREFIX}/include")
+
+    # Prepend in reverse order
+    list(PREPEND CMAKE_SYSTEM_LIBRARY_PATH
+      "${ANDROID_SYSROOT_PREFIX}/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+    list(PREPEND CMAKE_SYSTEM_LIBRARY_PATH
+      "${ANDROID_SYSROOT_PREFIX}/lib/${CMAKE_LIBRARY_ARCHITECTURE}/${ANDROID_PLATFORM_LEVEL}")
+endif()
+
 # these aren't set yet at this point by the Android toolchain, but without
 # those the find_package() call in ECMAndroidDeployQt will fail
 set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
