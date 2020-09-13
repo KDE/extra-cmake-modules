@@ -142,6 +142,7 @@ set_deprecated_variable(CMAKE_ANDROID_ARCH_ABI ANDROID_ABI "$ENV{ANDROID_ARCH_AB
 set(ANDROID_SDK_ROOT "$ENV{ANDROID_SDK_ROOT}" CACHE PATH "Android SDK path")
 
 file(GLOB platforms LIST_DIRECTORIES TRUE RELATIVE ${ANDROID_SDK_ROOT}/platforms ${ANDROID_SDK_ROOT}/platforms/*)
+list(SORT platforms COMPARE NATURAL)
 list(GET platforms -1 _default_platform)
 set(ANDROID_SDK_COMPILE_API "${_default_platform}" CACHE STRING "Android API Level")
 if(ANDROID_SDK_COMPILE_API MATCHES "^android-([0-9]+)$")
@@ -149,6 +150,7 @@ if(ANDROID_SDK_COMPILE_API MATCHES "^android-([0-9]+)$")
 endif()
 
 file(GLOB build-tools LIST_DIRECTORIES TRUE RELATIVE ${ANDROID_SDK_ROOT}/build-tools ${ANDROID_SDK_ROOT}/build-tools/*)
+list(SORT build-tools COMPARE NATURAL)
 list(GET build-tools -1 _default_sdk)
 set(ANDROID_SDK_BUILD_TOOLS_REVISION "${_default_sdk}" CACHE STRING "Android Build Tools version")
 

@@ -80,6 +80,9 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
         COMMAND LANG=C cmake -DINPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json.in2" -DOUTPUT_FILE="${QTANDROID_EXPORTED_TARGET}-deployment.json" "-DTARGET=$<TARGET_FILE:${QTANDROID_EXPORTED_TARGET}>" "-DOUTPUT_DIR=$<TARGET_FILE_DIR:${QTANDROID_EXPORTED_TARGET}>" "-DEXPORT_DIR=${CMAKE_INSTALL_PREFIX}" "-DECM_ADDITIONAL_FIND_ROOT_PATH=\"${ECM_ADDITIONAL_FIND_ROOT_PATH}\"" "-DANDROID_EXTRA_LIBS=\"${ANDROID_EXTRA_LIBS}\"" -P ${_CMAKE_ANDROID_DIR}/specifydependencies.cmake
         COMMAND $<TARGET_FILE_DIR:Qt5::qmake>/androiddeployqt --gradle --input "${QTANDROID_EXPORTED_TARGET}-deployment.json" --apk "${ANDROID_APK_OUTPUT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk" --output "${EXPORT_DIR}" --android-platform android-${ANDROID_SDK_COMPILE_API} --deployment bundled ${arguments}
     )
+    # --android-platform above is only available as a command line option
+    # This specifies the actual version of the SDK files to use, and
+    # can be different from both the NDK target and the Java API target.
 
     add_custom_target(install-apk-${QTANDROID_EXPORTED_TARGET}
         COMMAND adb install -r "${ANDROID_APK_OUTPUT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk"
