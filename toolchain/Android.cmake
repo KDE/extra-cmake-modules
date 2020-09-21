@@ -160,6 +160,18 @@ if (NOT CMAKE_ANDROID_STL_TYPE)
     set(CMAKE_ANDROID_STL_TYPE c++_shared)
 endif()
 
+# Workaround link failure at FindThreads in CXX-only mode,
+# armv7 really doesn't like mixing PIC/PIE code.
+# Since we only have to care about a single compiler,
+# hard-code the values here.
+if (NOT TARGET Threads::Threads)
+    set(Threads_FOUND TRUE)
+    set(CMAKE_THREAD_LIBS_INIT "-pthread")
+    add_library(Threads::Threads INTERFACE IMPORTED)
+    set_property(TARGET Threads::Threads PROPERTY INTERFACE_COMPILE_OPTIONS "-pthread")
+    set_property(TARGET Threads::Threads PROPERTY INTERFACE_LINK_LIBRARIES "-pthread")
+endif()
+
 # let the Android NDK toolchain file do the actual work
 set(ANDROID_PLATFORM "android-${CMAKE_ANDROID_API}")
 set(ANDROID_STL ${CMAKE_ANDROID_STL_TYPE})
