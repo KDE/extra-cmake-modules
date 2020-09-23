@@ -1,4 +1,9 @@
-set(EXPECTED "@CMAKE_CURRENT_SOURCE_DIR@/expected")
+if (WIN32)
+    set(EXPECTED "@CMAKE_CURRENT_SOURCE_DIR@/windowsexpected")
+else ()
+    set(EXPECTED "@CMAKE_CURRENT_SOURCE_DIR@/expected")
+endif (WIN32)
+
 set(ACTUAL "@CMAKE_INSTALL_PREFIX@")
 
 # Compares files in two directories, emits a fatal error if the top level files are different

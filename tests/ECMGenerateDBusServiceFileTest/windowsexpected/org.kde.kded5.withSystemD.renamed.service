@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.kde.kded5.withSystemD
+Exec=kded5
+SystemdService=plasma-kded.service
