@@ -7,7 +7,7 @@
 # CMAKE_REQUIRED_LIBRARIES. So after running CheckAtomic you can use
 # std:atomic.
 #
-# Since 5.XX.0.
+# Since 5.75.0.
 
 #=============================================================================
 # SPDX-FileCopyrightText: 2003-2018 University of Illinois at Urbana-Champaign.
