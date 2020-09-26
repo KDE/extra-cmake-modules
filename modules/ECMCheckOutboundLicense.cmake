@@ -65,6 +65,8 @@
 # SPDX-FileCopyrightText: 2020 Andreas Cord-Landwehr <cordlandwehr@kde.org>
 # SPDX-License-Identifier: BSD-3-Clause
 
+include(FeatureSummary)
+
 option(SKIP_LICENSE_TESTS "Skip outbound license tests" OFF)
 
 find_package(Python3)
@@ -72,6 +74,7 @@ set_package_properties(Python3 PROPERTIES
     PURPOSE "Required to run tests of module ECMCheckOutboundLicense"
     TYPE OPTIONAL
 )
+
 find_package(ReuseTool)
 set_package_properties(ReuseTool PROPERTIES
     PURPOSE "Required to run tests of module ECMCheckOutboundLicense"
