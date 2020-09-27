@@ -107,11 +107,20 @@ function(kde_package_app_templates)
 
         add_custom_target(${_baseName} ALL DEPENDS ${_template})
 
-        add_custom_command(OUTPUT ${_template}
-             COMMAND ${CMAKE_COMMAND} -E tar "cvfj" ${_template} .
-             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
-        )
-
+        if(GNU_TAR_FOUND)
+            # Make tar archive reproducible, the arguments are only available on UNIX like systems
+            add_custom_command(OUTPUT ${_template}
+                 COMMAND tar ARGS -c ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
+                    --exclude .kdev_ignore --exclude .svn --sort=name --mode=go=rX,u+rw,a-s --owner=root
+                    --group=root --numeric-owner -j -v -f ${_template} .
+                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
+            )
+        else()
+            add_custom_command(OUTPUT ${_template}
+                COMMAND ${CMAKE_COMMAND} -E tar "cvfj" ${_template} .
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
+            )
+        endif()
 
         install(FILES ${_template} DESTINATION ${ARG_INSTALL_DIR})
         set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${_template}")
