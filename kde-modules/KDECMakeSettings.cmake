@@ -300,7 +300,7 @@ function(_repository_name reponame dir)
         WORKING_DIRECTORY "${dir}")
 
     if(exitCode EQUAL 0)
-        string(REGEX MATCHALL ".+[:\\/]([-A-Za-z0-9]+)(.git)?\\s*" "" ${giturl})
+        string(REGEX MATCHALL ".+kde\\.org[:\\/]([-A-Za-z0-9\\/]+)(.git)?\\s*" "" ${giturl})
         set(${reponame} ${CMAKE_MATCH_1})
     endif()
 
@@ -325,7 +325,7 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
     _repository_name(_reponame "${CMAKE_SOURCE_DIR}")
 
     set(releaseme_clone_commands
-        COMMAND git clone --depth 1 https://anongit.kde.org/releaseme.git
+        COMMAND git clone --depth 1 https://invent.kde.org/sdk/releaseme.git
     )
     add_custom_command(
         OUTPUT "${CMAKE_BINARY_DIR}/releaseme"
