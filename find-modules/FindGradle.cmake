@@ -17,6 +17,8 @@
 #                      DESTINATION <dest>)
 #
 # Installs a Android AAR library that has been created with ``gradle_add_aar``.
+#
+# Since 5.76.0.
 
 #=============================================================================
 # SPDX-FileCopyrightText: 2019 Volker Krause <vkrause@kde.org>
