@@ -12,7 +12,7 @@
 #       EXECUTABLE <executable>
 #       [SYSTEMD_SERVICE <systemd service>]
 #       DESTINATION <install_path>
-#       [RENAME <dbus service filename>]
+#       [RENAME <dbus service filename>] # Since 5.75
 #   )
 #
 # A D-Bus service file ``<service name>.service`` will be generated and installed
