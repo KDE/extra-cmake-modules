@@ -17,5 +17,6 @@
    "sdkBuildToolsRevision": "@ANDROID_SDK_BUILD_TOOLS_REVISION@",
    "android-min-sdk-version": "@ANDROID_API_LEVEL@",
    "android-target-sdk-version": "@ANDROID_SDK_COMPILE_API@",
-   "extraPrefixDirs": [ @EXTRA_PREFIX_DIRS@ ]
+   "extraPrefixDirs": [ @EXTRA_PREFIX_DIRS@ ],
+   "useLLVM": ##USE_LLVM##
 }
