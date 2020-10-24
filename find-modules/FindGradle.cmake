@@ -71,6 +71,8 @@ function(gradle_add_aar target)
     add_custom_command(
         OUTPUT ${_build_root}/build/outputs/aar/${ARG_NAME}${_aar_suffix}.aar
         COMMAND ${Gradle_EXECUTABLE} ${_aar_gradleCmd}
+        # this allows make create-apk to work without installations for apps with AAR libs in the same repository
+        COMMAND ${CMAKE_COMMAND} -E copy ${_build_root}/build/outputs/aar/${ARG_NAME}${_aar_suffix}.aar ${CMAKE_BINARY_DIR}/jar/${ARG_NAME}.aar
         DEPENDS ${Gradle_EXECUTABLE} ${_src_files}
         DEPENDS gradle
         WORKING_DIRECTORY ${_build_root}

@@ -9,6 +9,10 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
         set(EXECUTABLE_DESTINATION_PATH "${EXPORT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${QTANDROID_EXPORTED_TARGET}_${CMAKE_ANDROID_ARCH_ABI}.so")
     endif()
     set(QML_IMPORT_PATHS "")
+    # add build directory to the search path as well, so this works without installation
+    if (EXISTS ${CMAKE_BINARY_DIR}/lib)
+        set(QML_IMPORT_PATHS ${CMAKE_BINARY_DIR}/lib)
+    endif()
     foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
         # qmlimportscanner chokes on symlinks, so we need to resolve those first
         get_filename_component(qml_path "${prefix}/lib/qml" REALPATH)
@@ -24,13 +28,9 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
         set(DEFINE_QML_IMPORT_PATHS "\"qml-import-paths\": \"${QML_IMPORT_PATHS}\",")
     endif()
 
-    set(EXTRA_PREFIX_DIRS "")
+    set(EXTRA_PREFIX_DIRS "\"${CMAKE_BINARY_DIR}\"")
     foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
-        if (EXTRA_PREFIX_DIRS)
-            set(EXTRA_PREFIX_DIRS "${EXTRA_PREFIX_DIRS}, \"${prefix}\"")
-        else()
-            set(EXTRA_PREFIX_DIRS "\"${prefix}\"")
-        endif()
+        set(EXTRA_PREFIX_DIRS "${EXTRA_PREFIX_DIRS}, \"${prefix}\"")
     endforeach()
 
     if (Qt5Core_VERSION VERSION_LESS 5.14.0)

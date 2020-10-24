@@ -254,6 +254,13 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
    endif()
 
+   # For Android we need to put shared libraries into "lib" for androiddeployqt to work without prior installation.
+   # That fact that this conflicts with the above isn't really an issue, as we can't run things while cross-compiling
+   # for Android anyway.
+   if (ANDROID)
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+   endif()
+
    if (APPLE)
        # Disable detection of X11 and related package on OS X because when using
        # brew or macports, X11 can be installed and thus is detected.
