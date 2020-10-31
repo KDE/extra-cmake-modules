@@ -3,8 +3,8 @@
 
 # Finds the REUSE Tool by FSFE: https://github.com/fsfe/reuse-tool
 #
-#  REUSE_TOOL_FOUND      - True if REUSE tool is found.
-#  REUSE_TOOL_EXECUTABLE - Path to executable
+#  REUSETOOL_FOUND      - True if REUSE tool is found.
+#  REUSETOOL_EXECUTABLE - Path to executable
 
 #=============================================================================
 # SPDX-FileCopyrightText: 2020 Andreas Cord-Landwehr <cordlandwehr@kde.org>
@@ -19,5 +19,5 @@ find_package_handle_standard_args(ReuseTool
     FOUND_VAR
         REUSETOOL_FOUND
     REQUIRED_VARS
-        REUSE_TOOL_EXECUTABLE
+        REUSETOOL_EXECUTABLE
 )
