@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 3.7 FATAL_ERROR)
 find_package(Qt5Core REQUIRED)
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
 function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_PATH)
     set(EXPORT_DIR "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}_build_apk/")
@@ -64,6 +65,12 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
 
     if (NOT TARGET create-apk)
         add_custom_target(create-apk)
+        if (NOT DEFINED ANDROID_FASTLANE_METADATA_OUTPUT_DIR)
+            set(ANDROID_FASTLANE_METADATA_OUTPUT_DIR ${CMAKE_BINARY_DIR}/fastlane)
+        endif()
+        add_custom_target(create-fastlane
+            COMMAND Python3::Interpreter ${CMAKE_CURRENT_LIST_DIR}/generate-fastlane-metadata.py --output ${ANDROID_FASTLANE_METADATA_OUTPUT_DIR} --source ${CMAKE_SOURCE_DIR}
+        )
     endif()
 
     if (NOT DEFINED ANDROID_APK_OUTPUT_DIR)
@@ -88,4 +95,5 @@ function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_
         COMMAND adb install -r "${ANDROID_APK_OUTPUT_DIR}/${QTANDROID_EXPORTED_TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk"
     )
     add_dependencies(create-apk ${CREATEAPK_TARGET_NAME})
+    add_dependencies(${CREATEAPK_TARGET_NAME} create-fastlane)
 endfunction()
