@@ -117,8 +117,6 @@ function(ecm_add_qtwayland_client_protocol out_var)
                                     BASENAME ${ARGS_BASENAME})
 
     get_filename_component(_infile ${ARGS_PROTOCOL} ABSOLUTE)
-    set(_ccode "${CMAKE_CURRENT_BINARY_DIR}/wayland-${ARGS_BASENAME}-client-protocol.c")
-    set(_cheader "${CMAKE_CURRENT_BINARY_DIR}/wayland-${ARGS_BASENAME}-client-protocol.h")
     set(_header "${CMAKE_CURRENT_BINARY_DIR}/qwayland-${ARGS_BASENAME}.h")
     set(_code "${CMAKE_CURRENT_BINARY_DIR}/qwayland-${ARGS_BASENAME}.cpp")
 
@@ -132,7 +130,7 @@ function(ecm_add_qtwayland_client_protocol out_var)
         COMMAND ${QtWaylandScanner_EXECUTABLE} client-code ${_infile} "" ${_prefix} > ${_code}
         DEPENDS ${_infile} ${_header} VERBATIM)
 
-    set_property(SOURCE ${_header} ${_code} ${_cheader} ${_ccode} PROPERTY SKIP_AUTOMOC ON)
+    set_property(SOURCE ${_header} ${_code} PROPERTY SKIP_AUTOMOC ON)
 
     list(APPEND ${out_var} "${_code}")
     set(${out_var} ${${out_var}} PARENT_SCOPE)

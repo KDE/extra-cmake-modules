@@ -134,7 +134,8 @@ function(ecm_add_wayland_server_protocol out_var)
 
     get_filename_component(_infile ${ARGS_PROTOCOL} ABSOLUTE)
     set(_server_header "${CMAKE_CURRENT_BINARY_DIR}/wayland-${ARGS_BASENAME}-server-protocol.h")
-    set_property(SOURCE ${_server_header} PROPERTY SKIP_AUTOMOC ON)
+    set(_server_code "${CMAKE_CURRENT_BINARY_DIR}/wayland-${ARGS_BASENAME}-protocol.c")
+    set_property(SOURCE ${_server_header} ${_server_code} PROPERTY SKIP_AUTOMOC ON)
     set_source_files_properties(${_server_header} GENERATED)
 
     add_custom_command(OUTPUT "${_server_header}"
