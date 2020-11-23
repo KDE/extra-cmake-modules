@@ -53,6 +53,9 @@ BreakBeforeBinaryOperators: None
 # format C++11 braced lists like function calls
 Cpp11BracedListStyle: true
 
+# do not put a space before C++11 braced lists
+SpaceBeforeCpp11BracedList: false
+
 # remove empty lines
 KeepEmptyLinesAtTheStartOfBlocks: false
 
