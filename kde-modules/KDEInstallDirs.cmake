@@ -573,8 +573,12 @@ _define_relative(KNOTIFY5RCDIR DATAROOTDIR "knotifications5"
 _define_relative(KXMLGUI5DIR DATAROOTDIR "kxmlgui5"
     "kxmlgui .rc files"
     KXMLGUI_INSTALL_DIR)
-_define_relative(KTEMPLATESDIR DATAROOTDIR "kdevappwizard/templates"
-    "Kapptemplate and Kdevelop templates")
+_define_relative(KAPPTEMPLATESDIR DATAROOTDIR "kdevappwizard/templates"
+    "KAppTemplate and KDevelop templates"
+    KDE_INSTALL_KTEMPLATESDIR
+    )
+_define_relative(KFILETEMPLATESDIR DATAROOTDIR "kdevfiletemplates/templates"
+    "KDevelop file templates")
 _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories5"
     "Qt Logging categories files")
 _define_relative(JARDIR "" "jar"
