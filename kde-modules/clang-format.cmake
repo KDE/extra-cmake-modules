@@ -67,3 +67,6 @@ ForEachMacros: [ foreach, Q_FOREACH, BOOST_FOREACH, forever, Q_FOREVER, QBENCHMA
 
 # keep lambda formatting multi-line if not empty
 AllowShortLambdasOnASingleLine: Empty
+
+# If a function call or braced initializer list doesn't fit on a line, allow putting all arguments onto the next line
+AllowAllArgumentsOnNextLine: false
