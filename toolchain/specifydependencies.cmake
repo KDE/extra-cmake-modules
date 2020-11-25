@@ -1,25 +1,31 @@
-execute_process(COMMAND readelf --wide --dynamic ${TARGET} ERROR_VARIABLE readelf_errors OUTPUT_VARIABLE out RESULT_VARIABLE result)
 
-if (NOT result EQUAL 0)
-    message(FATAL_ERROR "readelf failed on ${TARGET} exit(${result}): ${readelf_errors}")
-endif()
+function(list_dependencies target libs)
+    execute_process(COMMAND readelf --wide --dynamic ${target} ERROR_VARIABLE readelf_errors OUTPUT_VARIABLE out RESULT_VARIABLE result)
 
-string(REPLACE "\n" ";" lines "${out}")
-set(extralibs)
-foreach(line ${lines})
-    string(REGEX MATCH ".*\\(NEEDED\\) +Shared library: +\\[(.+)\\]$" matched ${line})
-    set(currentLib ${CMAKE_MATCH_1})
-
-    if(NOT ${currentLib} MATCHES "libQt5.*" AND matched)
-        find_file(ourlib-${currentLib} ${currentLib} HINTS ${OUTPUT_DIR} ${EXPORT_DIR} ${ECM_ADDITIONAL_FIND_ROOT_PATH} NO_DEFAULT_PATH PATH_SUFFIXES lib)
-
-        if(ourlib-${currentLib})
-            list(APPEND extralibs "${ourlib-${currentLib}}")
-        else()
-            message(STATUS "could not find ${currentLib} in ${OUTPUT_DIR} ${EXPORT_DIR}/lib/ ${ECM_ADDITIONAL_FIND_ROOT_PATH}")
-        endif()
+    if (NOT result EQUAL 0)
+        message(FATAL_ERROR "readelf failed on ${target} exit(${result}): ${readelf_errors}")
     endif()
-endforeach()
+
+    string(REPLACE "\n" ";" lines "${out}")
+    set(extralibs ${${libs}})
+    foreach(line ${lines})
+        string(REGEX MATCH ".*\\(NEEDED\\) +Shared library: +\\[(.+)\\]$" matched ${line})
+        set(currentLib ${CMAKE_MATCH_1})
+
+        if(NOT ${currentLib} MATCHES "libQt5.*" AND matched)
+            find_file(ourlib-${currentLib} ${currentLib} HINTS ${OUTPUT_DIR} ${EXPORT_DIR} ${ECM_ADDITIONAL_FIND_ROOT_PATH} NO_DEFAULT_PATH PATH_SUFFIXES lib)
+
+            if(ourlib-${currentLib})
+                list(APPEND extralibs "${ourlib-${currentLib}}")
+            else()
+                message(STATUS "could not find ${currentLib} in ${OUTPUT_DIR} ${EXPORT_DIR}/lib/ " ${ECM_ADDITIONAL_FIND_ROOT_PATH})
+            endif()
+        endif()
+    endforeach()
+    set(${libs} ${extralibs} PARENT_SCOPE)
+endfunction()
+
+list_dependencies(${TARGET} extralibs)
 
 function(contains_library libpath IS_EQUAL)
     get_filename_component (name ${libpath} NAME)
@@ -47,23 +53,29 @@ if (ANDROID_EXTRA_LIBS)
     endforeach()
 endif()
 
-if(extralibs)
-    string(REPLACE ";" "," libs "${extralibs}")
-    set(extralibs "\"android-extra-libs\": \"${libs}\",")
-endif()
-
 set(extraplugins)
-foreach(folder "share" "lib/qml") #now we check for folders with extra stuff
+foreach(folder "plugins" "share" "lib/qml") #now we check for folders with extra stuff
     set(plugin "${EXPORT_DIR}/${folder}")
     if(EXISTS "${plugin}")
-        if(extraplugins)
-            set(extraplugins "${extraplugins},${plugin}")
-        else()
-            set(extraplugins "${plugin}")
-        endif()
+        list(APPEND extraplugins "${plugin}")
     endif()
 endforeach()
+
+if(EXISTS "module-plugins")
+    file(READ "module-plugins" moduleplugins)
+    foreach(module ${moduleplugins})
+        list_dependencies(${module} extralibs)
+    endforeach()
+    list(REMOVE_DUPLICATES extralibs)
+endif()
+
+if(extralibs)
+    string(REPLACE ";" "," extralibs "${extralibs}")
+    set(extralibs "\"android-extra-libs\": \"${extralibs}\",")
+endif()
+
 if(extraplugins)
+    string(REPLACE ";" "," extraplugins "${extraplugins}")
     set(extraplugins "\"android-extra-plugins\": \"${extraplugins}\",")
 endif()
 

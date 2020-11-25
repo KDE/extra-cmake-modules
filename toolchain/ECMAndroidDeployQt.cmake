@@ -1,6 +1,36 @@
-cmake_minimum_required (VERSION 3.7 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.19 FATAL_ERROR)
 find_package(Qt5Core REQUIRED)
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
+
+# Taken from https://stackoverflow.com/a/62311397
+function(_ecm_get_all_targets var)
+    set(targets)
+    _ecm_get_all_targets_recursive(targets ${CMAKE_CURRENT_SOURCE_DIR})
+    set(${var} ${targets} PARENT_SCOPE)
+endfunction()
+
+macro(_ecm_get_all_targets_recursive targets dir)
+    get_property(subdirectories DIRECTORY ${dir} PROPERTY SUBDIRECTORIES)
+    foreach(subdir ${subdirectories})
+        _ecm_get_all_targets_recursive(${targets} ${subdir})
+    endforeach()
+
+    get_property(current_targets DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
+    list(APPEND ${targets} ${current_targets})
+endmacro()
+
+function(_ecm_deferred_androiddeployqt)
+    _ecm_get_all_targets(all_targets)
+    set(module_targets)
+    foreach(tgt ${all_targets})
+        get_target_property(tgt_type ${tgt} TYPE)
+        if(tgt_type STREQUAL "MODULE_LIBRARY")
+            list(APPEND module_targets "$<TARGET_FILE:${tgt}>")
+        endif()
+    endforeach()
+    file(GENERATE OUTPUT "module-plugins" CONTENT "${module_targets}")
+endfunction()
+cmake_language(DEFER DIRECTORY "${CMAKE_SOURCE_DIR}" CALL _ecm_deferred_androiddeployqt)
 
 function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_PATH)
     set(EXPORT_DIR "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}_build_apk/")
