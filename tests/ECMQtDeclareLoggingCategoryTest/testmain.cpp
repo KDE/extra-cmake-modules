@@ -7,6 +7,7 @@
 #include "log1.h"
 #include "log2.h"
 #include "log3.h"
+#include "log5.h"
 
 #include <iostream>
 
@@ -87,6 +88,16 @@ int main(int argc, char **argv)
         success = false;
     }
 #endif
+
+    if (log5_1().categoryName() != QLatin1String("log.five.1")) {
+        qWarning("log5_1 category was \"%s\", expected \"log.five.1\"", log5_1().categoryName());
+        success = false;
+    }
+
+    if (log5_2().categoryName() != QLatin1String("log.five.2")) {
+        qWarning("log5_2 category was \"%s\", expected \"log.five.2\"", log5_2().categoryName());
+        success = false;
+    }
 
     return success ? 0 : 1;
 }

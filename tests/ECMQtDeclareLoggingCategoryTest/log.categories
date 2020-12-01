@@ -4,3 +4,5 @@
 log.one log 1 IDENTIFIER [log1]
 log.two log 2 DEFAULT_SEVERITY [INFO] IDENTIFIER [foo::bar::log2]
 log.four log 4 DEFAULT_SEVERITY [WARNING] IDENTIFIER [log4]
+log.five.1 log 5_1 IDENTIFIER [log5_1]
+log.five.2 log 5_2 IDENTIFIER [log5_2]

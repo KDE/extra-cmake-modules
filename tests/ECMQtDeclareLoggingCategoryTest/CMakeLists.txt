@@ -44,6 +44,24 @@ ecm_qt_export_logging_category(
     DESCRIPTION "log 4"
 )
 
+ecm_qt_declare_logging_category(
+    sources
+    HEADER "log5.h"
+    IDENTIFIER "log5_1"
+    CATEGORY_NAME "log.five.1"
+    DESCRIPTION "log 5_1"
+    EXPORT LOG
+)
+
+ecm_qt_declare_logging_category(
+    sources
+    HEADER "log5.h"
+    IDENTIFIER "log5_2"
+    CATEGORY_NAME "log.five.2"
+    DESCRIPTION "log 5_2"
+    EXPORT LOG
+)
+
 find_package(Qt5Core REQUIRED)
 
 add_executable(testmain testmain.cpp ${sources})

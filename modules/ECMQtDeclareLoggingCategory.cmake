@@ -46,6 +46,15 @@
 # And ``OLD_CATEGORY_NAMES`` can be used to inform about any renamings of the category,
 # so user settings can be migrated. Since 5.68.0.
 #
+# All values except ``EXPORT`` and ``HEADER`` (since 5.77) are expected to be
+# unique. If multiple calls to ``ecm_qt_declare_logging_category`` are done with
+# non-unique values, behavior is undefined. When the same value is used for
+# ``EXPORT``, all categories declared as part of that export will be installed
+# when ``ecm_qt_install_logging_categories`` is called. Since 5.77, when the
+# same value is used for ``HEADER`` within one directory or its subdirectories,
+# all categories declared with that value will be placed in the same header
+# file.
+#
 # Since 5.14.0.
 #
 # ::
@@ -254,13 +263,29 @@ function(ecm_qt_declare_logging_category sources_var)
 
     get_filename_component(HEADER_NAME "${ARG_HEADER}" NAME)
 
-    string(REGEX REPLACE "[^a-zA-Z0-9]" "_" GUARD_NAME "${HEADER_NAME}")
+    string(REGEX REPLACE "[^a-zA-Z0-9]" "_" HEADER_IDENTIFIER "${HEADER_NAME}")
     string(REPLACE "::" "_" GUARD_PREFIX "ECM_QLOGGINGCATEGORY_${ARG_IDENTIFIER}")
-    string(TOUPPER "${GUARD_PREFIX}_${GUARD_NAME}" GUARD_NAME)
+    string(TOUPPER "${GUARD_PREFIX}_${HEADER_IDENTIFIER}" GUARD_NAME)
 
     if (NOT _ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_CPP)
        message(FATAL_ERROR "You must include(ECMQtDeclareLoggingCategory) before using ecm_qt_declare_logging_category")
     endif()
+
+    set_property(
+        DIRECTORY
+        APPEND_STRING
+        PROPERTY "${HEADER_IDENTIFIER}_LOGGING_DECLARATIONS"
+        "\nQ_DECLARE_LOGGING_CATEGORY(${IDENTIFIER})"
+    )
+    set_property(
+        DIRECTORY
+        APPEND_STRING
+        PROPERTY "${HEADER_IDENTIFIER}_LOGGING_DEFINITIONS"
+        "\nQ_LOGGING_CATEGORY(${IDENTIFIER}, \"${ARG_CATEGORY_NAME}\", Qt${ARG_DEFAULT_SEVERITY}Msg)"
+    )
+
+    get_property(LOGGING_DECLARATIONS DIRECTORY PROPERTY "${HEADER_IDENTIFIER}_LOGGING_DECLARATIONS")
+    get_property(LOGGING_DEFINITIONS DIRECTORY PROPERTY "${HEADER_IDENTIFIER}_LOGGING_DEFINITIONS")
 
     configure_file("${_ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_CPP}" "${cpp_filename}")
     configure_file("${_ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_H}" "${ARG_HEADER}")
