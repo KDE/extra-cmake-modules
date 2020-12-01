@@ -83,6 +83,23 @@ function(kde_package_app_templates)
         message(FATAL_ERROR "No INSTALL_DIR argument given to kde_package_app_templates")
     endif()
 
+    find_program(_tar_executable NAMES gtar tar)
+    if(_tar_executable)
+        execute_process(
+            COMMAND ${_tar_executable} --version
+            TIMEOUT 3
+            RESULT_VARIABLE _tar_exit
+            OUTPUT_VARIABLE _tar_version
+        )
+        if("${_tar_exit}" EQUAL 0 AND "${_tar_version}" MATCHES "GNU tar")
+            set(GNU_TAR_FOUND ON)
+        else()
+            set(GNU_TAR_FOUND OFF)
+        endif()
+    else()
+        set(GNU_TAR_FOUND OFF)
+    endif()
+
     foreach(_templateName ${ARG_TEMPLATES})
 
         get_filename_component(_tmp_file ${_templateName} ABSOLUTE)
@@ -108,9 +125,9 @@ function(kde_package_app_templates)
         add_custom_target(${_baseName} ALL DEPENDS ${_template})
 
         if(GNU_TAR_FOUND)
-            # Make tar archive reproducible, the arguments are only available on UNIX like systems
+            # Make tar archive reproducible, the arguments are only available with GNU tar
             add_custom_command(OUTPUT ${_template}
-                 COMMAND tar ARGS -c ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
+                 COMMAND ${_tar_executable} ARGS -c ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
                     --exclude .kdev_ignore --exclude .svn --sort=name --mode=go=rX,u+rw,a-s --owner=root
                     --group=root --numeric-owner -j -v -f ${_template} .
                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
