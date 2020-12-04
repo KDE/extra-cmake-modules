@@ -223,9 +223,9 @@ def processAppstreamData(applicationName, appstreamData, desktopData):
     if not 'categories' in data and desktopData:
         # The Python XDG extension/wrapper requires that it be able to read the file itself
         # To ensure it is able to do this, we transfer the content of the file from the APK out to a temporary file to keep it happy
-        (fd, path) = tempfile.mkstemp(suffix=name + ".desktop")
+        (fd, path) = tempfile.mkstemp(suffix=applicationName + ".desktop")
         handle = open(fd, "wb")
-        handle.write(desktopFileContents.read())
+        handle.write(desktopData)
         handle.close()
         # Parse the XDG format *.desktop file, and extract the categories within it
         desktopFile = xdg.DesktopEntry.DesktopEntry(path)
