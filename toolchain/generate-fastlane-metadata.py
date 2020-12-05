@@ -94,7 +94,10 @@ def createYml(appname, data):
 
     # Update the categories first
     # Now is also a good time to add 'KDE' to the list of categories as well
-    info['Categories'] = data['categories'][None] + ['KDE']
+    if 'categories' in data:
+        info['Categories'] = data['categories'][None] + ['KDE']
+    else:
+        info['Categories']  = ['KDE']
 
     # Update the general sumamry as well
     info['Summary'] = data['summary'][None]
