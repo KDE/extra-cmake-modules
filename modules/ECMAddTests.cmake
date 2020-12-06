@@ -94,7 +94,7 @@ function(ecm_add_test)
   target_link_libraries(${_targetname} ${ARG_LINK_LIBRARIES})
   ecm_mark_as_test(${_targetname})
   if (CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-    if(CMAKE_HOST_SYSTEM MATCHES "Windows")
+    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
       set(PATHSEP ";")
     else() # e.g. Linux
       set(PATHSEP ":")
