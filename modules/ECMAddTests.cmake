@@ -95,7 +95,8 @@ function(ecm_add_test)
   ecm_mark_as_test(${_targetname})
   if (CMAKE_LIBRARY_OUTPUT_DIRECTORY)
     if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-      set(PATHSEP ";")
+       # https://stackoverflow.com/questions/59862894/how-do-i-make-a-list-in-cmake-with-the-semicolon-value
+       set(PATHSEP "\\\;") # Don't want cmake to treat it like a list
     else() # e.g. Linux
       set(PATHSEP ":")
     endif()
