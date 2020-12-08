@@ -134,11 +134,14 @@ def downloadScreenshots(applicationName, data):
     path = os.path.join(basePath, 'metadata',  applicationName, 'en-US', 'images', 'phoneScreenshots')
     os.makedirs(path, exist_ok=True)
 
+    i = 0
     for screenshot in data['screenshots']:
-        fileName = screenshot[screenshot.rindex('/') + 1:]
+        fileName = str(i) + '-' + screenshot[screenshot.rindex('/') + 1:]
         r = requests.get(screenshot)
-        with open(os.path.join(path, fileName), 'wb') as f:
-            f.write(r.content)
+        if r.status_code < 400:
+            with open(os.path.join(path, fileName), 'wb') as f:
+                f.write(r.content)
+            i += 1
 
 # Put all metadata for the given application name into an archive
 # We need this to easily transfer the entire metadata to the signing machine for integration
