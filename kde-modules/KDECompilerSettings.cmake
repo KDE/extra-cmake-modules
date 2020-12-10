@@ -237,6 +237,13 @@ if (CMAKE_SYSTEM_NAME STREQUAL GNU)
     set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
 endif()
 
+if (MSVC)
+    # Our source files are UTF-8 encoded, and assuming that is also the
+    # default behavior of GCC/Clang. Not so for MSVC though, so force
+    # that to UTF-8 explicitly, as that will otherwise cause compile-time
+    # and runtime issues when dealing with string literals outside of 7-bit ASCII.
+    add_compile_options(/utf-8)
+endif()
 
 
 ############################################################
