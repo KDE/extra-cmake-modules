@@ -151,7 +151,8 @@ def downloadScreenshots(applicationName, data):
 def createMetadataArchive(applicationName):
     srcPath = os.path.join(arguments.output, 'metadata')
     zipFileName = os.path.join(srcPath, 'fastlane-' + applicationName + '.zip')
-    os.unlink(zipFileName)
+    if os.path.exists(zipFileName):
+        os.unlink(zipFileName)
     archive = zipfile.ZipFile(zipFileName, 'w')
     archive.write(os.path.join(srcPath, applicationName + '.yml'), applicationName + '.yml')
 
