@@ -15,6 +15,7 @@ import io
 import os
 import re
 import requests
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -132,6 +133,7 @@ def downloadScreenshots(applicationName, data):
 
     basePath = arguments.output
     path = os.path.join(basePath, 'metadata',  applicationName, 'en-US', 'images', 'phoneScreenshots')
+    shutil.rmtree(path, ignore_errors=True)
     os.makedirs(path, exist_ok=True)
 
     i = 0
@@ -148,7 +150,9 @@ def downloadScreenshots(applicationName, data):
 # into the F-Droid nightly repository
 def createMetadataArchive(applicationName):
     srcPath = os.path.join(arguments.output, 'metadata')
-    archive = zipfile.ZipFile(os.path.join(srcPath, 'fastlane-' + applicationName + '.zip'), 'w')
+    zipFileName = os.path.join(srcPath, 'fastlane-' + applicationName + '.zip')
+    os.unlink(zipFileName)
+    archive = zipfile.ZipFile(zipFileName, 'w')
     archive.write(os.path.join(srcPath, applicationName + '.yml'), applicationName + '.yml')
 
     oldcwd = os.getcwd()
