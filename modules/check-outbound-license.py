@@ -125,15 +125,15 @@ if __name__ == '__main__':
             spdxDictionary[fileName] = licenses
             fileName = ""
             licenses = []
-    f.close();
+    f.close()
 
     # read file with list of test files
     f = open(args.input, "r")
     testfiles = f.readlines()
     f.close()
 
-    if check_outbound_license(args.license, testfiles, spdxDictionary) == True:
-        sys.exit(0);
+    if check_outbound_license(args.license, testfiles, spdxDictionary) is True:
+        sys.exit(0)
 
     # in any other case, return error code
     sys.exit(1)

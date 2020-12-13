@@ -258,11 +258,11 @@ def processAppstreamData(applicationName, appstreamData, desktopData):
 
 # Generate metadata for the given appstream and desktop files
 def processAppstreamFile(appstreamFileName, desktopFileName):
-    appstreamFile = open(appstreamFileName, "rb");
+    appstreamFile = open(appstreamFileName, "rb")
     desktopData = None
     if desktopFileName and os.path.exists(desktopFileName):
-        desktopFile = open(desktopFileName, "rb");
-        desktopData = desktopFile.read();
+        desktopFile = open(desktopFileName, "rb")
+        desktopData = desktopFile.read()
     applicationName = os.path.basename(appstreamFileName)[:-12]
     processAppstreamData(applicationName, appstreamFile.read(), desktopData)
 
@@ -290,16 +290,16 @@ def scanSourceDir():
         appdataFiles = glob.iglob(arguments.source + "/**/" + appname + ".appdata.xml", recursive=True)
         appdataFile = None
         for f in appdataFiles:
-            appdataFile = f;
-            break;
+            appdataFile = f
+            break
         if not appdataFile:
             continue
 
         desktopFiles = glob.iglob(arguments.source + "/**/" + appname + ".desktop", recursive=True)
         desktopFile = None
         for f in desktopFiles:
-            desktopFile = f;
-            break;
+            desktopFile = f
+            break
 
         processAppstreamFile(appdataFile, desktopFile)
 

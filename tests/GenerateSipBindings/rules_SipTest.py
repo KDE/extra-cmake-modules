@@ -1,5 +1,6 @@
 
-import os, sys
+import os
+import sys
 
 import rules_engine
 sys.path.append(os.path.dirname(os.path.dirname(rules_engine.__file__)))

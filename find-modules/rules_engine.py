@@ -18,7 +18,6 @@ import os
 import re
 import sys
 import textwrap
-import traceback
 from copy import deepcopy
 from clang.cindex import CursorKind
 
@@ -51,7 +50,7 @@ class Rule(object):
         # Derive a useful name for diagnostic purposes.
         #
         caller = os.path.basename(inspect.stack()[3][1])
-        self.name =  "{}:{}[{}],{}".format(caller, type(db).__name__, rule_number, fn.__name__)
+        self.name = "{}:{}[{}],{}".format(caller, type(db).__name__, rule_number, fn.__name__)
         self.rule_number = rule_number
         self.fn = fn
         self.usage = 0

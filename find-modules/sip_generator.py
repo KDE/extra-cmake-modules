@@ -12,12 +12,10 @@ import argparse
 import gettext
 import inspect
 import logging
-import os
-import re
 import sys
 import traceback
 from clang import cindex
-from clang.cindex import AccessSpecifier, AvailabilityKind, CursorKind, SourceRange, StorageClass, TokenKind, TypeKind, TranslationUnit
+from clang.cindex import AccessSpecifier, AvailabilityKind, CursorKind, SourceRange, TokenKind, TypeKind, TranslationUnit
 
 import rules_engine
 
@@ -784,7 +782,7 @@ def main(argv=None):
         body, includes = g.create_sip(args.source, args.include_filename)
         with open(args.output, "w") as outputFile:
             outputFile.write(body)
-    except Exception as e:
+    except Exception:
         tbk = traceback.format_exc()
         print(tbk)
         return -1
