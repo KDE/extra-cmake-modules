@@ -7,6 +7,10 @@
 # Note that none of the variables defined by this module provide any
 # information about the location of already-installed KDE software.
 #
+# Also sets ``CMAKE_INSTALL_PREFIX`` to the installation prefix of ECM,
+# unless that variable has been already explicitly set by something else
+# (since 5.61 and with CMake >= 3.7).
+#
 # Inclusion of this module defines the following variables:
 #
 # ``KDE_INSTALL_<dir>``
