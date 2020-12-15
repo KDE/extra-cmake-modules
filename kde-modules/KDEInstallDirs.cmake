@@ -469,20 +469,30 @@ endif()
 option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, QCH files for Qt-based libs, Plugins and Imports to the Qt 5 install dir" "${_default_KDE_INSTALL_USE_QT_SYS_PATHS}")
 if(KDE_INSTALL_USE_QT_SYS_PATHS)
     # Qt-specific vars
+    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
     query_qmake(qt_plugins_dir QT_INSTALL_PLUGINS)
 
+    if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
+        file(RELATIVE_PATH qt_plugins_dir ${qt_install_prefix_dir} ${qt_plugins_dir})
+    endif()
     _define_absolute(QTPLUGINDIR ${qt_plugins_dir}
         "Qt plugins"
          QT_PLUGIN_INSTALL_DIR)
 
     query_qmake(qt_imports_dir QT_INSTALL_IMPORTS)
 
+    if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
+        file(RELATIVE_PATH qt_imports_dir ${qt_install_prefix_dir} ${qt_imports_dir})
+    endif()
     _define_absolute(QTQUICKIMPORTSDIR ${qt_imports_dir}
         "QtQuick1 imports"
         IMPORTS_INSTALL_DIR)
 
     query_qmake(qt_qml_dir QT_INSTALL_QML)
 
+    if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
+        file(RELATIVE_PATH qt_qml_dir ${qt_install_prefix_dir} ${qt_qml_dir})
+    endif()
     _define_absolute(QMLDIR ${qt_qml_dir}
         "QtQuick2 imports"
         QML_INSTALL_DIR)
