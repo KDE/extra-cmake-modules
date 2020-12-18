@@ -30,6 +30,9 @@ languageMap = {
     "ca": "ca-ES"
 }
 
+# see https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/
+supportedRichTextTags = { 'li', 'ul', 'ol', 'li', 'b', 'u', 'i' }
+
 # Android appdata.xml textual item parser
 # This function handles reading standard text entries within an Android appdata.xml file
 # In particular, it handles splitting out the various translations, and converts some HTML to something which F-Droid can make use of
@@ -44,18 +47,18 @@ def readText(elem, found):
     if not lang in found:
         found[lang] = ""
 
-    # Do we have a HTML List Item?
-    if elem.tag == 'li':
-        found[lang] += "· "
-
     # If there is text available, we'll want to extract it
     # Additionally, if this element has any children, make sure we read those as well
     # It isn't clear if it is possible for an item to not have text, but to have children which do have text
     # The code will currently skip these if they're encountered
     if elem.text:
+        if elem.tag in supportedRichTextTags:
+            found[lang] += '<' + elem.tag + '>'
         found[lang] += elem.text
         for child in elem:
             readText(child, found)
+        if elem.tag in supportedRichTextTags:
+            found[lang] += '</' + elem.tag + '>'
 
     # Finally, if this element is a HTML Paragraph (p) or HTML List Item (li) make sure we add a new line for presentation purposes
     if elem.tag == 'li' or elem.tag == 'p':
