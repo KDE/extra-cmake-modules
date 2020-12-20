@@ -19,7 +19,7 @@
 #
 # .. note::
 #
-#   This module requires CMake 3.7.
+#   This module requires CMake 3.18.
 #
 # Since 1.7.0.
 #
@@ -118,7 +118,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-cmake_minimum_required(VERSION "3.7")
+cmake_minimum_required(VERSION "3.18")
 
 macro(set_deprecated_variable actual_variable deprecated_variable default_value)
     set(${deprecated_variable} "${default_value}" CACHE STRING "Deprecated. Use ${actual_variable}")
