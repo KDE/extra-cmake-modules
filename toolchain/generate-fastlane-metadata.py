@@ -128,15 +128,38 @@ def createYml(appname, data):
     with open(path, 'w') as output:
         yaml.dump(info, output, default_flow_style=False)
 
+# Integrates locally existing image assets into the metadata
+def processLocalImages(applicationName, data):
+    if not os.path.exists(os.path.join(arguments.source, 'fastlane')):
+        return
+
+    outPath = os.path.abspath(arguments.output);
+    oldcwd = os.getcwd()
+    os.chdir(os.path.join(arguments.source, 'fastlane'))
+
+    imageFiles = glob.glob('metadata/**/*.png', recursive=True)
+    imageFiles.extend(glob.glob('metadata/**/*.jpg', recursive=True))
+    for image in imageFiles:
+        # noramlize single- vs multi-app layouts
+        imageDestName = image.replace('metadata/android', 'metadata/' + applicationName)
+
+        # copy image
+        os.makedirs(os.path.dirname(os.path.join(outPath, imageDestName)), exist_ok=True)
+        shutil.copy(image, os.path.join(outPath, imageDestName))
+
+        # if the source already contains screenshots, those override whatever we found in the appstream file
+        if 'phoneScreenshots' in image:
+            data['screenshots'] = {}
+
+    os.chdir(oldcwd)
+
 # Download screenshots referenced in the appstream data
 # see https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/
 def downloadScreenshots(applicationName, data):
     if not 'screenshots' in data:
         return
 
-    basePath = arguments.output
-    path = os.path.join(basePath, 'metadata',  applicationName, 'en-US', 'images', 'phoneScreenshots')
-    shutil.rmtree(path, ignore_errors=True)
+    path = os.path.join(arguments.output, 'metadata',  applicationName, 'en-US', 'images', 'phoneScreenshots')
     os.makedirs(path, exist_ok=True)
 
     i = 0
@@ -256,7 +279,14 @@ def processAppstreamData(applicationName, appstreamData, desktopData):
     createFastlaneFile( applicationName, "short_description.txt", data['summary'] )
     createFastlaneFile( applicationName, "full_description.txt", data['description'] )
     createYml(applicationName, data)
+
+    # cleanup old image files before collecting new ones
+    imagePath = os.path.join(arguments.output, 'metadata',  applicationName, 'en-US', 'images')
+    shutil.rmtree(imagePath, ignore_errors=True)
+    processLocalImages(applicationName, data)
     downloadScreenshots(applicationName, data)
+
+    # put the result in an archive file for easier use by Jenkins
     createMetadataArchive(applicationName)
 
 # Generate metadata for the given appstream and desktop files
