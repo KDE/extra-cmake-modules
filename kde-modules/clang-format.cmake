@@ -17,8 +17,8 @@ Standard: Cpp11
 # 4 spaces indent
 TabWidth: 4
 
-# 3 * 80 wide lines
-ColumnLimit: 240
+# 2 * 80 wide lines
+ColumnLimit: 160
 
 # sort includes inside line separated groups
 SortIncludes: true
