@@ -47,8 +47,9 @@ BinPackArguments: false
 # don't move parameters to own lines if they are not all on the same
 BinPackParameters: false
 
-# don't break binary ops
-BreakBeforeBinaryOperators: None
+# In case we have an if statement whith multiple lines the operator should be at the beginning of the line
+# but we do not want to break assignments
+BreakBeforeBinaryOperators: NonAssignment
 
 # format C++11 braced lists like function calls
 Cpp11BracedListStyle: true
