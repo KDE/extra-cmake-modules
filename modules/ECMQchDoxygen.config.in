@@ -116,8 +116,6 @@ USE_MDFILE_AS_MAINPAGE = @ECM_QCH_DOXYGEN_MAINPAGE_MDFILE@
 # configuration options related to the alphabetical class index
 #---------------------------------------------------------------------------
 ALPHABETICAL_INDEX     = NO
-COLS_IN_ALPHA_INDEX    = 5
-IGNORE_PREFIX          = 
 #---------------------------------------------------------------------------
 # do NOT generate any formats other than qhp
 #---------------------------------------------------------------------------
