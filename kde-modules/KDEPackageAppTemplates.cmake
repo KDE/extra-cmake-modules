@@ -123,7 +123,7 @@ function(kde_package_app_templates)
         if(GNU_TAR_FOUND)
             # Make tar archive reproducible, the arguments are only available with GNU tar
             add_custom_command(OUTPUT ${_template}
-                COMMAND ${_tar_executable} ARGS -c ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
+                COMMAND ${_tar_executable} ARGS -c
                    --exclude .kdev_ignore --exclude .svn --sort=name --mode=go=rX,u+rw,a-s --owner=root
                    --group=root --numeric-owner -j -v -f ${_template} .
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
