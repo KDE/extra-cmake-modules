@@ -74,3 +74,10 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant" )
    endif()
 endif()
+
+if (NOT ("${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.80.0"))
+    include(KDEClangFormat)
+    # add clang-format target
+    file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.c)
+    kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
+endif ()
