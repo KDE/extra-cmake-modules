@@ -9,7 +9,7 @@
 #
 # ::
 #
-#   kde_configure_pre_commit_hook(GIR_DIR <dir> CHECKS <checks...>)
+#   kde_configure_pre_commit_hook(GIT_DIR <dir> CHECKS <checks...>)
 #
 # This function will create a pre-commit hook which contains all the given checks.
 # In case the source dir does not contain the .git folder, the GIT_DIR
