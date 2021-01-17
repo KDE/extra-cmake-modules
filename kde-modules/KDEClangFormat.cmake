@@ -40,24 +40,26 @@ endif()
 
 # formatting target
 function(KDE_CLANG_FORMAT)
-    # add target only if clang-format available
+    # add target without specific commands first, we add the real calls file-per-file to avoid command line length issues
+    add_custom_target(clang-format COMMENT "Formatting sources in ${CMAKE_CURRENT_SOURCE_DIR} with ${KDE_CLANG_FORMAT_EXECUTABLE}...")
+
+    # run clang-format only if available, else signal the user what is missing
     if(KDE_CLANG_FORMAT_EXECUTABLE)
-        add_custom_target(clang-format
-        COMMAND
-            ${KDE_CLANG_FORMAT_EXECUTABLE}
-            -style=file
-            -i
-            ${ARGV}
-        WORKING_DIRECTORY
-            ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT
-            "Formatting sources in ${CMAKE_CURRENT_SOURCE_DIR} with ${KDE_CLANG_FORMAT_EXECUTABLE}..."
-        )
+        foreach(_file ${ARGV})
+            add_custom_command(TARGET clang-format
+                COMMAND
+                    ${KDE_CLANG_FORMAT_EXECUTABLE}
+                    -style=file
+                    -i
+                    ${_file}
+                WORKING_DIRECTORY
+                    ${CMAKE_CURRENT_SOURCE_DIR}
+                )
+        endforeach()
     else()
-        add_custom_target(clang-format
-        COMMAND
-            ${CMAKE_COMMAND} -E echo
-            "Could not set up the clang-format target as the clang-format executable is missing."
-        )
+        add_custom_command(TARGET clang-format
+            COMMAND
+                ${CMAKE_COMMAND} -E echo "Could not set up the clang-format target as the clang-format executable is missing."
+            )
     endif()
 endfunction()
