@@ -7,25 +7,6 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_DIR})
 include(ECMQtDeclareLoggingCategory)
 include(CMakeParseArguments)
 
-function (check_file)
-    set(options)
-    set(oneValueArgs GENERATED EXPECTED)
-    set(multiValueArgs)
-    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-    if (NOT EXISTS "${ARGS_GENERATED}")
-        message(FATAL_ERROR "${ARGS_GENERATED} was not generated")
-    endif()
-    file(READ "${ARGS_GENERATED}" generated_contents)
-    if (NOT EXISTS "${ARGS_EXPECTED}")
-        message(FATAL_ERROR "Original ${ARGS_EXPECTED} was not found")
-    endif()
-    file(READ "${ARGS_EXPECTED}" original_contents)
-    if (NOT "${generated_contents}" STREQUAL "${original_contents}")
-        message(FATAL_ERROR "${generated_file} contains '${generated_contents}' instead of '${original_contents}'")
-    endif()
-endfunction()
-
 ecm_qt_declare_logging_category(
     sources
     HEADER "log1.h"
@@ -78,15 +59,8 @@ target_link_libraries(testmain
 ecm_qt_install_logging_categories(
     EXPORT LOG
     FILE log.categories
-    DESTINATION "${CMAKE_BINARY_DIR}/dummyinstall"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/qlogging-categories5"
 )
 
-check_file(
-    GENERATED "${CMAKE_CURRENT_BINARY_DIR}/log.categories"
-    EXPECTED "${CMAKE_CURRENT_SOURCE_DIR}/log.categories"
-)
-check_file(
-    GENERATED "${CMAKE_CURRENT_BINARY_DIR}/log.renamecategories"
-    EXPECTED "${CMAKE_CURRENT_SOURCE_DIR}/log.renamecategories"
-)
-
+# this will be run by CTest
+configure_file(check.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/check.cmake" @ONLY)

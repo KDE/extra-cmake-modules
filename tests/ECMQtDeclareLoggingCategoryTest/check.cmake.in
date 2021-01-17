@@ -1,0 +1,35 @@
+set(CMAKE_MODULE_PATH "@MODULES_DIR@/../kde-modules")
+set(CMAKE_CURRENT_SOURCE_DIR "@CMAKE_CURRENT_SOURCE_DIR@")
+set(CMAKE_CURRENT_BINARY_DIR "@CMAKE_CURRENT_BINARY_DIR@")
+
+
+###########################################################
+
+function (check_file)
+    set(options)
+    set(oneValueArgs GENERATED EXPECTED)
+    set(multiValueArgs)
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if (NOT EXISTS "${ARGS_GENERATED}")
+        message(FATAL_ERROR "${ARGS_GENERATED} was not generated")
+    endif()
+    file(READ "${ARGS_GENERATED}" generated_contents)
+    if (NOT EXISTS "${ARGS_EXPECTED}")
+        message(FATAL_ERROR "Original ${ARGS_EXPECTED} was not found")
+    endif()
+    file(READ "${ARGS_EXPECTED}" original_contents)
+    if (NOT "${generated_contents}" STREQUAL "${original_contents}")
+        message(FATAL_ERROR "${generated_file} contains '${generated_contents}' instead of '${original_contents}'")
+    endif()
+endfunction()
+
+
+check_file(
+    GENERATED "${CMAKE_CURRENT_BINARY_DIR}/log.categories"
+    EXPECTED "${CMAKE_CURRENT_SOURCE_DIR}/log.categories"
+)
+check_file(
+    GENERATED "${CMAKE_CURRENT_BINARY_DIR}/log.renamecategories"
+    EXPECTED "${CMAKE_CURRENT_SOURCE_DIR}/log.renamecategories"
+)
