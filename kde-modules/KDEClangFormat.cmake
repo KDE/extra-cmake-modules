@@ -54,6 +54,8 @@ function(KDE_CLANG_FORMAT)
                     ${_file}
                 WORKING_DIRECTORY
                     ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMENT
+                    "Formatting ${_file}..."
                 )
         endforeach()
     else()
