@@ -14,8 +14,6 @@
 #
 # Using this function will create a clang-format target that will format all
 # ``<files>`` passed to the function with the predefined KDE clang-format style.
-# Since version 5.79 this function is called by default in KDEFrameworkCompilerSettings. If directories should be excluded from
-# the formatting a .clang-format file with "DisableFormat: true" and "SortIncludes: false" should be created.
 #
 # Example usage:
 #
@@ -29,7 +27,6 @@
 
 #=============================================================================
 # SPDX-FileCopyrightText: 2019 Christoph Cullmann <cullmann@kde.org>
-# SPDX-FileCopyrightText: 2021 Alexander Lohnau <alexander.lohnau@gmx.de>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -43,11 +40,6 @@ endif()
 
 # formatting target
 function(KDE_CLANG_FORMAT)
-    if (TARGET clang-format)
-        message(WARNING "the kde_clang_format function was already called")
-        return()
-    endif()
-
     # add target without specific commands first, we add the real calls file-per-file to avoid command line length issues
     add_custom_target(clang-format COMMENT "Formatting sources in ${CMAKE_CURRENT_SOURCE_DIR} with ${KDE_CLANG_FORMAT_EXECUTABLE}...")
 
