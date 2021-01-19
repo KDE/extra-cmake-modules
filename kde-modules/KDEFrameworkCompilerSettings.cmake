@@ -44,6 +44,12 @@ if (NOT WIN32)
     add_definitions(-DQT_STRICT_ITERATORS)
 endif()
 
+# Some non-KF projects make (ab)use of KDEFrameworkCompilerSettings currently,
+# let them only hit this as well when bumping their min. ECM requirement to a newer version.
+if (NOT "${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.79.0")
+    add_definitions(-DQT_NO_FOREACH)
+endif()
+
 add_definitions(
     -DQT_DEPRECATED_WARNINGS_SINCE=0x060000
     -DKF_DEPRECATED_WARNINGS_SINCE=0x060000
