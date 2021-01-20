@@ -120,8 +120,12 @@ def createYml(appname, data):
     if 'source-repo' in data:
         info['SourceCode'] = data['source-repo']
 
+    if 'url-donation' in data:
+        info['Donate'] = data['url-donation'][None]
+    else:
+        info['Donate'] = 'https://kde.org/community/donations/'
+
     # static data
-    info['Donate'] = 'https://kde.org/community/donations/'
     info['Translation'] = 'https://l10n.kde.org/'
 
     # Finally, with our updates completed, we can save the updated appname.yml file back to disk
