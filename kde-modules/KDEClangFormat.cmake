@@ -45,18 +45,24 @@ function(KDE_CLANG_FORMAT)
 
     # run clang-format only if available, else signal the user what is missing
     if(KDE_CLANG_FORMAT_EXECUTABLE)
+        get_filename_component(_binary_dir ${CMAKE_BINARY_DIR} REALPATH)
         foreach(_file ${ARGV})
-            add_custom_command(TARGET clang-format
-                COMMAND
-                    ${KDE_CLANG_FORMAT_EXECUTABLE}
-                    -style=file
-                    -i
-                    ${_file}
-                WORKING_DIRECTORY
-                    ${CMAKE_CURRENT_SOURCE_DIR}
-                COMMENT
-                    "Formatting ${_file}..."
-                )
+            # check if the file is inside the build directory => ignore such files
+            get_filename_component(_full_file_path ${_file} REALPATH)
+            string(FIND ${_full_file_path} ${_binary_dir} _index)
+            if(NOT _index EQUAL 0)
+                add_custom_command(TARGET clang-format
+                    COMMAND
+                        ${KDE_CLANG_FORMAT_EXECUTABLE}
+                        -style=file
+                        -i
+                        ${_full_file_path}
+                    WORKING_DIRECTORY
+                        ${CMAKE_CURRENT_SOURCE_DIR}
+                    COMMENT
+                        "Formatting ${_full_file_path}..."
+                    )
+            endif()
         endforeach()
     else()
         add_custom_command(TARGET clang-format
