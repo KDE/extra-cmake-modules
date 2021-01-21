@@ -301,7 +301,7 @@ endif()
 # Download translations
 
 function(_repository_name reponame dir)
-    execute_process(COMMAND git config --get remote.origin.url
+    execute_process(COMMAND git remote get-url --all origin
         OUTPUT_VARIABLE giturl
         RESULT_VARIABLE exitCode
         WORKING_DIRECTORY "${dir}")
