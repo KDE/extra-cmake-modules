@@ -12,7 +12,7 @@
 #
 # ::
 #
-#   ecm_qt_declare_logging_category(<sources_var>
+#   ecm_qt_declare_logging_category(<sources_var_name(|target (since 5.80))>
 #       HEADER <filename>
 #       IDENTIFIER <identifier>
 #       CATEGORY_NAME <category_name>
@@ -23,10 +23,14 @@
 #   )
 #
 # A header file, ``<filename>``, will be generated along with a corresponding
-# source file, which will be added to ``<sources_var>``. These will provide a
-# QLoggingCategory category that can be referred to from C++ code using
-# ``<identifier>``, and from the logging configuration using
+# source file. These will provide a QLoggingCategory category that can be referred
+# to from C++ code using ``<identifier>``, and from the logging configuration using
 # ``<category_name>``.
+#
+# The generated source file will be added to the variable with the name
+# ``<sources_var_name>``. If the given argument is a target though, instead both the
+# generated header file and the generated source file will be added to the target as
+# private sources (since 5.80).
 #
 # If ``<filename>`` is not absolute, it will be taken relative to the current
 # binary directory.
@@ -265,9 +269,13 @@ function(ecm_qt_declare_logging_category sources_var)
     configure_file("${_ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_CPP}" "${cpp_filename}")
     configure_file("${_ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_H}" "${ARG_HEADER}")
 
-    set(sources "${${sources_var}}")
-    list(APPEND sources "${cpp_filename}")
-    set(${sources_var} "${sources}" PARENT_SCOPE)
+    if(TARGET ${sources_var})
+        target_sources(${sources_var} PRIVATE ${cpp_filename} "${ARG_HEADER}")
+    else()
+        set(sources "${${sources_var}}")
+        list(APPEND sources "${cpp_filename}")
+        set(${sources_var} "${sources}" PARENT_SCOPE)
+    endif()
 
     # note data in global properties
     if (ARG_EXPORT)
