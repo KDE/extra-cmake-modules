@@ -324,7 +324,8 @@ def scanSourceDir():
             continue
 
         # now that we have the app id, look for matching appdata/desktop files
-        appdataFiles = glob.iglob(arguments.source + "/**/" + appname + ".appdata.xml", recursive=True)
+        appdataFiles = glob.glob(arguments.source + "/**/" + appname + ".metainfo.xml", recursive=True)
+        appdataFiles.extend(glob.glob(arguments.source + "/**/" + appname + ".appdata.xml", recursive=True))
         appdataFile = None
         for f in appdataFiles:
             appdataFile = f
