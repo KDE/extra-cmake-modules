@@ -192,33 +192,16 @@ def createMetadataArchive(applicationName):
         archive.write(file, file)
     os.chdir(oldcwd)
 
-# Main function for extracting metadata from APK files
-def processApkFile(apkFilepath):
-    # First, determine the name of the application we have here
-    # This is needed in order to locate the metadata files within the APK that have the information we need
+# Generate metadata for the given appstream and desktop files
+def processAppstreamFile(appstreamFileName, desktopFileName):
+    # appstreamFileName has the form <id>.appdata.xml or <id>.metainfo.xml, so we
+    # have to strip off two extensions
+    applicationName = os.path.splitext(os.path.splitext(os.path.basename(appstreamFileName))[0])[0]
 
-    # Prepare the aapt (Android SDK command) to inspect the provided APK
-    commandToRun = "aapt dump badging %s" % (apkFilepath)
-    manifest = subprocess.check_output( commandToRun, shell=True ).decode('utf-8')
-    # Search through the aapt output for the name of the application
-    result = re.search(' name=\'([^\']*)\'', manifest)
-    applicationName = result.group(1)
-
-    # Attempt to look within the APK provided for the metadata information we will need
-    with zipfile.ZipFile(apkFilepath, 'r') as contents:
-        appdataFile = contents.open("assets/share/metainfo/%s.appdata.xml" % applicationName)
-        desktopFileContent = None
-        try:
-            desktopFileContent = contents.read("assets/share/applications/%s.desktop" % applicationName)
-        except:
-            None
-        processAppstreamData(applicationName, appdataFile.read(), desktopFileContent)
-
-# Extract meta data from appstream/desktop file contents
-def processAppstreamData(applicationName, appstreamData, desktopData):
     data = {}
     # Within this file we look at every entry, and where possible try to export it's content so we can use it later
-    root = ET.fromstring(appstreamData)
+    appstreamFile = open(appstreamFileName, "rb")
+    root = ET.fromstring(appstreamFile.read())
     for child in root:
         # Make sure we start with a blank slate for this entry
         output = {}
@@ -261,15 +244,9 @@ def processAppstreamData(applicationName, appstreamData, desktopData):
     # Did we find any categories?
     # Sometimes we don't find any within the Fastlane information, but without categories the F-Droid store isn't of much use
     # In the event this happens, fallback to the *.desktop file for the application to see if it can provide any insight.
-    if not 'categories' in data and desktopData:
-        # The Python XDG extension/wrapper requires that it be able to read the file itself
-        # To ensure it is able to do this, we transfer the content of the file from the APK out to a temporary file to keep it happy
-        (fd, path) = tempfile.mkstemp(suffix=applicationName + ".desktop")
-        handle = open(fd, "wb")
-        handle.write(desktopData)
-        handle.close()
+    if not 'categories' in data and desktopFileName:
         # Parse the XDG format *.desktop file, and extract the categories within it
-        desktopFile = xdg.DesktopEntry.DesktopEntry(path)
+        desktopFile = xdg.DesktopEntry.DesktopEntry(desktopFileName)
         data['categories'] = { None: desktopFile.getCategories() }
 
     # Try to figure out the source repository
@@ -292,16 +269,6 @@ def processAppstreamData(applicationName, appstreamData, desktopData):
 
     # put the result in an archive file for easier use by Jenkins
     createMetadataArchive(applicationName)
-
-# Generate metadata for the given appstream and desktop files
-def processAppstreamFile(appstreamFileName, desktopFileName):
-    appstreamFile = open(appstreamFileName, "rb")
-    desktopData = None
-    if desktopFileName and os.path.exists(desktopFileName):
-        desktopFile = open(desktopFileName, "rb")
-        desktopData = desktopFile.read()
-    applicationName = os.path.basename(appstreamFileName)[:-12]
-    processAppstreamData(applicationName, appstreamFile.read(), desktopData)
 
 # scan source directory for manifests/metadata we can work with
 def scanSourceDir():
@@ -346,7 +313,6 @@ def scanSourceDir():
 
 # Parse the command line arguments we've been given
 parser = argparse.ArgumentParser(description='Generate fastlane metadata for Android apps from appstream metadata')
-parser.add_argument('--apk', type=str, required=False, help='APK file to extract metadata from')
 parser.add_argument('--appstream', type=str, required=False, help='Appstream file to extract metadata from')
 parser.add_argument('--desktop', type=str, required=False, help='Desktop file to extract additional metadata from')
 parser.add_argument('--source', type=str, required=False, help='Source directory to find metadata in')
@@ -361,12 +327,6 @@ if arguments.appstream and os.path.exists(arguments.appstream):
     processAppstreamFile(arguments.appstream, arguments.desktop)
     sys.exit(0)
 
-# else, if we have an APK, try to find the appstream file in there
-# this ensures compatibility with the old metadata generation
-if arguments.apk and os.path.exists(arguments.apk):
-    processApkFile(arguments.apk)
-    sys.exit(0)
-
 # else, look in the source dir for appstream/desktop files
 # this follows roughly what get-apk-args from binary factory does
 if arguments.source and os.path.exists(arguments.source):
@@ -374,5 +334,5 @@ if arguments.source and os.path.exists(arguments.source):
     sys.exit(0)
 
 # else: missing arguments
-print("Either one of --appstream, --apk or --source have to be provided!")
+print("Either one of --appstream or --source have to be provided!")
 sys.exit(1)
