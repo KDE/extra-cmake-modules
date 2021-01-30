@@ -35,7 +35,18 @@ find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
 
 # instantiate our clang-format file, must be in source directory for tooling if we have the tool
 if(KDE_CLANG_FORMAT_EXECUTABLE)
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/clang-format.cmake ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format @ONLY)
+    set(CLANG_FORMAT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format)
+    if (EXISTS ${CLANG_FORMAT_FILE})
+        file(READ ${CLANG_FORMAT_FILE} CLANG_FORMAT_CONTENTS LIMIT 128)
+        string(FIND "${CLANG_FORMAT_CONTENTS}" "SPDX-FileCopyrightText: 2019 Christoph Cullmann" matchres)
+        if(${matchres} EQUAL -1)
+            message(WARNING "The .clang-format file already exists. Please remove it in order to use the file provided by ECM")
+        else()
+            configure_file(${CMAKE_CURRENT_LIST_DIR}/clang-format.cmake ${CLANG_FORMAT_FILE} @ONLY)
+        endif()
+    else()
+        configure_file(${CMAKE_CURRENT_LIST_DIR}/clang-format.cmake ${CLANG_FORMAT_FILE} @ONLY)
+    endif()
 endif()
 
 # formatting target
