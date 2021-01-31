@@ -31,7 +31,6 @@ add_definitions(-DQT_NO_CAST_TO_ASCII
                 -DQT_NO_CAST_FROM_ASCII
                 -DQT_NO_URL_CAST_FROM_STRING
                 -DQT_NO_CAST_FROM_BYTEARRAY
-                -DQT_NO_SIGNALS_SLOTS_KEYWORDS
                 -DQT_USE_QSTRINGBUILDER
                 -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT
                )
@@ -47,7 +46,12 @@ endif()
 # Some non-KF projects make (ab)use of KDEFrameworkCompilerSettings currently,
 # let them only hit this as well when bumping their min. ECM requirement to a newer version.
 if (NOT "${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.79.0")
-    add_definitions(-DQT_NO_FOREACH)
+    add_definitions(
+        -DQT_NO_KEYWORDS
+        -DQT_NO_FOREACH
+    )
+else()
+    add_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 endif()
 
 add_definitions(
