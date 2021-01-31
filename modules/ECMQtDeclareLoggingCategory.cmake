@@ -95,7 +95,7 @@
 # call which uses the same ``<exportid>``. This can be in the same directory, or
 # any subdirectory or parent directory.
 #
-# ``EXPORT`` specifies the group id of categories whose informatipn should be
+# ``EXPORT`` specifies the group id of categories whose information should be
 # stored in the file generated and installed.
 #
 # ``FILE`` specifies the name of the file generated and installed. It will default
