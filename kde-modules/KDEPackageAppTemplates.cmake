@@ -85,8 +85,10 @@ function(kde_package_app_templates)
 
     find_program(_tar_executable NAMES gtar tar)
     if(_tar_executable)
+        # NOTE: we also pass `--sort=name` here to check if the tar exe supports that
+        #       this feature was only added in gnu tar v1.28
         execute_process(
-            COMMAND ${_tar_executable} --version
+            COMMAND ${_tar_executable} --sort=name --version
             TIMEOUT 3
             RESULT_VARIABLE _tar_exit
             OUTPUT_VARIABLE _tar_version
