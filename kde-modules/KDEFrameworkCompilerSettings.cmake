@@ -37,6 +37,7 @@ if (NOT CMAKE_CXX_STANDARD)
     endif()
 endif()
 
+set(KDE_COMPILERSETTINGS_LEVEL 5.84.0)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 
 add_definitions(-DQT_NO_CAST_TO_ASCII

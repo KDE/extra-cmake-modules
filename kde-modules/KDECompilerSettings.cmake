@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2007 Matthias Kretz <kretz@kde.org>
 # SPDX-FileCopyrightText: 2006-2007 Laurent Montel <montel@kde.org>
 # SPDX-FileCopyrightText: 2006-2013 Alex Neundorf <neundorf@kde.org>
+# SPDX-FileCopyrightText: 2021 Friedrich W. H. Kossebau <kossebau@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -20,6 +21,98 @@ specific target.
 
 NB: it is recommended to include this module with the NO_POLICY_SCOPE
 flag, otherwise you may get spurious warnings with some versions of CMake.
+
+Since 5.85 newer settings are controlled by a variable
+``KDE_COMPILERSETTINGS_LEVEL``, taking an ECM version as value. That
+version can not be greater than the minimum required ECM version.
+The settings which are default at that version will then be used,
+but can be overriden by more fine-grained controls (see respective settings).
+This variable needs to be set before including this module, otherwise
+defaults to the minimum required ECM version.
+
+Modern code
+~~~~~~~~~~~
+
+The following CMake C standard default variables are set:
+
+For ``KDE_COMPILERSETTINGS_LEVEL`` >= 5.85:
+
+- ``CMAKE_C_STANDARD``: ``99``
+- ``CMAKE_C_STANDARD_REQUIRED``: ``TRUE``
+- ``CMAKE_C_EXTENSIONS``: ``OFF``
+
+Otherwise:
+
+- ``CMAKE_C_STANDARD``: ``90``
+- ``CMAKE_C_STANDARD_REQUIRED``: not modified
+- ``CMAKE_C_EXTENSIONS``: not modified
+
+If the variable ``CMAKE_C_STANDARD`` is already set when including this module,
+none of the above variables will be modifed.
+
+The following CMake C++ standard default variables are set:
+
+For ``KDE_COMPILERSETTINGS_LEVEL`` >= 5.85:
+
+- ``CMAKE_CXX_STANDARD``: ``17``
+- ``CMAKE_CXX_STANDARD_REQUIRED``: ``TRUE``
+- ``CMAKE_CXX_EXTENSIONS``: ``OFF``
+
+Otherwise:
+
+- ``CMAKE_CXX_STANDARD``: ``11``
+- ``CMAKE_CXX_STANDARD_REQUIRED``: ``TRUE``
+- ``CMAKE_CXX_EXTENSIONS``: not modified.
+
+If the variable ``CMAKE_CXX_STANDARD`` is already set when including this module,
+none of the above variables will be modifed.
+
+
+The following C++ compiler flags are set:
+
+- ``-pedantic`` (GNU and Clang compilers, since 5.85)
+
+  Can be disabled by setting ``KDE_SKIP_PEDANTIC_WARNINGS_SETTINGS`` to ``TRUE``
+  before including this module (default is ``FALSE`` for
+  ``KDE_COMPILERSETTINGS_LEVEL`` >= 5.85, ``TRUE`` otherwise).
+
+- ``-Wmissing-include-dirs`` (GNU compilers, since 5.85)
+
+  Can be disabled by setting ``KDE_SKIP_MISSING_INCLUDE_DIRS_WARNINGS_SETTINGS`` to ``TRUE``
+  before including this module (default is ``FALSE`` for
+  ``KDE_COMPILERSETTINGS_LEVEL`` >= 5.85, ``TRUE`` otherwise).
+
+- ``-Wzero-as-null-pointer-constant`` (GNU and Clang compilers, since 5.85)
+
+  Can be disabled by setting ``KDE_SKIP_NULLPTR_WARNINGS_SETTINGS`` to ``TRUE``
+  before including this module (default is ``FALSE`` for
+  ``KDE_COMPILERSETTINGS_LEVEL`` >= 5.85, ``TRUE`` otherwise).
+
+- Qt related preprocessor definitions (since 5.85.0):
+
+  - ``-DQT_NO_CAST_TO_ASCII``
+  - ``-DQT_NO_CAST_FROM_ASCII``
+  - ``-DQT_NO_URL_CAST_FROM_STRING``
+  - ``-DQT_NO_CAST_FROM_BYTEARRAY``
+  - ``-DQT_USE_QSTRINGBUILDER``
+  - ``-DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT``
+  - ``-DQT_NO_KEYWORDS``
+  - ``-DQT_NO_FOREACH``
+  - ``-DQT_STRICT_ITERATORS``
+
+    Strict iterators are not enabled on Windows, because they lead
+    to a link error when application code iterates over a QVector<QPoint> for
+    instance, unless Qt itself was also built with strict iterators.
+    See example at https://bugreports.qt.io/browse/AUTOSUITE-946
+
+  Can be controlled by setting ``KDE_QT_MODERNCODE_DEFINITIONS_LEVEL`` to the
+  version of ECM where the wanted set of definitions has been added
+  before including this module (default is ``KDE_COMPILERSETTINGS_LEVEL``).
+  To disable individual definitions instead use ``remove_definitions()`` directly
+  after including this module.
+
+Functions
+~~~~~~~~~
 
 This module provides the following functions::
 
@@ -42,8 +135,74 @@ on a target that has source files in a language other than C++.
 Enables exceptions for C++ source files compiled for the
 CMakeLists.txt file in the current directory and all subdirectories.
 
+
+Example usages:
+
+.. code-block:: cmake
+
+  # needing some macro/feature only available with ECM 5.80.0
+  find_package(ECM 5.80.0 NO_MODULE)
+
+  # requiring ECM 5.80.0 above will default KDE_COMPILERSETTINGS_LEVEL also to 5.80.0,
+  # thus not activate any newer settings
+  include(KDECompilerSettings NO_POLICY_SCOPE)
+
+.. code-block:: cmake
+
+  # needing some macro/feature only available with ECM 5.87.0
+  find_package(ECM 5.87.0 NO_MODULE)
+
+  # project uses settings default as of KDECompilerSettings in ECM 5.85.0
+  set(KDE_COMPILERSETTINGS_LEVEL 5.85.0)
+  include(KDECompilerSettings NO_POLICY_SCOPE)
+
+.. code-block:: cmake
+
+  # needing some macro/feature only available with ECM 5.87.0
+  find_package(ECM 5.87.0 NO_MODULE)
+
+  # project mainly uses settings default as of KDECompilerSettings in ECM 5.85.0
+  # with some small twisting
+  set(KDE_COMPILERSETTINGS_LEVEL 5.85.0)
+  # not ready yet for pedantic compilers
+  set(KDE_SKIP_PEDANTIC_WARNINGS_SETTINGS TRUE)
+  # avoid any Qt definitions
+  set(KDE_QT_MODERNCODE_DEFINITIONS_LEVEL 5.84.0)
+  include(KDECompilerSettings NO_POLICY_SCOPE)
+
+.. code-block:: cmake
+
+  # needing some macro/feature only available with ECM 5.85.0
+  find_package(ECM 5.85.0 NO_MODULE)
+
+  # requiring ECM 5.85.0 above will default KDE_COMPILERSETTINGS_LEVEL also to 5.85.0,
+  # which again defaults KDE_QT_MODERNCODE_DEFINITIONS_LEVEL also to 5.85.0
+  include(KDECompilerSettings NO_POLICY_SCOPE)
+  # project is fine with almost all added Qt definitions as of 5.85.0, but not these ones:
+  remove_definitions(
+      -DQT_NO_KEYWORDS
+      -DQT_NO_FOREACH
+  )
+
 Since pre-1.0.0.
 #]=======================================================================]
+
+############################################################
+# Select and check KDE_COMPILERSETTINGS_LEVEL
+# For a specified version of KDE_COMPILERSETTINGS_LEVEL always the same set
+# of settings needs to be used, to give that version a meaning, even more as
+# the settings are usually more strict and can break builds which build fine
+# without the setting.
+# As at the time of version x it is usually unknown what future versions x+y
+# will offer as settings, the minimum required version of ECM sets the upper
+# limit then for the level version.
+if(NOT DEFINED KDE_COMPILERSETTINGS_LEVEL)
+    set(KDE_COMPILERSETTINGS_LEVEL ${ECM_GLOBAL_FIND_VERSION})
+else()
+    if(KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER ${ECM_GLOBAL_FIND_VERSION})
+        message(FATAL "KDE_COMPILERSETTINGS_LEVEL cannot be newer than the min. required ECM version.")
+    endif()
+endif()
 
 include("${ECM_MODULE_DIR}/ECMSourceVersionControl.cmake")
 
@@ -184,11 +343,22 @@ endif()
 
 # Pick sensible versions of the C and C++ standards.
 if (NOT CMAKE_C_STANDARD)
-    set(CMAKE_C_STANDARD 90)
+    if (KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.85.0)
+        set(CMAKE_C_STANDARD 99)
+        set(CMAKE_C_STANDARD_REQUIRED TRUE)
+        set(CMAKE_C_EXTENSIONS OFF)
+    else()
+        set(CMAKE_C_STANDARD 90)
+    endif()
 endif()
 if (NOT CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 11)
-    set(CMAKE_CXX_STANDARD_REQUIRED True)
+    if (KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.85.0)
+        set(CMAKE_CXX_STANDARD 17)
+        set(CMAKE_CXX_EXTENSIONS OFF)
+    else()
+        set(CMAKE_CXX_STANDARD 11)
+    endif()
+    set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 endif()
 
 # Do not merge uninitialized global variables.
@@ -431,6 +601,75 @@ if (APPLE)
     _kde_add_platform_definitions(-DQT_MAC_USE_COCOA)
 endif()
 
+############################################################
+# Modern code
+############################################################
+
+function(_kde_set_default_skip_variable_by_min_ecm _var_name _ecm_version)
+    if(NOT DEFINED ${_var_name})
+        if (KDE_COMPILERSETTINGS_LEVEL VERSION_LESS ${_ecm_version})
+            set(${_var_name} TRUE PARENT_SCOPE)
+        else()
+            set(${_var_name} FALSE PARENT_SCOPE)
+        endif()
+    endif()
+endfunction()
+
+if(NOT DEFINED KDE_QT_MODERNCODE_DEFINITIONS_LEVEL)
+    set(KDE_QT_MODERNCODE_DEFINITIONS_LEVEL ${KDE_COMPILERSETTINGS_LEVEL})
+endif()
+
+if (KDE_QT_MODERNCODE_DEFINITIONS_LEVEL VERSION_GREATER_EQUAL "5.85.0")
+    add_definitions(
+        -DQT_NO_CAST_TO_ASCII
+        -DQT_NO_CAST_FROM_ASCII
+        -DQT_NO_URL_CAST_FROM_STRING
+        -DQT_NO_CAST_FROM_BYTEARRAY
+        -DQT_USE_QSTRINGBUILDER
+        -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT
+        -DQT_NO_KEYWORDS
+        -DQT_NO_FOREACH
+    )
+    if (NOT WIN32)
+        # Strict iterators can't be used on Windows, they lead to a link error
+        # when application code iterates over a QVector<QPoint> for instance, unless
+        # Qt itself was also built with strict iterators.
+        # See example at https://bugreports.qt.io/browse/AUTOSUITE-946
+        add_definitions(-DQT_STRICT_ITERATORS)
+    endif()
+endif()
+
+_kde_set_default_skip_variable_by_min_ecm(KDE_SKIP_PEDANTIC_WARNINGS_SETTINGS "5.85.0")
+
+if (NOT KDE_SKIP_PEDANTIC_WARNINGS_SETTINGS)
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
+    endif()
+endif()
+
+_kde_set_default_skip_variable_by_min_ecm(KDE_SKIP_NULLPTR_WARNINGS_SETTINGS "5.85.0")
+
+if (NOT KDE_SKIP_NULLPTR_WARNINGS_SETTINGS)
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0.0")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant" )
+        endif()
+    endif()
+
+    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0.0")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant" )
+        endif()
+    endif()
+endif()
+
+_kde_set_default_skip_variable_by_min_ecm(KDE_SKIP_MISSING_INCLUDE_DIRS_WARNINGS_SETTINGS "5.85.0")
+
+if (NOT KDE_SKIP_MISSING_INCLUDE_DIRS_WARNINGS_SETTINGS)
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-include-dirs")
+    endif()
+endif()
 
 ############################################################
 # Hacks
