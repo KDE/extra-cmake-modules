@@ -51,6 +51,12 @@
 
 # try to find clang-format in path
 find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
+# If we haven't found any symlinked variants try to find any suitable version
+foreach(SUGGESTED_VERSION 13 12 11 10)
+    if(NOT KDE_CLANG_FORMAT_EXECUTABLE)
+        find_program(KDE_CLANG_FORMAT_EXECUTABLE "clang-format-${SUGGESTED_VERSION}")
+    endif()
+endforeach()
 
 # instantiate our clang-format file, must be in source directory for tooling if we have the tool
 if(KDE_CLANG_FORMAT_EXECUTABLE)

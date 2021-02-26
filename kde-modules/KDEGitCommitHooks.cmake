@@ -39,12 +39,11 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-# try to find clang-format in path
-find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
+include(KDEClangFormat)
+
 include(CMakeParseArguments)
 set(PRE_COMMIT_HOOK_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/pre-commit.in")
-set(CLANG_FORMAT_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/clang-format.sh")
-
+set(CLANG_FORMAT_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/clang-format.sh.in")
 function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
     set(_oneValueArgs "")
     set(_multiValueArgs CHECKS)
@@ -60,6 +59,7 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
         # The pre-commit hook is a bash script, consequently it won't work on non-unix platforms
         if (UNIX)
             if(KDE_CLANG_FORMAT_EXECUTABLE)
+                get_filename_component(KDE_CLANG_FORMAT_EXECUTABLE_BASE_NAME ${KDE_CLANG_FORMAT_EXECUTABLE} NAME)
                 list(FIND ARG_CHECKS "CLANG_FORMAT" _index)
                 if (${_index} GREATER -1)
                     set(CLANG_FORMAT_SCRIPT "./.git/hooks/scripts/clang-format.sh")
