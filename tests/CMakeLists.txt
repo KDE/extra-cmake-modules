@@ -60,9 +60,6 @@ endmacro()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/find-modules)
 
-# enforce finding of ReuseTool in parent scope of module, beause
-# only here the module path can point into the source directory
-find_package(ReuseTool)
 add_subdirectory(ECMCheckOutboundLicenseTest)
 
 # Skip if PyQt not available

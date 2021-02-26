@@ -130,7 +130,6 @@ function(ecm_check_outbound_license)
     # generate file with list of relative file paths
     string(REPLACE "${CMAKE_BINARY_DIR}/" "" RELATIVE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
     set(OUTPUT_FILE ${CMAKE_BINARY_DIR}/licensecheck_${ARG_TEST_NAME}.txt)
-    message(STATUS "Generate test input file: ${OUTPUT_FILE}")
     file(REMOVE ${OUTPUT_FILE})
     foreach(_file ${ARG_FILES})
         # check script expects files to start with "./", which must be relative to CMAKE_SOURCE_DIR

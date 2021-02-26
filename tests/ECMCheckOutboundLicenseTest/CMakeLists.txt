@@ -1,5 +1,9 @@
 set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
+set(CMAKE_MODULE_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../find-modules
+)
+
 include(ECMCheckOutboundLicense)
 
 # check relative and absolute input paths
