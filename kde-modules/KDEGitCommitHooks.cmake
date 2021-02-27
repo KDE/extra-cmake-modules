@@ -60,6 +60,12 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
         if (UNIX)
             if(KDE_CLANG_FORMAT_EXECUTABLE)
                 get_filename_component(KDE_CLANG_FORMAT_EXECUTABLE_BASE_NAME ${KDE_CLANG_FORMAT_EXECUTABLE} NAME)
+                # In case we have no clang-format executable, but only one with the specific version we need to tell the git clang-format tool to use it
+                if(NOT KDE_CLANG_FORMAT_EXECUTABLE_BASE_NAME STREQUAL "clang-format")
+                execute_process(COMMAND git config clangFormat.binary ${KDE_CLANG_FORMAT_EXECUTABLE_BASE_NAME}
+                                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+                endif()
+                set(SET_GIT_CLANG_FORMAT_BINARY FALSE)
                 list(FIND ARG_CHECKS "CLANG_FORMAT" _index)
                 if (${_index} GREATER -1)
                     set(CLANG_FORMAT_SCRIPT "./.git/hooks/scripts/clang-format.sh")
