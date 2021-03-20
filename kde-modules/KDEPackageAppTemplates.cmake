@@ -92,6 +92,7 @@ function(kde_package_app_templates)
             TIMEOUT 3
             RESULT_VARIABLE _tar_exit
             OUTPUT_VARIABLE _tar_version
+            ERROR_VARIABLE _tar_stderr
         )
         if("${_tar_exit}" EQUAL 0 AND "${_tar_version}" MATCHES "GNU tar")
             set(GNU_TAR_FOUND ON)
