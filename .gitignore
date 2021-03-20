@@ -17,6 +17,8 @@ Makefile
 avail
 random_seed
 /build*/
+/cmake-build*/
+.idea
 CMakeLists.txt.user*
 *.unc-backup*
 __pycache__
