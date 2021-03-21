@@ -117,6 +117,7 @@ function(kde_package_app_templates)
             add_custom_command(OUTPUT ${_template}
                 COMMAND ${_tar_executable} ARGS -c
                    --exclude .kdev_ignore --exclude .svn --sort=name --mode=go=rX,u+rw,a-s --owner=root
+                   --pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0
                    --group=root --numeric-owner -j -v -f ${_template} .
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
                 DEPENDS ${_subdirs_entries}
