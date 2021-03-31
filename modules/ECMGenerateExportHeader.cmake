@@ -44,7 +44,9 @@
 # If not set, the generated code will ignore any such macros.
 #
 # ``DEPRECATED_BASE_VERSION`` specifies the default version before and at which
-# deprecated API is disabled. The default is the value of
+# deprecated API is disabled. Possible values are "0", "CURRENT" (which
+# resolves to <version>) and a version string in the format
+# "<major>.<minor>.<patchlevel>". The default is the value of
 # "<exclude_deprecated_before_and_at_version>" if set, or "<major>.0.0", with
 # <major> taken from <version>.
 #
@@ -437,9 +439,13 @@ function(ecm_generate_export_header target)
     )
     cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+    # helper string
+    set(_version_triple_regexp "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$")
     # args sanity check
     if (NOT ARGS_VERSION)
         message(FATAL_ERROR "No VERSION passed when calling ecm_generate_export_header().")
+    elseif(NOT ARGS_VERSION MATCHES ${_version_triple_regexp})
+        message(FATAL_ERROR "VERSION expected to be in x.y.z format when calling ecm_generate_export_header().")
     endif()
     if (ARGS_INCLUDE_GUARD_NAME AND CMAKE_VERSION VERSION_LESS 3.11)
         message(FATAL_ERROR "Argument INCLUDE_GUARD_NAME needs at least CMake 3.11 when calling ecm_generate_export_header().")
@@ -448,18 +454,23 @@ function(ecm_generate_export_header target)
         set(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT 0)
     elseif(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT STREQUAL "CURRENT")
         set(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT ${ARGS_VERSION})
+    elseif(NOT ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT MATCHES ${_version_triple_regexp} AND
+           NOT ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT STREQUAL "0")
+        message(FATAL_ERROR "EXCLUDE_DEPRECATED_BEFORE_AND_AT expected to be in \"x.y.z\" format, \"0\" or \"CURRENT\" when calling ecm_generate_export_header().")
     endif()
     if (NOT DEFINED ARGS_DEPRECATED_BASE_VERSION)
         if (ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
             set(ARGS_DEPRECATED_BASE_VERSION "${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}")
         else()
-            string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$" "\\1"
- _version_major "${ARGS_VERSION}")
+            string(REGEX REPLACE ${_version_triple_regexp} "\\1" _version_major "${ARGS_VERSION}")
             set(ARGS_DEPRECATED_BASE_VERSION "${_version_major}.0.0")
         endif()
     else()
         if(ARGS_DEPRECATED_BASE_VERSION STREQUAL "CURRENT")
             set(ARGS_DEPRECATED_BASE_VERSION ${ARGS_VERSION})
+        elseif(NOT ARGS_DEPRECATED_BASE_VERSION MATCHES ${_version_triple_regexp} AND
+               NOT ARGS_DEPRECATED_BASE_VERSION STREQUAL "0")
+            message(FATAL_ERROR "DEPRECATED_BASE_VERSION expected to be in \"x.y.z\" format, \"0\" or \"CURRENT\" when calling ecm_generate_export_header().")
         endif()
         if (ARGS_DEPRECATED_BASE_VERSION VERSION_LESS ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
             message(STATUS "DEPRECATED_BASE_VERSION (${ARGS_DEPRECATED_BASE_VERSION}) was lower than EXCLUDE_DEPRECATED_BEFORE_AND_AT (${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}) when calling ecm_generate_export_header(), raising to that.")
