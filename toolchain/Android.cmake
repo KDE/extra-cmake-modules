@@ -112,6 +112,20 @@
 # the create-apk-myapp target.
 #
 # See Android documentation on how to create a keystore to use
+#
+# Advanced Options
+# ================
+#
+# The following packaging options are mainly interesting for automation or integration
+# with CI/CD pipelines:
+# ``ANDROID_APK_OUTPUT_DIR``
+#     Specifies a folder where the generated APK files should be placed.
+# ``ANDROID_FASTLANE_METADATA_OUTPUT_DIR``
+#     Specifies a folder where the generated metadata for the F-Droid store
+#     should be placed.
+# ``ANDROIDDEPLOYQT_EXTRA_ARGS``
+#     Allows to pass additional arguments to `androiddeployqt`. This is an alternative to
+#     the `ARGS=` argument for `make` and unlike that works with all CMake generators.
 
 # =============================================================================
 # SPDX-FileCopyrightText: 2014 Aleix Pol i Gonzalez <aleixpol@kde.org>
