@@ -206,7 +206,7 @@ function(ecm_install_po_files_as_qm podir)
         return()
     endif()
 
-    file(GLOB po_files "${podir}/*/*.po")
+    file(GLOB po_files "${absolute_podir}/*/*.po")
     foreach(po_file ${po_files})
         get_filename_component(po_dir ${po_file} DIRECTORY)
         get_filename_component(lang ${po_dir} NAME)
