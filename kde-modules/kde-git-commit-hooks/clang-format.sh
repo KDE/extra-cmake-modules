@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Based on okular/hooks/pre-commit, credits go to Albert Astals Cid
+# SPDX-FileCopyrightText: 2021 Alexander Lohnau <alexander.lohnau@gmx.de>
+# SPDX-License-Identifier: BSD-3-Clause
 
 readonly output=$(git clang-format --diff)
 
