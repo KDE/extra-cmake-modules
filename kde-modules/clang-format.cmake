@@ -4,6 +4,11 @@
 #
 # SPDX-License-Identifier: MIT
 
+---
+Language: JavaScript
+DisableFormat: true
+---
+
 # Style for C++
 Language: Cpp
 
