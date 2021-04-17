@@ -1,60 +1,59 @@
-#.rst:
-# FindWaylandScanner
-# ------------------
-#
-# Try to find wayland-scanner.
-#
-# If the wayland-scanner executable is not in your PATH, you can provide
-# an alternative name or full path location with the ``WaylandScanner_EXECUTABLE``
-# variable.
-#
-# This will define the following variables:
-#
-# ``WaylandScanner_FOUND``
-#     True if wayland-scanner is available.
-#
-# ``WaylandScanner_EXECUTABLE``
-#     The wayland-scanner executable.
-#
-# If ``WaylandScanner_FOUND`` is TRUE, it will also define the following imported
-# target:
-#
-# ``Wayland::Scanner``
-#     The wayland-scanner executable.
-#
-# This module provides the following functions to generate C protocol
-# implementations:
-#
-#   - ``ecm_add_wayland_client_protocol``
-#   - ``ecm_add_wayland_server_protocol``
-#
-# ::
-#
-#   ecm_add_wayland_client_protocol(<source_files_var>
-#                                   PROTOCOL <xmlfile>
-#                                   BASENAME <basename>)
-#
-# Generate Wayland client protocol files from ``<xmlfile>`` XML
-# definition for the ``<basename>`` interface and append those files
-# to ``<source_files_var>``.
-#
-# ::
-#
-#   ecm_add_wayland_server_protocol(<source_files_var>
-#                                   PROTOCOL <xmlfile>
-#                                   BASENAME <basename>)
-#
-# Generate Wayland server protocol files from ``<xmlfile>`` XML
-# definition for the ``<basename>`` interface and append those files
-# to ``<source_files_var>``.
-#
-# Since 1.4.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindWaylandScanner
+------------------
+
+Try to find wayland-scanner.
+
+If the wayland-scanner executable is not in your PATH, you can provide
+an alternative name or full path location with the ``WaylandScanner_EXECUTABLE``
+variable.
+
+This will define the following variables:
+
+``WaylandScanner_FOUND``
+    True if wayland-scanner is available.
+
+``WaylandScanner_EXECUTABLE``
+    The wayland-scanner executable.
+
+If ``WaylandScanner_FOUND`` is TRUE, it will also define the following imported
+target:
+
+``Wayland::Scanner``
+    The wayland-scanner executable.
+
+This module provides the following functions to generate C protocol
+implementations:
+
+  - ``ecm_add_wayland_client_protocol``
+  - ``ecm_add_wayland_server_protocol``
+
+::
+
+  ecm_add_wayland_client_protocol(<source_files_var>
+                                  PROTOCOL <xmlfile>
+                                  BASENAME <basename>)
+
+Generate Wayland client protocol files from ``<xmlfile>`` XML
+definition for the ``<basename>`` interface and append those files
+to ``<source_files_var>``.
+
+::
+
+  ecm_add_wayland_server_protocol(<source_files_var>
+                                  PROTOCOL <xmlfile>
+                                  BASENAME <basename>)
+
+Generate Wayland server protocol files from ``<xmlfile>`` XML
+definition for the ``<basename>`` interface and append those files
+to ``<source_files_var>``.
+
+Since 1.4.0.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 

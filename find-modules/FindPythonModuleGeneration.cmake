@@ -1,66 +1,63 @@
-#.rst:
-# FindPythonModuleGeneration
-# --------------------------
-#
-# This module is experimental and internal.  The interface will likely
-# change in the coming releases.
-#
-# Tools and macros for generating python bindings
-#
-# This will define the following public function:
-#
-#   ecm_generate_python_binding(TARGET <target>
-#                               PYTHONNAMESPACE <namespace>
-#                               MODULENAME <modulename>
-#                               RULES_FILE <rulesfile>
-#                               SIP_DEPENDS <dependencies>
-#                               SIP_INCLUDES <includes>
-#                               HEADERS <headers>)
-#
-# Invoking the function will create bindings for the <target> for python 2 and 3,
-# if available.  The bindings will be put in the namespace <namespace> in python,
-# and will be available from the module <modulename>.
-#
-# The optional rules file specifies the rules for creating the bindings
-#
-# A simple invocation would be:
-#
-#   ecm_generate_python_binding(TARGET KMyTarget
-#     PYTHONNAMESPACE PyKF5
-#     MODULENAME MyTarget
-#     SIP_DEPENDS QtCore/QtCoremod.sip
-#     HEADERS ${myTargetHeaders}
-#   )
-#
-# which can then be used from python as
-#
-#   import PyKF5.MyTarget
-#
-# Inclusion of this module defines the following variables:
-#
-# ``KDE_INSTALL_PYTHON2DIR``, ``KDE_INSTALL_PYTHON3DIR``
-#     destination for generated bindings
-# ``KDE_INSTALL_FULL_PYTHON2DIR``, ``KDE_INSTALL_FULL_PYTHON3DIR``
-#     corresponding absolute path
-#
-# If ``KDE_INSTALL_USE_PYTHON2_SYS_PATHS`` is set to TRUE before including this
-# module, the default value for ``KDE_INSTALL_PYTHON2DIR`` is instead queried from
-# pythons distutil.sysconfig.get_python_lib().
-# If not set, it will default to TRUE if pythons ``sysconfig.PREFIX`` is the same
-# as ``CMAKE_INSTALL_PREFIX``, otherwise it defaults to FALSE.
-# This variable should NOT be set from within CMakeLists.txt files, instead it
-# is intended to be set manually when configuring a project which uses this
-# module (e.g. by packagers).
-#
-# Likewise for ``KDE_INSTALL_USE_PYTHON3_SYS_PATHS`` and ``KDE_INSTALL_PYTHON3DIR``.
-#
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2016 Stephen Kelly <steveire@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
 
+#[=======================================================================[.rst:
+FindPythonModuleGeneration
+--------------------------
+
+This module is experimental and internal.  The interface will likely
+change in the coming releases.
+
+Tools and macros for generating python bindings
+
+This will define the following public function:
+
+  ecm_generate_python_binding(TARGET <target>
+                              PYTHONNAMESPACE <namespace>
+                              MODULENAME <modulename>
+                              RULES_FILE <rulesfile>
+                              SIP_DEPENDS <dependencies>
+                              SIP_INCLUDES <includes>
+                              HEADERS <headers>)
+
+Invoking the function will create bindings for the <target> for python 2 and 3,
+if available.  The bindings will be put in the namespace <namespace> in python,
+and will be available from the module <modulename>.
+
+The optional rules file specifies the rules for creating the bindings
+
+A simple invocation would be:
+
+  ecm_generate_python_binding(TARGET KMyTarget
+    PYTHONNAMESPACE PyKF5
+    MODULENAME MyTarget
+    SIP_DEPENDS QtCore/QtCoremod.sip
+    HEADERS ${myTargetHeaders}
+  )
+
+which can then be used from python as
+
+  import PyKF5.MyTarget
+
+Inclusion of this module defines the following variables:
+
+``KDE_INSTALL_PYTHON2DIR``, ``KDE_INSTALL_PYTHON3DIR``
+    destination for generated bindings
+``KDE_INSTALL_FULL_PYTHON2DIR``, ``KDE_INSTALL_FULL_PYTHON3DIR``
+    corresponding absolute path
+
+If ``KDE_INSTALL_USE_PYTHON2_SYS_PATHS`` is set to TRUE before including this
+module, the default value for ``KDE_INSTALL_PYTHON2DIR`` is instead queried from
+pythons distutil.sysconfig.get_python_lib().
+If not set, it will default to TRUE if pythons ``sysconfig.PREFIX`` is the same
+as ``CMAKE_INSTALL_PREFIX``, otherwise it defaults to FALSE.
+This variable should NOT be set from within CMakeLists.txt files, instead it
+is intended to be set manually when configuring a project which uses this
+module (e.g. by packagers).
+
+Likewise for ``KDE_INSTALL_USE_PYTHON3_SYS_PATHS`` and ``KDE_INSTALL_PYTHON3DIR``.
+#]=======================================================================]
 
 macro(_find_python version minor_version)
   set(_CURRENT_VERSION ${version}.${minor_version})

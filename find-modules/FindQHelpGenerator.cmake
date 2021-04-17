@@ -1,16 +1,16 @@
-# WARNING: FOR ECM-INTERNAL USE ONLY, DO NOT USE IN OWN PROJECTS
-# THIS FILE MIGHT DISAPPEAR IN FUTURE VERSIONS OF ECM.
-
-# Finds the Qt5 QHelpGenerator
-#
-#  QHelpGenerator_FOUND     - True if QHelpGenerator found.
-#  QHelpGenerator_EXECUTABLE - Path to executable
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2016 Friedrich W. H. Kossebau <kossebau@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+WARNING: FOR ECM-INTERNAL USE ONLY, DO NOT USE IN OWN PROJECTS
+THIS FILE MIGHT DISAPPEAR IN FUTURE VERSIONS OF ECM.
+
+Finds the Qt5 QHelpGenerator
+
+ QHelpGenerator_FOUND     - True if QHelpGenerator found.
+ QHelpGenerator_EXECUTABLE - Path to executable
+#]=======================================================================]
 
 find_package(Qt5Help QUIET)
 if (TARGET Qt5::qhelpgenerator)

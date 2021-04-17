@@ -1,35 +1,34 @@
-#.rst:
-# ECMQMLModules
-# -------------
-#
-# Find QML import modules through a find_qmlmodule() call.
-# It uses the qmlplugindump application to find the plugins and sets them up as
-# runtime dependencies.
-#
-# This is useful so that when we configure a project we are noified when some
-# QML imports are not present in the system, thus having the application compilable
-# but fail at runtime.
-#
-# ::
-#
-#   ecm_find_qmlmodule(<module_name> <version>...)
-#
-# Any further arguments passed will be forwarded into a find_package() call. See
-# find_package() documentation for more information.
-#
-# Usage example:
-#
-# .. code-block:: cmake
-#
-#   ecm_find_qmlmodule(org.kde.kirigami 2.1)
-#
-# Since 5.38.0.
-#
-#=============================================================================
 # SPDX-FileCopyrightText: 2015 Aleix Pol Gonzalez <aleixpol@blue-systems.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+ECMQMLModules
+-------------
+
+Find QML import modules through a find_qmlmodule() call.
+It uses the qmlplugindump application to find the plugins and sets them up as
+runtime dependencies.
+
+This is useful so that when we configure a project we are noified when some
+QML imports are not present in the system, thus having the application compilable
+but fail at runtime.
+
+::
+
+  ecm_find_qmlmodule(<module_name> <version>...)
+
+Any further arguments passed will be forwarded into a find_package() call. See
+find_package() documentation for more information.
+
+Usage example:
+
+.. code-block:: cmake
+
+  ecm_find_qmlmodule(org.kde.kirigami 2.1)
+
+Since 5.38.0.
+#]=======================================================================]
 
 set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 

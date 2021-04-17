@@ -1,32 +1,29 @@
-#.rst:
-# ECMWinResolveSymlinks
-# --------------------------
-#
-# Resolve pseudo-symlinks created by git when cloning on Windows.
-#
-# ::
-#
-#   ecm_win_resolve_symlinks(<dir>)
-#
-# When git checks out a repository with UNIX symlinks on Windows machine,
-# it creates a text file for each symlink, containing a relative path to the
-# real file.
-# This function would recursively walk over specified directory and replace
-# pseudo-symlinks with corresponding real file's contents. It would then run
-# git update-index --assume-unchanged on them to trick git.
-#
-# This is useful for projects like "breeze-icons" that contain many identical
-# icons implemented as symlinks.
-#
-# Since 5.28
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2016 Gleb Popov <6yearold@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
-# (To distribute this file outside of extra-cmake-modules, substitute the full
-#  License text for the above reference.)
+
+#[=======================================================================[.rst:
+ECMWinResolveSymlinks
+--------------------------
+
+Resolve pseudo-symlinks created by git when cloning on Windows.
+
+::
+
+  ecm_win_resolve_symlinks(<dir>)
+
+When git checks out a repository with UNIX symlinks on Windows machine,
+it creates a text file for each symlink, containing a relative path to the
+real file.
+This function would recursively walk over specified directory and replace
+pseudo-symlinks with corresponding real file's contents. It would then run
+git update-index --assume-unchanged on them to trick git.
+
+This is useful for projects like "breeze-icons" that contain many identical
+icons implemented as symlinks.
+
+Since 5.28
+#]=======================================================================]
 
 function(ECM_WIN_RESOLVE_SYMLINKS _dir)
   get_filename_component(dir ${_dir} ABSOLUTE)

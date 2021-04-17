@@ -1,257 +1,260 @@
-#.rst:
-# ECMAddQch
-# ------------------
-#
-# This module provides the ``ecm_add_qch`` function for generating API
-# documentation files in the QCH format, and the ``ecm_install_qch_export``
-# function for generating and installing exported CMake targets for such
-# generated QCH files to enable builds of other software with generation of
-# QCH files to create links into the given QCH files.
-#
-# ::
-#
-#   ecm_add_qch(<target_name>
-#       NAME <name>
-#       VERSION <version>
-#       QCH_INSTALL_DESTINATION <qchfile_install_path>
-#       TAGFILE_INSTALL_DESTINATION <tagsfile_install_path>
-#       [COMPONENT <component>]
-#       [BASE_NAME <basename>]
-#       [SOURCE_DIRS <dir> [<dir2> [...]]]
-#       [SOURCES <file> [<file2> [...]]]
-#       |MD_MAINPAGE <md_file>]
-#       [INCLUDE_DIRS <incdir> [<incdir2> [...]]]
-#       [IMAGE_DIRS <idir> [<idir2> [...]]]
-#       [EXAMPLE_DIRS <edir> [<edir2> [...]]]
-#       [ORG_DOMAIN <domain>]
-#       [NAMESPACE <namespace>]
-#       [LINK_QCHS <qch> [<qch2> [...]]]
-#       [PREDEFINED_MACROS <macro[=content]> [<macro2[=content]> [...]]]
-#       [BLANK_MACROS <macro> [<macro2> [...]]]
-#       [CONFIG_TEMPLATE <configtemplate_file>]
-#       [VERBOSE]
-#   )
-#
-# This macro adds a target called <target_name> for the creation of an API
-# documentation manual in the QCH format from the given sources.
-# It currently uses doxygen, future versions might optionally also allow other
-# tools.
-# Next to the QCH file the target will generate a corresponding doxygen tag
-# file, which enables creating links from other documentation into the
-# generated QCH file.
-#
-# It is recommended to make the use of this macro optional, by depending
-# the call to ``ecm_add_qch`` on a CMake option being set, with a name like
-# ``BUILD_QCH`` and being TRUE by default. This will allow the developers to
-# saves resources on normal source development build cycles by setting this
-# option to FALSE.
-#
-# The macro will set the target properties DOXYGEN_TAGFILE, QHP_NAMESPACE,
-# QHP_NAMESPACE_VERSIONED, QHP_VIRTUALFOLDER and LINK_QCHS to the respective
-# values, to allow other code access to them, e.g. the macro
-# ``ecm_install_qch_export``.
-# To enable the use of the target <target_name> as item for LINK_QCHS
-# in further ``ecm_add_qch`` calls in the current build,
-# additionally a target property DOXYGEN_TAGFILE_BUILD is set, with the path
-# of the created doxygen tag file in the build dir.
-# If existing, ``ecm_add_qch`` will use this property instead of
-# DOXYGEN_TAGFILE for access to the tags file.
-#
-# NAME specifies the name for the generated documentation.
-#
-# VERSION specifies the version of the library for which the documentation is
-# created.
-#
-# BASE_NAME specifies the base name for the generated files.
-# The default basename is ``<name>``.
-#
-# SOURCE_DIRS specifies the dirs (incl. subdirs) with the source files for
-# which the API documentation should be generated.  Dirs can be relative to
-# the current source dir. Dependencies to the files in the dirs are not
-# tracked currently, other than with the SOURCES argument. So do not use for
-# sources generated during the build.
-# Needs to be used when SOURCES or CONFIG_TEMPLATE are not used.
-#
-# SOURCES specifies the source files for which the API documentation should be
-# generated.
-# Needs to be used when SOURCE_DIRS or CONFIG_TEMPLATE are not used.
-#
-# MD_MAINPAGE specifies a file in Markdown format that should be used as main
-# page. This page will overrule any ``\mainpage`` command in the included
-# sources.
-#
-# INCLUDE_DIRS specifies the dirs which should be searched for included
-# headers. Dirs can be relative to the current source dir. Since 5.63.
-#
-# IMAGE_DIRS specifies the dirs which contain images that are included in the
-# documentation. Dirs can be relative to the current source dir.
-#
-# EXAMPLE_DIRS specifies the dirs which contain examples that are included in
-# the documentation. Dirs can be relative to the current source dir.
-#
-# QCH_INSTALL_DESTINATION specifies where the generated QCH file will be
-# installed.
-#
-# TAGFILE_INSTALL_DESTINATION specifies where the generated tag file will be
-# installed.
-#
-# COMPONENT specifies the installation component name with which the install
-# rules for the generated QCH file and tag file are associated.
-#
-# NAMESPACE can be used to set a custom namespace <namespace> of the generated
-# QCH file. The namepspace is used as the unique id by QHelpEngine (cmp.
-# https://doc.qt.io/qt-5/qthelpproject.html#namespace).
-# The default namespace is ``<domain>.<name>``.
-# Needs to be used when ORG_DOMAIN is not used.
-#
-# ORG_DOMAIN can be used to define the organization domain prefix for the
-# default namespace of the generated QCH file.
-# Needs to be used when NAMESPACE is not used.
-#
-# LINK_QCHS specifies a list of other QCH targets which should be used for
-# creating references to API documentation of code in external libraries.
-# For each target <qch> in the list these target properties are expected to be
-# defined: DOXYGEN_TAGFILE, QHP_NAMESPACE and QHP_VIRTUALFOLDER.
-# If any of these is not existing, <qch> will be ignored.
-# Use the macro ``ecm_install_qch_export`` for exporting a target with these
-# properties with the CMake config of a library.
-# Any target <qch> can also be one created before in the same buildsystem by
-# another call of ``ecm_add_qch``.
-#
-# PREDEFINED_MACROS specifies a list of C/C++ macros which should be handled as
-# given by the API dox generation tool.
-# Examples are macros only defined in generated files, so whose
-# definition might be not available to the tool.
-#
-# BLANK_MACROS specifies a list of C/C++ macro names which should be ignored by
-# the API dox generation tool and handled as if they resolve to empty strings.
-# Examples are export macros only defined in generated files, so whose
-# definition might be not available to the tool.
-#
-# CONFIG_TEMPLATE specifies a custom cmake template file for the config file
-# that is created to control the execution of the API dox generation tool.
-# The following CMake variables need to be used:
-# ECM_QCH_DOXYGEN_QHELPGENERATOR_EXECUTABLE,
-# ECM_QCH_DOXYGEN_FILEPATH, ECM_QCH_DOXYGEN_TAGFILE.
-# The following CMake variables can be used:
-# ECM_QCH_DOXYGEN_PROJECTNAME, ECM_QCH_DOXYGEN_PROJECTVERSION,
-# ECM_QCH_DOXYGEN_VIRTUALFOLDER, ECM_QCH_DOXYGEN_FULLNAMESPACE,
-# ECM_QCH_DOXYGEN_TAGFILES,
-# ECM_QCH_DOXYGEN_WARN_LOGFILE, ECM_QCH_DOXYGEN_QUIET.
-# There is no guarantue that the other CMake variables currently used in the
-# default config file template will also be present with the same semantics
-# in future versions of this macro.
-#
-# VERBOSE tells the API dox generation tool to be more verbose about its
-# activity.
-#
-# The default config file for the API dox generation tool, so the one when not
-# using CONFIG_TEMPLATE, allows code to handle the case of being processed by
-# the tool by defining the C/C++ preprocessor macro ``K_DOXYGEN`` when run
-# (since v5.67.0). For backward-compatibility also the definition
-# ``DOXYGEN_SHOULD_SKIP_THIS`` is set, but its usage is deprecated.
-#
-# Example usage:
-#
-# .. code-block:: cmake
-#
-#   ecm_add_qch(
-#       MyLib_QCH
-#       NAME MyLib
-#       VERSION "0.42.0"
-#       ORG_DOMAIN org.myorg
-#       SOURCE_DIRS
-#           src
-#       LINK_QCHS
-#           Qt5Core_QCH
-#           Qt5Xml_QCH
-#           Qt5Gui_QCH
-#           Qt5Widgets_QCH
-#       BLANK_MACROS
-#           MyLib_EXPORT
-#           MyLib_DEPRECATED
-#       TAGFILE_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/tags
-#       QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/qch
-#       COMPONENT Devel
-#   )
-#
-# Example usage (with two QCH files, second linking first):
-#
-# .. code-block:: cmake
-#
-#   ecm_add_qch(
-#       MyLib_QCH
-#       NAME MyLib
-#       VERSION ${MyLib_VERSION}
-#       ORG_DOMAIN org.myorg
-#       SOURCES ${MyLib_PUBLIC_HEADERS}
-#       MD_MAINPAGE src/mylib/README.md
-#       LINK_QCHS Qt5Core_QCH
-#       TAGFILE_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/tags
-#       QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/qch
-#       COMPONENT Devel
-#   )
-#   ecm_add_qch(
-#       MyOtherLib_QCH
-#       NAME MyOtherLib
-#       VERSION ${MyOtherLib_VERSION}
-#       ORG_DOMAIN org.myorg
-#       SOURCES ${MyOtherLib_PUBLIC_HEADERS}
-#       MD_MAINPAGE src/myotherlib/README.md
-#       LINK_QCHS Qt5Core_QCH MyLib_QCH
-#       TAGFILE_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/tags
-#       QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/qch
-#       COMPONENT Devel
-#   )
-#
-# ::
-#
-#   ecm_install_qch_export(
-#       TARGETS [<name> [<name2> [...]]]
-#       FILE <file>
-#       DESTINATION <dest>
-#       [COMPONENT <component>]
-#   )
-#
-# This macro creates and installs a CMake file <file> which exports the given
-# QCH targets <name> etc., so they can be picked up by CMake-based builds of
-# other software that also generate QCH files (using ``ecm_add_qch``) and
-# which should include links to the QCH files created by the given targets.
-# The installed CMake file <file> is expected to be included by the CMake
-# config file created for the software the related QCH files are documenting.
-#
-# TARGETS specifies the QCH targets which should be exported. If a target does
-# not exist or does not have all needed properties, a warning will be
-# generated and the target skipped.
-# This behaviour might change in future versions to result in a fail instead.
-#
-# FILE specifies the name of the created CMake file, typically with a .cmake
-# extension.
-#
-# DESTINATION specifies the directory on disk to which the file will be
-# installed. It usually is the same as the one where the CMake config files
-# for this software are installed.
-#
-# COMPONENT specifies the installation component name with which the
-# install rule is associated.
-#
-# Example usage:
-#
-# .. code-block:: cmake
-#
-#   ecm_install_qch_export(
-#       TARGETS MyLib_QCH
-#       FILE MyLibQCHTargets.cmake
-#       DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/MyLib"
-#       COMPONENT Devel
-#   )
-#
-# Since 5.36.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2016-2017 Friedrich W. H. Kossebau <kossebau@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMAddQch
+------------------
+
+This module provides the ``ecm_add_qch`` function for generating API
+documentation files in the QCH format, and the ``ecm_install_qch_export``
+function for generating and installing exported CMake targets for such
+generated QCH files to enable builds of other software with generation of
+QCH files to create links into the given QCH files.
+
+::
+
+  ecm_add_qch(<target_name>
+      NAME <name>
+      VERSION <version>
+      QCH_INSTALL_DESTINATION <qchfile_install_path>
+      TAGFILE_INSTALL_DESTINATION <tagsfile_install_path>
+      [COMPONENT <component>]
+      [BASE_NAME <basename>]
+      [SOURCE_DIRS <dir> [<dir2> [...]]]
+      [SOURCES <file> [<file2> [...]]]
+      |MD_MAINPAGE <md_file>]
+      [INCLUDE_DIRS <incdir> [<incdir2> [...]]]
+      [IMAGE_DIRS <idir> [<idir2> [...]]]
+      [EXAMPLE_DIRS <edir> [<edir2> [...]]]
+      [ORG_DOMAIN <domain>]
+      [NAMESPACE <namespace>]
+      [LINK_QCHS <qch> [<qch2> [...]]]
+      [PREDEFINED_MACROS <macro[=content]> [<macro2[=content]> [...]]]
+      [BLANK_MACROS <macro> [<macro2> [...]]]
+      [CONFIG_TEMPLATE <configtemplate_file>]
+      [VERBOSE]
+  )
+
+This macro adds a target called <target_name> for the creation of an API
+documentation manual in the QCH format from the given sources.
+It currently uses doxygen, future versions might optionally also allow other
+tools.
+Next to the QCH file the target will generate a corresponding doxygen tag
+file, which enables creating links from other documentation into the
+generated QCH file.
+
+It is recommended to make the use of this macro optional, by depending
+the call to ``ecm_add_qch`` on a CMake option being set, with a name like
+``BUILD_QCH`` and being TRUE by default. This will allow the developers to
+saves resources on normal source development build cycles by setting this
+option to FALSE.
+
+The macro will set the target properties ``DOXYGEN_TAGFILE``, ``QHP_NAMESPACE``,
+``QHP_NAMESPACE_VERSIONED``, ``QHP_VIRTUALFOLDER`` and ``LINK_QCHS`` to the respective
+values, to allow other code access to them, e.g. the macro
+``ecm_install_qch_export``.
+To enable the use of the target <target_name> as item for ``LINK_QCHS``
+in further ``ecm_add_qch`` calls in the current build,
+additionally a target property ``DOXYGEN_TAGFILE_BUILD`` is set, with the path
+of the created doxygen tag file in the build dir.
+If existing, ``ecm_add_qch`` will use this property instead of
+``DOXYGEN_TAGFILE`` for access to the tags file.
+
+``NAME`` specifies the name for the generated documentation.
+
+``VERSION`` specifies the version of the library for which the documentation is
+created.
+
+``BASE_NAME`` specifies the base name for the generated files.
+The default basename is ``<name>``.
+
+``SOURCE_DIRS`` specifies the dirs (incl. subdirs) with the source files for
+which the API documentation should be generated.  Dirs can be relative to
+the current source dir. Dependencies to the files in the dirs are not
+tracked currently, other than with the ``SOURCES`` argument. So do not use for
+sources generated during the build.
+Needs to be used when ``SOURCES`` or ``CONFIG_TEMPLATE`` are not used.
+
+``SOURCES`` specifies the source files for which the API documentation should be
+generated.
+Needs to be used when ``SOURCE_DIRS`` or ``CONFIG_TEMPLATE`` are not used.
+
+``MD_MAINPAGE`` specifies a file in Markdown format that should be used as main
+page. This page will overrule any ``\mainpage`` command in the included
+sources.
+
+``INCLUDE_DIRS`` specifies the dirs which should be searched for included
+headers. Dirs can be relative to the current source dir. Since 5.63.
+
+``IMAGE_DIRS`` specifies the dirs which contain images that are included in the
+documentation. Dirs can be relative to the current source dir.
+
+``EXAMPLE_DIRS`` specifies the dirs which contain examples that are included in
+the documentation. Dirs can be relative to the current source dir.
+
+``QCH_INSTALL_DESTINATION`` specifies where the generated QCH file will be
+installed.
+
+``TAGFILE_INSTALL_DESTINATION`` specifies where the generated tag file will be
+installed.
+
+``COMPONENT`` specifies the installation component name with which the install
+rules for the generated QCH file and tag file are associated.
+
+``NAMESPACE`` can be used to set a custom namespace <namespace> of the generated
+QCH file. The namepspace is used as the unique id by QHelpEngine (cmp.
+https://doc.qt.io/qt-5/qthelpproject.html#namespace).
+The default namespace is ``<domain>.<name>``.
+Needs to be used when ``ORG_DOMAIN`` is not used.
+
+``ORG_DOMAIN`` can be used to define the organization domain prefix for the
+default namespace of the generated QCH file.
+Needs to be used when ``NAMESPACE`` is not used.
+
+``LINK_QCHS`` specifies a list of other QCH targets which should be used for
+creating references to API documentation of code in external libraries.
+For each target <qch> in the list these target properties are expected to be
+defined: ``DOXYGEN_TAGFILE``, ``QHP_NAMESPACE`` and ``QHP_VIRTUALFOLDER``.
+If any of these is not existing, <qch> will be ignored.
+Use the macro ``ecm_install_qch_export`` for exporting a target with these
+properties with the CMake config of a library.
+Any target <qch> can also be one created before in the same buildsystem by
+another call of ``ecm_add_qch``.
+
+``PREDEFINED_MACROS`` specifies a list of C/C++ macros which should be handled as
+given by the API dox generation tool.
+Examples are macros only defined in generated files, so whose
+definition might be not available to the tool.
+
+``BLANK_MACROS`` specifies a list of C/C++ macro names which should be ignored by
+the API dox generation tool and handled as if they resolve to empty strings.
+Examples are export macros only defined in generated files, so whose
+definition might be not available to the tool.
+
+``CONFIG_TEMPLATE`` specifies a custom cmake template file for the config file
+that is created to control the execution of the API dox generation tool.
+The following CMake variables need to be used:
+- ``ECM_QCH_DOXYGEN_QHELPGENERATOR_EXECUTABLE``
+- ``ECM_QCH_DOXYGEN_FILEPATH, ECM_QCH_DOXYGEN_TAGFILE``
+The following CMake variables can be used:
+- ``ECM_QCH_DOXYGEN_PROJECTNAME``
+- ``ECM_QCH_DOXYGEN_PROJECTVERSION``
+- ``ECM_QCH_DOXYGEN_VIRTUALFOLDER``
+- ``ECM_QCH_DOXYGEN_FULLNAMESPACE``
+- ``ECM_QCH_DOXYGEN_TAGFILES``
+- ``ECM_QCH_DOXYGEN_WARN_LOGFILE``
+- ``ECM_QCH_DOXYGEN_QUIET``
+There is no guarantue that the other CMake variables currently used in the
+default config file template will also be present with the same semantics
+in future versions of this macro.
+
+``VERBOSE`` tells the API dox generation tool to be more verbose about its
+activity.
+
+The default config file for the API dox generation tool, so the one when not
+using ``CONFIG_TEMPLATE``, allows code to handle the case of being processed by
+the tool by defining the C/C++ preprocessor macro ``K_DOXYGEN`` when run
+(since v5.67.0). For backward-compatibility also the definition
+``DOXYGEN_SHOULD_SKIP_THIS`` is set, but its usage is deprecated.
+
+Example usage:
+
+.. code-block:: cmake
+
+  ecm_add_qch(
+      MyLib_QCH
+      NAME MyLib
+      VERSION "0.42.0"
+      ORG_DOMAIN org.myorg
+      SOURCE_DIRS
+          src
+      LINK_QCHS
+          Qt5Core_QCH
+          Qt5Xml_QCH
+          Qt5Gui_QCH
+          Qt5Widgets_QCH
+      BLANK_MACROS
+          MyLib_EXPORT
+          MyLib_DEPRECATED
+      TAGFILE_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/tags
+      QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/qch
+      COMPONENT Devel
+  )
+
+Example usage (with two QCH files, second linking first):
+
+.. code-block:: cmake
+
+  ecm_add_qch(
+      MyLib_QCH
+      NAME MyLib
+      VERSION ${MyLib_VERSION}
+      ORG_DOMAIN org.myorg
+      SOURCES ${MyLib_PUBLIC_HEADERS}
+      MD_MAINPAGE src/mylib/README.md
+      LINK_QCHS Qt5Core_QCH
+      TAGFILE_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/tags
+      QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/qch
+      COMPONENT Devel
+  )
+  ecm_add_qch(
+      MyOtherLib_QCH
+      NAME MyOtherLib
+      VERSION ${MyOtherLib_VERSION}
+      ORG_DOMAIN org.myorg
+      SOURCES ${MyOtherLib_PUBLIC_HEADERS}
+      MD_MAINPAGE src/myotherlib/README.md
+      LINK_QCHS Qt5Core_QCH MyLib_QCH
+      TAGFILE_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/tags
+      QCH_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/docs/qch
+      COMPONENT Devel
+  )
+
+::
+
+  ecm_install_qch_export(
+      TARGETS [<name> [<name2> [...]]]
+      FILE <file>
+      DESTINATION <dest>
+      [COMPONENT <component>]
+  )
+
+This macro creates and installs a CMake file <file> which exports the given
+QCH targets <name> etc., so they can be picked up by CMake-based builds of
+other software that also generate QCH files (using ``ecm_add_qch``) and
+which should include links to the QCH files created by the given targets.
+The installed CMake file <file> is expected to be included by the CMake
+config file created for the software the related QCH files are documenting.
+
+``TARGETS`` specifies the QCH targets which should be exported. If a target does
+not exist or does not have all needed properties, a warning will be
+generated and the target skipped.
+This behaviour might change in future versions to result in a fail instead.
+
+``FILE`` specifies the name of the created CMake file, typically with a .cmake
+extension.
+
+``DESTINATION`` specifies the directory on disk to which the file will be
+installed. It usually is the same as the one where the CMake config files
+for this software are installed.
+
+``COMPONENT`` specifies the installation component name with which the
+install rule is associated.
+
+Example usage:
+
+.. code-block:: cmake
+
+  ecm_install_qch_export(
+      TARGETS MyLib_QCH
+      FILE MyLibQCHTargets.cmake
+      DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/MyLib"
+      COMPONENT Devel
+  )
+
+Since 5.36.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 include(ECMQueryQmake)

@@ -1,33 +1,32 @@
-#.rst:
-# FindInotify
-# --------------
-#
-# Try to find inotify on this system. This finds:
-#  - libinotify on Unix like systems, or
-#  - the kernel's inotify on Linux systems.
-#
-# This will define the following variables:
-#
-# ``Inotify_FOUND``
-#    True if inotify is available
-# ``Inotify_LIBRARIES``
-#    This has to be passed to target_link_libraries()
-# ``Inotify_INCLUDE_DIRS``
-#    This has to be passed to target_include_directories()
-#
-# On Linux, the libraries and include directories are empty,
-# even though ``Inotify_FOUND`` may be set to TRUE. This is because
-# no special includes or libraries are needed. On other systems
-# these may be needed to use inotify.
-#
-# Since 5.32.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2016 Tobias C. Berner <tcberner@FreeBSD.org>
 # SPDX-FileCopyrightText: 2017 Adriaan de Groot <groot@kde.org>
 #
 # SPDX-License-Identifier: BSD-2-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindInotify
+--------------
+
+Try to find inotify on this system. This finds:
+ - libinotify on Unix like systems, or
+ - the kernel's inotify on Linux systems.
+
+This will define the following variables:
+
+``Inotify_FOUND``
+   True if inotify is available
+``Inotify_LIBRARIES``
+   This has to be passed to target_link_libraries()
+``Inotify_INCLUDE_DIRS``
+   This has to be passed to target_include_directories()
+
+On Linux, the libraries and include directories are empty,
+even though ``Inotify_FOUND`` may be set to TRUE. This is because
+no special includes or libraries are needed. On other systems
+these may be needed to use inotify.
+
+Since 5.32.0.
+#]=======================================================================]
 
 find_path(Inotify_INCLUDE_DIRS sys/inotify.h)
 

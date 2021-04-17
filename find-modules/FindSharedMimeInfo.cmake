@@ -1,37 +1,36 @@
-#.rst:
-# FindSharedMimeInfo
-# ------------------
-#
-# Try to find the shared-mime-info package.
-#
-# This will define the following variables:
-#
-# ``SharedMimeInfo_FOUND``
-#     True if system has the shared-mime-info package
-# ``UPDATE_MIME_DATABASE_EXECUTABLE``
-#     The update-mime-database executable
-#
-# and the following imported targets:
-#
-# ``SharedMimeInfo::UpdateMimeDatabase``
-#     The update-mime-database executable
-#
-# The follow macro is available::
-#
-#   update_xdg_mimetypes(<path>)
-#
-# Updates the XDG mime database at install time (unless the ``$DESTDIR``
-# environment variable is set, in which case it is up to package managers to
-# perform this task).
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2013-2014 Alex Merry <alex.merry@kdemail.net>
 # SPDX-FileCopyrightText: 2007 Pino Toscano <toscano.pino@tiscali.it>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindSharedMimeInfo
+------------------
+
+Try to find the shared-mime-info package.
+
+This will define the following variables:
+
+``SharedMimeInfo_FOUND``
+    True if system has the shared-mime-info package
+``UPDATE_MIME_DATABASE_EXECUTABLE``
+    The update-mime-database executable
+
+and the following imported targets:
+
+``SharedMimeInfo::UpdateMimeDatabase``
+    The update-mime-database executable
+
+The follow macro is available::
+
+  update_xdg_mimetypes(<path>)
+
+Updates the XDG mime database at install time (unless the ``$DESTDIR``
+environment variable is set, in which case it is up to package managers to
+perform this task).
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 

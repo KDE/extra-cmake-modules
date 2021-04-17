@@ -1,31 +1,31 @@
-#.rst:
-# ECMGenerateQmlTypes
-# -------------------
-#
-# Generates plugins.qmltypes files for QML plugins.
-#
-# ::
-#
-#   ecm_generate_qmltypes(<org.kde.pluginname> 1.3
-#                         DESTINATION <${KDE_INSTALL_QMLDIR}/org/kde/pluginname>)
-#
-# Makes it possible to generate plugins.qmltypes files for the QML plugins that
-# our project offers. These files offer introspection upon our plugin and are
-# useful for integrating with IDE language support of our plugin. It offers
-# information about the objects its methods and their argument types.
-#
-# The developer will be in charge of making sure that these files are up to date.
-# The plugin.qmltypes file will sit in the source directory. This function will
-# include the code that installs the file in the right place and a small unit
-# test named qmltypes-pluginname-version that makes sure that it doesn't need updating.
-#
-#
-# Since 5.33.0
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2017 Aleix Pol Gonzalez <aleixpol@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMGenerateQmlTypes
+-------------------
+
+Generates plugins.qmltypes files for QML plugins.
+
+::
+
+  ecm_generate_qmltypes(<org.kde.pluginname> 1.3
+                        DESTINATION <${KDE_INSTALL_QMLDIR}/org/kde/pluginname>)
+
+Makes it possible to generate plugins.qmltypes files for the QML plugins that
+our project offers. These files offer introspection upon our plugin and are
+useful for integrating with IDE language support of our plugin. It offers
+information about the objects its methods and their argument types.
+
+The developer will be in charge of making sure that these files are up to date.
+The plugin.qmltypes file will sit in the source directory. This function will
+include the code that installs the file in the right place and a small unit
+test named qmltypes-pluginname-version that makes sure that it doesn't need updating.
+
+
+Since 5.33.0
+#]=======================================================================]
 
 include(CMakeParseArguments)
 function(ecm_generate_qmltypes)

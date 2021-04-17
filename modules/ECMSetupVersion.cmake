@@ -1,87 +1,87 @@
-#.rst:
-# ECMSetupVersion
-# ---------------
-#
-# Handle library version information.
-#
-# ::
-#
-#   ecm_setup_version(<version>
-#                     VARIABLE_PREFIX <prefix>
-#                     [SOVERSION <soversion>]
-#                     [VERSION_HEADER <filename>]
-#                     [PACKAGE_VERSION_FILE <filename> [COMPATIBILITY <compat>]] )
-#
-# This parses a version string and sets up a standard set of version variables.
-# It can optionally also create a C version header file and a CMake package
-# version file to install along with the library.
-#
-# If the ``<version>`` argument is of the form ``<major>.<minor>.<patch>``
-# (or ``<major>.<minor>.<patch>.<tweak>``), The following CMake variables are
-# set::
-#
-#   <prefix>_VERSION_MAJOR  - <major>
-#   <prefix>_VERSION_MINOR  - <minor>
-#   <prefix>_VERSION_PATCH  - <patch>
-#   <prefix>_VERSION        - <version>
-#   <prefix>_VERSION_STRING - <version> (for compatibility: use <prefix>_VERSION instead)
-#   <prefix>_SOVERSION      - <soversion>, or <major> if SOVERSION was not given
-#
-# If CMake policy CMP0048 is not NEW, the following CMake variables will also
-# be set::
-#
-#   PROJECT_VERSION_MAJOR   - <major>
-#   PROJECT_VERSION_MINOR   - <minor>
-#   PROJECT_VERSION_PATCH   - <patch>
-#   PROJECT_VERSION         - <version>
-#   PROJECT_VERSION_STRING  - <version> (for compatibility: use PROJECT_VERSION instead)
-#
-# If the VERSION_HEADER option is used, a simple C header is generated with the
-# given filename. If filename is a relative path, it is interpreted as relative
-# to CMAKE_CURRENT_BINARY_DIR.  The generated header contains the following
-# macros::
-#
-#    <prefix>_VERSION_MAJOR  - <major> as an integer
-#    <prefix>_VERSION_MINOR  - <minor> as an integer
-#    <prefix>_VERSION_PATCH  - <patch> as an integer
-#    <prefix>_VERSION_STRING - <version> as a C string
-#    <prefix>_VERSION        - the version as an integer
-#
-# ``<prefix>_VERSION`` has ``<patch>`` in the bottom 8 bits, ``<minor>`` in the
-# next 8 bits and ``<major>`` in the remaining bits.  Note that ``<patch>`` and
-# ``<minor>`` must be less than 256.
-#
-# If the PACKAGE_VERSION_FILE option is used, a simple CMake package version
-# file is created using the write_basic_package_version_file() macro provided by
-# CMake. It should be installed in the same location as the Config.cmake file of
-# the library so that it can be found by find_package().  If the filename is a
-# relative path, it is interpreted as relative to CMAKE_CURRENT_BINARY_DIR. The
-# optional COMPATIBILITY option is forwarded to
-# write_basic_package_version_file(), and defaults to AnyNewerVersion.
-#
-# If CMake policy CMP0048 is NEW, an alternative form of the command is
-# available::
-#
-#   ecm_setup_version(PROJECT
-#                     [VARIABLE_PREFIX <prefix>]
-#                     [SOVERSION <soversion>]
-#                     [VERSION_HEADER <filename>]
-#                     [PACKAGE_VERSION_FILE <filename>] )
-#
-# This will use the version information set by the project() command.
-# VARIABLE_PREFIX defaults to the project name.  Note that PROJECT must be the
-# first argument.  In all other respects, it behaves like the other form of the
-# command.
-#
-# Since pre-1.0.0.
-#
-# COMPATIBILITY option available since 1.6.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2012 Alexander Neundorf <neundorf@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMSetupVersion
+---------------
+
+Handle library version information.
+
+::
+
+  ecm_setup_version(<version>
+                    VARIABLE_PREFIX <prefix>
+                    [SOVERSION <soversion>]
+                    [VERSION_HEADER <filename>]
+                    [PACKAGE_VERSION_FILE <filename> [COMPATIBILITY <compat>]] )
+
+This parses a version string and sets up a standard set of version variables.
+It can optionally also create a C version header file and a CMake package
+version file to install along with the library.
+
+If the ``<version>`` argument is of the form ``<major>.<minor>.<patch>``
+(or ``<major>.<minor>.<patch>.<tweak>``), The following CMake variables are
+set::
+
+  <prefix>_VERSION_MAJOR  - <major>
+  <prefix>_VERSION_MINOR  - <minor>
+  <prefix>_VERSION_PATCH  - <patch>
+  <prefix>_VERSION        - <version>
+  <prefix>_VERSION_STRING - <version> (for compatibility: use <prefix>_VERSION instead)
+  <prefix>_SOVERSION      - <soversion>, or <major> if SOVERSION was not given
+
+If CMake policy CMP0048 is not NEW, the following CMake variables will also
+be set::
+
+  PROJECT_VERSION_MAJOR   - <major>
+  PROJECT_VERSION_MINOR   - <minor>
+  PROJECT_VERSION_PATCH   - <patch>
+  PROJECT_VERSION         - <version>
+  PROJECT_VERSION_STRING  - <version> (for compatibility: use PROJECT_VERSION instead)
+
+If the VERSION_HEADER option is used, a simple C header is generated with the
+given filename. If filename is a relative path, it is interpreted as relative
+to CMAKE_CURRENT_BINARY_DIR.  The generated header contains the following
+macros::
+
+   <prefix>_VERSION_MAJOR  - <major> as an integer
+   <prefix>_VERSION_MINOR  - <minor> as an integer
+   <prefix>_VERSION_PATCH  - <patch> as an integer
+   <prefix>_VERSION_STRING - <version> as a C string
+   <prefix>_VERSION        - the version as an integer
+
+``<prefix>_VERSION`` has ``<patch>`` in the bottom 8 bits, ``<minor>`` in the
+next 8 bits and ``<major>`` in the remaining bits.  Note that ``<patch>`` and
+``<minor>`` must be less than 256.
+
+If the PACKAGE_VERSION_FILE option is used, a simple CMake package version
+file is created using the write_basic_package_version_file() macro provided by
+CMake. It should be installed in the same location as the Config.cmake file of
+the library so that it can be found by find_package().  If the filename is a
+relative path, it is interpreted as relative to CMAKE_CURRENT_BINARY_DIR. The
+optional COMPATIBILITY option is forwarded to
+write_basic_package_version_file(), and defaults to AnyNewerVersion.
+
+If CMake policy CMP0048 is NEW, an alternative form of the command is
+available::
+
+  ecm_setup_version(PROJECT
+                    [VARIABLE_PREFIX <prefix>]
+                    [SOVERSION <soversion>]
+                    [VERSION_HEADER <filename>]
+                    [PACKAGE_VERSION_FILE <filename>] )
+
+This will use the version information set by the project() command.
+VARIABLE_PREFIX defaults to the project name.  Note that PROJECT must be the
+first argument.  In all other respects, it behaves like the other form of the
+command.
+
+Since pre-1.0.0.
+
+COMPATIBILITY option available since 1.6.0.
+#]=======================================================================]
 
 include(CMakePackageConfigHelpers)
 

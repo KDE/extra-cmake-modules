@@ -1,182 +1,182 @@
-#.rst:
-# ECMAddQtDesignerPlugin
-# ----------------------
-#
-# This module provides the ``ecm_add_qtdesignerplugin`` function for generating
-# Qt Designer plugins for custom widgets. Each of those widgets is described
-# using a second function ``ecm_qtdesignerplugin_widget``.
-#
-# ::
-#
-#   ecm_add_qtdesignerplugin(<target_name>
-#       NAME <name>
-#       WIDGETS <widgetid> [<widgetid2> [...]]
-#       LINK_LIBRARIES <lib> [<lib2> [...]]
-#       INSTALL_DESTINATION <install_path>
-#       [OUTPUT_NAME <output_name>]
-#       [DEFAULT_GROUP <group>]
-#       [DEFAULT_HEADER_CASE <SAME_CASE|LOWER_CASE|UPPER_CASE>]
-#       [DEFAULT_HEADER_EXTENSION <header_extension>]
-#       [DEFAULT_ICON_DIR <icon_dir>]
-#       [INCLUDE_FILES <include_file> [<include_file2> [...]]]
-#       [SOURCES <src> [<src2> [...]]]
-#       [COMPONENT <component>]
-#   )
-#
-# ``NAME`` specifies the base name to use in the generated sources.
-# The default is <target_name>.
-#
-# ``WIDGETS`` specifies the widgets the plugin should support. Each widget has
-# to be defined before by a call of ``ecm_qtdesignerplugin_widget`` with the
-# respective <widgetid>, in a scope including the current call.
-#
-# ``LINK_LIBRARIES`` specifies the libraries to link against. This will be at
-# least the library providing the widget class(es).
-#
-# ``INSTALL_DESTINATION`` specifies where the generated plugin binary will be
-# installed.
-#
-# ``OUTPUT_NAME`` specifies the name of the plugin binary. The default is
-# "<target_name>".
-#
-# ``DEFAULT_GROUP`` specifies the default group in Qt Designer where the
-# widgets will be placed. The default is "Custom".
-#
-# ``DEFAULT_HEADER_CASE`` specifies how the name of the header is derived from
-# the widget class name.  The default is "LOWER_CASE".
-#
-# ``DEFAULT_HEADER_EXTENSION`` specifies what file name extension is used for
-# the header file derived from the class name.  The default is "h".
-#
-# ``DEFAULT_ICON_DIR`` specifies what file name extension is used for
-# the header file derived from the class name.  The default is "pics".
-#
-# ``INCLUDE_FILES`` specifies additional include files to include with the
-# generated source file. This can be needed for custom code used in
-# initializing or creating widgets.
-#
-# ``SOURCES`` specifies additional source files to build the plugin from.
-# This can be needed to support custom code used in initializing or
-# creating widgets.
-#
-# ``COMPONENT`` specifies the installation component name with which the install
-# rules for the generated plugin are associated.
-#
-# ::
-#
-#   ecm_qtdesignerplugin_widget(<widgetid>
-#       [CLASS_NAME <class_name>]
-#       [INCLUDE_FILE <include_file>]
-#       [CONTAINER]
-#       [ICON <iconfile>]
-#       [TOOLTIP <tooltip>]
-#       [WHATSTHIS <whatsthis>]
-#       [GROUP <group>]
-#       [CREATE_WIDGET_CODE_FROM_VARIABLE <create_widget_code_variable>]
-#       [INITIALIZE_CODE_FROM_VARIABLE <initialize_code_variable]
-#       [DOM_XML_FROM_VARIABLE <dom_xml_variable>]
-#       [IMPL_CLASS_NAME <impl_class_name>]
-#       [CONSTRUCTOR_ARGS_CODE <constructor_args_code>]
-#       [CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE <constructor_args_code_variable>]
-#   )
-#
-# ``CLASS_NAME`` specifies the name of the widget class, including namespaces.
-# The default is "<widgetid>".
-#
-# ``INCLUDE_FILE`` specifies the include file to use for the class of this
-# widget. The default is derived from <class_name> as configured by the
-# ``DEFAULT_HEADER_*`` options of ``ecm_add_qtdesignerplugin``, also replacing
-# any namespace separators with "/".
-#
-# ``CONTAINER`` specifies, if set, that this widget is a container
-# for other widgets.
-#
-# ``ICON`` specifies the icon file to use as symbol for this widget.
-# The default is "{lowercased <class_name>}.png" in the default icons dir as
-# configured by the ``DEFAULT_ICON_DIR`` option of
-# ``ecm_add_qtdesignerplugin``, if such a file exists.
-#
-# ``TOOLTIP`` specifies the tooltip text to use for this widget. Default is
-# "<class_name> Widget".
-#
-# ``WHATSTHIS`` specifies the What's-This text to use for this widget.
-# Defaults to the tooltip.
-#
-# ``GROUP`` specifies the group in Qt Designer where the widget will be placed.
-# The default is set as configured by the ``DEFAULT_GROUP`` option of
-# ``ecm_add_qtdesignerplugin``.
-#
-# ``CREATE_WIDGET_CODE_FROM_VARIABLE`` specifies the variable to get from the
-# C++ code to use as factory code to create an instance of the widget,
-# for the override of
-# ``QDesignerCustomWidgetInterface::createWidget(QWidget* parent)``.
-# The default is "return new <impl_class_name><constructor_args_code>;".
-#
-# ``INITIALIZE_CODE_FROM_VARIABLE`` specifies the variable to get from the C++
-# code to use with the override of
-# ``QDesignerCustomWidgetInterface::initialize(QDesignerFormEditorInterface* core)``.
-# The code has to use the present class member ``m_initialized`` to track and
-# update the state. The default code simply sets ``m_initialized`` to
-# ``true``, if it was not before.
-#
-# ``DOM_XML_FROM_VARIABLE`` specifies the variable to get from the string to
-# use with the optional override of
-# ``QDesignerCustomWidgetInterface::domXml()``.
-# Default does not override.
-#
-# ``IMPL_CLASS_NAME`` specifies the name of the widget class to use for the
-# widget instance with Qt Designer. The default is "<class_name>".
-#
-# ``CONSTRUCTOR_ARGS_CODE`` specifies the C++ code to use for the constructor
-# arguments with the default of ``CREATE_WIDGET_CODE_FROM_VARIABLE``. Note
-# that the parentheses are required. The default is "(parent)".
-#
-# ``CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE`` specifies the variable to get from
-# the C++ code instead of passing it directly via ``CONSTRUCTOR_ARGS_CODE``.
-# This can be needed if the code is more complex and e.g. includes ";" chars.
-#
-#
-#
-# Example usage:
-#
-# .. code-block:: cmake
-#
-#   ecm_qtdesignerplugin_widget(FooWidget
-#       TOOLTIP "Enables to browse foo."
-#       GROUP "Views (Foo)"
-#   )
-#
-#   set(BarWidget_CREATE_WIDGET_CODE
-#   "
-#       auto* widget = new BarWidget(parent);
-#       widget->setBar("Example bar");
-#       return widget;
-#   ")
-#
-#   ecm_qtdesignerplugin_widget(BarWidget
-#       TOOLTIP "Displays bars."
-#       GROUP "Display (Foo)"
-#       CREATE_WIDGET_CODE_FROM_VARIABLE BarWidget_CREATE_WIDGET_CODE
-#   )
-#
-#   ecm_add_qtdesignerplugin(foowidgets
-#       NAME FooWidgets
-#       OUTPUT_NAME foo2widgets
-#       WIDGETS
-#           FooWidget
-#           BarWidget
-#       LINK_LIBRARIES
-#           Foo::Widgets
-#       INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
-#       COMPONENT Devel
-#   )
-#
-# Since 5.62.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2019 Friedrich W. H. Kossebau <kossebau@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMAddQtDesignerPlugin
+----------------------
+
+This module provides the ``ecm_add_qtdesignerplugin`` function for generating
+Qt Designer plugins for custom widgets. Each of those widgets is described
+using a second function ``ecm_qtdesignerplugin_widget``.
+
+::
+
+  ecm_add_qtdesignerplugin(<target_name>
+      NAME <name>
+      WIDGETS <widgetid> [<widgetid2> [...]]
+      LINK_LIBRARIES <lib> [<lib2> [...]]
+      INSTALL_DESTINATION <install_path>
+      [OUTPUT_NAME <output_name>]
+      [DEFAULT_GROUP <group>]
+      [DEFAULT_HEADER_CASE <SAME_CASE|LOWER_CASE|UPPER_CASE>]
+      [DEFAULT_HEADER_EXTENSION <header_extension>]
+      [DEFAULT_ICON_DIR <icon_dir>]
+      [INCLUDE_FILES <include_file> [<include_file2> [...]]]
+      [SOURCES <src> [<src2> [...]]]
+      [COMPONENT <component>]
+  )
+
+``NAME`` specifies the base name to use in the generated sources.
+The default is <target_name>.
+
+``WIDGETS`` specifies the widgets the plugin should support. Each widget has
+to be defined before by a call of ``ecm_qtdesignerplugin_widget`` with the
+respective <widgetid>, in a scope including the current call.
+
+``LINK_LIBRARIES`` specifies the libraries to link against. This will be at
+least the library providing the widget class(es).
+
+``INSTALL_DESTINATION`` specifies where the generated plugin binary will be
+installed.
+
+``OUTPUT_NAME`` specifies the name of the plugin binary. The default is
+"<target_name>".
+
+``DEFAULT_GROUP`` specifies the default group in Qt Designer where the
+widgets will be placed. The default is "Custom".
+
+``DEFAULT_HEADER_CASE`` specifies how the name of the header is derived from
+the widget class name.  The default is "LOWER_CASE".
+
+``DEFAULT_HEADER_EXTENSION`` specifies what file name extension is used for
+the header file derived from the class name.  The default is "h".
+
+``DEFAULT_ICON_DIR`` specifies what file name extension is used for
+the header file derived from the class name.  The default is "pics".
+
+``INCLUDE_FILES`` specifies additional include files to include with the
+generated source file. This can be needed for custom code used in
+initializing or creating widgets.
+
+``SOURCES`` specifies additional source files to build the plugin from.
+This can be needed to support custom code used in initializing or
+creating widgets.
+
+``COMPONENT`` specifies the installation component name with which the install
+rules for the generated plugin are associated.
+
+::
+
+  ecm_qtdesignerplugin_widget(<widgetid>
+      [CLASS_NAME <class_name>]
+      [INCLUDE_FILE <include_file>]
+      [CONTAINER]
+      [ICON <iconfile>]
+      [TOOLTIP <tooltip>]
+      [WHATSTHIS <whatsthis>]
+      [GROUP <group>]
+      [CREATE_WIDGET_CODE_FROM_VARIABLE <create_widget_code_variable>]
+      [INITIALIZE_CODE_FROM_VARIABLE <initialize_code_variable]
+      [DOM_XML_FROM_VARIABLE <dom_xml_variable>]
+      [IMPL_CLASS_NAME <impl_class_name>]
+      [CONSTRUCTOR_ARGS_CODE <constructor_args_code>]
+      [CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE <constructor_args_code_variable>]
+  )
+
+``CLASS_NAME`` specifies the name of the widget class, including namespaces.
+The default is "<widgetid>".
+
+``INCLUDE_FILE`` specifies the include file to use for the class of this
+widget. The default is derived from <class_name> as configured by the
+``DEFAULT_HEADER_*`` options of ``ecm_add_qtdesignerplugin``, also replacing
+any namespace separators with "/".
+
+``CONTAINER`` specifies, if set, that this widget is a container
+for other widgets.
+
+``ICON`` specifies the icon file to use as symbol for this widget.
+The default is "{lowercased <class_name>}.png" in the default icons dir as
+configured by the ``DEFAULT_ICON_DIR`` option of
+``ecm_add_qtdesignerplugin``, if such a file exists.
+
+``TOOLTIP`` specifies the tooltip text to use for this widget. Default is
+"<class_name> Widget".
+
+``WHATSTHIS`` specifies the What's-This text to use for this widget.
+Defaults to the tooltip.
+
+``GROUP`` specifies the group in Qt Designer where the widget will be placed.
+The default is set as configured by the ``DEFAULT_GROUP`` option of
+``ecm_add_qtdesignerplugin``.
+
+``CREATE_WIDGET_CODE_FROM_VARIABLE`` specifies the variable to get from the
+C++ code to use as factory code to create an instance of the widget,
+for the override of
+``QDesignerCustomWidgetInterface::createWidget(QWidget* parent)``.
+The default is "return new <impl_class_name><constructor_args_code>;".
+
+``INITIALIZE_CODE_FROM_VARIABLE`` specifies the variable to get from the C++
+code to use with the override of
+``QDesignerCustomWidgetInterface::initialize(QDesignerFormEditorInterface* core)``.
+The code has to use the present class member ``m_initialized`` to track and
+update the state. The default code simply sets ``m_initialized`` to
+``true``, if it was not before.
+
+``DOM_XML_FROM_VARIABLE`` specifies the variable to get from the string to
+use with the optional override of
+``QDesignerCustomWidgetInterface::domXml()``.
+Default does not override.
+
+``IMPL_CLASS_NAME`` specifies the name of the widget class to use for the
+widget instance with Qt Designer. The default is "<class_name>".
+
+``CONSTRUCTOR_ARGS_CODE`` specifies the C++ code to use for the constructor
+arguments with the default of ``CREATE_WIDGET_CODE_FROM_VARIABLE``. Note
+that the parentheses are required. The default is "(parent)".
+
+``CONSTRUCTOR_ARGS_CODE_FROM_VARIABLE`` specifies the variable to get from
+the C++ code instead of passing it directly via ``CONSTRUCTOR_ARGS_CODE``.
+This can be needed if the code is more complex and e.g. includes ";" chars.
+
+
+
+Example usage:
+
+.. code-block:: cmake
+
+  ecm_qtdesignerplugin_widget(FooWidget
+      TOOLTIP "Enables to browse foo."
+      GROUP "Views (Foo)"
+  )
+
+  set(BarWidget_CREATE_WIDGET_CODE
+  "
+      auto* widget = new BarWidget(parent);
+      widget->setBar("Example bar");
+      return widget;
+  ")
+
+  ecm_qtdesignerplugin_widget(BarWidget
+      TOOLTIP "Displays bars."
+      GROUP "Display (Foo)"
+      CREATE_WIDGET_CODE_FROM_VARIABLE BarWidget_CREATE_WIDGET_CODE
+  )
+
+  ecm_add_qtdesignerplugin(foowidgets
+      NAME FooWidgets
+      OUTPUT_NAME foo2widgets
+      WIDGETS
+          FooWidget
+          BarWidget
+      LINK_LIBRARIES
+          Foo::Widgets
+      INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
+      COMPONENT Devel
+  )
+
+Since 5.62.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 

@@ -1,72 +1,3 @@
-#.rst:
-# ECMAddAppIcon
-# -------------
-#
-# Add icons to executable files and packages.
-#
-# ::
-#
-#  ecm_add_app_icon(<sources_var>
-#                   ICONS <icon> [<icon> [...]]
-#                   [SIDEBAR_ICONS <icon> [<icon> [...]] # Since 5.49
-#                   [OUTFILE_BASENAME <name>]) # Since 5.49
-#                   )
-#
-# The given icons, whose names must match the pattern::
-#
-#   <size>-<other_text>.png
-#
-# will be added to the executable target whose sources are specified by
-# ``<sources_var>`` on platforms that support it (Windows and Mac OS X).
-# Other icon files are ignored but on Mac SVG files can be supported and
-# it is thus possible to mix those with png files in a single macro call.
-#
-# ``<size>`` is a numeric pixel size (typically 16, 32, 48, 64, 128 or 256).
-# ``<other_text>`` can be any other text. See the platform notes below for any
-# recommendations about icon sizes.
-#
-# ``SIDEBAR_ICONS`` can be used to add Mac OS X sidebar
-# icons to the generated iconset. They are used when a folder monitored by the
-# application is dragged into Finder's sidebar. Since 5.49.
-#
-# ``OUTFILE_BASENAME`` will be used as the basename for the icon file. If
-# you specify it, the icon file will be called ``<OUTFILE_BASENAME>.icns`` on Mac OS X
-# and ``<OUTFILE_BASENAME>.ico`` on Windows. If you don't specify it, it defaults
-# to ``<sources_var>.<ext>``. Since 5.49.
-#
-#
-# Windows notes
-#    * Icons are compiled into the executable using a resource file.
-#    * Icons may not show up in Windows Explorer if the executable
-#      target does not have the ``WIN32_EXECUTABLE`` property set.
-#    * Icotool (see :find-module:`FindIcoTool`) is required.
-#    * Supported sizes: 16, 24, 32, 48, 64, 128, 256, 512 and 1024.
-#
-# Mac OS X notes
-#    * The executable target must have the ``MACOSX_BUNDLE`` property set.
-#    * Icons are added to the bundle.
-#    * If the ksvg2icns tool from KIconThemes is available, .svg and .svgz
-#      files are accepted; the first that is converted successfully to .icns
-#      will provide the application icon. SVG files are ignored otherwise.
-#    * The tool iconutil (provided by Apple) is required for bitmap icons.
-#    * Supported sizes: 16, 32, 64, 128, 256 (and 512, 1024 after OS X 10.9).
-#    * At least a 128x128px (or an SVG) icon is required.
-#    * Larger sizes are automatically used to substitute for smaller sizes on
-#      "Retina" (high-resolution) displays. For example, a 32px icon, if
-#      provided, will be used as a 32px icon on standard-resolution displays,
-#      and as a 16px-equivalent icon (with an "@2x" tag) on high-resolution
-#      displays. That is why you should provide 64px and 1024px icons although
-#      they are not supported anymore directly. Instead they will be used as
-#      32px@2x and 512px@2x. ksvg2icns handles this internally.
-#    * This function sets the ``MACOSX_BUNDLE_ICON_FILE`` variable to the name
-#      of the generated icns file, so that it will be used as the
-#      ``MACOSX_BUNDLE_ICON_FILE`` target property when you call
-#      ``add_executable``.
-#    * Sidebar icons should typically provided in 16, 32, 64, 128 and 256px.
-#
-# Since 1.7.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2014 Ralf Habacker <ralf.habacker@freenet.de>
 # SPDX-FileCopyrightText: 2006-2009 Alexander Neundorf <neundorf@kde.org>
@@ -74,6 +5,75 @@
 # SPDX-FileCopyrightText: 2007 Matthias Kretz <kretz@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMAddAppIcon
+-------------
+
+Add icons to executable files and packages.
+
+::
+
+ ecm_add_app_icon(<sources_var>
+                  ICONS <icon> [<icon> [...]]
+                  [SIDEBAR_ICONS <icon> [<icon> [...]] # Since 5.49
+                  [OUTFILE_BASENAME <name>]) # Since 5.49
+                  )
+
+The given icons, whose names must match the pattern::
+
+  <size>-<other_text>.png
+
+will be added to the executable target whose sources are specified by
+``<sources_var>`` on platforms that support it (Windows and Mac OS X).
+Other icon files are ignored but on Mac SVG files can be supported and
+it is thus possible to mix those with png files in a single macro call.
+
+``<size>`` is a numeric pixel size (typically 16, 32, 48, 64, 128 or 256).
+``<other_text>`` can be any other text. See the platform notes below for any
+recommendations about icon sizes.
+
+``SIDEBAR_ICONS`` can be used to add Mac OS X sidebar
+icons to the generated iconset. They are used when a folder monitored by the
+application is dragged into Finder's sidebar. Since 5.49.
+
+``OUTFILE_BASENAME`` will be used as the basename for the icon file. If
+you specify it, the icon file will be called ``<OUTFILE_BASENAME>.icns`` on Mac OS X
+and ``<OUTFILE_BASENAME>.ico`` on Windows. If you don't specify it, it defaults
+to ``<sources_var>.<ext>``. Since 5.49.
+
+
+Windows notes
+   * Icons are compiled into the executable using a resource file.
+   * Icons may not show up in Windows Explorer if the executable
+     target does not have the ``WIN32_EXECUTABLE`` property set.
+   * Icotool (see :find-module:`FindIcoTool`) is required.
+   * Supported sizes: 16, 24, 32, 48, 64, 128, 256, 512 and 1024.
+
+Mac OS X notes
+   * The executable target must have the ``MACOSX_BUNDLE`` property set.
+   * Icons are added to the bundle.
+   * If the ksvg2icns tool from KIconThemes is available, .svg and .svgz
+     files are accepted; the first that is converted successfully to .icns
+     will provide the application icon. SVG files are ignored otherwise.
+   * The tool iconutil (provided by Apple) is required for bitmap icons.
+   * Supported sizes: 16, 32, 64, 128, 256 (and 512, 1024 after OS X 10.9).
+   * At least a 128x128px (or an SVG) icon is required.
+   * Larger sizes are automatically used to substitute for smaller sizes on
+     "Retina" (high-resolution) displays. For example, a 32px icon, if
+     provided, will be used as a 32px icon on standard-resolution displays,
+     and as a 16px-equivalent icon (with an "@2x" tag) on high-resolution
+     displays. That is why you should provide 64px and 1024px icons although
+     they are not supported anymore directly. Instead they will be used as
+     32px@2x and 512px@2x. ksvg2icns handles this internally.
+   * This function sets the ``MACOSX_BUNDLE_ICON_FILE`` variable to the name
+     of the generated icns file, so that it will be used as the
+     ``MACOSX_BUNDLE_ICON_FILE`` target property when you call
+     ``add_executable``.
+   * Sidebar icons should typically provided in 16, 32, 64, 128 and 256px.
+
+Since 1.7.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 

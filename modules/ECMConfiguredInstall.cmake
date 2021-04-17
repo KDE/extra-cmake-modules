@@ -1,37 +1,35 @@
-#.rst:
-# ECMConfiguredInstall
-# --------------------
-#
-# Takes a list of files, runs configure_file on each and installs the resultant configured files in the given location.
-#
-# Any suffix of ".in" in the passed file names wil be stripped from the file name at the installed location.
-#
-# ::
-#
-#   ecm_install_configured_files(
-#       INPUT <file> [<file2> [...]]
-#       DESTINATION <INSTALL_DIRECTORY>
-#       [COPYONLY]
-#       [ESCAPE_QUOTES]
-#       [@ONLY]
-#       [COMPONENT <component>])
-#
-# Example usage:
-#
-# .. code-block:: cmake
-#
-#   ecm_install_configured_files(INPUT foo.txt.in DESTINATION ${KDE_INSTALL_DATADIR} @ONLY)
-#
-# This wil install the file as foo.txt with any cmake variable replacements made into the data directory.
-#
-# Since 5.73.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
 
+#[=======================================================================[.rst:
+ECMConfiguredInstall
+--------------------
+
+Takes a list of files, runs configure_file on each and installs the resultant configured files in the given location.
+
+Any suffix of ".in" in the passed file names wil be stripped from the file name at the installed location.
+
+::
+
+  ecm_install_configured_files(
+      INPUT <file> [<file2> [...]]
+      DESTINATION <INSTALL_DIRECTORY>
+      [COPYONLY]
+      [ESCAPE_QUOTES]
+      [@ONLY]
+      [COMPONENT <component>])
+
+Example usage:
+
+.. code-block:: cmake
+
+  ecm_install_configured_files(INPUT foo.txt.in DESTINATION ${KDE_INSTALL_DATADIR} @ONLY)
+
+This will install the file as foo.txt with any cmake variable replacements made into the data directory.
+
+Since 5.73.0.
+#]=======================================================================]
 
 function(ecm_install_configured_files)
     set(options COPYONLY ESCAPE_QUOTES @ONLY)

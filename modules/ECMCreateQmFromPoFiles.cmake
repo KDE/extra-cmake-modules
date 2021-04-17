@@ -1,80 +1,80 @@
-#.rst:
-# ECMCreateQmFromPoFiles
-# ----------------------
-#
-# .. warning:: This module is deprecated and will be removed by ECM 1.0. Use
-#              ECMPoQmTools instead.
-#
-# Generate QTranslator (.qm) catalogs from Gettext (.po) catalogs.
-#
-# ::
-#
-#   ecm_create_qm_from_po_files(PO_FILES <file1>... <fileN>
-#                               [CATALOG_NAME <catalog_name>]
-#                               [INSTALL_DESTINATION <install_destination>])
-#
-# Creates the necessary rules to compile .po files into .qm files, and install
-# them.
-#
-# The .qm files are installed in ``<install_destination>/<lang>/LC_MESSAGES``,
-# where <install_destination> is the INSTALL_DESTINATION argument and <lang> is
-# extracted from the "Language" field inside the .po file.
-#
-# INSTALL_DESTINATION defaults to ``${LOCALE_INSTALL_DIR}`` if defined,
-# otherwise it uses ``${CMAKE_INSTALL_LOCALEDIR}`` if that is defined, otherwise
-# it uses ``share/locale``.
-#
-# CATALOG_NAME defines the name of the installed .qm files. If set, .qm files
-# will be installed as ``<catalog_name>.qm``. If not set .qm files will be named
-# after the name of their source .po file.
-#
-# Setting the catalog name is useful when all .po files for a target are kept
-# in a single source directory. For example, the "mylib" probject might keep all
-# its translations in a "po" directory, like this::
-#
-#   po/
-#       es.po
-#       fr.po
-#
-# Without setting CATALOG_NAME, those .po will be turned into .qm and installed
-# as::
-#
-#   share/locale/fr/LC_MESSAGES/fr.qm
-#   share/locale/es/LC_MESSAGES/es.qm
-#
-# If CATALOG_NAME is set to "mylib", they will be installed as::
-#
-#   share/locale/fr/LC_MESSAGES/mylib.qm
-#   share/locale/es/LC_MESSAGES/mylib.qm
-#
-# Which is what the loader created by ecm_create_qm_loader() expects.
-#
-# ecm_create_qm_from_po_files() creates a "translation" target. This target
-# builds all .po files into .qm files.
-#
-# ::
-#
-#   ecm_create_qm_loader(<source_files_var> <catalog_name>)
-#
-# ecm_create_qm_loader() generates a C++ file which ensures translations are
-# automatically loaded at startup. The path of the .cpp file is appended to
-# <source_files_var>.  Typical usage is like:
-#
-# .. code-block:: cmake
-#
-#   set(mylib_SRCS foo.cpp bar.cpp)
-#   ecm_create_qm_loader(mylib_SRCS mylib)
-#   add_library(mylib ${mylib_SRCS})
-#
-# This generates a C++ file which loads "mylib.qm" at startup, assuming it has
-# been installed by ecm_create_qm_from_po_files(), and compiles it into ``mylib``.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Aurélien Gâteau <agateau@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMCreateQmFromPoFiles
+----------------------
+
+.. warning:: This module is deprecated and will be removed by ECM 1.0. Use
+             ECMPoQmTools instead.
+
+Generate QTranslator (.qm) catalogs from Gettext (.po) catalogs.
+
+::
+
+  ecm_create_qm_from_po_files(PO_FILES <file1>... <fileN>
+                              [CATALOG_NAME <catalog_name>]
+                              [INSTALL_DESTINATION <install_destination>])
+
+Creates the necessary rules to compile .po files into .qm files, and install
+them.
+
+The .qm files are installed in ``<install_destination>/<lang>/LC_MESSAGES``,
+where <install_destination> is the INSTALL_DESTINATION argument and <lang> is
+extracted from the "Language" field inside the .po file.
+
+INSTALL_DESTINATION defaults to ``${LOCALE_INSTALL_DIR}`` if defined,
+otherwise it uses ``${CMAKE_INSTALL_LOCALEDIR}`` if that is defined, otherwise
+it uses ``share/locale``.
+
+CATALOG_NAME defines the name of the installed .qm files. If set, .qm files
+will be installed as ``<catalog_name>.qm``. If not set .qm files will be named
+after the name of their source .po file.
+
+Setting the catalog name is useful when all .po files for a target are kept
+in a single source directory. For example, the "mylib" probject might keep all
+its translations in a "po" directory, like this::
+
+  po/
+      es.po
+      fr.po
+
+Without setting CATALOG_NAME, those .po will be turned into .qm and installed
+as::
+
+  share/locale/fr/LC_MESSAGES/fr.qm
+  share/locale/es/LC_MESSAGES/es.qm
+
+If CATALOG_NAME is set to "mylib", they will be installed as::
+
+  share/locale/fr/LC_MESSAGES/mylib.qm
+  share/locale/es/LC_MESSAGES/mylib.qm
+
+Which is what the loader created by ecm_create_qm_loader() expects.
+
+ecm_create_qm_from_po_files() creates a "translation" target. This target
+builds all .po files into .qm files.
+
+::
+
+  ecm_create_qm_loader(<source_files_var> <catalog_name>)
+
+ecm_create_qm_loader() generates a C++ file which ensures translations are
+automatically loaded at startup. The path of the .cpp file is appended to
+<source_files_var>.  Typical usage is like:
+
+.. code-block:: cmake
+
+  set(mylib_SRCS foo.cpp bar.cpp)
+  ecm_create_qm_loader(mylib_SRCS mylib)
+  add_library(mylib ${mylib_SRCS})
+
+This generates a C++ file which loads "mylib.qm" at startup, assuming it has
+been installed by ecm_create_qm_from_po_files(), and compiles it into ``mylib``.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 message(AUTHOR_WARNING "ECMCreateQmFromPoFiles is deprecated and will be removed before the release of Extra CMake Modules 1.0. Use ECMPoQmTools instead.")
 

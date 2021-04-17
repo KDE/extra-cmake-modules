@@ -1,44 +1,43 @@
-#.rst:
-# FindLibExiv2
-# ------------
-#
-# Try to find the Exiv2 library.
-#
-# This will define the following variables:
-#
-# ``LibExiv2_FOUND``
-#     True if (the requested version of) Exiv2 is available
-#
-# ``LibExiv2_VERSION``
-#     The version of Exiv2
-#
-# ``LibExiv2_INCLUDE_DIRS``
-#     The include dirs of Exiv2 for use with target_include_directories()
-#
-# ``LibExiv2_LIBRARIES``
-#     The Exiv2 library for use with target_link_libraries().
-#     This can be passed to target_link_libraries() instead of
-#     the ``LibExiv2::LibExiv2`` target
-#
-# If ``LibExiv2_FOUND`` is TRUE, it will also define the following imported
-# target:
-#
-# ``LibExiv2::LibExiv2``
-#     The Exiv2 library
-#
-# In general we recommend using the imported target, as it is easier to use.
-# Bear in mind, however, that if the target is in the link interface of an
-# exported library, it must be made available by the package config file.
-#
-# Since 5.53.0.
-#
-#=============================================================================
 # SPDX-FileCopyrightText: 2018 Christophe Giboudeaux <christophe@krop.fr>
 # SPDX-FileCopyrightText: 2010 Alexander Neundorf <neundorf@kde.org>
 # SPDX-FileCopyrightText: 2008 Gilles Caulier <caulier.gilles@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindLibExiv2
+------------
+
+Try to find the Exiv2 library.
+
+This will define the following variables:
+
+``LibExiv2_FOUND``
+    True if (the requested version of) Exiv2 is available
+
+``LibExiv2_VERSION``
+    The version of Exiv2
+
+``LibExiv2_INCLUDE_DIRS``
+    The include dirs of Exiv2 for use with target_include_directories()
+
+``LibExiv2_LIBRARIES``
+    The Exiv2 library for use with target_link_libraries().
+    This can be passed to target_link_libraries() instead of
+    the ``LibExiv2::LibExiv2`` target
+
+If ``LibExiv2_FOUND`` is TRUE, it will also define the following imported
+target:
+
+``LibExiv2::LibExiv2``
+    The Exiv2 library
+
+In general we recommend using the imported target, as it is easier to use.
+Bear in mind, however, that if the target is in the link interface of an
+exported library, it must be made available by the package config file.
+
+Since 5.53.0.
+#]=======================================================================]
 
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_EXIV2 QUIET exiv2)

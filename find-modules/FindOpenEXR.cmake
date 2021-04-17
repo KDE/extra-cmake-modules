@@ -1,37 +1,36 @@
-#.rst:
-# FindOpenEXR
-# -----------
-#
-# Try to find the OpenEXR libraries.
-#
-# This will define the following variables:
-#
-# ``OpenEXR_FOUND``
-#     True if OpenEXR is available
-# ``OpenEXR_LIBRARIES``
-#     Link to these to use OpenEXR
-# ``OpenEXR_INCLUDE_DIRS``
-#     Include directory for OpenEXR
-# ``OpenEXR_DEFINITIONS``
-#     Compiler flags required to link against OpenEXR
-#
-# and the following imported targets:
-#
-# ``OpenEXR::IlmImf``
-#     The OpenEXR core library
-#
-# In general we recommend using the imported target, as it is easier to use.
-# Bear in mind, however, that if the target is in the link interface of an
-# exported library, it must be made available by the package config file.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2013-2014 Alex Merry <alex.merry@kdemail.net>
 # SPDX-FileCopyrightText: 2006 Alexander Neundorf <neundorf@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindOpenEXR
+-----------
+
+Try to find the OpenEXR libraries.
+
+This will define the following variables:
+
+``OpenEXR_FOUND``
+    True if OpenEXR is available
+``OpenEXR_LIBRARIES``
+    Link to these to use OpenEXR
+``OpenEXR_INCLUDE_DIRS``
+    Include directory for OpenEXR
+``OpenEXR_DEFINITIONS``
+    Compiler flags required to link against OpenEXR
+
+and the following imported targets:
+
+``OpenEXR::IlmImf``
+    The OpenEXR core library
+
+In general we recommend using the imported target, as it is easier to use.
+Bear in mind, however, that if the target is in the link interface of an
+exported library, it must be made available by the package config file.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 

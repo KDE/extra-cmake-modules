@@ -1,29 +1,29 @@
-#.rst:
-# KDEFrameworkCompilerSettings
-# ----------------------------
-#
-# Set stricter compile and link flags for KDE Frameworks modules.
-#
-# The KDECompilerSettings module is included and, in addition, various
-# defines that affect the Qt libraries are set to enforce certain
-# conventions.
-#
-# For example, constructions like QString("foo") are prohibited, instead
-# forcing the use of QLatin1String or QStringLiteral, and some
-# Qt-defined keywords like signals and slots will not be defined.
-#
-# NB: it is recommended to include this module with the NO_POLICY_SCOPE
-# flag, otherwise you may get spurious warnings with some versions of CMake.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2013 Albert Astals Cid <aacid@kde.org>
 # SPDX-FileCopyrightText: 2007 Matthias Kretz <kretz@kde.org>
 # SPDX-FileCopyrightText: 2006-2007 Laurent Montel <montel@kde.org>
 # SPDX-FileCopyrightText: 2006-2013 Alex Neundorf <neundorf@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+KDEFrameworkCompilerSettings
+----------------------------
+
+Set stricter compile and link flags for KDE Frameworks modules.
+
+The KDECompilerSettings module is included and, in addition, various
+defines that affect the Qt libraries are set to enforce certain
+conventions.
+
+For example, constructions like QString("foo") are prohibited, instead
+forcing the use of QLatin1String or QStringLiteral, and some
+Qt-defined keywords like signals and slots will not be defined.
+
+NB: it is recommended to include this module with the NO_POLICY_SCOPE
+flag, otherwise you may get spurious warnings with some versions of CMake.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(KDECompilerSettings NO_POLICY_SCOPE)
 

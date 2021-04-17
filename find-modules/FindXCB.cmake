@@ -1,67 +1,66 @@
-#.rst:
-# FindXCB
-# -------
-#
-# Try to find XCB.
-#
-# This is a component-based find module, which makes use of the COMPONENTS and
-# OPTIONAL_COMPONENTS arguments to find_module.  The following components are
-# available::
-#
-#   XCB
-#   ATOM         AUX          COMPOSITE    CURSOR       DAMAGE
-#   DPMS         DRI2         DRI3         EVENT        EWMH
-#   GLX          ICCCM        IMAGE        KEYSYMS      PRESENT
-#   RANDR        RECORD       RENDER       RENDERUTIL   RES
-#   SCREENSAVER  SHAPE        SHM          SYNC         UTIL
-#   XEVIE        XF86DRI      XFIXES       XINERAMA     XINPUT
-#   XKB          XPRINT       XTEST        XV           XVMC
-#
-# If no components are specified, this module will act as though all components
-# except XINPUT (which is considered unstable) were passed to
-# OPTIONAL_COMPONENTS.
-#
-# This module will define the following variables, independently of the
-# components searched for or found:
-#
-# ``XCB_FOUND``
-#     True if (the requestion version of) xcb is available
-# ``XCB_VERSION``
-#     Found xcb version
-# ``XCB_TARGETS``
-#     A list of all targets imported by this module (note that there may be more
-#     than the components that were requested)
-# ``XCB_LIBRARIES``
-#     This can be passed to target_link_libraries() instead of the imported
-#     targets
-# ``XCB_INCLUDE_DIRS``
-#     This should be passed to target_include_directories() if the targets are
-#     not used for linking
-# ``XCB_DEFINITIONS``
-#     This should be passed to target_compile_options() if the targets are not
-#     used for linking
-#
-# For each searched-for components, ``XCB_<component>_FOUND`` will be set to
-# true if the corresponding xcb library was found, and false otherwise.  If
-# ``XCB_<component>_FOUND`` is true, the imported target ``XCB::<component>``
-# will be defined.  This module will also attempt to determine
-# ``XCB_*_VERSION`` variables for each imported target, although
-# ``XCB_VERSION`` should normally be sufficient.
-#
-# In general we recommend using the imported targets, as they are easier to use
-# and provide more control.  Bear in mind, however, that if any target is in the
-# link interface of an exported library, it must be made available by the
-# package config file.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2011 Fredrik Höglund <fredrik@kde.org>
 # SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 # SPDX-FileCopyrightText: 2014-2015 Alex Merry <alex.merry@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindXCB
+-------
+
+Try to find XCB.
+
+This is a component-based find module, which makes use of the COMPONENTS and
+OPTIONAL_COMPONENTS arguments to find_module.  The following components are
+available::
+
+  XCB
+  ATOM         AUX          COMPOSITE    CURSOR       DAMAGE
+  DPMS         DRI2         DRI3         EVENT        EWMH
+  GLX          ICCCM        IMAGE        KEYSYMS      PRESENT
+  RANDR        RECORD       RENDER       RENDERUTIL   RES
+  SCREENSAVER  SHAPE        SHM          SYNC         UTIL
+  XEVIE        XF86DRI      XFIXES       XINERAMA     XINPUT
+  XKB          XPRINT       XTEST        XV           XVMC
+
+If no components are specified, this module will act as though all components
+except XINPUT (which is considered unstable) were passed to
+OPTIONAL_COMPONENTS.
+
+This module will define the following variables, independently of the
+components searched for or found:
+
+``XCB_FOUND``
+    True if (the requestion version of) xcb is available
+``XCB_VERSION``
+    Found xcb version
+``XCB_TARGETS``
+    A list of all targets imported by this module (note that there may be more
+    than the components that were requested)
+``XCB_LIBRARIES``
+    This can be passed to target_link_libraries() instead of the imported
+    targets
+``XCB_INCLUDE_DIRS``
+    This should be passed to target_include_directories() if the targets are
+    not used for linking
+``XCB_DEFINITIONS``
+    This should be passed to target_compile_options() if the targets are not
+    used for linking
+
+For each searched-for components, ``XCB_<component>_FOUND`` will be set to
+true if the corresponding xcb library was found, and false otherwise.  If
+``XCB_<component>_FOUND`` is true, the imported target ``XCB::<component>``
+will be defined.  This module will also attempt to determine
+``XCB_*_VERSION`` variables for each imported target, although
+``XCB_VERSION`` should normally be sufficient.
+
+In general we recommend using the imported targets, as they are easier to use
+and provide more control.  Bear in mind, however, that if any target is in the
+link interface of an exported library, it must be made available by the
+package config file.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 

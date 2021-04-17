@@ -1,33 +1,35 @@
-#.rst:
-# FindTaglib
-# ----------
-#
-# Try to find the Taglib library.
-#
-# This will define the following variables:
-#
-# ``Taglib_FOUND``
-#       True if the system has the taglib library of at least the minimum
-#       version specified by the version parameter to find_package()
-# ``Taglib_INCLUDE_DIRS``
-#       The taglib include dirs for use with target_include_directories
-# ``Taglib_LIBRARIES``
-#       The taglib libraries for use with target_link_libraries()
-# ``Taglib_VERSION``
-#       The version of taglib that was found
-#
-# If ``Taglib_FOUND`` is TRUE, it will also define the following imported
-# target:
-#
-# ``Taglib::Taglib``
-#       The Taglib library
-#
-# Since 5.72.0
-#
 # SPDX-FileCopyrightText: 2006 Laurent Montel <montel@kde.org>
 # SPDX-FileCopyrightText: 2019 Heiko Becker <heirecka@exherbo.org>
 # SPDX-FileCopyrightText: 2020 Elvis Angelaccio <elvis.angelaccio@kde.org>
+#
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+FindTaglib
+----------
+
+Try to find the Taglib library.
+
+This will define the following variables:
+
+``Taglib_FOUND``
+      True if the system has the taglib library of at least the minimum
+      version specified by the version parameter to find_package()
+``Taglib_INCLUDE_DIRS``
+      The taglib include dirs for use with target_include_directories
+``Taglib_LIBRARIES``
+      The taglib libraries for use with target_link_libraries()
+``Taglib_VERSION``
+      The version of taglib that was found
+
+If ``Taglib_FOUND`` is TRUE, it will also define the following imported
+target:
+
+``Taglib::Taglib``
+      The Taglib library
+
+Since 5.72.0
+#]=======================================================================]
 
 find_package(PkgConfig QUIET)
 

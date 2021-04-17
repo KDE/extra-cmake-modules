@@ -1,32 +1,31 @@
-#.rst:
-# FindSeccomp
-# -----------
-#
-# Try to locate the libseccomp library.
-#
-# This will define the following variables:
-#
-# ``Seccomp_FOUND``
-#     True if the seccomp library is available
-# ``Seccomp_INCLUDE_DIRS``
-#     The seccomp include directories
-# ``Seccomp_LIBRARIES``
-#     The seccomp libraries for linking
-#
-# If ``Seccomp_FOUND`` is TRUE, it will also define the following
-# imported target:
-#
-# ``Seccomp::Seccomp``
-#     The Seccomp library
-#
-# Since 5.44.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2017 Martin Flöser <mgraesslin@kde.org>
 # SPDX-FileCopyrightText: 2017 David Kahles <david.kahles96@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindSeccomp
+-----------
+
+Try to locate the libseccomp library.
+
+This will define the following variables:
+
+``Seccomp_FOUND``
+    True if the seccomp library is available
+``Seccomp_INCLUDE_DIRS``
+    The seccomp include directories
+``Seccomp_LIBRARIES``
+    The seccomp libraries for linking
+
+If ``Seccomp_FOUND`` is TRUE, it will also define the following
+imported target:
+
+``Seccomp::Seccomp``
+    The Seccomp library
+
+Since 5.44.0.
+#]=======================================================================]
 
 find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_Libseccomp QUIET libseccomp)

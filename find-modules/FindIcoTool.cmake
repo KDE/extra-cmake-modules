@@ -1,35 +1,34 @@
-#.rst:
-# FindIcoTool
-# -----------
-#
-# Try to find icotool.
-#
-# If the icotool executable is not in your PATH, you can provide
-# an alternative name or full path location with the ``IcoTool_EXECUTABLE``
-# variable.
-#
-# This will define the following variables:
-#
-# ``IcoTool_FOUND``
-#     True if icotool is available.
-#
-# ``IcoTool_EXECUTABLE``
-#     The icotool executable.
-#
-# If ``IcoTool_FOUND`` is TRUE, it will also define the following imported
-# target:
-#
-# ``IcoTool::IcoTool``
-#     The icotool executable.
-#
-# Since 5.49.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2017 Vincent Pinon <vpinon@kde.org>
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindIcoTool
+-----------
+
+Try to find icotool.
+
+If the icotool executable is not in your PATH, you can provide
+an alternative name or full path location with the ``IcoTool_EXECUTABLE``
+variable.
+
+This will define the following variables:
+
+``IcoTool_FOUND``
+    True if icotool is available.
+
+``IcoTool_EXECUTABLE``
+    The icotool executable.
+
+If ``IcoTool_FOUND`` is TRUE, it will also define the following imported
+target:
+
+``IcoTool::IcoTool``
+    The icotool executable.
+
+Since 5.49.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 ecm_find_package_version_check(IcoTool)

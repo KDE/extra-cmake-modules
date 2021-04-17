@@ -1,43 +1,42 @@
-#.rst:
-# FindEGL
-# -------
-#
-# Try to find EGL.
-#
-# This will define the following variables:
-#
-# ``EGL_FOUND``
-#     True if (the requested version of) EGL is available
-# ``EGL_VERSION``
-#     The version of EGL; note that this is the API version defined in the
-#     headers, rather than the version of the implementation (eg: Mesa)
-# ``EGL_LIBRARIES``
-#     This can be passed to target_link_libraries() instead of the ``EGL::EGL``
-#     target
-# ``EGL_INCLUDE_DIRS``
-#     This should be passed to target_include_directories() if the target is not
-#     used for linking
-# ``EGL_DEFINITIONS``
-#     This should be passed to target_compile_options() if the target is not
-#     used for linking
-#
-# If ``EGL_FOUND`` is TRUE, it will also define the following imported target:
-#
-# ``EGL::EGL``
-#     The EGL library
-#
-# In general we recommend using the imported target, as it is easier to use.
-# Bear in mind, however, that if the target is in the link interface of an
-# exported library, it must be made available by the package config file.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindEGL
+-------
+
+Try to find EGL.
+
+This will define the following variables:
+
+``EGL_FOUND``
+    True if (the requested version of) EGL is available
+``EGL_VERSION``
+    The version of EGL; note that this is the API version defined in the
+    headers, rather than the version of the implementation (eg: Mesa)
+``EGL_LIBRARIES``
+    This can be passed to target_link_libraries() instead of the ``EGL::EGL``
+    target
+``EGL_INCLUDE_DIRS``
+    This should be passed to target_include_directories() if the target is not
+    used for linking
+``EGL_DEFINITIONS``
+    This should be passed to target_compile_options() if the target is not
+    used for linking
+
+If ``EGL_FOUND`` is TRUE, it will also define the following imported target:
+
+``EGL::EGL``
+    The EGL library
+
+In general we recommend using the imported target, as it is easier to use.
+Bear in mind, however, that if the target is in the link interface of an
+exported library, it must be made available by the package config file.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 include(CheckCXXSourceCompiles)

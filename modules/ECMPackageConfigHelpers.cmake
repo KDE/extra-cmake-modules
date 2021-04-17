@@ -1,59 +1,59 @@
-#.rst:
-# ECMPackageConfigHelpers
-# -----------------------
-#
-# Helper macros for generating CMake package config files.
-#
-# ``write_basic_package_version_file()`` is the same as the one provided by the
-# `CMakePackageConfigHelpers
-# <https://www.cmake.org/cmake/help/v2.8.12/cmake.html#module:CMakePackageConfigHelpers>`_
-# module in CMake; see that module's documentation for
-# more information.
-#
-# ::
-#
-#   ecm_configure_package_config_file(<input> <output>
-#       INSTALL_DESTINATION <path>
-#       [PATH_VARS <var1> [<var2> [...]]
-#       [NO_SET_AND_CHECK_MACRO]
-#       [NO_CHECK_REQUIRED_COMPONENTS_MACRO])
-#
-#
-# This behaves in the same way as configure_package_config_file() from CMake
-# 2.8.12, except that it adds an extra helper macro: find_dependency(). It is
-# highly recommended that you read the `documentation for
-# CMakePackageConfigHelpers
-# <https://www.cmake.org/cmake/help/v2.8.12/cmake.html#module:CMakePackageConfigHelpers>`_
-# for more information, particularly with regard to the PATH_VARS argument.
-#
-# Note that there is no argument that will disable the find_dependency() macro;
-# if you do not require this macro, you should use
-# ``configure_package_config_file`` from the CMakePackageConfigHelpers module.
-#
-# CMake 3.0 includes a CMakeFindDependencyMacro module that provides the
-# find_dependency() macro (which you can ``include()`` in your package config
-# file), so this file is only useful for projects wishing to provide config
-# files that will work with CMake 2.8.12.
-#
-# Additional Config File Macros
-# =============================
-#
-# ::
-#
-#   find_dependency(<dep> [<version> [EXACT]])
-#
-# find_dependency() should be used instead of find_package() to find package
-# dependencies.  It forwards the correct parameters for EXACT, QUIET and
-# REQUIRED which were passed to the original find_package() call.  It also sets
-# an informative diagnostic message if the dependency could not be found.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kdemail.net>
 # SPDX-FileCopyrightText: 2013 Stephen Kelly <steveire@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMPackageConfigHelpers
+-----------------------
+
+Helper macros for generating CMake package config files.
+
+``write_basic_package_version_file()`` is the same as the one provided by the
+`CMakePackageConfigHelpers
+<https://www.cmake.org/cmake/help/v2.8.12/cmake.html#module:CMakePackageConfigHelpers>`_
+module in CMake; see that module's documentation for
+more information.
+
+::
+
+  ecm_configure_package_config_file(<input> <output>
+      INSTALL_DESTINATION <path>
+      [PATH_VARS <var1> [<var2> [...]]
+      [NO_SET_AND_CHECK_MACRO]
+      [NO_CHECK_REQUIRED_COMPONENTS_MACRO])
+
+
+This behaves in the same way as configure_package_config_file() from CMake
+2.8.12, except that it adds an extra helper macro: find_dependency(). It is
+highly recommended that you read the `documentation for
+CMakePackageConfigHelpers
+<https://www.cmake.org/cmake/help/v2.8.12/cmake.html#module:CMakePackageConfigHelpers>`_
+for more information, particularly with regard to the PATH_VARS argument.
+
+Note that there is no argument that will disable the find_dependency() macro;
+if you do not require this macro, you should use
+``configure_package_config_file`` from the CMakePackageConfigHelpers module.
+
+CMake 3.0 includes a CMakeFindDependencyMacro module that provides the
+find_dependency() macro (which you can ``include()`` in your package config
+file), so this file is only useful for projects wishing to provide config
+files that will work with CMake 2.8.12.
+
+Additional Config File Macros
+=============================
+
+::
+
+  find_dependency(<dep> [<version> [EXACT]])
+
+find_dependency() should be used instead of find_package() to find package
+dependencies.  It forwards the correct parameters for EXACT, QUIET and
+REQUIRED which were passed to the original find_package() call.  It also sets
+an informative diagnostic message if the dependency could not be found.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(${CMAKE_ROOT}/Modules/CMakePackageConfigHelpers.cmake)
 

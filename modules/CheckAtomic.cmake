@@ -1,19 +1,18 @@
-#.rst:
-# CheckAtomic
-# -----------
-#
-# Check if the compiler supports std:atomic out of the box or if libatomic is
-# needed for atomic support. If it is needed libatomicis added to
-# CMAKE_REQUIRED_LIBRARIES. So after running CheckAtomic you can use
-# std:atomic.
-#
-# Since 5.75.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2003-2018 University of Illinois at Urbana-Champaign.
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+CheckAtomic
+-----------
+
+Check if the compiler supports std:atomic out of the box or if libatomic is
+needed for atomic support. If it is needed libatomicis added to
+``CMAKE_REQUIRED_LIBRARIES``. So after running CheckAtomic you can use
+std:atomic.
+
+Since 5.75.0.
+#]=======================================================================]
 
 include(CheckCXXSourceCompiles)
 include(CheckLibraryExists)

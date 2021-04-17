@@ -1,32 +1,31 @@
-#.rst:
-# FindSphinx
-# ----------
-#
-# Try to find the Sphinx documentation builder.
-#
-# This will define the following variables:
-#
-# ``Sphinx_FOUND``
-#     True if (the requested version of) Sphinx is available
-# ``Sphinx_VERSION``
-#     The version of the Sphinx documentation builder.
-# ``Sphinx_BUILD_EXECUTABLE``
-#     The path to the Sphinx documentation builder executable.
-#
-# If ``Sphinx_FOUND`` is TRUE, it will also define the following imported target:
-#
-# ``Sphinx::Build``
-#     The Sphinx documentation builder.
-#
-# In general we recommend using the imported target, as it is easier to use.
-#
-# Since 5.17.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2015 Alex Merry <alex.merry@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindSphinx
+----------
+
+Try to find the Sphinx documentation builder.
+
+This will define the following variables:
+
+``Sphinx_FOUND``
+    True if (the requested version of) Sphinx is available
+``Sphinx_VERSION``
+    The version of the Sphinx documentation builder.
+``Sphinx_BUILD_EXECUTABLE``
+    The path to the Sphinx documentation builder executable.
+
+If ``Sphinx_FOUND`` is TRUE, it will also define the following imported target:
+
+``Sphinx::Build``
+    The Sphinx documentation builder.
+
+In general we recommend using the imported target, as it is easier to use.
+
+Since 5.17.0.
+#]=======================================================================]
 
 # Distros sometimes rename Python executables to allow for parallel
 # installation of Python2 and Python3 versions

@@ -1,23 +1,22 @@
-#.rst:
-# FindWaylandProtocols
-# --------------------
-#
-# Try to find wayland-protocols on a Unix system.
-#
-# This will define the following variables:
-#
-# ``WaylandProtocols_FOUND``
-#     True if (the requested version of) wayland-protocols is available
-# ``WaylandProtocols_VERSION``
-#     The version of wayland-protocols
-# ``WaylandProtocols_DATADIR``
-#     The wayland protocols data directory
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindWaylandProtocols
+--------------------
+
+Try to find wayland-protocols on a Unix system.
+
+This will define the following variables:
+
+``WaylandProtocols_FOUND``
+    True if (the requested version of) wayland-protocols is available
+``WaylandProtocols_VERSION``
+    The version of wayland-protocols
+``WaylandProtocols_DATADIR``
+    The wayland protocols data directory
+#]=======================================================================]
 
 find_package(PkgConfig)
 pkg_check_modules(PKG_wayland_protocols QUIET wayland-protocols)

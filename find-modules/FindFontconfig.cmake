@@ -1,34 +1,33 @@
-#.rst:
-# FindFontconfig
-# --------------
-#
-# Try to find Fontconfig.
-# Once done this will define the following variables:
-#
-# ``Fontconfig_FOUND``
-#     True if Fontconfig is available
-# ``Fontconfig_INCLUDE_DIRS``
-#     The include directory to use for the Fontconfig headers
-# ``Fontconfig_LIBRARIES``
-#     The Fontconfig libraries for linking
-# ``Fontconfig_DEFINITIONS``
-#     Compiler switches required for using Fontconfig
-# ``Fontconfig_VERSION``
-#     The version of Fontconfig that has been found
-#
-# If ``Fontconfig_FOUND`` is TRUE, it will also define the following
-# imported target:
-#
-# ``Fontconfig::Fontconfig``
-#
-# Since 5.57.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2006, 2007 Laurent Montel <montel@kde.org>
 # SPDX-FileCopyrightText: 2018 Volker Krause <vkrause@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindFontconfig
+--------------
+
+Try to find Fontconfig.
+Once done this will define the following variables:
+
+``Fontconfig_FOUND``
+    True if Fontconfig is available
+``Fontconfig_INCLUDE_DIRS``
+    The include directory to use for the Fontconfig headers
+``Fontconfig_LIBRARIES``
+    The Fontconfig libraries for linking
+``Fontconfig_DEFINITIONS``
+    Compiler switches required for using Fontconfig
+``Fontconfig_VERSION``
+    The version of Fontconfig that has been found
+
+If ``Fontconfig_FOUND`` is TRUE, it will also define the following
+imported target:
+
+``Fontconfig::Fontconfig``
+
+Since 5.57.0.
+#]=======================================================================]
 
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls

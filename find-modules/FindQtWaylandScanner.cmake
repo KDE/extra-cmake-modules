@@ -1,68 +1,67 @@
-#.rst:
-# FindQtWaylandScanner
-# --------------------
-#
-# Try to find qtwaylandscanner.
-#
-# If the qtwaylandscanner executable is not in your PATH, you can provide
-# an alternative name or full path location with the ``QtWaylandScanner_EXECUTABLE``
-# variable.
-#
-# This will define the following variables:
-#
-# ``QtWaylandScanner_FOUND``
-#     True if qtwaylandscanner is available
-#
-# ``QtWaylandScanner_EXECUTABLE``
-#     The qtwaylandscanner executable.
-#
-# If ``QtWaylandScanner_FOUND`` is TRUE, it will also define the following imported
-# target:
-#
-# ``Wayland::QtScanner``
-#     The qtwaylandscanner executable.
-#
-# This module provides the following functions to generate C++ protocol
-# implementations:
-#
-#   - ``ecm_add_qtwayland_client_protocol``
-#   - ``ecm_add_qtwayland_server_protocol``
-#
-# ::
-#
-#   ecm_add_qtwayland_client_protocol(<source_files_var>
-#                                     PROTOCOL <xmlfile>
-#                                     BASENAME <basename>
-#                                     [PREFIX <prefix>])
-#
-# Generate C++ wrapper to Wayland client protocol files from ``<xmlfile>``
-# XML definition for the ``<basename>`` interface and append those files
-# to ``<source_files_var>``.  Pass the ``<prefix>`` argument if the interface
-# names don't start with ``qt_`` or ``wl_``.
-#
-# WaylandScanner is required and will be searched for.
-#
-# ::
-#
-#   ecm_add_qtwayland_server_protocol(<source_files_var>
-#                                     PROTOCOL <xmlfile>
-#                                     BASENAME <basename>
-#                                     [PREFIX <prefix>])
-#
-# Generate C++ wrapper to Wayland server protocol files from ``<xmlfile>``
-# XML definition for the ``<basename>`` interface and append those files
-# to ``<source_files_var>``.  Pass the ``<prefix>`` argument if the interface
-# names don't start with ``qt_`` or ``wl_``.
-#
-# WaylandScanner is required and will be searched for.
-#
-# Since 1.4.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2012-2014 Pier Luigi Fiorini <pierluigi.fiorini@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindQtWaylandScanner
+--------------------
+
+Try to find qtwaylandscanner.
+
+If the qtwaylandscanner executable is not in your PATH, you can provide
+an alternative name or full path location with the ``QtWaylandScanner_EXECUTABLE``
+variable.
+
+This will define the following variables:
+
+``QtWaylandScanner_FOUND``
+    True if qtwaylandscanner is available
+
+``QtWaylandScanner_EXECUTABLE``
+    The qtwaylandscanner executable.
+
+If ``QtWaylandScanner_FOUND`` is TRUE, it will also define the following imported
+target:
+
+``Wayland::QtScanner``
+    The qtwaylandscanner executable.
+
+This module provides the following functions to generate C++ protocol
+implementations:
+
+  - ``ecm_add_qtwayland_client_protocol``
+  - ``ecm_add_qtwayland_server_protocol``
+
+::
+
+  ecm_add_qtwayland_client_protocol(<source_files_var>
+                                    PROTOCOL <xmlfile>
+                                    BASENAME <basename>
+                                    [PREFIX <prefix>])
+
+Generate C++ wrapper to Wayland client protocol files from ``<xmlfile>``
+XML definition for the ``<basename>`` interface and append those files
+to ``<source_files_var>``.  Pass the ``<prefix>`` argument if the interface
+names don't start with ``qt_`` or ``wl_``.
+
+WaylandScanner is required and will be searched for.
+
+::
+
+  ecm_add_qtwayland_server_protocol(<source_files_var>
+                                    PROTOCOL <xmlfile>
+                                    BASENAME <basename>
+                                    [PREFIX <prefix>])
+
+Generate C++ wrapper to Wayland server protocol files from ``<xmlfile>``
+XML definition for the ``<basename>`` interface and append those files
+to ``<source_files_var>``.  Pass the ``<prefix>`` argument if the interface
+names don't start with ``qt_`` or ``wl_``.
+
+WaylandScanner is required and will be searched for.
+
+Since 1.4.0.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")

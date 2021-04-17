@@ -1,43 +1,42 @@
-#.rst:
-# FindLibGit2
-# -----------
-#
-# Try to find libgit2 on a Unix system.
-#
-# This will define the following variables:
-#
-# ``LIBGIT2_FOUND``
-#     True if (the requested version of) libgit2 is available
-# ``LIBGIT2_VERSION``
-#     The version of libgit2
-# ``LIBGIT2_LIBRARIES``
-#     This can be passed to target_link_libraries() instead of the ``LibGit2::LibGit2``
-#     target
-# ``LIBGIT2_INCLUDE_DIRS``
-#     This should be passed to target_include_directories() if the target is not
-#     used for linking
-# ``LIBGIT2_DEFINITIONS``
-#     This should be passed to target_compile_options() if the target is not
-#     used for linking
-#
-# If ``LIBGIT2_FOUND`` is TRUE, it will also define the following imported target:
-#
-# ``LibGit2::LibGit2``
-#     The libgit2 library
-#
-# In general we recommend using the imported target, as it is easier to use.
-# Bear in mind, however, that if the target is in the link interface of an
-# exported library, it must be made available by the package config file.
-#
-# Since 1.3.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 # SPDX-FileCopyrightText: 2014 Christoph Cullmann <cullmann@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindLibGit2
+-----------
+
+Try to find libgit2 on a Unix system.
+
+This will define the following variables:
+
+``LIBGIT2_FOUND``
+    True if (the requested version of) libgit2 is available
+``LIBGIT2_VERSION``
+    The version of libgit2
+``LIBGIT2_LIBRARIES``
+    This can be passed to target_link_libraries() instead of the ``LibGit2::LibGit2``
+    target
+``LIBGIT2_INCLUDE_DIRS``
+    This should be passed to target_include_directories() if the target is not
+    used for linking
+``LIBGIT2_DEFINITIONS``
+    This should be passed to target_compile_options() if the target is not
+    used for linking
+
+If ``LIBGIT2_FOUND`` is TRUE, it will also define the following imported target:
+
+``LibGit2::LibGit2``
+    The libgit2 library
+
+In general we recommend using the imported target, as it is easier to use.
+Bear in mind, however, that if the target is in the link interface of an
+exported library, it must be made available by the package config file.
+
+Since 1.3.0.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 

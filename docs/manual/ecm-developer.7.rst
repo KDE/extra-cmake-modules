@@ -17,33 +17,25 @@ devoted to find modules. This guide will only highlight things that are
 particular to the Extra CMake Modules project.
 
 Most of these are stylistic points. For example, the license header for a module
-in ECM should look like::
+in ECM should look like:
 
-  #=============================================================================
-  # Copyright 20XX Your Name <your.email@example.com>
+.. code-block:: cmake
+
+  # SPDX-FileCopyrightText: 20XX Your Name <your.email@example.com>
   #
-  # Redistribution and use in source and binary forms, with or without
-  # modification, are permitted provided that the following conditions
-  # are met:
-  #
-  # 1. Redistributions of source code must retain the copyright
-  #    notice, this list of conditions and the following disclaimer.
-  # 2. Redistributions in binary form must reproduce the copyright
-  #    notice, this list of conditions and the following disclaimer in the
-  #    documentation and/or other materials provided with the distribution.
-  # 3. The name of the author may not be used to endorse or promote products
-  #    derived from this software without specific prior written permission.
-  #
-  # THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-  # IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-  # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-  # IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-  # INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-  # NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  # DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-  # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  # SPDX-License-Identifier: BSD-3-Clause
+
+Documentation is written in reStructuredText format and put inside a bracket
+comment with a ``.rst:`` id after the opening bracket:
+
+.. code-block:: cmake
+
+  #[=======================================================================[.rst:
+  The docs
+  #]=======================================================================]
+
+(docs/sphinx/ext/ecm.py has code to extract the rst text from a comment with
+such wrapping)
 
 Functions should be used instead of macros unless there is a good reason not to
 (and that reason should be noted in a comment), and lowercase should be used for
@@ -60,38 +52,41 @@ follow the same pattern.
 Find Modules
 ------------
 
-A good template for find module documentation is::
+A good template for find module documentation is:
 
-  #.rst:
-  # FindFoo
-  # -------
-  #
-  # Finds the Foo library.
-  #
-  # This will define the following variables:
-  #
-  # ``Foo_FOUND``
-  #     True if (the requested version of) Foo is available
-  # ``Foo_VERSION``
-  #     The version of Foo, if it is found
-  # ``Foo_LIBRARIES``
-  #     This can be passed to target_link_libraries() instead of the ``Foo::Foo``
-  #     target
-  # ``Foo_INCLUDE_DIRS``
-  #     This should be passed to target_include_directories() if the target is not
-  #     used for linking
-  # ``Foo_DEFINITIONS``
-  #     This should be passed to target_compile_options() if the target is not
-  #     used for linking
-  #
-  # If ``Foo_FOUND`` is TRUE, it will also define the following imported target:
-  #
-  # ``Foo::Foo``
-  #     The Foo library
-  #
-  # In general we recommend using the imported target, as it is easier to use.
-  # Bear in mind, however, that if the target is in the link interface of an
-  # exported library, it must be made available by the package config file.
+.. code-block:: cmake
+
+  #[=======================================================================[.rst:
+  FindFoo
+  -------
+
+  Finds the Foo library.
+
+  This will define the following variables:
+
+  ``Foo_FOUND``
+      True if (the requested version of) Foo is available
+  ``Foo_VERSION``
+      The version of Foo, if it is found
+  ``Foo_LIBRARIES``
+      This can be passed to target_link_libraries() instead of the ``Foo::Foo``
+      target
+  ``Foo_INCLUDE_DIRS``
+      This should be passed to target_include_directories() if the target is not
+      used for linking
+  ``Foo_DEFINITIONS``
+      This should be passed to target_compile_options() if the target is not
+      used for linking
+
+  If ``Foo_FOUND`` is TRUE, it will also define the following imported target:
+
+  ``Foo::Foo``
+      The Foo library
+
+  In general we recommend using the imported target, as it is easier to use.
+  Bear in mind, however, that if the target is in the link interface of an
+  exported library, it must be made available by the package config file.
+  #]=======================================================================]
 
 Note the use of definition lists for the variables.
 

@@ -1,40 +1,38 @@
-#.rst:
-# FindSasl2
-# ---------
-#
-# Try to find the SASL2 library.
-#
-# This will define the following variables:
-#
-# ``Sasl2_FOUND``
-#     System has SASL2.
-#
-# ``Sasl2_VERSION``
-#     The version of SASL2.
-#
-# ``Sasl2_INCLUDE_DIRS``
-#     This should be passed to target_include_directories() if
-#     the target is not used for linking.
-#
-# ``Sasl2_LIBRARIES``
-#     The SASL2 library.
-#     This can be passed to target_link_libraries() instead of
-#     the ``Sasl2::Sasl2`` target
-#
-# If ``Sasl2_FOUND`` is TRUE, the following imported target
-# will be available:
-#
-# ``Sasl2::Sasl2``
-#     The SASL2 library
-#
-# Since 5.41.0.
-#
-#=============================================================================
 # SPDX-FileCopyrightText: 2006, 2007 Laurent Montel <montel@kde.org>
 #
-#
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindSasl2
+---------
+
+Try to find the SASL2 library.
+
+This will define the following variables:
+
+``Sasl2_FOUND``
+    System has SASL2.
+
+``Sasl2_VERSION``
+    The version of SASL2.
+
+``Sasl2_INCLUDE_DIRS``
+    This should be passed to target_include_directories() if
+    the target is not used for linking.
+
+``Sasl2_LIBRARIES``
+    The SASL2 library.
+    This can be passed to target_link_libraries() instead of
+    the ``Sasl2::Sasl2`` target
+
+If ``Sasl2_FOUND`` is TRUE, the following imported target
+will be available:
+
+``Sasl2::Sasl2``
+    The SASL2 library
+
+Since 5.41.0.
+#]=======================================================================]
 
 # NOTE: libsasl2.pc doesn't export the include dir.
 find_package(PkgConfig QUIET)

@@ -1,80 +1,80 @@
-#.rst:
-# ECMGeneratePriFile
-# ------------------
-#
-# Generate a ``.pri`` file for the benefit of qmake-based projects.
-#
-# As well as the function below, this module creates the cache variable
-# ``ECM_MKSPECS_INSTALL_DIR`` and sets the default value to ``mkspecs/modules``.
-# This assumes Qt and the current project are both installed to the same
-# non-system prefix.  Packagers who use ``-DCMAKE_INSTALL_PREFIX=/usr`` will
-# certainly want to set ``ECM_MKSPECS_INSTALL_DIR`` to something like
-# ``share/qt5/mkspecs/modules``.
-#
-# The main thing is that this should be the ``modules`` subdirectory of either
-# the default qmake ``mkspecs`` directory or of a directory that will be in the
-# ``$QMAKEPATH`` environment variable when qmake is run.
-#
-# ::
-#
-#   ecm_generate_pri_file(BASE_NAME <baseName>
-#                         LIB_NAME <libName>
-#                         [DEPS "<dep> [<dep> [...]]"]
-#                         [FILENAME_VAR <filename_variable>]
-#                         [INCLUDE_INSTALL_DIR <dir>]
-#                         [LIB_INSTALL_DIR <dir>])
-#
-# If your CMake project produces a Qt-based library, you may expect there to be
-# applications that wish to use it that use a qmake-based build system, rather
-# than a CMake-based one.  Creating a ``.pri`` file will make use of your
-# library convenient for them, in much the same way that CMake config files make
-# things convenient for CMake-based applications.
-#
-# ecm_generate_pri_file() generates just such a file.  It requires the
-# ``PROJECT_VERSION_STRING`` variable to be set.  This is typically set by
-# :module:`ECMSetupVersion`, although the project() command in CMake 3.0.0 and
-# later can also set this.
-#
-# BASE_NAME specifies the name qmake project (.pro) files should use to refer to
-# the library (eg: KArchive).  LIB_NAME is the name of the actual library to
-# link to (ie: the first argument to add_library()).  DEPS is a space-separated
-# list of the base names of other libraries (for Qt libraries, use the same
-# names you use with the ``QT`` variable in a qmake project file, such as "core"
-# for QtCore).  FILENAME_VAR specifies the name of a variable to store the path
-# to the generated file in.
-#
-# INCLUDE_INSTALL_DIR is the path (relative to ``CMAKE_INSTALL_PREFIX``) that
-# include files will be installed to. It defaults to
-# ``${INCLUDE_INSTALL_DIR}/<baseName>`` if the ``INCLUDE_INSTALL_DIR`` variable
-# is set. If that variable is not set, the ``CMAKE_INSTALL_INCLUDEDIR`` variable
-# is used instead, and if neither are set ``include`` is used.  LIB_INSTALL_DIR
-# operates similarly for the installation location for libraries; it defaults to
-# ``${LIB_INSTALL_DIR}``, ``${CMAKE_INSTALL_LIBDIR}`` or ``lib``, in that order.
-#
-# Example usage:
-#
-# .. code-block:: cmake
-#
-#   ecm_generate_pri_file(
-#       BASE_NAME KArchive
-#       LIB_NAME KF5KArchive
-#       DEPS "core"
-#       FILENAME_VAR pri_filename
-#   )
-#   install(FILES ${pri_filename} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-#
-# A qmake-based project that wished to use this would then do::
-#
-#   QT += KArchive
-#
-# in their ``.pro`` file.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 David Faure <faure@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMGeneratePriFile
+------------------
+
+Generate a ``.pri`` file for the benefit of qmake-based projects.
+
+As well as the function below, this module creates the cache variable
+``ECM_MKSPECS_INSTALL_DIR`` and sets the default value to ``mkspecs/modules``.
+This assumes Qt and the current project are both installed to the same
+non-system prefix.  Packagers who use ``-DCMAKE_INSTALL_PREFIX=/usr`` will
+certainly want to set ``ECM_MKSPECS_INSTALL_DIR`` to something like
+``share/qt5/mkspecs/modules``.
+
+The main thing is that this should be the ``modules`` subdirectory of either
+the default qmake ``mkspecs`` directory or of a directory that will be in the
+``$QMAKEPATH`` environment variable when qmake is run.
+
+::
+
+  ecm_generate_pri_file(BASE_NAME <baseName>
+                        LIB_NAME <libName>
+                        [DEPS "<dep> [<dep> [...]]"]
+                        [FILENAME_VAR <filename_variable>]
+                        [INCLUDE_INSTALL_DIR <dir>]
+                        [LIB_INSTALL_DIR <dir>])
+
+If your CMake project produces a Qt-based library, you may expect there to be
+applications that wish to use it that use a qmake-based build system, rather
+than a CMake-based one.  Creating a ``.pri`` file will make use of your
+library convenient for them, in much the same way that CMake config files make
+things convenient for CMake-based applications.
+
+ecm_generate_pri_file() generates just such a file.  It requires the
+``PROJECT_VERSION_STRING`` variable to be set.  This is typically set by
+:module:`ECMSetupVersion`, although the project() command in CMake 3.0.0 and
+later can also set this.
+
+BASE_NAME specifies the name qmake project (.pro) files should use to refer to
+the library (eg: KArchive).  LIB_NAME is the name of the actual library to
+link to (ie: the first argument to add_library()).  DEPS is a space-separated
+list of the base names of other libraries (for Qt libraries, use the same
+names you use with the ``QT`` variable in a qmake project file, such as "core"
+for QtCore).  FILENAME_VAR specifies the name of a variable to store the path
+to the generated file in.
+
+INCLUDE_INSTALL_DIR is the path (relative to ``CMAKE_INSTALL_PREFIX``) that
+include files will be installed to. It defaults to
+``${INCLUDE_INSTALL_DIR}/<baseName>`` if the ``INCLUDE_INSTALL_DIR`` variable
+is set. If that variable is not set, the ``CMAKE_INSTALL_INCLUDEDIR`` variable
+is used instead, and if neither are set ``include`` is used.  LIB_INSTALL_DIR
+operates similarly for the installation location for libraries; it defaults to
+``${LIB_INSTALL_DIR}``, ``${CMAKE_INSTALL_LIBDIR}`` or ``lib``, in that order.
+
+Example usage:
+
+.. code-block:: cmake
+
+  ecm_generate_pri_file(
+      BASE_NAME KArchive
+      LIB_NAME KF5KArchive
+      DEPS "core"
+      FILENAME_VAR pri_filename
+  )
+  install(FILES ${pri_filename} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
+A qmake-based project that wished to use this would then do::
+
+  QT += KArchive
+
+in their ``.pro`` file.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 # Replicate the logic from KDEInstallDirs.cmake as we can't depend on it
 # Ask qmake if we're using the same prefix as Qt

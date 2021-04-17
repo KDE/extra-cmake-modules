@@ -1,37 +1,36 @@
-#.rst:
-# FindUDev
-# --------
-#
-# Try to find the UDev library.
-#
-# This will define the following variables:
-#
-# ``UDev_FOUND``
-#     System has UDev.
-#
-# ``UDev_INCLUDE_DIRS``
-#     The libudev include directory.
-#
-# ``UDev_LIBRARIES``
-#     The libudev libraries.
-#
-# ``UDev_VERSION``
-#     The libudev version.
-#
-# If ``UDev_FOUND`` is TRUE, it will also define the following imported
-# target:
-#
-# ``UDev::UDev``
-#     The UDev library
-#
-# Since 5.57.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2010 Rafael Fernández López <ereslibre@kde.org>
 # SPDX-FileCopyrightText: 2019 Volker Krause <vkrause@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindUDev
+--------
+
+Try to find the UDev library.
+
+This will define the following variables:
+
+``UDev_FOUND``
+    System has UDev.
+
+``UDev_INCLUDE_DIRS``
+    The libudev include directory.
+
+``UDev_LIBRARIES``
+    The libudev libraries.
+
+``UDev_VERSION``
+    The libudev version.
+
+If ``UDev_FOUND`` is TRUE, it will also define the following imported
+target:
+
+``UDev::UDev``
+    The UDev library
+
+Since 5.57.0.
+#]=======================================================================]
 
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_UDEV QUIET libudev)

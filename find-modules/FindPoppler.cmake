@@ -1,57 +1,57 @@
-#.rst:
-# FindPoppler
-# -----------
-#
-# Try to find Poppler.
-#
-# This is a component-based find module, which makes use of the COMPONENTS
-# and OPTIONAL_COMPONENTS arguments to find_module.  The following components
-# are available::
-#
-#   Core  Cpp  Qt5  Qt4  Glib
-#
-# If no components are specified, this module will act as though all components
-# were passed to OPTIONAL_COMPONENTS.
-#
-# This module will define the following variables, independently of the
-# components searched for or found:
-#
-# ``Poppler_FOUND``
-#     TRUE if (the requested version of) Poppler is available
-# ``Poppler_VERSION``
-#     Found Poppler version
-# ``Poppler_TARGETS``
-#     A list of all targets imported by this module (note that there may be more
-#     than the components that were requested)
-# ``Poppler_LIBRARIES``
-#     This can be passed to target_link_libraries() instead of the imported
-#     targets
-# ``Poppler_INCLUDE_DIRS``
-#     This should be passed to target_include_directories() if the targets are
-#     not used for linking
-# ``Poppler_DEFINITIONS``
-#     This should be passed to target_compile_options() if the targets are not
-#     used for linking
-#
-# For each searched-for components, ``Poppler_<component>_FOUND`` will be set to
-# TRUE if the corresponding Poppler library was found, and FALSE otherwise.  If
-# ``Poppler_<component>_FOUND`` is TRUE, the imported target
-# ``Poppler::<component>`` will be defined.  This module will also attempt to
-# determine ``Poppler_*_VERSION`` variables for each imported target, although
-# ``Poppler_VERSION`` should normally be sufficient.
-#
-# In general we recommend using the imported targets, as they are easier to use
-# and provide more control.  Bear in mind, however, that if any target is in the
-# link interface of an exported library, it must be made available by the
-# package config file.
-#
-# Since 5.19
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2015 Alex Richardson <arichardson.kde@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindPoppler
+-----------
+
+Try to find Poppler.
+
+This is a component-based find module, which makes use of the COMPONENTS
+and OPTIONAL_COMPONENTS arguments to find_module.  The following components
+are available::
+
+  Core  Cpp  Qt5  Qt4  Glib
+
+If no components are specified, this module will act as though all components
+were passed to OPTIONAL_COMPONENTS.
+
+This module will define the following variables, independently of the
+components searched for or found:
+
+``Poppler_FOUND``
+    TRUE if (the requested version of) Poppler is available
+``Poppler_VERSION``
+    Found Poppler version
+``Poppler_TARGETS``
+    A list of all targets imported by this module (note that there may be more
+    than the components that were requested)
+``Poppler_LIBRARIES``
+    This can be passed to target_link_libraries() instead of the imported
+    targets
+``Poppler_INCLUDE_DIRS``
+    This should be passed to target_include_directories() if the targets are
+    not used for linking
+``Poppler_DEFINITIONS``
+    This should be passed to target_compile_options() if the targets are not
+    used for linking
+
+For each searched-for components, ``Poppler_<component>_FOUND`` will be set to
+TRUE if the corresponding Poppler library was found, and FALSE otherwise.  If
+``Poppler_<component>_FOUND`` is TRUE, the imported target
+``Poppler::<component>`` will be defined.  This module will also attempt to
+determine ``Poppler_*_VERSION`` variables for each imported target, although
+``Poppler_VERSION`` should normally be sufficient.
+
+In general we recommend using the imported targets, as they are easier to use
+and provide more control.  Bear in mind, however, that if any target is in the
+link interface of an exported library, it must be made available by the
+package config file.
+
+Since 5.19
+#]=======================================================================]
+
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 
 ecm_find_package_version_check(Poppler)

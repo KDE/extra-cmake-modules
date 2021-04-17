@@ -1,24 +1,24 @@
-#.rst:
-# FindIsoCodes
-# ------------
-#
-# Try to find iso-codes data files.
-# Once done this will define:
-# ``IsoCodes_FOUND``
-#      Whether the system has iso-codes
-# ``IsoCodes_PREFIX``
-#       The location in which the iso-codes data files are found
-# ``IsoCodes_DOMAINS``
-#       The available domains provided by iso-codes
-#
-# Since 5.80.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2016 Pino Toscano <pino@kde.org>
 # SPDX-FileCopyrightText: 2021 Volker Krause <vkrause@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindIsoCodes
+------------
+
+Try to find iso-codes data files.
+Once done this will define:
+
+``IsoCodes_FOUND``
+      Whether the system has iso-codes
+``IsoCodes_PREFIX``
+      The location in which the iso-codes data files are found
+``IsoCodes_DOMAINS``
+      The available domains provided by iso-codes
+
+Since 5.80.0.
+#]=======================================================================]
 
 find_package(PkgConfig)
 pkg_check_modules(PKG_iso_codes QUIET iso-codes)

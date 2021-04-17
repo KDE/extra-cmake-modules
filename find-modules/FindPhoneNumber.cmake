@@ -1,37 +1,36 @@
-#.rst:
-# FindPhoneNumber
-# ---------------
-#
-# Try to find PhoneNumber.
-#
-# This is a component-based find module, which makes use of the COMPONENTS and
-# OPTIONAL_COMPONENTS arguments to find_module.  The following components are
-# available::
-#
-#   PhoneNumber  GeoCoding
-#
-# If no components are specified, this module will act as though all components
-# were passed to OPTIONAL_COMPONENTS.
-#
-# This module will define the following variables, independently of the
-# components searched for or found:
-#
-# ``PhoneNumber_FOUND``
-#     True if (the requestion version of) PhoneNumber is available
-#
-# For each searched-for components, ``PhoneNumber_<component>_FOUND`` will be set to
-# TRUE if the corresponding library was found, and FALSE otherwise.  If
-# ``PhoneNumber_<component>_FOUND`` is TRUE, the imported target ``PhoneNumber::<component>``
-# will be defined.
-#
-# Since 5.54.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2017 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # SPDX-FileCopyrightText: 2018 Volker Krause <vkrause@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindPhoneNumber
+---------------
+
+Try to find PhoneNumber.
+
+This is a component-based find module, which makes use of the COMPONENTS and
+OPTIONAL_COMPONENTS arguments to find_module.  The following components are
+available::
+
+  PhoneNumber  GeoCoding
+
+If no components are specified, this module will act as though all components
+were passed to OPTIONAL_COMPONENTS.
+
+This module will define the following variables, independently of the
+components searched for or found:
+
+``PhoneNumber_FOUND``
+    True if (the requestion version of) PhoneNumber is available
+
+For each searched-for components, ``PhoneNumber_<component>_FOUND`` will be set to
+TRUE if the corresponding library was found, and FALSE otherwise.  If
+``PhoneNumber_<component>_FOUND`` is TRUE, the imported target ``PhoneNumber::<component>``
+will be defined.
+
+Since 5.54.0.
+#]=======================================================================]
 
 include(ECMFindModuleHelpersStub)
 

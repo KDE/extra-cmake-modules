@@ -1,83 +1,82 @@
-#.rst:
-# ECMGeneratePkgConfigFile
-# ------------------------
-#
-# Generate a `pkg-config <https://www.freedesktop.org/wiki/Software/pkg-config/>`_
-# file for the benefit of
-# `autotools <https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html>`_-based
-# projects.
-#
-# ::
-#
-#   ecm_generate_pkgconfig_file(BASE_NAME <baseName>
-#                         [LIB_NAME <libName>]
-#                         [DEPS "<dep> [<dep> [...]]"]
-#                         [FILENAME_VAR <filename_variable>]
-#                         [INCLUDE_INSTALL_DIR <dir>]
-#                         [LIB_INSTALL_DIR <dir>]
-#                         [DEFINES -D<variable=value>...]
-#                         [DESCRIPTION <library description>] # since 5.41.0
-#                         [INSTALL])
-#
-# ``BASE_NAME`` is the name of the module. It's the name projects will use to
-# find the module.
-#
-# ``LIB_NAME`` is the name of the library that is being exported. If undefined,
-# it will default to the ``BASE_NAME``. That means the ``LIB_NAME`` will be set
-# as the name field as well as the library to link to.
-#
-# ``FILENAME_VAR`` is specified with a variable name. This variable will
-# receive the location of the generated file will be set, within the build
-# directory. This way it can be used in case some processing is required. See
-# also ``INSTALL``.
-#
-# ``INCLUDE_INSTALL_DIR`` specifies where the includes will be installed. If
-# it's not specified, it will default to ``INSTALL_INCLUDEDIR``,
-# ``CMAKE_INSTALL_INCLUDEDIR`` or just "include/" in case they are specified,
-# with the BASE_NAME postfixed.
-#
-# ``LIB_INSTALL_DIR`` specifies where the library is being installed. If it's
-# not specified, it will default to ``LIB_INSTALL_DIR``,
-# ``CMAKE_INSTALL_LIBDIR`` or just "lib/" in case they are specified.
-#
-# ``DEFINES`` is a list of preprocessor defines that it is recommended users of
-# the library pass to the compiler when using it.
-#
-# ``DESCRIPTION`` describes what this library is. If it's not specified, CMake
-# will first try to get the description from the metainfo.yaml file or will
-# create one based on ``LIB_NAME``. Since 5.41.0.
-#
-# ``INSTALL`` will cause the module to be installed to the ``pkgconfig``
-# subdirectory of ``LIB_INSTALL_DIR``, unless the ``ECM_PKGCONFIG_INSTALL_DIR``
-# cache variable is set to something different. Note that the first call to
-# ecm_generate_pkgconfig_file with the ``INSTALL`` argument will cause
-# ``ECM_PKGCONFIG_INSTALL_DIR`` to be set to the cache, and will be used in any
-# subsequent calls.
-#
-# To properly use this macro a version needs to be set. To retrieve it,
-# ``ECM_PKGCONFIG_INSTALL_DIR`` uses ``PROJECT_VERSION``. To set it, use the
-# project() command (only available since CMake 3.0) or the ecm_setup_version()
-# macro.
-#
-# Example usage:
-#
-# .. code-block:: cmake
-#
-#   ecm_generate_pkgconfig_file(
-#       BASE_NAME KF5Archive
-#       DEPS Qt5Core
-#       FILENAME_VAR pkgconfig_filename
-#       INSTALL
-#   )
-#
-# Since 1.3.0.
-#
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Aleix Pol Gonzalez <aleixpol@kde.org>
 # SPDX-FileCopyrightText: 2014 David Faure <faure@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMGeneratePkgConfigFile
+------------------------
+
+Generate a `pkg-config <https://www.freedesktop.org/wiki/Software/pkg-config/>`_
+file for the benefit of
+`autotools <https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html>`_-based
+projects.
+
+::
+
+  ecm_generate_pkgconfig_file(BASE_NAME <baseName>
+                        [LIB_NAME <libName>]
+                        [DEPS "<dep> [<dep> [...]]"]
+                        [FILENAME_VAR <filename_variable>]
+                        [INCLUDE_INSTALL_DIR <dir>]
+                        [LIB_INSTALL_DIR <dir>]
+                        [DEFINES -D<variable=value>...]
+                        [DESCRIPTION <library description>] # since 5.41.0
+                        [INSTALL])
+
+``BASE_NAME`` is the name of the module. It's the name projects will use to
+find the module.
+
+``LIB_NAME`` is the name of the library that is being exported. If undefined,
+it will default to the ``BASE_NAME``. That means the ``LIB_NAME`` will be set
+as the name field as well as the library to link to.
+
+``FILENAME_VAR`` is specified with a variable name. This variable will
+receive the location of the generated file will be set, within the build
+directory. This way it can be used in case some processing is required. See
+also ``INSTALL``.
+
+``INCLUDE_INSTALL_DIR`` specifies where the includes will be installed. If
+it's not specified, it will default to ``INSTALL_INCLUDEDIR``,
+``CMAKE_INSTALL_INCLUDEDIR`` or just "include/" in case they are specified,
+with the BASE_NAME postfixed.
+
+``LIB_INSTALL_DIR`` specifies where the library is being installed. If it's
+not specified, it will default to ``LIB_INSTALL_DIR``,
+``CMAKE_INSTALL_LIBDIR`` or just "lib/" in case they are specified.
+
+``DEFINES`` is a list of preprocessor defines that it is recommended users of
+the library pass to the compiler when using it.
+
+``DESCRIPTION`` describes what this library is. If it's not specified, CMake
+will first try to get the description from the metainfo.yaml file or will
+create one based on ``LIB_NAME``. Since 5.41.0.
+
+``INSTALL`` will cause the module to be installed to the ``pkgconfig``
+subdirectory of ``LIB_INSTALL_DIR``, unless the ``ECM_PKGCONFIG_INSTALL_DIR``
+cache variable is set to something different. Note that the first call to
+ecm_generate_pkgconfig_file with the ``INSTALL`` argument will cause
+``ECM_PKGCONFIG_INSTALL_DIR`` to be set to the cache, and will be used in any
+subsequent calls.
+
+To properly use this macro a version needs to be set. To retrieve it,
+``ECM_PKGCONFIG_INSTALL_DIR`` uses ``PROJECT_VERSION``. To set it, use the
+project() command (only available since CMake 3.0) or the ecm_setup_version()
+macro.
+
+Example usage:
+
+.. code-block:: cmake
+
+  ecm_generate_pkgconfig_file(
+      BASE_NAME KF5Archive
+      DEPS Qt5Core
+      FILENAME_VAR pkgconfig_filename
+      INSTALL
+  )
+
+Since 1.3.0.
+#]=======================================================================]
 
 function(ECM_GENERATE_PKGCONFIG_FILE)
   set(options INSTALL)

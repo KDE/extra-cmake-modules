@@ -1,59 +1,59 @@
-#.rst:
-# ECMGenerateDBusServiceFile
-# ---------------------------
-#
-# This module provides the ``ecm_generate_dbus_service_file`` function for
-# generating and installing a D-Bus service file.
-#
-# ::
-#
-#   ecm_generate_dbus_service_file(
-#       NAME <service name>
-#       EXECUTABLE <executable>
-#       [SYSTEMD_SERVICE <systemd service>]
-#       DESTINATION <install_path>
-#       [RENAME <dbus service filename>] # Since 5.75
-#   )
-#
-# A D-Bus service file ``<service name>.service`` will be generated and installed
-# in the relevant D-Bus config location. This filename can be customized with RENAME.
-#
-# ``<executable>`` must be an absolute path to the installed service executable. When using it with
-# ``KDEInstallDirs`` it needs to be the ``_FULL_`` variant of the path variable.
-#
-# Note: On Windows, the macro will only use the file name part of ``<executable>`` since D-Bus
-# service executables are to be installed in the same directory as the D-Bus daemon.
-#
-# Optionally, a ``<systemd service>`` can be specified to launch the corresponding
-# systemd service instead of the ``<executable>`` if the D-Bus daemon is started by systemd.
-#
-# Example usage:
-#
-# .. code-block:: cmake
-#
-#   ecm_generate_dbus_service_file(
-#       NAME org.kde.kded5
-#       EXECUTABLE ${KDE_INSTALL_FULL_BINDIR}/kded5
-#       DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR}
-#   )
-#
-# .. code-block:: cmake
-#
-#   ecm_generate_dbus_service_file(
-#       NAME org.kde.kded5
-#       EXECUTABLE ${KDE_INSTALL_FULL_BINDIR}/kded5
-#       SYSTEMD_SERVICE plasma-kded.service
-#       DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR}
-#       RENAME org.kde.daemon.service
-#   )
-#
-# Since 5.73.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2020 Kai Uwe Broulik <kde@broulik.de>
 # SPDX-FileCopyrightText: 2020 Henri Chain <henri.chain@enioka.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMGenerateDBusServiceFile
+---------------------------
+
+This module provides the ``ecm_generate_dbus_service_file`` function for
+generating and installing a D-Bus service file.
+
+::
+
+  ecm_generate_dbus_service_file(
+      NAME <service name>
+      EXECUTABLE <executable>
+      [SYSTEMD_SERVICE <systemd service>]
+      DESTINATION <install_path>
+      [RENAME <dbus service filename>] # Since 5.75
+  )
+
+A D-Bus service file ``<service name>.service`` will be generated and installed
+in the relevant D-Bus config location. This filename can be customized with RENAME.
+
+``<executable>`` must be an absolute path to the installed service executable. When using it with
+``KDEInstallDirs`` it needs to be the ``_FULL_`` variant of the path variable.
+
+Note: On Windows, the macro will only use the file name part of ``<executable>`` since D-Bus
+service executables are to be installed in the same directory as the D-Bus daemon.
+
+Optionally, a ``<systemd service>`` can be specified to launch the corresponding
+systemd service instead of the ``<executable>`` if the D-Bus daemon is started by systemd.
+
+Example usage:
+
+.. code-block:: cmake
+
+  ecm_generate_dbus_service_file(
+      NAME org.kde.kded5
+      EXECUTABLE ${KDE_INSTALL_FULL_BINDIR}/kded5
+      DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR}
+  )
+
+.. code-block:: cmake
+
+  ecm_generate_dbus_service_file(
+      NAME org.kde.kded5
+      EXECUTABLE ${KDE_INSTALL_FULL_BINDIR}/kded5
+      SYSTEMD_SERVICE plasma-kded.service
+      DESTINATION ${KDE_INSTALL_DBUSSERVICEDIR}
+      RENAME org.kde.daemon.service
+  )
+
+Since 5.73.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 

@@ -1,216 +1,3 @@
-#.rst:
-# KDEInstallDirs
-# --------------
-#
-# Define KDE standard installation directories.
-#
-# Note that none of the variables defined by this module provide any
-# information about the location of already-installed KDE software.
-#
-# Also sets ``CMAKE_INSTALL_PREFIX`` to the installation prefix of ECM,
-# unless that variable has been already explicitly set by something else
-# (since 5.61 and with CMake >= 3.7).
-#
-# Inclusion of this module defines the following variables:
-#
-# ``KDE_INSTALL_<dir>``
-#     destination for files of a given type
-# ``KDE_INSTALL_FULL_<dir>``
-#     corresponding absolute path
-#
-# where ``<dir>`` is one of (default values in parentheses and alternative,
-# deprecated variable name in square brackets):
-#
-# ``BUNDLEDIR``
-#     application bundles (``/Applications/KDE``) [``BUNDLE_INSTALL_DIR``]
-# ``EXECROOTDIR``
-#     executables and libraries (``<empty>``) [``EXEC_INSTALL_PREFIX``]
-# ``BINDIR``
-#     user executables (``EXECROOTDIR/bin``) [``BIN_INSTALL_DIR``]
-# ``SBINDIR``
-#     system admin executables (``EXECROOTDIR/sbin``) [``SBIN_INSTALL_DIR``]
-# ``LIBDIR``
-#     object code libraries (``EXECROOTDIR/lib``, ``EXECROOTDIR/lib64`` or
-#     ``EXECROOTDIR/lib/<multiarch-tuple`` on Debian) [``LIB_INSTALL_DIR``]
-# ``LIBEXECDIR``
-#     executables for internal use by programs and libraries (``BINDIR`` on
-#     Windows, ``LIBDIR/libexec`` otherwise) [``LIBEXEC_INSTALL_DIR``]
-# ``CMAKEPACKAGEDIR``
-#     CMake packages, including config files (``LIBDIR/cmake``)
-#     [``CMAKECONFIG_INSTALL_PREFIX``]
-# ``QTPLUGINDIR``
-#     Qt plugins (``LIBDIR/plugins`` or qmake-qt5's ``QT_INSTALL_PLUGINS``) [``QT_PLUGIN_INSTALL_DIR``]
-# ``PLUGINDIR``
-#     Plugins (``QTPLUGINDIR``) [``PLUGIN_INSTALL_DIR``]
-# ``QTQUICKIMPORTSDIR``
-#     QtQuick1 imports (``QTPLUGINDIR/imports`` or qmake-qt5's ``QT_INSTALL_IMPORTS``) [``IMPORTS_INSTALL_DIR``]
-# ``QMLDIR``
-#     QtQuick2 imports (``LIBDIR/qml`` or qmake-qt5's ``QT_INSTALL_QML``) [``QML_INSTALL_DIR``]
-# ``INCLUDEDIR``
-#     C and C++ header files (``include``) [``INCLUDE_INSTALL_DIR``]
-# ``LOCALSTATEDIR``
-#     modifiable single-machine data (``var``)
-# ``SHAREDSTATEDIR``
-#     modifiable architecture-independent data (``com``)
-# ``DATAROOTDIR``
-#     read-only architecture-independent data root (``share``)
-#     [``SHARE_INSTALL_PREFIX``]
-# ``DATADIR``
-#     read-only architecture-independent data (``DATAROOTDIR``)
-#     [``DATA_INSTALL_DIR``]
-# ``DOCBUNDLEDIR``
-#     documentation bundles generated using kdoctools
-#     (``DATAROOTDIR/doc/HTML``) [``HTML_INSTALL_DIR``]
-# ``KCFGDIR``
-#     kconfig description files (``DATAROOTDIR/config.kcfg``)
-#     [``KCFG_INSTALL_DIR``]
-# ``KCONFUPDATEDIR``
-#     kconf_update scripts (``DATAROOTDIR/kconf_update``)
-#     [``KCONF_UPDATE_INSTALL_DIR``]
-# ``KSERVICES5DIR``
-#     services for KDE Frameworks 5 (``DATAROOTDIR/kservices5``)
-#     [``SERVICES_INSTALL_DIR``]
-# ``KSERVICETYPES5DIR``
-#     service types for KDE Frameworks 5 (``DATAROOTDIR/kservicetypes5``)
-#     [``SERVICETYPES_INSTALL_DIR``]
-# ``KXMLGUI5DIR``
-#     knotify description files (``DATAROOTDIR/kxmlgui5``)
-#     [``KXMLGUI_INSTALL_DIR``]
-# ``KTEMPLATESDIR``
-#     Kapptemplate and Kdevelop templates (``kdevappwizard/templates``)
-# ``KNOTIFY5RCDIR``
-#     knotify description files (``DATAROOTDIR/knotifications5``)
-#     [``KNOTIFYRC_INSTALL_DIR``]
-# ``ICONDIR``
-#     icons (``DATAROOTDIR/icons``) [``ICON_INSTALL_DIR``]
-# ``LOCALEDIR``
-#     knotify description files (``DATAROOTDIR/locale``)
-#     [``LOCALE_INSTALL_DIR``]
-# ``SOUNDDIR``
-#     sound files (``DATAROOTDIR/sounds``) [``SOUND_INSTALL_DIR``]
-# ``TEMPLATEDIR``
-#     templates (``DATAROOTDIR/templates``) [``TEMPLATES_INSTALL_DIR``]
-# ``WALLPAPERDIR``
-#     desktop wallpaper images (``DATAROOTDIR/wallpapers``)
-#     [``WALLPAPER_INSTALL_DIR``]
-# ``APPDIR``
-#     application desktop files (``DATAROOTDIR/applications``) Since 1.1.0.
-#     [``XDG_APPS_INSTALL_DIR``]
-# ``DESKTOPDIR``
-#     desktop directories (``DATAROOTDIR/desktop-directories``)
-#     [``XDG_DIRECTORY_INSTALL_DIR``]
-# ``MIMEDIR``
-#     mime description files (``DATAROOTDIR/mime/packages``)
-#     [``XDG_MIME_INSTALL_DIR``]
-# ``METAINFODIR``
-#     AppStream component metadata files (``DATAROOTDIR/metainfo``)
-# ``QTQCHDIR``
-#     documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc/qch`` or qmake-qt5's ``QT_INSTALL_DOCS``) Since 5.36.0.
-# ``QCHDIR``
-#     documentation bundles in QCH format (``DATAROOTDIR/doc/qch``) Since 5.36.0.
-# ``MANDIR``
-#     man documentation (``DATAROOTDIR/man``) [``MAN_INSTALL_DIR``]
-# ``INFODIR``
-#     info documentation (``DATAROOTDIR/info``)
-# ``DBUSDIR``
-#     D-Bus (``DATAROOTDIR/dbus-1``)
-# ``DBUSINTERFACEDIR``
-#     D-Bus interfaces (``DBUSDIR/interfaces``)
-#     [``DBUS_INTERFACES_INSTALL_DIR``]
-# ``DBUSSERVICEDIR``
-#     D-Bus session services (``DBUSDIR/services``)
-#     [``DBUS_SERVICES_INSTALL_DIR``]
-# ``DBUSSYSTEMSERVICEDIR``
-#     D-Bus system services (``DBUSDIR/system-services``)
-#     [``DBUS_SYSTEM_SERVICES_INSTALL_DIR``]
-# ``SYSCONFDIR``
-#     read-only single-machine data
-#     (``etc``, or ``/etc`` if ``CMAKE_INSTALL_PREFIX`` is ``/usr``)
-#     [``SYSCONF_INSTALL_DIR``]
-# ``CONFDIR``
-#     application configuration files (``SYSCONFDIR/xdg``)
-#     [``CONFIG_INSTALL_DIR``]
-# ``AUTOSTARTDIR``
-#     autostart files (``CONFDIR/autostart``) [``AUTOSTART_INSTALL_DIR``]
-# ``LOGGINGCATEGORIESDIR``
-#     Qt logging categories files directory (``DATAROOTDIR/qlogging-categories5``) Since 5.59.0
-# ``JARDIR``
-#     Java AAR/JAR files for Android. Since 5.62.0
-# ``SYSTEMDUNITDIR``
-#     Systemd Units (``lib/systemd``)
-#     [``SYSTEMD_UNIT_INSTALL_DIR``]. Since 5.65
-# ``SYSTEMDUSERUNITDIR``
-#     Systemd User Units (``lib/systemd/user``)
-#     [``SYSTEMD_USER_UNIT_INSTALL_DIR``]. Since 5.65
-#
-# If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
-# module, the default values for some variables are instead queried from
-# Qt5's qmake (where mentioned in the parentheses above).
-# If not set, it will default to TRUE if Qt5's qmake is found and
-# it's ``QT_INSTALL_PREFIX`` is the same as ``CMAKE_INSTALL_PREFIX``,
-# otherwise default to FALSE.
-# This variable should NOT be set from within CMakeLists.txt files, instead
-# is intended to be set manually when configuring a project which uses
-# KDEInstallDirs (e.g. by packagers).
-#
-# If ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE before including this
-# module, the deprecated variables (listed in the square brackets above) are
-# not defined.
-#
-# In addition, for each ``KDE_INSTALL_*`` variable, an equivalent
-# ``CMAKE_INSTALL_*`` variable is defined. If
-# ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE, only those variables
-# defined by the ``GNUInstallDirs`` module (shipped with CMake) are defined.
-# If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to TRUE, no variables with
-# a ``CMAKE_`` prefix will be defined by this module (other than
-# CMAKE_INSTALL_DEFAULT_COMPONENT_NAME - see below).
-#
-# The ``KDE_INSTALL_<dir>`` variables (or their ``CMAKE_INSTALL_<dir>`` or
-# deprecated counterparts) may be passed to the DESTINATION options of
-# ``install()`` commands for the corresponding file type.  They are set in the
-# CMake cache, and so the defaults above can be overridden by users.
-#
-# Note that the ``KDE_INSTALL_<dir>``, ``CMAKE_INSTALL_<dir>`` or deprecated
-# form of the variable can be changed using CMake command line variable
-# definitions; in either case, all forms of the variable will be affected. The
-# effect of passing multiple forms of the same variable on the command line
-# (such as ``KDE_INSTALL_BINDIR`` and ``CMAKE_INSTALL_BINDIR`` is undefined.
-#
-# The variable ``KDE_INSTALL_TARGETS_DEFAULT_ARGS`` is also defined (along with
-# the deprecated form ``INSTALL_TARGETS_DEFAULT_ARGS``).  This should be used
-# when libraries or user-executable applications are installed, in the
-# following manner:
-#
-# .. code-block:: cmake
-#
-#   install(TARGETS mylib myapp ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-#
-# It MUST NOT be used for installing plugins, system admin executables or
-# executables only intended for use internally by other code.  Those should use
-# ``KDE_INSTALL_PLUGINDIR``, ``KDE_INSTALL_SBINDIR`` or
-# ``KDE_INSTALL_LIBEXECDIR`` respectively.
-#
-# Additionally, ``CMAKE_INSTALL_DEFAULT_COMPONENT_NAME`` will be set to
-# ``${PROJECT_NAME}`` to provide a sensible default for this CMake option.
-#
-# Note that mixing absolute and relative paths, particularly for ``BINDIR``,
-# ``LIBDIR`` and ``INCLUDEDIR``, can cause issues with exported targets. Given
-# that the default values for these are relative paths, relative paths should
-# be used on the command line when possible (eg: use
-# ``-DKDE_INSTALL_LIBDIR=lib64`` instead of
-# ``-DKDE_INSTALL_LIBDIR=/usr/lib/lib64`` to override the library directory).
-#
-# Since pre-1.0.0.
-#
-# NB: The variables starting ``KDE_INSTALL_`` are available since 1.6.0,
-# unless otherwise noted with the variable.
-#
-# The ``KDE_INSTALL_PREFIX_SCRIPT`` option will install a ${CMAKE_INSTALL_PREFIX}/prefix.sh
-# file that allows to easily incorporate the necessary environment variables
-# for the prefix into a process.
-#
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014-2015 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2013 Stephen Kelly <steveire@gmail.com>
 # SPDX-FileCopyrightText: 2012 David Faure <faure@kde.org>
@@ -219,6 +6,218 @@
 # SPDX-FileCopyrightText: 2006-2013 Alex Neundorf <neundorf@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+KDEInstallDirs
+--------------
+
+Define KDE standard installation directories.
+
+Note that none of the variables defined by this module provide any
+information about the location of already-installed KDE software.
+
+Also sets ``CMAKE_INSTALL_PREFIX`` to the installation prefix of ECM,
+unless that variable has been already explicitly set by something else
+(since 5.61 and with CMake >= 3.7).
+
+Inclusion of this module defines the following variables:
+
+``KDE_INSTALL_<dir>``
+    destination for files of a given type
+``KDE_INSTALL_FULL_<dir>``
+    corresponding absolute path
+
+where ``<dir>`` is one of (default values in parentheses and alternative,
+deprecated variable name in square brackets):
+
+``BUNDLEDIR``
+    application bundles (``/Applications/KDE``) [``BUNDLE_INSTALL_DIR``]
+``EXECROOTDIR``
+    executables and libraries (``<empty>``) [``EXEC_INSTALL_PREFIX``]
+``BINDIR``
+    user executables (``EXECROOTDIR/bin``) [``BIN_INSTALL_DIR``]
+``SBINDIR``
+    system admin executables (``EXECROOTDIR/sbin``) [``SBIN_INSTALL_DIR``]
+``LIBDIR``
+    object code libraries (``EXECROOTDIR/lib``, ``EXECROOTDIR/lib64`` or
+    ``EXECROOTDIR/lib/<multiarch-tuple`` on Debian) [``LIB_INSTALL_DIR``]
+``LIBEXECDIR``
+    executables for internal use by programs and libraries (``BINDIR`` on
+    Windows, ``LIBDIR/libexec`` otherwise) [``LIBEXEC_INSTALL_DIR``]
+``CMAKEPACKAGEDIR``
+    CMake packages, including config files (``LIBDIR/cmake``)
+    [``CMAKECONFIG_INSTALL_PREFIX``]
+``QTPLUGINDIR``
+    Qt plugins (``LIBDIR/plugins`` or qmake-qt5's ``QT_INSTALL_PLUGINS``) [``QT_PLUGIN_INSTALL_DIR``]
+``PLUGINDIR``
+    Plugins (``QTPLUGINDIR``) [``PLUGIN_INSTALL_DIR``]
+``QTQUICKIMPORTSDIR``
+    QtQuick1 imports (``QTPLUGINDIR/imports`` or qmake-qt5's ``QT_INSTALL_IMPORTS``) [``IMPORTS_INSTALL_DIR``]
+``QMLDIR``
+    QtQuick2 imports (``LIBDIR/qml`` or qmake-qt5's ``QT_INSTALL_QML``) [``QML_INSTALL_DIR``]
+``INCLUDEDIR``
+    C and C++ header files (``include``) [``INCLUDE_INSTALL_DIR``]
+``LOCALSTATEDIR``
+    modifiable single-machine data (``var``)
+``SHAREDSTATEDIR``
+    modifiable architecture-independent data (``com``)
+``DATAROOTDIR``
+    read-only architecture-independent data root (``share``)
+    [``SHARE_INSTALL_PREFIX``]
+``DATADIR``
+    read-only architecture-independent data (``DATAROOTDIR``)
+    [``DATA_INSTALL_DIR``]
+``DOCBUNDLEDIR``
+    documentation bundles generated using kdoctools
+    (``DATAROOTDIR/doc/HTML``) [``HTML_INSTALL_DIR``]
+``KCFGDIR``
+    kconfig description files (``DATAROOTDIR/config.kcfg``)
+    [``KCFG_INSTALL_DIR``]
+``KCONFUPDATEDIR``
+    kconf_update scripts (``DATAROOTDIR/kconf_update``)
+    [``KCONF_UPDATE_INSTALL_DIR``]
+``KSERVICES5DIR``
+    services for KDE Frameworks 5 (``DATAROOTDIR/kservices5``)
+    [``SERVICES_INSTALL_DIR``]
+``KSERVICETYPES5DIR``
+    service types for KDE Frameworks 5 (``DATAROOTDIR/kservicetypes5``)
+    [``SERVICETYPES_INSTALL_DIR``]
+``KXMLGUI5DIR``
+    knotify description files (``DATAROOTDIR/kxmlgui5``)
+    [``KXMLGUI_INSTALL_DIR``]
+``KTEMPLATESDIR``
+    Kapptemplate and Kdevelop templates (``kdevappwizard/templates``)
+``KNOTIFY5RCDIR``
+    knotify description files (``DATAROOTDIR/knotifications5``)
+    [``KNOTIFYRC_INSTALL_DIR``]
+``ICONDIR``
+    icons (``DATAROOTDIR/icons``) [``ICON_INSTALL_DIR``]
+``LOCALEDIR``
+    knotify description files (``DATAROOTDIR/locale``)
+    [``LOCALE_INSTALL_DIR``]
+``SOUNDDIR``
+    sound files (``DATAROOTDIR/sounds``) [``SOUND_INSTALL_DIR``]
+``TEMPLATEDIR``
+    templates (``DATAROOTDIR/templates``) [``TEMPLATES_INSTALL_DIR``]
+``WALLPAPERDIR``
+    desktop wallpaper images (``DATAROOTDIR/wallpapers``)
+    [``WALLPAPER_INSTALL_DIR``]
+``APPDIR``
+    application desktop files (``DATAROOTDIR/applications``) Since 1.1.0.
+    [``XDG_APPS_INSTALL_DIR``]
+``DESKTOPDIR``
+    desktop directories (``DATAROOTDIR/desktop-directories``)
+    [``XDG_DIRECTORY_INSTALL_DIR``]
+``MIMEDIR``
+    mime description files (``DATAROOTDIR/mime/packages``)
+    [``XDG_MIME_INSTALL_DIR``]
+``METAINFODIR``
+    AppStream component metadata files (``DATAROOTDIR/metainfo``)
+``QTQCHDIR``
+    documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc/qch`` or qmake-qt5's ``QT_INSTALL_DOCS``) Since 5.36.0.
+``QCHDIR``
+    documentation bundles in QCH format (``DATAROOTDIR/doc/qch``) Since 5.36.0.
+``MANDIR``
+    man documentation (``DATAROOTDIR/man``) [``MAN_INSTALL_DIR``]
+``INFODIR``
+    info documentation (``DATAROOTDIR/info``)
+``DBUSDIR``
+    D-Bus (``DATAROOTDIR/dbus-1``)
+``DBUSINTERFACEDIR``
+    D-Bus interfaces (``DBUSDIR/interfaces``)
+    [``DBUS_INTERFACES_INSTALL_DIR``]
+``DBUSSERVICEDIR``
+    D-Bus session services (``DBUSDIR/services``)
+    [``DBUS_SERVICES_INSTALL_DIR``]
+``DBUSSYSTEMSERVICEDIR``
+    D-Bus system services (``DBUSDIR/system-services``)
+    [``DBUS_SYSTEM_SERVICES_INSTALL_DIR``]
+``SYSCONFDIR``
+    read-only single-machine data
+    (``etc``, or ``/etc`` if ``CMAKE_INSTALL_PREFIX`` is ``/usr``)
+    [``SYSCONF_INSTALL_DIR``]
+``CONFDIR``
+    application configuration files (``SYSCONFDIR/xdg``)
+    [``CONFIG_INSTALL_DIR``]
+``AUTOSTARTDIR``
+    autostart files (``CONFDIR/autostart``) [``AUTOSTART_INSTALL_DIR``]
+``LOGGINGCATEGORIESDIR``
+    Qt logging categories files directory (``DATAROOTDIR/qlogging-categories5``) Since 5.59.0
+``JARDIR``
+    Java AAR/JAR files for Android. Since 5.62.0
+``SYSTEMDUNITDIR``
+    Systemd Units (``lib/systemd``)
+    [``SYSTEMD_UNIT_INSTALL_DIR``]. Since 5.65
+``SYSTEMDUSERUNITDIR``
+    Systemd User Units (``lib/systemd/user``)
+    [``SYSTEMD_USER_UNIT_INSTALL_DIR``]. Since 5.65
+
+If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
+module, the default values for some variables are instead queried from
+Qt5's qmake (where mentioned in the parentheses above).
+If not set, it will default to TRUE if Qt5's qmake is found and
+it's ``QT_INSTALL_PREFIX`` is the same as ``CMAKE_INSTALL_PREFIX``,
+otherwise default to FALSE.
+This variable should NOT be set from within CMakeLists.txt files, instead
+is intended to be set manually when configuring a project which uses
+KDEInstallDirs (e.g. by packagers).
+
+If ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE before including this
+module, the deprecated variables (listed in the square brackets above) are
+not defined.
+
+In addition, for each ``KDE_INSTALL_*`` variable, an equivalent
+``CMAKE_INSTALL_*`` variable is defined. If
+``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE, only those variables
+defined by the ``GNUInstallDirs`` module (shipped with CMake) are defined.
+If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to TRUE, no variables with
+a ``CMAKE_`` prefix will be defined by this module (other than
+CMAKE_INSTALL_DEFAULT_COMPONENT_NAME - see below).
+
+The ``KDE_INSTALL_<dir>`` variables (or their ``CMAKE_INSTALL_<dir>`` or
+deprecated counterparts) may be passed to the DESTINATION options of
+``install()`` commands for the corresponding file type.  They are set in the
+CMake cache, and so the defaults above can be overridden by users.
+
+Note that the ``KDE_INSTALL_<dir>``, ``CMAKE_INSTALL_<dir>`` or deprecated
+form of the variable can be changed using CMake command line variable
+definitions; in either case, all forms of the variable will be affected. The
+effect of passing multiple forms of the same variable on the command line
+(such as ``KDE_INSTALL_BINDIR`` and ``CMAKE_INSTALL_BINDIR`` is undefined.
+
+The variable ``KDE_INSTALL_TARGETS_DEFAULT_ARGS`` is also defined (along with
+the deprecated form ``INSTALL_TARGETS_DEFAULT_ARGS``).  This should be used
+when libraries or user-executable applications are installed, in the
+following manner:
+
+.. code-block:: cmake
+
+  install(TARGETS mylib myapp ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+
+It MUST NOT be used for installing plugins, system admin executables or
+executables only intended for use internally by other code.  Those should use
+``KDE_INSTALL_PLUGINDIR``, ``KDE_INSTALL_SBINDIR`` or
+``KDE_INSTALL_LIBEXECDIR`` respectively.
+
+Additionally, ``CMAKE_INSTALL_DEFAULT_COMPONENT_NAME`` will be set to
+``${PROJECT_NAME}`` to provide a sensible default for this CMake option.
+
+Note that mixing absolute and relative paths, particularly for ``BINDIR``,
+``LIBDIR`` and ``INCLUDEDIR``, can cause issues with exported targets. Given
+that the default values for these are relative paths, relative paths should
+be used on the command line when possible (eg: use
+``-DKDE_INSTALL_LIBDIR=lib64`` instead of
+``-DKDE_INSTALL_LIBDIR=/usr/lib/lib64`` to override the library directory).
+
+Since pre-1.0.0.
+
+NB: The variables starting ``KDE_INSTALL_`` are available since 1.6.0,
+unless otherwise noted with the variable.
+
+The ``KDE_INSTALL_PREFIX_SCRIPT`` option will install a ${CMAKE_INSTALL_PREFIX}/prefix.sh
+file that allows to easily incorporate the necessary environment variables
+for the prefix into a process.
+#]=======================================================================]
 
 # Figure out what the default install directory for libraries should be.
 # This is based on the logic in GNUInstallDirs, but simplified (the

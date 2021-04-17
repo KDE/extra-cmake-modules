@@ -1,36 +1,35 @@
-#.rst:
-# FindQCollectionGenerator
-# ------------------------
-#
-# Try to find the Qt help collection generator.
-#
-# This will define the following variables:
-#
-# ``QCollectionGenerator_FOUND``
-#     True if (the requested version of) Sphinx is available
-# ``QCollectionGenerator_VERSION``
-#     The version of the Qt help collection generator. Note that this not the
-#     same as the version of Qt it is provided by.
-# ``QCollectionGenerator_QT_VERSION``
-#     The version of Qt that the Qt help collection generator is from.
-# ``QCollectionGenerator_EXECUTABLE``
-#     The path to the Qt help collection generator executable.
-#
-# If ``QCollectionGenerator_FOUND`` is TRUE, it will also define the following
-# imported target:
-#
-# ``QCollectionGenerator::Generator``
-#     The Qt help collection generator.
-#
-# In general we recommend using the imported target, as it is easier to use.
-#
-# Since 5.17.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2015 Alex Merry <alex.merry@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindQCollectionGenerator
+------------------------
+
+Try to find the Qt help collection generator.
+
+This will define the following variables:
+
+``QCollectionGenerator_FOUND``
+    True if (the requested version of) Sphinx is available
+``QCollectionGenerator_VERSION``
+    The version of the Qt help collection generator. Note that this not the
+    same as the version of Qt it is provided by.
+``QCollectionGenerator_QT_VERSION``
+    The version of Qt that the Qt help collection generator is from.
+``QCollectionGenerator_EXECUTABLE``
+    The path to the Qt help collection generator executable.
+
+If ``QCollectionGenerator_FOUND`` is TRUE, it will also define the following
+imported target:
+
+``QCollectionGenerator::Generator``
+    The Qt help collection generator.
+
+In general we recommend using the imported target, as it is easier to use.
+
+Since 5.17.0.
+#]=======================================================================]
 
 find_program(QCollectionGenerator_EXECUTABLE
     NAMES

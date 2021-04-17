@@ -1,79 +1,79 @@
-#.rst:
-# ECMPoQmTools
-# ------------
-#
-# This module provides the ``ecm_process_po_files_as_qm`` and
-# ``ecm_install_po_files_as_qm`` functions for generating QTranslator (.qm)
-# catalogs from Gettext (.po) catalogs, and the ``ecm_create_qm_loader``
-# function for generating the necessary code to load them in a Qt application
-# or library.
-#
-# ::
-#
-#   ecm_process_po_files_as_qm(<lang> [ALL]
-#                              [INSTALL_DESTINATION <install_destination>]
-#                              PO_FILES <pofile> [<pofile> [...]])
-#
-# Compile .po files into .qm files for the given language.
-#
-# If INSTALL_DESTINATION is given, the .qm files are installed in
-# ``<install_destination>/<lang>/LC_MESSAGES``. Typically,
-# ``<install_destination>`` is set to ``share/locale``.
-#
-# ``ecm_process_po_files_as_qm`` creates a "translations" target. This target
-# builds all .po files into .qm files.  If ALL is specified, these rules are
-# added to the "all" target (and so the .qm files will be built by default).
-#
-# ::
-#
-#   ecm_create_qm_loader(<source_files_var> <catalog_name>)
-#
-# Generates C++ code which ensures translations are automatically loaded at
-# startup. The generated files are appended to ``<source_files_var>``.
-#
-# It assumes that the .qm file for the language code ``<lang>`` is installed as
-# ``<sharedir>/locale/<lang>/LC_MESSAGES/<catalog_name>.qm``, where
-# ``<sharedir>`` is one of the directories given by the ``GenericDataLocation``
-# of ``QStandardPaths``.
-#
-# Typical usage is like:
-#
-# .. code-block:: cmake
-#
-#   set(mylib_SRCS foo.cpp bar.cpp)
-#   ecm_create_qm_loader(mylib_SRCS mylib)
-#   add_library(mylib ${mylib_SRCS})
-#
-# ::
-#
-#   ecm_install_po_files_as_qm(<podir>)
-#
-# Searches for .po files and installs them to the standard location.
-#
-# This is a convenience function which relies on all .po files being kept in
-# ``<podir>/<lang>/``, where ``<lang>`` is the language the .po files are
-# written in.
-#
-# For example, given the following directory structure::
-#
-#  po/
-#    fr/
-#      mylib.po
-#
-# ``ecm_install_po_files_as_qm(po)`` compiles ``mylib.po`` into ``mylib.qm`` and
-# installs it in ``<install_destination>/fr/LC_MESSAGES``.
-# ``<install_destination>`` defaults to ``${LOCALE_INSTALL_DIR}`` if defined,
-# otherwise it uses ``${CMAKE_INSTALL_LOCALEDIR}`` if that is defined, otherwise
-# it uses ``share/locale``.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2007-2009 Kitware, Inc.
 # SPDX-FileCopyrightText: 2007 Alexander Neundorf <neundorf@kde.org>
 # SPDX-FileCopyrightText: 2014 Aurélien Gâteau <agateau@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMPoQmTools
+------------
+
+This module provides the ``ecm_process_po_files_as_qm`` and
+``ecm_install_po_files_as_qm`` functions for generating QTranslator (.qm)
+catalogs from Gettext (.po) catalogs, and the ``ecm_create_qm_loader``
+function for generating the necessary code to load them in a Qt application
+or library.
+
+::
+
+  ecm_process_po_files_as_qm(<lang> [ALL]
+                             [INSTALL_DESTINATION <install_destination>]
+                             PO_FILES <pofile> [<pofile> [...]])
+
+Compile .po files into .qm files for the given language.
+
+If INSTALL_DESTINATION is given, the .qm files are installed in
+``<install_destination>/<lang>/LC_MESSAGES``. Typically,
+``<install_destination>`` is set to ``share/locale``.
+
+``ecm_process_po_files_as_qm`` creates a "translations" target. This target
+builds all .po files into .qm files.  If ALL is specified, these rules are
+added to the "all" target (and so the .qm files will be built by default).
+
+::
+
+  ecm_create_qm_loader(<source_files_var> <catalog_name>)
+
+Generates C++ code which ensures translations are automatically loaded at
+startup. The generated files are appended to ``<source_files_var>``.
+
+It assumes that the .qm file for the language code ``<lang>`` is installed as
+``<sharedir>/locale/<lang>/LC_MESSAGES/<catalog_name>.qm``, where
+``<sharedir>`` is one of the directories given by the ``GenericDataLocation``
+of ``QStandardPaths``.
+
+Typical usage is like:
+
+.. code-block:: cmake
+
+  set(mylib_SRCS foo.cpp bar.cpp)
+  ecm_create_qm_loader(mylib_SRCS mylib)
+  add_library(mylib ${mylib_SRCS})
+
+::
+
+  ecm_install_po_files_as_qm(<podir>)
+
+Searches for .po files and installs them to the standard location.
+
+This is a convenience function which relies on all .po files being kept in
+``<podir>/<lang>/``, where ``<lang>`` is the language the .po files are
+written in.
+
+For example, given the following directory structure::
+
+ po/
+   fr/
+     mylib.po
+
+``ecm_install_po_files_as_qm(po)`` compiles ``mylib.po`` into ``mylib.qm`` and
+installs it in ``<install_destination>/fr/LC_MESSAGES``.
+``<install_destination>`` defaults to ``${LOCALE_INSTALL_DIR}`` if defined,
+otherwise it uses ``${CMAKE_INSTALL_LOCALEDIR}`` if that is defined, otherwise
+it uses ``share/locale``.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 

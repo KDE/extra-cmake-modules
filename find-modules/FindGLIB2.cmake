@@ -1,34 +1,33 @@
-#.rst:
-# FindGLIB2
-# ---------
-#
-# Try to locate the GLib2 library.
-# If found, this will define the following variables:
-#
-# ``GLIB2_FOUND``
-#     True if the GLib2 library is available
-# ``GLIB2_INCLUDE_DIRS``
-#     The GLib2 include directories
-# ``GLIB2_LIBRARIES``
-#     The GLib2 libraries for linking
-# ``GLIB2_INCLUDE_DIR``
-#     Deprecated, use ``GLIB2_INCLUDE_DIRS``
-# ``GLIB2_LIBRARY``
-#     Deprecated, use ``GLIB2_LIBRARIES``
-#
-# If ``GLIB2_FOUND`` is TRUE, it will also define the following
-# imported target:
-#
-# ``GLIB2::GLIB2``
-#     The GLIB2 library
-#
-# Since 5.41.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2008 Laurent Montel <montel@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindGLIB2
+---------
+
+Try to locate the GLib2 library.
+If found, this will define the following variables:
+
+``GLIB2_FOUND``
+    True if the GLib2 library is available
+``GLIB2_INCLUDE_DIRS``
+    The GLib2 include directories
+``GLIB2_LIBRARIES``
+    The GLib2 libraries for linking
+``GLIB2_INCLUDE_DIR``
+    Deprecated, use ``GLIB2_INCLUDE_DIRS``
+``GLIB2_LIBRARY``
+    Deprecated, use ``GLIB2_LIBRARIES``
+
+If ``GLIB2_FOUND`` is TRUE, it will also define the following
+imported target:
+
+``GLIB2::GLIB2``
+    The GLIB2 library
+
+Since 5.41.0.
+#]=======================================================================]
 
 find_package(PkgConfig)
 pkg_check_modules(PC_GLIB2 QUIET glib-2.0)

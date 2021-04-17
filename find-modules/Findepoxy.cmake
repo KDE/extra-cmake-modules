@@ -1,40 +1,41 @@
-#.rst:
-# Findepoxy
-# ---------
-#
-# Try to find libepoxy on a Unix system.
-#
-# This will define the following variables:
-#
-# ``epoxy_FOUND``
-#     True if (the requested version of) libepoxy is available
-# ``epoxy_VERSION``
-#     The version of libepoxy
-# ``epoxy_LIBRARIES``
-#     This should be passed to target_link_libraries() if the target is not
-#     used for linking
-# ``epoxy_INCLUDE_DIRS``
-#     This should be passed to target_include_directories() if the target is not
-#     used for linking
-# ``epoxy_DEFINITIONS``
-#     This should be passed to target_compile_options() if the target is not
-#     used for linking
-# ``epoxy_HAS_GLX``
-#     True if GLX support is available
-#
-# If ``epoxy_FOUND`` is TRUE, it will also define the following imported target:
-#
-# ``epoxy::epoxy``
-#     The epoxy library
-#
-# In general we recommend using the imported target, as it is easier to use.
-# Bear in mind, however, that if the target is in the link interface of an
-# exported library, it must be made available by the package config file.
-
 # SPDX-FileCopyrightText: 2014 Fredrik Höglund <fredrik@kde.org>
 # SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+Findepoxy
+---------
+
+Try to find libepoxy on a Unix system.
+
+This will define the following variables:
+
+``epoxy_FOUND``
+    True if (the requested version of) libepoxy is available
+``epoxy_VERSION``
+    The version of libepoxy
+``epoxy_LIBRARIES``
+    This should be passed to target_link_libraries() if the target is not
+    used for linking
+``epoxy_INCLUDE_DIRS``
+    This should be passed to target_include_directories() if the target is not
+    used for linking
+``epoxy_DEFINITIONS``
+    This should be passed to target_compile_options() if the target is not
+    used for linking
+``epoxy_HAS_GLX``
+    True if GLX support is available
+
+If ``epoxy_FOUND`` is TRUE, it will also define the following imported target:
+
+``epoxy::epoxy``
+    The epoxy library
+
+In general we recommend using the imported target, as it is easier to use.
+Bear in mind, however, that if the target is in the link interface of an
+exported library, it must be made available by the package config file.
+#]=======================================================================]
 
 find_package(PkgConfig)
 pkg_check_modules(PKG_epoxy QUIET epoxy)

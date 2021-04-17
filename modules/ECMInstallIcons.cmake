@@ -1,75 +1,75 @@
-#.rst:
-# ECMInstallIcons
-# ---------------
-#
-# Installs icons, sorting them into the correct directories according to the
-# FreeDesktop.org icon naming specification.
-#
-# ::
-#
-#   ecm_install_icons(ICONS <icon> [<icon> [...]]
-#                     DESTINATION <icon_install_dir>
-#                     [LANG <l10n_code>]
-#                     [THEME <theme>])
-#
-# The given icons, whose names must match the pattern::
-#
-#   <size>-<group>-<name>.<ext>
-#
-# will be installed to the appropriate subdirectory of DESTINATION according to
-# the FreeDesktop.org icon naming scheme. By default, they are installed to the
-# "hicolor" theme, but this can be changed using the THEME argument.  If the
-# icons are localized, the LANG argument can be used to install them in a
-# locale-specific directory.
-#
-# ``<size>`` is a numeric pixel size (typically 16, 22, 32, 48, 64, 128 or 256)
-# or ``sc`` for scalable (SVG) files, ``<group>`` is one of the standard
-# FreeDesktop.org icon groups (actions, animations, apps, categories, devices,
-# emblems, emotes, intl, mimetypes, places, status) and ``<ext>`` is one of
-# ``.png``, ``.mng`` or ``.svgz``.
-#
-# The typical installation directory is ``share/icons``.
-#
-# .. code-block:: cmake
-#
-#   ecm_install_icons(ICONS 22-actions-menu_new.png
-#                     DESTINATION share/icons)
-#
-# The above code will install the file ``22-actions-menu_new.png`` as
-# ``${CMAKE_INSTALL_PREFIX}/share/icons/<theme>/22x22/actions/menu_new.png``
-#
-# Users of the :kde-module:`KDEInstallDirs` module would normally use
-# ``${KDE_INSTALL_ICONDIR}`` as the DESTINATION, while users of the GNUInstallDirs
-# module should use ``${CMAKE_INSTALL_DATAROOTDIR}/icons``.
-#
-# An old form of arguments will also be accepted::
-#
-#   ecm_install_icons(<icon_install_dir> [<l10n_code>])
-#
-# This matches files named like::
-#
-#   <theme><size>-<group>-<name>.<ext>
-#
-# where ``<theme>`` is one of
-#
-# * ``hi`` for hicolor
-# * ``lo`` for locolor
-# * ``cr`` for the Crystal icon theme
-# * ``ox`` for the Oxygen icon theme
-# * ``br`` for the Breeze icon theme
-#
-# With this syntax, the file ``hi22-actions-menu_new.png`` would be installed
-# into ``<icon_install_dir>/hicolor/22x22/actions/menu_new.png``
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2013 David Edmundson <kde@davidedmundson.co.uk>
 # SPDX-FileCopyrightText: 2008 Chusslove Illich <caslav.ilic@gmx.net>
 # SPDX-FileCopyrightText: 2006 Alex Neundorf <neundorf@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMInstallIcons
+---------------
+
+Installs icons, sorting them into the correct directories according to the
+FreeDesktop.org icon naming specification.
+
+::
+
+  ecm_install_icons(ICONS <icon> [<icon> [...]]
+                    DESTINATION <icon_install_dir>
+                    [LANG <l10n_code>]
+                    [THEME <theme>])
+
+The given icons, whose names must match the pattern::
+
+  <size>-<group>-<name>.<ext>
+
+will be installed to the appropriate subdirectory of DESTINATION according to
+the FreeDesktop.org icon naming scheme. By default, they are installed to the
+"hicolor" theme, but this can be changed using the THEME argument.  If the
+icons are localized, the LANG argument can be used to install them in a
+locale-specific directory.
+
+``<size>`` is a numeric pixel size (typically 16, 22, 32, 48, 64, 128 or 256)
+or ``sc`` for scalable (SVG) files, ``<group>`` is one of the standard
+FreeDesktop.org icon groups (actions, animations, apps, categories, devices,
+emblems, emotes, intl, mimetypes, places, status) and ``<ext>`` is one of
+``.png``, ``.mng`` or ``.svgz``.
+
+The typical installation directory is ``share/icons``.
+
+.. code-block:: cmake
+
+  ecm_install_icons(ICONS 22-actions-menu_new.png
+                    DESTINATION share/icons)
+
+The above code will install the file ``22-actions-menu_new.png`` as
+``${CMAKE_INSTALL_PREFIX}/share/icons/<theme>/22x22/actions/menu_new.png``
+
+Users of the :kde-module:`KDEInstallDirs` module would normally use
+``${KDE_INSTALL_ICONDIR}`` as the DESTINATION, while users of the GNUInstallDirs
+module should use ``${CMAKE_INSTALL_DATAROOTDIR}/icons``.
+
+An old form of arguments will also be accepted::
+
+  ecm_install_icons(<icon_install_dir> [<l10n_code>])
+
+This matches files named like::
+
+  <theme><size>-<group>-<name>.<ext>
+
+where ``<theme>`` is one of
+
+* ``hi`` for hicolor
+* ``lo`` for locolor
+* ``cr`` for the Crystal icon theme
+* ``ox`` for the Oxygen icon theme
+* ``br`` for the Breeze icon theme
+
+With this syntax, the file ``hi22-actions-menu_new.png`` would be installed
+into ``<icon_install_dir>/hicolor/22x22/actions/menu_new.png``
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 

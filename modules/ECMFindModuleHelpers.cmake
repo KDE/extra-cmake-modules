@@ -1,106 +1,106 @@
-#.rst:
-# ECMFindModuleHelpers
-# --------------------
-#
-# Helper macros for find modules: ecm_find_package_version_check(),
-# ecm_find_package_parse_components() and
-# ecm_find_package_handle_library_components().
-#
-# ::
-#
-#   ecm_find_package_version_check(<name>)
-#
-# Prints warnings if the CMake version or the project's required CMake version
-# is older than that required by extra-cmake-modules.
-#
-# ::
-#
-#   ecm_find_package_parse_components(<name>
-#       RESULT_VAR <variable>
-#       KNOWN_COMPONENTS <component1> [<component2> [...]]
-#       [SKIP_DEPENDENCY_HANDLING])
-#
-# This macro will populate <variable> with a list of components found in
-# <name>_FIND_COMPONENTS, after checking that all those components are in the
-# list of KNOWN_COMPONENTS; if there are any unknown components, it will print
-# an error or warning (depending on the value of <name>_FIND_REQUIRED) and call
-# return().
-#
-# The order of components in <variable> is guaranteed to match the order they
-# are listed in the KNOWN_COMPONENTS argument.
-#
-# If SKIP_DEPENDENCY_HANDLING is not set, for each component the variable
-# <name>_<component>_component_deps will be checked for dependent components.
-# If <component> is listed in <name>_FIND_COMPONENTS, then all its (transitive)
-# dependencies will also be added to <variable>.
-#
-# ::
-#
-#   ecm_find_package_handle_library_components(<name>
-#       COMPONENTS <component> [<component> [...]]
-#       [SKIP_DEPENDENCY_HANDLING])
-#       [SKIP_PKG_CONFIG])
-#
-# Creates an imported library target for each component.  The operation of this
-# macro depends on the presence of a number of CMake variables.
-#
-# The <name>_<component>_lib variable should contain the name of this library,
-# and <name>_<component>_header variable should contain the name of a header
-# file associated with it (whatever relative path is normally passed to
-# '#include'). <name>_<component>_header_subdir variable can be used to specify
-# which subdirectory of the include path the headers will be found in.
-# ecm_find_package_components() will then search for the library
-# and include directory (creating appropriate cache variables) and create an
-# imported library target named <name>::<component>.
-#
-# Additional variables can be used to provide additional information:
-#
-# If SKIP_PKG_CONFIG, the <name>_<component>_pkg_config variable is set, and
-# pkg-config is found, the pkg-config module given by
-# <name>_<component>_pkg_config will be searched for and used to help locate the
-# library and header file.  It will also be used to set
-# <name>_<component>_VERSION.
-#
-# Note that if version information is found via pkg-config,
-# <name>_<component>_FIND_VERSION can be set to require a particular version
-# for each component.
-#
-# If SKIP_DEPENDENCY_HANDLING is not set, the INTERFACE_LINK_LIBRARIES property
-# of the imported target for <component> will be set to contain the imported
-# targets for the components listed in <name>_<component>_component_deps.
-# <component>_FOUND will also be set to false if any of the compoments in
-# <name>_<component>_component_deps are not found.  This requires the components
-# in <name>_<component>_component_deps to be listed before <component> in the
-# COMPONENTS argument.
-#
-# The following variables will be set:
-#
-# ``<name>_TARGETS``
-#   the imported targets
-# ``<name>_LIBRARIES``
-#   the found libraries
-# ``<name>_INCLUDE_DIRS``
-#   the combined required include directories for the components
-# ``<name>_DEFINITIONS``
-#   the "other" CFLAGS provided by pkg-config, if any
-# ``<name>_VERSION``
-#   the value of ``<name>_<component>_VERSION`` for the first component that
-#   has this variable set (note that components are searched for in the order
-#   they are passed to the macro), although if it is already set, it will not
-#   be altered
-#
-# Note that these variables are never cleared, so if
-# ecm_find_package_handle_library_components() is called multiple times with
-# different components (typically because of multiple find_package() calls) then
-# ``<name>_TARGETS``, for example, will contain all the targets found in any
-# call (although no duplicates).
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMFindModuleHelpers
+--------------------
+
+Helper macros for find modules: ecm_find_package_version_check(),
+ecm_find_package_parse_components() and
+ecm_find_package_handle_library_components().
+
+::
+
+  ecm_find_package_version_check(<name>)
+
+Prints warnings if the CMake version or the project's required CMake version
+is older than that required by extra-cmake-modules.
+
+::
+
+  ecm_find_package_parse_components(<name>
+      RESULT_VAR <variable>
+      KNOWN_COMPONENTS <component1> [<component2> [...]]
+      [SKIP_DEPENDENCY_HANDLING])
+
+This macro will populate <variable> with a list of components found in
+<name>_FIND_COMPONENTS, after checking that all those components are in the
+list of KNOWN_COMPONENTS; if there are any unknown components, it will print
+an error or warning (depending on the value of <name>_FIND_REQUIRED) and call
+return().
+
+The order of components in <variable> is guaranteed to match the order they
+are listed in the KNOWN_COMPONENTS argument.
+
+If SKIP_DEPENDENCY_HANDLING is not set, for each component the variable
+<name>_<component>_component_deps will be checked for dependent components.
+If <component> is listed in <name>_FIND_COMPONENTS, then all its (transitive)
+dependencies will also be added to <variable>.
+
+::
+
+  ecm_find_package_handle_library_components(<name>
+      COMPONENTS <component> [<component> [...]]
+      [SKIP_DEPENDENCY_HANDLING])
+      [SKIP_PKG_CONFIG])
+
+Creates an imported library target for each component.  The operation of this
+macro depends on the presence of a number of CMake variables.
+
+The <name>_<component>_lib variable should contain the name of this library,
+and <name>_<component>_header variable should contain the name of a header
+file associated with it (whatever relative path is normally passed to
+'#include'). <name>_<component>_header_subdir variable can be used to specify
+which subdirectory of the include path the headers will be found in.
+ecm_find_package_components() will then search for the library
+and include directory (creating appropriate cache variables) and create an
+imported library target named <name>::<component>.
+
+Additional variables can be used to provide additional information:
+
+If SKIP_PKG_CONFIG, the <name>_<component>_pkg_config variable is set, and
+pkg-config is found, the pkg-config module given by
+<name>_<component>_pkg_config will be searched for and used to help locate the
+library and header file.  It will also be used to set
+<name>_<component>_VERSION.
+
+Note that if version information is found via pkg-config,
+<name>_<component>_FIND_VERSION can be set to require a particular version
+for each component.
+
+If SKIP_DEPENDENCY_HANDLING is not set, the INTERFACE_LINK_LIBRARIES property
+of the imported target for <component> will be set to contain the imported
+targets for the components listed in <name>_<component>_component_deps.
+<component>_FOUND will also be set to false if any of the compoments in
+<name>_<component>_component_deps are not found.  This requires the components
+in <name>_<component>_component_deps to be listed before <component> in the
+COMPONENTS argument.
+
+The following variables will be set:
+
+``<name>_TARGETS``
+  the imported targets
+``<name>_LIBRARIES``
+  the found libraries
+``<name>_INCLUDE_DIRS``
+  the combined required include directories for the components
+``<name>_DEFINITIONS``
+  the "other" CFLAGS provided by pkg-config, if any
+``<name>_VERSION``
+  the value of ``<name>_<component>_VERSION`` for the first component that
+  has this variable set (note that components are searched for in the order
+  they are passed to the macro), although if it is already set, it will not
+  be altered
+
+Note that these variables are never cleared, so if
+ecm_find_package_handle_library_components() is called multiple times with
+different components (typically because of multiple find_package() calls) then
+``<name>_TARGETS``, for example, will contain all the targets found in any
+call (although no duplicates).
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 

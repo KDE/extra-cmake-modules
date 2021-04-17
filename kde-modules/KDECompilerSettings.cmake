@@ -1,41 +1,3 @@
-#.rst:
-# KDECompilerSettings
-# -------------------
-#
-# Set useful compile and link flags for C++ (and C) code.
-#
-# Enables many more warnings than the default, and sets stricter modes
-# for some compiler features.  By default, exceptions are disabled;
-# kde_target_enable_exceptions() can be used to re-enable them for a
-# specific target.
-#
-# NB: it is recommended to include this module with the NO_POLICY_SCOPE
-# flag, otherwise you may get spurious warnings with some versions of CMake.
-#
-# This module provides the following functions::
-#
-#   kde_source_files_enable_exceptions([file1 [file2 [...]]])
-#
-# Enables exceptions for specific source files.  This should not be
-# used on source files in a language other than C++.
-#
-# ::
-#
-#   kde_target_enable_exceptions(target <INTERFACE|PUBLIC|PRIVATE>)
-#
-# Enables exceptions for a specific target.  This should not be used
-# on a target that has source files in a language other than C++.
-#
-# ::
-#
-#   kde_enable_exceptions()
-#
-# Enables exceptions for C++ source files compiled for the
-# CMakeLists.txt file in the current directory and all subdirectories.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2013 Stephen Kelly <steveire@gmail.com>
 # SPDX-FileCopyrightText: 2012-2013 Raphael Kubo da Costa <rakuco@FreeBSD.org>
@@ -44,6 +6,44 @@
 # SPDX-FileCopyrightText: 2006-2013 Alex Neundorf <neundorf@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+KDECompilerSettings
+-------------------
+
+Set useful compile and link flags for C++ (and C) code.
+
+Enables many more warnings than the default, and sets stricter modes
+for some compiler features.  By default, exceptions are disabled;
+kde_target_enable_exceptions() can be used to re-enable them for a
+specific target.
+
+NB: it is recommended to include this module with the NO_POLICY_SCOPE
+flag, otherwise you may get spurious warnings with some versions of CMake.
+
+This module provides the following functions::
+
+  kde_source_files_enable_exceptions([file1 [file2 [...]]])
+
+Enables exceptions for specific source files.  This should not be
+used on source files in a language other than C++.
+
+::
+
+  kde_target_enable_exceptions(target <INTERFACE|PUBLIC|PRIVATE>)
+
+Enables exceptions for a specific target.  This should not be used
+on a target that has source files in a language other than C++.
+
+::
+
+  kde_enable_exceptions()
+
+Enables exceptions for C++ source files compiled for the
+CMakeLists.txt file in the current directory and all subdirectories.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include("${ECM_MODULE_DIR}/ECMSourceVersionControl.cmake")
 

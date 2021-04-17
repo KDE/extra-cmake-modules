@@ -1,30 +1,31 @@
-#.rst:
-# FindGradle
-# ----------
-#
-# Provides the ability to build Android AAR libraries using Gradle.
-#
-# This relies on the Qt provided Gradle, so a Qt for Android installation
-# is required.
-#
-#   gradle_add_aar(<target>
-#                  BUIDLFILE build.gradle
-#                  NAME <aar-name>)
-#
-# This builds an Android AAR library using the given ``build.gradle`` file.
-#
-#   gradle_install_aar(<target>
-#                      DESTINATION <dest>)
-#
-# Installs a Android AAR library that has been created with ``gradle_add_aar``.
-#
-# Since 5.76.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2019 Volker Krause <vkrause@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindGradle
+----------
+
+Provides the ability to build Android AAR libraries using Gradle.
+
+This relies on the Qt provided Gradle, so a Qt for Android installation
+is required.
+::
+
+  gradle_add_aar(<target>
+                 BUIDLFILE build.gradle
+                 NAME <aar-name>)
+
+This builds an Android AAR library using the given ``build.gradle`` file.
+::
+
+  gradle_install_aar(<target>
+                     DESTINATION <dest>)
+
+Installs a Android AAR library that has been created with ``gradle_add_aar``.
+
+Since 5.76.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 include(FindPackageHandleStandardArgs)

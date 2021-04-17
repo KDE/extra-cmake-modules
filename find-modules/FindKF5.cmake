@@ -1,30 +1,29 @@
-#.rst:
-# FindKF5
-# -------
-#
-# Find KDE Frameworks 5 with a single find_package() call.
-#
-# This will use the package config files provided by the individual frameworks.
-# For example, if you wish to find KArchive, which presents itself to CMake as
-# KF5Archive (ie: you would do ``find_package(KF5Archive)`` to find it
-# directly), you can do
-#
-# .. code-block:: cmake
-#
-#   find_package(KF5 COMPONENTS Archive)
-#
-# If all the required components (those given in the COMPONENTS argument, but
-# not those given in the OPTIONAL_COMPONENTS argument) are found, ``KF5_FOUND``
-# will be set to true. Otherwise, it will be set to false.
-#
-# Since pre-1.0.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2013 Stephen Kelly <steveire@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindKF5
+-------
+
+Find KDE Frameworks 5 with a single find_package() call.
+
+This will use the package config files provided by the individual frameworks.
+For example, if you wish to find KArchive, which presents itself to CMake as
+KF5Archive (ie: you would do ``find_package(KF5Archive)`` to find it
+directly), you can do
+
+.. code-block:: cmake
+
+  find_package(KF5 COMPONENTS Archive)
+
+If all the required components (those given in the COMPONENTS argument, but
+not those given in the OPTIONAL_COMPONENTS argument) are found, ``KF5_FOUND``
+will be set to true. Otherwise, it will be set to false.
+
+Since pre-1.0.0.
+#]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 

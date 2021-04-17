@@ -1,362 +1,362 @@
-#.rst:
-# ECMGenerateExportHeader
-# -----------------------
-#
-# This module provides the ``ecm_generate_export_header`` function for
-# generating export macros for libraries with version-based control over
-# visibility of and compiler warnings for deprecated API for the library user,
-# as well as over excluding deprecated API and their implementation when
-# building the library itself.
-#
-# For preparing some values useful in the context it also provides a function
-# ``ecm_export_header_format_version``.
-#
-# ::
-#
-#   ecm_generate_export_header(<library_target_name>
-#       VERSION <version>
-#       [BASE_NAME <base_name>]
-#       [GROUP_BASE_NAME <group_base_name>]
-#       [EXPORT_MACRO_NAME <export_macro_name>]
-#       [EXPORT_FILE_NAME <export_file_name>]
-#       [DEPRECATED_MACRO_NAME <deprecated_macro_name>]
-#       [NO_EXPORT_MACRO_NAME <no_export_macro_name>]
-#       [INCLUDE_GUARD_NAME <include_guard_name>]
-#       [STATIC_DEFINE <static_define>]
-#       [PREFIX_NAME <prefix_name>]
-#       [DEPRECATED_BASE_VERSION <deprecated_base_version>]
-#       [DEPRECATION_VERSIONS <deprecation_version> [<deprecation_version2> [...]]]
-#       [EXCLUDE_DEPRECATED_BEFORE_AND_AT <exclude_deprecated_before_and_at_version>]
-#       [NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE]
-#       [NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE]
-#       [CUSTOM_CONTENT_FROM_VARIABLE <variable>]
-#   )
-#
-# ``VERSION`` specifies the version of the library, given in the format
-# "<major>.<minor>.<patchlevel>".
-#
-# ``GROUP_BASE_NAME`` specifies the name to use for the macros defining
-# library group default values. If set, this will generate code supporting
-# ``<group_base_name>_NO_DEPRECATED_WARNINGS``,
-# ``<group_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT``,
-# ``<group_base_name>_DEPRECATED_WARNINGS_SINCE``  and
-# ``<group_base_name>_NO_DEPRECATED`` (see below).
-# If not set, the generated code will ignore any such macros.
-#
-# ``DEPRECATED_BASE_VERSION`` specifies the default version before and at which
-# deprecated API is disabled. Possible values are "0", "CURRENT" (which
-# resolves to <version>) and a version string in the format
-# "<major>.<minor>.<patchlevel>". The default is the value of
-# "<exclude_deprecated_before_and_at_version>" if set, or "<major>.0.0", with
-# <major> taken from <version>.
-#
-# ``DEPRECATION_VERSIONS`` specifies versions in "<major>.<minor>" format in
-# which API was declared deprecated. Any version used with the generated
-# macro ``<prefix_name><base_name>_DEPRECATED_VERSION(major, minor, text)``
-# or ``<prefix_name><base_name>_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
-# needs to be listed here, otherwise the macro will fail to work.
-#
-# ``EXCLUDE_DEPRECATED_BEFORE_AND_AT`` specifies the version for which all API
-# deprecated before and at should be excluded from the build completely.
-# Possible values are "0" (default), "CURRENT" (which resolves to <version>)
-# and a version string in the format "<major>.<minor>.<patchlevel>".
-#
-# ``NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE`` specifies that the definition
-# ``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE`` will
-# not be set for the library inside its own build, and thus will be defined
-# by either explicit definition in the build system configuration or by the
-# default value mechanism (see below).
-# The default is that it is set for the build, to the version specified by
-# ``EXCLUDE_DEPRECATED_BEFORE_AND_AT``, so no deprecation warnings are
-# done for any own deprecated API used in the library implementation itself.
-#
-# ``NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE`` specifies that the definition
-# ``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT`` will
-# not be set in the public interface of the library inside its own build, and
-# the same for the definition
-# ``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE`` (if not
-# disabled by ``NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE`` already).
-# The default is that they are set, to the version specified by
-# ``EXCLUDE_DEPRECATED_BEFORE_AND_AT``, so e.g. test and examples part of the
-# project automatically build against the full API included in the build and
-# without any deprecation warnings for it.
-#
-#
-# The function ``ecm_generate_export_header`` defines C++ preprocessor macros
-# in the generated export header, some for use in the sources of the library
-# the header is generated for, other for use by projects linking agsinst the
-# library.
-#
-# The macros for use in the library C++ sources are these, next to those also
-# defined by `GenerateExportHeader
-# <https://cmake.org/cmake/help/latest/module/GenerateExportHeader.html>`_:
-#
-# ``<prefix_name><uppercase_base_name>_DEPRECATED_VERSION(major, minor, text)``
-#   to use to conditionally set a
-#   ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for a class, struct
-#   or function (other elements to be supported in future versions), depending
-#   on the visibility macro flags set (see below)
-#
-# ``<prefix_name><uppercase_base_name>_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
-#   to use to conditionally set a
-#   ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for a class, struct
-#   or function (other elements to be supported in future versions), depending
-#   on the visibility macro flags set (see below), with ``major`` & ``minor``
-#   applied for the logic and ``textmajor`` & ``textminor`` for the warnings message.
-#   Useful for retroactive tagging of API for the compiler without injecting the
-#   API into the compiler warning conditions of already released versions.
-#   Since 5.71.
-#
-# ``<prefix_name><uppercase_base_name>_ENABLE_DEPRECATED_SINCE(major, minor)``
-#   evaluates to ``TRUE`` or ``FALSE`` depending on the visibility macro flags
-#   set (see below). To be used mainly with ``#if``/``#endif`` to mark sections
-#   of code which should be included depending on the visibility requested.
-#
-# ``<prefix_name><uppercase_base_name>_BUILD_DEPRECATED_SINCE(major, minor)``
-#   evaluates to ``TRUE`` or ``FALSE`` depending on the value of
-#   ``EXCLUDE_DEPRECATED_BEFORE_AND_AT``. To be used mainly with
-#   ``#if``/``#endif`` to mark sections of two types of code: implementation
-#   code for deprecated API and declaration code of deprecated API which only
-#   may be disabled at build time of the library for BC reasons (e.g. virtual
-#   methods, see notes below).
-#
-# ``<prefix_name><uppercase_base_name>_EXCLUDE_DEPRECATED_BEFORE_AND_AT``
-#   holds the version used to exclude deprecated API at build time of the
-#   library.
-#
-# The macros used to control visibility when building against the library are:
-#
-# ``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT``
-#   definition to set to a value in single hex number version notation
-#   (``0x<major><minor><patchlevel>``).
-#
-# ``<prefix_name><uppercase_base_name>_NO_DEPRECATED``
-#   flag to define to disable all deprecated API, being a shortcut for
-#   settings ``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT``
-#   to the current version. If both are set, this flag overrules.
-#
-# ``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE``
-#   definition to set to a value in single hex number version notation
-#   (``0x<major><minor><patchlevel>``). Warnings will be only activated for
-#   API deprecated up to and including the version. If
-#   ``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT``
-#   is set (directly or via the group default), it will default to that
-#   version, resulting in no warnings. Otherwise the default is the current
-#   version, resulting in warnings for all deprecated API.
-#
-# ``<prefix_name><uppercase_base_name>_NO_DEPRECATED_WARNINGS``
-#   flag to define to disable all deprecation warnings, being a shortcut for
-#   setting ``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE``
-#   to "0". If both are set, this flag overrules.
-#
-# When the ``GROUP_BASE_NAME`` has been used, the same macros but with the
-# given ``<group_base_name>`` prefix are available to define the defaults of
-# these macros, if not explicitly set.
-#
-# Note: The tricks applied here for hiding deprecated API to the compiler
-# when building against a library do not work for all deprecated API:
-#
-# * virtual methods need to stay visible to the compiler to build proper
-#   virtual method tables for subclasses
-# * enumerators from enums cannot be simply removed, as this changes
-#   auto values of following enumerators, also can poke holes in enumerator
-#   series used as index into tables
-#
-# In such cases the API can be only "hidden" at build time of the library,
-# itself, by generated hard coded macro settings, using
-# ``<prefix_name><uppercase_base_name>_BUILD_DEPRECATED_SINCE(major, minor)``.
-#
-# Examples:
-#
-# Preparing a library "Foo" created by target "foo", which is part of a group
-# of libraries "Bar", where some API of "Foo" got deprecated at versions
-# 5.0 & 5.12:
-#
-# .. code-block:: cmake
-#
-#   ecm_generate_export_header(foo
-#       GROUP_BASE_NAME BAR
-#       VERSION ${FOO_VERSION}
-#       DEPRECATION_VERSIONS 5.0 5.12
-#   )
-#
-# In the library "Foo" sources in the headers the API would be prepared like
-# this, using the generated macros ``FOO_ENABLE_DEPRECATED_SINCE`` and
-# ``FOO_DEPRECATED_VERSION``:
-#
-# .. code-block:: cpp
-#
-#   #include <foo_export.h>
-#
-#   #if FOO_ENABLE_DEPRECATED_SINCE(5, 0)
-#   /**
-#     * @deprecated Since 5.0
-#     */
-#   FOO_DEPRECATED_VERSION(5, 0, "Use doFoo2()")
-#   FOO_EXPORT void doFoo();
-#   #endif
-#
-#   #if FOO_ENABLE_DEPRECATED_SINCE(5, 12)
-#   /**
-#     * @deprecated Since 5.12
-#     */
-#   FOO_DEPRECATED_VERSION(5, 12, "Use doBar2()")
-#   FOO_EXPORT void doBar();
-#   #endif
-#
-# Projects linking against the "Foo" library can control which part of its
-# deprecated API should be hidden to the compiler by adding a definition
-# using the ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` macro variable set to the
-# desired value (in version hex number notation):
-#
-# .. code-block:: cmake
-#
-#   add_definitions(-DFOO_DISABLE_DEPRECATED_BEFORE_AND_AT=0x050000)
-#
-# Or using the macro variable of the group:
-#
-# .. code-block:: cmake
-#
-#   add_definitions(-DBAR_DISABLE_DEPRECATED_BEFORE_AND_AT=0x050000)
-#
-# If both are specified, ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` will take
-# precedence.
-#
-# To build a variant of a library with some deprecated API completely left
-# out from the build, not only optionally invisible to consumers, one uses the
-# ``EXCLUDE_DEPRECATED_BEFORE_AND_AT`` parameter. This is best combined with a
-# cached CMake variable.
-#
-# .. code-block:: cmake
-#
-#   set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
-#
-#   ecm_generate_export_header(foo
-#       VERSION ${FOO_VERSION}
-#       EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
-#       DEPRECATION_VERSIONS 5.0 5.12
-#   )
-#
-# The macros used in the headers for library consumers are reused for
-# disabling the API excluded in the build of the library. For disabling the
-# implementation of that API as well as for disabling deprecated API which
-# only can be disabled at build time of the library for BC reasons, one
-# uses the generated macro ``FOO_BUILD_DEPRECATED_SINCE``, like this:
-#
-# .. code-block:: cpp
-#
-#   #include <foo_export.h>
-#
-#   enum Bars {
-#       One,
-#   #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
-#       Two,
-#   #endif
-#       Three,
-#   };
-#
-#   #if FOO_ENABLE_DEPRECATED_SINCE(5, 0)
-#   /**
-#     * @deprecated Since 5.0
-#     */
-#   FOO_DEPRECATED_VERSION(5, 0, "Use doFoo2()")
-#   FOO_EXPORT void doFoo();
-#   #endif
-#
-#   #if FOO_ENABLE_DEPRECATED_SINCE(5, 12)
-#   /**
-#     * @deprecated Since 5.12
-#     */
-#   FOO_DEPRECATED_VERSION(5, 12, "Use doBar2()")
-#   FOO_EXPORT void doBar();
-#   #endif
-#
-#   class FOO_EXPORT Foo {
-#   public:
-#   #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
-#       /**
-#         * @deprecated Since 5.0
-#         */
-#       FOO_DEPRECATED_VERSION(5, 0, "Feature removed")
-#       virtual void doWhat();
-#   #endif
-#   };
-#
-# .. code-block:: cpp
-#
-#   #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
-#   void doFoo()
-#   {
-#       // [...]
-#   }
-#   #endif
-#
-#   #if FOO_BUILD_DEPRECATED_SINCE(5, 12)
-#   void doBar()
-#   {
-#       // [...]
-#   }
-#   #endif
-#
-#   #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
-#   void Foo::doWhat()
-#   {
-#       // [...]
-#   }
-#   #endif
-#
-# So e.g. if ``EXCLUDE_DEPRECATED_BEFORE_AND_AT`` is set to "5.0.0", the
-# enumerator ``Two`` as well as the methods ``::doFoo()`` and ``Foo::doWhat()``
-# will be not available to library consumers. The methods will not have been
-# compiled into the library binary, and the declarations will be hidden to the
-# compiler, ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` also cannot be used to
-# reactivate them.
-#
-# When using the ``NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE`` and the project
-# for the "Foo" library includes also tests and examples linking against the
-# library and using deprecated API (like tests covering it), one better
-# explicitly sets ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` for those targets
-# to the version before and at which all deprecated API has been excluded from
-# the build.
-# Even more when building against other libraries from the same group "Bar" and
-# disabling some deprecated API of those libraries using the group macro
-# ``BAR_DISABLE_DEPRECATED_BEFORE_AND_AT``, which also works as default for
-# ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT``.
-#
-# To get the hex number style value the helper macro
-# ``ecm_export_header_format_version()`` will be used:
-#
-# .. code-block:: cmake
-#
-#   set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control what part of deprecated API is excluded from build [default=0].")
-#
-#   ecm_generate_export_header(foo
-#       VERSION ${FOO_VERSION}
-#       GROUP_BASE_NAME BAR
-#       EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
-#       NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE
-#       DEPRECATION_VERSIONS 5.0 5.12
-#   )
-#
-#   ecm_export_header_format_version(${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
-#       CURRENT_VERSION ${FOO_VERSION}
-#       HEXNUMBER_VAR foo_no_deprecated_before_and_at
-#   )
-#
-#   # disable all deprecated API up to 5.9.0 from all other libs of group "BAR" that we use ourselves
-#   add_definitions(-DBAR_DISABLE_DEPRECATED_BEFORE_AND_AT=0x050900)
-#
-#   add_executable(app app.cpp)
-#   target_link_libraries(app foo)
-#   target_compile_definitions(app
-#        PRIVATE "FOO_DISABLE_DEPRECATED_BEFORE_AND_AT=${foo_no_deprecated_before_and_at}")
-#
-# Since 5.64.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2019 Friedrich W. H. Kossebau <kossebau@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMGenerateExportHeader
+-----------------------
+
+This module provides the ``ecm_generate_export_header`` function for
+generating export macros for libraries with version-based control over
+visibility of and compiler warnings for deprecated API for the library user,
+as well as over excluding deprecated API and their implementation when
+building the library itself.
+
+For preparing some values useful in the context it also provides a function
+``ecm_export_header_format_version``.
+
+::
+
+  ecm_generate_export_header(<library_target_name>
+      VERSION <version>
+      [BASE_NAME <base_name>]
+      [GROUP_BASE_NAME <group_base_name>]
+      [EXPORT_MACRO_NAME <export_macro_name>]
+      [EXPORT_FILE_NAME <export_file_name>]
+      [DEPRECATED_MACRO_NAME <deprecated_macro_name>]
+      [NO_EXPORT_MACRO_NAME <no_export_macro_name>]
+      [INCLUDE_GUARD_NAME <include_guard_name>]
+      [STATIC_DEFINE <static_define>]
+      [PREFIX_NAME <prefix_name>]
+      [DEPRECATED_BASE_VERSION <deprecated_base_version>]
+      [DEPRECATION_VERSIONS <deprecation_version> [<deprecation_version2> [...]]]
+      [EXCLUDE_DEPRECATED_BEFORE_AND_AT <exclude_deprecated_before_and_at_version>]
+      [NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE]
+      [NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE]
+      [CUSTOM_CONTENT_FROM_VARIABLE <variable>]
+  )
+
+``VERSION`` specifies the version of the library, given in the format
+"<major>.<minor>.<patchlevel>".
+
+``GROUP_BASE_NAME`` specifies the name to use for the macros defining
+library group default values. If set, this will generate code supporting
+``<group_base_name>_NO_DEPRECATED_WARNINGS``,
+``<group_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT``,
+``<group_base_name>_DEPRECATED_WARNINGS_SINCE``  and
+``<group_base_name>_NO_DEPRECATED`` (see below).
+If not set, the generated code will ignore any such macros.
+
+``DEPRECATED_BASE_VERSION`` specifies the default version before and at which
+deprecated API is disabled. Possible values are "0", "CURRENT" (which
+resolves to <version>) and a version string in the format
+"<major>.<minor>.<patchlevel>". The default is the value of
+"<exclude_deprecated_before_and_at_version>" if set, or "<major>.0.0", with
+<major> taken from <version>.
+
+``DEPRECATION_VERSIONS`` specifies versions in "<major>.<minor>" format in
+which API was declared deprecated. Any version used with the generated
+macro ``<prefix_name><base_name>_DEPRECATED_VERSION(major, minor, text)``
+or ``<prefix_name><base_name>_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
+needs to be listed here, otherwise the macro will fail to work.
+
+``EXCLUDE_DEPRECATED_BEFORE_AND_AT`` specifies the version for which all API
+deprecated before and at should be excluded from the build completely.
+Possible values are "0" (default), "CURRENT" (which resolves to <version>)
+and a version string in the format "<major>.<minor>.<patchlevel>".
+
+``NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE`` specifies that the definition
+``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE`` will
+not be set for the library inside its own build, and thus will be defined
+by either explicit definition in the build system configuration or by the
+default value mechanism (see below).
+The default is that it is set for the build, to the version specified by
+``EXCLUDE_DEPRECATED_BEFORE_AND_AT``, so no deprecation warnings are
+done for any own deprecated API used in the library implementation itself.
+
+``NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE`` specifies that the definition
+``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT`` will
+not be set in the public interface of the library inside its own build, and
+the same for the definition
+``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE`` (if not
+disabled by ``NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE`` already).
+The default is that they are set, to the version specified by
+``EXCLUDE_DEPRECATED_BEFORE_AND_AT``, so e.g. test and examples part of the
+project automatically build against the full API included in the build and
+without any deprecation warnings for it.
+
+
+The function ``ecm_generate_export_header`` defines C++ preprocessor macros
+in the generated export header, some for use in the sources of the library
+the header is generated for, other for use by projects linking agsinst the
+library.
+
+The macros for use in the library C++ sources are these, next to those also
+defined by `GenerateExportHeader
+<https://cmake.org/cmake/help/latest/module/GenerateExportHeader.html>`_:
+
+``<prefix_name><uppercase_base_name>_DEPRECATED_VERSION(major, minor, text)``
+  to use to conditionally set a
+  ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for a class, struct
+  or function (other elements to be supported in future versions), depending
+  on the visibility macro flags set (see below)
+
+``<prefix_name><uppercase_base_name>_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
+  to use to conditionally set a
+  ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for a class, struct
+  or function (other elements to be supported in future versions), depending
+  on the visibility macro flags set (see below), with ``major`` & ``minor``
+  applied for the logic and ``textmajor`` & ``textminor`` for the warnings message.
+  Useful for retroactive tagging of API for the compiler without injecting the
+  API into the compiler warning conditions of already released versions.
+  Since 5.71.
+
+``<prefix_name><uppercase_base_name>_ENABLE_DEPRECATED_SINCE(major, minor)``
+  evaluates to ``TRUE`` or ``FALSE`` depending on the visibility macro flags
+  set (see below). To be used mainly with ``#if``/``#endif`` to mark sections
+  of code which should be included depending on the visibility requested.
+
+``<prefix_name><uppercase_base_name>_BUILD_DEPRECATED_SINCE(major, minor)``
+  evaluates to ``TRUE`` or ``FALSE`` depending on the value of
+  ``EXCLUDE_DEPRECATED_BEFORE_AND_AT``. To be used mainly with
+  ``#if``/``#endif`` to mark sections of two types of code: implementation
+  code for deprecated API and declaration code of deprecated API which only
+  may be disabled at build time of the library for BC reasons (e.g. virtual
+  methods, see notes below).
+
+``<prefix_name><uppercase_base_name>_EXCLUDE_DEPRECATED_BEFORE_AND_AT``
+  holds the version used to exclude deprecated API at build time of the
+  library.
+
+The macros used to control visibility when building against the library are:
+
+``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT``
+  definition to set to a value in single hex number version notation
+  (``0x<major><minor><patchlevel>``).
+
+``<prefix_name><uppercase_base_name>_NO_DEPRECATED``
+  flag to define to disable all deprecated API, being a shortcut for
+  settings ``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT``
+  to the current version. If both are set, this flag overrules.
+
+``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE``
+  definition to set to a value in single hex number version notation
+  (``0x<major><minor><patchlevel>``). Warnings will be only activated for
+  API deprecated up to and including the version. If
+  ``<prefix_name><uppercase_base_name>_DISABLE_DEPRECATED_BEFORE_AND_AT``
+  is set (directly or via the group default), it will default to that
+  version, resulting in no warnings. Otherwise the default is the current
+  version, resulting in warnings for all deprecated API.
+
+``<prefix_name><uppercase_base_name>_NO_DEPRECATED_WARNINGS``
+  flag to define to disable all deprecation warnings, being a shortcut for
+  setting ``<prefix_name><uppercase_base_name>_DEPRECATED_WARNINGS_SINCE``
+  to "0". If both are set, this flag overrules.
+
+When the ``GROUP_BASE_NAME`` has been used, the same macros but with the
+given ``<group_base_name>`` prefix are available to define the defaults of
+these macros, if not explicitly set.
+
+Note: The tricks applied here for hiding deprecated API to the compiler
+when building against a library do not work for all deprecated API:
+
+* virtual methods need to stay visible to the compiler to build proper
+  virtual method tables for subclasses
+* enumerators from enums cannot be simply removed, as this changes
+  auto values of following enumerators, also can poke holes in enumerator
+  series used as index into tables
+
+In such cases the API can be only "hidden" at build time of the library,
+itself, by generated hard coded macro settings, using
+``<prefix_name><uppercase_base_name>_BUILD_DEPRECATED_SINCE(major, minor)``.
+
+Examples:
+
+Preparing a library "Foo" created by target "foo", which is part of a group
+of libraries "Bar", where some API of "Foo" got deprecated at versions
+5.0 & 5.12:
+
+.. code-block:: cmake
+
+  ecm_generate_export_header(foo
+      GROUP_BASE_NAME BAR
+      VERSION ${FOO_VERSION}
+      DEPRECATION_VERSIONS 5.0 5.12
+  )
+
+In the library "Foo" sources in the headers the API would be prepared like
+this, using the generated macros ``FOO_ENABLE_DEPRECATED_SINCE`` and
+``FOO_DEPRECATED_VERSION``:
+
+.. code-block:: cpp
+
+  #include <foo_export.h>
+
+  #if FOO_ENABLE_DEPRECATED_SINCE(5, 0)
+  /**
+    * @deprecated Since 5.0
+    */
+  FOO_DEPRECATED_VERSION(5, 0, "Use doFoo2()")
+  FOO_EXPORT void doFoo();
+  #endif
+
+  #if FOO_ENABLE_DEPRECATED_SINCE(5, 12)
+  /**
+    * @deprecated Since 5.12
+    */
+  FOO_DEPRECATED_VERSION(5, 12, "Use doBar2()")
+  FOO_EXPORT void doBar();
+  #endif
+
+Projects linking against the "Foo" library can control which part of its
+deprecated API should be hidden to the compiler by adding a definition
+using the ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` macro variable set to the
+desired value (in version hex number notation):
+
+.. code-block:: cmake
+
+  add_definitions(-DFOO_DISABLE_DEPRECATED_BEFORE_AND_AT=0x050000)
+
+Or using the macro variable of the group:
+
+.. code-block:: cmake
+
+  add_definitions(-DBAR_DISABLE_DEPRECATED_BEFORE_AND_AT=0x050000)
+
+If both are specified, ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` will take
+precedence.
+
+To build a variant of a library with some deprecated API completely left
+out from the build, not only optionally invisible to consumers, one uses the
+``EXCLUDE_DEPRECATED_BEFORE_AND_AT`` parameter. This is best combined with a
+cached CMake variable.
+
+.. code-block:: cmake
+
+  set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
+
+  ecm_generate_export_header(foo
+      VERSION ${FOO_VERSION}
+      EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
+      DEPRECATION_VERSIONS 5.0 5.12
+  )
+
+The macros used in the headers for library consumers are reused for
+disabling the API excluded in the build of the library. For disabling the
+implementation of that API as well as for disabling deprecated API which
+only can be disabled at build time of the library for BC reasons, one
+uses the generated macro ``FOO_BUILD_DEPRECATED_SINCE``, like this:
+
+.. code-block:: cpp
+
+  #include <foo_export.h>
+
+  enum Bars {
+      One,
+  #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
+      Two,
+  #endif
+      Three,
+  };
+
+  #if FOO_ENABLE_DEPRECATED_SINCE(5, 0)
+  /**
+    * @deprecated Since 5.0
+    */
+  FOO_DEPRECATED_VERSION(5, 0, "Use doFoo2()")
+  FOO_EXPORT void doFoo();
+  #endif
+
+  #if FOO_ENABLE_DEPRECATED_SINCE(5, 12)
+  /**
+    * @deprecated Since 5.12
+    */
+  FOO_DEPRECATED_VERSION(5, 12, "Use doBar2()")
+  FOO_EXPORT void doBar();
+  #endif
+
+  class FOO_EXPORT Foo {
+  public:
+  #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
+      /**
+        * @deprecated Since 5.0
+        */
+      FOO_DEPRECATED_VERSION(5, 0, "Feature removed")
+      virtual void doWhat();
+  #endif
+  };
+
+.. code-block:: cpp
+
+  #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
+  void doFoo()
+  {
+      // [...]
+  }
+  #endif
+
+  #if FOO_BUILD_DEPRECATED_SINCE(5, 12)
+  void doBar()
+  {
+      // [...]
+  }
+  #endif
+
+  #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
+  void Foo::doWhat()
+  {
+      // [...]
+  }
+  #endif
+
+So e.g. if ``EXCLUDE_DEPRECATED_BEFORE_AND_AT`` is set to "5.0.0", the
+enumerator ``Two`` as well as the methods ``::doFoo()`` and ``Foo::doWhat()``
+will be not available to library consumers. The methods will not have been
+compiled into the library binary, and the declarations will be hidden to the
+compiler, ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` also cannot be used to
+reactivate them.
+
+When using the ``NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE`` and the project
+for the "Foo" library includes also tests and examples linking against the
+library and using deprecated API (like tests covering it), one better
+explicitly sets ``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT`` for those targets
+to the version before and at which all deprecated API has been excluded from
+the build.
+Even more when building against other libraries from the same group "Bar" and
+disabling some deprecated API of those libraries using the group macro
+``BAR_DISABLE_DEPRECATED_BEFORE_AND_AT``, which also works as default for
+``FOO_DISABLE_DEPRECATED_BEFORE_AND_AT``.
+
+To get the hex number style value the helper macro
+``ecm_export_header_format_version()`` will be used:
+
+.. code-block:: cmake
+
+  set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control what part of deprecated API is excluded from build [default=0].")
+
+  ecm_generate_export_header(foo
+      VERSION ${FOO_VERSION}
+      GROUP_BASE_NAME BAR
+      EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
+      NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE
+      DEPRECATION_VERSIONS 5.0 5.12
+  )
+
+  ecm_export_header_format_version(${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
+      CURRENT_VERSION ${FOO_VERSION}
+      HEXNUMBER_VAR foo_no_deprecated_before_and_at
+  )
+
+  # disable all deprecated API up to 5.9.0 from all other libs of group "BAR" that we use ourselves
+  add_definitions(-DBAR_DISABLE_DEPRECATED_BEFORE_AND_AT=0x050900)
+
+  add_executable(app app.cpp)
+  target_link_libraries(app foo)
+  target_compile_definitions(app
+       PRIVATE "FOO_DISABLE_DEPRECATED_BEFORE_AND_AT=${foo_no_deprecated_before_and_at}")
+
+Since 5.64.0.
+#]=======================================================================]
 
 include(GenerateExportHeader)
 include(CMakeParseArguments)

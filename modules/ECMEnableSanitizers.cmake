@@ -1,78 +1,78 @@
-#.rst:
-# ECMEnableSanitizers
-# -------------------
-#
-# Enable compiler sanitizer flags.
-#
-# The following sanitizers are supported:
-#
-# - Address Sanitizer
-# - Memory Sanitizer
-# - Thread Sanitizer
-# - Leak Sanitizer
-# - Undefined Behaviour Sanitizer
-#
-# All of them are implemented in Clang, depending on your version, and
-# there is an work in progress in GCC, where some of them are currently
-# implemented.
-#
-# This module will check your current compiler version to see if it
-# supports the sanitizers that you want to enable
-#
-# Usage
-# =====
-#
-# Simply add::
-#
-#    include(ECMEnableSanitizers)
-#
-# to your ``CMakeLists.txt``. Note that this module is included in
-# KDECompilerSettings, so projects using that module do not need to also
-# include this one.
-#
-# The sanitizers are not enabled by default. Instead, you must set
-# ``ECM_ENABLE_SANITIZERS`` (either in your ``CMakeLists.txt`` or on the
-# command line) to a semicolon-separated list of sanitizers you wish to enable.
-# The options are:
-#
-# - address
-# - memory
-# - thread
-# - leak
-# - undefined
-# - fuzzer
-#
-# The sanitizers "address", "memory" and "thread" are mutually exclusive.  You
-# cannot enable two of them in the same build.
-#
-# "leak" requires the  "address" sanitizer.
-#
-# .. note::
-#
-#   To reduce the overhead induced by the instrumentation of the sanitizers, it
-#   is advised to enable compiler optimizations (``-O1`` or higher).
-#
-# Example
-# =======
-#
-# This is an example of usage::
-#
-#   mkdir build
-#   cd build
-#   cmake -DECM_ENABLE_SANITIZERS='address;leak;undefined' ..
-#
-# .. note::
-#
-#   Most of the sanitizers will require Clang. To enable it, use::
-#
-#     -DCMAKE_CXX_COMPILER=clang++
-#
-# Since 1.3.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2014 Mathieu Tarral <mathieu.tarral@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMEnableSanitizers
+-------------------
+
+Enable compiler sanitizer flags.
+
+The following sanitizers are supported:
+
+- Address Sanitizer
+- Memory Sanitizer
+- Thread Sanitizer
+- Leak Sanitizer
+- Undefined Behaviour Sanitizer
+
+All of them are implemented in Clang, depending on your version, and
+there is an work in progress in GCC, where some of them are currently
+implemented.
+
+This module will check your current compiler version to see if it
+supports the sanitizers that you want to enable
+
+Usage
+=====
+
+Simply add::
+
+   include(ECMEnableSanitizers)
+
+to your ``CMakeLists.txt``. Note that this module is included in
+KDECompilerSettings, so projects using that module do not need to also
+include this one.
+
+The sanitizers are not enabled by default. Instead, you must set
+``ECM_ENABLE_SANITIZERS`` (either in your ``CMakeLists.txt`` or on the
+command line) to a semicolon-separated list of sanitizers you wish to enable.
+The options are:
+
+- address
+- memory
+- thread
+- leak
+- undefined
+- fuzzer
+
+The sanitizers "address", "memory" and "thread" are mutually exclusive.  You
+cannot enable two of them in the same build.
+
+"leak" requires the  "address" sanitizer.
+
+.. note::
+
+  To reduce the overhead induced by the instrumentation of the sanitizers, it
+  is advised to enable compiler optimizations (``-O1`` or higher).
+
+Example
+=======
+
+This is an example of usage::
+
+  mkdir build
+  cd build
+  cmake -DECM_ENABLE_SANITIZERS='address;leak;undefined' ..
+
+.. note::
+
+  Most of the sanitizers will require Clang. To enable it, use::
+
+    -DCMAKE_CXX_COMPILER=clang++
+
+Since 1.3.0.
+#]=======================================================================]
 
 # MACRO check_compiler_version
 #-----------------------------

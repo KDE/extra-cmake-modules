@@ -1,72 +1,72 @@
-#.rst:
-# KDETemplateGenerator
-# --------------------
-#
-# Packages KApptemplate/KDevelop compatible application templates
-#
-# This module provides a functionality to package in a tarball and
-# install project templates compatible with the format used by
-# KApptemplate and KDevelop. Useful for providing minimal examples
-# for the usage of the KDE Frameworks.
-#
-# This module provides the following function:
-#
-# ::
-#
-#   kde_package_app_templates(TEMPLATES <template> [<template> [...]]
-#                             INSTALL_DIR <directory>)
-#
-# INSTALL_DIR is the directory to install the template package to.
-# In most cases you will want to use the variable KDE_INSTALL_KTEMPLATESDIR
-# from :kde-module:`KDEInstallDirs`.
-#
-# TEMPLATES lists subdirectories containing template files;
-# each ``<template>`` directory will be packaged into a file named
-# ``<template>.tar.bz2`` and installed to the appropriate location.
-#
-# The template is a minimal source tree of an application as if it was
-# an application project by itself, with names (file names or text inside)
-# the text files replaced by the following placeholders when needed:
-#
-# ``%{PROJECTDIRNAME}``
-#     name of generated project base folder ex: %{APPNAMELC} for KAppTemplate
-# ``%{APPNAME}``
-#     project name as entered by user ex: MyKApp
-# ``%{APPNAMELC}``
-#     project name in lower case ex: mykapp
-# ``%{APPNAMEUC}``
-#     project name in upper case ex: MYKAPP
-#
-# ``%{CPP_TEMPLATE}``
-#     license header for cpp file
-# ``%{H_TEMPLATE}``
-#     license header for h file
-#
-# ``%{AUTHOR}``
-#     author name ex: George Ignacious
-# ``%{EMAIL}``
-#     author email ex: foo@bar.org
-# ``%{VERSION}``
-#     project version ex: 0.1
-#
-# Deprecated:
-#
-# ``%{dest}``
-#    path of generated project base folder, used in .kdevtemplate with the ShowFilesAfterGeneration entry
-#    KDevelop >= 5.1.1 supports relative paths with that entry, making this placeholder obsolete
-#
-# Multiple templates can be passed at once.
-#
-#
-# Since 5.18
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
 # SPDX-FileCopyrightText: 2014 Simon Wächter <waechter.simon@gmail.com>
 # SPDX-FileCopyrightText: 2013 Nico Kruber <nico.kruber@gmail.com>
 # SPDX-FileCopyrightText: 2012 Jeremy Whiting <jpwhiting@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+KDETemplateGenerator
+--------------------
+
+Packages KApptemplate/KDevelop compatible application templates
+
+This module provides a functionality to package in a tarball and
+install project templates compatible with the format used by
+KApptemplate and KDevelop. Useful for providing minimal examples
+for the usage of the KDE Frameworks.
+
+This module provides the following function:
+
+::
+
+  kde_package_app_templates(TEMPLATES <template> [<template> [...]]
+                            INSTALL_DIR <directory>)
+
+INSTALL_DIR is the directory to install the template package to.
+In most cases you will want to use the variable KDE_INSTALL_KTEMPLATESDIR
+from :kde-module:`KDEInstallDirs`.
+
+TEMPLATES lists subdirectories containing template files;
+each ``<template>`` directory will be packaged into a file named
+``<template>.tar.bz2`` and installed to the appropriate location.
+
+The template is a minimal source tree of an application as if it was
+an application project by itself, with names (file names or text inside)
+the text files replaced by the following placeholders when needed:
+
+``%{PROJECTDIRNAME}``
+    name of generated project base folder ex: %{APPNAMELC} for KAppTemplate
+``%{APPNAME}``
+    project name as entered by user ex: MyKApp
+``%{APPNAMELC}``
+    project name in lower case ex: mykapp
+``%{APPNAMEUC}``
+    project name in upper case ex: MYKAPP
+
+``%{CPP_TEMPLATE}``
+    license header for cpp file
+``%{H_TEMPLATE}``
+    license header for h file
+
+``%{AUTHOR}``
+    author name ex: George Ignacious
+``%{EMAIL}``
+    author email ex: foo@bar.org
+``%{VERSION}``
+    project version ex: 0.1
+
+Deprecated:
+
+``%{dest}``
+   path of generated project base folder, used in .kdevtemplate with the ShowFilesAfterGeneration entry
+   KDevelop >= 5.1.1 supports relative paths with that entry, making this placeholder obsolete
+
+Multiple templates can be passed at once.
+
+
+Since 5.18
+#]=======================================================================]
 
 include(CMakeParseArguments)
 

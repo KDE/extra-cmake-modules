@@ -1,152 +1,152 @@
-#.rst:
-# ECMQtDeclareLoggingCategory
-# ---------------------------
-#
-# This module provides the ``ecm_qt_declare_logging_category`` function for
-# generating declarations for logging categories in Qt5, and the
-# ``ecm_qt_install_logging_categories`` function for generating and installing
-# a file in KDebugSettings format with the info about all those categories,
-# as well as a file with info about any renamed categories if defined.
-# To include in that file any logging categories that are manually defined
-# also a function ``ecm_qt_export_logging_category`` is provided.
-#
-# ::
-#
-#   ecm_qt_declare_logging_category(<sources_var_name(|target (since 5.80))>
-#       HEADER <filename>
-#       IDENTIFIER <identifier>
-#       CATEGORY_NAME <category_name>
-#       [OLD_CATEGORY_NAMES <oldest_cat_name> [<second_oldest_cat_name> [...]]]
-#       [DEFAULT_SEVERITY <Debug|Info|Warning|Critical|Fatal>]
-#       [EXPORT <exportid>]
-#       [DESCRIPTION <description>]
-#   )
-#
-# A header file, ``<filename>``, will be generated along with a corresponding
-# source file. These will provide a QLoggingCategory category that can be referred
-# to from C++ code using ``<identifier>``, and from the logging configuration using
-# ``<category_name>``.
-#
-# The generated source file will be added to the variable with the name
-# ``<sources_var_name>``. If the given argument is a target though, instead both the
-# generated header file and the generated source file will be added to the target as
-# private sources (since 5.80).
-#
-# If ``<filename>`` is not absolute, it will be taken relative to the current
-# binary directory.
-#
-# If the code is compiled against Qt 5.4 or later, by default it will only log
-# output that is at least the severity specified by ``DEFAULT_SEVERITY``, or
-# "Info" level if ``DEFAULT_SEVERITY`` is not given. Note that, due to a
-# bug in Qt 5.5, "Info" may be treated as more severe than "Fatal".
-#
-# ``<identifier>`` may include namespaces (eg: ``foo::bar::IDENT``).
-#
-# If ``EXPORT`` is passed, the category will be registered for the group id
-# ``<exportid>``. Info about the categories of that group can then be
-# generated in a file and installed by that group id with the
-# ``ecm_qt_install_logging_categories`` function. In that case also ``DESCRIPTION``
-# will need to be passed, with ``<description>`` being a short single line text.
-# And ``OLD_CATEGORY_NAMES`` can be used to inform about any renamings of the category,
-# so user settings can be migrated. Since 5.68.0.
-#
-# Since 5.14.0.
-#
-# ::
-#
-#   ecm_qt_export_logging_category(
-#       IDENTIFIER <identifier>
-#       CATEGORY_NAME <category_name>
-#       [OLD_CATEGORY_NAMES <oldest_category_name> [<second_oldest_category_name> [...]]]
-#       EXPORT <exportid>
-#       DESCRIPTION <description>
-#       [DEFAULT_SEVERITY <Debug|Info|Warning|Critical|Fatal>]
-#   )
-#
-# Registers a logging category for being included in the generated and
-# installed KDebugSettings files. To be used for categories who are declared by
-# manual code or other ways instead of code generated with
-# ``ecm_qt_declare_logging_category``.
-#
-# ``<identifier>`` may include namespaces (eg: ``foo::bar::IDENT``).
-#
-# ``EXPORT`` specifies the group id with which the category will be registered.
-# Info about the categories of that group can then be generated in a file and
-# installed by that group id with the ``ecm_qt_install_logging_categories`` function.
-#
-# ``DESCRIPTION`` specifies a short single line text describing the category.
-#
-# ``OLD_CATEGORY_NAMES`` can be used to inform about any renamings of the category,
-# so user settings can be migrated.
-#
-# Since 5.68.0.
-#
-# ::
-#
-#   ecm_qt_install_logging_categories(
-#       EXPORT <exportid>
-#       [FILE <filename>]
-#       DESTINATION <install_path>
-#       [SORT]
-#       [COMPONENT <component>]
-#   )
-#
-# Generates and installs a file in KDebugSettings format with the info about all
-# the categories registered for the group ``<exportid>``, as well as a file with
-# info about any renamed categories, if there are.
-#
-# The method call needs to be after the last ``ecm_qt_declare_logging_category``
-# call which uses the same ``<exportid>``. This can be in the same directory, or
-# any subdirectory or parent directory.
-#
-# ``EXPORT`` specifies the group id of categories whose information should be
-# stored in the file generated and installed.
-#
-# ``FILE`` specifies the name of the file generated and installed. It will default
-# to lower-cased ``<exportid>.categories``.
-#
-# ``DESTINATION`` specifies where the generated file will be
-# installed.
-#
-# IF ``SORT`` is set, entries will be sorted by identifiers.
-#
-# ``COMPONENT`` specifies the installation component name with which the install
-# rules for the generated file are associated.
-#
-# Example usage:
-#
-# .. code-block:: cmake
-#
-#   ecm_qt_declare_logging_category(
-#       MYPROJECT_SRCS
-#       HEADER "myproject_debug.h"
-#       IDENTIFIER "MYPROJECT_DEBUG"
-#       CATEGORY_NAME "myproject"
-#       OLD_CATEGORY_NAMES "myprojectlog"
-#       DESCRIPTION "My project"
-#       EXPORT MyProject
-#   )
-#
-#   ecm_qt_export_logging_category(
-#       IDENTIFIER "MYPROJECT_SUBMODULE_DEBUG"
-#       CATEGORY_NAME "myproject.submodule"
-#       DESCRIPTION "My project - submodule"
-#       EXPORT MyProject
-#   )
-#
-#   ecm_qt_install_logging_categories(
-#       EXPORT MyProject
-#       FILE myproject.categories
-#       DESTINATION "${KDE_INSTALL_LOGGINGCATEGORIESDIR}"
-#   )
-#
-# Since 5.68.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2015 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2020 Friedrich W. H. Kossebau <kossebau@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
+
+#[=======================================================================[.rst:
+ECMQtDeclareLoggingCategory
+---------------------------
+
+This module provides the ``ecm_qt_declare_logging_category`` function for
+generating declarations for logging categories in Qt5, and the
+``ecm_qt_install_logging_categories`` function for generating and installing
+a file in KDebugSettings format with the info about all those categories,
+as well as a file with info about any renamed categories if defined.
+To include in that file any logging categories that are manually defined
+also a function ``ecm_qt_export_logging_category`` is provided.
+
+::
+
+  ecm_qt_declare_logging_category(<sources_var_name(|target (since 5.80))>
+      HEADER <filename>
+      IDENTIFIER <identifier>
+      CATEGORY_NAME <category_name>
+      [OLD_CATEGORY_NAMES <oldest_cat_name> [<second_oldest_cat_name> [...]]]
+      [DEFAULT_SEVERITY <Debug|Info|Warning|Critical|Fatal>]
+      [EXPORT <exportid>]
+      [DESCRIPTION <description>]
+  )
+
+A header file, ``<filename>``, will be generated along with a corresponding
+source file. These will provide a QLoggingCategory category that can be referred
+to from C++ code using ``<identifier>``, and from the logging configuration using
+``<category_name>``.
+
+The generated source file will be added to the variable with the name
+``<sources_var_name>``. If the given argument is a target though, instead both the
+generated header file and the generated source file will be added to the target as
+private sources (since 5.80).
+
+If ``<filename>`` is not absolute, it will be taken relative to the current
+binary directory.
+
+If the code is compiled against Qt 5.4 or later, by default it will only log
+output that is at least the severity specified by ``DEFAULT_SEVERITY``, or
+"Info" level if ``DEFAULT_SEVERITY`` is not given. Note that, due to a
+bug in Qt 5.5, "Info" may be treated as more severe than "Fatal".
+
+``<identifier>`` may include namespaces (eg: ``foo::bar::IDENT``).
+
+If ``EXPORT`` is passed, the category will be registered for the group id
+``<exportid>``. Info about the categories of that group can then be
+generated in a file and installed by that group id with the
+``ecm_qt_install_logging_categories`` function. In that case also ``DESCRIPTION``
+will need to be passed, with ``<description>`` being a short single line text.
+And ``OLD_CATEGORY_NAMES`` can be used to inform about any renamings of the category,
+so user settings can be migrated. Since 5.68.0.
+
+Since 5.14.0.
+
+::
+
+  ecm_qt_export_logging_category(
+      IDENTIFIER <identifier>
+      CATEGORY_NAME <category_name>
+      [OLD_CATEGORY_NAMES <oldest_category_name> [<second_oldest_category_name> [...]]]
+      EXPORT <exportid>
+      DESCRIPTION <description>
+      [DEFAULT_SEVERITY <Debug|Info|Warning|Critical|Fatal>]
+  )
+
+Registers a logging category for being included in the generated and
+installed KDebugSettings files. To be used for categories who are declared by
+manual code or other ways instead of code generated with
+``ecm_qt_declare_logging_category``.
+
+``<identifier>`` may include namespaces (eg: ``foo::bar::IDENT``).
+
+``EXPORT`` specifies the group id with which the category will be registered.
+Info about the categories of that group can then be generated in a file and
+installed by that group id with the ``ecm_qt_install_logging_categories`` function.
+
+``DESCRIPTION`` specifies a short single line text describing the category.
+
+``OLD_CATEGORY_NAMES`` can be used to inform about any renamings of the category,
+so user settings can be migrated.
+
+Since 5.68.0.
+
+::
+
+  ecm_qt_install_logging_categories(
+      EXPORT <exportid>
+      [FILE <filename>]
+      DESTINATION <install_path>
+      [SORT]
+      [COMPONENT <component>]
+  )
+
+Generates and installs a file in KDebugSettings format with the info about all
+the categories registered for the group ``<exportid>``, as well as a file with
+info about any renamed categories, if there are.
+
+The method call needs to be after the last ``ecm_qt_declare_logging_category``
+call which uses the same ``<exportid>``. This can be in the same directory, or
+any subdirectory or parent directory.
+
+``EXPORT`` specifies the group id of categories whose information should be
+stored in the file generated and installed.
+
+``FILE`` specifies the name of the file generated and installed. It will default
+to lower-cased ``<exportid>.categories``.
+
+``DESTINATION`` specifies where the generated file will be
+installed.
+
+IF ``SORT`` is set, entries will be sorted by identifiers.
+
+``COMPONENT`` specifies the installation component name with which the install
+rules for the generated file are associated.
+
+Example usage:
+
+.. code-block:: cmake
+
+  ecm_qt_declare_logging_category(
+      MYPROJECT_SRCS
+      HEADER "myproject_debug.h"
+      IDENTIFIER "MYPROJECT_DEBUG"
+      CATEGORY_NAME "myproject"
+      OLD_CATEGORY_NAMES "myprojectlog"
+      DESCRIPTION "My project"
+      EXPORT MyProject
+  )
+
+  ecm_qt_export_logging_category(
+      IDENTIFIER "MYPROJECT_SUBMODULE_DEBUG"
+      CATEGORY_NAME "myproject.submodule"
+      DESCRIPTION "My project - submodule"
+      EXPORT MyProject
+  )
+
+  ecm_qt_install_logging_categories(
+      EXPORT MyProject
+      FILE myproject.categories
+      DESTINATION "${KDE_INSTALL_LOGGINGCATEGORIESDIR}"
+  )
+
+Since 5.68.0.
+#]=======================================================================]
 
 include(CMakeParseArguments)
 

@@ -1,38 +1,37 @@
-#.rst:
-# FindCanberra
-# ------------
-#
-# Try to find Canberra event sound library.
-#
-# This will define the following variables:
-#
-# ``Canberra_FOUND``
-#     True if (the requested version of) Canberra is available
-# ``Canberra_VERSION``
-#     The version of Canberra
-# ``Canberra_LIBRARIES``
-#     The libraries of Canberra for use with target_link_libraries()
-# ``Canberra_INCLUDE_DIRS``
-#     The include dirs of Canberra for use with target_include_directories()
-#
-# If ``Canberra_FOUND`` is TRUE, it will also define the following imported
-# target:
-#
-# ``Canberra::Canberra``
-#     The Canberra library
-#
-# In general we recommend using the imported target, as it is easier to use.
-# Bear in mind, however, that if the target is in the link interface of an
-# exported library, it must be made available by the package config file.
-#
-# Since 5.56.0.
-
-#=============================================================================
 # SPDX-FileCopyrightText: 2012 Raphael Kubo da Costa <rakuco@FreeBSD.org>
 # SPDX-FileCopyrightText: 2019 Harald Sitter <sitter@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
-#=============================================================================
+
+#[=======================================================================[.rst:
+FindCanberra
+------------
+
+Try to find Canberra event sound library.
+
+This will define the following variables:
+
+``Canberra_FOUND``
+    True if (the requested version of) Canberra is available
+``Canberra_VERSION``
+    The version of Canberra
+``Canberra_LIBRARIES``
+    The libraries of Canberra for use with target_link_libraries()
+``Canberra_INCLUDE_DIRS``
+    The include dirs of Canberra for use with target_include_directories()
+
+If ``Canberra_FOUND`` is TRUE, it will also define the following imported
+target:
+
+``Canberra::Canberra``
+    The Canberra library
+
+In general we recommend using the imported target, as it is easier to use.
+Bear in mind, however, that if the target is in the link interface of an
+exported library, it must be made available by the package config file.
+
+Since 5.56.0.
+#]=======================================================================]
 
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_Canberra libcanberra QUIET)
