@@ -4,9 +4,10 @@
 #
 # SPDX-License-Identifier: MIT
 
-# Upstream documentation:
-# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
-
+# This file got automatically created by ECM, do not edit
+# See https://clang.llvm.org/docs/ClangFormatStyleOptions.html for the config options
+# and https://community.kde.org/Policies/Frameworks_Coding_Style#Clang-format_automatic_code_formatting
+# for clang-format tips & tricks
 ---
 Language: JavaScript
 DisableFormat: true
