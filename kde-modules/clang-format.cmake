@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: MIT
 
+# Upstream documentation:
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
 ---
 Language: JavaScript
 DisableFormat: true
