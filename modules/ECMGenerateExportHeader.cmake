@@ -532,7 +532,10 @@ function(ecm_generate_export_header target)
 
     # for the set of compiler versions supported by ECM/KF we can assume those attributes supported
     # KF6: with C++14 support expected, switch to always use [[deprecated(text)]]
-    if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+    get_target_property(target_cxx_standard ${target} CXX_STANDARD)
+    if(NOT target_cxx_standard LESS 14)
+         set(_decl_deprecated_text_definition "[[deprecated(text)]]")
+    elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
         set(_decl_deprecated_text_definition "__attribute__ ((__deprecated__(text)))")
     elseif(MSVC)
         set(_decl_deprecated_text_definition "__declspec(deprecated(text))")
