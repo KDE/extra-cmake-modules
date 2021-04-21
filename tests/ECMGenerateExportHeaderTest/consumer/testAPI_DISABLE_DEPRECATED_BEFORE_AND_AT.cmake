@@ -24,7 +24,7 @@ endif()
 
 function(testAPI code_var_name)
     set(options BUILD_TIME_ONLY_DISABLABLE NO_WARNING)
-    set(oneValueArgs DEPRECATED_AT)
+    set(oneValueArgs DEPRECATED_AT CXX_STANDARD)
     set(multiValueArgs)
     cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -36,6 +36,17 @@ function(testAPI code_var_name)
        set(_build_result_expected FALSE)
     endif()
 
+    if (ARGS_CXX_STANDARD)
+        if(MSVC)
+            set(std_flag  "/std:c++${ARGS_CXX_STANDARD}")
+        else()
+            set(std_flag "-std=c++${ARGS_CXX_STANDARD}")
+        endif()
+    else()
+        set(std_flag)
+    endif()
+
+    set(CMAKE_REQUIRED_FLAGS "${std_flag}")
     set(CMAKE_REQUIRED_LIBRARIES library)
     set(CMAKE_REQUIRED_DEFINITIONS "-D${_deprecation_macros_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT=${disable_deprecated_before_and_at_hexnumber}")
 
@@ -54,24 +65,26 @@ int main(int, char**)
 
     # check warning 
     if(_build_result_expected)
-        if((ARGS_BUILD_TIME_ONLY_DISABLABLE AND NOT ARGS_NO_WARNING) OR
-           (NOT ARGS_BUILD_TIME_ONLY_DISABLABLE AND ARGS_DEPRECATED_AT AND
-            ARGS_DEPRECATED_AT VERSION_GREATER LIBRARY_DISABLE_DEPRECATED_BEFORE_AND_AT))
-            set(_dep_warning_result_expected FALSE)
+        if(NOT ARGS_NO_WARNING AND
+           ((ARGS_BUILD_TIME_ONLY_DISABLABLE) OR
+            (NOT ARGS_BUILD_TIME_ONLY_DISABLABLE AND ARGS_DEPRECATED_AT AND
+             ARGS_DEPRECATED_AT VERSION_GREATER LIBRARY_DISABLE_DEPRECATED_BEFORE_AND_AT)))
+            set(_dep_warning_as_error_result_expected FALSE)
         else()
-            set(_dep_warning_result_expected TRUE)
+            set(_dep_warning_as_error_result_expected TRUE)
         endif()
 
         if(MSVC)
             # warning C4996 warns about deprecated declarations
-            set(CMAKE_REQUIRED_FLAGS "-we4996")
+            set(dep_warning_as_error_flag "-we4996")
         else()
-            set(CMAKE_REQUIRED_FLAGS "-Werror=deprecated-declarations")
+            set(dep_warning_as_error_flag "-Werror=deprecated-declarations")
         endif()
 
+        set(CMAKE_REQUIRED_FLAGS "${std_flag} ${dep_warning_as_error_flag}")
         set(CMAKE_REQUIRED_DEFINITIONS) # unset LIBRARY_DISABLE_DEPRECATED_BEFORE_AND_AT, as LIBRARY_DEPRECATED_WARNINGS_SINCE defaults to it
         unset(_dep_warning_result CACHE) # clear out as check_cxx_source_compiles caches the result
         check_cxx_source_compiles("${_code}" _dep_warning_result)
-        assert_var_bool_value(_dep_warning_result ${_dep_warning_result_expected})
+        assert_var_bool_value(_dep_warning_result ${_dep_warning_as_error_result_expected})
     endif()
 endfunction()

@@ -111,6 +111,24 @@ defined by `GenerateExportHeader
   API into the compiler warning conditions of already released versions.
   Since 5.71.
 
+``<prefix_name><uppercase_base_name>_ENUMERATOR_DEPRECATED_VERSION(major, minor, text)``
+  to use to conditionally set a
+  ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for an enumerator, depending
+  on the warnings macro flags set (see below). In builds using C++14 standard or earlier,
+  where enumerator attributes are not yet supported, the macro will always yield an empty string.
+  Since 5.83.
+
+``<prefix_name><uppercase_base_name>_ENUMERATOR_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
+  to use to conditionally set a
+  ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for an enumerator, depending
+  on the warnings macro flags set (see below), with ``major`` & ``minor``
+  applied for the logic and ``textmajor`` & ``textminor`` for the warnings message.
+  In builds using C++14 standard or earlier, where enumerator attributes are not yet supported,
+  the macro will always yield an empty string.
+  Useful for retroactive tagging of API for the compiler without injecting the
+  API into the compiler warning conditions of already released versions.
+  Since 5.83.
+
 ``<prefix_name><uppercase_base_name>_ENABLE_DEPRECATED_SINCE(major, minor)``
   evaluates to ``TRUE`` or ``FALSE`` depending on the visibility macro flags
   set (see below). To be used mainly with ``#if``/``#endif`` to mark sections
@@ -254,7 +272,7 @@ uses the generated macro ``FOO_BUILD_DEPRECATED_SINCE``, like this:
   enum Bars {
       One,
   #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
-      Two,
+      Two FOO_ENUMERATOR_DEPRECATED_VERSION(5, 0, "Use Three"), // macro available since 5.83
   #endif
       Three,
   };
@@ -531,7 +549,7 @@ function(ecm_generate_export_header target)
     endif()
 
     # for the set of compiler versions supported by ECM/KF we can assume those attributes supported
-    # KF6: with C++14 support expected, switch to always use [[deprecated(text)]]
+    # KF6: with C++17 as minimum standard planned, switch to always use [[deprecated(text)]]
     if (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
         set(_decl_deprecated_text_definition "__attribute__ ((__deprecated__(text)))")
     elseif(MSVC)
@@ -539,10 +557,23 @@ function(ecm_generate_export_header target)
     else()
         set(_decl_deprecated_text_definition "${_macro_base_name}_DECL_DEPRECATED")
     endif()
-
     # generate header file
     set(_output "
-#define ${_macro_base_name}_DECL_DEPRECATED_TEXT(text) ${_decl_deprecated_text_definition}
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(deprecated)
+"
+    )
+    # needed below to check if [[deprecated(text)]] is used
+    if(MSVC)
+        string(APPEND _output
+"#  define ECM_GENERATEEXPORTHEADER_HAVE_DEPRECATED_ATTRIBUTE
+"
+        )
+    endif()
+    string(APPEND _output
+"#  define ${_macro_base_name}_DECL_DEPRECATED_TEXT(text) [[deprecated(text)]]
+#else
+#  define ${_macro_base_name}_DECL_DEPRECATED_TEXT(text) ${_decl_deprecated_text_definition}
+#endif
 
 #define ECM_GENERATEEXPORTHEADER_VERSION_VALUE(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
 "
@@ -687,6 +718,32 @@ function(ecm_generate_export_header target)
         )
         string(APPEND _output
 "#define ${_macro_base_name}_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text) ${_macro_base_name}_DEPRECATED_VERSION_##major(minor, \"Since \"#textmajor\".\"#textminor\". \" text)
+"
+        )
+        # reusing the existing version-controlled deprecation macros for enumerator deprecation macros
+        # to avoid having to repeat all the explicit version variants
+        # MSVC seems to have issues with __declspec(deprecated) being used as enumerator attribute
+        # so it needs a separate check to ensure the macro is using [[deprecated(text)]]
+        # [[deprecated(text)]] is part of C++14 and enumerator attributes are part of C++17,
+        # so one should assume just checking the latter is enough, but no idea if this can be relied on
+        if(MSVC)
+            string(APPEND _output
+"#if defined(ECM_GENERATEEXPORTHEADER_HAVE_DEPRECATED_ATTRIBUTE) && defined(__cpp_enumerator_attributes) && __cpp_enumerator_attributes >= 201411
+"
+            )
+        else()
+            string(APPEND _output
+"#if defined(__cpp_enumerator_attributes) && __cpp_enumerator_attributes >= 201411
+"
+            )
+        endif()
+        string(APPEND _output
+"#  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION(major, minor, text) ${_macro_base_name}_DEPRECATED_VERSION(major, minor, text)
+#  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text) ${_macro_base_name}_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)
+#else
+#  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION(major, minor, text)
+#  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)
+#endif
 "
         )
     endif()

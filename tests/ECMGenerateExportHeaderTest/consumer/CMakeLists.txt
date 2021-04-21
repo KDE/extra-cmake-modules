@@ -24,7 +24,16 @@ include(testAPI_${TEST_VARIANT}.cmake)
 
 # for each API element test their visibility to the compiler and if a warning is emitted
 set(_code "Enum enumerator = Enumerator_deprecatedAt2_0;")
-testAPI(_code DEPRECATED_AT 2.0 BUILD_TIME_ONLY_DISABLABLE NO_WARNING)
+testAPI(_code DEPRECATED_AT 2.0 CXX_STANDARD 11 BUILD_TIME_ONLY_DISABLABLE NO_WARNING)
+
+set(_code "Enum enumerator = Enumerator_deprecatedAt2_0;")
+testAPI(_code DEPRECATED_AT 2.0 CXX_STANDARD 17 BUILD_TIME_ONLY_DISABLABLE)
+
+set(_code "Enum enumerator = Enumerator_deprecatedAt2_12;")
+testAPI(_code DEPRECATED_AT 2.12 CXX_STANDARD 11 NO_WARNING)
+
+set(_code "Enum enumerator = Enumerator_deprecatedAt2_12;")
+testAPI(_code DEPRECATED_AT 2.12 CXX_STANDARD 17)
 
 set(_code "Enum enumerator = Enumerator_not_deprecated;")
 testAPI(_code)

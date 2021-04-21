@@ -2,9 +2,12 @@
 
 enum Enum {
 #if LIBRARY_BUILD_DEPRECATED_SINCE(2, 0)
-    Enumerator_deprecatedAt2_0,
+    Enumerator_deprecatedAt2_0 LIBRARY_ENUMERATOR_DEPRECATED_VERSION(2, 0, "Deprecated at 2.0"),
 #endif
     Enumerator_not_deprecated,
+#if LIBRARY_ENABLE_DEPRECATED_SINCE(2, 12)
+    Enumerator_deprecatedAt2_12 LIBRARY_ENUMERATOR_DEPRECATED_VERSION(2, 12, "Deprecated at 2.12"),
+#endif
 };
 
 #if LIBRARY_ENABLE_DEPRECATED_SINCE(2, 0)
