@@ -76,7 +76,7 @@ Since 1.3.0.
 
 # MACRO check_compiler_version
 #-----------------------------
-macro (check_compiler_version gcc_required_version clang_required_version)
+macro (check_compiler_version gcc_required_version clang_required_version msvc_required_version)
     if (
         (
             CMAKE_CXX_COMPILER_ID MATCHES "GNU"
@@ -89,12 +89,19 @@ macro (check_compiler_version gcc_required_version clang_required_version)
             AND
             CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${clang_required_version}
         )
+        OR
+        (
+            CMAKE_CXX_COMPILER_ID MATCHES "MSVC"
+            AND
+            CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${msvc_required_version}
+        )
     )
         # error !
         message(FATAL_ERROR "You ask to enable the sanitizer ${CUR_SANITIZER},
         but your compiler ${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION}
         does not support it !
-        You should use at least GCC ${gcc_required_version} or Clang ${clang_required_version}
+        You should use at least GCC ${gcc_required_version}, Clang ${clang_required_version}
+        or MSVC ${msvc_required_version}
         (99.99 means not implemented yet)")
     endif ()
 endmacro ()
@@ -103,25 +110,29 @@ endmacro ()
 #------------------------------
 macro (enable_sanitizer_flags sanitize_option)
     if (${sanitize_option} MATCHES "address")
-        check_compiler_version("4.8" "3.1")
-        set(XSAN_COMPILE_FLAGS "-fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
-        set(XSAN_LINKER_FLAGS "asan")
+        check_compiler_version("4.8" "3.1" "19.28")
+        if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+            set(XSAN_COMPILE_FLAGS "-fsanitize=address")
+        else()
+            set(XSAN_COMPILE_FLAGS "-fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
+            set(XSAN_LINKER_FLAGS "asan")
+        endif()
     elseif (${sanitize_option} MATCHES "thread")
-        check_compiler_version("4.8" "3.1")
+        check_compiler_version("4.8" "3.1" "99.99")
         set(XSAN_COMPILE_FLAGS "-fsanitize=thread")
         set(XSAN_LINKER_FLAGS "tsan")
     elseif (${sanitize_option} MATCHES "memory")
-        check_compiler_version("99.99" "3.1")
+        check_compiler_version("99.99" "3.1" "99.99")
         set(XSAN_COMPILE_FLAGS "-fsanitize=memory")
     elseif (${sanitize_option} MATCHES "leak")
-        check_compiler_version("4.9" "3.4")
+        check_compiler_version("4.9" "3.4" "99.99")
         set(XSAN_COMPILE_FLAGS "-fsanitize=leak")
         set(XSAN_LINKER_FLAGS "lsan")
     elseif (${sanitize_option} MATCHES "undefined")
-        check_compiler_version("4.9" "3.1")
+        check_compiler_version("4.9" "3.1" "99.99")
         set(XSAN_COMPILE_FLAGS "-fsanitize=undefined -fno-omit-frame-pointer -fno-optimize-sibling-calls")
     elseif (${sanitize_option} MATCHES "fuzzer")
-        check_compiler_version("99.99" "6.0")
+        check_compiler_version("99.99" "6.0" "99.99")
         set(XSAN_COMPILE_FLAGS "-fsanitize=fuzzer")
     else ()
         message(FATAL_ERROR "Compiler sanitizer option \"${sanitize_option}\" not supported.")
@@ -129,7 +140,7 @@ macro (enable_sanitizer_flags sanitize_option)
 endmacro ()
 
 if (ECM_ENABLE_SANITIZERS)
-    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
         # for each element of the ECM_ENABLE_SANITIZERS list
         foreach ( CUR_SANITIZER ${ECM_ENABLE_SANITIZERS} )
             # lowercase filter
