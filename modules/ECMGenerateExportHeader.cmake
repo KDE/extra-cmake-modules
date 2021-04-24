@@ -116,7 +116,7 @@ defined by `GenerateExportHeader
   ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for an enumerator, depending
   on the warnings macro flags set (see below). In builds using C++14 standard or earlier,
   where enumerator attributes are not yet supported, the macro will always yield an empty string.
-  Since 5.83.
+  Since 5.82.
 
 ``<prefix_name><uppercase_base_name>_ENUMERATOR_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
   to use to conditionally set a
@@ -127,7 +127,7 @@ defined by `GenerateExportHeader
   the macro will always yield an empty string.
   Useful for retroactive tagging of API for the compiler without injecting the
   API into the compiler warning conditions of already released versions.
-  Since 5.83.
+  Since 5.82.
 
 ``<prefix_name><uppercase_base_name>_ENABLE_DEPRECATED_SINCE(major, minor)``
   evaluates to ``TRUE`` or ``FALSE`` depending on the visibility macro flags
@@ -272,7 +272,7 @@ uses the generated macro ``FOO_BUILD_DEPRECATED_SINCE``, like this:
   enum Bars {
       One,
   #if FOO_BUILD_DEPRECATED_SINCE(5, 0)
-      Two FOO_ENUMERATOR_DEPRECATED_VERSION(5, 0, "Use Three"), // macro available since 5.83
+      Two FOO_ENUMERATOR_DEPRECATED_VERSION(5, 0, "Use Three"), // macro available since 5.82
   #endif
       Three,
   };
