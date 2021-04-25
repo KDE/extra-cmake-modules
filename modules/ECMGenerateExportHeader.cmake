@@ -559,7 +559,12 @@ function(ecm_generate_export_header target)
     endif()
     # generate header file
     set(_output "
-#if defined(__has_cpp_attribute) && __has_cpp_attribute(deprecated) >= 201309
+#if defined(__cplusplus) && defined(__has_cpp_attribute)
+#  define ECM_GENERATEEXPORTHEADER_HAS_CPP_ATTRIBUTE(x) __has_cpp_attribute(x)
+#else
+#  define ECM_GENERATEEXPORTHEADER_HAS_CPP_ATTRIBUTE(x) 0
+#endif
+#if ECM_GENERATEEXPORTHEADER_HAS_CPP_ATTRIBUTE(deprecated) >= 201309
 "
     )
     # needed below to check if [[deprecated(text)]] is used
