@@ -27,7 +27,12 @@ set(_code "Enum enumerator = Enumerator_deprecatedAt2_0;")
 testAPI(_code DEPRECATED_AT 2.0 CXX_STANDARD 11 BUILD_TIME_ONLY_DISABLABLE NO_WARNING)
 
 set(_code "Enum enumerator = Enumerator_deprecatedAt2_0;")
-testAPI(_code DEPRECATED_AT 2.0 CXX_STANDARD 17 BUILD_TIME_ONLY_DISABLABLE)
+# we do not yet support enumerator warnings with MSVC
+if(MSVC)
+    testAPI(_code DEPRECATED_AT 2.0 CXX_STANDARD 17 BUILD_TIME_ONLY_DISABLABLE NO_WARNING)
+else()
+    testAPI(_code DEPRECATED_AT 2.0 CXX_STANDARD 17 BUILD_TIME_ONLY_DISABLABLE)
+endif()
 
 set(_code "Enum enumerator = Enumerator_deprecatedAt2_12;")
 testAPI(_code DEPRECATED_AT 2.12 CXX_STANDARD 11 NO_WARNING)

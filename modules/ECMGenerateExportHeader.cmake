@@ -116,6 +116,7 @@ defined by `GenerateExportHeader
   ``<prefix_name><uppercase_base_name>_DEPRECATED`` macro for an enumerator, depending
   on the warnings macro flags set (see below). In builds using C++14 standard or earlier,
   where enumerator attributes are not yet supported, the macro will always yield an empty string.
+  With MSVC it is also always an empty string for now.
   Since 5.82.
 
 ``<prefix_name><uppercase_base_name>_ENUMERATOR_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)``
@@ -127,6 +128,7 @@ defined by `GenerateExportHeader
   the macro will always yield an empty string.
   Useful for retroactive tagging of API for the compiler without injecting the
   API into the compiler warning conditions of already released versions.
+  With MSVC it is also always an empty string for now.
   Since 5.82.
 
 ``<prefix_name><uppercase_base_name>_ENABLE_DEPRECATED_SINCE(major, minor)``
@@ -559,26 +561,7 @@ function(ecm_generate_export_header target)
     endif()
     # generate header file
     set(_output "
-#if defined(__cplusplus) && defined(__has_cpp_attribute)
-#  define ECM_GENERATEEXPORTHEADER_HAS_CPP_ATTRIBUTE(x) __has_cpp_attribute(x)
-#else
-#  define ECM_GENERATEEXPORTHEADER_HAS_CPP_ATTRIBUTE(x) 0
-#endif
-#if ECM_GENERATEEXPORTHEADER_HAS_CPP_ATTRIBUTE(deprecated) >= 201309
-"
-    )
-    # needed below to check if [[deprecated(text)]] is used
-    if(MSVC)
-        string(APPEND _output
-"#  define ECM_GENERATEEXPORTHEADER_HAVE_DEPRECATED_ATTRIBUTE
-"
-        )
-    endif()
-    string(APPEND _output
-"#  define ${_macro_base_name}_DECL_DEPRECATED_TEXT(text) [[deprecated(text)]]
-#else
-#  define ${_macro_base_name}_DECL_DEPRECATED_TEXT(text) ${_decl_deprecated_text_definition}
-#endif
+#define ${_macro_base_name}_DECL_DEPRECATED_TEXT(text) ${_decl_deprecated_text_definition}
 
 #define ECM_GENERATEEXPORTHEADER_VERSION_VALUE(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
 "
@@ -727,30 +710,31 @@ function(ecm_generate_export_header target)
         )
         # reusing the existing version-controlled deprecation macros for enumerator deprecation macros
         # to avoid having to repeat all the explicit version variants
-        # MSVC seems to have issues with __declspec(deprecated) being used as enumerator attribute
-        # so it needs a separate check to ensure the macro is using [[deprecated(text)]]
-        # [[deprecated(text)]] is part of C++14 and enumerator attributes are part of C++17,
-        # so one should assume just checking the latter is enough, but no idea if this can be relied on
-        if(MSVC)
-            string(APPEND _output
-"#if defined(ECM_GENERATEEXPORTHEADER_HAVE_DEPRECATED_ATTRIBUTE) && defined(__cpp_enumerator_attributes) && __cpp_enumerator_attributes >= 201411
-"
-            )
-        else()
+        # TODO: MSVC seems to have issues with __declspec(deprecated) being used as enumerator attribute
+        # and deals only with standard [[deprecated(text)]].
+        # But for now we have to keep the deprecation macros using the compiler-specific attributes,
+        # because CMake's GenerateExportHeader uses the latter for the export macros and
+        # at least GCC does not support both being used mixed e.g. on the same class or method.
+        # Possibly needs to be solved by forking GenerateExportHeader to get complete control.
+        if(NOT MSVC)
             string(APPEND _output
 "#if defined(__cpp_enumerator_attributes) && __cpp_enumerator_attributes >= 201411
-"
-            )
-        endif()
-        string(APPEND _output
-"#  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION(major, minor, text) ${_macro_base_name}_DEPRECATED_VERSION(major, minor, text)
+#  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION(major, minor, text) ${_macro_base_name}_DEPRECATED_VERSION(major, minor, text)
 #  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text) ${_macro_base_name}_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)
 #else
 #  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION(major, minor, text)
 #  define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)
 #endif
 "
-        )
+            )
+        else()
+            string(APPEND _output
+"// Not yet implemented for MSVC
+#define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION(major, minor, text)
+#define ${_macro_base_name}_ENUMERATOR_DEPRECATED_VERSION_BELATED(major, minor, textmajor, textminor, text)
+"
+            )
+        endif()
     endif()
     if (ARGS_CUSTOM_CONTENT_FROM_VARIABLE)
         string(APPEND _output "${ARGS_CUSTOM_CONTENT_FROM_VARIABLE}\n")
