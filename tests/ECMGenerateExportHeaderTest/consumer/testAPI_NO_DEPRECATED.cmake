@@ -19,7 +19,10 @@ function(testAPI code_var_name)
 
     if (ARGS_CXX_STANDARD)
         if(MSVC)
-            set(std_flag  "/std:c++${ARGS_CXX_STANDARD}")
+            # C++11 is default for MSVC, no /std:c++11 flag available to set
+            if (NOT ARGS_CXX_STANDARD STREQUAL "11")
+                set(std_flag  "/std:c++${ARGS_CXX_STANDARD}")
+            endif()
         else()
             set(std_flag "-std=c++${ARGS_CXX_STANDARD}")
         endif()
