@@ -23,6 +23,7 @@ the default qmake ``mkspecs`` directory or of a directory that will be in the
 
   ecm_generate_pri_file(BASE_NAME <baseName>
                         LIB_NAME <libName>
+                        [VERSION <version>] # since 5.83
                         [DEPS "<dep> [<dep> [...]]"]
                         [FILENAME_VAR <filename_variable>]
                         [INCLUDE_INSTALL_DIR <dir>]
@@ -32,12 +33,17 @@ If your CMake project produces a Qt-based library, you may expect there to be
 applications that wish to use it that use a qmake-based build system, rather
 than a CMake-based one.  Creating a ``.pri`` file will make use of your
 library convenient for them, in much the same way that CMake config files make
-things convenient for CMake-based applications.
+things convenient for CMake-based applications. ``ecm_generate_pri_file()``
+generates just such a file.
 
-ecm_generate_pri_file() generates just such a file.  It requires the
-``PROJECT_VERSION_STRING`` variable to be set.  This is typically set by
-:module:`ECMSetupVersion`, although the project() command in CMake 3.0.0 and
-later can also set this.
+VERSION specifies the version of the library the ``.pri`` file describes. If
+not set, the value is taken from the context variable ``PROJECT_VERSION``.
+This variable is usually set by the ``project(... VERSION ...)`` command or,
+if CMake policy CMP0048 is not NEW, by :module:`ECMSetupVersion`.
+For backward-compatibility with older ECM versions the
+``PROJECT_VERSION_STRING`` variable as set by :module:`ECMSetupVersion`
+will be preferred over ``PROJECT_VERSION`` if set, unless the minimum
+required version of ECM is 5.83 and newer. Since 5.83.
 
 BASE_NAME specifies the name qmake project (.pro) files should use to refer to
 the library (eg: KArchive).  LIB_NAME is the name of the actual library to
@@ -64,6 +70,7 @@ Example usage:
       LIB_NAME KF5KArchive
       DEPS "core"
       FILENAME_VAR pri_filename
+      VERSION 4.2.0
   )
   install(FILES ${pri_filename} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
 
@@ -106,7 +113,7 @@ endif()
 
 function(ECM_GENERATE_PRI_FILE)
   set(options )
-  set(oneValueArgs BASE_NAME LIB_NAME DEPS FILENAME_VAR INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
+  set(oneValueArgs BASE_NAME LIB_NAME DEPS FILENAME_VAR INCLUDE_INSTALL_DIR LIB_INSTALL_DIR VERSION)
   set(multiValueArgs )
 
   cmake_parse_arguments(EGPF "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -115,14 +122,28 @@ function(ECM_GENERATE_PRI_FILE)
     message(FATAL_ERROR "Unknown keywords given to ECM_GENERATE_PRI_FILE(): \"${EGPF_UNPARSED_ARGUMENTS}\"")
   endif()
 
+  if("${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.83.0")
+    set(_support_backward_compat_version_string_var TRUE)
+  else()
+    set(_support_backward_compat_version_string_var FALSE)
+  endif()
+
   if(NOT EGPF_BASE_NAME)
     message(FATAL_ERROR "Required argument BASE_NAME missing in ECM_GENERATE_PRI_FILE() call")
   endif()
   if(NOT EGPF_LIB_NAME)
     message(FATAL_ERROR "Required argument LIB_NAME missing in ECM_GENERATE_PRI_FILE() call")
   endif()
-  if(NOT PROJECT_VERSION_STRING)
-    message(FATAL_ERROR "Required variable PROJECT_VERSION_STRING not set before ECM_GENERATE_PRI_FILE() call. Did you call ecm_setup_version?")
+  if(NOT EGPF_VERSION)
+    if(_support_backward_compat_version_string_var)
+      if(NOT PROJECT_VERSION_STRING AND NOT PROJECT_VERSION)
+        message(FATAL_ERROR "Required variable PROJECT_VERSION_STRING or PROJECT_VERSION not set before ECM_GENERATE_PRI_FILE() call. Missing call of ecm_setup_version() or project(VERSION)?")
+      endif()
+    else()
+      if(NOT PROJECT_VERSION)
+        message(FATAL_ERROR "Required variable PROJECT_VERSION not set before ECM_GENERATE_PRI_FILE() call. Missing call of ecm_setup_version() or project(VERSION)?")
+      endif()
+    endif()
   endif()
   if(NOT EGPF_INCLUDE_INSTALL_DIR)
       if(INCLUDE_INSTALL_DIR)
@@ -143,9 +164,22 @@ function(ECM_GENERATE_PRI_FILE)
       endif()
   endif()
 
-  string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" PROJECT_VERSION_MAJOR "${PROJECT_VERSION_STRING}")
-  string(REGEX REPLACE "^[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" PROJECT_VERSION_MINOR "${PROJECT_VERSION_STRING}")
-  string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" PROJECT_VERSION_PATCH "${PROJECT_VERSION_STRING}")
+  if(EGPF_VERSION)
+    set(PRI_VERSION "${EGPF_VERSION}")
+  else()
+    if(_support_backward_compat_version_string_var AND PROJECT_VERSION_STRING)
+      set(PRI_VERSION "${PROJECT_VERSION_STRING}")
+      if(NOT PROJECT_VERSION_STRING STREQUAL PROJECT_VERSION)
+        message(DEPRECATION "ECM_GENERATE_PRI_FILE() will no longer support PROJECT_VERSION_STRING when the required minimum version of ECM is 5.83 or newer. Set VERSION parameter or use PROJECT_VERSION instead.")
+      endif()
+    else()
+      set(PRI_VERSION "${PROJECT_VERSION}")
+    endif()
+  endif()
+
+  string(REGEX REPLACE "^([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" PRI_VERSION_MAJOR "${PRI_VERSION}")
+  string(REGEX REPLACE "^[0-9]+\\.([0-9]+)\\.[0-9]+.*" "\\1" PRI_VERSION_MINOR "${PRI_VERSION}")
+  string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" PRI_VERSION_PATCH "${PRI_VERSION}")
 
   # Prepare the right number of "../.." to go from ECM_MKSPECS_INSTALL_DIR to the install prefix
   # This allows to make the generated pri files relocatable (no absolute paths)
@@ -191,10 +225,10 @@ function(ECM_GENERATE_PRI_FILE)
   file(GENERATE
      OUTPUT ${PRI_FILENAME}
      CONTENT
-     "QT.${PRI_TARGET_BASENAME}.VERSION = ${PROJECT_VERSION_STRING}
-QT.${PRI_TARGET_BASENAME}.MAJOR_VERSION = ${PROJECT_VERSION_MAJOR}
-QT.${PRI_TARGET_BASENAME}.MINOR_VERSION = ${PROJECT_VERSION_MINOR}
-QT.${PRI_TARGET_BASENAME}.PATCH_VERSION = ${PROJECT_VERSION_PATCH}
+     "QT.${PRI_TARGET_BASENAME}.VERSION = ${PRI_VERSION}
+QT.${PRI_TARGET_BASENAME}.MAJOR_VERSION = ${PRI_VERSION_MAJOR}
+QT.${PRI_TARGET_BASENAME}.MINOR_VERSION = ${PRI_VERSION_MINOR}
+QT.${PRI_TARGET_BASENAME}.PATCH_VERSION = ${PRI_VERSION_PATCH}
 QT.${PRI_TARGET_BASENAME}.name = ${PRI_TARGET_LIBNAME}
 QT.${PRI_TARGET_BASENAME}.module = ${PRI_TARGET_LIBNAME}
 QT.${PRI_TARGET_BASENAME}.defines = ${PRI_TARGET_DEFINES}

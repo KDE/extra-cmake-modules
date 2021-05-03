@@ -29,8 +29,12 @@ set::
   <prefix>_VERSION_MINOR  - <minor>
   <prefix>_VERSION_PATCH  - <patch>
   <prefix>_VERSION        - <version>
-  <prefix>_VERSION_STRING - <version> (for compatibility: use <prefix>_VERSION instead)
   <prefix>_SOVERSION      - <soversion>, or <major> if SOVERSION was not given
+
+For backward-compatibility also this variable is set (only if the minimum required
+version of ECM is < 5.83)::
+
+  <prefix>_VERSION_STRING - <version> (use <prefix>_VERSION instead)
 
 If CMake policy CMP0048 is not NEW, the following CMake variables will also
 be set::
@@ -39,7 +43,11 @@ be set::
   PROJECT_VERSION_MINOR   - <minor>
   PROJECT_VERSION_PATCH   - <patch>
   PROJECT_VERSION         - <version>
-  PROJECT_VERSION_STRING  - <version> (for compatibility: use PROJECT_VERSION instead)
+
+For backward-compatibility, if CMake policy CMP0048 is not NEW, also this variable is set
+(only if the minimum required version of ECM is < 5.83)::
+
+  PROJECT_VERSION_STRING  - <version> (use PROJECT_VERSION instead)
 
 If the VERSION_HEADER option is used, a simple C header is generated with the
 given filename. If filename is a relative path, it is interpreted as relative
@@ -142,6 +150,12 @@ function(ecm_setup_version _version)
         set(ESV_SOVERSION ${_major})
     endif()
 
+    if("${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.83.0")
+        set(_set_backward_compat_version_string_vars TRUE)
+    else()
+        set(_set_backward_compat_version_string_vars FALSE)
+    endif()
+
     if(should_set_prefixed_vars)
         set(${ESV_VARIABLE_PREFIX}_VERSION "${_version}")
         set(${ESV_VARIABLE_PREFIX}_VERSION_MAJOR ${_major})
@@ -158,9 +172,10 @@ function(ecm_setup_version _version)
         set(PROJECT_VERSION_PATCH "${_patch}")
     endif()
 
-    # compat
-    set(PROJECT_VERSION_STRING "${PROJECT_VERSION}")
-    set(${ESV_VARIABLE_PREFIX}_VERSION_STRING "${${ESV_VARIABLE_PREFIX}_VERSION}")
+    if(_set_backward_compat_version_string_vars)
+        set(PROJECT_VERSION_STRING "${PROJECT_VERSION}")
+        set(${ESV_VARIABLE_PREFIX}_VERSION_STRING "${${ESV_VARIABLE_PREFIX}_VERSION}")
+    endif()
 
     if(ESV_VERSION_HEADER)
         set(HEADER_PREFIX "${ESV_VARIABLE_PREFIX}")
@@ -195,8 +210,8 @@ function(ecm_setup_version _version)
         set(PROJECT_VERSION_PATCH "${PROJECT_VERSION_PATCH}" PARENT_SCOPE)
     endif()
 
-    # always set the compatibility variables
-    set(PROJECT_VERSION_STRING "${PROJECT_VERSION_STRING}" PARENT_SCOPE)
-    set(${ESV_VARIABLE_PREFIX}_VERSION_STRING "${${ESV_VARIABLE_PREFIX}_VERSION}" PARENT_SCOPE)
-
+    if(_set_backward_compat_version_string_vars)
+        set(PROJECT_VERSION_STRING "${PROJECT_VERSION_STRING}" PARENT_SCOPE)
+        set(${ESV_VARIABLE_PREFIX}_VERSION_STRING "${${ESV_VARIABLE_PREFIX}_VERSION}" PARENT_SCOPE)
+    endif()
 endfunction()
