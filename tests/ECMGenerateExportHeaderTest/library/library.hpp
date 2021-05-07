@@ -11,13 +11,15 @@ enum Enum {
 };
 
 #if LIBRARY_ENABLE_DEPRECATED_SINCE(2, 0)
+LIBRARY_EXPORT
 LIBRARY_DEPRECATED_VERSION(2, 0, "Deprecated at 2.0")
-LIBRARY_EXPORT void function_deprecatedAt2_0();
+void function_deprecatedAt2_0();
 #endif
 
 #if LIBRARY_ENABLE_DEPRECATED_SINCE(2, 12)
+LIBRARY_EXPORT
 LIBRARY_DEPRECATED_VERSION(2, 12, "Deprecated at 2.12")
-LIBRARY_EXPORT void function_deprecatedAt2_12();
+void function_deprecatedAt2_12();
 #endif
 
 LIBRARY_EXPORT void function_not_deprecated();

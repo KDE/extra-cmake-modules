@@ -216,16 +216,18 @@ this, using the generated macros ``FOO_ENABLE_DEPRECATED_SINCE`` and
   /**
     * @deprecated Since 5.0
     */
+  FOO_EXPORT
   FOO_DEPRECATED_VERSION(5, 0, "Use doFoo2()")
-  FOO_EXPORT void doFoo();
+  void doFoo();
   #endif
 
   #if FOO_ENABLE_DEPRECATED_SINCE(5, 12)
   /**
     * @deprecated Since 5.12
     */
+  FOO_EXPORT
   FOO_DEPRECATED_VERSION(5, 12, "Use doBar2()")
-  FOO_EXPORT void doBar();
+  void doBar();
   #endif
 
 Projects linking against the "Foo" library can control which part of its
@@ -283,16 +285,18 @@ uses the generated macro ``FOO_BUILD_DEPRECATED_SINCE``, like this:
   /**
     * @deprecated Since 5.0
     */
+  FOO_EXPORT
   FOO_DEPRECATED_VERSION(5, 0, "Use doFoo2()")
-  FOO_EXPORT void doFoo();
+  void doFoo();
   #endif
 
   #if FOO_ENABLE_DEPRECATED_SINCE(5, 12)
   /**
     * @deprecated Since 5.12
     */
+  FOO_EXPORT
   FOO_DEPRECATED_VERSION(5, 12, "Use doBar2()")
-  FOO_EXPORT void doBar();
+  void doBar();
   #endif
 
   class FOO_EXPORT Foo {
