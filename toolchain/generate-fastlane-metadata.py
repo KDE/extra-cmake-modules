@@ -25,9 +25,29 @@ import yaml
 import zipfile
 
 # Constants used in this script
+# map KDE's translated language codes to those expected by Android
+# see https://f-droid.org/en/docs/Translation_and_Localization/
+# F-Droid is more tolerant than the Play Store here, the latter rejects anything not exactly matching its known codes
+# Android does do the expected fallbacks, so the seemingly "too specific" mappings here are still working as expected
+# see https://developer.android.com/guide/topics/resources/multilingual-support#resource-resolution-examples
 languageMap = {
     None: "en-US",
-    "ca": "ca-ES"
+    "ca-valencia": None, # not supported by Android
+    "cs": "cs-CZ",
+    "de": "de-DE",
+    "es": "es-ES",
+    "eu": "eu-ES",
+    "fi": "fi-FI",
+    "fr": "fr-FR",
+    "gl": "gl-ES",
+    "ia": None, # not supported by Android
+    "it": "it-IT",
+    "ko": "ko-KR",
+    "nl": "nl-NL",
+    "pl": "pl-PL",
+    "pt": "pt-PT",
+    "ru": "ru-RU",
+    "sv": "sv-SE"
 }
 
 # see https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/
@@ -74,6 +94,8 @@ def createFastlaneFile( applicationName, filenameToPopulate, fileContent ):
     for lang, text in fileContent.items():
         # First, do we need to amend the language id, to turn the Android language ID into something more F-Droid/Fastlane friendly?
         languageCode = languageMap.get(lang, lang)
+        if not languageCode:
+            continue
 
         # Next we need to determine the path to the directory we're going to be writing the data into
         repositoryBasePath = arguments.output
