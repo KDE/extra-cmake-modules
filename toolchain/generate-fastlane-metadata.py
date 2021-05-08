@@ -47,25 +47,41 @@ languageMap = {
     "pl": "pl-PL",
     "pt": "pt-PT",
     "ru": "ru-RU",
-    "sv": "sv-SE"
+    "sv": "sv-SE",
+    'x-test': None
 }
 
 # see https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/
 supportedRichTextTags = { 'li', 'ul', 'ol', 'li', 'b', 'u', 'i' }
 
+# List all translated languages present in an Appstream XML file
+def listAllLanguages(root, langs):
+    for elem in root:
+        lang = elem.get('{http://www.w3.org/XML/1998/namespace}lang')
+        if not lang in langs:
+            langs.add(lang)
+        listAllLanguages(elem, langs)
+
+# Apply language fallback to a map of translations
+def applyLanguageFallback(data, allLanguages):
+    for l in allLanguages:
+        if not l in data or not data[l] or len(data[l]) == 0:
+            data[l] = data[None]
+
 # Android appdata.xml textual item parser
 # This function handles reading standard text entries within an Android appdata.xml file
 # In particular, it handles splitting out the various translations, and converts some HTML to something which F-Droid can make use of
-def readText(elem, found):
+# We have to handle incomplete translations both on top-level and intermediate tags,
+# and fall back to the English default text where necessary.
+def readText(elem, found, allLanguages):
     # Determine the language this entry is in
     lang = elem.get('{http://www.w3.org/XML/1998/namespace}lang')
-    if lang == 'x-test':
-        return
 
     # Do we have any text for this language yet?
     # If not, get everything setup
-    if not lang in found:
-        found[lang] = ""
+    for l in allLanguages:
+        if not l in found:
+            found[l] = ""
 
     # If there is text available, we'll want to extract it
     # Additionally, if this element has any children, make sure we read those as well
@@ -75,8 +91,20 @@ def readText(elem, found):
         if elem.tag in supportedRichTextTags:
             found[lang] += '<' + elem.tag + '>'
         found[lang] += elem.text
+
+        subOutput = {}
         for child in elem:
-            readText(child, found)
+            if not child.get('{http://www.w3.org/XML/1998/namespace}lang') and len(subOutput) > 0:
+                applyLanguageFallback(subOutput, allLanguages)
+                for l in allLanguages:
+                    found[l] += subOutput[l]
+                subOutput = {}
+            readText(child, subOutput, allLanguages)
+        if len(subOutput) > 0:
+            applyLanguageFallback(subOutput, allLanguages)
+            for l in allLanguages:
+                found[l] += subOutput[l]
+
         if elem.tag in supportedRichTextTags:
             found[lang] += '</' + elem.tag + '>'
 
@@ -224,6 +252,10 @@ def processAppstreamFile(appstreamFileName, desktopFileName):
     # Within this file we look at every entry, and where possible try to export it's content so we can use it later
     appstreamFile = open(appstreamFileName, "rb")
     root = ET.fromstring(appstreamFile.read())
+
+    allLanguages = set()
+    listAllLanguages(root, allLanguages)
+
     for child in root:
         # Make sure we start with a blank slate for this entry
         output = {}
@@ -258,10 +290,14 @@ def processAppstreamFile(appstreamFileName, desktopFileName):
 
         # Otherwise this is just textual information we need to extract
         else:
-            readText(child, output)
+            readText(child, output, allLanguages)
 
         # Save the information we've gathered!
         data[tag] = output
+
+    applyLanguageFallback(data['name'], allLanguages)
+    applyLanguageFallback(data['summary'], allLanguages)
+    applyLanguageFallback(data['description'], allLanguages)
 
     # Did we find any categories?
     # Sometimes we don't find any within the Fastlane information, but without categories the F-Droid store isn't of much use
