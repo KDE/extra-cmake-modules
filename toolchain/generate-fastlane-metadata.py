@@ -85,28 +85,35 @@ def readText(elem, found, allLanguages):
 
     # If there is text available, we'll want to extract it
     # Additionally, if this element has any children, make sure we read those as well
-    # It isn't clear if it is possible for an item to not have text, but to have children which do have text
-    # The code will currently skip these if they're encountered
-    if elem.text:
-        if elem.tag in supportedRichTextTags:
+    if elem.tag in supportedRichTextTags:
+        if (elem.text and elem.text.strip()) or lang:
             found[lang] += '<' + elem.tag + '>'
+        else:
+            for l in allLanguages:
+                found[l] += '<' + elem.tag + '>'
+
+    if elem.text and elem.text.strip():
         found[lang] += elem.text
 
-        subOutput = {}
-        for child in elem:
-            if not child.get('{http://www.w3.org/XML/1998/namespace}lang') and len(subOutput) > 0:
-                applyLanguageFallback(subOutput, allLanguages)
-                for l in allLanguages:
-                    found[l] += subOutput[l]
-                subOutput = {}
-            readText(child, subOutput, allLanguages)
-        if len(subOutput) > 0:
+    subOutput = {}
+    for child in elem:
+        if not child.get('{http://www.w3.org/XML/1998/namespace}lang') and len(subOutput) > 0:
             applyLanguageFallback(subOutput, allLanguages)
             for l in allLanguages:
                 found[l] += subOutput[l]
+            subOutput = {}
+        readText(child, subOutput, allLanguages)
+    if len(subOutput) > 0:
+        applyLanguageFallback(subOutput, allLanguages)
+        for l in allLanguages:
+            found[l] += subOutput[l]
 
-        if elem.tag in supportedRichTextTags:
+    if elem.tag in supportedRichTextTags:
+        if (elem.text and elem.text.strip()) or lang:
             found[lang] += '</' + elem.tag + '>'
+        else:
+            for l in allLanguages:
+                found[l] += '</' + elem.tag + '>'
 
     # Finally, if this element is a HTML Paragraph (p) or HTML List Item (li) make sure we add a new line for presentation purposes
     if elem.tag == 'li' or elem.tag == 'p':
