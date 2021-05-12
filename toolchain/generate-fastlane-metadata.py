@@ -51,8 +51,10 @@ languageMap = {
     'x-test': None
 }
 
-# see https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/
-supportedRichTextTags = { 'li', 'ul', 'ol', 'li', 'b', 'u', 'i' }
+# The subset of supported rich text tags in F-Droid and Google Play
+# - see https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/ for F-Droid
+# - Google Play doesn't support lists
+supportedRichTextTags = { 'b', 'u', 'i' }
 
 # List all translated languages present in an Appstream XML file
 def listAllLanguages(root, langs):
@@ -91,6 +93,8 @@ def readText(elem, found, allLanguages):
         else:
             for l in allLanguages:
                 found[l] += '<' + elem.tag + '>'
+    elif elem.tag == 'li':
+        found[lang] += '· '
 
     if elem.text and elem.text.strip():
         found[lang] += elem.text
