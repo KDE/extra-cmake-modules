@@ -14,7 +14,7 @@ Add icons to executable files and packages.
 
 ::
 
- ecm_add_app_icon(<sources_var>
+ ecm_add_app_icon(<sources_var_name(|target (since 5.83))>
                   ICONS <icon> [<icon> [...]]
                   [SIDEBAR_ICONS <icon> [<icon> [...]] # Since 5.49
                   [OUTFILE_BASENAME <name>]) # Since 5.49
@@ -24,10 +24,16 @@ The given icons, whose names must match the pattern::
 
   <size>-<other_text>.png
 
-will be added to the executable target whose sources are specified by
-``<sources_var>`` on platforms that support it (Windows and Mac OS X).
+will be added as platform-specific application icons
+to the variable named ``<sources_var_name>`` or, if the first argument
+is a target (since 5.83), to the SOURCES property of ``<target>``.
+Any target must be created with add_executable() and not be an alias.
+
 Other icon files are ignored but on Mac SVG files can be supported and
 it is thus possible to mix those with png files in a single macro call.
+
+The platforms currently supported are Windows and Mac OS X, on all others
+the call has no effect and is ignored.
 
 ``<size>`` is a numeric pixel size (typically 16, 32, 48, 64, 128 or 256).
 ``<other_text>`` can be any other text. See the platform notes below for any
@@ -40,7 +46,7 @@ application is dragged into Finder's sidebar. Since 5.49.
 ``OUTFILE_BASENAME`` will be used as the basename for the icon file. If
 you specify it, the icon file will be called ``<OUTFILE_BASENAME>.icns`` on Mac OS X
 and ``<OUTFILE_BASENAME>.ico`` on Windows. If you don't specify it, it defaults
-to ``<sources_var>.<ext>``. Since 5.49.
+to ``<sources_var_name>.<ext>``. Since 5.49.
 
 
 Windows notes
@@ -77,7 +83,7 @@ Since 1.7.0.
 
 include(CMakeParseArguments)
 
-function(ecm_add_app_icon appsources)
+function(ecm_add_app_icon appsources_or_target)
     set(options)
     set(oneValueArgs OUTFILE_BASENAME)
     set(multiValueArgs ICONS SIDEBAR_ICONS)
@@ -85,6 +91,16 @@ function(ecm_add_app_icon appsources)
 
     if(NOT ARG_ICONS)
         message(FATAL_ERROR "No ICONS argument given to ecm_add_app_icon")
+    endif()
+    if (TARGET ${appsources_or_target})
+        get_target_property(target_type ${appsources_or_target} TYPE)
+        if (NOT target_type STREQUAL "EXECUTABLE")
+            message(FATAL_ERROR "Target argument passed to ecm_add_app_icon is not an executable: ${appsources_or_target}")
+        endif()
+        get_target_property(aliased_target ${appsources_or_target} ALIASED_TARGET)
+        if(aliased_target)
+            message(FATAL_ERROR "Target argument passed to ecm_add_app_icon must not be an alias: ${appsources_or_target}")
+        endif()
     endif()
     if(ARG_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Unexpected arguments to ecm_add_app_icon: ${ARG_UNPARSED_ARGUMENTS}")
@@ -106,7 +122,11 @@ function(ecm_add_app_icon appsources)
                     # install the icns file we just created
                     get_filename_component(icon_name ${icon_full} NAME_WE)
                     set(MACOSX_BUNDLE_ICON_FILE ${icon_name}.icns PARENT_SCOPE)
-                    set(${appsources} "${${appsources}};${CMAKE_CURRENT_BINARY_DIR}/${icon_name}.icns" PARENT_SCOPE)
+                    if (TARGET ${appsources_or_target})
+                        target_sources(${appsources_or_target} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/${icon_name}.icns")
+                    else()
+                        set(${appsources_or_target} "${${appsources_or_target}};${CMAKE_CURRENT_BINARY_DIR}/${icon_name}.icns" PARENT_SCOPE)
+                    endif()
                     set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${icon_name}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
                     # we're done now
                     return()
@@ -162,7 +182,7 @@ function(ecm_add_app_icon appsources)
     if (ARG_OUTFILE_BASENAME)
         set (_outfilebasename "${ARG_OUTFILE_BASENAME}")
     else()
-        set (_outfilebasename "${appsources}")
+        set (_outfilebasename "${appsources_or_target}")
     endif()
     set (_outfilename "${CMAKE_CURRENT_BINARY_DIR}/${_outfilebasename}")
 
@@ -220,7 +240,11 @@ function(ecm_add_app_icon appsources)
             endforeach()
 
             create_windows_icon_and_rc(IcoTool::IcoTool "${icotool_args}" "${windows_icons_modern}")
-            set(${appsources} "${${appsources}};${_outfilename}.rc" PARENT_SCOPE)
+            if (TARGET ${appsources_or_target})
+                target_sources(${appsources_or_target} PRIVATE "${_outfilename}.rc")
+            else()
+                set(${appsources_or_target} "${${appsources_or_target}};${_outfilename}.rc" PARENT_SCOPE)
+            endif()
         else()
             message(WARNING "Unable to find the icotool utilities or icons in matching sizes - application will not have an application icon!")
         endif()
@@ -301,7 +325,11 @@ function(ecm_add_app_icon appsources)
 
             # Append the icns file to the sources list so it will be a dependency to the
             # main target
-            set(${appsources} "${${appsources}};${_outfilename}.icns" PARENT_SCOPE)
+            if (TARGET ${appsources_or_target})
+                target_sources(${appsources_or_target} PRIVATE "${_outfilename}.icns")
+            else()
+                set(${appsources_or_target} "${${appsources_or_target}};${_outfilename}.icns" PARENT_SCOPE)
+            endif()
 
             # Install the icon into the Resources dir in the bundle
             set_source_files_properties("${_outfilename}.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
