@@ -84,6 +84,7 @@ foreach(format ${doc_formats})
         OUTPUT ${doc_format_output}
         COMMAND
             Sphinx::Build
+            -D man_make_section_directory=0
             -c ${CMAKE_CURRENT_BINARY_DIR}
             -d ${CMAKE_CURRENT_BINARY_DIR}/doctrees
             -b ${format}
