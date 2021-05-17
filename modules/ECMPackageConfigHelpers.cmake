@@ -59,9 +59,7 @@ include(${CMAKE_ROOT}/Modules/CMakePackageConfigHelpers.cmake)
 
 set(_ecm_package_config_helpers_included TRUE)
 
-if(NOT CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.13)
-    message(AUTHOR_WARNING "Your project already requires a version of CMake that includes the find_dependency macro via the CMakeFindDependencyMacro module. You should use CMakePackageConfigHelpers instead of ECMPackageConfigHelpers.")
-endif()
+message(AUTHOR_WARNING "Your project already requires a version of CMake that includes the find_dependency macro via the CMakeFindDependencyMacro module. You should use CMakePackageConfigHelpers instead of ECMPackageConfigHelpers.")
 
 function(ECM_CONFIGURE_PACKAGE_CONFIG_FILE _inputFile _outputFile)
   set(options NO_SET_AND_CHECK_MACRO NO_CHECK_REQUIRED_COMPONENTS_MACRO)

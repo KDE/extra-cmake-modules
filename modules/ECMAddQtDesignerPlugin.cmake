@@ -618,7 +618,7 @@ QList<QDesignerCustomWidgetInterface*> ${_collection_classname}::customWidgets()
 
         # setup plugin binary
         add_library(${target} MODULE ${_srcs})
-        if(Qt5UiPlugin_VERSION AND NOT Qt5UiPlugin_VERSION VERSION_LESS "5.9.0")
+        if(Qt5UiPlugin_VERSION AND Qt5UiPlugin_VERSION VERSION_GREATER_EQUAL 5.9.0)
             list(APPEND ARGS_LINK_LIBRARIES Qt5::UiPlugin)
         else()
             # For Qt <5.9 include dir variables needed

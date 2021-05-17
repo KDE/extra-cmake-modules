@@ -61,8 +61,7 @@ subsequent calls.
 
 To properly use this macro a version needs to be set. To retrieve it,
 ``ECM_PKGCONFIG_INSTALL_DIR`` uses ``PROJECT_VERSION``. To set it, use the
-project() command (only available since CMake 3.0) or the ecm_setup_version()
-macro.
+project() command or the ecm_setup_version() macro
 
 Example usage:
 

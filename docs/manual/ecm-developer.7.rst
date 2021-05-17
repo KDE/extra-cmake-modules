@@ -132,11 +132,11 @@ used is not high enough. This can be done with:
 
 .. code-block:: cmake
 
-  if(CMAKE_VERSION VERSION_LESS 2.8.12)
-      message(FATAL_ERROR "CMake 2.8.12 is required by FindFoo.cmake")
+  if(CMAKE_VERSION VERSION_LESS 3.16.0)
+      message(FATAL_ERROR "CMake 3.16.0 is required by FindFoo.cmake")
   endif()
-  if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
-      message(AUTHOR_WARNING "Your project should require at least CMake 2.8.12 to use FindFoo.cmake")
+  if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 3.16.0)
+      message(AUTHOR_WARNING "Your project should require at least CMake 3.16.0 to use FindFoo.cmake")
   endif()
 
 The :module:`ECMFindModuleHelpers` module has several useful functions and

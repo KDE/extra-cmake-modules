@@ -36,11 +36,7 @@ ecm_export_header_format_version(1.2.3
 )
 
 assert_var_str_value(_versionstring "1.2.3")
-if (NOT CMAKE_VERSION VERSION_LESS 3.13)
-    assert_var_str_value(_hexnumber "0x10203")
-else()
-    assert_var_str_value(_hexnumber "66051")
-endif()
+assert_var_str_value(_hexnumber "0x10203")
 
 # check some version: no CURRENT_VERSION
 ecm_export_header_format_version(1.2.3
@@ -49,11 +45,7 @@ ecm_export_header_format_version(1.2.3
 )
 
 assert_var_str_value(_versionstring "1.2.3")
-if (NOT CMAKE_VERSION VERSION_LESS 3.13)
-    assert_var_str_value(_hexnumber "0x10203")
-else()
-    assert_var_str_value(_hexnumber "66051")
-endif()
+assert_var_str_value(_hexnumber "0x10203")
 
 # check CURRENT
 ecm_export_header_format_version(CURRENT
@@ -63,10 +55,6 @@ ecm_export_header_format_version(CURRENT
 )
 
 assert_var_str_value(_versionstring "4.5.6")
-if (NOT CMAKE_VERSION VERSION_LESS 3.13)
-    assert_var_str_value(_hexnumber "0x40506")
-else()
-    assert_var_str_value(_hexnumber "263430")
-endif()
+assert_var_str_value(_hexnumber "0x40506")
 
 add_executable(dummy main.cpp)

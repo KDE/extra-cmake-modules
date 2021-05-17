@@ -122,7 +122,7 @@ function(ECM_GENERATE_PRI_FILE)
     message(FATAL_ERROR "Unknown keywords given to ECM_GENERATE_PRI_FILE(): \"${EGPF_UNPARSED_ARGUMENTS}\"")
   endif()
 
-  if("${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.83.0")
+  if(ECM_GLOBAL_FIND_VERSION VERSION_LESS 5.83.0)
     set(_support_backward_compat_version_string_var TRUE)
   else()
     set(_support_backward_compat_version_string_var FALSE)

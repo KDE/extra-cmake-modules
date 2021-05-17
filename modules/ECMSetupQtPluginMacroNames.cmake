@@ -111,42 +111,34 @@ macro(ecm_setup_qtplugin_macro_names)
     endif()
 
     # CMAKE_AUTOMOC_MACRO_NAMES
-    if(NOT CMAKE_VERSION VERSION_LESS "3.10.0")
-        # CMake 3.9+ warns about automoc on files without Q_OBJECT, and doesn't know about other macros.
-        # 3.10+ lets us provide more macro names that require automoc.
-        list(APPEND CMAKE_AUTOMOC_MACRO_NAMES
-            ${ESQMN_JSON_NONE}
-            ${ESQMN_JSON_ARG1}
-            ${ESQMN_JSON_ARG2}
-            ${ESQMN_JSON_ARG3}
-        )
-    endif()
+    list(APPEND CMAKE_AUTOMOC_MACRO_NAMES
+        ${ESQMN_JSON_NONE}
+        ${ESQMN_JSON_ARG1}
+        ${ESQMN_JSON_ARG2}
+        ${ESQMN_JSON_ARG3}
+    )
 
     # CMAKE_AUTOMOC_DEPEND_FILTERS
-    if(NOT CMAKE_VERSION VERSION_LESS "3.9.0")
-        # CMake's automoc needs help to find names of plugin metadata files in case Q_PLUGIN_METADATA
-        # is indirectly used via other C++ preprocessor macros
-        # 3.9+ lets us provide some filter rule pairs (keyword, regexp) to match the names of such files
-        # in the plain text of the sources. See AUTOMOC_DEPEND_FILTERS docs for details.
-        foreach(macro_name  ${ESQMN_JSON_ARG1})
-            list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-                "${macro_name}"
-                "[\n^][ \t]*${macro_name}[ \t\n]*\\([ \t\n]*\"([^\"]+)\""
-            )
-        endforeach()
-        foreach(macro_name  ${ESQMN_JSON_ARG2})
-            list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-                "${macro_name}"
-                "[\n^][ \t]*${macro_name}[ \t\n]*\\([^,]*,[ \t\n]*\"([^\"]+)\""
-            )
-        endforeach()
-        foreach(macro_name  ${ESQMN_JSON_ARG3})
-            list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-                "${macro_name}"
-                "[\n^][ \t]*${macro_name}[ \t\n]*\\([^,]*,[^,]*,[ \t\n]*\"([^\"]+)\""
-            )
-        endforeach()
-    endif()
+    # CMake's automoc needs help to find names of plugin metadata files in case Q_PLUGIN_METADATA
+    # is indirectly used via other C++ preprocessor macros
+    foreach(macro_name  ${ESQMN_JSON_ARG1})
+        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+            "${macro_name}"
+            "[\n^][ \t]*${macro_name}[ \t\n]*\\([ \t\n]*\"([^\"]+)\""
+        )
+    endforeach()
+    foreach(macro_name  ${ESQMN_JSON_ARG2})
+        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+            "${macro_name}"
+            "[\n^][ \t]*${macro_name}[ \t\n]*\\([^,]*,[ \t\n]*\"([^\"]+)\""
+        )
+    endforeach()
+    foreach(macro_name  ${ESQMN_JSON_ARG3})
+        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+            "${macro_name}"
+            "[\n^][ \t]*${macro_name}[ \t\n]*\\([^,]*,[^,]*,[ \t\n]*\"([^\"]+)\""
+        )
+    endforeach()
 
     if (ESQMN_CONFIG_CODE_VARIABLE)
         set(_content
@@ -160,52 +152,46 @@ macro(ecm_setup_qtplugin_macro_names)
             ${ESQMN_JSON_ARG3}
         )
         string(APPEND _content "
-if(NOT CMAKE_VERSION VERSION_LESS \"3.10.0\")
-    # CMake 3.9+ warns about automoc on files without Q_OBJECT, and doesn't know about other macros.
-    # 3.10+ lets us provide more macro names that require automoc.
-    list(APPEND CMAKE_AUTOMOC_MACRO_NAMES ${_all_macro_names})
-endif()
+# CMake 3.9+ warns about automoc on files without Q_OBJECT, and doesn't know about other macros.
+# 3.10+ lets us provide more macro names that require automoc.
+list(APPEND CMAKE_AUTOMOC_MACRO_NAMES ${_all_macro_names})
 ")
 
         if(ESQMN_JSON_ARG1 OR ESQMN_JSON_ARG2 OR ESQMN_JSON_ARG3)
             string(APPEND _content "
-if(NOT CMAKE_VERSION VERSION_LESS \"3.9.0\")
-    # CMake's automoc needs help to find names of plugin metadata files in case Q_PLUGIN_METADATA
-    # is indirectly used via other C++ preprocessor macros
-    # 3.9+ lets us provide some filter rule pairs (keyword, regexp) to match the names of such files
-    # in the plain text of the sources. See AUTOMOC_DEPEND_FILTERS docs for details.
+# CMake's automoc needs help to find names of plugin metadata files in case Q_PLUGIN_METADATA
+# is indirectly used via other C++ preprocessor macros
 ")
             if(ESQMN_JSON_ARG1)
                 string(APPEND _content
-"    foreach(macro_name  ${ESQMN_JSON_ARG1})
-        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-            \"\${macro_name}\"
-            \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([ \\t\\n]*\\\"([^\\\"]+)\\\"\"
-        )
-    endforeach()
+"foreach(macro_name  ${ESQMN_JSON_ARG1})
+    list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+        \"\${macro_name}\"
+        \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([ \\t\\n]*\\\"([^\\\"]+)\\\"\"
+    )
+endforeach()
 ")
             endif()
             if(ESQMN_JSON_ARG2)
                 string(APPEND _content
-"    foreach(macro_name  ${ESQMN_JSON_ARG2})
-        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-            \"\${macro_name}\"
-            \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
-        )
-    endforeach()
+"foreach(macro_name  ${ESQMN_JSON_ARG2})
+    list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+        \"\${macro_name}\"
+        \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
+    )
+endforeach()
 ")
             endif()
             if(ESQMN_JSON_ARG3)
                 string(APPEND _content
-"    foreach(macro_name  ${ESQMN_JSON_ARG3})
-        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-            \"\${macro_name}\"
-            \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
-        )
-    endforeach()
+"foreach(macro_name  ${ESQMN_JSON_ARG3})
+    list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+        \"\${macro_name}\"
+        \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
+    )
+endforeach()
 ")
             endif()
-            string(APPEND _content "endif()")
         endif()
         string(APPEND _content "
 ####################################################################################"

@@ -43,7 +43,7 @@ endmacro()
 
 macro(version_var_checks prefix version)
     assert_var_str_value(${prefix}_VERSION "${version}")
-    if("${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.83.0")
+    if(ECM_GLOBAL_FIND_VERSION VERSION_LESS 5.83.0)
         assert_var_str_value(${prefix}_VERSION_STRING "${version}")
     endif()
     if("${version}" MATCHES "^([0-9]+)")

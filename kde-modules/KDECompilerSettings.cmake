@@ -75,7 +75,7 @@ endif()
 ############################################################
 
 macro(_kde_compiler_min_version min_version)
-    if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${min_version}")
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${min_version})
         message(WARNING "Version ${CMAKE_CXX_COMPILER_VERSION} of the ${CMAKE_CXX_COMPILER_ID} C++ compiler is not supported. Please use version ${min_version} or later.")
     endif()
 endmacro()
@@ -368,12 +368,12 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
 endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
-    (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5))
+    (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 3.5))
     # -Wvla: use of variable-length arrays (an extension to C++)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wvla")
 endif()
-if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0) OR
-    (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5))
+if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 5.0) OR
+    (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 3.5))
     include(CheckCXXCompilerFlag)
     check_cxx_compiler_flag(-Wdate-time HAVE_DATE_TIME)
     if (HAVE_DATE_TIME)
@@ -383,7 +383,7 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_CXX_COMPILER_VERSION VER
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-   if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0.0")
+   if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 5.0.0)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wsuggest-override -Wlogical-op" )
    endif()
 endif()
@@ -461,8 +461,8 @@ if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 if (CMAKE_GENERATOR STREQUAL "Ninja" AND
-    ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9) OR
-     (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5)))
+    ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 4.9) OR
+     (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 3.5)))
     # Force colored warnings in Ninja's output, if the compiler has -fdiagnostics-color support.
     # Rationale in https://github.com/ninja-build/ninja/issues/814
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")

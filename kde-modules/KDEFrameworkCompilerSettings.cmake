@@ -45,7 +45,7 @@ endif()
 
 # Some non-KF projects make (ab)use of KDEFrameworkCompilerSettings currently,
 # let them only hit this as well when bumping their min. ECM requirement to a newer version.
-if (NOT "${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.79.0")
+if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.79.0)
     add_definitions(
         -DQT_NO_KEYWORDS
         -DQT_NO_FOREACH
@@ -64,18 +64,18 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-   if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0.0")
+   if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 5.0.0)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant" )
    endif()
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-   if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0.0")
+   if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 5.0.0)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant" )
    endif()
 endif()
 
-if (NOT ("${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.80.0"))
+if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.80.0)
     include(KDEClangFormat)
     # add clang-format target
     file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.c)

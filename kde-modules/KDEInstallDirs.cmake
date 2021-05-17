@@ -334,9 +334,7 @@ macro(_define_relative varname parent subdir docstring)
                 PROPERTY TYPE PATH)
         endif()
     elseif(${_oldstylename})
-        if(NOT CMAKE_VERSION VERSION_LESS 3.0.0)
-            message(DEPRECATION "${_oldstylename} is deprecated, use KDE_INSTALL_${varname} instead.")
-        endif()
+        message(DEPRECATION "${_oldstylename} is deprecated, use KDE_INSTALL_${varname} instead.")
         # The old name was given (probably on the command line): move
         # it to the new name
         set(KDE_INSTALL_${varname} "${${_oldstylename}}"
@@ -344,7 +342,7 @@ macro(_define_relative varname parent subdir docstring)
                   "${docstring} (${_docpath})"
                   FORCE)
     elseif(${_cmakename})
-        if(_cmakename_is_deprecated AND NOT CMAKE_VERSION VERSION_LESS 3.0.0)
+        if(_cmakename_is_deprecated)
             message(DEPRECATION "${_cmakename} is deprecated, use KDE_INSTALL_${varname} instead.")
         endif()
         # The CMAKE_ name was given (probably on the command line): move
@@ -417,7 +415,6 @@ if(APPLE)
         BUNDLE_INSTALL_DIR)
 endif()
 
-# Only supported since cmake 3.7
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${ECM_PREFIX}" CACHE PATH "Install path prefix" FORCE)
 endif()

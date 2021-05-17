@@ -220,9 +220,7 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # Since CMake 3.0
    # TODO KF6: discuss enabling AUTOUIC and note porting requirements. autouic
    #   acts on all #include "ui_*.h" assuming *.ui exists
-   if(NOT CMAKE_VERSION VERSION_LESS 3.0)
-      set(CMAKE_AUTORCC ON)
-   endif()
+   set(CMAKE_AUTORCC ON)
 
    # By default, create 'GUI' executables. This can be reverted on a per-target basis
    # using ECMMarkNonGuiExecutable
@@ -246,7 +244,7 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # even without installation.
 
    # We do the same under Unix to make it possible to run tests and apps without installing
-   if (WIN32 OR NOT ("${ECM_GLOBAL_FIND_VERSION}" VERSION_LESS "5.38.0"))
+   if (WIN32 OR ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.38.0)
        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
@@ -342,9 +340,7 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
     set(_l10n_po_dir "${CMAKE_BINARY_DIR}/po")
     set(_l10n_poqm_dir "${CMAKE_BINARY_DIR}/poqm")
 
-    if(CMAKE_VERSION VERSION_GREATER 3.2)
-        set(extra BYPRODUCTS ${_l10n_po_dir} ${_l10n_poqm_dir})
-    endif()
+    set(extra BYPRODUCTS ${_l10n_po_dir} ${_l10n_poqm_dir})
 
     set(fetch_commands
         COMMAND ruby "${CMAKE_BINARY_DIR}/releaseme/fetchpo.rb"

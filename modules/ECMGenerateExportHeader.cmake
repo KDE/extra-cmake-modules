@@ -394,9 +394,7 @@ function(_ecm_geh_generate_hex_number _var_name _version)
     string(REGEX REPLACE ${version_regex} "\\2" _version_minor "${_version}")
     string(REGEX REPLACE ${version_regex} "\\3" _version_patch "${_version}")
     set(_outputformat)
-    if (NOT CMAKE_VERSION VERSION_LESS 3.13)
-        set(_outputformat OUTPUT_FORMAT HEXADECIMAL)
-    endif()
+    set(_outputformat OUTPUT_FORMAT HEXADECIMAL)
     math(EXPR _hexnumber "${_version_major}*65536 + ${_version_minor}*256 + ${_version_patch}" ${_outputformat})
     set(${_var_name} ${_hexnumber} PARENT_SCOPE)
 endfunction()
@@ -470,9 +468,6 @@ function(ecm_generate_export_header target)
         message(FATAL_ERROR "No VERSION passed when calling ecm_generate_export_header().")
     elseif(NOT ARGS_VERSION MATCHES ${_version_triple_regexp})
         message(FATAL_ERROR "VERSION expected to be in x.y.z format when calling ecm_generate_export_header().")
-    endif()
-    if (ARGS_INCLUDE_GUARD_NAME AND CMAKE_VERSION VERSION_LESS 3.11)
-        message(FATAL_ERROR "Argument INCLUDE_GUARD_NAME needs at least CMake 3.11 when calling ecm_generate_export_header().")
     endif()
     if (NOT ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
         set(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT 0)
@@ -771,9 +766,7 @@ function(ecm_generate_export_header target)
     # for older cmake verions we have to manually append our generated content
     # for newer we use CUSTOM_CONTENT_FROM_VARIABLE
     set(_custom_content_args)
-    if (NOT CMAKE_VERSION VERSION_LESS 3.7)
-        set(_custom_content_args CUSTOM_CONTENT_FROM_VARIABLE _output)
-    endif()
+    set(_custom_content_args CUSTOM_CONTENT_FROM_VARIABLE _output)
     generate_export_header(${target}
         BASE_NAME ${ARGS_BASE_NAME}
         DEPRECATED_MACRO_NAME "${_macro_base_name}_DECL_DEPRECATED"
@@ -786,14 +779,13 @@ function(ecm_generate_export_header target)
         ${_custom_content_args}
     )
 
-    if (CMAKE_VERSION VERSION_LESS 3.7)
-        if (ARGS_INCLUDE_GUARD_NAME)
-            set(_include_guard "ECM_GENERATEEXPORTHEADER_${ARGS_INCLUDE_GUARD_NAME}")
-        else()
-            set(_include_guard "ECM_GENERATEEXPORTHEADER_${_upper_base_name}_EXPORT_H")
-        endif()
+    if (ARGS_INCLUDE_GUARD_NAME)
+        set(_include_guard "ECM_GENERATEEXPORTHEADER_${ARGS_INCLUDE_GUARD_NAME}")
+    else()
+        set(_include_guard "ECM_GENERATEEXPORTHEADER_${_upper_base_name}_EXPORT_H")
+    endif()
 
-        file(APPEND ${_header_work_file} "
+    file(APPEND ${_header_work_file} "
 
 #ifndef ${_include_guard}
 #define ${_include_guard}
@@ -802,8 +794,7 @@ ${_output}
 
 #endif /* ${_include_guard} */
 "
-        )
-    endif()
+    )
 
     # avoid rebuilding if there was no change
     execute_process(

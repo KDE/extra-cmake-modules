@@ -107,19 +107,9 @@ function(kde_package_app_templates)
         get_filename_component(_baseName ${_tmp_file} NAME_WE)
         set(_template ${CMAKE_CURRENT_BINARY_DIR}/${_baseName}.tar.bz2)
 
-        # CONFIGURE_DEPENDS is only available for cmake >= 3.12
-        if(NOT CMAKE_VERSION VERSION_LESS "3.12.0")
-            # also enlist directories as deps to catch file removals
-            file(GLOB_RECURSE _subdirs_entries LIST_DIRECTORIES true CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}/*")
-        else()
-            file(GLOB_RECURSE _subdirs_entries LIST_DIRECTORIES true "${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}/*")
-            # custom code to implement CONFIGURE_DEPENDS
-            foreach(_direntry ${_subdirs_entries})
-                if(IS_DIRECTORY ${_direntry})
-                    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${_direntry})
-                endif()
-            endforeach()
-        endif()
+        # also enlist directories as deps to catch file removals
+        file(GLOB_RECURSE _subdirs_entries LIST_DIRECTORIES true CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}/*")
+
         add_custom_target(${_baseName} ALL DEPENDS ${_template})
 
         if(GNU_TAR_FOUND)
