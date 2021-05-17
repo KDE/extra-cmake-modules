@@ -71,7 +71,7 @@ ecm_install_po_files_as_qm(tr_test-po)
 
 
 #
-# single-threaded test
+# single-threaded test, sources var arg
 #
 set(tr_test_SRCS
     tr_test.cpp
@@ -79,6 +79,14 @@ set(tr_test_SRCS
 ecm_create_qm_loader(tr_test_SRCS catalog)
 add_executable(tr_test ${tr_test_SRCS})
 target_link_libraries(tr_test PRIVATE Qt5::Core)
+
+
+#
+# single-threaded test, target arg
+#
+add_executable(tr_test_target tr_test.cpp)
+ecm_create_qm_loader(tr_test_target catalog)
+target_link_libraries(tr_test_target PRIVATE Qt5::Core)
 
 
 #
