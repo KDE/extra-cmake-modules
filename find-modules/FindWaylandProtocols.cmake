@@ -18,7 +18,7 @@ This will define the following variables:
     The wayland protocols data directory
 #]=======================================================================]
 
-find_package(PkgConfig)
+find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_wayland_protocols QUIET wayland-protocols)
 
 set(WaylandProtocols_VERSION ${PKG_wayland_protocols_VERSION})

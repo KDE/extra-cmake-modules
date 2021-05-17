@@ -20,7 +20,7 @@ Once done this will define:
 Since 5.80.0.
 #]=======================================================================]
 
-find_package(PkgConfig)
+find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_iso_codes QUIET iso-codes)
 
 set(IsoCodes_VERSION ${PKG_iso_codes_VERSION})

@@ -37,7 +37,7 @@ Bear in mind, however, that if the target is in the link interface of an
 exported library, it must be made available by the package config file.
 #]=======================================================================]
 
-find_package(PkgConfig)
+find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_epoxy QUIET epoxy)
 
 set(epoxy_VERSION ${PKG_epoxy_VERSION})

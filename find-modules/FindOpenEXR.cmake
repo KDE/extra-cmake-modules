@@ -38,7 +38,7 @@ ecm_find_package_version_check(OpenEXR)
 
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
-find_package(PkgConfig)
+find_package(PkgConfig QUIET)
 pkg_check_modules(PC_OpenEXR QUIET OpenEXR)
 
 set(OpenEXR_DEFINITIONS ${PC_OpenEXR_CFLAGS_OTHER})

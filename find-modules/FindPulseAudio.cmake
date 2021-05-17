@@ -46,7 +46,7 @@ if(NOT PulseAudio_FIND_VERSION)
   set(PulseAudio_FIND_VERSION "0.9.9")
 endif()
 
-find_package(PkgConfig)
+find_package(PkgConfig QUIET)
 pkg_check_modules(PC_PulseAudio QUIET libpulse>=${PulseAudio_FIND_VERSION})
 pkg_check_modules(PC_PulseAudio_MAINLOOP QUIET libpulse-mainloop-glib)
 

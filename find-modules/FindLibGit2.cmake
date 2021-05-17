@@ -44,7 +44,7 @@ ecm_find_package_version_check(LibGit2)
 
 # Use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
-find_package(PkgConfig)
+find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_GIT2 QUIET git2)
 
 set(LIBGIT2_DEFINITIONS ${PKG_GIT2_CFLAGS_OTHER})
