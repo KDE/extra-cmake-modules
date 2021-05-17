@@ -33,7 +33,7 @@ Since 5.72.0
 
 find_package(PkgConfig QUIET)
 
-pkg_search_module(PC_TAGLIB QUIET taglib)
+pkg_check_modules(PC_TAGLIB QUIET taglib)
 
 find_path(Taglib_INCLUDE_DIRS
     NAMES tag.h
