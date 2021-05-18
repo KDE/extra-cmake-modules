@@ -13,7 +13,11 @@ foreach(file IN LISTS out)
         continue()
     endif()
 
-    list(APPEND metadatafiles ${file})
+    if(EXISTS ${file})
+        list(APPEND metadatafiles ${file})
+    else()
+        message(WARNING "Could not find ${file}")
+    endif()
 endforeach()
 
 if(metadatafiles)
