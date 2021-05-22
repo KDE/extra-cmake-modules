@@ -218,6 +218,22 @@ def processLocalImages(applicationName, data):
 
     os.chdir(oldcwd)
 
+# Attempt to find the application icon if we haven't gotten that explicitly from processLocalImages
+def findIcon(applicationName, iconBaseName):
+    iconPath = os.path.join(arguments.output, 'metadata', applicationName, 'en-US', 'images', 'icon.png')
+    if os.path.exists(iconPath):
+        return
+
+    oldcwd = os.getcwd()
+    os.chdir(arguments.source)
+
+    iconFiles = glob.glob(f"**/{iconBaseName}-playstore.png", recursive=True)
+    for icon in iconFiles:
+        shutil.copy(icon, iconPath)
+        break
+
+    os.chdir(oldcwd)
+
 # Download screenshots referenced in the appstream data
 # see https://f-droid.org/en/docs/All_About_Descriptions_Graphics_and_Screenshots/
 def downloadScreenshots(applicationName, data):
@@ -254,7 +270,7 @@ def createMetadataArchive(applicationName):
     os.chdir(oldcwd)
 
 # Generate metadata for the given appstream and desktop files
-def processAppstreamFile(appstreamFileName, desktopFileName):
+def processAppstreamFile(appstreamFileName, desktopFileName, iconBaseName):
     # appstreamFileName has the form <id>.appdata.xml or <id>.metainfo.xml, so we
     # have to strip off two extensions
     applicationName = os.path.splitext(os.path.splitext(os.path.basename(appstreamFileName))[0])[0]
@@ -335,6 +351,7 @@ def processAppstreamFile(appstreamFileName, desktopFileName):
     shutil.rmtree(imagePath, ignore_errors=True)
     processLocalImages(applicationName, data)
     downloadScreenshots(applicationName, data)
+    findIcon(applicationName, iconBaseName)
 
     # put the result in an archive file for easier use by Jenkins
     createMetadataArchive(applicationName)
@@ -359,6 +376,11 @@ def scanSourceDir():
         if not appname or not is_app:
             continue
 
+        iconBaseName = None
+        for elem in root.findall('application'):
+            if prefix + 'icon' in elem.attrib:
+                iconBaseName = elem.attrib[prefix + 'icon'].split('/')[-1]
+
         # now that we have the app id, look for matching appdata/desktop files
         appdataFiles = glob.glob(arguments.source + "/**/" + appname + ".metainfo.xml", recursive=True)
         appdataFiles.extend(glob.glob(arguments.source + "/**/" + appname + ".appdata.xml", recursive=True))
@@ -375,7 +397,7 @@ def scanSourceDir():
             desktopFile = f
             break
 
-        processAppstreamFile(appdataFile, desktopFile)
+        processAppstreamFile(appdataFile, desktopFile, iconBaseName)
 
 
 ### Script Commences
