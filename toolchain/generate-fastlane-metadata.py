@@ -229,6 +229,7 @@ def findIcon(applicationName, iconBaseName):
 
     iconFiles = glob.glob(f"**/{iconBaseName}-playstore.png", recursive=True)
     for icon in iconFiles:
+        os.makedirs(os.path.dirname(iconPath), exist_ok=True)
         shutil.copy(icon, iconPath)
         break
 
