@@ -93,5 +93,5 @@ Links
 * Home page: https://commits.kde.org/extra-cmake-modules
 * Documentation: https://api.kde.org/ecm/
 * Mailing list: https://mail.kde.org/mailman/listinfo/kde-buildsystem
-* IRC channel: #kde-devel on Freenode
+* IRC channel: #kde-devel on Libera Chat
 * Git repository: https://commits.kde.org/extra-cmake-modules
