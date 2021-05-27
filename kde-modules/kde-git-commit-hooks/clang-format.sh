@@ -4,6 +4,11 @@
 
 readonly output=$(git clang-format -v --diff)
 
+if [[ ! -f .clang-format ]]; then
+    echo "ERROR: no .clang-format file found in repository root, abort format"
+    echo "       run cmake for this repository to generate it"
+    exit 1
+fi
 if [[ "$output" == *"no modified files to format"* ]]; then exit 0; fi
 if [[ "$output" == *"clang-format did not modify any files"* ]]; then exit 0; fi
 
