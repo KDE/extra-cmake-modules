@@ -29,14 +29,16 @@ target:
 and the following public function:
 ::
 
-  ecm_gperf_generate(<GperfInput> <OutputFile> <OutputVariable>
+  ecm_gperf_generate(<GperfInput> <OutputFile> <OutputVariable(|target (since 5.83))>
                      [GENERATION_FLAGS <flags>])
 
 Run ``gperf`` on ``<GperfInput>`` to generate ``<OutputFile>``, adding it to
 the ``<OutputVariable>`` variable which contains the source for the target
-where ``<OutputFile>`` is going to be built.  The optional
-``GENERATION_FLAGS`` argument is needed to pass extra parameters to
-``gperf`` (note you cannot override that way the output file).
+where ``<OutputFile>`` is going to be built or, since KF 5.83, if the given
+argument is a target, to the list of private sources of that target. The
+target must not be an alias. The optional ``GENERATION_FLAGS`` argument is
+needed to pass extra parameters to ``gperf`` (note you cannot override that
+way the output file).
 
 A simple invocation would be:
 
@@ -82,13 +84,19 @@ set_package_properties(Gperf PROPERTIES
 
 include(CMakeParseArguments)
 
-function(ecm_gperf_generate input_file output_file out_var)
+function(ecm_gperf_generate input_file output_file _target_or_sources_var)
     # Parse arguments
     set(oneValueArgs GENERATION_FLAGS)
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
 
     if(ARGS_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Unknown keywords given to ecm_gperf_generate(): \"${ARGS_UNPARSED_ARGUMENTS}\"")
+    endif()
+    if (TARGET ${_target_or_sources_var})
+        get_target_property(aliased_target ${_target_or_sources_var} ALIASED_TARGET)
+        if(aliased_target)
+            message(FATAL_ERROR "Target argument passed to ecm_gperf_generate must not be an alias: ${_target_or_sources_var}")
+        endif()
     endif()
 
     get_filename_component(_infile ${input_file} ABSOLUTE)
@@ -102,6 +110,9 @@ function(ecm_gperf_generate input_file output_file out_var)
     )
     set_property(SOURCE ${output_file} PROPERTY SKIP_AUTOMOC ON)
 
-    list(APPEND ${out_var} "${output_file}")
-    set(${out_var} ${${out_var}} PARENT_SCOPE)
+    if (TARGET ${_target_or_sources_var})
+        target_sources(${_target_or_sources_var} PRIVATE ${output_file})
+    else()
+        set(${_target_or_sources_var} ${${_target_or_sources_var}} ${output_file} PARENT_SCOPE)
+    endif()
 endfunction()
