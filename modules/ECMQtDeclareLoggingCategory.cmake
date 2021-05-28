@@ -35,7 +35,7 @@ to from C++ code using ``<identifier>``, and from the logging configuration usin
 The generated source file will be added to the variable with the name
 ``<sources_var_name>``. If the given argument is a target though, instead both the
 generated header file and the generated source file will be added to the target as
-private sources (since 5.80).
+private sources (since 5.80). The target must not be an alias.
 
 If ``<filename>`` is not absolute, it will be taken relative to the current
 binary directory.
@@ -229,6 +229,12 @@ function(ecm_qt_declare_logging_category sources_var)
     endif()
     if(ARG_EXPORT AND NOT ARG_DESCRIPTION)
         message(FATAL_ERROR "Missing DESCRIPTION argument for ecm_qt_declare_logging_category.")
+    endif()
+    if (TARGET ${sources_var})
+        get_target_property(aliased_target ${sources_var} ALIASED_TARGET)
+        if(aliased_target)
+            message(FATAL_ERROR "Target argument passed to ecm_qt_declare_logging_category must not be an alias: ${sources_var}")
+        endif()
     endif()
 
     if (NOT IS_ABSOLUTE "${ARG_HEADER}")
