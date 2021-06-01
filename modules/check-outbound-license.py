@@ -65,6 +65,7 @@ compatibilityMatrix = {
         "GPL-2.0-or-later",
         "GPL-3.0-only",
         "GPL-3.0-or-later",
+        "LicenseRef-KDE-Accepted-GPL",
         "MIT",
         "BSD-2-Clause",
         "BSD-3-Clause",
