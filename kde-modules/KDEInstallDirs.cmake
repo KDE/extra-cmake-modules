@@ -723,6 +723,22 @@ endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.sh @ONLY)
 
+find_program(ELV elvish)
+if(ELV)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.elv.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.elv @ONLY)
+endif()
+
+find_program(ION ion)
+if(ION)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.ion.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.ion @ONLY)
+endif()
+
+find_program(PWSH pwsh)
+if(PWSH)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.ps1.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.ps1 @ONLY)
+endif()
+
+
 option(KDE_INSTALL_PREFIX_SCRIPT "Installs ${CMAKE_INSTALL_PREFIX}/prefix.sh that sets up the necessary environment variables" OFF)
 if(KDE_INSTALL_PREFIX_SCRIPT)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/prefix.sh DESTINATION ${CMAKE_INSTALL_PREFIX} PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ)

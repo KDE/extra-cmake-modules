@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: 2021 Carson Black <uhhadd@gmail.com>
+# SPDX-License-Identifier: BSD-3-Clause
+
+$ENV:PATH = -join("@KDE_INSTALL_FULL_BINDIR@:", $ENV:PATH)
+
+# LD_LIBRARY_PATH only needed if you are building without rpath
+# $ENV:LD_LIBRARY_PATH = @KDE_INSTALL_FULL_LIBDIR@:$ENV:LD_LIBRARY_PATH
+
+if (-not (Test-Path ENV:XDG_DATA_DIRS)) {
+    $ENV:XDG_DATA_DIRS = "@KDE_INSTALL_FULL_DATADIR@:/usr/local/share/:/usr/share/"
+} else {
+    $ENV:XDG_DATA_DIRS = -join("@KDE_INSTALL_FULL_DATADIR@:", $ENV:XDG_DATA_DIRS)
+}
+if (-not (Test-Path ENV:XDG_CONFIG_DIRS)) {
+    $ENV:XDG_DATA_DIRS = "@KDE_INSTALL_FULL_DATADIR@:/etc/xdg"
+} else {
+    $ENV:XDG_DATA_DIRS = -join("@KDE_INSTALL_FULL_DATADIR@:", $ENV:XDG_CONFIG_DIRS)
+}
+
+$ENV:QT_PLUGIN_PATH = -join("@KDE_INSTALL_FULL_QTPLUGINDIR@:", $ENV:QT_PLUGIN_PATH)
+$ENV:QML2_IMPORT_PATH = -join("@KDE_INSTALL_FULL_QMLDIR@:", $ENV:QML2_IMPORT_PATH)
+
+$ENV:QT_QUICK_CONTROLS_STYLE_PATH = -join("@KDE_INSTALL_FULL_QMLDIR@/QtQuick/Controls.2/:", $ENV:QT_QUICK_CONTROLS_STYLE_PATH)
