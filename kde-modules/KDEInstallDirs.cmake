@@ -722,6 +722,10 @@ endif()
 # Prefix set up
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.sh @ONLY)
+find_program(FISH_EXECUTABLE fish)
+if(FISH_EXECUTABLE)
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.sh.fish.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.sh.fish @ONLY)
+endif()
 
 option(KDE_INSTALL_PREFIX_SCRIPT "Installs ${CMAKE_INSTALL_PREFIX}/prefix.sh that sets up the necessary environment variables" OFF)
 if(KDE_INSTALL_PREFIX_SCRIPT)
