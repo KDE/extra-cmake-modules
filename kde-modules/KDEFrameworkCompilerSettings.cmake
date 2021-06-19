@@ -26,7 +26,7 @@ Since pre-1.0.0.
 #]=======================================================================]
 
 if (NOT CMAKE_CXX_STANDARD)
-    if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.83.0)
+    if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.84.0)
         set(CMAKE_CXX_STANDARD 17)
         set(CMAKE_CXX_STANDARD_REQUIRED True)
     endif()
