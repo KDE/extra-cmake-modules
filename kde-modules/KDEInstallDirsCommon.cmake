@@ -239,10 +239,6 @@ _define_relative(CMAKEPACKAGEDIR LIBDIR "cmake"
     "CMake packages, including config files"
     CMAKECONFIG_INSTALL_PREFIX)
 
-_define_relative(PLUGINDIR QTPLUGINDIR ""
-    "Plugins"
-    PLUGIN_INSTALL_DIR)
-
 _define_absolute(INCLUDEDIR "include"
     "C and C++ header files"
     INCLUDE_INSTALL_DIR)

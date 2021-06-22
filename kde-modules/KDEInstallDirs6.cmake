@@ -273,6 +273,10 @@ option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, QCH files for Qt-ba
         QML_INSTALL_DIR)
 #endif()
 
+_define_relative(PLUGINDIR QTPLUGINDIR ""
+    "Plugins"
+    PLUGIN_INSTALL_DIR)
+
 _define_non_cache(INCLUDEDIR_KF6 "${CMAKE_INSTALL_INCLUDEDIR}/KF6")
 
 _define_non_cache(DATADIR_KF5 "${CMAKE_INSTALL_DATADIR}/kf6")
