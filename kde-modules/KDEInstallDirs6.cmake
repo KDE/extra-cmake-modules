@@ -12,6 +12,9 @@
 KDEInstallDirs6
 ---------------
 
+THIS IS CURRENTLY ONLY AN ALPHA VERSION, FOR FRAMEWORKS USAGE ONLY,
+AND TO BE MODIFIED INCREMENTALLY. PLEASE DO NOT USE IN APPLICATIONS YET.
+
 Define KDE standard installation directories for Qt6/KF6 based software.
 
 Note that none of the variables defined by this module provide any
@@ -208,13 +211,12 @@ be used on the command line when possible (eg: use
 ``-DKDE_INSTALL_LIBDIR=lib64`` instead of
 ``-DKDE_INSTALL_LIBDIR=/usr/lib/lib64`` to override the library directory).
 
-Since 5.82.0.
-
 The ``KDE_INSTALL_PREFIX_SCRIPT`` option will install a ${CMAKE_INSTALL_PREFIX}/prefix.sh
 file that allows to easily incorporate the necessary environment variables
 for the prefix into a process.
 #]=======================================================================]
 
+set(KDE_INSTALL_DIRS_NO_DEPRECATED TRUE)
 
 include(${CMAKE_CURRENT_LIST_DIR}/KDEInstallDirsCommon.cmake)
 

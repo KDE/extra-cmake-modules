@@ -357,4 +357,8 @@ if(APPLE)
                                           BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
 endif()
 
+if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
+    set(INSTALL_TARGETS_DEFAULT_ARGS ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+endif()
+
 include(${CMAKE_CURRENT_LIST_DIR}/KDESetupPrefixScript.cmake)

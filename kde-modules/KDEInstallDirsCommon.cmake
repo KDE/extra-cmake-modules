@@ -377,10 +377,6 @@ if(APPLE)
                                           BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
 endif()
 
-if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
-    set(INSTALL_TARGETS_DEFAULT_ARGS ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-endif()
-
 # new in cmake 2.8.9: this is used for all installed files which do not have a component set
 # so set the default component name to the name of the project, if a project name has been set:
 if(NOT "${PROJECT_NAME}" STREQUAL "Project")
