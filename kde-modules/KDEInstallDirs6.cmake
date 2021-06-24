@@ -30,88 +30,73 @@ Inclusion of this module defines the following variables:
 ``KDE_INSTALL_FULL_<dir>``
     corresponding absolute path
 
-where ``<dir>`` is one of (default values in parentheses and alternative,
-deprecated variable name in square brackets):
+where ``<dir>`` is one of (default values in parentheses):
 
 ``BUNDLEDIR``
-    application bundles (``/Applications/KDE``) [``BUNDLE_INSTALL_DIR``]
+    application bundles (``/Applications/KDE``)
 ``EXECROOTDIR``
-    executables and libraries (``<empty>``) [``EXEC_INSTALL_PREFIX``]
+    executables and libraries (``<empty>``)
 ``BINDIR``
-    user executables (``EXECROOTDIR/bin``) [``BIN_INSTALL_DIR``]
+    user executables (``EXECROOTDIR/bin``)
 ``SBINDIR``
-    system admin executables (``EXECROOTDIR/sbin``) [``SBIN_INSTALL_DIR``]
+    system admin executables (``EXECROOTDIR/sbin``)
 ``LIBDIR``
     object code libraries (``EXECROOTDIR/lib``, ``EXECROOTDIR/lib64`` or
-    ``EXECROOTDIR/lib/<multiarch-tuple`` on Debian) [``LIB_INSTALL_DIR``]
+    ``EXECROOTDIR/lib/<multiarch-tuple`` on Debian)
 ``LIBEXECDIR``
     executables for internal use by programs and libraries (``BINDIR`` on
-    Windows, ``LIBDIR/libexec`` otherwise) [``LIBEXEC_INSTALL_DIR``]
+    Windows, ``LIBDIR/libexec`` otherwise)
 ``CMAKEPACKAGEDIR``
     CMake packages, including config files (``LIBDIR/cmake``)
-    [``CMAKECONFIG_INSTALL_PREFIX``]
 ``QTPLUGINDIR``
-    Qt plugins (``LIBDIR/plugins`` or qmake-qt5's ``QT_INSTALL_PLUGINS``) [``QT_PLUGIN_INSTALL_DIR``]
+    Qt plugins (``LIBDIR/plugins`` or qmake-qt5's ``QT_INSTALL_PLUGINS``)
 ``PLUGINDIR``
     Plugins (``QTPLUGINDIR``) [``PLUGIN_INSTALL_DIR``]
 ``QMLDIR``
-    QtQuick2 imports (``LIBDIR/qml`` or qmake-qt5's ``QT_INSTALL_QML``) [``QML_INSTALL_DIR``]
+    QtQuick2 imports (``LIBDIR/qml`` or qmake-qt5's ``QT_INSTALL_QML``)
 ``INCLUDEDIR``
-    C and C++ header files (``include``) [``INCLUDE_INSTALL_DIR``]
+    C and C++ header files (``include``)
 ``LOCALSTATEDIR``
     modifiable single-machine data (``var``)
 ``SHAREDSTATEDIR``
     modifiable architecture-independent data (``com``)
 ``DATAROOTDIR``
     read-only architecture-independent data root (``share``)
-    [``SHARE_INSTALL_PREFIX``]
 ``DATADIR``
     read-only architecture-independent data (``DATAROOTDIR``)
-    [``DATA_INSTALL_DIR``]
 ``DOCBUNDLEDIR``
     documentation bundles generated using kdoctools
-    (``DATAROOTDIR/doc/HTML``) [``HTML_INSTALL_DIR``]
+    (``DATAROOTDIR/doc/HTML``)
 ``KCFGDIR``
     kconfig description files (``DATAROOTDIR/config.kcfg``)
-    [``KCFG_INSTALL_DIR``]
 ``KCONFUPDATEDIR``
     kconf_update scripts (``DATAROOTDIR/kconf_update``)
-    [``KCONF_UPDATE_INSTALL_DIR``]
 ``KSERVICES6DIR``
     services for KDE Frameworks 6 (``DATAROOTDIR/kservices6``)
-    [``SERVICES_INSTALL_DIR``]
 ``KSERVICETYPES6DIR``
     service types for KDE Frameworks 6 (``DATAROOTDIR/kservicetypes6``)
-    [``SERVICETYPES_INSTALL_DIR``]
 ``KXMLGUI6DIR``
     knotify description files (``DATAROOTDIR/kxmlgui6``)
-    [``KXMLGUI_INSTALL_DIR``]
 ``KTEMPLATESDIR``
     Kapptemplate and Kdevelop templates (``kdevappwizard/templates``)
 ``KNOTIFY6RCDIR``
     knotify description files (``DATAROOTDIR/knotifications6``)
-    [``KNOTIFYRC_INSTALL_DIR``]
 ``ICONDIR``
-    icons (``DATAROOTDIR/icons``) [``ICON_INSTALL_DIR``]
+    icons (``DATAROOTDIR/icons``)
 ``LOCALEDIR``
     knotify description files (``DATAROOTDIR/locale``)
-    [``LOCALE_INSTALL_DIR``]
 ``SOUNDDIR``
-    sound files (``DATAROOTDIR/sounds``) [``SOUND_INSTALL_DIR``]
+    sound files (``DATAROOTDIR/sounds``)
 ``TEMPLATEDIR``
-    templates (``DATAROOTDIR/templates``) [``TEMPLATES_INSTALL_DIR``]
+    templates (``DATAROOTDIR/templates``)
 ``WALLPAPERDIR``
     desktop wallpaper images (``DATAROOTDIR/wallpapers``)
-    [``WALLPAPER_INSTALL_DIR``]
 ``APPDIR``
-    application desktop files (``DATAROOTDIR/applications``) Since 1.1.0.
-    [``XDG_APPS_INSTALL_DIR``]
+    application desktop files (``DATAROOTDIR/applications``)
 ``DESKTOPDIR``
     desktop directories (``DATAROOTDIR/desktop-directories``)
-    [``XDG_DIRECTORY_INSTALL_DIR``]
 ``MIMEDIR``
     mime description files (``DATAROOTDIR/mime/packages``)
-    [``XDG_MIME_INSTALL_DIR``]
 ``METAINFODIR``
     AppStream component metadata files (``DATAROOTDIR/metainfo``)
 ``QTQCHDIR``
@@ -119,39 +104,32 @@ deprecated variable name in square brackets):
 ``QCHDIR``
     documentation bundles in QCH format (``DATAROOTDIR/doc/qch``)
 ``MANDIR``
-    man documentation (``DATAROOTDIR/man``) [``MAN_INSTALL_DIR``]
+    man documentation (``DATAROOTDIR/man``)
 ``INFODIR``
     info documentation (``DATAROOTDIR/info``)
 ``DBUSDIR``
     D-Bus (``DATAROOTDIR/dbus-1``)
 ``DBUSINTERFACEDIR``
     D-Bus interfaces (``DBUSDIR/interfaces``)
-    [``DBUS_INTERFACES_INSTALL_DIR``]
 ``DBUSSERVICEDIR``
     D-Bus session services (``DBUSDIR/services``)
-    [``DBUS_SERVICES_INSTALL_DIR``]
 ``DBUSSYSTEMSERVICEDIR``
     D-Bus system services (``DBUSDIR/system-services``)
-    [``DBUS_SYSTEM_SERVICES_INSTALL_DIR``]
 ``SYSCONFDIR``
     read-only single-machine data
     (``etc``, or ``/etc`` if ``CMAKE_INSTALL_PREFIX`` is ``/usr``)
-    [``SYSCONF_INSTALL_DIR``]
 ``CONFDIR``
     application configuration files (``SYSCONFDIR/xdg``)
-    [``CONFIG_INSTALL_DIR``]
 ``AUTOSTARTDIR``
-    autostart files (``CONFDIR/autostart``) [``AUTOSTART_INSTALL_DIR``]
+    autostart files (``CONFDIR/autostart``)
 ``LOGGINGCATEGORIESDIR``
     Qt logging categories files directory (``DATAROOTDIR/qlogging-categories6``)
 ``JARDIR``
     Java AAR/JAR files for Android.
 ``SYSTEMDUNITDIR``
     Systemd Units (``lib/systemd``)
-    [``SYSTEMD_UNIT_INSTALL_DIR``].
 ``SYSTEMDUSERUNITDIR``
     Systemd User Units (``lib/systemd/user``)
-    [``SYSTEMD_USER_UNIT_INSTALL_DIR``].
 
 TODO TODO TODO
 If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
@@ -164,33 +142,26 @@ This variable should NOT be set from within CMakeLists.txt files, instead
 is intended to be set manually when configuring a project which uses
 KDEInstallDirs (e.g. by packagers).
 
-If ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE before including this
-module, the deprecated variables (listed in the square brackets above) are
-not defined.
-
 In addition, for each ``KDE_INSTALL_*`` variable, an equivalent
-``CMAKE_INSTALL_*`` variable is defined. If
-``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE, only those variables
-defined by the ``GNUInstallDirs`` module (shipped with CMake) are defined.
+``CMAKE_INSTALL_*`` variable is defined, if such a variable is also
+defined by the ``GNUInstallDirs`` module (shipped with CMake).
 If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to TRUE, no variables with
 a ``CMAKE_`` prefix will be defined by this module (other than
 CMAKE_INSTALL_DEFAULT_COMPONENT_NAME - see below).
 
-The ``KDE_INSTALL_<dir>`` variables (or their ``CMAKE_INSTALL_<dir>`` or
-deprecated counterparts) may be passed to the DESTINATION options of
+The ``KDE_INSTALL_<dir>`` variables may be passed to the DESTINATION options of
 ``install()`` commands for the corresponding file type.  They are set in the
 CMake cache, and so the defaults above can be overridden by users.
 
-Note that the ``KDE_INSTALL_<dir>``, ``CMAKE_INSTALL_<dir>`` or deprecated
-form of the variable can be changed using CMake command line variable
-definitions; in either case, all forms of the variable will be affected. The
-effect of passing multiple forms of the same variable on the command line
+Note that the ``KDE_INSTALL_<dir>`` or ``CMAKE_INSTALL_<dir>`` variables
+can be changed using CMake command line variable definitions; in either case,
+both forms of the variable will be affected. The effect of passing multiple
+forms of the same variable on the command line
 (such as ``KDE_INSTALL_BINDIR`` and ``CMAKE_INSTALL_BINDIR`` is undefined.
 
-The variable ``KDE_INSTALL_TARGETS_DEFAULT_ARGS`` is also defined (along with
-the deprecated form ``INSTALL_TARGETS_DEFAULT_ARGS``).  This should be used
-when libraries or user-executable applications are installed, in the
-following manner:
+The variable ``KDE_INSTALL_TARGETS_DEFAULT_ARGS`` is also defined.
+This should be used when libraries or user-executable applications are installed,
+in the following manner:
 
 .. code-block:: cmake
 
