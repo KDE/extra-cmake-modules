@@ -47,6 +47,8 @@ languageMap = {
     "pl": "pl-PL",
     "pt": "pt-PT",
     "ru": "ru-RU",
+    "sr": "sr-Cyrl-RS",
+    "sr@latin": "sr-Latn-RS",
     "sv": "sv-SE",
     'x-test': None
 }
