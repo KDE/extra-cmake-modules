@@ -71,7 +71,9 @@ Mac OS X notes
      and as a 16px-equivalent icon (with an "@2x" tag) on high-resolution
      displays. That is why you should provide 64px and 1024px icons although
      they are not supported anymore directly. Instead they will be used as
-     32px@2x and 512px@2x. ksvg2icns handles this internally.
+     32px@2x and 512px@2x. If an SVG icon is provided, ksvg2icns will be
+     used internally to automatically generate all appropriate sizes,
+     including the high-resolution ones.
    * This function sets the ``MACOSX_BUNDLE_ICON_FILE`` variable to the name
      of the generated icns file, so that it will be used as the
      ``MACOSX_BUNDLE_ICON_FILE`` target property when you call
