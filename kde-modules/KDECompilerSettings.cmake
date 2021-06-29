@@ -135,7 +135,6 @@ on a target that has source files in a language other than C++.
 Enables exceptions for C++ source files compiled for the
 CMakeLists.txt file in the current directory and all subdirectories.
 
-
 Example usages:
 
 .. code-block:: cmake
@@ -183,6 +182,19 @@ Example usages:
       -DQT_NO_KEYWORDS
       -DQT_NO_FOREACH
   )
+
+Inclusion of this module defines the following variables:
+
+``ENABLE_BSYMBOLICFUNCTIONS``
+    indicates whether we make use of -Bsymbolic-functions for linking.
+    It ensures libraries bind global function references locally rather than
+    at runtime.
+    This option only has an effect on ELF-based systems.
+
+    The option is disabled by default except when using
+    KDEFrameworkCompilerSettings.cmake where it's enabled. Projects can enable
+    it by calling set(ENABLE_BSYMBOLICFUNCTIONS ON) or passing -DENABLE
+    BSYMBOLICFUNCTIONS=ON when configuring the build directory.
 
 Since pre-1.0.0.
 #]=======================================================================]
@@ -582,6 +594,18 @@ if (MSVC)
     # C4661: 'identifier' : no suitable definition provided for explicit
     #         template instantiation request
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4661")
+endif()
+
+option(ENABLE_BSYMBOLICFUNCTIONS "Make use of -Bsymbolic-functions" OFF)
+if (ENABLE_BSYMBOLICFUNCTIONS)
+    set(_SYMBOLIC_FUNCTIONS_COMPILER_OPTION "-Wl,-Bsymbolic-functions")
+    list(APPEND CMAKE_REQUIRED_LIBRARIES "${_SYMBOLIC_FUNCTIONS_COMPILER_OPTION}")
+    check_cxx_source_compiles( "int main () { return 0; }" BSYMBOLICFUNCTIONS_AVAILABLE )
+    list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES "${_SYMBOLIC_FUNCTIONS_COMPILER_OPTION}")
+    if (BSYMBOLICFUNCTIONS_AVAILABLE)
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${_SYMBOLIC_FUNCTIONS_COMPILER_OPTION}")
+        set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${_SYMBOLIC_FUNCTIONS_COMPILER_OPTION}")
+    endif()
 endif()
 
 if (WIN32)
