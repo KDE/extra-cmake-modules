@@ -246,7 +246,7 @@ def downloadScreenshots(applicationName, data):
     path = os.path.join(arguments.output, 'metadata',  applicationName, 'en-US', 'images', 'phoneScreenshots')
     os.makedirs(path, exist_ok=True)
 
-    i = 0
+    i = 1 # number screenshots starting at 1 rather than 0 to match what the fastlane tool does
     for screenshot in data['screenshots']:
         fileName = str(i) + '-' + screenshot[screenshot.rindex('/') + 1:]
         r = requests.get(screenshot)
