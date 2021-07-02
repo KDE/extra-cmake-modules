@@ -29,70 +29,32 @@ flag, otherwise you may get spurious warnings with some versions of CMake.
 Since pre-1.0.0.
 #]=======================================================================]
 
-if (NOT CMAKE_CXX_STANDARD)
-    if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.84.0)
-        set(CMAKE_CXX_STANDARD 17)
-        set(CMAKE_CXX_STANDARD_REQUIRED True)
-        set(CMAKE_CXX_EXTENSIONS OFF)
-    endif()
+# No-one else should be using this module, at least by the time when requiring
+# ECM 5.85 as minimum, where also settings levels had been introduced for
+# KDECompilerSettings to satisfy the needs for stricter out-of-the-box
+# settings.
+# So making a clear cut here by that condition and providing backward-compat
+# support from a separate file with the old code, avoiding the need for
+# further if()-else() when changing the settings for current KDE Frameworks.
+if (ECM_GLOBAL_FIND_VERSION VERSION_LESS 5.85.0)
+    include(KDEFrameworkCompilerLegacySettings NO_POLICY_SCOPE)
+    return()
 endif()
 
-if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.85.0)
-    set(ENABLE_BSYMBOLICFUNCTIONS ON)
-endif()
+# set ENABLE_BSYMBOLICFUNCTIONS default to ON
+# TODO: find a nice way to set an option default
+set(ENABLE_BSYMBOLICFUNCTIONS ON)
+
+# Current defaults
 include(KDECompilerSettings NO_POLICY_SCOPE)
 
-add_definitions(-DQT_NO_CAST_TO_ASCII
-                -DQT_NO_CAST_FROM_ASCII
-                -DQT_NO_URL_CAST_FROM_STRING
-                -DQT_NO_CAST_FROM_BYTEARRAY
-                -DQT_USE_QSTRINGBUILDER
-                -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT
-               )
-
-if (NOT WIN32)
-    # Strict iterators can't be used on Windows, they lead to a link error
-    # when application code iterates over a QVector<QPoint> for instance, unless
-    # Qt itself was also built with strict iterators.
-    # See example at https://bugreports.qt.io/browse/AUTOSUITE-946
-    add_definitions(-DQT_STRICT_ITERATORS)
-endif()
-
-# Some non-KF projects make (ab)use of KDEFrameworkCompilerSettings currently,
-# let them only hit this as well when bumping their min. ECM requirement to a newer version.
-if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.79.0)
-    add_definitions(
-        -DQT_NO_KEYWORDS
-        -DQT_NO_FOREACH
-    )
-else()
-    add_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
-endif()
-
+# enable warnings for any deprecated Qt/KF API of current 5 series
 add_definitions(
     -DQT_DEPRECATED_WARNINGS_SINCE=0x060000
     -DKF_DEPRECATED_WARNINGS_SINCE=0x060000
 )
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic")
-endif()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-   if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 5.0.0)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant" )
-   endif()
-endif()
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-   if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 5.0.0)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wzero-as-null-pointer-constant" )
-   endif()
-endif()
-
-if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.80.0)
-    include(KDEClangFormat)
-    # add clang-format target
-    file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.c)
-    kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
-endif ()
+# add clang-format target
+include(KDEClangFormat)
+file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.c)
+kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
