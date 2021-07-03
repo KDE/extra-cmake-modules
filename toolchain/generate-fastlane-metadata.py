@@ -147,7 +147,7 @@ def createFastlaneFile( applicationName, filenameToPopulate, fileContent ):
 
         # Now write out file contents!
         with open(path + '/' + filenameToPopulate, 'w') as f:
-            f.write(text)
+            f.write(text.strip()) # trim whitespaces, to avoid spurious differences after a Google Play roundtrip
 
 # Create the summary appname.yml file used by F-Droid to summarise this particular entry in the repository
 # see https://f-droid.org/en/docs/Build_Metadata_Reference/
