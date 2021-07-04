@@ -162,14 +162,19 @@ endif()
 
 if (NOT GPB_PYTHON3_LIBRARY)
   set(_PYTHON3_MIN_VERSION 4)
-  set(_PYTHON3_MAX_VERSION 10)
 
-  _find_python(3 ${_PYTHON3_MAX_VERSION}) # Canary check
+  # This value is safe to increment over time, it is used only as a reasonable
+  # upper bound to start searching from
+  set(_PYTHON3_MAX_VERSION 50)
+
+  _find_python(3 ${_PYTHON3_MAX_VERSION})
 
   if (GPB_PYTHON3_LIBRARY)
     message(FATAL_ERROR "The max python version in ${CMAKE_FIND_PACKAGE_NAME} must be updated.")
   endif()
 
+  # Look for the highest supported version of Python 3 by looking for a minor
+  # version that doesn't exist and decrementing until we find a match.
   set(_PYTHON3_FIND_VERSION ${_PYTHON3_MAX_VERSION})
 
   while(NOT GPB_PYTHON3_LIBRARY
