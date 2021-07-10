@@ -118,6 +118,10 @@ IF ``SORT`` is set, entries will be sorted by identifiers.
 ``COMPONENT`` specifies the installation component name with which the install
 rules for the generated file are associated.
 
+Since 5.85.0 this is a no-op when building for Android, as KDebugSettings is
+not available on that platform and the logging category files therefore just
+bloat the APK.
+
 Example usage:
 
 .. code-block:: cmake
@@ -306,6 +310,11 @@ endfunction()
 
 
 function(ecm_qt_install_logging_categories)
+    # on Android there is no KDebugSettings, and thus the logging categories files make no sense in APKs
+    if (ANDROID)
+        return()
+    endif()
+
     set(options SORT)
     set(oneValueArgs FILE EXPORT DESTINATION COMPONENT)
     set(multiValueArgs)
