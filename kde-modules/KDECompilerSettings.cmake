@@ -209,9 +209,9 @@ Since pre-1.0.0.
 # will offer as settings, the minimum required version of ECM sets the upper
 # limit then for the level version.
 if(NOT DEFINED KDE_COMPILERSETTINGS_LEVEL)
-    set(KDE_COMPILERSETTINGS_LEVEL ${ECM_GLOBAL_FIND_VERSION})
+    set(KDE_COMPILERSETTINGS_LEVEL "${ECM_GLOBAL_FIND_VERSION}")
 else()
-    if(KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER ${ECM_GLOBAL_FIND_VERSION})
+    if(KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER "${ECM_GLOBAL_FIND_VERSION}")
         message(FATAL "KDE_COMPILERSETTINGS_LEVEL cannot be newer than the min. required ECM version.")
     endif()
 endif()
