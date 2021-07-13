@@ -135,6 +135,24 @@ on a target that has source files in a language other than C++.
 Enables exceptions for C++ source files compiled for the
 CMakeLists.txt file in the current directory and all subdirectories.
 
+Variables
+~~~~~~~~~
+
+Inclusion of this module defines the following variables:
+
+``ENABLE_BSYMBOLICFUNCTIONS``
+    indicates whether we make use of -Bsymbolic-functions for linking.
+    It ensures libraries bind global function references locally rather than
+    at runtime.
+    This option only has an effect on ELF-based systems.
+
+    The option is disabled by default except when using
+    KDEFrameworkCompilerSettings.cmake where it's enabled. Projects can enable
+    it by calling set(ENABLE_BSYMBOLICFUNCTIONS ON) or passing -DENABLE
+    BSYMBOLICFUNCTIONS=ON when configuring the build directory.
+
+    Since 5.85
+
 Example usages:
 
 .. code-block:: cmake
@@ -182,19 +200,6 @@ Example usages:
       -DQT_NO_KEYWORDS
       -DQT_NO_FOREACH
   )
-
-Inclusion of this module defines the following variables:
-
-``ENABLE_BSYMBOLICFUNCTIONS``
-    indicates whether we make use of -Bsymbolic-functions for linking.
-    It ensures libraries bind global function references locally rather than
-    at runtime.
-    This option only has an effect on ELF-based systems.
-
-    The option is disabled by default except when using
-    KDEFrameworkCompilerSettings.cmake where it's enabled. Projects can enable
-    it by calling set(ENABLE_BSYMBOLICFUNCTIONS ON) or passing -DENABLE
-    BSYMBOLICFUNCTIONS=ON when configuring the build directory.
 
 Since pre-1.0.0.
 #]=======================================================================]
