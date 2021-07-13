@@ -8,7 +8,7 @@ ECMConfiguredInstall
 
 Takes a list of files, runs configure_file on each and installs the resultant configured files in the given location.
 
-Any suffix of ".in" in the passed file names wil be stripped from the file name at the installed location.
+Any suffix of ".in" in the passed file names will be stripped from the file name at the installed location.
 
 ::
 

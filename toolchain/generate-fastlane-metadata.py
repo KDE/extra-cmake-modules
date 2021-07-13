@@ -166,7 +166,7 @@ def createYml(appname, data):
     else:
         info['Categories']  = ['KDE']
 
-    # Update the general sumamry as well
+    # Update the general summary as well
     info['Summary'] = data['summary'][None]
 
     # Check to see if we have a Homepage...

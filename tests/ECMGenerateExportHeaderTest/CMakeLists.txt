@@ -83,7 +83,7 @@ list(LENGTH library_versions library_versions_count)
 math(EXPR _last_index ${library_versions_count}-1)
 
 # test generating the library with different EXCLUDE_DEPRECATED_BEFORE_AND_AT values
-# als install the generated libraries together incl. exported cmake targets, for use in tests below
+# also install the generated libraries together incl. exported cmake targets, for use in tests below
 # TODO: wariant with DEPRECATED_BASE_VERSION
 foreach(_group_arg "" "WITH_GROUP")
     foreach(_index RANGE ${_last_index})

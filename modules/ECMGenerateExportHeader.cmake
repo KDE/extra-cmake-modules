@@ -534,7 +534,7 @@ function(ecm_generate_export_header target)
     endif()
 
     set_property(TARGET ${target} APPEND PROPERTY AUTOGEN_TARGET_DEPENDS "${ARGS_EXPORT_FILE_NAME}")
-    # build with all the API not excluded, ensure all deprecated API is visible in the build itselt
+    # build with all the API not excluded, ensure all deprecated API is visible in the build itself
     _ecm_geh_generate_hex_number(_hexnumber ${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT})
     set(_disabling_visibility_definition "${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT=${_hexnumber}")
     target_compile_definitions(${target} PRIVATE "${_disabling_visibility_definition}")
@@ -763,7 +763,7 @@ function(ecm_generate_export_header target)
     if (ARGS_STATIC_DEFINE)
         set(_static_define_args STATIC_DEFINE "${ARGS_STATIC_DEFINE}")
     endif()
-    # for older cmake verions we have to manually append our generated content
+    # for older cmake versions we have to manually append our generated content
     # for newer we use CUSTOM_CONTENT_FROM_VARIABLE
     set(_custom_content_args)
     set(_custom_content_args CUSTOM_CONTENT_FROM_VARIABLE _output)

@@ -812,7 +812,7 @@ class RuleSet(object):
     """
     To implement your own binding, create a subclass of RuleSet, also called
     RuleSet in your own Python module. Your subclass will expose the raw rules
-    along with other ancilliary data exposed through the subclass methods.
+    along with other ancillary data exposed through the subclass methods.
 
     You then simply run the SIP generation and SIP compilation programs passing
     in the name of your rules file

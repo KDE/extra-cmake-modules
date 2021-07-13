@@ -26,7 +26,7 @@ Since 5.85 newer settings are controlled by a variable
 ``KDE_COMPILERSETTINGS_LEVEL``, taking an ECM version as value. That
 version can not be greater than the minimum required ECM version.
 The settings which are default at that version will then be used,
-but can be overriden by more fine-grained controls (see respective settings).
+but can be overridden by more fine-grained controls (see respective settings).
 This variable needs to be set before including this module, otherwise
 defaults to the minimum required ECM version.
 
@@ -48,7 +48,7 @@ Otherwise:
 - ``CMAKE_C_EXTENSIONS``: not modified
 
 If the variable ``CMAKE_C_STANDARD`` is already set when including this module,
-none of the above variables will be modifed.
+none of the above variables will be modified.
 
 The following CMake C++ standard default variables are set:
 
@@ -65,7 +65,7 @@ Otherwise:
 - ``CMAKE_CXX_EXTENSIONS``: not modified.
 
 If the variable ``CMAKE_CXX_STANDARD`` is already set when including this module,
-none of the above variables will be modifed.
+none of the above variables will be modified.
 
 
 The following C++ compiler flags are set:
