@@ -212,7 +212,7 @@ if(NOT DEFINED KDE_COMPILERSETTINGS_LEVEL)
     set(KDE_COMPILERSETTINGS_LEVEL "${ECM_GLOBAL_FIND_VERSION}")
 else()
     if(KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER "${ECM_GLOBAL_FIND_VERSION}")
-        message(FATAL "KDE_COMPILERSETTINGS_LEVEL cannot be newer than the min. required ECM version.")
+        message(FATAL_ERROR "KDE_COMPILERSETTINGS_LEVEL (${KDE_COMPILERSETTINGS_LEVEL}) cannot be newer than the min. required ECM version (${ECM_GLOBAL_FIND_VERSION}).")
     endif()
 endif()
 
