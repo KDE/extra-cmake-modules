@@ -209,11 +209,12 @@ Since pre-1.0.0.
 # will offer as settings, the minimum required version of ECM sets the upper
 # limit then for the level version.
 if(NOT DEFINED KDE_COMPILERSETTINGS_LEVEL)
-    set(KDE_COMPILERSETTINGS_LEVEL "${ECM_GLOBAL_FIND_VERSION}")
+    set(KDE_INTERNAL_COMPILERSETTINGS_LEVEL "${ECM_GLOBAL_FIND_VERSION}")
 else()
     if(KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER "${ECM_GLOBAL_FIND_VERSION}")
         message(FATAL_ERROR "KDE_COMPILERSETTINGS_LEVEL (${KDE_COMPILERSETTINGS_LEVEL}) cannot be newer than the min. required ECM version (${ECM_GLOBAL_FIND_VERSION}).")
     endif()
+    set(KDE_INTERNAL_COMPILERSETTINGS_LEVEL "${KDE_COMPILERSETTINGS_LEVEL}")
 endif()
 
 include("${ECM_MODULE_DIR}/ECMSourceVersionControl.cmake")
@@ -355,7 +356,7 @@ endif()
 
 # Pick sensible versions of the C and C++ standards.
 if (NOT CMAKE_C_STANDARD)
-    if (KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.85.0)
+    if (KDE_INTERNAL_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.85.0)
         set(CMAKE_C_STANDARD 99)
         set(CMAKE_C_STANDARD_REQUIRED TRUE)
         set(CMAKE_C_EXTENSIONS OFF)
@@ -364,7 +365,7 @@ if (NOT CMAKE_C_STANDARD)
     endif()
 endif()
 if (NOT CMAKE_CXX_STANDARD)
-    if (KDE_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.85.0)
+    if (KDE_INTERNAL_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.85.0)
         set(CMAKE_CXX_STANDARD 17)
         set(CMAKE_CXX_EXTENSIONS OFF)
     else()
@@ -634,7 +635,7 @@ endif()
 
 function(_kde_set_default_skip_variable_by_min_ecm _var_name _ecm_version)
     if(NOT DEFINED ${_var_name})
-        if (KDE_COMPILERSETTINGS_LEVEL VERSION_LESS ${_ecm_version})
+        if (KDE_INTERNAL_COMPILERSETTINGS_LEVEL VERSION_LESS ${_ecm_version})
             set(${_var_name} TRUE PARENT_SCOPE)
         else()
             set(${_var_name} FALSE PARENT_SCOPE)
@@ -643,10 +644,12 @@ function(_kde_set_default_skip_variable_by_min_ecm _var_name _ecm_version)
 endfunction()
 
 if(NOT DEFINED KDE_QT_MODERNCODE_DEFINITIONS_LEVEL)
-    set(KDE_QT_MODERNCODE_DEFINITIONS_LEVEL ${KDE_COMPILERSETTINGS_LEVEL})
+    set(KDE_INTERNAL_QT_MODERNCODE_DEFINITIONS_LEVEL ${KDE_INTERNAL_COMPILERSETTINGS_LEVEL})
+else()
+    set(KDE_INTERNAL_QT_MODERNCODE_DEFINITIONS_LEVEL ${KDE_INTERNAL_COMPILERSETTINGS_LEVEL})
 endif()
 
-if (KDE_QT_MODERNCODE_DEFINITIONS_LEVEL VERSION_GREATER_EQUAL "5.85.0")
+if (KDE_INTERNAL_QT_MODERNCODE_DEFINITIONS_LEVEL VERSION_GREATER_EQUAL "5.85.0")
     add_definitions(
         -DQT_NO_CAST_TO_ASCII
         -DQT_NO_CAST_FROM_ASCII
@@ -736,3 +739,10 @@ endif()
 
 include("${ECM_MODULE_DIR}/ECMEnableSanitizers.cmake")
 include("${ECM_MODULE_DIR}/ECMCoverageOption.cmake")
+
+############################################################
+# Clean-up
+############################################################
+# unset again, to not leak into caller scope and avoid usage there
+set(KDE_INTERNAL_COMPILERSETTINGS_LEVEL)
+set(KDE_INTERNAL_QT_MODERNCODE_DEFINITIONS_LEVEL)
