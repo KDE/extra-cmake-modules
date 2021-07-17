@@ -346,6 +346,10 @@ if (WIN32)
     # As stated in http://msdn.microsoft.com/en-us/library/4hwaceh6.aspx M_PI only gets defined
     # if _USE_MATH_DEFINES is defined, with mingw this has a similar effect as -D_GNU_SOURCE on math.h
     _kde_add_platform_definitions(-D_USE_MATH_DEFINES)
+
+    # Don't define MIN and MAX in windows.h
+    # the defines break the use of std::max
+    _kde_add_platform_definitions(-DNOMINMAX)
 endif()
 
 
