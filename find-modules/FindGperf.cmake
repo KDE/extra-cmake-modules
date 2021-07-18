@@ -20,6 +20,9 @@ This will define the following variables:
 ``Gperf_EXECUTABLE``
     The gperf executable.
 
+``Gperf_VERSION``
+    The gperf version. (since 5.85)
+
 If ``Gperf_FOUND`` is TRUE, it will also define the following imported
 target:
 
@@ -56,12 +59,27 @@ ecm_find_package_version_check(Gperf)
 # Find gperf
 find_program(Gperf_EXECUTABLE NAMES gperf)
 
+if(Gperf_EXECUTABLE)
+    execute_process(COMMAND ${Gperf_EXECUTABLE} -v
+        OUTPUT_VARIABLE _version_string
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(_version_string MATCHES "^GNU gperf ([-0-9\\.]+)")
+        set(Gperf_VERSION "${CMAKE_MATCH_1}")
+    endif()
+    unset(_version_string)
+else()
+    set(Gperf_VERSION)
+endif()
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Gperf
     FOUND_VAR
         Gperf_FOUND
     REQUIRED_VARS
         Gperf_EXECUTABLE
+    VERSION_VAR
+        Gperf_VERSION
 )
 
 mark_as_advanced(Gperf_EXECUTABLE)
