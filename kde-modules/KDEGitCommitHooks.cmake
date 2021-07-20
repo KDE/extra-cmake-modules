@@ -41,6 +41,21 @@ Since 5.79
 
 # try to find clang-format in path
 find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
+if(NOT KDE_CLANG_FORMAT_EXECUTABLE)
+    # Try again with versioned names; this has the downside that
+    # the list needs updating periodically with new clang-format versions.
+    #
+    # Note that versions of clang-format can and do ping-pong over
+    # internal changes (e.g. 10 and 11 differ in how to format
+    # no-capture lambdas, `[]` vs `[ ]`, depending on other
+    # seemingly-unrelated configuration options). Formatting may
+    # also fail if the .clang-format file uses options for a newer
+    # clang-format than the one found.
+    #
+    # Pre-9.0 versions are intentionally excluded here.
+    find_program(KDE_CLANG_FORMAT_EXECUTABLE NAMES clang-format12 clang-format11 clang-format10 clang-format90)
+endif()
+
 include(CMakeParseArguments)
 set(PRE_COMMIT_HOOK_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/pre-commit.in")
 set(CLANG_FORMAT_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/clang-format.sh")
