@@ -34,6 +34,9 @@ of CMAKE_WIN32_EXECUTABLE or CMAKE_MACOSX_BUNDLE). Be aware that this changes
 the executable entry point on Windows (although some frameworks, such as Qt,
 abstract this difference away).
 
+The tests will be build with -DQT_FORCE_ASSERTS to enable assertions in the
+test executable even for release builds.
+
 The TARGET_NAMES_VAR and TEST_NAMES_VAR arguments, if given, should specify a
 variable name to receive the list of generated target and test names,
 respectively. This makes it convenient to apply properties to them as a
@@ -92,6 +95,7 @@ function(ecm_add_test)
   endif()
   add_test(NAME ${_testname} COMMAND ${_targetname})
   target_link_libraries(${_targetname} ${ARG_LINK_LIBRARIES})
+  target_compile_definitions(${_targetname} PRIVATE -DQT_FORCE_ASSERTS)
   ecm_mark_as_test(${_targetname})
   if (CMAKE_LIBRARY_OUTPUT_DIRECTORY)
     if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
