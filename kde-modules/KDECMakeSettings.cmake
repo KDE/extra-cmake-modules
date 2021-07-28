@@ -297,14 +297,24 @@ endif()
 # Download translations
 
 function(_repository_name reponame dir)
-    execute_process(COMMAND git remote get-url --all origin
-        OUTPUT_VARIABLE giturl
+    execute_process(COMMAND git rev-parse --symbolic-full-name @{u}
+        OUTPUT_VARIABLE upstream_ref
         RESULT_VARIABLE exitCode
         WORKING_DIRECTORY "${dir}")
+    string(REGEX REPLACE "refs/remotes/([^/]+)/.*" "\\1" gitorigin "${upstream_ref}")
+    if(exitCode EQUAL 0)
+        message(DEBUG "Git upstream inferred as ${gitorigin}, upstream ref was ${upstream_ref}")
+        execute_process(COMMAND git remote get-url --all "${gitorigin}"
+            OUTPUT_VARIABLE giturl
+            RESULT_VARIABLE exitCode
+            WORKING_DIRECTORY "${dir}")
+    endif()
 
     if(exitCode EQUAL 0)
+        message(DEBUG "Git URL inferred as ${giturl}")
         string(REGEX MATCHALL ".+kde\\.org[:\\/]([-A-Za-z0-9\\/]+)(.git)?\\s*" "" ${giturl})
         set(${reponame} ${CMAKE_MATCH_1})
+        message(DEBUG "Repository inferred as ${${reponame}}")
     endif()
 
     if(NOT ${reponame})
