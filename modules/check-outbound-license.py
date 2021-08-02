@@ -128,6 +128,8 @@ if __name__ == '__main__':
             licenses = []
     f.close()
 
+    spdxDictionary[fileName] = licenses
+
     # read file with list of test files
     f = open(args.input, "r")
     testfiles = f.readlines()
