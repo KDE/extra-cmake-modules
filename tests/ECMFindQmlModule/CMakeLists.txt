@@ -5,7 +5,7 @@ set(ECM_FIND_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../find-modules)
 set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
 set(CMAKE_MODULE_PATH "${ECM_FIND_MODULE_DIR}" "${ECM_MODULE_DIR}")
 
-include(ECMQMLModules)
+include(ECMFindQmlModule)
 
 ecm_find_qmlmodule(QtQuick 2.1)
 

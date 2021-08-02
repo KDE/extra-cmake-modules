@@ -208,7 +208,7 @@ set_package_properties(
         PURPOSE "Required to run tests for the ECMQMLModules module."
 )
 if (TARGET Qt5::Quick)
-    add_test_macro(ECMQMLModules dummy)
+    add_test_macro(ECMFindQmlModule dummy)
 
     set(ECMQmlModuleTest.static_full_EXTRA_OPTIONS
         --build-target install
