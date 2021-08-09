@@ -58,7 +58,8 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
     # In case of tarballs there is no .git directory
     if (EXISTS ${GIT_DIR})
         # The pre-commit hook is a bash script, consequently it won't work on non-unix platforms
-        if (UNIX)
+        # git on Windows provides its own bash
+        if (UNIX OR WIN32)
             if(KDE_CLANG_FORMAT_EXECUTABLE)
                 list(FIND ARG_CHECKS "CLANG_FORMAT" _index)
                 if (${_index} GREATER -1)
