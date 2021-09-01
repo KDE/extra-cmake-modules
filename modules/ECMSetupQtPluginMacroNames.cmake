@@ -141,6 +141,12 @@ macro(ecm_setup_qtplugin_macro_names)
     endforeach()
 
     if (ESQMN_CONFIG_CODE_VARIABLE)
+        # As CMake config files of one project can be included multiple times,
+        # the code to add entries to CMAKE_AUTOMOC_MACRO_NAMES & CMAKE_AUTOMOC_DEPEND_FILTERS
+        # would then be also executed multiple times.
+        # While there currently is no simple way known to have a unique flag to track
+        # if the code was already executed, at least by the data currently passed to this macro,
+        # simply check for the presence of the new entries  before adding them for now.
         set(_content
 "####################################################################################
 # CMAKE_AUTOMOC
@@ -154,7 +160,12 @@ macro(ecm_setup_qtplugin_macro_names)
         string(APPEND _content "
 # CMake 3.9+ warns about automoc on files without Q_OBJECT, and doesn't know about other macros.
 # 3.10+ lets us provide more macro names that require automoc.
-list(APPEND CMAKE_AUTOMOC_MACRO_NAMES ${_all_macro_names})
+foreach(macro_name  ${_all_macro_names})
+    # we can be run multiple times, so add only once
+    if(NOT \${macro_name} IN_LIST CMAKE_AUTOMOC_MACRO_NAMES)
+        list(APPEND CMAKE_AUTOMOC_MACRO_NAMES \${macro_name})
+    endif()
+endforeach()
 ")
 
         if(ESQMN_JSON_ARG1 OR ESQMN_JSON_ARG2 OR ESQMN_JSON_ARG3)
@@ -165,30 +176,39 @@ list(APPEND CMAKE_AUTOMOC_MACRO_NAMES ${_all_macro_names})
             if(ESQMN_JSON_ARG1)
                 string(APPEND _content
 "foreach(macro_name  ${ESQMN_JSON_ARG1})
-    list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-        \"\${macro_name}\"
-        \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([ \\t\\n]*\\\"([^\\\"]+)\\\"\"
-    )
+    # we can be run multiple times, so add only once
+    if(NOT \${macro_name} IN_LIST CMAKE_AUTOMOC_DEPEND_FILTERS)
+        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+            \"\${macro_name}\"
+            \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([ \\t\\n]*\\\"([^\\\"]+)\\\"\"
+        )
+    endif()
 endforeach()
 ")
             endif()
             if(ESQMN_JSON_ARG2)
                 string(APPEND _content
 "foreach(macro_name  ${ESQMN_JSON_ARG2})
-    list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-        \"\${macro_name}\"
-        \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
-    )
+    # we can be run multiple times, so add only once
+    if(NOT \${macro_name} IN_LIST CMAKE_AUTOMOC_DEPEND_FILTERS)
+        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+            \"\${macro_name}\"
+            \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
+        )
+    endif()
 endforeach()
 ")
             endif()
             if(ESQMN_JSON_ARG3)
                 string(APPEND _content
 "foreach(macro_name  ${ESQMN_JSON_ARG3})
-    list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
-        \"\${macro_name}\"
-        \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
-    )
+    # we can be run multiple times, so add only once
+    if(NOT \${macro_name} IN_LIST CMAKE_AUTOMOC_DEPEND_FILTERS)
+        list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
+            \"\${macro_name}\"
+            \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
+        )
+    endif()
 endforeach()
 ")
             endif()
