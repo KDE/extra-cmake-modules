@@ -147,6 +147,7 @@ macro(ecm_setup_qtplugin_macro_names)
         # While there currently is no simple way known to have a unique flag to track
         # if the code was already executed, at least by the data currently passed to this macro,
         # simply check for the presence of the new entries  before adding them for now.
+        # Not using IN_LIST in generated code, as projects might have CMP0057 set to OLD
         set(_content
 "####################################################################################
 # CMAKE_AUTOMOC
@@ -162,7 +163,8 @@ macro(ecm_setup_qtplugin_macro_names)
 # 3.10+ lets us provide more macro names that require automoc.
 foreach(macro_name  ${_all_macro_names})
     # we can be run multiple times, so add only once
-    if(NOT \${macro_name} IN_LIST CMAKE_AUTOMOC_MACRO_NAMES)
+    list (FIND CMAKE_AUTOMOC_MACRO_NAMES \"\${macro_name}\" _index)
+    if(_index LESS 0)
         list(APPEND CMAKE_AUTOMOC_MACRO_NAMES \${macro_name})
     endif()
 endforeach()
@@ -177,7 +179,8 @@ endforeach()
                 string(APPEND _content
 "foreach(macro_name  ${ESQMN_JSON_ARG1})
     # we can be run multiple times, so add only once
-    if(NOT \${macro_name} IN_LIST CMAKE_AUTOMOC_DEPEND_FILTERS)
+    list (FIND CMAKE_AUTOMOC_DEPEND_FILTERS \"\${macro_name}\" _index)
+    if(_index LESS 0)
         list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
             \"\${macro_name}\"
             \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([ \\t\\n]*\\\"([^\\\"]+)\\\"\"
@@ -190,7 +193,8 @@ endforeach()
                 string(APPEND _content
 "foreach(macro_name  ${ESQMN_JSON_ARG2})
     # we can be run multiple times, so add only once
-    if(NOT \${macro_name} IN_LIST CMAKE_AUTOMOC_DEPEND_FILTERS)
+    list (FIND CMAKE_AUTOMOC_DEPEND_FILTERS \"\${macro_name}\" _index)
+    if(_index LESS 0)
         list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
             \"\${macro_name}\"
             \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
@@ -203,7 +207,8 @@ endforeach()
                 string(APPEND _content
 "foreach(macro_name  ${ESQMN_JSON_ARG3})
     # we can be run multiple times, so add only once
-    if(NOT \${macro_name} IN_LIST CMAKE_AUTOMOC_DEPEND_FILTERS)
+    list (FIND CMAKE_AUTOMOC_DEPEND_FILTERS \"\${macro_name}\" _index)
+    if(_index LESS 0)
         list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
             \"\${macro_name}\"
             \"[\\n^][ \\t]*\${macro_name}[ \\t\\n]*\\\\([^,]*,[^,]*,[ \\t\\n]*\\\"([^\\\"]+)\\\"\"
