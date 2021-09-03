@@ -540,9 +540,16 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT APPLE) OR
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_SHARED_LINKER_FLAGS}")
     set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_MODULE_LINKER_FLAGS}")
 
+    string(TOUPPER "CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}" compileflags)
+    if("${CMAKE_CXX_FLAGS} ${${compileflags}}" MATCHES "-fsanitize")
+        set(sanitizers_enabled TRUE)
+    else()
+        set(sanitizers_enabled FALSE)
+    endif()
+
     # Do not allow undefined symbols, even in non-symbolic shared libraries
     # On OpenBSD we must disable this to allow the stuff to properly compile without explicit libc specification
-    if (NOT CMAKE_SYSTEM_NAME MATCHES "OpenBSD")
+    if (NOT CMAKE_SYSTEM_NAME MATCHES "OpenBSD" AND (NOT sanitizers_enabled OR NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined ${CMAKE_SHARED_LINKER_FLAGS}")
         set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--no-undefined ${CMAKE_MODULE_LINKER_FLAGS}")
     endif()
