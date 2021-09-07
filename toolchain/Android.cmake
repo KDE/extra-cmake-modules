@@ -122,6 +122,7 @@ Advanced Options
 
 The following packaging options are mainly interesting for automation or integration
 with CI/CD pipelines:
+
 ``ANDROID_APK_OUTPUT_DIR``
     Specifies a folder where the generated APK files should be placed.
 ``ANDROID_FASTLANE_METADATA_OUTPUT_DIR``
