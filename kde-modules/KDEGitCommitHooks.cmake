@@ -56,7 +56,7 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
     set(GIT_DIR "${CMAKE_SOURCE_DIR}/.git")
 
     # In case of tarballs there is no .git directory
-    if (EXISTS ${GIT_DIR})
+    if (IS_DIRECTORY ${GIT_DIR})
         # The pre-commit hook is a bash script, consequently it won't work on non-unix platforms
         # git on Windows provides its own bash
         if (UNIX OR WIN32)
