@@ -41,16 +41,16 @@ compatible with the specified license headers. Note that a convenient way is to 
 the CMake GLOB command of the FILE function.
 
 ``LICENSES``  : List of one or multiple outbound license regarding which the compatibility
-                 of the source code files shall be tested. Currently, the following values
+                of the source code files shall be tested. Currently, the following values
                 are supported (values are SPDX registry identifiers):
-                   * MIT
-                   * BSD-2-Clause
-                   * BSD-3-Clause
-                   * LGPL-2.0-only
-                   * LGPL-2.1-only
-                   * LGPL-3.0-only
-                   * GPL-2.0-only
-                   * GPL-3.0-only
+                * MIT
+                * BSD-2-Clause
+                * BSD-3-Clause
+                * LGPL-2.0-only
+                * LGPL-2.1-only
+                * LGPL-3.0-only
+                * GPL-2.0-only
+                * GPL-3.0-only
 
 ``FILES:``    : List of source files that contain valid SPDX-License-Identifier markers.
                 The paths can be relative to the CMake file that generates the test case
