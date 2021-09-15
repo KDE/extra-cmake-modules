@@ -28,7 +28,11 @@ these may be needed to use inotify.
 Since 5.32.0.
 #]=======================================================================]
 
-find_path(Inotify_INCLUDE_DIRS sys/inotify.h)
+# Additional suffixes are to support inotify installed on FreeBSD
+# in such a way that it is not "accidentally" found when ${LOCALBASE}/include
+# is added to the include path; this is similar to OpenBSD's avoidance
+# of "inotify poisoning" in builds.
+find_path(Inotify_INCLUDE_DIRS sys/inotify.h PATH_SUFFIXES libinotify inotify)
 
 if(Inotify_INCLUDE_DIRS)
 # On Linux there is no library to link against, on the BSDs there is.
