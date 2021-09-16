@@ -34,7 +34,7 @@ Since 5.56.0.
 #]=======================================================================]
 
 find_package(PkgConfig QUIET)
-pkg_check_modules(PC_Canberra libcanberra QUIET)
+pkg_check_modules(PC_Canberra QUIET IMPORTED_TARGET libcanberra)
 
 find_library(Canberra_LIBRARIES
     NAMES canberra
@@ -66,6 +66,9 @@ if(Canberra_FOUND AND NOT TARGET Canberra::Canberra)
         INTERFACE_COMPILE_OPTIONS "${PC_Canberra_CFLAGS}"
         INTERFACE_INCLUDE_DIRECTORIES "${Canberra_INCLUDE_DIRS}"
     )
+    if (TARGET PkgConfig::PC_Canberra)
+        target_link_libraries(Canberra::Canberra INTERFACE PkgConfig::PC_Canberra)
+    endif()
 endif()
 
 mark_as_advanced(Canberra_LIBRARIES Canberra_INCLUDE_DIRS Canberra_VERSION)
