@@ -67,5 +67,5 @@ mark_as_advanced(UDEV_FOUND UDEV_LIBS UDEV_INCLUDE_DIR)
 include(FeatureSummary)
 set_package_properties(UDev PROPERTIES
     DESCRIPTION "API for enumerating and introspecting local devices (part of systemd)"
-    URL "https://freedesktop.org/wiki/Software/systemd/"
+    URL "https://www.freedesktop.org/wiki/Software/systemd/"
 )
