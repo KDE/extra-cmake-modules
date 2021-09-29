@@ -60,6 +60,7 @@ find_path(EGL_INCLUDE_DIR
 find_library(EGL_LIBRARY
     NAMES
         EGL
+        libEGL
     HINTS
         ${PKG_EGL_LIBRARY_DIRS}
 )
