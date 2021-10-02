@@ -68,7 +68,7 @@ include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
 
 ecm_find_package_version_check(QtWaylandScanner)
 
-query_qmake(qt_binaries_dir QT_INSTALL_BINS)
+query_qmake(qt_binaries_dir QT_HOST_BINS)
 
 # Find qtwaylandscanner
 find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS ${qt_binaries_dir})
