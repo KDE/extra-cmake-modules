@@ -6,12 +6,12 @@ set PATH "@KDE_INSTALL_FULL_BINDIR@:$PATH"
 # LD_LIBRARY_PATH only needed if you are building without rpath
 # set -x LD_LIBRARY_PATH "@KDE_INSTALL_FULL_LIBDIR@:$LD_LIBRARY_PATH"
 
-if set -q XDG_DATA_DIRS
+if test -z "$XDG_DATA_DIRS"
     set -x --path XDG_DATA_DIRS /usr/local/share/ /usr/share/
 end
 set -x --path XDG_DATA_DIRS "@KDE_INSTALL_FULL_DATADIR@" $XDG_DATA_DIRS
 
-if set -q XDG_CONFIG_DIRS
+if test -z "$XDG_CONFIG_DIRS"
     set -x --path XDG_CONFIG_DIRS /etc/xdg
 end
 set -x --path XDG_CONFIG_DIRS "@KDE_INSTALL_FULL_CONFDIR@" $XDG_CONFIG_DIRS
