@@ -792,4 +792,5 @@ if __name__ == "__main__":
     if sys.argv[1] != "--self-check":
         sys.exit(main())
     else:
+        from PyQt5.Qt import PYQT_CONFIGURATION
         cindex.Config.set_library_file(sys.argv[2])

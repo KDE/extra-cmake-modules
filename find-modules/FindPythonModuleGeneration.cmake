@@ -260,7 +260,7 @@ else()
   message(STATUS "Found ${libclang_LIBRARY}")
 endif()
 
-foreach (pyversion "2" "3")
+foreach (pyversion "3" "2")
   set(GPB_PYTHON_COMMAND ${GPB_PYTHON${pyversion}_COMMAND})
   if (NOT GPB_PYTHON_COMMAND)
     continue()
