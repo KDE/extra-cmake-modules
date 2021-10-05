@@ -118,6 +118,17 @@ find_package_handle_standard_args(Wayland
 )
 
 pkg_get_variable(Wayland_DATADIR wayland-server pkgdatadir)
+if (CMAKE_CROSSCOMPILING AND (NOT EXISTS "${Wayland_DATADIR}/wayland.xml"))
+    # PKG_CONFIG_SYSROOT_DIR only applies to -I and -L flags, so pkg-config
+    # does not prepend CMAKE_SYSROOT when cross-compiling unless you pass
+    # --define-prefix explicitly. Therefore we have to  manually do prepend
+    # it here when cross-compiling.
+    # See https://gitlab.kitware.com/cmake/cmake/-/issues/16647#note_844761
+    set(Wayland_DATADIR ${CMAKE_SYSROOT}${Wayland_DATADIR})
+endif()
+if (NOT EXISTS "${Wayland_DATADIR}/wayland.xml")
+    message(WARNING "Could not find wayland.xml in ${Wayland_DATADIR}")
+endif()
 
 include(FeatureSummary)
 set_package_properties(Wayland PROPERTIES
