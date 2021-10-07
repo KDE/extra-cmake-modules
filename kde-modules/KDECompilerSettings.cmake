@@ -604,6 +604,12 @@ if (MSVC)
     # C4661: 'identifier' : no suitable definition provided for explicit
     #         template instantiation request
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4661")
+
+    if (CMAKE_CXX_STANDARD GREATER_EQUAL 11)
+        # Ensure __cplusplus is correct, otherwise it defaults to 199711L which isn't true
+        # https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
+    endif()
 endif()
 
 option(ENABLE_BSYMBOLICFUNCTIONS "Make use of -Bsymbolic-functions" OFF)
