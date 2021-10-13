@@ -192,9 +192,9 @@ set(ANDROID_PLATFORM "android-${CMAKE_ANDROID_API}")
 set(ANDROID_STL ${CMAKE_ANDROID_STL_TYPE})
 include(${CMAKE_ANDROID_NDK}/build/cmake/android.toolchain.cmake REQUIRED)
 
-## HACK: Remove when we can depend on NDK r22
+## HACK: Remove when we can depend on NDK r23
 # Workaround issue https://github.com/android/ndk/issues/929
-if(ANDROID_NDK_MAJOR VERSION_LESS 22)
+if(ANDROID_NDK_MAJOR VERSION_LESS 23)
     unset(CMAKE_SYSROOT)
     set(ANDROID_SYSROOT_PREFIX "${ANDROID_TOOLCHAIN_ROOT}/sysroot/usr")
 
