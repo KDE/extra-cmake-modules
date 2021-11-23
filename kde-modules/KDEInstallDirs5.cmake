@@ -76,18 +76,18 @@ deprecated variable name in square brackets):
 ``KCONFUPDATEDIR``
     kconf_update scripts (``DATAROOTDIR/kconf_update``)
     [``KCONF_UPDATE_INSTALL_DIR``]
-``KSERVICES5DIR``
+``KSERVICES5DIR`` or (since 5.89) ``KSERVICESDIR``
     services for KDE Frameworks 5 (``DATAROOTDIR/kservices5``)
     [``SERVICES_INSTALL_DIR``]
-``KSERVICETYPES5DIR``
+``KSERVICETYPES5DIR`` or (since 5.89) ``KSERVICETYPESDIR``
     service types for KDE Frameworks 5 (``DATAROOTDIR/kservicetypes5``)
     [``SERVICETYPES_INSTALL_DIR``]
-``KXMLGUI5DIR``
+``KXMLGUI5DIR`` or (since 5.89) ``KXMLGUIDIR``
     knotify description files (``DATAROOTDIR/kxmlgui5``)
     [``KXMLGUI_INSTALL_DIR``]
 ``KTEMPLATESDIR``
     Kapptemplate and Kdevelop templates (``kdevappwizard/templates``)
-``KNOTIFY5RCDIR``
+``KNOTIFY5RCDIR`` or (since 5.89) ``KNOTIFYRCDIR``
     knotify description files (``DATAROOTDIR/knotifications5``)
     [``KNOTIFYRC_INSTALL_DIR``]
 ``ICONDIR``
@@ -321,16 +321,16 @@ endif()
 # KDE Framework-specific things
 _define_relative(KSERVICES5DIR DATAROOTDIR "kservices5"
     "services for KDE Frameworks 5"
-    SERVICES_INSTALL_DIR)
+    SERVICES_INSTALL_DIR KSERVICESDIR)
 _define_relative(KSERVICETYPES5DIR DATAROOTDIR "kservicetypes5"
     "service types for KDE Frameworks 5"
-    SERVICETYPES_INSTALL_DIR)
+    SERVICETYPES_INSTALL_DIR KSERVICETYPESDIR)
 _define_relative(KNOTIFY5RCDIR DATAROOTDIR "knotifications5"
     "knotify description files"
-    KNOTIFYRC_INSTALL_DIR)
+    KNOTIFYRC_INSTALL_DIR KNOTIFYRCDIR)
 _define_relative(KXMLGUI5DIR DATAROOTDIR "kxmlgui5"
     "kxmlgui .rc files"
-    KXMLGUI_INSTALL_DIR)
+    KXMLGUI_INSTALL_DIR KXMLGUIDIR)
 _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories5"
     "Qt Logging categories files")
 
@@ -344,12 +344,12 @@ _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories5"
 #   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
-# FIXME: why is INCLUDES (only) set for ARCHIVE targets?
 set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                       LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
                                       ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
                                       INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR_KF5}"
 )
+set(KF_INSTALL_TARGETS_DEFAULT_ARGS ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 # on the Mac support an extra install directory for application bundles
 if(APPLE)

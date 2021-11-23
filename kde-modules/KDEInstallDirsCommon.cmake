@@ -76,10 +76,15 @@ set(_gnu_install_dirs_vars
 #            relative to KDE_INSTALL_${parent}: no leading /
 # docstring: documentation about the variable (not including the default value)
 # oldstylename (optional): the old-style name of the variable
+# alias (optional): alias for the variable (e.g. without '5' in the name)
 macro(_define_relative varname parent subdir docstring)
     set(_oldstylename)
     if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED AND ${ARGC} GREATER 4)
         set(_oldstylename "${ARGV4}")
+    endif()
+    set(_aliasname)
+    if(${ARGC} GREATER 5)
+        set(_aliasname "${ARGV5}")
     endif()
     set(_cmakename)
     if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES)
@@ -132,6 +137,13 @@ macro(_define_relative varname parent subdir docstring)
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
+    elseif(${_aliasname})
+        # The alias variable was given (probably on the command line): move
+        # it to the new name
+        set(KDE_INSTALL_${varname} "${${_aliasname}}"
+            CACHE PATH
+                  "${docstring} (${_docpath})"
+                  FORCE)
     elseif(${_cmakename})
         if(_cmakename_is_deprecated)
             message(DEPRECATION "${_cmakename} is deprecated, use KDE_INSTALL_${varname} instead.")
@@ -170,6 +182,9 @@ macro(_define_relative varname parent subdir docstring)
 
     if(_oldstylename)
         set(${_oldstylename} "${KDE_INSTALL_${varname}}")
+    endif()
+    if (_aliasname)
+        set(${_aliasname} "${KDE_INSTALL_${varname}}")
     endif()
 endmacro()
 
@@ -370,7 +385,7 @@ endif()
 set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                       LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
                                       ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
-                                      INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+                                      INCLUDES DESTINATION "${KDE_INSTALL_INCLUDEDIR}"
 )
 if(APPLE)
     set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}

@@ -71,15 +71,15 @@ where ``<dir>`` is one of (default values in parentheses):
     kconfig description files (``DATAROOTDIR/config.kcfg``)
 ``KCONFUPDATEDIR``
     kconf_update scripts (``DATAROOTDIR/kconf_update``)
-``KSERVICES6DIR``
+``KSERVICESDIR``
     services for KDE Frameworks 6 (``DATAROOTDIR/kservices6``)
-``KSERVICETYPES6DIR``
+``KSERVICETYPESDIR``
     service types for KDE Frameworks 6 (``DATAROOTDIR/kservicetypes6``)
-``KXMLGUI6DIR``
+``KXMLGUIDIR``
     knotify description files (``DATAROOTDIR/kxmlgui6``)
 ``KTEMPLATESDIR``
     Kapptemplate and Kdevelop templates (``kdevappwizard/templates``)
-``KNOTIFY6RCDIR``
+``KNOTIFYRCDIR``
     knotify description files (``DATAROOTDIR/knotifications6``)
 ``ICONDIR``
     icons (``DATAROOTDIR/icons``)
@@ -192,9 +192,9 @@ set(KDE_INSTALL_DIRS_NO_DEPRECATED TRUE)
 include(${CMAKE_CURRENT_LIST_DIR}/KDEInstallDirsCommon.cmake)
 
 if(WIN32)
-    _define_non_cache(LIBEXECDIR_KF6 "${CMAKE_INSTALL_LIBEXECDIR}")
+    _define_non_cache(LIBEXECDIR_KF "${CMAKE_INSTALL_LIBEXECDIR}")
 else()
-    _define_non_cache(LIBEXECDIR_KF6 "${CMAKE_INSTALL_LIBEXECDIR}/kf6")
+    _define_non_cache(LIBEXECDIR_KF "${CMAKE_INSTALL_LIBEXECDIR}/kf6")
 endif()
 
 # TODO TODO TODO
@@ -221,8 +221,7 @@ option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, QCH files for Qt-ba
 #        file(RELATIVE_PATH qt_plugins_dir ${qt_install_prefix_dir} ${qt_plugins_dir})
 #    endif()
 #    _define_absolute(QTPLUGINDIR ${qt_plugins_dir}
-#        "Qt plugins"
-#         QT_PLUGIN_INSTALL_DIR)
+#        "Qt plugins")
 #
 #    query_qmake(qt_qml_dir QT_INSTALL_QML)
 #
@@ -230,8 +229,7 @@ option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, QCH files for Qt-ba
 #        file(RELATIVE_PATH qt_qml_dir ${qt_install_prefix_dir} ${qt_qml_dir})
 #    endif()
 #    _define_absolute(QMLDIR ${qt_qml_dir}
-#        "QtQuick2 imports"
-#        QML_INSTALL_DIR)
+#        "QtQuick2 imports")
 #else()
     set(_pluginsDirParent LIBDIR)
     if (ANDROID)
@@ -239,21 +237,18 @@ option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, QCH files for Qt-ba
         #androiddeployqt wants plugins right in the prefix
     endif()
     _define_relative(QTPLUGINDIR "${_pluginsDirParent}" "plugins"
-        "Qt plugins"
-        QT_PLUGIN_INSTALL_DIR)
+        "Qt plugins")
 
     _define_relative(QMLDIR LIBDIR "qml"
-        "QtQuick2 imports"
-        QML_INSTALL_DIR)
+        "QtQuick2 imports")
 #endif()
 
 _define_relative(PLUGINDIR QTPLUGINDIR ""
-    "Plugins"
-    PLUGIN_INSTALL_DIR)
+    "Plugins")
 
-_define_non_cache(INCLUDEDIR_KF6 "${CMAKE_INSTALL_INCLUDEDIR}/KF6")
+_define_non_cache(INCLUDEDIR_KF "${CMAKE_INSTALL_INCLUDEDIR}/KF6")
 
-_define_non_cache(DATADIR_KF5 "${CMAKE_INSTALL_DATADIR}/kf6")
+_define_non_cache(DATADIR_KF "${CMAKE_INSTALL_DATADIR}/kf6")
 
 # TODO TODO TODO
 # Qt-specific data vars
@@ -269,21 +264,17 @@ _define_non_cache(DATADIR_KF5 "${CMAKE_INSTALL_DATADIR}/kf6")
 
 
 # KDE Framework-specific things
-_define_relative(KSERVICES6DIR DATAROOTDIR "kservices6"
-    "services for KDE Frameworks 6"
-    SERVICES_INSTALL_DIR)
-_define_relative(KSERVICETYPES6DIR DATAROOTDIR "kservicetypes6"
-    "service types for KDE Frameworks 6"
-    SERVICETYPES_INSTALL_DIR)
-_define_relative(KNOTIFY6RCDIR DATAROOTDIR "knotifications6"
-    "knotify description files"
-    KNOTIFYRC_INSTALL_DIR)
-_define_relative(KXMLGUI6DIR DATAROOTDIR "kxmlgui6"
-    "kxmlgui .rc files"
-    KXMLGUI_INSTALL_DIR)
+_define_relative(KSERVICESDIR DATAROOTDIR "kservices6"
+    "services for KDE Frameworks 6")
+_define_relative(KSERVICETYPESDIR DATAROOTDIR "kservicetypes6"
+    "service types for KDE Frameworks 6")
+_define_relative(KNOTIFYRCDIR DATAROOTDIR "knotifications6"
+    "knotify description files")
+# TODO MOVE TO KXMLGUI
+_define_relative(KXMLGUIDIR DATAROOTDIR "kxmlgui6"
+    "kxmlgui .rc files")
 _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories6"
     "Qt Logging categories files")
-
 
 # For more documentation see above.
 # Later on it will be possible to extend this for installing OSX frameworks
@@ -294,11 +285,10 @@ _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories6"
 #   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
-# FIXME: why is INCLUDES (only) set for ARCHIVE targets?
-set(KF6_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-                                      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
-                                      INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR_KF6}"
+set(KF_INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                                    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+                                    INCLUDES DESTINATION "${KDE_INSTALL_INCLUDEDIR_KF}"
 )
 
 # on the Mac support an extra install directory for application bundles
