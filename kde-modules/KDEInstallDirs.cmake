@@ -12,4 +12,7 @@ Since 5.82.0, prior to that equivalent to KDEInstallDirs5.
 #]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
+if(NOT DEFINED ${QT_MAJOR_VERSION})
+    set(QT_MAJOR_VERSION 5)
+endif()
 include(${CMAKE_CURRENT_LIST_DIR}/KDEInstallDirs${QT_MAJOR_VERSION}.cmake)
