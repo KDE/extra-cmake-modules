@@ -4,10 +4,10 @@ exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=/usr/KCoreAddons
 
-Name: KF5CoreAddons2
-Description: Addons to QtCore
-URL: https://www.kde.org/
+Name: KF5CoreAddons5
+Description: KF5CoreAddons test
+URL: https://www.example.org/
 Version: 5.43
-Libs: -L${prefix}/lib -lKF5CoreAddons2
+Libs: -L${prefix}/lib -lKF5CoreAddons5
 Cflags: -I/usr/KCoreAddons 
 Requires: Qt5Core

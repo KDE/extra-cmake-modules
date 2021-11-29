@@ -6,6 +6,7 @@ includedir=/usr/KCoreAddons
 
 Name: KF5CoreAddons4
 Description: KF5CoreAddons4 library.
+URL: https://www.kde.org/
 Version: 5.43
 Libs: -L${prefix}/lib -lKF5CoreAddons4
 Cflags: -I/usr/KCoreAddons 

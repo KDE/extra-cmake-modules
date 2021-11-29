@@ -22,6 +22,7 @@ projects.
                         [LIB_INSTALL_DIR <dir>]
                         [DEFINES -D<variable=value>...]
                         [DESCRIPTION <library description>] # since 5.41.0
+                        [URL <url>] # since 5.89.0
                         [INSTALL])
 
 ``BASE_NAME`` is the name of the module. It's the name projects will use to
@@ -59,6 +60,9 @@ the library pass to the compiler when using it.
 will first try to get the description from the metainfo.yaml file or will
 create one based on ``LIB_NAME``. Since 5.41.0.
 
+``URL`` An URL where people can get more information about and download the
+package. Defaults to "https://www.kde.org/". Since 5.89.0.
+
 ``INSTALL`` will cause the module to be installed to the ``pkgconfig``
 subdirectory of ``LIB_INSTALL_DIR``, unless the ``ECM_PKGCONFIG_INSTALL_DIR``
 cache variable is set to something different. Note that the first call to
@@ -86,7 +90,7 @@ Since 1.3.0.
 
 function(ECM_GENERATE_PKGCONFIG_FILE)
   set(options INSTALL)
-  set(oneValueArgs BASE_NAME LIB_NAME FILENAME_VAR INCLUDE_INSTALL_DIR LIB_INSTALL_DIR DESCRIPTION)
+  set(oneValueArgs BASE_NAME LIB_NAME FILENAME_VAR INCLUDE_INSTALL_DIR LIB_INSTALL_DIR DESCRIPTION URL)
   set(multiValueArgs DEPS DEFINES)
 
   cmake_parse_arguments(EGPF "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -133,6 +137,9 @@ function(ECM_GENERATE_PKGCONFIG_FILE)
           set(EGPF_DESCRIPTION "${EGPF_LIB_NAME} library.")
       endif()
   endif()
+  if(NOT EGPF_URL)
+      set(EGPF_URL "https://www.kde.org/")
+  endif()
 
   set(PKGCONFIG_TARGET_BASENAME ${EGPF_BASE_NAME})
   set(PKGCONFIG_TARGET_LIBNAME ${EGPF_LIB_NAME})
@@ -167,6 +174,7 @@ function(ECM_GENERATE_PKGCONFIG_FILE)
       set(PKGCONFIG_TARGET_LIBS "\${prefix}/${EGPF_LIB_INSTALL_DIR}")
   endif()
   set(PKGCONFIG_TARGET_DESCRIPTION "${EGPF_DESCRIPTION}")
+  set(PKGCONFIG_TARGET_URL "${EGPF_URL}")
   set(PKGCONFIG_TARGET_DEFINES "")
   if(EGPF_DEFINES)
     set(PKGCONFIG_TARGET_DEFINES "${EGPF_DEFINE}")
@@ -186,6 +194,7 @@ includedir=${PKGCONFIG_TARGET_INCLUDES}
 
 Name: ${PKGCONFIG_TARGET_LIBNAME}
 Description: ${PKGCONFIG_TARGET_DESCRIPTION}
+URL: ${PKGCONFIG_TARGET_URL}
 Version: ${PROJECT_VERSION}
 Libs: -L\${prefix}/${EGPF_LIB_INSTALL_DIR} -l${PKGCONFIG_TARGET_LIBNAME}
 Cflags: -I${PKGCONFIG_TARGET_INCLUDES} ${PKGCONFIG_TARGET_DEFINES}

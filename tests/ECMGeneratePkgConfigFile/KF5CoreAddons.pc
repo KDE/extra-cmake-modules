@@ -6,6 +6,7 @@ includedir=${prefix}/include/KF5CoreAddons
 
 Name: KF5CoreAddons
 Description: KF5CoreAddons test
+URL: https://www.kde.org/
 Version: 5.43
 Libs: -L${prefix}/lib -lKF5CoreAddons
 Cflags: -I${prefix}/include/KF5CoreAddons 
