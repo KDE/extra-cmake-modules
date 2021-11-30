@@ -12,7 +12,8 @@ Finds the Qt5 QHelpGenerator
  QHelpGenerator_EXECUTABLE - Path to executable
 #]=======================================================================]
 
-find_package(Qt5Help QUIET)
+include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
+find_package(Qt${QT_MAJOR_VERSION}Help QUIET)
 if (TARGET Qt5::qhelpgenerator)
     get_target_property(QHelpGenerator_EXECUTABLE Qt5::qhelpgenerator LOCATION)
 else()

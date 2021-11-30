@@ -179,6 +179,7 @@ Since 5.62.0.
 #]=======================================================================]
 
 include(CMakeParseArguments)
+include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 
 # helper method
 # escapes string for C++ code
@@ -442,7 +443,7 @@ macro(ecm_add_qtdesignerplugin target)
     # Check deps
     # peek at Qt5Core to learn about the version to decide whether Qt5UiPlugin is enough
     if(NOT Qt5Core_FOUND)
-        find_package(Qt5Core QUIET CONFIG)
+        find_package(Qt${QT_MAJOR_VERSION}Core QUIET CONFIG)
     endif()
     if(Qt5Core_VERSION VERSION_LESS "5.5.0")
         set(_qtdesigner_tobefound TRUE)
@@ -454,15 +455,15 @@ macro(ecm_add_qtdesignerplugin target)
         set(_qtuiplugin_tobefound TRUE)
     endif()
     if(NOT Qt5Designer_FOUND AND _qtdesigner_tobefound)
-        find_package(Qt5Designer QUIET CONFIG)
-        set_package_properties(Qt5Designer PROPERTIES
+        find_package(Qt${QT_MAJOR_VERSION}Designer QUIET CONFIG)
+        set_package_properties(Qt${QT_MAJOR_VERSION}Designer PROPERTIES
             PURPOSE "Required to build Qt Designer plugins"
             TYPE REQUIRED
         )
     endif()
     if(NOT Qt5UiPlugin_FOUND AND _qtuiplugin_tobefound)
-        find_package(Qt5UiPlugin QUIET CONFIG)
-        set_package_properties(Qt5UiPlugin PROPERTIES
+        find_package(Qt${QT_MAJOR_VERSION}UiPlugin QUIET CONFIG)
+        set_package_properties(Qt${QT_MAJOR_VERSION}UiPlugin PROPERTIES
             PURPOSE "Required to build Qt Designer plugins"
             TYPE REQUIRED
         )

@@ -257,6 +257,7 @@ Since 5.36.0.
 #]=======================================================================]
 
 include(CMakeParseArguments)
+include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
 include(ECMQueryQmake)
 
 
@@ -279,7 +280,7 @@ function(_ecm_ensure_qt_qch_targets)
     # Ideally one day Qt CMake Config files provide these
     if(NOT TARGET Qt5Core_QCH)
         # get Qt version, if any
-        find_package(Qt5Core CONFIG QUIET)
+        find_package(Qt${QT_MAJOR_VERSION}Core CONFIG QUIET)
         # lookup tag files
         query_qmake(qt_docs_dir QT_INSTALL_DOCS TRY)
         find_path(_qtcoreTagsPath qtcore/qtcore.tags

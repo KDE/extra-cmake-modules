@@ -83,6 +83,8 @@ Since pre-1.0.0.
 #]=======================================================================]
 
 include(CMakeParseArguments)
+include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
+
 
 # Copied from FindGettext.cmake
 function(_ecm_qm_get_unique_target_name _name _unique_name)
@@ -143,7 +145,7 @@ function(ecm_process_po_files_as_qm lang)
     endif()
 
     # Find lrelease and lconvert
-    find_package(Qt5LinguistTools CONFIG REQUIRED)
+    find_package(Qt${QT_MAJOR_VERSION}LinguistTools CONFIG REQUIRED)
 
     if(TARGET Qt5::lconvert)
         set(lconvert_executable Qt5::lconvert)
