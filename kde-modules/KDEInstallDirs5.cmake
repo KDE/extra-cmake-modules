@@ -349,7 +349,6 @@ set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDI
                                       ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
                                       INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR_KF5}"
 )
-set(KF_INSTALL_TARGETS_DEFAULT_ARGS ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 # on the Mac support an extra install directory for application bundles
 if(APPLE)
@@ -360,5 +359,11 @@ endif()
 if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
     set(INSTALL_TARGETS_DEFAULT_ARGS ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
+
+# version-less forward compatibility variants, see also KDEInstallDirs6.cmake
+set(KF_INSTALL_TARGETS_DEFAULT_ARGS ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+_define_non_cache(INCLUDEDIR_KF "${KDE_INSTALL_INCLUDEDIR_KF5}")
+_define_non_cache(DATADIR_KF "${KDE_INSTALL_DATADIR_KF5}")
+_define_non_cache(LIBEXECDIR_KF "${KDE_INSTALL_LIBEXECDIR_KF5}")
 
 include(${CMAKE_CURRENT_LIST_DIR}/KDESetupPrefixScript.cmake)

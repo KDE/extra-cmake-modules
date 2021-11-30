@@ -293,7 +293,7 @@ set(KF_INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}
 
 # on the Mac support an extra install directory for application bundles
 if(APPLE)
-    set(KF6_INSTALL_TARGETS_DEFAULT_ARGS  ${KF6_INSTALL_TARGETS_DEFAULT_ARGS}
+    set(KF_INSTALL_TARGETS_DEFAULT_ARGS  ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
                                           BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
 endif()
 
