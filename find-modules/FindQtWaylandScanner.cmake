@@ -63,15 +63,19 @@ WaylandScanner is required and will be searched for.
 Since 1.4.0.
 #]=======================================================================]
 
+include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
-include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
-
 ecm_find_package_version_check(QtWaylandScanner)
 
-query_qmake(qt_binaries_dir QT_HOST_BINS)
-
-# Find qtwaylandscanner
-find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS ${qt_binaries_dir})
+if (QT_MAJOR_VERSION STREQUAL "5")
+    include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
+    query_qmake(qt_binaries_dir QT_HOST_BINS)
+    # Find qtwaylandscanner
+    find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS ${qt_binaries_dir})
+elseif(QT_MAJOR_VERSION STREQUAL "6")
+    find_package(Qt6WaylandScannerTools)
+    get_target_property(QtWaylandScanner_EXECUTABLE Qt6::qtwaylandscanner IMPORTED_LOCATION)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(QtWaylandScanner
@@ -83,11 +87,13 @@ find_package_handle_standard_args(QtWaylandScanner
 
 mark_as_advanced(QtWaylandScanner_EXECUTABLE)
 
-if(NOT TARGET Wayland::QtScanner AND QtWaylandScanner_FOUND)
-    add_executable(Wayland::QtScanner IMPORTED)
-    set_target_properties(Wayland::QtScanner PROPERTIES
-        IMPORTED_LOCATION "${QtWaylandScanner_EXECUTABLE}"
-    )
+if (QT_MAJOR_VERSION STREQUAL "5")
+    if(NOT TARGET Wayland::QtScanner AND QtWaylandScanner_FOUND)
+        add_executable(Wayland::QtScanner IMPORTED)
+        set_target_properties(Wayland::QtScanner PROPERTIES
+            IMPORTED_LOCATION "${QtWaylandScanner_EXECUTABLE}"
+        )
+    endif()
 endif()
 
 include(FeatureSummary)
