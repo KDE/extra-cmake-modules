@@ -20,7 +20,7 @@ This will define the following variables:
 ``Inotify_INCLUDE_DIRS``
    This has to be passed to target_include_directories()
 
-On Linux, the libraries and include directories are empty,
+On Linux and SunOS, the libraries and include directories are empty,
 even though ``Inotify_FOUND`` may be set to TRUE. This is because
 no special includes or libraries are needed. On other systems
 these may be needed to use inotify.
@@ -31,9 +31,9 @@ Since 5.32.0.
 find_path(Inotify_INCLUDE_DIRS sys/inotify.h)
 
 if(Inotify_INCLUDE_DIRS)
-# On Linux there is no library to link against, on the BSDs there is.
+# On Linux and SunOS, there is no library to link against, on the BSDs there is.
 # On the BSD's, inotify is implemented through a library, libinotify.
-    if( CMAKE_SYSTEM_NAME MATCHES "Linux")
+    if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "SunOS")
         set(Inotify_FOUND TRUE)
         set(Inotify_LIBRARIES "")
         set(Inotify_INCLUDE_DIRS "")
