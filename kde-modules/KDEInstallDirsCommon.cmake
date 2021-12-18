@@ -184,7 +184,7 @@ macro(_define_relative varname parent subdir docstring)
         set(${_oldstylename} "${KDE_INSTALL_${varname}}")
     endif()
     if (_aliasname)
-        set(${_aliasname} "${KDE_INSTALL_${varname}}")
+        set(KDE_INSTALL_${_aliasname} "${KDE_INSTALL_${varname}}")
     endif()
 endmacro()
 
