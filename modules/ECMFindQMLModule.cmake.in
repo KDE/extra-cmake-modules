@@ -5,11 +5,17 @@
 #=============================================================================
 
 include(FindPackageHandleStandardArgs)
-include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
+include("${ECM_MODULE_DIR}/QtVersionOption.cmake")
 
-query_qmake(qt_binaries_dir QT_HOST_BINS)
+if (QT_MAJOR_VERSION EQUAL "5")
+    include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
+    query_qmake(qt_binaries_dir QT_HOST_BINS)
+    find_program(QMLPLUGINDUMP_PROGRAM NAMES qmlplugindump HINTS ${qt_binaries_dir})
+elseif (QT_MAJOR_VERSION EQUAL "6")
+    find_package(Qt6QmlTools REQUIRED)
+    get_target_property(QMLPLUGINDUMP_PROGRAM Qt6::qmlplugindump LOCATION)
+endif()
 
-find_program(QMLPLUGINDUMP_PROGRAM NAMES qmlplugindump HINTS ${qt_binaries_dir})
 if(NOT QMLPLUGINDUMP_PROGRAM)
     message(WARNING "Could not find qmlplugindump. It is necessary to look up qml module dependencies.")
 endif()
