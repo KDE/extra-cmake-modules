@@ -60,6 +60,7 @@ set(Poppler_known_components
     Cpp
     Qt4
     Qt5
+    Qt6
     Glib
 )
 foreach(_comp ${Poppler_known_components})
@@ -75,11 +76,12 @@ set(Poppler_Core_component_deps "")
 set(Poppler_Core_pkg_config "poppler")
 # poppler-config.h header is only installed with --enable-xpdf-headers
 # fall back to using any header from a submodule with a path to make it work in that case too
-set(Poppler_Core_header "poppler-config.h" "cpp/poppler-version.h" "qt5/poppler-qt5.h" "qt4/poppler-qt4.h" "glib/poppler.h")
+set(Poppler_Core_header "poppler-config.h" "cpp/poppler-version.h" "qt6/poppler-qt6.h" "qt5/poppler-qt5.h" "qt4/poppler-qt4.h" "glib/poppler.h")
 set(Poppler_Core_header_subdir "poppler")
 set(Poppler_Core_lib "poppler")
 
 set(Poppler_Cpp_header "poppler-version.h")
+set(Poppler_Qt6_header "poppler-qt6.h")
 set(Poppler_Qt5_header "poppler-qt5.h")
 set(Poppler_Qt4_header "poppler-qt4.h")
 set(Poppler_Glib_header "poppler.h")
