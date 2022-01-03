@@ -7,6 +7,8 @@ include:
   - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd.yml
 
 pages:
+    only:
+      - tags
     stage: deploy
     image: debian:bullseye-slim
     before_script:
