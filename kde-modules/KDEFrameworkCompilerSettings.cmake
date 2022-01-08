@@ -41,9 +41,17 @@ if (ECM_GLOBAL_FIND_VERSION VERSION_LESS 5.85.0)
     return()
 endif()
 
-# set ENABLE_BSYMBOLICFUNCTIONS default to ON
+# set ENABLE_BSYMBOLICFUNCTIONS default to ON when possible
 # TODO: find a nice way to set an option default
-set(ENABLE_BSYMBOLICFUNCTIONS ON)
+# we can only use symbolic functions when everything is built with that
+# otherwise we'll break function pointer based connects and method lookups
+include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
+if (QT_MAJOR_VERSION EQUAL "6")
+    find_package(Qt6Core)
+    set(ENABLE_BSYMBOLICFUNCTIONS ${QT_FEATURE_reduce_relocations})
+else ()
+    set(ENABLE_BSYMBOLICFUNCTIONS ON)
+endif()
 
 # Current defaults
 include(KDECompilerSettings NO_POLICY_SCOPE)
