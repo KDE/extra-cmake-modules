@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 #[=======================================================================[.rst:
-KDEDeprecationSettings
+ECMDeprecationSettings
 -----------------------
 
 This module provides the ``ecm_set_disabled_deprecation_versions`` function setting the excluding
