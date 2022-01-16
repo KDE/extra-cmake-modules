@@ -7,17 +7,20 @@ include:
   - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/freebsd.yml
   - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6.yml
 
-pages:
+docs:
     only:
       - tags
-    stage: deploy
+    stage: build
     image: debian:bullseye-slim
     before_script:
       - apt-get update && apt-get install --yes --no-install-recommends cmake make gcc libc6-dev umps3 python3-sphinx sphinx-common python3-sphinxcontrib.qthelp
     script:
       - mkdir build && cd build && cmake .. && cmake --build .
-      - mkdir ${CI_PROJECT_DIR}/public && cp -vr ${CI_PROJECT_DIR}/build/docs/html/* ${CI_PROJECT_DIR}/public
+      - mkdir ../ecm-docs && mv docs/html/* ../ecm-docs/
     artifacts:
       name: ecm-docs-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
+      expire_in: 3 months
+      when: on_success
       paths:
-        - ${CI_PROJECT_DIR}/public
+        - ecm-docs/
+
