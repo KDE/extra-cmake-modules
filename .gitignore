@@ -24,3 +24,4 @@ CMakeLists.txt.user*
 __pycache__
 .cmake/
 /compile_commands.json
+/.clang-format
