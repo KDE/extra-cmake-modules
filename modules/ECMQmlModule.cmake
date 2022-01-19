@@ -261,6 +261,10 @@ function(ecm_add_qml_module ARG_TARGET)
         ${_ECM_QMLMODULE_PROPERTY_CLASSNAME} "${ARG_CLASSNAME}"
         ${_ECM_QMLMODULE_PROPERTY_DEPENDS} ""
     )
+
+    # -Muri is required for static QML plugins to work properly, see
+    # https://bugreports.qt.io/browse/QTBUG-82598
+    set_target_properties(${ARG_TARGET} PROPERTIES AUTOMOC_MOC_OPTIONS -Muri=${ARG_URI})
 endfunction()
 
 function(ecm_add_qml_module_dependencies ARG_TARGET)
