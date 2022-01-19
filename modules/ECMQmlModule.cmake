@@ -53,7 +53,7 @@ be used instead.
 You can add C++ and QML source files to the target using ``target_sources`` and
 ``ecm_target_qml_sources``, respectively.
 
-Since 5.87.0
+Since 5.91.0
 
 ::
     ecm_add_qml_module_dependencies(<target> DEPENDS <module string> [<module string> ...])
@@ -61,7 +61,7 @@ Since 5.87.0
 Add the list of dependencies specified by the ``DEPENDS`` argument to be listed
 as dependencies in the generated QMLDIR file of ``<target>``.
 
-Since 5.87.0
+Since 5.91.0
 
 ::
     ecm_target_qml_sources(<target> SOURCES <source.qml> [<source.qml> ...] [VERSION <version>] [PATH <path>] [PRIVATE])
@@ -83,7 +83,7 @@ files should be copied to. By default, files will be copied to the module root.
 This function will fail if ``<target>`` is not a QML module target or any of the
 specified files do not exist.
 
-Since 5.87.0
+Since 5.91.0
 
 ::
     ecm_finalize_qml_module(<target> DESTINATION <QML install destination>)
@@ -106,7 +106,7 @@ number of tasks:
 
 This function will fail if ``<target>`` is not a QML module target.
 
-Since 5.87.0
+Since 5.91.0
 
 #]========================================================================]
 
