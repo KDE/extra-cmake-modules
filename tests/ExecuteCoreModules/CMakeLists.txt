@@ -1,5 +1,6 @@
 project(ExecuteCoreModules)
 cmake_minimum_required(VERSION 3.5)
+set(ECM_GLOBAL_FIND_VERSION "5.90.0")
 
 file(GLOB all_core_modules "${CMAKE_CURRENT_SOURCE_DIR}/../../modules/*cmake")
 
