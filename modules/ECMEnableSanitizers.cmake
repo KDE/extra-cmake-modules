@@ -74,6 +74,7 @@ This is an example of usage::
 Since 1.3.0.
 #]=======================================================================]
 
+include(CheckLinkerFlag)
 # MACRO check_compiler_version
 #-----------------------------
 macro (check_compiler_version gcc_required_version clang_required_version msvc_required_version)
@@ -147,18 +148,24 @@ if (ECM_ENABLE_SANITIZERS)
             string(TOLOWER ${CUR_SANITIZER} CUR_SANITIZER)
             # check option and enable appropriate flags
             enable_sanitizer_flags ( ${CUR_SANITIZER} )
-            # TODO: GCC will not link pthread library if enabled ASan
-            if(CMAKE_C_COMPILER_ID MATCHES "Clang")
-              set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${XSAN_COMPILE_FLAGS}" )
-            endif()
-            set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XSAN_COMPILE_FLAGS}" )
-            if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-              link_libraries(${XSAN_LINKER_FLAGS})
-            endif()
-            if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            check_linker_flag(CXX "-l${XSAN_LINKER_FLAGS}" _HAVE_XSAN_LINKER_FLAGS)
+            if (_HAVE_XSAN_LINKER_FLAGS)
+              # TODO: GCC will not link pthread library if enabled ASan
+              if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+                string(APPEND CMAKE_C_FLAGS " ${XSAN_COMPILE_FLAGS}")
+              endif()
+              string(APPEND CMAKE_CXX_FLAGS " ${XSAN_COMPILE_FLAGS}")
+              if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+                  link_libraries(${XSAN_LINKER_FLAGS})
+              endif()
+              if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
                 string(REPLACE "-Wl,--no-undefined" "" CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
                 string(REPLACE "-Wl,--no-undefined" "" CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
-            endif ()
+              endif ()
+            else()
+              message(STATUS "Tried to enable sanitizers -DECM_ENABLE_SANITIZERS=${ECM_ENABLE_SANITIZERS}, \
+but linker does not have sanitizer support")
+            endif()
         endforeach()
     else()
         message(STATUS "Tried to enable sanitizers (-DECM_ENABLE_SANITIZERS=${ECM_ENABLE_SANITIZERS}), \
