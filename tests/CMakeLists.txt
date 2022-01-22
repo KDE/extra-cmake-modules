@@ -9,24 +9,24 @@
 # architecture-dependent locations (like /usr/lib64).
 # We only set this for the tests, making sure it does not interfere
 # with other files (as ECM itself is architecture-independent).
-project(ECMTests C)
+project(ECMTests C CXX)
+include(../modules/QtVersionOption.cmake)
 
-find_package(Qt5LinguistTools CONFIG)
+find_package(Qt${QT_MAJOR_VERSION} COMPONENTS Core LinguistTools Quick CONFIG)
 set_package_properties(
-    Qt5LinguistTools
+    Qt${QT_MAJOR_VERSION}LinguistTools
     PROPERTIES
         URL "https://www.qt.io/"
-        DESCRIPTION "Qt5 linguist tools."
+        DESCRIPTION "Qt linguist tools."
         TYPE OPTIONAL
         PURPOSE "Required to run tests for the ECMPoQmTools module."
 )
 
-find_package(Qt5Core CONFIG)
 set_package_properties(
-    Qt5Core
+    Qt${QT_MAJOR_VERSION}Core
     PROPERTIES
         URL "https://www.qt.io/"
-        DESCRIPTION "Qt5 core library."
+        DESCRIPTION "Qt core library."
         TYPE OPTIONAL
         PURPOSE "Required to run tests for the ECMQtDeclareLoggingCategory module, and for some tests of the KDEInstallDirs module."
 )
@@ -133,7 +133,7 @@ set(KDEInstallDirsTest.relative_or_absolute_usr_EXTRA_OPTIONS
 add_test_variant(KDEInstallDirsTest.relative_or_absolute_usr
                  KDEInstallDirsTest.relative_or_absolute dummy)
 
-if (TARGET Qt5::qmake)
+if (TARGET Qt5::qmake OR TARGET Qt6::Core)
     set(KDEInstallDirsTest.relative_or_absolute_qt_EXTRA_OPTIONS
         --build-options -DCMAKE_INSTALL_PREFIX=/tmp
                         -DKDE_INSTALL_USE_QT_SYS_PATHS=TRUE
@@ -146,7 +146,7 @@ if (TARGET Qt5::qmake)
     add_test_variant(KDEInstallDirsTest.relative_or_absolute_qt
                      KDEInstallDirsTest.relative_or_absolute dummy)
 endif ()
-if (Qt5Core_FOUND)
+if (TARGET Qt${QT_MAJOR_VERSION}::Core)
     set(ECMQtDeclareLoggingCategoryTest_EXTRA_OPTIONS
         --build-target all
         --build-options
@@ -187,7 +187,7 @@ add_test_macro(KDEPackageAppTemplatesTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/KDEPackageAppTemplatesTest/check.cmake"
 )
 
-if (Qt5Core_FOUND AND Qt5LinguistTools_FOUND)
+if (TARGET Qt${QT_MAJOR_VERSION}::Core AND TARGET Qt${QT_MAJOR_VERSION}::lconvert)
     set(ECMPoQmToolsTest_EXTRA_OPTIONS
         --build-target install
         --build-options
@@ -198,16 +198,15 @@ if (Qt5Core_FOUND AND Qt5LinguistTools_FOUND)
     )
 endif()
 
-find_package(Qt5Quick CONFIG)
 set_package_properties(
-    Qt5Quick
+    Qt${QT_MAJOR_VERSION}Quick
     PROPERTIES
         URL "https://www.qt.io/"
-        DESCRIPTION "Qt5 Quick library."
+        DESCRIPTION "Qt Quick library."
         TYPE OPTIONAL
         PURPOSE "Required to run tests for the ECMQMLModules module."
 )
-if (TARGET Qt5::Quick)
+if (TARGET Qt${QT_MAJOR_VERSION}::Quick)
     add_test_macro(ECMFindQmlModule dummy)
 
     set(ECMQmlModuleTest.static_full_EXTRA_OPTIONS
