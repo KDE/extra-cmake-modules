@@ -4,6 +4,7 @@ set(ECM_MODULE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../modules")
 
 set(CMAKE_MODULE_PATH ${ECM_MODULE_DIR})
 
+include(QtVersionOption)
 include(ECMQtDeclareLoggingCategory)
 include(CMakeParseArguments)
 
@@ -44,7 +45,7 @@ ecm_qt_export_logging_category(
     DESCRIPTION "log 4"
 )
 
-find_package(Qt5Core REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION}Core REQUIRED)
 
 add_executable(testmain testmain.cpp ${sources})
 target_include_directories(testmain
@@ -53,7 +54,7 @@ target_include_directories(testmain
 )
 target_link_libraries(testmain
     PRIVATE
-        Qt5::Core
+        Qt${QT_MAJOR_VERSION}::Core
 )
 
 ecm_qt_install_logging_categories(

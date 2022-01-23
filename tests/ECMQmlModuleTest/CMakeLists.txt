@@ -8,8 +8,9 @@ cmake_minimum_required(VERSION 3.5)
 
 set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
 set(CMAKE_MODULE_PATH "${ECM_FIND_MODULE_DIR}" "${ECM_MODULE_DIR}")
+include(QtVersionOption)
 
-find_package(Qt5 REQUIRED COMPONENTS Qml)
+find_package(Qt${QT_MAJOR_VERSION} REQUIRED COMPONENTS Qml)
 include(ECMQmlModule)
 
 if(QML_ONLY)
@@ -17,7 +18,7 @@ if(QML_ONLY)
 else()
     ecm_add_qml_module(TestModule URI Test)
     target_sources(TestModule PRIVATE qmlmodule.cpp)
-    target_link_libraries(TestModule Qt5::Qml)
+    target_link_libraries(TestModule Qt${QT_MAJOR_VERSION}::Qml)
 endif()
 
 if (DEPENDS)
