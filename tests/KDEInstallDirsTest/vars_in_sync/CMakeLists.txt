@@ -26,7 +26,10 @@ foreach(suffix ${var_suffixes})
     endif()
 endforeach()
 
-assert_var_defined(KF5_INSTALL_TARGETS_DEFAULT_ARGS)
+assert_var_defined(KF_INSTALL_TARGETS_DEFAULT_ARGS)
+if (QT_MAJOR_VERSION EQUAL "5")
+    assert_var_defined(KF5_INSTALL_TARGETS_DEFAULT_ARGS)
+endif()
 assert_var_defined(KDE_INSTALL_TARGETS_DEFAULT_ARGS)
 if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES AND
    NOT KDE_INSTALL_DIRS_NO_DEPRECATED)

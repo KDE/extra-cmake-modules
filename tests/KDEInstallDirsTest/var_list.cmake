@@ -5,7 +5,7 @@ set(var_suffixes
     CMAKEPACKAGEDIR
     CONFDIR
     DATADIR
-    DATADIR_KF5
+    DATADIR_KF
     DATAROOTDIR
     DBUSDIR
     DBUSINTERFACEDIR
@@ -16,17 +16,17 @@ set(var_suffixes
     EXECROOTDIR
     ICONDIR
     INCLUDEDIR
-    INCLUDEDIR_KF5
+    INCLUDEDIR_KF
     INFODIR
     KCFGDIR
     KCONFUPDATEDIR
-    KNOTIFY5RCDIR
-    KXMLGUI5DIR
-    KSERVICES5DIR
-    KSERVICETYPES5DIR
+    KNOTIFYRCDIR
+    KXMLGUIDIR
+    KSERVICESDIR
+    KSERVICETYPESDIR
     LIBDIR
     LIBEXECDIR
-    LIBEXECDIR_KF5
+    LIBEXECDIR_KF
     LOCALEDIR
     LOCALSTATEDIR
     MANDIR
@@ -37,7 +37,6 @@ set(var_suffixes
     QMLDIR
     QTPLUGINDIR
     QTQCHDIR
-    QTQUICKIMPORTSDIR
     SBINDIR
     SHAREDSTATEDIR
     SOUNDDIR
@@ -46,6 +45,18 @@ set(var_suffixes
     SYSTEMDUSERUNITDIR
     TEMPLATEDIR
     WALLPAPERDIR)
+if (QT_MAJOR_VERSION EQUAL "5")
+    list(APPEND var_suffixes
+        DATADIR_KF5
+        INCLUDEDIR_KF5
+        KNOTIFY5RCDIR
+        KXMLGUI5DIR
+        KSERVICES5DIR
+        KSERVICETYPES5DIR
+        LIBEXECDIR_KF5
+        QTQUICKIMPORTSDIR
+    )
+endif()
 if(APPLE)
     list(APPEND var_suffixes BUNDLEDIR)
 endif()
@@ -127,6 +138,11 @@ else()
         set(should_set_CMAKE_INSTALL_${suffix} TRUE)
     endforeach()
 endif()
+
+# newly added version-less vars in 5 do also not set the legacy variables
+foreach(suffix DATADIR_KF INCLUDEDIR_KF KNOTIFYRCDIR KXMLGUIDIR KSERVICESDIR KSERVICETYPESDIR LIBEXECDIR_KF)
+    set(should_set_CMAKE_INSTALL_${suffix} FALSE)
+endforeach()
 
 unset(_gnu_install_dirs_suffixes)
 
