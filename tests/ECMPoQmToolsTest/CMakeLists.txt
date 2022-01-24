@@ -66,7 +66,7 @@ unset(LOCALE_INSTALL_DIR)
 #                      #
 ########################
 
-find_package(Qt5Core CONFIG REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION}Core CONFIG REQUIRED)
 ecm_install_po_files_as_qm(tr_test-po)
 
 
@@ -78,7 +78,7 @@ set(tr_test_SRCS
 )
 ecm_create_qm_loader(tr_test_SRCS catalog)
 add_executable(tr_test ${tr_test_SRCS})
-target_link_libraries(tr_test PRIVATE Qt5::Core)
+target_link_libraries(tr_test PRIVATE Qt${QT_MAJOR_VERSION}::Core)
 
 
 #
@@ -86,7 +86,7 @@ target_link_libraries(tr_test PRIVATE Qt5::Core)
 #
 add_executable(tr_test_target tr_test.cpp)
 ecm_create_qm_loader(tr_test_target catalog)
-target_link_libraries(tr_test_target PRIVATE Qt5::Core)
+target_link_libraries(tr_test_target PRIVATE Qt${QT_MAJOR_VERSION}::Core)
 
 
 #
@@ -100,14 +100,14 @@ ecm_create_qm_loader(tr_test_2_SRCS catalog2)
 add_executable(tr_test_2 ${tr_test_2_SRCS})
 set_target_properties(tr_test_2 PROPERTIES AUTOMOC ON)
 target_include_directories(tr_test_2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-target_link_libraries(tr_test_2 PRIVATE Qt5::Core)
+target_link_libraries(tr_test_2 PRIVATE Qt${QT_MAJOR_VERSION}::Core)
 
 
 #
 # module for tr_thread_test
 #
 add_library(tr_thread_module MODULE tr_thread_test_module.cpp ${QMLOADER_FILES})
-target_link_libraries(tr_thread_module PRIVATE Qt5::Core)
+target_link_libraries(tr_thread_module PRIVATE Qt${QT_MAJOR_VERSION}::Core)
 
 
 #
@@ -122,7 +122,7 @@ add_executable(tr_thread_test ${tr_thread_test_SRCS})
 set_target_properties(tr_thread_test PROPERTIES AUTOMOC ON)
 target_include_directories(tr_thread_test PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 target_compile_definitions(tr_thread_test PRIVATE "MODULE_PATH=\"$<TARGET_FILE:tr_thread_module>\"")
-target_link_libraries(tr_thread_test PRIVATE Qt5::Core)
+target_link_libraries(tr_thread_test PRIVATE Qt${QT_MAJOR_VERSION}::Core)
 
 
 #
@@ -131,7 +131,7 @@ target_link_libraries(tr_thread_test PRIVATE Qt5::Core)
 #
 # make sure the moc file is only visible to this test/target
 set(MOC_DIR "${CMAKE_CURRENT_BINARY_DIR}/tr_thread_test_2_moc")
-qt5_generate_moc(tr_thread_test.cpp "${MOC_DIR}/tr_thread_test.moc")
+qt_generate_moc(tr_thread_test.cpp "${MOC_DIR}/tr_thread_test.moc")
 # Unset SKIP_AUTOMOC again, to not interfer with AUTOMOC as set for tr_thread_test
 set_source_files_properties(tr_thread_test PROPERTIES SKIP_AUTOMOC OFF)
 
@@ -144,7 +144,7 @@ add_executable(tr_thread_test_2 ${tr_thread_test_2_SRCS})
 set_target_properties(tr_thread_test_2 PROPERTIES AUTOMOC OFF)
 target_include_directories(tr_thread_test_2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}" "${MOC_DIR}")
 target_compile_definitions(tr_thread_test_2 PRIVATE "MODULE_PATH=\"$<TARGET_FILE:tr_thread_module>\"")
-target_link_libraries(tr_thread_test_2 PRIVATE Qt5::Core)
+target_link_libraries(tr_thread_test_2 PRIVATE Qt${QT_MAJOR_VERSION}::Core)
 
 
 #

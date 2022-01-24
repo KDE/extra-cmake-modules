@@ -145,10 +145,14 @@ function(ecm_process_po_files_as_qm lang)
     endif()
 
     # Find lrelease and lconvert
-    find_package(Qt${QT_MAJOR_VERSION}LinguistTools CONFIG REQUIRED)
+    if (QT_MAJOR_VERSION EQUAL "5")
+        find_package(Qt5LinguistTools CONFIG REQUIRED)
+    else()
+        find_package(Qt6 COMPONENTS LinguistTools CONFIG REQUIRED)
+    endif()
 
-    if(TARGET Qt5::lconvert)
-        set(lconvert_executable Qt5::lconvert)
+    if(TARGET Qt${QT_MAJOR_VERSION}::lconvert)
+        set(lconvert_executable Qt${QT_MAJOR_VERSION}::lconvert)
     else()
         # Qt < 5.3.1 does not define Qt5::lconvert
         get_target_property(lrelease_location Qt5::lrelease LOCATION)
@@ -178,7 +182,7 @@ function(ecm_process_po_files_as_qm lang)
         add_custom_command(OUTPUT ${qm_file}
             COMMAND ${lconvert_executable}
                 ARGS -i ${po_file} -o ${ts_file} -target-language ${lang}
-            COMMAND Qt5::lrelease
+            COMMAND Qt${QT_MAJOR_VERSION}::lrelease
                 ARGS -removeidentical -nounfinished -silent ${ts_file} -qm ${qm_file}
             DEPENDS ${po_file}
             )

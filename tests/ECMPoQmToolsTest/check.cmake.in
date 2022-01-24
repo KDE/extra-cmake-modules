@@ -74,7 +74,7 @@ if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
         foreach(lang en de de_AT fr)
             execute_process(
                 COMMAND "${CMAKE_COMMAND}" -E env "XDG_DATA_DIRS=${ACTUAL_TREE}/share"
-                    LANGUAGE=${lang} "${exec}"
+                    LANG=${lang} "${exec}"
                 OUTPUT_VARIABLE output
             )
             string(STRIP "${output}" stripped_output)
