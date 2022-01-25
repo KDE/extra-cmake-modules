@@ -12,7 +12,7 @@ if (QT_MAJOR_VERSION EQUAL "5")
     query_qmake(qt_binaries_dir QT_HOST_BINS)
     find_program(QMLPLUGINDUMP_PROGRAM NAMES qmlplugindump HINTS ${qt_binaries_dir})
 elseif (QT_MAJOR_VERSION EQUAL "6")
-    find_package(Qt6QmlTools REQUIRED)
+    find_package(Qt6 COMPONENTS QmlTools REQUIRED)
     get_target_property(QMLPLUGINDUMP_PROGRAM Qt6::qmlplugindump LOCATION)
 endif()
 
