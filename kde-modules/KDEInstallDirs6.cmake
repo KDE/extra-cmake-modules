@@ -5,6 +5,7 @@
 # SPDX-FileCopyrightText: 2006-2007 Laurent Montel <montel@kde.org>
 # SPDX-FileCopyrightText: 2006-2013 Alex Neundorf <neundorf@kde.org>
 # SPDX-FileCopyrightText: 2021 Volker Krause <vkrause@kde.org>
+# SPDX-FileCopyrightText: 2021 Ahmad Samir <a.samir78@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -131,7 +132,6 @@ where ``<dir>`` is one of (default values in parentheses):
 ``SYSTEMDUSERUNITDIR``
     Systemd User Units (``lib/systemd/user``)
 
-TODO TODO TODO
 If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
 module, the default values for some variables are instead queried from
 Qt6's qmake (where mentioned in the parentheses above).
@@ -197,40 +197,42 @@ else()
     _define_non_cache(LIBEXECDIR_KF "${CMAKE_INSTALL_LIBEXECDIR}/kf6")
 endif()
 
-# TODO TODO TODO
-#include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
+find_package(Qt6 COMPONENTS CoreTools REQUIRED CONFIG)
+get_target_property(qtpaths_executable Qt6::qtpaths LOCATION)
+execute_process(COMMAND ${qtpaths_executable} --query QT_INSTALL_PREFIX OUTPUT_VARIABLE qt_install_prefix_dir)
+
+set(_qt_prefix_is_cmake_install_prefix FALSE)
+if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
+    set(_qt_prefix_is_cmake_install_prefix TRUE)
+endif()
 
 set(_default_KDE_INSTALL_USE_QT_SYS_PATHS OFF)
 if(NOT DEFINED KDE_INSTALL_USE_QT_SYS_PATHS)
-# TODO TODO TODO
-    #query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
-    #if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
-    #    message(STATUS "Installing in the same prefix as Qt, adopting their path scheme.")
-    #    set(_default_KDE_INSTALL_USE_QT_SYS_PATHS ON)
-    #endif()
+    if(_qt_prefix_is_cmake_install_prefix)
+       message(STATUS "Installing in the same prefix as Qt, adopting their path scheme.")
+       set(_default_KDE_INSTALL_USE_QT_SYS_PATHS ON)
+    endif()
 endif()
 
-option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, QCH files for Qt-based libs, Plugins and Imports to the Qt 5 install dir" "${_default_KDE_INSTALL_USE_QT_SYS_PATHS}")
-# TODO TODO TODO
-#if(KDE_INSTALL_USE_QT_SYS_PATHS)
-#    # Qt-specific vars
-#    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
-#    query_qmake(qt_plugins_dir QT_INSTALL_PLUGINS)
-#
-#    if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
-#        file(RELATIVE_PATH qt_plugins_dir ${qt_install_prefix_dir} ${qt_plugins_dir})
-#    endif()
-#    _define_absolute(QTPLUGINDIR ${qt_plugins_dir}
-#        "Qt plugins")
-#
-#    query_qmake(qt_qml_dir QT_INSTALL_QML)
-#
-#    if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
-#        file(RELATIVE_PATH qt_qml_dir ${qt_install_prefix_dir} ${qt_qml_dir})
-#    endif()
-#    _define_absolute(QMLDIR ${qt_qml_dir}
-#        "QtQuick2 imports")
-#else()
+option (KDE_INSTALL_USE_QT_SYS_PATHS
+        "Install mkspecs files, QCH files for Qt-based libs, Plugins and Imports to the Qt 6 install dir"
+        "${_default_KDE_INSTALL_USE_QT_SYS_PATHS}"
+)
+
+if(KDE_INSTALL_USE_QT_SYS_PATHS)
+   # Qt-specific vars
+    execute_process(COMMAND ${qtpaths_executable} --query QT_INSTALL_PLUGINS OUTPUT_VARIABLE qt_plugins_dir)
+    if(_qt_prefix_is_cmake_install_prefix)
+        file(RELATIVE_PATH qt_plugins_dir ${qt_install_prefix_dir} ${qt_plugins_dir})
+    endif()
+    _define_absolute(QTPLUGINDIR ${qt_plugins_dir} "Qt plugins")
+
+    execute_process(COMMAND ${qtpaths_executable} --query QT_INSTALL_QML OUTPUT_VARIABLE qt_qml_dir)
+    if(_qt_prefix_is_cmake_install_prefix)
+        file(RELATIVE_PATH qt_qml_dir ${qt_install_prefix_dir} ${qt_qml_dir})
+    endif()
+   _define_absolute(QMLDIR ${qt_qml_dir} "QtQuick2 imports")
+else()
     set(_pluginsDirParent LIBDIR)
     if (ANDROID)
         set(_pluginsDirParent)
@@ -241,7 +243,7 @@ option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, QCH files for Qt-ba
 
     _define_relative(QMLDIR LIBDIR "qml"
         "QtQuick2 imports")
-#endif()
+endif()
 
 _define_relative(PLUGINDIR QTPLUGINDIR ""
     "Plugins")
@@ -250,17 +252,15 @@ _define_non_cache(INCLUDEDIR_KF "${CMAKE_INSTALL_INCLUDEDIR}/KF6")
 
 _define_non_cache(DATADIR_KF "${CMAKE_INSTALL_DATADIR}/kf6")
 
-# TODO TODO TODO
 # Qt-specific data vars
-#if(KDE_INSTALL_USE_QT_SYS_PATHS)
-#    query_qmake(qt_docs_dir QT_INSTALL_DOCS)
-#
-#    _define_absolute(QTQCHDIR ${qt_docs_dir}
-#        "documentation bundles in QCH format for Qt-extending libraries")
-#else()
+if(KDE_INSTALL_USE_QT_SYS_PATHS)
+    execute_process(COMMAND ${qtpaths_executable} --query QT_INSTALL_DOCS OUTPUT_VARIABLE qt_docs_dir)
+
+   _define_absolute(QTQCHDIR ${qt_docs_dir} "documentation bundles in QCH format for Qt-extending libraries")
+else()
     _define_relative(QTQCHDIR DATAROOTDIR "doc/qch"
         "documentation bundles in QCH format for Qt-extending libraries")
-#endif()
+endif()
 
 
 # KDE Framework-specific things
