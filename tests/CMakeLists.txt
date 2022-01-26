@@ -126,13 +126,17 @@ set(KDEInstallDirsTest.vars_in_sync_cmake_arg_EXTRA_OPTIONS
 add_test_variant(KDEInstallDirsTest.vars_in_sync_cmake_arg
                  KDEInstallDirsTest.vars_in_sync dummy)
 
-set(KDEInstallDirsTest.vars_in_sync_oldstyle_arg_EXTRA_OPTIONS
-    --build-options -DBIN_INSTALL_DIR=altbin
-                    -DBINDIR_expected_value=altbin
-                    -DCMAKE_WARN_DEPRECATED=TRUE
-    )
-add_test_variant(KDEInstallDirsTest.vars_in_sync_oldstyle_arg
-                 KDEInstallDirsTest.vars_in_sync dummy)
+# KDEInstallDirs6 explicitly sets KDE_INSTALL_DIRS_NO_DEPRECATED to false,
+# hence this test makes no sense in that case
+if(TARGET Qt5::Core)
+    set(KDEInstallDirsTest.vars_in_sync_oldstyle_arg_EXTRA_OPTIONS
+        --build-options -DBIN_INSTALL_DIR=altbin
+                        -DBINDIR_expected_value=altbin
+                        -DCMAKE_WARN_DEPRECATED=TRUE
+        )
+    add_test_variant(KDEInstallDirsTest.vars_in_sync_oldstyle_arg
+                     KDEInstallDirsTest.vars_in_sync dummy)
+endif()
 
 set(KDEInstallDirsTest.relative_or_absolute_usr_EXTRA_OPTIONS
     --build-options -DCMAKE_INSTALL_PREFIX=/usr
