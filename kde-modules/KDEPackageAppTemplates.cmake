@@ -114,6 +114,16 @@ function(kde_package_app_templates)
         add_custom_target(${_baseName} ALL DEPENDS ${_template})
 
         if(GNU_TAR_FOUND)
+            # Honour SOURCE_DATE_EPOCH if set
+            if(DEFINED ENV{SOURCE_DATE_EPOCH})
+                set(TIMESTAMP $ENV{SOURCE_DATE_EPOCH})
+            else()
+                execute_process(
+                    COMMAND "date" "+%s"
+                    OUTPUT_VARIABLE TIMESTAMP
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+            endif()
+
             # Make tar archive reproducible, the arguments are only available with GNU tar
             add_custom_command(OUTPUT ${_template}
                 COMMAND ${_tar_executable} ARGS
@@ -121,7 +131,8 @@ function(kde_package_app_templates)
                    --sort=name
                    --mode=go=rX,u+rw,a-s
                    --numeric-owner --owner=0 --group=0
-                   --pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0
+                   --mtime="@${TIMESTAMP}"
+                   --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime
                     -c -j -v -f ${_template} .
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
                 DEPENDS ${_subdirs_entries}
