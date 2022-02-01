@@ -120,7 +120,7 @@ function(kde_package_app_templates)
                    --exclude .kdev_ignore --exclude .svn
                    --sort=name
                    --mode=go=rX,u+rw,a-s
-                   --numeric-owner --owner=root --group=root
+                   --numeric-owner --owner=0 --group=0
                    --pax-option=exthdr.name=%d/PaxHeaders/%f,atime:=0,ctime:=0
                     -c -j -v -f ${_template} .
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
