@@ -14,7 +14,7 @@ For the identifier "QT" this functions adds the definition "QT_DISABLE_DEPRECATE
 Otherwise the name for the definition is generated using `${IDENTIFIER}_DISABLE_DEPRECATED_BEFORE_AND_AT`,
 following the naming of the generated code in :kde-module:`ECMGenerateExportHeaders`.
 The version for the definition can be overwritten, by passing definition name and the deprecation version
-as a CMake defintion. This allows one to exclude deprecations without having to edit the CMakeLists.txt file.
+as a CMake definition. This allows one to exclude deprecations without having to edit the CMakeLists.txt file.
 
 This module provides the following function:
 
@@ -57,7 +57,7 @@ function (ecm_set_disabled_deprecation_versions)
     list(LENGTH ARGS_UNPARSED_ARGUMENTS PAIR_COUNT)
     math(EXPR is_even_number "${PAIR_COUNT} % 2")
     if (NOT is_even_number EQUAL 0)
-        message(FATAL_ERROR "Expected number of argumments an even number of identifiers and version")
+        message(FATAL_ERROR "Expected number of arguments is an even number of identifiers and version")
     endif()
     math(EXPR number_pairs "(${PAIR_COUNT} / 2) - 1")
     foreach (it RANGE ${number_pairs})
@@ -92,7 +92,7 @@ function (ecm_set_disabled_deprecation_versions)
             if (NOT CMAKE_MATCH_1)
                 message(FATAL_ERROR "Failed to get major version from ${DEPRECATION_VERSION}")
             endif()
-            # Add 1 to the major version and sture it as a hex value
+            # Add 1 to the major version and store it as a hex value
             math(EXPR next_major_version "(${CMAKE_MATCH_1} + 1) * 65536 " OUTPUT_FORMAT HEXADECIMAL)
             add_definitions(-D${DEPRECATION_NAME}_DEPRECATED_WARNINGS_SINCE=${next_major_version})
         endif()
