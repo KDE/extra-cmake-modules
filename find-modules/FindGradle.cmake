@@ -27,18 +27,24 @@ Installs a Android AAR library that has been created with ``gradle_add_aar``.
 Since 5.76.0.
 #]=======================================================================]
 
+include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
 include(CMakeParseArguments)
 include(FindPackageHandleStandardArgs)
 
-find_package(Qt5Core REQUIRED)
+find_package(Qt${QT_MAJOR_VERSION}Core REQUIRED)
 
+set (Gradle_PRECOMMAND "")
 if (NOT WIN32)
     set(Gradle_EXECUTABLE ${CMAKE_BINARY_DIR}/gradle/gradlew)
+    # the gradlew script installed by Qt6 is not executable, so running it directly fails
+    if (QT_MAJOR_VERSION EQUAL "6")
+        set(Gradle_PRECOMMAND "sh")
+    endif()
 else()
     set(Gradle_EXECUTABLE ${CMAKE_BINARY_DIR}/gradle/gradlew.bat)
 endif()
 
-get_target_property(_qt_core_location Qt5::Core LOCATION)
+get_target_property(_qt_core_location Qt${QT_MAJOR_VERSION}::Core LOCATION)
 get_filename_component(_qt_install_root ${_qt_core_location} DIRECTORY)
 get_filename_component(_qt_install_root ${_qt_install_root}/../ ABSOLUTE)
 
@@ -49,6 +55,13 @@ add_custom_command(OUTPUT ${Gradle_EXECUTABLE}
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${_qt_install_root}/src/3rdparty/gradle ${CMAKE_BINARY_DIR}/gradle
 )
 add_custom_target(gradle DEPENDS ${Gradle_EXECUTABLE})
+
+# Android Gradle plugin version (not the Gradle version!) used by Qt, for use in our own build.gradle files
+if (QT_MAJOR_VERSION EQUAL "5")
+    set(Gradle_ANDROID_GRADLE_PLUGIN_VERSION 3.6.4)
+else()
+    set(Gradle_ANDROID_GRADLE_PLUGIN_VERSION 7.0.2)
+endif()
 
 find_package_handle_standard_args(Gradle DEFAULT_MSG Gradle_EXECUTABLE)
 
@@ -71,7 +84,7 @@ function(gradle_add_aar target)
     file(GLOB_RECURSE _src_files CONFIGURE_DEPENDS "*")
     add_custom_command(
         OUTPUT ${_build_root}/build/outputs/aar/${ARG_NAME}${_aar_suffix}.aar
-        COMMAND ${Gradle_EXECUTABLE} ${_aar_gradleCmd}
+        COMMAND ${Gradle_PRECOMMAND} ${Gradle_EXECUTABLE} ${_aar_gradleCmd}
         # this allows make create-apk to work without installations for apps with AAR libs in the same repository
         COMMAND ${CMAKE_COMMAND} -E copy ${_build_root}/build/outputs/aar/${ARG_NAME}${_aar_suffix}.aar ${CMAKE_BINARY_DIR}/jar/${ARG_NAME}.aar
         DEPENDS ${Gradle_EXECUTABLE} ${_src_files}
