@@ -26,7 +26,8 @@ the default qmake ``mkspecs`` directory or of a directory that will be in the
                         [VERSION <version>] # since 5.83
                         [DEPS "<dep> [<dep> [...]]"]
                         [FILENAME_VAR <filename_variable>]
-                        [INCLUDE_INSTALL_DIR <dir>]
+                        [INCLUDE_INSTALL_DIRS <dir> [<dir> [...]]]  # since 5.92
+                        [INCLUDE_INSTALL_DIR <dir>] # deprecated since 5.92
                         [LIB_INSTALL_DIR <dir>])
 
 If your CMake project produces a Qt-based library, you may expect there to be
@@ -53,13 +54,16 @@ names you use with the ``QT`` variable in a qmake project file, such as "core"
 for QtCore).  FILENAME_VAR specifies the name of a variable to store the path
 to the generated file in.
 
-INCLUDE_INSTALL_DIR is the path (relative to ``CMAKE_INSTALL_PREFIX``) that
+INCLUDE_INSTALL_DIRS are the paths (relative to ``CMAKE_INSTALL_PREFIX``) that
 include files will be installed to. It defaults to
 ``${INCLUDE_INSTALL_DIR}/<baseName>`` if the ``INCLUDE_INSTALL_DIR`` variable
 is set. If that variable is not set, the ``CMAKE_INSTALL_INCLUDEDIR`` variable
 is used instead, and if neither are set ``include`` is used.  LIB_INSTALL_DIR
 operates similarly for the installation location for libraries; it defaults to
 ``${LIB_INSTALL_DIR}``, ``${CMAKE_INSTALL_LIBDIR}`` or ``lib``, in that order.
+
+INCLUDE_INSTALL_DIR is the old variant of INCLUDE_INSTALL_DIRS, taking only one
+directory.
 
 Example usage:
 
@@ -114,7 +118,7 @@ endif()
 function(ECM_GENERATE_PRI_FILE)
   set(options )
   set(oneValueArgs BASE_NAME LIB_NAME DEPS FILENAME_VAR INCLUDE_INSTALL_DIR LIB_INSTALL_DIR VERSION)
-  set(multiValueArgs )
+  set(multiValueArgs INCLUDE_INSTALL_DIRS)
 
   cmake_parse_arguments(EGPF "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -145,13 +149,19 @@ function(ECM_GENERATE_PRI_FILE)
       endif()
     endif()
   endif()
-  if(NOT EGPF_INCLUDE_INSTALL_DIR)
+  if(EGPF_INCLUDE_INSTALL_DIR)
+    if(EGPF_INCLUDE_INSTALL_DIRS)
+      message(FATAL_ERROR "Only one argument of INCLUDE_INSTALL_DIR & INCLUDE_INSTALL_DIRS can be used in ECM_GENERATE_PRI_FILE() call")
+    endif()
+    set(EGPF_INCLUDE_INSTALL_DIRS ${EGPF_INCLUDE_INSTALL_DIR})
+  endif()
+  if(NOT EGPF_INCLUDE_INSTALL_DIRS)
       if(INCLUDE_INSTALL_DIR)
-          set(EGPF_INCLUDE_INSTALL_DIR "${INCLUDE_INSTALL_DIR}/${EGPF_BASE_NAME}")
+          set(EGPF_INCLUDE_INSTALL_DIRS "${INCLUDE_INSTALL_DIR}/${EGPF_BASE_NAME}")
       elseif(CMAKE_INSTALL_INCLUDEDIR)
-          set(EGPF_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${EGPF_BASE_NAME}")
+          set(EGPF_INCLUDE_INSTALL_DIRS "${CMAKE_INSTALL_INCLUDEDIR}/${EGPF_BASE_NAME}")
       else()
-          set(EGPF_INCLUDE_INSTALL_DIR "include/${EGPF_BASE_NAME}")
+          set(EGPF_INCLUDE_INSTALL_DIRS "include/${EGPF_BASE_NAME}")
       endif()
   endif()
   if(NOT EGPF_LIB_INSTALL_DIR)
@@ -193,11 +203,15 @@ function(ECM_GENERATE_PRI_FILE)
   set(PRI_TARGET_BASENAME ${EGPF_BASE_NAME})
   set(PRI_TARGET_LIBNAME ${EGPF_LIB_NAME})
   set(PRI_TARGET_QTDEPS ${EGPF_DEPS})
-  if(IS_ABSOLUTE "${EGPF_INCLUDE_INSTALL_DIR}")
-      set(PRI_TARGET_INCLUDES "${EGPF_INCLUDE_INSTALL_DIR}")
-  else()
-      set(PRI_TARGET_INCLUDES "${BASEPATH}/${EGPF_INCLUDE_INSTALL_DIR}")
-  endif()
+  set(PRI_TARGET_INCLUDES)
+  foreach(_dir ${EGPF_INCLUDE_INSTALL_DIRS})
+    # separate list entries with space
+    if(IS_ABSOLUTE "${_dir}")
+        string(APPEND PRI_TARGET_INCLUDES " ${_dir}")
+    else()
+        string(APPEND PRI_TARGET_INCLUDES " ${BASEPATH}/${_dir}")
+    endif()
+  endforeach()
   if(IS_ABSOLUTE "${EGPF_LIB_INSTALL_DIR}")
       set(PRI_TARGET_LIBS "${EGPF_LIB_INSTALL_DIR}")
   else()
