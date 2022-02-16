@@ -12,7 +12,7 @@ takes care of a number of things that often need to be repeated. It also takes
 care of special handling of QML modules between shared and static builds. When
 building a static version of a QML module, the relevant QML source files are
 bundled into the static library. When using a shared build, the QML plugin and
-relevant QML files are copied to the target's RUNTIME_OUTPUT_DIRECTORY to make
+relevant QML files are copied to the target's ``RUNTIME_OUTPUT_DIRECTORY`` to make
 it easier to run things directly from the build directory.
 
 Example usage:
@@ -31,6 +31,7 @@ Example usage:
 
 
 ::
+
     ecm_add_qml_module(<target name> URI <module uri> [VERSION <module version>] [NO_PLUGIN] [CLASSNAME <class name>])
 
 This will declare a new CMake target called ``<target name>``. The ``URI``
@@ -56,6 +57,7 @@ You can add C++ and QML source files to the target using ``target_sources`` and
 Since 5.91.0
 
 ::
+
     ecm_add_qml_module_dependencies(<target> DEPENDS <module string> [<module string> ...])
 
 Add the list of dependencies specified by the ``DEPENDS`` argument to be listed
@@ -64,6 +66,7 @@ as dependencies in the generated QMLDIR file of ``<target>``.
 Since 5.91.0
 
 ::
+
     ecm_target_qml_sources(<target> SOURCES <source.qml> [<source.qml> ...] [VERSION <version>] [PATH <path>] [PRIVATE])
 
 Add the list of QML files specified by the ``SOURCES`` argument as source files
@@ -86,6 +89,7 @@ specified files do not exist.
 Since 5.91.0
 
 ::
+
     ecm_finalize_qml_module(<target> DESTINATION <QML install destination>)
 
 Finalize the specified QML module target. This must be called after all other
