@@ -196,6 +196,17 @@ set(ANDROID_PLATFORM "android-${CMAKE_ANDROID_API}")
 set(ANDROID_STL ${CMAKE_ANDROID_STL_TYPE})
 include(${CMAKE_ANDROID_NDK}/build/cmake/android.toolchain.cmake REQUIRED)
 
+# Export configurable variables for the try_compile() command.
+list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+  CMAKE_ANDROID_NDK
+  CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION
+  CMAKE_ANDROID_API
+  CMAKE_ANDROID_ARCH
+  CMAKE_ANDROID_ARCH_ABI
+  ANDROID_SDK_ROOT
+  ANDROID_SDK_COMPILE_API
+)
+
 ## HACK: Remove when we can depend on NDK r23
 # Workaround issue https://github.com/android/ndk/issues/929
 if(ANDROID_NDK_MAJOR VERSION_LESS 23)
