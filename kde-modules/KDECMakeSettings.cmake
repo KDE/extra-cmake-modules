@@ -301,14 +301,18 @@ function(_repository_name reponame dir)
         OUTPUT_VARIABLE upstream_ref
         RESULT_VARIABLE exitCode
         WORKING_DIRECTORY "${dir}")
-    string(REGEX REPLACE "refs/remotes/([^/]+)/.*" "\\1" gitorigin "${upstream_ref}")
     if(exitCode EQUAL 0)
+        string(REGEX REPLACE "refs/remotes/([^/]+)/.*" "\\1" gitorigin "${upstream_ref}")
         message(DEBUG "Git upstream inferred as ${gitorigin}, upstream ref was ${upstream_ref}")
-        execute_process(COMMAND git remote get-url --all "${gitorigin}"
-            OUTPUT_VARIABLE giturl
-            RESULT_VARIABLE exitCode
-            WORKING_DIRECTORY "${dir}")
+    else()
+        set(gitorigin "origin")
+        message(DEBUG "Assuming origin as the git remote as we are in detached mode")
     endif()
+
+    execute_process(COMMAND git remote get-url --all "${gitorigin}"
+        OUTPUT_VARIABLE giturl
+        RESULT_VARIABLE exitCode
+        WORKING_DIRECTORY "${dir}")
 
     if(exitCode EQUAL 0)
         message(DEBUG "Git URL inferred as ${giturl}")
