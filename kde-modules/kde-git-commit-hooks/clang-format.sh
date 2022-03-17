@@ -2,7 +2,7 @@
 
 # Based on okular/hooks/pre-commit, credits go to Albert Astals Cid
 
-readonly output=$(git clang-format -v --diff)
+readonly output=$(git clang-format --extensions ".cpp, .h, .hpp, .c" -v --diff)
 
 if [[ ! -f .clang-format ]]; then
     echo "ERROR: no .clang-format file found in repository root, abort format"

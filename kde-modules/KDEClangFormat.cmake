@@ -35,7 +35,7 @@ Example usage:
 .. code-block:: cmake
 
   include(KDEClangFormat)
-  file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
+  file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.hpp *.c)
   kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 
 To exclude directories from the formatting add a ``.clang-format``

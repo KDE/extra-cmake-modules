@@ -76,6 +76,6 @@ endif()
 if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.80.0)
     include(KDEClangFormat)
     # add clang-format target
-    file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.c)
+    file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.hpp *.c)
     kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 endif ()
