@@ -258,7 +258,7 @@ Since 5.36.0.
 
 include(CMakeParseArguments)
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
-include(ECMQueryQmake)
+include(ECMQueryQt)
 
 
 # Helper method: adding the LINK_QCHS property to a Qt QCH targets, from module base names ("Core" etc.)
@@ -282,7 +282,7 @@ function(_ecm_ensure_qt_qch_targets)
         # get Qt version, if any
         find_package(Qt${QT_MAJOR_VERSION}Core CONFIG QUIET)
         # lookup tag files
-        query_qmake(qt_docs_dir QT_INSTALL_DOCS TRY)
+        ecm_query_qt(qt_docs_dir QT_INSTALL_DOCS TRY)
         find_path(_qtcoreTagsPath qtcore/qtcore.tags
             PATHS
                 ${qt_docs_dir}

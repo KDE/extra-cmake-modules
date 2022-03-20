@@ -231,11 +231,11 @@ if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
     set(KF5_LIBEXEC_INSTALL_DIR "${CMAKE_INSTALL_LIBEXECDIR_KF5}")
 endif()
 
-include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
+include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
 
 set(_default_KDE_INSTALL_USE_QT_SYS_PATHS OFF)
 if(NOT DEFINED KDE_INSTALL_USE_QT_SYS_PATHS)
-    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
+    ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
     if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
         message(STATUS "Installing in the same prefix as Qt, adopting their path scheme.")
         set(_default_KDE_INSTALL_USE_QT_SYS_PATHS ON)
@@ -245,8 +245,8 @@ endif()
 option (KDE_INSTALL_USE_QT_SYS_PATHS "Install mkspecs files, QCH files for Qt-based libs, Plugins and Imports to the Qt 5 install dir" "${_default_KDE_INSTALL_USE_QT_SYS_PATHS}")
 if(KDE_INSTALL_USE_QT_SYS_PATHS)
     # Qt-specific vars
-    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
-    query_qmake(qt_plugins_dir QT_INSTALL_PLUGINS)
+    ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
+    ecm_query_qt(qt_plugins_dir QT_INSTALL_PLUGINS)
 
     if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
         file(RELATIVE_PATH qt_plugins_dir ${qt_install_prefix_dir} ${qt_plugins_dir})
@@ -255,7 +255,7 @@ if(KDE_INSTALL_USE_QT_SYS_PATHS)
         "Qt plugins"
          QT_PLUGIN_INSTALL_DIR)
 
-    query_qmake(qt_imports_dir QT_INSTALL_IMPORTS)
+    ecm_query_qt(qt_imports_dir QT_INSTALL_IMPORTS)
 
     if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
         file(RELATIVE_PATH qt_imports_dir ${qt_install_prefix_dir} ${qt_imports_dir})
@@ -264,7 +264,7 @@ if(KDE_INSTALL_USE_QT_SYS_PATHS)
         "QtQuick1 imports"
         IMPORTS_INSTALL_DIR)
 
-    query_qmake(qt_qml_dir QT_INSTALL_QML)
+    ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
 
     if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
         file(RELATIVE_PATH qt_qml_dir ${qt_install_prefix_dir} ${qt_qml_dir})
@@ -308,7 +308,7 @@ endif()
 
 # Qt-specific data vars
 if(KDE_INSTALL_USE_QT_SYS_PATHS)
-    query_qmake(qt_docs_dir QT_INSTALL_DOCS)
+    ecm_query_qt(qt_docs_dir QT_INSTALL_DOCS)
 
     _define_absolute(QTQCHDIR ${qt_docs_dir}
         "documentation bundles in QCH format for Qt-extending libraries")

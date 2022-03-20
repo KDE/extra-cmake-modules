@@ -64,11 +64,11 @@ Since 1.4.0.
 #]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
-include("${ECM_MODULE_DIR}/ECMQueryQmake.cmake")
+include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
 
 ecm_find_package_version_check(QtWaylandScanner)
 
-query_qmake(qt_binaries_dir QT_HOST_BINS)
+ecm_query_qt(qt_binaries_dir QT_HOST_BINS)
 
 # Find qtwaylandscanner
 find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS ${qt_binaries_dir})

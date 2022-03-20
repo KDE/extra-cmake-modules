@@ -89,19 +89,19 @@ Since pre-1.0.0.
 
 # Replicate the logic from KDEInstallDirs.cmake as we can't depend on it
 # Ask qmake if we're using the same prefix as Qt
-set(_askqmake OFF)
+set(_should_query_qt OFF)
 if(NOT DEFINED KDE_INSTALL_USE_QT_SYS_PATHS)
-    include(ECMQueryQmake)
-    query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
+    include(ECMQueryQt)
+    ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
     if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
-        set(_askqmake ON)
+        set(_should_query_qt ON)
     endif()
 endif()
 
-if(KDE_INSTALL_USE_QT_SYS_PATHS OR _askqmake)
-  include(ECMQueryQmake)
-  query_qmake(qt_install_prefix_dir QT_INSTALL_PREFIX)
-  query_qmake(qt_host_data_dir QT_HOST_DATA)
+if(KDE_INSTALL_USE_QT_SYS_PATHS OR _should_query_qt)
+  include(ECMQueryQt)
+  ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX)
+  ecm_query_qt(qt_host_data_dir QT_HOST_DATA)
   if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
     file(RELATIVE_PATH qt_host_data_dir ${qt_install_prefix_dir} ${qt_host_data_dir})
   endif()
