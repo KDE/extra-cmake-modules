@@ -197,9 +197,8 @@ else()
     _define_non_cache(LIBEXECDIR_KF "${CMAKE_INSTALL_LIBEXECDIR}/kf6")
 endif()
 
-find_package(Qt6 COMPONENTS CoreTools REQUIRED CONFIG)
-get_target_property(qtpaths_executable Qt6::qtpaths LOCATION)
-execute_process(COMMAND ${qtpaths_executable} --query QT_INSTALL_PREFIX OUTPUT_VARIABLE qt_install_prefix_dir)
+include(${ECM_MODULE_DIR}/ECMQueryQt.cmake)
+ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX)
 
 set(_qt_prefix_is_cmake_install_prefix FALSE)
 if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
@@ -221,13 +220,13 @@ option (KDE_INSTALL_USE_QT_SYS_PATHS
 
 if(KDE_INSTALL_USE_QT_SYS_PATHS)
    # Qt-specific vars
-    execute_process(COMMAND ${qtpaths_executable} --query QT_INSTALL_PLUGINS OUTPUT_VARIABLE qt_plugins_dir)
+    ecm_query_qt(qt_plugins_dir QT_INSTALL_PLUGINS)
     if(_qt_prefix_is_cmake_install_prefix)
         file(RELATIVE_PATH qt_plugins_dir ${qt_install_prefix_dir} ${qt_plugins_dir})
     endif()
     _define_absolute(QTPLUGINDIR ${qt_plugins_dir} "Qt plugins")
 
-    execute_process(COMMAND ${qtpaths_executable} --query QT_INSTALL_QML OUTPUT_VARIABLE qt_qml_dir)
+    ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
     if(_qt_prefix_is_cmake_install_prefix)
         file(RELATIVE_PATH qt_qml_dir ${qt_install_prefix_dir} ${qt_qml_dir})
     endif()
@@ -254,7 +253,7 @@ _define_non_cache(DATADIR_KF "${CMAKE_INSTALL_DATADIR}/kf6")
 
 # Qt-specific data vars
 if(KDE_INSTALL_USE_QT_SYS_PATHS)
-    execute_process(COMMAND ${qtpaths_executable} --query QT_INSTALL_DOCS OUTPUT_VARIABLE qt_docs_dir)
+    ecm_query_qt(qt_docs_dir QT_INSTALL_DOCS)
 
    _define_absolute(QTQCHDIR ${qt_docs_dir} "documentation bundles in QCH format for Qt-extending libraries")
 else()
