@@ -7,6 +7,11 @@ set(CMAKE_MODULE_PATH "${ECM_MODULE_DIR}")
 add_library(testhelper STATIC ../testhelper.cpp)
 target_include_directories(testhelper PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
+# Link to QtCore for WinMain on Windows
+include(QtVersionOption)
+find_package(Qt${QT_MAJOR_VERSION}Core REQUIRED)
+target_link_libraries(testhelper PUBLIC Qt${QT_MAJOR_VERSION}::Core)
+
 enable_testing()
 
 include(ECMAddTests)
