@@ -38,7 +38,11 @@ if (SHARED)
     )
 
     if (NOT QML_ONLY AND NOT DEPENDS)
-        check_file_exists("${INSTALL_DIR}/Test/libTestModule.so")
+        if (WIN32)
+            check_file_exists("${INSTALL_DIR}/Test/TestModule.dll")
+        else()
+            check_file_exists("${INSTALL_DIR}/Test/libTestModule.so")
+        endif()
 
         check_file_contents(
             GENERATED "${INSTALL_DIR}/Test/qmldir"
@@ -60,5 +64,9 @@ if (SHARED)
         )
     endif()
 else()
-    check_file_exists("${INSTALL_DIR}/Test/libTestModule.a")
+    if (WIN32)
+        check_file_exists("${INSTALL_DIR}/Test/TestModule.lib")
+    else()
+        check_file_exists("${INSTALL_DIR}/Test/libTestModule.a")
+    endif()
 endif()
