@@ -427,17 +427,31 @@ function(ecm_add_qch target_name)
         TYPE REQUIRED
         PURPOSE "Needed for API dox QCH file generation${doxygen_description_addition}"
     )
-    find_package(QHelpGenerator REQUIRED)
-    set_package_properties(QHelpGenerator PROPERTIES
-        TYPE REQUIRED
-        PURPOSE "Needed for API dox QCH file generation"
-        DESCRIPTION "Part of Qt5 tools"
-    )
+
+    if (QT_MAJOR_VERSION EQUAL "5")
+        find_package(QHelpGenerator REQUIRED)
+        set_package_properties(QHelpGenerator PROPERTIES
+            TYPE REQUIRED
+            PURPOSE "Needed for API dox QCH file generation"
+            DESCRIPTION "Part of Qt5 tools"
+        )
+    else()
+        find_package(Qt6 COMPONENTS ToolsTools CONFIG REQUIRED)
+        set_package_properties(Qt6ToolsTools PROPERTIES
+            TYPE REQUIRED
+            PURPOSE "Needed for API dox QCH file generation"
+            DESCRIPTION "qhelpgenerator from Qt6 tools"
+        )
+        if(TARGET Qt6::qhelpgenerator)
+            get_target_property(QHelpGenerator_EXECUTABLE Qt6::qhelpgenerator LOCATION)
+        endif()
+    endif()
+
     set(_missing_tools)
     if (NOT DOXYGEN_FOUND)
         list(APPEND _missing_tools "Doxygen")
     endif()
-    if (NOT QHelpGenerator_FOUND)
+    if (NOT QHelpGenerator_FOUND AND NOT TARGET Qt6::qhelpgenerator)
         list(APPEND _missing_tools "qhelpgenerator")
     endif()
 
