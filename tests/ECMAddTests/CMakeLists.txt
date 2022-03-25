@@ -1,3 +1,9 @@
+if (QT_MAJOR_VERSION EQUAL "6")
+    set(QT_VERSION_OPT "-DBUILD_WITH_QT6=ON")
+else()
+    set(QT_VERSION_OPT "-DBUILD_WITH_QT6=OFF")
+endif()
+
 macro(add_check NAME)
     string(REPLACE "." "/" dir "${NAME}")
     string(REGEX REPLACE "[^.]*\\." "" proj "${NAME}")
@@ -12,7 +18,7 @@ macro(add_check NAME)
             --build-generator ${CMAKE_GENERATOR}
             --build-makeprogram ${CMAKE_MAKE_PROGRAM}
             --build-project ${proj}
-            --build-options -DBUILD_TESTING:BOOL=ON
+            --build-options -DBUILD_TESTING:BOOL=ON ${QT_VERSION_OPT}
             ${${NAME}_EXTRA_OPTIONS}
             --test-command "${CMAKE_CTEST_COMMAND}"
         )
