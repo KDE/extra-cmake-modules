@@ -38,15 +38,27 @@ Since: 5.93
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 
 if (QT_MAJOR_VERSION STREQUAL "5")
-    find_package(Qt${QT_MAJOR_VERSION}Core QUIET)
-    get_target_property(_qmake_executable_default Qt5::qmake LOCATION)
+    find_program(_qmake_executable_default NAMES qmake-qt5 qmake5)
+    if(NOT _qmake_executable_default)
+        # Enable the CXX language to let CMake look for config files
+        # into library dirs
+        enable_language(CXX)
+        find_package(Qt${QT_MAJOR_VERSION}Core QUIET)
+        if(TARGET Qt5::qmake)
+            get_target_property(_qmake_executable_default Qt5::qmake LOCATION)
+        endif()
+    endif()
     set(QUERY_EXECUTABLE ${_qmake_executable_default}
         CACHE FILEPATH "Location of the Qt5 qmake executable")
     set(_exec_name_text "Qt5 qmake")
     set(_cli_option "-query")
 elseif(QT_MAJOR_VERSION STREQUAL "6")
-    find_package(Qt6 COMPONENTS CoreTools REQUIRED CONFIG)
-    get_target_property(_qtpaths_executable Qt6::qtpaths LOCATION)
+    find_program(_qtpaths_executable NAMES qtpaths6)
+    if(NOT _qtpaths_executable)
+        enable_language(CXX)
+        find_package(Qt6 COMPONENTS CoreTools REQUIRED CONFIG)
+        get_target_property(_qtpaths_executable Qt6::qtpaths LOCATION)
+    endif()
     set(QUERY_EXECUTABLE ${_qtpaths_executable}
         CACHE FILEPATH "Location of the Qt6 qtpaths executable")
     set(_exec_name_text "Qt6 qtpaths")
