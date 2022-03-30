@@ -38,7 +38,7 @@ Since: 5.93
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 
 if (QT_MAJOR_VERSION STREQUAL "5")
-    find_program(_qmake_executable_default NAMES qmake-qt5 qmake5)
+    find_program(_qmake_executable_default NAMES qmake qmake-qt5 qmake5)
     if(NOT _qmake_executable_default)
         # Enable the CXX language to let CMake look for config files
         # into library dirs
