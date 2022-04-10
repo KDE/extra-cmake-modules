@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2020 Alexander Lohnau <alexander.lohnau@gmx.de>
+# SPDX-FileCopyrightText: 2022 Ahmad Samir <a.samirh78@gmail.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -73,7 +74,32 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
         message(WARNING "No clang-format executable was found, skipping the formatting pre-commit hook")
     endif()
 
-    if(_write_hook)
+    if(NOT _write_hook)
+        return()
+    endif()
+
+    set(_hook_file "${GIT_DIR}/hooks/pre-commit")
+    # Doesn't exist? write away
+    if(NOT EXISTS ${_hook_file})
         configure_file(${PRE_COMMIT_HOOK_UNIX} "${GIT_DIR}/hooks/pre-commit")
+        return()
+    endif()
+
+    file(READ ${_hook_file} _contents)
+
+    # For when CLANG_FORMAT_SCRIPT didn't have the 'git rev-parse --git-common-dir' part
+    set(_old_cmd "./.git/hooks/scripts/clang-format.sh")
+    string(FIND ${_contents} ${_old_cmd} _idx)
+    if (${_idx} GREATER -1)
+        string(REPLACE "${_old_cmd}" "${CLANG_FORMAT_SCRIPT}" _contents "${_contents}")
+        file(WRITE ${_hook_file} ${_contents})
+        return()
+    endif()
+
+    string(FIND ${_contents} ${CLANG_FORMAT_SCRIPT} _idx)
+    # File exists and doesn't have the clang-format.sh line, append it
+    # so as to not overwrite users' customisations
+    if (_idx EQUAL -1)
+        file(APPEND ${_hook_file} ${CLANG_FORMAT_SCRIPT})
     endif()
 endfunction()
