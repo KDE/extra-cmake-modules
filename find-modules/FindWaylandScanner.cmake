@@ -34,15 +34,23 @@ implementations:
 
 ::
 
+  ecm_add_wayland_client_protocol(<target>
+                                  PROTOCOL <xmlfile>
+                                  BASENAME <basename>)
+
   ecm_add_wayland_client_protocol(<source_files_var>
                                   PROTOCOL <xmlfile>
                                   BASENAME <basename>)
 
 Generate Wayland client protocol files from ``<xmlfile>`` XML
 definition for the ``<basename>`` interface and append those files
-to ``<source_files_var>``.
+to ``<source_files_var>`` or ``<target>``.
 
 ::
+
+  ecm_add_wayland_server_protocol(<target>
+                                  PROTOCOL <xmlfile>
+                                  BASENAME <basename>)
 
   ecm_add_wayland_server_protocol(<source_files_var>
                                   PROTOCOL <xmlfile>
@@ -50,7 +58,7 @@ to ``<source_files_var>``.
 
 Generate Wayland server protocol files from ``<xmlfile>`` XML
 definition for the ``<basename>`` interface and append those files
-to ``<source_files_var>``.
+to ``<source_files_var>`` or ``<target>``.
 
 Since 1.4.0.
 #]=======================================================================]
@@ -88,7 +96,7 @@ set_package_properties(WaylandScanner PROPERTIES
 
 include(CMakeParseArguments)
 
-function(ecm_add_wayland_client_protocol out_var)
+function(ecm_add_wayland_client_protocol target_or_sources_var)
     # Parse arguments
     set(oneValueArgs PROTOCOL BASENAME)
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
@@ -113,12 +121,16 @@ function(ecm_add_wayland_client_protocol out_var)
         COMMAND ${WaylandScanner_EXECUTABLE} public-code ${_infile} ${_code}
         DEPENDS ${_infile} ${_client_header} VERBATIM)
 
-    list(APPEND ${out_var} "${_client_header}" "${_code}")
-    set(${out_var} ${${out_var}} PARENT_SCOPE)
+    if (TARGET ${target_or_sources_var})
+        target_sources(${target_or_sources_var} PRIVATE "${_client_header}" "${_code}")
+    else()
+        list(APPEND ${target_or_sources_var} "${_client_header}" "${_code}")
+        set(${target_or_sources_var} ${${target_or_sources_var}} PARENT_SCOPE)
+    endif()
 endfunction()
 
 
-function(ecm_add_wayland_server_protocol out_var)
+function(ecm_add_wayland_server_protocol target_or_sources_var)
     # Parse arguments
     set(oneValueArgs PROTOCOL BASENAME)
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
@@ -127,7 +139,7 @@ function(ecm_add_wayland_server_protocol out_var)
         message(FATAL_ERROR "Unknown keywords given to ecm_add_wayland_server_protocol(): \"${ARGS_UNPARSED_ARGUMENTS}\"")
     endif()
 
-    ecm_add_wayland_client_protocol(${out_var}
+    ecm_add_wayland_client_protocol(${target_or_sources_var}
                                     PROTOCOL ${ARGS_PROTOCOL}
                                     BASENAME ${ARGS_BASENAME})
 
@@ -141,6 +153,10 @@ function(ecm_add_wayland_server_protocol out_var)
         COMMAND ${WaylandScanner_EXECUTABLE} server-header ${_infile} ${_server_header}
         DEPENDS ${_infile} VERBATIM)
 
-    list(APPEND ${out_var} "${_server_header}")
-    set(${out_var} ${${out_var}} PARENT_SCOPE)
+    if (TARGET ${target_or_sources_var})
+        target_sources(${target_or_sources_var} PRIVATE "${_server_header}")
+    else()
+        list(APPEND ${target_or_sources_var} "${_server_header}")
+        set(${target_or_sources_var} ${${target_or_sources_var}} PARENT_SCOPE)
+    endif()
 endfunction()
