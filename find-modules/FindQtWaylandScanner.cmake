@@ -34,6 +34,11 @@ implementations:
 
 ::
 
+  ecm_add_qtwayland_client_protocol(<target>
+                                    PROTOCOL <xmlfile>
+                                    BASENAME <basename>
+                                    [PREFIX <prefix>])
+
   ecm_add_qtwayland_client_protocol(<source_files_var>
                                     PROTOCOL <xmlfile>
                                     BASENAME <basename>
@@ -41,12 +46,17 @@ implementations:
 
 Generate C++ wrapper to Wayland client protocol files from ``<xmlfile>``
 XML definition for the ``<basename>`` interface and append those files
-to ``<source_files_var>``.  Pass the ``<prefix>`` argument if the interface
+to ``<source_files_var>`` or ``<target>``.  Pass the ``<prefix>`` argument if the interface
 names don't start with ``qt_`` or ``wl_``.
 
 WaylandScanner is required and will be searched for.
 
 ::
+
+  ecm_add_qtwayland_server_protocol(<target>
+                                    PROTOCOL <xmlfile>
+                                    BASENAME <basename>
+                                    [PREFIX <prefix>])
 
   ecm_add_qtwayland_server_protocol(<source_files_var>
                                     PROTOCOL <xmlfile>
@@ -55,7 +65,7 @@ WaylandScanner is required and will be searched for.
 
 Generate C++ wrapper to Wayland server protocol files from ``<xmlfile>``
 XML definition for the ``<basename>`` interface and append those files
-to ``<source_files_var>``.  Pass the ``<prefix>`` argument if the interface
+to ``<source_files_var>`` or ``<target>``.  Pass the ``<prefix>`` argument if the interface
 names don't start with ``qt_`` or ``wl_``.
 
 WaylandScanner is required and will be searched for.
@@ -99,7 +109,7 @@ set_package_properties(QtWaylandScanner PROPERTIES
 
 include(CMakeParseArguments)
 
-function(ecm_add_qtwayland_client_protocol out_var)
+function(ecm_add_qtwayland_client_protocol target_or_sources_var)
     # Parse arguments
     set(oneValueArgs PROTOCOL BASENAME PREFIX)
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
@@ -111,7 +121,7 @@ function(ecm_add_qtwayland_client_protocol out_var)
     set(_prefix "${ARGS_PREFIX}")
 
     find_package(WaylandScanner REQUIRED QUIET)
-    ecm_add_wayland_client_protocol(${out_var}
+    ecm_add_wayland_client_protocol(${target_or_sources_var}
                                     PROTOCOL ${ARGS_PROTOCOL}
                                     BASENAME ${ARGS_BASENAME})
 
@@ -131,12 +141,16 @@ function(ecm_add_qtwayland_client_protocol out_var)
 
     set_property(SOURCE ${_header} ${_code} PROPERTY SKIP_AUTOMOC ON)
 
-    list(APPEND ${out_var} "${_code}")
-    set(${out_var} ${${out_var}} PARENT_SCOPE)
+    if (TARGET ${target_or_sources_var})
+        target_sources(${target_or_sources_var} PRIVATE "${_code}")
+    else()
+        list(APPEND ${target_or_sources_var} "${_code}")
+        set(${target_or_sources_var} ${${target_or_sources_var}} PARENT_SCOPE)
+    endif()
 endfunction()
 
 
-function(ecm_add_qtwayland_server_protocol out_var)
+function(ecm_add_qtwayland_server_protocol target_or_sources_var)
     # Parse arguments
     set(oneValueArgs PROTOCOL BASENAME PREFIX)
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
@@ -148,7 +162,7 @@ function(ecm_add_qtwayland_server_protocol out_var)
     set(_prefix "${ARGS_PREFIX}")
 
     find_package(WaylandScanner REQUIRED QUIET)
-    ecm_add_wayland_server_protocol(${out_var}
+    ecm_add_wayland_server_protocol(${target_or_sources_var}
                                     PROTOCOL ${ARGS_PROTOCOL}
                                     BASENAME ${ARGS_BASENAME})
 
@@ -168,6 +182,10 @@ function(ecm_add_qtwayland_server_protocol out_var)
 
     set_property(SOURCE ${_header} ${_code} PROPERTY SKIP_AUTOMOC ON)
 
-    list(APPEND ${out_var} "${_code}")
-    set(${out_var} ${${out_var}} PARENT_SCOPE)
+    if (TARGET ${target_or_sources_var})
+        target_sources(${target_or_sources_var} PRIVATE "${_code}")
+    else()
+        list(APPEND ${target_or_sources_var} "${_code}")
+        set(${target_or_sources_var} ${${target_or_sources_var}} PARENT_SCOPE)
+    endif()
 endfunction()
