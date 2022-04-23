@@ -266,6 +266,12 @@ function(ecm_add_qml_module ARG_TARGET)
         ${_ECM_QMLMODULE_PROPERTY_DEPENDS} ""
     )
 
+    # QQmlImportDatabase::resolvePlugin doesn't accept lib prefixes under
+    # Windows, causing to fail to import when using as a dynamic plugin.
+    if (MINGW)
+        set_target_properties(${ARG_TARGET} PROPERTIES PREFIX "")
+    endif()
+
     # -Muri is required for static QML plugins to work properly, see
     # https://bugreports.qt.io/browse/QTBUG-82598
     set_target_properties(${ARG_TARGET} PROPERTIES AUTOMOC_MOC_OPTIONS -Muri=${ARG_URI})
