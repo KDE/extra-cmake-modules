@@ -10,7 +10,7 @@ Find QML import modules through a find_qmlmodule() call.
 It uses the qmlplugindump application to find the plugins and sets them up as
 runtime dependencies.
 
-This is useful so that when we configure a project we are noified when some
+This is useful so that when we configure a project we are notified when some
 QML imports are not present in the system, thus having the application compilable
 but fail at runtime.
 
