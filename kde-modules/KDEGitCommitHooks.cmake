@@ -89,17 +89,17 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
 
     # For when CLANG_FORMAT_SCRIPT didn't have the 'git rev-parse --git-common-dir' part
     set(_old_cmd "./.git/hooks/scripts/clang-format.sh")
-    string(FIND ${_contents} ${_old_cmd} _idx)
+    string(FIND "${_contents}" "${_old_cmd}" _idx)
     if (${_idx} GREATER -1)
         string(REPLACE "${_old_cmd}" "${CLANG_FORMAT_SCRIPT}" _contents "${_contents}")
-        file(WRITE ${_hook_file} ${_contents})
+        file(WRITE ${_hook_file} "${_contents}")
         return()
     endif()
 
-    string(FIND ${_contents} ${CLANG_FORMAT_SCRIPT} _idx)
+    string(FIND "${_contents}" "${CLANG_FORMAT_SCRIPT}" _idx)
     # File exists and doesn't have the clang-format.sh line, append it
     # so as to not overwrite users' customisations
     if (_idx EQUAL -1)
-        file(APPEND ${_hook_file} ${CLANG_FORMAT_SCRIPT})
+        file(APPEND ${_hook_file} "${CLANG_FORMAT_SCRIPT}")
     endif()
 endfunction()
