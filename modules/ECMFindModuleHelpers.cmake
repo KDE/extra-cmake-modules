@@ -93,6 +93,10 @@ The following variables will be set:
   they are passed to the macro), although if it is already set, it will not
   be altered
 
+Since 5.95, you can set the ``SKIP_ECM_CMAKE_MINIMUM_VERSION_WARNING`` option
+to ``ON`` to disable showing a warning when the found CMake version is >= 3.16.0,
+but the project sets the minimum required CMake version to an older version.
+
 Note that these variables are never cleared, so if
 ecm_find_package_handle_library_components() is called multiple times with
 different components (typically because of multiple find_package() calls) then
@@ -105,11 +109,13 @@ Since pre-1.0.0.
 include(CMakeParseArguments)
 
 macro(ecm_find_package_version_check module_name)
-    if(CMAKE_VERSION VERSION_LESS 3.16.0)
-        message(FATAL_ERROR "CMake 3.16.0 is required by Find${module_name}.cmake")
+    set(_current_version 3.16.0)
+    if(CMAKE_VERSION VERSION_LESS ${_current_version})
+        message(FATAL_ERROR "CMake ${_current_version} is required by Find${module_name}.cmake")
     endif()
-    if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 3.16.0)
-        message(AUTHOR_WARNING "Your project should require at least CMake 3.16.0 to use Find${module_name}.cmake")
+    option(SKIP_ECM_CMAKE_MINIMUM_VERSION_WARNING "Don't show warning when the found CMake version is >= ${_current_version}, but the project sets the minimum required CMake version to an older version" OFF)
+    if(NOT SKIP_ECM_CMAKE_MINIMUM_VERSION_WARNING AND CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS ${_current_version})
+        message(AUTHOR_WARNING "Your project should require at least CMake ${_current_version} to use Find${module_name}.cmake")
     endif()
 endmacro()
 
