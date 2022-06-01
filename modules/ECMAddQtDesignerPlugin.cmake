@@ -442,44 +442,16 @@ macro(ecm_add_qtdesignerplugin target)
     endif()
 
     # Check deps
-    # peek at Qt5Core to learn about the version to decide whether Qt5UiPlugin is enough
-    if(NOT Qt5Core_FOUND)
-        find_package(Qt${QT_MAJOR_VERSION}Core QUIET CONFIG)
-    endif()
-    if(Qt5Core_VERSION VERSION_LESS "5.5.0")
-        set(_qtdesigner_tobefound TRUE)
-    elseif(Qt5Core_VERSION VERSION_LESS "5.9.0")
-        set(_qtdesigner_tobefound TRUE)
-        set(_qtuiplugin_tobefound TRUE)
-    else()
-        # Since Qt 5.9 only Qt5UiPlugin is needed
-        set(_qtuiplugin_tobefound TRUE)
-    endif()
-    if(NOT Qt5Designer_FOUND AND _qtdesigner_tobefound)
-        find_package(Qt${QT_MAJOR_VERSION}Designer QUIET CONFIG)
-        set_package_properties(Qt${QT_MAJOR_VERSION}Designer PROPERTIES
-            PURPOSE "Required to build Qt Designer plugins"
-            TYPE REQUIRED
-        )
-    endif()
-    if(NOT Qt5UiPlugin_FOUND AND _qtuiplugin_tobefound)
+    if(NOT Qt${QT_MAJOR_VERSION}UiPlugin_FOUND)
         find_package(Qt${QT_MAJOR_VERSION}UiPlugin QUIET CONFIG)
         set_package_properties(Qt${QT_MAJOR_VERSION}UiPlugin PROPERTIES
             PURPOSE "Required to build Qt Designer plugins"
             TYPE REQUIRED
         )
     endif()
-    if (Qt5Designer_FOUND)
-        set(_qtdesigner_tobefound FALSE)
-    endif()
-    if (Qt5UiPlugin_FOUND)
-        set(_qtuiplugin_tobefound FALSE)
-        # in some old versions Qt5UiPlugin does not set its _INCLUDE_DIRS variable. Fill it manually
-        get_target_property(Qt5UiPlugin_INCLUDE_DIRS Qt5::UiPlugin INTERFACE_INCLUDE_DIRECTORIES)
-    endif()
 
-    # setup plugin only if designer/uiplugin libs were found, as we do not abort hard the cmake run otherwise
-    if(NOT _qtdesigner_tobefound AND NOT _qtuiplugin_tobefound)
+    # setup plugin only if uiplugin lib was found, as we do not abort hard the cmake run otherwise
+    if (Qt${QT_MAJOR_VERSION}UiPlugin_FOUND)
         set(_generation_dir "${CMAKE_CURRENT_BINARY_DIR}/${target}_ECMQtDesignerPlugin")
         file(MAKE_DIRECTORY "${_generation_dir}")
         set(_rc_icon_dir "/${ARGS_NAME}/designer")
@@ -624,15 +596,6 @@ QList<QDesignerCustomWidgetInterface*> ${_collection_classname}::customWidgets()
 
         # setup plugin binary
         add_library(${target} MODULE ${_srcs})
-        if(Qt5UiPlugin_VERSION AND Qt5UiPlugin_VERSION VERSION_GREATER_EQUAL 5.9.0)
-            list(APPEND ARGS_LINK_LIBRARIES Qt5::UiPlugin)
-        else()
-            # For Qt <5.9 include dir variables needed
-            target_include_directories(${target}
-                PRIVATE ${Qt5UiPlugin_INCLUDE_DIRS}
-                PRIVATE ${Qt5Designer_INCLUDE_DIRS}
-            )
-        endif()
         if(NOT WIN32)
             # Since there are no libraries provided by this module,
             # there is no point including the build tree in RPath,
@@ -647,7 +610,7 @@ QList<QDesignerCustomWidgetInterface*> ${_collection_classname}::customWidgets()
                 OUTPUT_NAME ${ARGS_OUTPUT_NAME}
             )
         endif()
-        target_link_libraries(${target} ${ARGS_LINK_LIBRARIES})
+        target_link_libraries(${target} ${ARGS_LINK_LIBRARIES} Qt${QT_MAJOR_VERSION}::UiPlugin)
 
         if (DEFINED ARGS_COMPONENT)
             set(_component COMPONENT ${ARGS_COMPONENT})
