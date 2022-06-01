@@ -536,7 +536,11 @@ macro(ecm_add_qtdesignerplugin target)
             )
             file(REMOVE "${_rc_work_file}")
 
-            qt5_add_resources(_srcs ${_rc_file})
+            if (QT_MAJOR_VERSION EQUAL "5")
+                qt5_add_resources(_srcs ${_rc_file})
+            else()
+                qt6_add_resources(_srcs ${_rc_file})
+            endif()
         endif()
 
         # generate source file
