@@ -28,12 +28,6 @@ int main(int argc, char **argv)
         qWarning("log1 category was \"%s\", expected \"log.one\"", log1().categoryName());
         success = false;
     }
-#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
-    if (!log1().isDebugEnabled()) {
-        qWarning("log1 debug messages were not enabled");
-        success = false;
-    }
-#else
     if (log1().isDebugEnabled()) {
         qWarning("log1 debug messages were enabled");
         success = false;
@@ -42,18 +36,11 @@ int main(int argc, char **argv)
         qWarning("log1 warning messages were not enabled");
         success = false;
     }
-#endif
 
     if (foo::bar::log2().categoryName() != QLatin1String("log.two")) {
         qWarning("log2 category was \"%s\", expected \"log.two\"", foo::bar::log2().categoryName());
         success = false;
     }
-#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
-    if (!foo::bar::log2().isDebugEnabled()) {
-        qWarning("log2 debug messages were not enabled");
-        success = false;
-    }
-#else
     if (foo::bar::log2().isDebugEnabled()) {
         qWarning("log2 debug messages were enabled");
         success = false;
@@ -62,18 +49,11 @@ int main(int argc, char **argv)
         qWarning("log2 warning messages were not enabled");
         success = false;
     }
-#endif
 
     if (log3().categoryName() != QLatin1String("three")) {
         qWarning("log3 category was \"%s\", expected \"three\"", log3().categoryName());
         success = false;
     }
-#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
-    if (!log3().isDebugEnabled()) {
-        qWarning("log3 debug messages were not enabled");
-        success = false;
-    }
-#else
     if (log3().isDebugEnabled()) {
         qWarning("log3 debug messages were enabled");
         success = false;
@@ -86,7 +66,6 @@ int main(int argc, char **argv)
         qWarning("log3 critical messages were not enabled");
         success = false;
     }
-#endif
 
     return success ? 0 : 1;
 }
