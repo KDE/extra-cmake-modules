@@ -155,7 +155,7 @@ ecm_find_package_parse_components(XCB
 
 list(FIND XCB_components "XINPUT" _XCB_XINPUT_index)
 if (NOT _XCB_XINPUT_index EQUAL -1)
-    message(AUTHOR_WARNING "XINPUT from XCB was requested: this is EXPERIMENTAL and is likely to unavailable on many systems!")
+    message(AUTHOR_WARNING "XINPUT from XCB was requested: this is EXPERIMENTAL and is likely to be unavailable on many systems!")
 endif()
 
 ecm_find_package_handle_library_components(XCB
