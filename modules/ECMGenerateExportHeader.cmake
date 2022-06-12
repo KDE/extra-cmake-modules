@@ -177,18 +177,19 @@ When the ``GROUP_BASE_NAME`` has been used, the same macros but with the
 given ``<group_base_name>`` prefix are available to define the defaults of
 these macros, if not explicitly set.
 
-Note: The tricks applied here for hiding deprecated API to the compiler
-when building against a library do not work for all deprecated API:
+.. warning::
+  The tricks applied here for hiding deprecated API to the compiler
+  when building against a library do not work for all deprecated API:
 
-* virtual methods need to stay visible to the compiler to build proper
-  virtual method tables for subclasses
-* enumerators from enums cannot be simply removed, as this changes
-  auto values of following enumerators, also can poke holes in enumerator
-  series used as index into tables
+  * virtual methods need to stay visible to the compiler to build proper
+    virtual method tables for subclasses
+  * enumerators from enums cannot be simply removed, as this changes
+    auto values of following enumerators, also can poke holes in enumerator
+    series used as index into tables
 
-In such cases the API can be only "hidden" at build time of the library,
-itself, by generated hard coded macro settings, using
-``<prefix_name><uppercase_base_name>_BUILD_DEPRECATED_SINCE(major, minor)``.
+  In such cases the API can be only "hidden" at build time of the library,
+  itself, by generated hard coded macro settings, using
+  ``<prefix_name><uppercase_base_name>_BUILD_DEPRECATED_SINCE(major, minor)``.
 
 Examples:
 
