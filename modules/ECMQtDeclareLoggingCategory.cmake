@@ -40,11 +40,6 @@ private sources (since 5.80). The target must not be an alias.
 If ``<filename>`` is not absolute, it will be taken relative to the current
 binary directory.
 
-If the code is compiled against Qt 5.4 or later, by default it will only log
-output that is at least the severity specified by ``DEFAULT_SEVERITY``, or
-"Info" level if ``DEFAULT_SEVERITY`` is not given. Note that, due to a
-bug in Qt 5.5, "Info" may be treated as more severe than "Fatal".
-
 ``<identifier>`` may include namespaces (eg: ``foo::bar::IDENT``).
 
 If ``EXPORT`` is passed, the category will be registered for the group id
