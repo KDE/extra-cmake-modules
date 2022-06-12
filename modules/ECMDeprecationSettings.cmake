@@ -7,7 +7,7 @@ ECMDeprecationSettings
 -----------------------
 
 This module provides the ``ecm_set_disabled_deprecation_versions`` function setting the excluding
-deprecated API for QT and KF projects.
+deprecated API for Qt and KF projects.
 
 This method expects pairs of the identifier and deprecation version.
 For the identifier "QT" this functions adds the definition "QT_DISABLE_DEPRECATED_BEFORE" with the given version in a hexadecimal format.
