@@ -12,7 +12,7 @@ deprecated API for QT and KF projects.
 This method expects pairs of the identifier and deprecation version.
 For the identifier "QT" this functions adds the definition "QT_DISABLE_DEPRECATED_BEFORE" with the given version in a hexadecimal format.
 Otherwise the name for the definition is generated using `${IDENTIFIER}_DISABLE_DEPRECATED_BEFORE_AND_AT`,
-following the naming of the generated code in :kde-module:`ECMGenerateExportHeaders`.
+following the naming of the generated code in :module:`ECMGenerateExportHeader`.
 The version for the definition can be overwritten, by passing definition name and the deprecation version
 as a CMake definition. This allows one to exclude deprecations without having to edit the CMakeLists.txt file.
 

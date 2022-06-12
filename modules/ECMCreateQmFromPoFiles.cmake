@@ -7,7 +7,7 @@ ECMCreateQmFromPoFiles
 ----------------------
 
 .. warning:: This module is deprecated and will be removed by ECM 1.0. Use
-             ECMPoQmTools instead.
+             :module:`ECMPoQmTools` instead.
 
 Generate QTranslator (.qm) catalogs from Gettext (.po) catalogs.
 

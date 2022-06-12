@@ -15,7 +15,7 @@ Set stricter compile and link flags for KDE Frameworks modules.
    Do not use this module for software which is not part of KDE-Frameworks.
    There is no guarantee for backward-compatibility in newer versions.
 
-The KDECompilerSettings module is included and, in addition, various
+The :kde-module:`KDECompilerSettings` module is included and, in addition, various
 defines that affect the Qt libraries are set to enforce certain
 conventions.
 

@@ -209,7 +209,7 @@ be used on the command line when possible (eg: use
 ``-DKDE_INSTALL_LIBDIR=lib64`` instead of
 ``-DKDE_INSTALL_LIBDIR=/usr/lib/lib64`` to override the library directory).
 
-Since 5.82.0, prior to that available as KDEInstallDirs.
+Since 5.82.0, prior to that available as :kde-module:`KDEInstallDirs`.
 
 NB: The variables starting ``KDE_INSTALL_`` are available since 1.6.0,
 unless otherwise noted with the variable.

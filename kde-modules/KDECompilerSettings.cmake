@@ -147,7 +147,7 @@ Inclusion of this module defines the following variables:
     This option only has an effect on ELF-based systems.
 
     The option is disabled by default except when using
-    KDEFrameworkCompilerSettings.cmake where it's enabled. Projects can enable
+    :kde-module:`KDEFrameworkCompilerSettings` where it's enabled. Projects can enable
     it by calling set(ENABLE_BSYMBOLICFUNCTIONS ON) or passing -DENABLE
     BSYMBOLICFUNCTIONS=ON when configuring the build directory.
 

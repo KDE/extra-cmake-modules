@@ -27,7 +27,7 @@ The ``.clang-format`` file from ECM will be copied to the source directory. This
 added to version control. It is recommended to add it to the ``.gitignore`` file: ``/.clang-format``.
 
 Since 5.79: If the source folder already contains a .clang-format file it is not overwritten.
-Since version 5.80 this function is called by default in KDEFrameworkCompilerSettings. If directories should be excluded from
+Since version 5.80 this function is called by default in :kde-module:`KDEFrameworkCompilerSettings`. If directories should be excluded from
 the formatting a .clang-format file with "DisableFormat: true" and "SortIncludes: false" should be created.
 
 Example usage:

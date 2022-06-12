@@ -6,9 +6,9 @@
 KDEInstallDirs
 --------------
 
-Compatibility wrapper around KDEInstallDirs5.
+Compatibility wrapper around :kde-module:`KDEInstallDirs5`.
 
-Since 5.82.0, prior to that equivalent to KDEInstallDirs5.
+Since 5.82.0, prior to that equivalent to :kde-module:`KDEInstallDirs5`.
 #]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)

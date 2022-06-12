@@ -24,7 +24,7 @@ A D-Bus service file ``<service name>.service`` will be generated and installed
 in the relevant D-Bus config location. This filename can be customized with RENAME.
 
 ``<executable>`` must be an absolute path to the installed service executable. When using it with
-``KDEInstallDirs`` it needs to be the ``_FULL_`` variant of the path variable.
+:kde-module:`KDEInstallDirs` it needs to be the ``_FULL_`` variant of the path variable.
 
 Note: On Windows, the macro will only use the file name part of ``<executable>`` since D-Bus
 service executables are to be installed in the same directory as the D-Bus daemon.
