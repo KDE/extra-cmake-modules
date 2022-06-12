@@ -25,6 +25,7 @@ This module provides the following function:
       [<identifier> <deprecation_version>]
       [<identifier2> <deprecation_version2>]
   )
+
 ``SHOW_DEPRECATIONS`` if this option is used, deprecation warnings for the current major version are emitted.
 
 
