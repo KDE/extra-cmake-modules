@@ -19,8 +19,9 @@ for some compiler features.  By default, exceptions are disabled;
 ``kde_target_enable_exceptions()`` can be used to re-enable them for a
 specific target.
 
-NB: it is recommended to include this module with the ``NO_POLICY_SCOPE``
-flag, otherwise you may get spurious warnings with some versions of CMake.
+.. note::
+  It is recommended to include this module with the ``NO_POLICY_SCOPE``
+  flag, otherwise you may get spurious warnings with some versions of CMake.
 
 Since 5.85 newer settings are controlled by a variable
 ``KDE_COMPILERSETTINGS_LEVEL``, taking an ECM version as value. That

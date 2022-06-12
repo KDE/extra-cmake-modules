@@ -65,10 +65,12 @@ package. Defaults to "https://www.kde.org/". Since 5.89.0.
 
 ``INSTALL`` will cause the module to be installed to the ``pkgconfig``
 subdirectory of ``LIB_INSTALL_DIR``, unless the ``ECM_PKGCONFIG_INSTALL_DIR``
-cache variable is set to something different. Note that the first call to
-``ecm_generate_pkgconfig_file()`` with the ``INSTALL`` argument will cause
-``ECM_PKGCONFIG_INSTALL_DIR`` to be set to the cache, and will be used in any
-subsequent calls.
+cache variable is set to something different.
+
+.. note::
+  The first call to ``ecm_generate_pkgconfig_file()`` with the ``INSTALL``
+  argument will cause ``ECM_PKGCONFIG_INSTALL_DIR`` to be set to the cache,
+  and will be used in any subsequent calls.
 
 To properly use this macro a version needs to be set. To retrieve it,
 ``ECM_PKGCONFIG_INSTALL_DIR`` uses ``PROJECT_VERSION``. To set it, use the

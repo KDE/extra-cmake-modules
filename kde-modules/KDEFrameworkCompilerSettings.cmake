@@ -23,8 +23,9 @@ For example, constructions like ``QString("foo")`` are prohibited, instead
 forcing the use of QLatin1String or QStringLiteral, and some
 Qt-defined keywords like signals and slots will not be defined.
 
-NB: it is recommended to include this module with the NO_POLICY_SCOPE
-flag, otherwise you may get spurious warnings with some versions of CMake.
+.. note::
+  It is recommended to include this module with the NO_POLICY_SCOPE
+  flag, otherwise you may get spurious warnings with some versions of CMake.
 
 Since pre-1.0.0.
 #]=======================================================================]

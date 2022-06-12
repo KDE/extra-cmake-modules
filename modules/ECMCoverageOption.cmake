@@ -16,7 +16,8 @@ When this module is included, a ``BUILD_COVERAGE`` option is added (default
 ``OFF``). Turning this option on enables GCC's coverage instrumentation, and
 links against ``libgcov``.
 
-Note that this will probably break the build if you are not using GCC.
+.. note::
+  This will probably break the build if you are not using GCC.
 
 Since 1.3.0.
 #]=======================================================================]

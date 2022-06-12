@@ -27,9 +27,10 @@ dynamically-linked libraries) is set to include the location that libraries
 will be installed to (as set in ``LIB_INSTALL_DIR`` or, if the former is not set,
 ``KDE_INSTALL_LIBDIR``), and also the linker search path.
 
-Note that ``LIB_INSTALL_DIR`` or alternatively ``KDE_INSTALL_LIBDIR`` needs
-to be set before including this module.
-Typically, this is done by including the :kde-module:`KDEInstallDirs` module.
+.. note::
+  ``LIB_INSTALL_DIR`` or alternatively ``KDE_INSTALL_LIBDIR`` needs
+  to be set before including this module.
+  Typically, this is done by including the :kde-module:`KDEInstallDirs` module.
 
 This section can be disabled by setting ``KDE_SKIP_RPATH_SETTINGS`` to ``TRUE``
 before including this module.

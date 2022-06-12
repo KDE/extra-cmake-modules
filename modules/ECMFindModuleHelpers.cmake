@@ -93,11 +93,12 @@ The following variables will be set:
   they are passed to the macro), although if it is already set, it will not
   be altered
 
-Note that these variables are never cleared, so if
-``ecm_find_package_handle_library_components()`` is called multiple times with
-different components (typically because of multiple ``find_package()`` calls) then
-``<name>_TARGETS``, for example, will contain all the targets found in any
-call (although no duplicates).
+.. note::
+  These variables are never cleared, so if
+  ``ecm_find_package_handle_library_components()`` is called multiple times with
+  different components (typically because of multiple ``find_package()`` calls) then
+  ``<name>_TARGETS``, for example, will contain all the targets found in any
+  call (although no duplicates).
 
 Since pre-1.0.0.
 #]=======================================================================]
