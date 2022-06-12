@@ -35,7 +35,7 @@ as the name field as well as the library to link to.
 ``DEPS`` is the list of libraries required by this library. Libraries that are
 not exposed to applications should be marked with ``PRIVATE``. The default
 is ``PUBLIC``, but note that according to the
-`Guide to pkg-config <https://people.freedesktop.org/~dbn/pkg-config-guide.html>`
+`Guide to pkg-config <https://people.freedesktop.org/~dbn/pkg-config-guide.html>`_
 marking dependencies as private is usually preferred. The ``PUBLIC`` and
 ``PRIVATE`` keywords are supported since 5.89.0.
 
