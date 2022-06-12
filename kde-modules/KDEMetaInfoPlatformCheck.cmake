@@ -4,7 +4,7 @@
 
 #[=======================================================================[.rst:
 KDEMetaInfoPlatformCheck
---------------------
+------------------------
 
 By including this module there will be an automatic check between the supported
 platforms listed in the metainfo.yaml file and the current platform
