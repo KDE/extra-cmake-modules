@@ -37,32 +37,32 @@ library convenient for them, in much the same way that CMake config files make
 things convenient for CMake-based applications. ``ecm_generate_pri_file()``
 generates just such a file.
 
-VERSION specifies the version of the library the ``.pri`` file describes. If
+``VERSION`` specifies the version of the library the ``.pri`` file describes. If
 not set, the value is taken from the context variable ``PROJECT_VERSION``.
 This variable is usually set by the ``project(... VERSION ...)`` command or,
-if CMake policy CMP0048 is not NEW, by :module:`ECMSetupVersion`.
+if CMake policy CMP0048 is not ``NEW``, by :module:`ECMSetupVersion`.
 For backward-compatibility with older ECM versions the
 ``PROJECT_VERSION_STRING`` variable as set by :module:`ECMSetupVersion`
 will be preferred over ``PROJECT_VERSION`` if set, unless the minimum
 required version of ECM is 5.83 and newer. Since 5.83.
 
-BASE_NAME specifies the name qmake project (.pro) files should use to refer to
-the library (eg: KArchive).  LIB_NAME is the name of the actual library to
-link to (ie: the first argument to add_library()).  DEPS is a space-separated
+``BASE_NAME`` specifies the name qmake project (.pro) files should use to refer to
+the library (eg: KArchive).  ``LIB_NAME`` is the name of the actual library to
+link to (ie: the first argument to add_library()).  ``DEPS`` is a space-separated
 list of the base names of other libraries (for Qt libraries, use the same
 names you use with the ``QT`` variable in a qmake project file, such as "core"
-for QtCore).  FILENAME_VAR specifies the name of a variable to store the path
+for QtCore).  ``FILENAME_VAR`` specifies the name of a variable to store the path
 to the generated file in.
 
-INCLUDE_INSTALL_DIRS are the paths (relative to ``CMAKE_INSTALL_PREFIX``) that
+``INCLUDE_INSTALL_DIRS`` are the paths (relative to ``CMAKE_INSTALL_PREFIX``) that
 include files will be installed to. It defaults to
 ``${INCLUDE_INSTALL_DIR}/<baseName>`` if the ``INCLUDE_INSTALL_DIR`` variable
 is set. If that variable is not set, the ``CMAKE_INSTALL_INCLUDEDIR`` variable
-is used instead, and if neither are set ``include`` is used.  LIB_INSTALL_DIR
+is used instead, and if neither are set ``include`` is used.  ``LIB_INSTALL_DIR``
 operates similarly for the installation location for libraries; it defaults to
 ``${LIB_INSTALL_DIR}``, ``${CMAKE_INSTALL_LIBDIR}`` or ``lib``, in that order.
 
-INCLUDE_INSTALL_DIR is the old variant of INCLUDE_INSTALL_DIRS, taking only one
+``INCLUDE_INSTALL_DIR`` is the old variant of ``INCLUDE_INSTALL_DIRS``, taking only one
 directory.
 
 Example usage:

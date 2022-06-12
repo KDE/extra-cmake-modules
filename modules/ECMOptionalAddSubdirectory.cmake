@@ -12,7 +12,7 @@ Make subdirectories optional.
 
   ecm_optional_add_subdirectory(<dir>)
 
-This behaves like add_subdirectory(), except that it does not complain if the
+This behaves like ``add_subdirectory()``, except that it does not complain if the
 directory does not exist.  Additionally, if the directory does exist, it
 creates an option to allow the user to skip it. The option will be named
 BUILD_<dir>.
@@ -20,7 +20,7 @@ BUILD_<dir>.
 This is useful for "meta-projects" that combine several mostly-independent
 sub-projects.
 
-If the CMake variable DISABLE_ALL_OPTIONAL_SUBDIRECTORIES is set to TRUE for
+If the CMake variable ``DISABLE_ALL_OPTIONAL_SUBDIRECTORIES`` is set to ``TRUE`` for
 the first CMake run on the project, all optional subdirectories will be
 disabled by default (but can of course be enabled via the respective options).
 For example, the following will disable all optional subdirectories except the

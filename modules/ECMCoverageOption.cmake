@@ -13,7 +13,7 @@ your tests. This module makes it easy to build with support for
 `GCov <https://gcc.gnu.org/onlinedocs/gcc/Gcov.html>`_.
 
 When this module is included, a ``BUILD_COVERAGE`` option is added (default
-OFF). Turning this option on enables GCC's coverage instrumentation, and
+``OFF``). Turning this option on enables GCC's coverage instrumentation, and
 links against ``libgcov``.
 
 Note that this will probably break the build if you are not using GCC.

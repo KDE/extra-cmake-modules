@@ -20,12 +20,12 @@ found, so it is not necessary to ``include(ECMUseFindModules)`` explicitly.
 This allows selective use of the find modules provided by ECM, including
 deferring to CMake's versions of those modules if it has them.  Rather than
 adding ``${ECM_FIND_MODULE_DIR}`` to ``CMAKE_MODULE_PATH``, you use
-ecm_use_find_modules() to copy the modules you want to a local (build)
+``ecm_use_find_modules()`` to copy the modules you want to a local (build)
 directory, and add that to ``CMAKE_MODULE_PATH``.
 
-The find modules given to MODULES will be copied to the directory given by DIR
+The find modules given to ``MODULES`` will be copied to the directory given by ``DIR``
 (which should be located in ``${CMAKE_BINARY_DIR}`` and added to
-``CMAKE_MODULE_PATH``).  If NO_OVERRIDE is given, only modules not also
+``CMAKE_MODULE_PATH``).  If ``NO_OVERRIDE`` is given, only modules not also
 provided by CMake will be copied.
 
 Example:

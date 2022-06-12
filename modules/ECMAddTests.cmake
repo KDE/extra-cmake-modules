@@ -20,29 +20,29 @@ Convenience functions for adding tests.
 A convenience function for adding multiple tests, each consisting of a
 single source file. For each file in <sources>, an executable target will be
 created (the name of which will be the basename of the source file). This
-will be linked against the libraries given with LINK_LIBRARIES. Each
+will be linked against the libraries given with ``LINK_LIBRARIES``. Each
 executable will be added as a test with the same name.
 
-If NAME_PREFIX is given, this prefix will be prepended to the test names, but
+If ``NAME_PREFIX`` is given, this prefix will be prepended to the test names, but
 not the target names. As a result, it will not prevent clashes between tests
 with the same name in different parts of the project, but it can be used to
 give an indication of where to look for a failing test.
 
-If the flag GUI is passed the test binaries will be GUI executables, otherwise
+If the flag ``GUI`` is passed the test binaries will be GUI executables, otherwise
 the resulting binaries will be console applications (regardless of the value
-of CMAKE_WIN32_EXECUTABLE or CMAKE_MACOSX_BUNDLE). Be aware that this changes
+of ``CMAKE_WIN32_EXECUTABLE`` or ``CMAKE_MACOSX_BUNDLE``). Be aware that this changes
 the executable entry point on Windows (although some frameworks, such as Qt,
 abstract this difference away).
 
-The tests will be build with -DQT_FORCE_ASSERTS to enable assertions in the
+The tests will be build with ``-DQT_FORCE_ASSERTS`` to enable assertions in the
 test executable even for release builds.
 
-The TARGET_NAMES_VAR and TEST_NAMES_VAR arguments, if given, should specify a
+The ``TARGET_NAMES_VAR`` and ``TEST_NAMES_VAR`` arguments, if given, should specify a
 variable name to receive the list of generated target and test names,
 respectively. This makes it convenient to apply properties to them as a
-whole, for example, using set_target_properties() or  set_tests_properties().
+whole, for example, using ``set_target_properties()`` or  ``set_tests_properties()``.
 
-The generated target executables will have the effects of ecm_mark_as_test()
+The generated target executables will have the effects of ``ecm_mark_as_test()``
 (from the :module:`ECMMarkAsTest` module) applied to it.
 
 ::
@@ -52,10 +52,10 @@ The generated target executables will have the effects of ecm_mark_as_test()
                          [NAME_PREFIX <prefix>]
                          [GUI])
 
-This is a single-test form of ecm_add_tests that allows multiple source files
-to be used for a single test. If using multiple source files, TEST_NAME must
+This is a single-test form of ``ecm_add_tests`` that allows multiple source files
+to be used for a single test. If using multiple source files, ``TEST_NAME`` must
 be given; this will be used for both the target and test names (and, as with
-ecm_add_tests(), the NAME_PREFIX argument will be prepended to the test name).
+``ecm_add_tests()``, the ``NAME_PREFIX`` argument will be prepended to the test name).
 
 
 Since pre-1.0.0.

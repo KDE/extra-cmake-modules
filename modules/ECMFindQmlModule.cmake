@@ -6,7 +6,7 @@
 ECMFindQmlModule
 ----------------
 
-Find QML import modules through a find_qmlmodule() call.
+Find QML import modules through a ``find_qmlmodule()`` call.
 It uses the qmlplugindump application to find the plugins and sets them up as
 runtime dependencies.
 
@@ -18,8 +18,8 @@ but fail at runtime.
 
   ecm_find_qmlmodule(<module_name> <version>...)
 
-Any further arguments passed will be forwarded into a find_package() call. See
-find_package() documentation for more information.
+Any further arguments passed will be forwarded into a ``find_package()`` call. See
+``find_package()`` documentation for more information.
 
 Usage example:
 

@@ -23,11 +23,11 @@ This module provides the following function:
   kde_package_app_templates(TEMPLATES <template> [<template> [...]]
                             INSTALL_DIR <directory>)
 
-INSTALL_DIR is the directory to install the template package to.
-In most cases you will want to use the variable KDE_INSTALL_KTEMPLATESDIR
+``INSTALL_DIR`` is the directory to install the template package to.
+In most cases you will want to use the variable ``KDE_INSTALL_KTEMPLATESDIR``
 from :kde-module:`KDEInstallDirs`.
 
-TEMPLATES lists subdirectories containing template files;
+``TEMPLATES`` lists subdirectories containing template files;
 each ``<template>`` directory will be packaged into a file named
 ``<template>.tar.bz2`` and installed to the appropriate location.
 
@@ -36,7 +36,7 @@ an application project by itself, with names (file names or text inside)
 the text files replaced by the following placeholders when needed:
 
 ``%{PROJECTDIRNAME}``
-    name of generated project base folder ex: %{APPNAMELC} for KAppTemplate
+    name of generated project base folder ex: ``%{APPNAMELC}`` for KAppTemplate
 ``%{APPNAME}``
     project name as entered by user ex: MyKApp
 ``%{APPNAMELC}``
@@ -59,7 +59,7 @@ the text files replaced by the following placeholders when needed:
 Deprecated:
 
 ``%{dest}``
-   path of generated project base folder, used in .kdevtemplate with the ShowFilesAfterGeneration entry
+   path of generated project base folder, used in .kdevtemplate with the ``ShowFilesAfterGeneration`` entry
    KDevelop >= 5.1.1 supports relative paths with that entry, making this placeholder obsolete
 
 Multiple templates can be passed at once.

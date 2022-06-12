@@ -46,7 +46,7 @@ generated QCH file.
 
 It is recommended to make the use of this macro optional, by depending
 the call to ``ecm_add_qch`` on a CMake option being set, with a name like
-``BUILD_QCH`` and being TRUE by default. This will allow the developers to
+``BUILD_QCH`` and being ``TRUE`` by default. This will allow the developers to
 saves resources on normal source development build cycles by setting this
 option to FALSE.
 

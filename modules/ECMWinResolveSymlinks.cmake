@@ -17,7 +17,7 @@ it creates a text file for each symlink, containing a relative path to the
 real file.
 This function would recursively walk over specified directory and replace
 pseudo-symlinks with corresponding real file's contents. It would then run
-git update-index --assume-unchanged on them to trick git.
+``git update-index --assume-unchanged`` on them to trick git.
 
 This is useful for projects like "breeze-icons" that contain many identical
 icons implemented as symlinks.

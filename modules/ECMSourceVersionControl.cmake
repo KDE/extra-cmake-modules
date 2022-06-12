@@ -10,7 +10,7 @@ Tries to determine whether the source is under version control (git clone,
 svn checkout, etc).
 
 ``ECM_SOURCE_UNDER_VERSION_CONTROL`` is set when indication is found that
-CMAKE_SOURCE_DIR is under version control.
+``CMAKE_SOURCE_DIR`` is under version control.
 
 Since 5.63
 #]=======================================================================]

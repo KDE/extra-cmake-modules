@@ -11,9 +11,9 @@ platforms listed in the metainfo.yaml file and the current platform
 that is the target of the build
 
 If the current platform that is the target of the build is not supported
-a cmake FATAL_ERROR will be issued
+a CMake ``FATAL_ERROR`` will be issued
 
-The check can be ignored by setting KF_IGNORE_PLATFORM_CHECK to ON
+The check can be ignored by setting ``KF_IGNORE_PLATFORM_CHECK`` to ``ON``.
 
 Since 5.93
 #]=======================================================================]

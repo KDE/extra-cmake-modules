@@ -16,10 +16,10 @@ Set useful compile and link flags for C++ (and C) code.
 
 Enables many more warnings than the default, and sets stricter modes
 for some compiler features.  By default, exceptions are disabled;
-kde_target_enable_exceptions() can be used to re-enable them for a
+``kde_target_enable_exceptions()`` can be used to re-enable them for a
 specific target.
 
-NB: it is recommended to include this module with the NO_POLICY_SCOPE
+NB: it is recommended to include this module with the ``NO_POLICY_SCOPE``
 flag, otherwise you may get spurious warnings with some versions of CMake.
 
 Since 5.85 newer settings are controlled by a variable
@@ -141,15 +141,15 @@ Variables
 Inclusion of this module defines the following variables:
 
 ``ENABLE_BSYMBOLICFUNCTIONS``
-    indicates whether we make use of -Bsymbolic-functions for linking.
+    indicates whether we make use of ``-Bsymbolic-functions`` for linking.
     It ensures libraries bind global function references locally rather than
     at runtime.
     This option only has an effect on ELF-based systems.
 
     The option is disabled by default except when using
     :kde-module:`KDEFrameworkCompilerSettings` where it's enabled. Projects can enable
-    it by calling set(ENABLE_BSYMBOLICFUNCTIONS ON) or passing -DENABLE
-    BSYMBOLICFUNCTIONS=ON when configuring the build directory.
+    it by calling ``set(ENABLE_BSYMBOLICFUNCTIONS ON)`` or passing
+    ``-DENABLE BSYMBOLICFUNCTIONS=ON`` when configuring the build directory.
 
     Since 5.85
 

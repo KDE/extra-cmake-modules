@@ -152,30 +152,30 @@ deprecated variable name in square brackets):
     Systemd User Units (``lib/systemd/user``)
     [``SYSTEMD_USER_UNIT_INSTALL_DIR``]. Since 5.65
 
-If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
+If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to ``TRUE`` before including this
 module, the default values for some variables are instead queried from
 Qt5's qmake (where mentioned in the parentheses above).
-If not set, it will default to TRUE if Qt5's qmake is found and
+If not set, it will default to ``TRUE`` if Qt5's qmake is found and
 it's ``QT_INSTALL_PREFIX`` is the same as ``CMAKE_INSTALL_PREFIX``,
-otherwise default to FALSE.
+otherwise default to ``FALSE``.
 This variable should NOT be set from within CMakeLists.txt files, instead
 is intended to be set manually when configuring a project which uses
 KDEInstallDirs (e.g. by packagers).
 
-If ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE before including this
+If ``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to ``TRUE`` before including this
 module, the deprecated variables (listed in the square brackets above) are
 not defined.
 
 In addition, for each ``KDE_INSTALL_*`` variable, an equivalent
 ``CMAKE_INSTALL_*`` variable is defined. If
-``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to TRUE, only those variables
+``KDE_INSTALL_DIRS_NO_DEPRECATED`` is set to ``TRUE``, only those variables
 defined by the ``GNUInstallDirs`` module (shipped with CMake) are defined.
-If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to TRUE, no variables with
+If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to ``TRUE``, no variables with
 a ``CMAKE_`` prefix will be defined by this module (other than
-CMAKE_INSTALL_DEFAULT_COMPONENT_NAME - see below).
+``CMAKE_INSTALL_DEFAULT_COMPONENT_NAME`` - see below).
 
 The ``KDE_INSTALL_<dir>`` variables (or their ``CMAKE_INSTALL_<dir>`` or
-deprecated counterparts) may be passed to the DESTINATION options of
+deprecated counterparts) may be passed to the ``DESTINATION`` options of
 ``install()`` commands for the corresponding file type.  They are set in the
 CMake cache, and so the defaults above can be overridden by users.
 

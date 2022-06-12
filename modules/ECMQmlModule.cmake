@@ -35,7 +35,7 @@ Example usage:
     ecm_add_qml_module(<target name> URI <module uri> [VERSION <module version>] [NO_PLUGIN] [CLASSNAME <class name>])
 
 This will declare a new CMake target called ``<target name>``. The ``URI``
-argument is required and should be a proper QML module URI. The URI is used,
+argument is required and should be a proper QML module URI. The ``URI`` is used,
 among others, to generate a subdirectory where the module will be installed to.
 
 If the ``VERSION`` argument is specified, it is used to initialize the default

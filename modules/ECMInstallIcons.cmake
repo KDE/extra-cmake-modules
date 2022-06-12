@@ -23,9 +23,9 @@ The given icons, whose names must match the pattern::
 
   <size>-<group>-<name>.<ext>
 
-will be installed to the appropriate subdirectory of DESTINATION according to
+will be installed to the appropriate subdirectory of ``DESTINATION`` according to
 the FreeDesktop.org icon naming scheme. By default, they are installed to the
-"hicolor" theme, but this can be changed using the THEME argument.  If the
+"hicolor" theme, but this can be changed using the ``THEME`` argument.  If the
 icons are localized, the LANG argument can be used to install them in a
 locale-specific directory.
 

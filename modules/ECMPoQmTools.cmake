@@ -22,12 +22,12 @@ or library.
 
 Compile .po files into .qm files for the given language.
 
-If INSTALL_DESTINATION is given, the .qm files are installed in
+If ``INSTALL_DESTINATION`` is given, the .qm files are installed in
 ``<install_destination>/<lang>/LC_MESSAGES``. Typically,
 ``<install_destination>`` is set to ``share/locale``.
 
 ``ecm_process_po_files_as_qm`` creates a "translations" target. This target
-builds all .po files into .qm files.  If ALL is specified, these rules are
+builds all .po files into .qm files.  If ``ALL`` is specified, these rules are
 added to the "all" target (and so the .qm files will be built by default).
 
 ::
@@ -37,8 +37,8 @@ added to the "all" target (and so the .qm files will be built by default).
 Generates C++ code which ensures translations are automatically loaded at
 startup. The generated files are appended to the variable named
 ``<sources_var_name>`` or, if the first argument is a target (since 5.83), to
-the SOURCES property of ``<target>``. Any target must be created with
-add_executable() or add_library() and not be an alias.
+the ``SOURCES`` property of ``<target>``. Any target must be created with
+``add_executable()`` or ``add_library()`` and not be an alias.
 
 It assumes that the .qm file for the language code ``<lang>`` is installed as
 ``<sharedir>/locale/<lang>/LC_MESSAGES/<catalog_name>.qm``, where

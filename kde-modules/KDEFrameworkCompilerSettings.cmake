@@ -19,7 +19,7 @@ The :kde-module:`KDECompilerSettings` module is included and, in addition, vario
 defines that affect the Qt libraries are set to enforce certain
 conventions.
 
-For example, constructions like QString("foo") are prohibited, instead
+For example, constructions like ``QString("foo")`` are prohibited, instead
 forcing the use of QLatin1String or QStringLiteral, and some
 Qt-defined keywords like signals and slots will not be defined.
 

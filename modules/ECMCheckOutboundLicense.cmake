@@ -26,7 +26,7 @@ Preconditions for using this module:
       by running ``reuse spdx`` on the tested directory.
 
 When this module is included, a ``SKIP_LICENSE_TESTS`` option is added (default
-OFF). Turning this option on skips the generation of license tests, which might
+``OFF``). Turning this option on skips the generation of license tests, which might
 be convenient if licenses shall not be tested in all build configurations.
 
 ::
@@ -38,7 +38,7 @@ be convenient if licenses shall not be tested in all build configurations.
 
 This method adds a custom unit test to ensure the specified outbound license to be
 compatible with the specified license headers. Note that a convenient way is to use
-the CMake GLOB command of the FILE function.
+the CMake ``GLOB`` argument of the ``FILE`` function.
 
 ``LICENSES``  : List of one or multiple outbound license regarding which the compatibility of the source code files shall be tested.
                 Currently, the following values are supported (values are SPDX registry identifiers):

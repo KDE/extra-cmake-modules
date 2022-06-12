@@ -132,12 +132,12 @@ where ``<dir>`` is one of (default values in parentheses):
 ``SYSTEMDUSERUNITDIR``
     Systemd User Units (``lib/systemd/user``)
 
-If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to TRUE before including this
+If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to ``TRUE`` before including this
 module, the default values for some variables are instead queried from
 Qt6's qmake (where mentioned in the parentheses above).
-If not set, it will default to TRUE if Qt6's qmake is found and
+If not set, it will default to ``TRUE`` if Qt6's qmake is found and
 it's ``QT_INSTALL_PREFIX`` is the same as ``CMAKE_INSTALL_PREFIX``,
-otherwise default to FALSE.
+otherwise default to ``FALSE``.
 This variable should NOT be set from within CMakeLists.txt files, instead
 is intended to be set manually when configuring a project which uses
 KDEInstallDirs (e.g. by packagers).
@@ -145,11 +145,11 @@ KDEInstallDirs (e.g. by packagers).
 In addition, for each ``KDE_INSTALL_*`` variable, an equivalent
 ``CMAKE_INSTALL_*`` variable is defined, if such a variable is also
 defined by the ``GNUInstallDirs`` module (shipped with CMake).
-If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to TRUE, no variables with
+If ``KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES`` is set to ``TRUE``, no variables with
 a ``CMAKE_`` prefix will be defined by this module (other than
-CMAKE_INSTALL_DEFAULT_COMPONENT_NAME - see below).
+``CMAKE_INSTALL_DEFAULT_COMPONENT_NAME`` - see below).
 
-The ``KDE_INSTALL_<dir>`` variables may be passed to the DESTINATION options of
+The ``KDE_INSTALL_<dir>`` variables may be passed to the ``DESTINATION`` options of
 ``install()`` commands for the corresponding file type.  They are set in the
 CMake cache, and so the defaults above can be overridden by users.
 

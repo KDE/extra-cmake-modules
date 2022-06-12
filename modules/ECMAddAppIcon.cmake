@@ -26,7 +26,7 @@ The given icons, whose names must match the pattern::
 
 will be added as platform-specific application icons
 to the variable named ``<sources_var_name>`` or, if the first argument
-is a target (since 5.83), to the SOURCES property of ``<target>``.
+is a target (since 5.83), to the ``SOURCES`` property of ``<target>``.
 Any target must be created with add_executable() and not be an alias.
 
 Other icon files are ignored but on Mac SVG files can be supported and
