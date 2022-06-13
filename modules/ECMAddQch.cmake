@@ -614,6 +614,17 @@ function(ecm_add_qch target_name)
             "${_doxygenconfig_file}"
             @ONLY
         )
+        # Doxygen warns verbosely about outdated config entries.
+        # To spare custom code here to generate configuration with no out-dated entries,
+        # instead make use of the doxygen feature to update configuration files.
+        execute_process(
+            COMMAND ${DOXYGEN_EXECUTABLE} -u "${_doxygenconfig_file}"
+            ERROR_VARIABLE _doxygen_update_error
+            RESULT_VARIABLE _doxygen_update_result
+        )
+        if(NOT ${_doxygen_update_result} STREQUAL "0")
+            message(WARNING "Updating the doxygen config file failed: ${_doxygen_update_error}")
+        endif()
 
         # setup make target
         set(_qch_INSTALLPATH ${ARGS_QCH_INSTALL_DESTINATION})
