@@ -89,6 +89,8 @@ The following C++ compiler flags are set:
   before including this module (default is ``FALSE`` for
   ``KDE_COMPILERSETTINGS_LEVEL`` >= 5.85, ``TRUE`` otherwise).
 
+- ``-Werror=undef`` (GNU and Clang compilers, since 5.96.0)
+
 - Qt related preprocessor definitions (since 5.85.0):
 
   - ``-DQT_NO_CAST_TO_ASCII``
