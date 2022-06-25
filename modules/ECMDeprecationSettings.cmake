@@ -21,12 +21,13 @@ This module provides the following function:
 ::
 
   ecm_set_disabled_deprecation_versions(
-      [SHOW_DEPRECATIONS]
+      [DISABLE_NEWER_WARNINGS] # since 5.96
       [<identifier> <deprecation_version>]
       [<identifier2> <deprecation_version2>]
   )
 
-``SHOW_DEPRECATIONS`` if this option is used, deprecation warnings for the current major version are emitted.
+``DISABLE_NEWER_WARNINGS`` disables additionally the compiler warnings for API deprecated in newer versions
+of the same major version.
 
 
 Example usage:
@@ -36,7 +37,7 @@ Example usage:
   set(QT_MIN_VERSION "5.15.0")
   set(KF5_MIN_VERSION "5.90")
 
-  ecm_set_disabled_deprecation_versions(SHOW_DEPRECATIONS
+  ecm_set_disabled_deprecation_versions(
     QT ${QT_MIN_VERSION}
     KF ${KF5_MIN_VERSION}
     KCOREADDONS 5.89.0 # In case we depend on deprecated KCoreAddons API
@@ -49,7 +50,20 @@ Since 5.91
 
 function (ecm_set_disabled_deprecation_versions)
     include(CMakeParseArguments)
-    cmake_parse_arguments(ARGS "SHOW_DEPRECATIONS" "" "" ${ARGN})
+    cmake_parse_arguments(ARGS "SHOW_DEPRECATIONS;DISABLE_NEWER_WARNINGS" "" "" ${ARGN})
+
+    # support legacy initial flag to opt-in to warnings
+    if (ARGS_SHOW_DEPRECATIONS)
+        message(DEPRECATION "SHOW_DEPRECATIONS is deprecated, since 5.96 warnings are enabled by default.")
+    endif()
+    if (ARGS_SHOW_DEPRECATIONS AND ARGS_DISABLE_NEWER_WARNINGS)
+        message(FATAL_ERROR "SHOW_DEPRECATIONS && DISABLE_NEWER_WARNINGS cannot be set both.")
+    endif()
+    set(show_newer_warnings TRUE)
+    if (ARGS_DISABLE_NEWER_WARNINGS)
+        set(show_newer_warnings FALSE)
+    endif()
+
     list(LENGTH ARGS_UNPARSED_ARGUMENTS PAIR_COUNT)
     math(EXPR is_even_number "${PAIR_COUNT} % 2")
     if (NOT is_even_number EQUAL 0)
@@ -83,7 +97,7 @@ function (ecm_set_disabled_deprecation_versions)
         add_definitions(-D${DEPRECATION_DEFINITION_NAME}=${DEPRECATION_HEX_VERSION})
 
         # Set the version for the deprecation warnings
-        if (ARGS_SHOW_DEPRECATIONS)
+        if (show_newer_warnings)
             string(REGEX MATCH "([0-9]+)\\." _ ${DEPRECATION_VERSION})
             if (NOT CMAKE_MATCH_1)
                 message(FATAL_ERROR "Failed to get major version from ${DEPRECATION_VERSION}")

@@ -57,12 +57,6 @@ endif()
 # Current defaults
 include(KDECompilerSettings NO_POLICY_SCOPE)
 
-# enable warnings for any deprecated Qt/KF API of current 5 series
-add_definitions(
-    -DQT_DEPRECATED_WARNINGS_SINCE=0x060000
-    -DKF_DEPRECATED_WARNINGS_SINCE=0x060000
-)
-
 # add clang-format target
 include(KDEClangFormat)
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.hpp *.c)
