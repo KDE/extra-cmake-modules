@@ -51,6 +51,11 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
     set(_multiValueArgs CHECKS)
     cmake_parse_arguments(ARG "" "${_oneValueArgs}" "${_multiValueArgs}" ${ARGN} )
 
+    if(NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+        message(STATUS "Project is not top level project - pre-commit hook not installed")
+        return()
+    endif()
+
     if(NOT ARG_CHECKS)
         message(FATAL_ERROR "No checks were specified")
     endif()
