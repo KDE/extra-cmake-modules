@@ -34,7 +34,7 @@ Example usage:
 
 .. code-block:: cmake
 
-  set(QT_MIN_VERSION "5.15.0")
+  set(QT_MIN_VERSION "5.15.2")
   set(KF5_MIN_VERSION "5.90")
 
   ecm_set_disabled_deprecation_versions(
