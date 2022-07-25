@@ -1,0 +1,44 @@
+#
+# SPDX-FileCopyrightText: 2022 Arjen Hiemstra <ahiemstra@heimr.nl>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+set(SOURCE_DIR "@CMAKE_CURRENT_SOURCE_DIR@")
+set(BUILD_DIR "@CMAKE_CURRENT_BINARY_DIR@")
+
+function(check_file_exists file)
+    if (NOT EXISTS ${file})
+        message(FATAL_ERROR "File \"${file}\" does not exist")
+    endif()
+endfunction()
+
+function (check_file_contents)
+    cmake_parse_arguments(ARGS "" "GENERATED;EXPECTED" "" ${ARGN})
+
+    if (NOT EXISTS "${ARGS_GENERATED}")
+        message(FATAL_ERROR "${ARGS_GENERATED} was not generated")
+    endif()
+    file(READ "${ARGS_GENERATED}" generated_contents)
+    if (NOT EXISTS "${ARGS_EXPECTED}")
+        message(FATAL_ERROR "Original ${ARGS_EXPECTED} was not found")
+    endif()
+    file(READ "${ARGS_EXPECTED}" original_contents)
+    if (NOT "${generated_contents}" STREQUAL "${original_contents}")
+        message(FATAL_ERROR "${generated_file} contains '${generated_contents}' instead of '${original_contents}'")
+    endif()
+endfunction()
+
+check_file_contents(
+    GENERATED "${BUILD_DIR}/ecm_qmltests_test.cpp"
+    EXPECTED "${SOURCE_DIR}/ecm_qmltests_test_expected.cpp"
+)
+
+check_file_contents(
+    GENERATED "${BUILD_DIR}/instantiation/TestTestType.qml"
+    EXPECTED "${SOURCE_DIR}/TestTestType_expected.qml"
+)
+
+check_file_contents(
+    GENERATED "${BUILD_DIR}/instantiation/TestAnotherTestType.qml"
+    EXPECTED "${SOURCE_DIR}/TestAnotherTestType_expected.qml"
+)

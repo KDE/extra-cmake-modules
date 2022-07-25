@@ -352,6 +352,10 @@ if (TARGET Qt6::Quick)
     add_test_variant(ECMQmlModuleTest.shared_depends_qt6 ECMQmlModuleTest
         ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMQmlModuleTest/shared_depends_qt6/check.cmake"
     )
+
+    add_test_macro(ECMQmlTestsTest
+        ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMQmlTestsTest/check.cmake"
+    )
 endif()
 
 set(ECMConfiguredInstallTest_EXTRA_OPTIONS
