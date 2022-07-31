@@ -24,8 +24,8 @@ available::
   XKB          XPRINT       XTEST        XV           XVMC
 
 If no components are specified, this module will act as though all components
-except XINPUT (which is considered unstable) were passed to
-OPTIONAL_COMPONENTS.
+were passed to OPTIONAL_COMPONENTS. Before 5.82 this excluded XINPUT. Since 5.82
+all components are searched for.
 
 This module will define the following variables, independently of the
 components searched for or found:
@@ -107,10 +107,6 @@ set(XCB_known_components
     XVMC
 )
 
-# XINPUT is unstable; do not include it by default
-set(XCB_default_components ${XCB_known_components})
-list(REMOVE_ITEM XCB_default_components "XINPUT")
-
 # default component info: xcb components have fairly predictable
 # header files, library names and pkg-config names
 foreach(_comp ${XCB_known_components})
@@ -152,11 +148,6 @@ ecm_find_package_parse_components(XCB
     KNOWN_COMPONENTS ${XCB_known_components}
     DEFAULT_COMPONENTS ${XCB_default_components}
 )
-
-list(FIND XCB_components "XINPUT" _XCB_XINPUT_index)
-if (NOT _XCB_XINPUT_index EQUAL -1)
-    message(AUTHOR_WARNING "XINPUT from XCB was requested: this is EXPERIMENTAL and is likely to be unavailable on many systems!")
-endif()
 
 ecm_find_package_handle_library_components(XCB
     COMPONENTS ${XCB_components}
