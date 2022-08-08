@@ -86,3 +86,8 @@ AllowShortLambdasOnASingleLine: Empty
 
 # We do not want clang-format to put all arguments on a new line
 AllowAllArgumentsOnNextLine: false
+
+# Don't change spaces after '//' in code comments
+SpacesInLineCommentPrefix:
+    Minimum: 0
+    Maximum: -1
