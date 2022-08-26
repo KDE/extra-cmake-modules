@@ -85,6 +85,10 @@ The default is that they are set, to the version specified by
 project automatically build against the full API included in the build and
 without any deprecation warnings for it.
 
+``CUSTOM_CONTENT_FROM_VARIABLE`` specifies the name of a variable whose
+content will be appended at the end of the generated file, before any
+final inclusion guard closing. Note that before 5.98 this was broken and
+would only append the string passed as argument value.
 
 The function ``ecm_generate_export_header`` defines C++ preprocessor macros
 in the generated export header, some for use in the sources of the library
@@ -737,7 +741,12 @@ function(ecm_generate_export_header target)
         endif()
     endif()
     if (ARGS_CUSTOM_CONTENT_FROM_VARIABLE)
-        string(APPEND _output "${ARGS_CUSTOM_CONTENT_FROM_VARIABLE}\n")
+        if(DEFINED "${ARGS_CUSTOM_CONTENT_FROM_VARIABLE}")
+            string(APPEND _output "${${ARGS_CUSTOM_CONTENT_FROM_VARIABLE}}\n")
+        else()
+            message(DEPRECATION "Passing a value instead of a variable name with CUSTOM_CONTENT_FROM_VARIABLE. Since 5.98, use the name of a variable.")
+            string(APPEND _output "${ARGS_CUSTOM_CONTENT_FROM_VARIABLE}\n")
+        endif()
     endif()
 
     set(_header_file "${ARGS_EXPORT_FILE_NAME}")
