@@ -133,7 +133,7 @@ function(kde_package_app_templates)
                    --numeric-owner --owner=0 --group=0
                    --mtime="@${TIMESTAMP}"
                    --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime
-                    -c -j -v -f ${_template} .
+                    -c -j -f ${_template} .
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}
                 DEPENDS ${_subdirs_entries}
             )
