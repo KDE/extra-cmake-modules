@@ -171,15 +171,23 @@ if(NOT KDE_SKIP_TEST_SETTINGS)
    # Otherwise, there will not be any useful settings, so just
    # fake the functionality we care about from CTest.
 
-   if (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
-      include(CTest)
-   else()
-      option(BUILD_TESTING "Build the testing tree." ON)
-      if(BUILD_TESTING)
-         enable_testing()
-         appstreamtest()
-      endif ()
-   endif ()
+    if (NOT KDE_DISABLE_CTESTCONFIG_WARNING
+        AND EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
+        message(WARNING "A CTestConfig.cmake file exists in the project's top-level dir,"
+                        "if your project doesn't use cdash.org, consider removing that file"
+                        " along with any traces of it in your project's buildsystem."
+                        " If your project actually uses CTestConfig.cmake, you can silence"
+                        " this warning by passing KDE_DISABLE_CTESTCONFIG_WARNING to CMake,"
+                        " please note that you'll need to manually include the CTest module "
+                        " as KDECMakeSettings doesn't do that automatically any more since 5.99."
+                        " This will warning will be removed in a future release.")
+    endif()
+
+    option(BUILD_TESTING "Build the testing tree." ON)
+    if(BUILD_TESTING)
+        enable_testing()
+        appstreamtest()
+    endif ()
 
 endif()
 
