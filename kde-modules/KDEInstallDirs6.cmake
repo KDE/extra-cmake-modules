@@ -78,8 +78,10 @@ where ``<dir>`` is one of (default values in parentheses):
     service types for KDE Frameworks 6 (``DATAROOTDIR/kservicetypes6``)
 ``KXMLGUIDIR``
     knotify description files (``DATAROOTDIR/kxmlgui6``)
-``KTEMPLATESDIR``
-    Kapptemplate and Kdevelop templates (``kdevappwizard/templates``)
+``KAPPTEMPLATESDIR``
+    KAppTemplate and KDevelop templates (``DATAROOTDIR/kdevappwizard/templates``)
+``KFILETEMPLATESDIR``
+    KDevelop file templates (``DATAROOTDIR/kdevfiletemplates/templates``)
 ``KNOTIFYRCDIR``
     knotify description files (``DATAROOTDIR/knotifications6``)
 ``ICONDIR``

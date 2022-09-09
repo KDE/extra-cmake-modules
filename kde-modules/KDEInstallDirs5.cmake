@@ -85,8 +85,11 @@ deprecated variable name in square brackets):
 ``KXMLGUI5DIR`` or (since 5.89) ``KXMLGUIDIR``
     knotify description files (``DATAROOTDIR/kxmlgui5``)
     [``KXMLGUI_INSTALL_DIR``]
-``KTEMPLATESDIR``
-    Kapptemplate and Kdevelop templates (``kdevappwizard/templates``)
+``KAPPTEMPLATESDIR``
+    KAppTemplate and KDevelop templates (``DATAROOTDIR/kdevappwizard/templates``)
+    [``KDE_INSTALL_KTEMPLATESDIR``] Since 5.77.
+``KFILETEMPLATESDIR``
+    KDevelop file templates (``DATAROOTDIR/kdevfiletemplates/templates``) Since 5.77.
 ``KNOTIFY5RCDIR`` or (since 5.89) ``KNOTIFYRCDIR``
     knotify description files (``DATAROOTDIR/knotifications5``)
     [``KNOTIFYRC_INSTALL_DIR``]
