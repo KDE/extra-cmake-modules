@@ -24,7 +24,7 @@ This module provides the following function:
                             INSTALL_DIR <directory>)
 
 ``INSTALL_DIR`` is the directory to install the template package to.
-In most cases you will want to use the variable ``KDE_INSTALL_KTEMPLATESDIR``
+In most cases you will want to use the variable ``KDE_INSTALL_KAPPTEMPLATESDIR``
 from :kde-module:`KDEInstallDirs`.
 
 ``TEMPLATES`` lists subdirectories containing template files;
