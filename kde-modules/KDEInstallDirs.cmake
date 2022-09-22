@@ -31,7 +31,7 @@ where ``<dir>`` is one of (default values in parentheses and alternative,
 deprecated variable name in square brackets):
 
 ``BUNDLEDIR``
-    application bundles (``/Applications/KDE``) [``BUNDLE_INSTALL_DIR``]
+    application bundles (``EXECROOTDIR/Applications/KDE``) [``BUNDLE_INSTALL_DIR``]
 ``EXECROOTDIR``
     executables and libraries (``<empty>``) [``EXEC_INSTALL_PREFIX``]
 ``BINDIR``
@@ -410,7 +410,7 @@ macro(_define_non_cache varname value)
 endmacro()
 
 if(APPLE)
-    _define_absolute(BUNDLEDIR "/Applications/KDE"
+    _define_relative(BUNDLEDIR EXECROOTDIR "Applications/KDE"
         "application bundles"
         BUNDLE_INSTALL_DIR)
 endif()

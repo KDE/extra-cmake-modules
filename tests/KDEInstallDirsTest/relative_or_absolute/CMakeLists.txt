@@ -9,11 +9,6 @@ include(KDEInstallDirs)
 include(../var_list.cmake)
 include(../../test_helpers.cmake)
 
-if(APPLE)
-    # The default bundle directory is an absolute path
-    set(BUNDLEDIR_should_be_absolute TRUE)
-endif()
-
 foreach(suffix ${var_suffixes})
     if(${suffix}_should_be_absolute)
         assert_var_absolute_path(KDE_INSTALL_${suffix})
