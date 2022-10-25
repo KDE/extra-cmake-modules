@@ -18,6 +18,35 @@
 
 namespace {
 
+    enum class LoadOptions { CreateWatcher, DoNotCreateWatcher };
+
+    void load(LoadOptions options);
+
+    class LanguageChangeWatcher : public QObject
+    {
+    public:
+        LanguageChangeWatcher(QObject *parent) : QObject(parent)
+        {
+            m_loadedLocale = QLocale::system().name();
+            QCoreApplication::instance()->installEventFilter(this);
+        }
+
+    private:
+        bool eventFilter(QObject *obj, QEvent *event) override
+        {
+            if (event->type() == QEvent::LanguageChange) {
+                if (m_loadedLocale != QLocale::system().name()) {
+                    m_loadedLocale = QLocale::system().name();
+                    load(LoadOptions::DoNotCreateWatcher);
+                }
+            }
+            return QObject::eventFilter(obj, event);
+        }
+
+
+        QString m_loadedLocale;
+    };
+
     bool loadTranslation(const QString &localeDirName)
     {
         QString subPath = QStringLiteral("locale/") + localeDirName + QStringLiteral("/LC_MESSAGES/@QM_LOADER_CATALOG_NAME@.qm");
@@ -42,7 +71,7 @@ namespace {
         return true;
     }
 
-    void load()
+    void load(LoadOptions options)
     {
         // The way Qt translation system handles plural forms makes it necessary to
         // have a translation file which contains only plural forms for `en`. That's
@@ -60,6 +89,10 @@ namespace {
                     }
                 }
             }
+        }
+
+        if (options == LoadOptions::CreateWatcher) {
+            new LanguageChangeWatcher(QCoreApplication::instance());
         }
     }
 
@@ -80,7 +113,7 @@ namespace {
     protected:
         void timerEvent(QTimerEvent *) Q_DECL_OVERRIDE
         {
-            load();
+            load(LoadOptions::CreateWatcher);
             this->deleteLater();
         }
     };
@@ -93,7 +126,7 @@ namespace {
         // QCoreApplication::installTranslator needs to be called on the main
         // thread, because it uses QCoreApplication::sendEvent.
         if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
-            load();
+            load(LoadOptions::CreateWatcher);
         } else {
             // QObjects inherit their parent object's thread
             Loader *loader = new Loader();
