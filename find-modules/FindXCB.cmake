@@ -20,8 +20,8 @@ available::
   GLX          ICCCM        IMAGE        KEYSYMS      PRESENT
   RANDR        RECORD       RENDER       RENDERUTIL   RES
   SCREENSAVER  SHAPE        SHM          SYNC         UTIL
-  XEVIE        XF86DRI      XFIXES       XINERAMA     XINPUT
-  XKB          XPRINT       XTEST        XV           XVMC
+  XF86DRI      XFIXES       XINERAMA     XINPUT       XKB
+  XPRINT       XTEST        XV           XVMC
 
 If no components are specified, this module will act as though all components
 were passed to OPTIONAL_COMPONENTS. Before 5.82 this excluded XINPUT. Since 5.82
@@ -96,7 +96,6 @@ set(XCB_known_components
     SCREENSAVER
     SYNC
     UTIL
-    XEVIE
     XF86DRI
     XINERAMA
     XINPUT
