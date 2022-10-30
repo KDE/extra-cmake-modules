@@ -19,7 +19,7 @@ Since 5.93
 #]=======================================================================]
 
 option(KF_IGNORE_PLATFORM_CHECK "Ignore the supported platform check against metainfo.yaml" OFF)
-if ($ENV{KF_IGNORE_PLATFORM_CHECK} STREQUAL "ON")
+if ("$ENV{KF_IGNORE_PLATFORM_CHECK}" STREQUAL "ON")
     message(WARNING "KF_IGNORE_PLATFORM_CHECK set to ON from the environment")
     set(KF_IGNORE_PLATFORM_CHECK ON)
 endif()
