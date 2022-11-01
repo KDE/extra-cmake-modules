@@ -19,6 +19,7 @@ set(_LIBDIR_DEFAULT "lib")
 #  - we are on a Linux, kFreeBSD or Hurd system but NOT cross-compiling
 #  - we are NOT on debian
 #  - we are NOT on flatpak
+#  - we are NOT on NixOS
 #  - we are on a 64 bits system
 # reason is: amd64 ABI: http://www.x86-64.org/documentation/abi.pdf
 # For Debian with multiarch, use 'lib/${CMAKE_LIBRARY_ARCHITECTURE}' if
@@ -27,7 +28,8 @@ set(_LIBDIR_DEFAULT "lib")
 if((CMAKE_SYSTEM_NAME MATCHES "Linux|kFreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "GNU")
    AND NOT CMAKE_CROSSCOMPILING
    AND NOT EXISTS "/etc/arch-release"
-   AND NOT DEFINED ENV{FLATPAK_ID})
+   AND NOT DEFINED ENV{FLATPAK_ID}
+   AND NOT EXISTS "/etc/NIXOS")
   if (EXISTS "/etc/debian_version") # is this a debian system ?
     if(CMAKE_LIBRARY_ARCHITECTURE)
       set(_LIBDIR_DEFAULT "lib/${CMAKE_LIBRARY_ARCHITECTURE}")
