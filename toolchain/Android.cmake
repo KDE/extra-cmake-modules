@@ -179,7 +179,15 @@ endif()
 # armv7 really doesn't like mixing PIC/PIE code.
 # Since we only have to care about a single compiler,
 # hard-code the values here.
-if (NOT TARGET Threads::Threads)
+# Qt6 fixes this and breaks in nested CMake calls (e.g. try_compile) if we
+# define Threads::Threads here, at least if the "C" language is enabled. In
+# CXX-only projects we still need to do this unconditionally...
+#
+# We cannot use our usual Qt version check at this point though yet,
+# se check whether we are chainloaded by the Qt toolchain as an indicator
+# for Qt6.
+get_property(_languages GLOBAL PROPERTY ENABLED_LANGUAGES)
+if (NOT TARGET Threads::Threads AND (NOT DEFINED __qt_chainload_toolchain_file OR NOT "C" IN_LIST _languages))
     set(Threads_FOUND TRUE)
     set(CMAKE_THREAD_LIBS_INIT "-pthread")
     add_library(Threads::Threads INTERFACE IMPORTED)
