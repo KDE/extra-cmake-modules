@@ -257,6 +257,18 @@ set(CMAKE_CXX_LINK_EXECUTABLE
     "<CMAKE_CXX_COMPILER> <CMAKE_SHARED_LIBRARY_CXX_FLAGS> <LINK_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS> <SONAME_FLAG><TARGET_SONAME> -o <TARGET> <OBJECTS> <LINK_LIBRARIES>"
 )
 
+# As our executables are shared libraries, we also need them build with position independent code (PIC).
+# Qt 5 forces that anyway, but in Qt 6 that is no longer the case for exectuables (which we pretend to build here),
+# and so we end up with just PIE (coming from CMake).
+# And as subsequent steps overwrite that setting again, we have to watch for that and redo our change.
+set(CMAKE_CXX_COMPILE_OPTIONS_PIE "-fPIC")
+macro(resetPieOption _var _access)
+    if (${_access} STREQUAL "MODIFIED_ACCESS")
+        set(CMAKE_CXX_COMPILE_OPTIONS_PIE "-fPIC")
+    endif()
+endmacro()
+variable_watch(CMAKE_CXX_COMPILE_OPTIONS_PIE resetPieOption)
+
 set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/../cmake" CACHE STRING "")
 
 ######### generation
