@@ -154,6 +154,9 @@ deprecated variable name in square brackets):
 ``SYSTEMDUSERUNITDIR``
     Systemd User Units (``lib/systemd/user``)
     [``SYSTEMD_USER_UNIT_INSTALL_DIR``]. Since 5.65
+``ZSHAUTOCOMPLETEDIR``
+    Zsh functions and autocompletion definitions (``zsh/site-functions``)
+    Since 5.101
 
 If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to ``TRUE`` before including this
 module, the default values for some variables are instead queried from

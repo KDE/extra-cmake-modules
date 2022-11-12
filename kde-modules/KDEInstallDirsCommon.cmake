@@ -352,7 +352,8 @@ _define_relative(SYSTEMDUNITDIR CMAKE_INSTALL_PREFIX "lib/systemd"
 _define_relative(SYSTEMDUSERUNITDIR SYSTEMDUNITDIR "user"
     "Systemd user units"
     SYSTEMD_USER_UNIT_INSTALL_DIR)
-
+_define_relative(ZSHAUTOCOMPLETEDIR DATAROOTDIR "zsh/site-functions"
+    "Zsh functions and autocompletion definitions")
 
 set(_default_sysconf_dir "etc")
 if (CMAKE_INSTALL_PREFIX STREQUAL "/usr")
