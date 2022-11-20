@@ -21,7 +21,7 @@ set(_LIBDIR_DEFAULT "lib")
 #  - we are NOT on flatpak
 #  - we are NOT on NixOS
 #  - we are on a 64 bits system
-# reason is: amd64 ABI: http://www.x86-64.org/documentation/abi.pdf
+# reason is: amd64 ABI: https://gitlab.com/x86-psABIs/x86-64-ABI/-/jobs/artifacts/master/raw/x86-64-ABI/abi.pdf?job=build
 # For Debian with multiarch, use 'lib/${CMAKE_LIBRARY_ARCHITECTURE}' if
 # CMAKE_LIBRARY_ARCHITECTURE is set (which contains e.g. "i386-linux-gnu"
 # See https://wiki.debian.org/Multiarch

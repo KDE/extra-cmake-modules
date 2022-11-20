@@ -73,7 +73,7 @@ mark_as_advanced(Canberra_LIBRARIES Canberra_INCLUDE_DIRS Canberra_VERSION)
 include(FeatureSummary)
 set_package_properties(Canberra PROPERTIES
     DESCRIPTION "Event sound library"
-    URL "http://0pointer.de/lennart/projects/libcanberra"
+    URL "https://0pointer.de/lennart/projects/libcanberra"
 )
 
 # Compatibility variables. In a previous life FindCanberra lived
