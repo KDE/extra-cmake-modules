@@ -90,8 +90,8 @@ Since 5.17.0
 - ``APPLE_SUPPRESS_X11_WARNING`` option since 5.14.0
 - ``CMAKE_AUTORCC`` enabled by default when supported by CMake (>= 3.0) since 5.62.0
 
-Translations
-~~~~~~~~~~~~
+Translations (deprecated)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 A fetch-translations target will be set up that will download translations
 for projects using l10n.kde.org.
 
@@ -107,6 +107,9 @@ Since 5.34.0
 time instead of build time.
 
 Since 5.50.0
+
+All ``KDE_L10N_*`` options have been deprecated since 5.102.0, as translations
+are meanwhile present inside the source code repositories.
 #]=======================================================================]
 
 ################# RPATH handling ##################################
