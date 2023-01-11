@@ -57,7 +57,7 @@ add_custom_command(OUTPUT ${Gradle_EXECUTABLE}
 add_custom_target(gradle DEPENDS ${Gradle_EXECUTABLE})
 
 # Android Gradle plugin version (not the Gradle version!) used by Qt, for use in our own build.gradle files
-if (QT_MAJOR_VERSION EQUAL "5")
+if (QT_MAJOR_VERSION EQUAL "5" AND Qt5Core_VERSION VERSION_LESS 5.15.8)
     set(Gradle_ANDROID_GRADLE_PLUGIN_VERSION 3.6.4)
 else()
     set(Gradle_ANDROID_GRADLE_PLUGIN_VERSION 7.0.2)
