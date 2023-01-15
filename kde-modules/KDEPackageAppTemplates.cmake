@@ -6,8 +6,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 #[=======================================================================[.rst:
-KDETemplateGenerator
---------------------
+KDEPackageAppTemplates
+----------------------
 
 Packages KApptemplate/KDevelop compatible application templates
 
