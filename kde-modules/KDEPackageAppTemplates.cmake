@@ -111,7 +111,7 @@ function(kde_package_app_templates)
         # also enlist directories as deps to catch file removals
         file(GLOB_RECURSE _subdirs_entries LIST_DIRECTORIES true CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${_templateName}/*")
 
-        add_custom_target(${_baseName} ALL DEPENDS ${_template})
+        add_custom_target(${_baseName}_kapptemplate ALL DEPENDS ${_template})
 
         if(GNU_TAR_FOUND)
             # Honour SOURCE_DATE_EPOCH if set
