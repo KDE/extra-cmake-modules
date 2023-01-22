@@ -292,7 +292,6 @@ function(_ecm_ensure_qt_qch_targets)
             string(REPLACE "." "" _version ${Qt5Core_VERSION})
             # TODO: properly find each tag file
             # TODO: complete list of Qt modules
-            # qtdbus.tags file missing since 5.0, QTBUG-60933, extra handling?
             foreach(_module
                 3D Bluetooth Concurrent Core DBus Gui Location
                 Network Positioning PrintSupport Qml Quick Sensors SerialPort Sql Svg
