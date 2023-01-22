@@ -264,11 +264,11 @@ include(ECMQueryQt)
 # Helper method: adding the LINK_QCHS property to a Qt QCH targets, from module base names ("Core" etc.)
 # if target does not exist (e.g. because no tagsfile was found), this is a no-op
 macro(_ecm_setup_qt_qch_links _module)
-    set(_target "Qt5${_module}_QCH")
+    set(_target "Qt${QT_MAJOR_VERSION}${_module}_QCH")
     if(TARGET ${_target})
         set(_linkqchs)
         foreach(_linkqch ${ARGN})
-            list(APPEND _linkqchs "Qt5${_linkqch}_QCH")
+            list(APPEND _linkqchs "Qt${QT_MAJOR_VERSION}${_linkqch}_QCH")
         endforeach()
         set_property(TARGET ${_target} PROPERTY LINK_QCHS ${_linkqchs})
     endif()
@@ -278,7 +278,7 @@ endmacro()
 function(_ecm_ensure_qt_qch_targets)
     # create QCH targets for Qt
     # Ideally one day Qt CMake Config files provide these
-    if(NOT TARGET Qt5Core_QCH)
+    if(NOT TARGET Qt${QT_MAJOR_VERSION}Core_QCH)
         # get Qt version, if any
         find_package(Qt${QT_MAJOR_VERSION}Core CONFIG QUIET)
         # lookup tag files
@@ -288,21 +288,30 @@ function(_ecm_ensure_qt_qch_targets)
                 ${qt_docs_dir}
         )
 
-        if(Qt5Core_FOUND AND _qtcoreTagsPath)
-            string(REPLACE "." "" _version ${Qt5Core_VERSION})
+        if(Qt${QT_MAJOR_VERSION}Core_FOUND AND _qtcoreTagsPath)
+            string(REPLACE "." "" _version ${Qt${QT_MAJOR_VERSION}Core_VERSION})
             # TODO: properly find each tag file
             # TODO: complete list of Qt modules
-            foreach(_module
-                3D Bluetooth Concurrent Core DBus Gui Location
-                Network Positioning PrintSupport Qml Quick Sensors SerialPort Sql Svg
-                WebChannel WebEngine WebSockets Widgets Xml XmlPatterns
-            )
+            if (QT_MAJOR_VERSION EQUAL "6")
+                set(_module_list
+                    3D Bluetooth Concurrent Core DBus Gui Location
+                    Network Nfc Pdf Positioning PrintSupport Qml Quick
+                    Sensors SerialBus SerialPort Sql StateMachine Svg
+                    Test TextToSpeech WebChannel WebEngine WebSockets Widgets Xml)
+            else()
+                set(_module_list
+                    3D Bluetooth Concurrent Core DBus Gui Location
+                    Network Positioning PrintSupport Qml Quick
+                    Sensors SerialPort Sql Svg
+                    WebChannel WebEngine WebSockets Widgets Xml XmlPatterns)
+            endif()
+            foreach(_module ${_module_list})
                 string(TOLOWER ${_module} _lowermodule)
 
                 set(_tagfile "${_qtcoreTagsPath}/qt${_lowermodule}/qt${_lowermodule}.tags")
                 if(EXISTS "${_tagfile}")
-                    add_custom_target(Qt5${_module}_QCH)
-                    set_target_properties(Qt5${_module}_QCH PROPERTIES
+                    add_custom_target(Qt${QT_MAJOR_VERSION}${_module}_QCH)
+                    set_target_properties(Qt${QT_MAJOR_VERSION}${_module}_QCH PROPERTIES
                         DOXYGEN_TAGFILE         "${_tagfile}"
                         QHP_NAMESPACE           "org.qt-project.qt${_lowermodule}"
                         QHP_NAMESPACE_VERSIONED "org.qt-project.qt${_lowermodule}.${_version}"
@@ -318,20 +327,36 @@ function(_ecm_ensure_qt_qch_targets)
             _ecm_setup_qt_qch_links(Gui          Core)
             _ecm_setup_qt_qch_links(Location     Positioning Gui Core)
             _ecm_setup_qt_qch_links(Network      Core)
+            if (QT_MAJOR_VERSION EQUAL "6")
+                _ecm_setup_qt_qch_links(Nfc      Core)
+                _ecm_setup_qt_qch_links(Pdf      Gui Core)
+            endif()
             _ecm_setup_qt_qch_links(Positioning  Core)
             _ecm_setup_qt_qch_links(PrintSupport Widgets Gui Core)
             _ecm_setup_qt_qch_links(Qml          Network Core)
             _ecm_setup_qt_qch_links(Quick        Qml Network Gui Core)
             _ecm_setup_qt_qch_links(Sensors      Core)
+            if (QT_MAJOR_VERSION EQUAL "6")
+                _ecm_setup_qt_qch_links(SerialBus   Core)
+            endif()
             _ecm_setup_qt_qch_links(SerialPort   Core)
             _ecm_setup_qt_qch_links(Sql          Core)
+            if (QT_MAJOR_VERSION EQUAL "6")
+                _ecm_setup_qt_qch_links(StateMachine   Core)
+            endif()
             _ecm_setup_qt_qch_links(Svg          Widgets Gui Core)
+            _ecm_setup_qt_qch_links(Test         Core)
+            if (QT_MAJOR_VERSION EQUAL "6")
+                _ecm_setup_qt_qch_links(TextToSpeech   Core)
+            endif()
             _ecm_setup_qt_qch_links(WebChannel   Qml Core)
             _ecm_setup_qt_qch_links(WebEngine    Quick Qml Gui Core)
             _ecm_setup_qt_qch_links(WebSockets   Network Core)
             _ecm_setup_qt_qch_links(Widgets      Gui Core)
             _ecm_setup_qt_qch_links(Xml          Core)
-            _ecm_setup_qt_qch_links(XmlPatterns  Network Core)
+            if (QT_MAJOR_VERSION EQUAL "5")
+                _ecm_setup_qt_qch_links(XmlPatterns  Network Core)
+            endif()
         endif()
     endif()
 endfunction()
