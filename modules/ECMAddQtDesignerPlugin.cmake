@@ -554,7 +554,7 @@ class ${_collection_classname}
         QDesignerCustomWidgetCollectionInterface
     )
 
-    Q_PLUGIN_METADATA(IID \"org.qt-project.Qt.QDesignerCustomWidgetInterface\")
+    Q_PLUGIN_METADATA(IID \"org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface\")
 
 public:
     explicit ${_collection_classname}(QObject* parent = nullptr);
