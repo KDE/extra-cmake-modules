@@ -244,7 +244,7 @@ endmacro()
 variable_watch(CMAKE_FIND_LIBRARY_SUFFIXES addAbiSuffix)
 
 # determine STL architecture, which is using a different format than ANDROID_ARCH_ABI
-string(REGEX REPLACE "-(clang)?([0-9].[0-9])?$" "" ECM_ANDROID_STL_ARCH ${ANDROID_TOOLCHAIN_NAME})
+string(REGEX REPLACE "-(clang)?([0-9].[0-9])?$" "" ECM_ANDROID_STL_ARCH "${ANDROID_TOOLCHAIN_NAME}")
 
 if (NOT DEFINED ECM_ADDITIONAL_FIND_ROOT_PATH)
     SET(ECM_ADDITIONAL_FIND_ROOT_PATH ${CMAKE_PREFIX_PATH})
