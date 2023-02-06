@@ -131,7 +131,7 @@ if(NOT KDE_SKIP_RPATH_SETTINGS)
    endif()
 
    if (NOT IS_ABSOLUTE "${_abs_LIB_INSTALL_DIR}")
-      set(_abs_LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
+      set(_abs_LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${_abs_LIB_INSTALL_DIR}")
    endif()
 
    if (UNIX)
