@@ -117,7 +117,7 @@ find_package_handle_standard_args(Wayland
     HANDLE_COMPONENTS
 )
 
-pkg_get_variable(Wayland_DATADIR wayland-server pkgdatadir)
+pkg_get_variable(Wayland_DATADIR wayland-scanner pkgdatadir)
 if (CMAKE_CROSSCOMPILING AND (NOT EXISTS "${Wayland_DATADIR}/wayland.xml"))
     # PKG_CONFIG_SYSROOT_DIR only applies to -I and -L flags, so pkg-config
     # does not prepend CMAKE_SYSROOT when cross-compiling unless you pass
