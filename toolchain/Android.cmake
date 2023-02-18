@@ -186,8 +186,13 @@ endif()
 # We cannot use our usual Qt version check at this point though yet,
 # se check whether we are chainloaded by the Qt toolchain as an indicator
 # for Qt6.
+# When building Qt6Base itself the check does not work, hence we have
+# ECM_THREADS_WORKAROUND for that case which set to OFF in the Craft blueprints.
+if (NOT DEFINED ECM_THREADS_WORKAROUND)
+    set(ECM_THREADS_WORKAROUND TRUE)
+endif()
 get_property(_languages GLOBAL PROPERTY ENABLED_LANGUAGES)
-if (NOT TARGET Threads::Threads AND (NOT DEFINED __qt_chainload_toolchain_file OR NOT "C" IN_LIST _languages))
+if (ECM_THREADS_WORKAROUND AND NOT TARGET Threads::Threads AND (NOT DEFINED __qt_chainload_toolchain_file OR NOT "C" IN_LIST _languages))
     set(Threads_FOUND TRUE)
     set(CMAKE_THREAD_LIBS_INIT "-pthread")
     add_library(Threads::Threads INTERFACE IMPORTED)
