@@ -749,9 +749,6 @@ function(ecm_generate_export_header target)
         endif()
     endif()
 
-    set(_header_file "${ARGS_EXPORT_FILE_NAME}")
-    set(_header_work_file "${_header_file}.work")
-
     # prepare optional arguments to pass through to generate_export_header
     set(_include_guard_name_args)
     if (ARGS_INCLUDE_GUARD_NAME)
@@ -773,10 +770,6 @@ function(ecm_generate_export_header target)
     if (ARGS_STATIC_DEFINE)
         set(_static_define_args STATIC_DEFINE "${ARGS_STATIC_DEFINE}")
     endif()
-    # for older cmake versions we have to manually append our generated content
-    # for newer we use CUSTOM_CONTENT_FROM_VARIABLE
-    set(_custom_content_args)
-    set(_custom_content_args CUSTOM_CONTENT_FROM_VARIABLE _output)
     generate_export_header(${target}
         BASE_NAME ${ARGS_BASE_NAME}
         DEPRECATED_MACRO_NAME "${_macro_base_name}_DECL_DEPRECATED"
@@ -784,31 +777,8 @@ function(ecm_generate_export_header target)
         ${_export_macro_name_args}
         ${_no_export_macro_name_args}
         ${_static_define_args}
-        EXPORT_FILE_NAME "${_header_work_file}"
+        EXPORT_FILE_NAME "${ARGS_EXPORT_FILE_NAME}"
         ${_include_guard_name_args}
-        ${_custom_content_args}
+        CUSTOM_CONTENT_FROM_VARIABLE _output
     )
-
-    if (ARGS_INCLUDE_GUARD_NAME)
-        set(_include_guard "ECM_GENERATEEXPORTHEADER_${ARGS_INCLUDE_GUARD_NAME}")
-    else()
-        set(_include_guard "ECM_GENERATEEXPORTHEADER_${_upper_base_name}_EXPORT_H")
-    endif()
-
-    file(APPEND ${_header_work_file} "
-
-#ifndef ${_include_guard}
-#define ${_include_guard}
-
-${_output}
-
-#endif /* ${_include_guard} */
-"
-    )
-
-    # avoid rebuilding if there was no change
-    execute_process(
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${_header_work_file}" "${_header_file}"
-    )
-    file(REMOVE "${_header_work_file}")
 endfunction()
