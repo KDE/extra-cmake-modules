@@ -289,7 +289,6 @@ _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories6"
 set(KF_INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
                                     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
-                                    INCLUDES DESTINATION "${KDE_INSTALL_INCLUDEDIR_KF}"
 )
 
 # on the Mac support an extra install directory for application bundles
