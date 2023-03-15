@@ -286,6 +286,15 @@ _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories6"
 #   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
+set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                                      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+)
+if(APPLE)
+    set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+                                          BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
+endif()
+
 set(KF_INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
                                     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel

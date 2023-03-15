@@ -386,16 +386,6 @@ if (_mixed_core_path_styles)
 endif()
 
 
-set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-                                      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
-                                      INCLUDES DESTINATION "${KDE_INSTALL_INCLUDEDIR}"
-)
-if(APPLE)
-    set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
-                                          BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
-endif()
-
 # new in cmake 2.8.9: this is used for all installed files which do not have a component set
 # so set the default component name to the name of the project, if a project name has been set:
 if(NOT "${PROJECT_NAME}" STREQUAL "Project")
