@@ -16,10 +16,9 @@ elseif (QT_MAJOR_VERSION EQUAL "6")
 
     ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
     _ecm_qmlmodule_uri_to_path(MODULEDIR "@MODULE_NAME@" "@VERSION@")
-    find_file(QMLDIR_FILE qmldir PATH_SUFFIXES "${KDE_INSTALL_QMLDIR}/${MODULEDIR}")
+    find_file(QMLDIR_FILE qmldir PATH_SUFFIXES "${KDE_INSTALL_QMLDIR}/${MODULEDIR}" NO_CACHE)
     if (NOT QMLDIR_FILE)
         if (NOT EXISTS "${qt_qml_dir}/${MODULEDIR}/")
-
             message(FATAL_ERROR "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${qt_qml_dir}/${MODULEDIR}/")
         endif()
     endif()
