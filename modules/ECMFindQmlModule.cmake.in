@@ -27,10 +27,11 @@ elseif (QT_MAJOR_VERSION EQUAL "6")
     include(ECMQmlModule)
 
     # Get the qmldir file
+    include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
     ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
     _ecm_qmlmodule_uri_to_path(MODULEDIR "@MODULE_NAME@" "@VERSION@")
     find_file(QMLDIR_FILE qmldir PATH_SUFFIXES "${KDE_INSTALL_QMLDIR}/${MODULEDIR}" NO_CACHE)
-    if (NOT QMLDIR_FILE) # Check the install destination, the QT_plugin-pAth might not be set up correctly at this point
+    if (NOT QMLDIR_FILE) # Check the install destination, the QT_PLUGIN_PATH might not be set up correctly at this point
         set(QMLDIR_FILE "${qt_qml_dir}/${MODULEDIR}/")
         if (NOT EXISTS "${QMLDIR_FILE}") # Check the Qt installation
             message(FATAL_ERROR "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${QMLDIR_FILE}")

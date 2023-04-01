@@ -3,3 +3,4 @@ module Test
 plugin TestModule
 classname TestModule
 QmlModule 1.0 QmlModule.qml
+# KDE-qmldir-Version: 1.0
