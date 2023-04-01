@@ -1,5 +1,6 @@
 #=============================================================================
 # SPDX-FileCopyrightText: 2015 Aleix Pol Gonzalez <aleixpol@blue-systems.com>
+# SPDX-FileCopyrightText: 2023 Alexander Lohnau <alexander.lohnau@gmx.de>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #=============================================================================
@@ -16,37 +17,56 @@ if (QT_MAJOR_VERSION EQUAL "5")
     include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
     ecm_query_qt(qt_binaries_dir QT_HOST_BINS)
     find_program(QMLPLUGINDUMP_PROGRAM NAMES qmlplugindump HINTS ${qt_binaries_dir})
+
+    if(NOT QMLPLUGINDUMP_PROGRAM)
+        message(WARNING "Could not find qmlplugindump. It is necessary to look up qml module dependencies.")
+    else()
+        execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" ERROR_VARIABLE ERRORS_OUTPUT OUTPUT_VARIABLE DISREGARD_VARIABLE RESULT_VARIABLE ExitCode TIMEOUT 30)
+    endif()
 elseif (QT_MAJOR_VERSION EQUAL "6")
     include(ECMQmlModule)
 
+    # Get the qmldir file
     ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
     _ecm_qmlmodule_uri_to_path(MODULEDIR "@MODULE_NAME@" "@VERSION@")
     find_file(QMLDIR_FILE qmldir PATH_SUFFIXES "${KDE_INSTALL_QMLDIR}/${MODULEDIR}" NO_CACHE)
     if (NOT QMLDIR_FILE) # Check the install destination, the QT_plugin-pAth might not be set up correctly at this point
-        if (NOT EXISTS "${qt_qml_dir}/${MODULEDIR}/") # Check the Qt installation
-            message(FATAL_ERROR "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${qt_qml_dir}/${MODULEDIR}/")
+        set(QMLDIR_FILE "${qt_qml_dir}/${MODULEDIR}/")
+        if (NOT EXISTS "${QMLDIR_FILE}") # Check the Qt installation
+            message(FATAL_ERROR "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${QMLDIR_FILE}")
         endif()
     endif()
 
-    if (NOT CMAKE_CROSSCOMPILING)
+    if (NOT "@VERSION@" STREQUAL "") # Check if we even need to check the version
+        file(READ "${QMLDIR_FILE}" FILE_CONTENTS)
+        if ("${FILE_CONTENTS}" MATCHES "# KDE-qmldir-Version: ([0-9]+(\\.[0-9]+)*)")
+            if ("${CMAKE_MATCH_1}" VERSION_GREATER_EQUAL "@VERSION@")
+                set(@GENMODULE@_FOUND TRUE)
+                set(@GENMODULE@_VERSION "${CMAKE_MATCH_1}")
+            endif()
+        endif()
+    elseif (NOT CMAKE_CROSSCOMPILING) # get the qmlplugindump executable for code below
         find_package(Qt6 COMPONENTS QmlTools REQUIRED)
         get_target_property(QMLPLUGINDUMP_PROGRAM Qt6::qmlplugindump LOCATION)
+    else() # if we don't have a specific version and the qmldir file was found, we are all set
+        set(@GENMODULE@_FOUND TRUE)
     endif()
 endif()
 
-if(NOT QMLPLUGINDUMP_PROGRAM)
-    message(WARNING "Could not find qmlplugindump. It is necessary to look up qml module dependencies.")
+# If we haven't checked the version above, use qmlplugindump
+if (NOT @GENMODULE@_FOUND)
+    execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" ERROR_VARIABLE ERRORS_OUTPUT OUTPUT_VARIABLE DISREGARD_VARIABLE RESULT_VARIABLE ExitCode TIMEOUT 30)
+    if(ExitCode EQUAL 0)
+        set(@GENMODULE@_FOUND TRUE)
+        set(@GENMODULE@_VERSION "${PACKAGE_FIND_VERSION}")
+    else()
+        message(STATUS "qmlplugindump failed for @MODULE_NAME@.")
+        set(@GENMODULE@_FOUND FALSE)
+    endif()
 endif()
 
-execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" ERROR_VARIABLE ERRORS_OUTPUT OUTPUT_VARIABLE DISREGARD_VARIABLE RESULT_VARIABLE ExitCode TIMEOUT 30)
-
-if(ExitCode EQUAL 0)
-    set(@GENMODULE@_FOUND TRUE)
-    set(@GENMODULE@_VERSION "${PACKAGE_FIND_VERSION}")
+if (@GENMODULE@_FOUND)
     set(${CACHE_VARIABLE} ON CACHE BOOL "Found this QML module")
-else()
-    message(STATUS "qmlplugindump failed for @MODULE_NAME@.")
-    set(@GENMODULE@_FOUND FALSE)
 endif()
 
 find_package_handle_standard_args(@GENMODULE@

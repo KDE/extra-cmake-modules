@@ -192,6 +192,8 @@ function(_ecm_qmlmodule_generate_qmldir ARG_TARGET)
             string(APPEND _qmldir_template "\ninternal ${_classname} ${_filename}")
         endif()
     endforeach()
+    get_target_property(_qml_version ${ARG_TARGET} ${_ECM_QMLMODULE_PROPERTY_VERSION})
+    string(APPEND _qmldir_template "\n# KDE-qmldir-Version: ${_qml_version}")
 
     string(APPEND _qmldir_template "\n")
 
