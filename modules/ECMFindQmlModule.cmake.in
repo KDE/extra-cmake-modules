@@ -22,8 +22,11 @@ elseif (QT_MAJOR_VERSION EQUAL "6")
             message(FATAL_ERROR "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${qt_qml_dir}/${MODULEDIR}/")
         endif()
     endif()
-    find_package(Qt6 COMPONENTS QmlTools REQUIRED)
-    get_target_property(QMLPLUGINDUMP_PROGRAM Qt6::qmlplugindump LOCATION)
+
+    if (NOT CMAKE_CROSSCOMPILING)
+        find_package(Qt6 COMPONENTS QmlTools REQUIRED)
+        get_target_property(QMLPLUGINDUMP_PROGRAM Qt6::qmlplugindump LOCATION)
+    endif()
 endif()
 
 if(NOT QMLPLUGINDUMP_PROGRAM)
