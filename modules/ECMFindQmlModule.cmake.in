@@ -6,6 +6,11 @@
 
 include(FindPackageHandleStandardArgs)
 include("${ECM_MODULE_DIR}/QtVersionOption.cmake")
+set(CACHE_VARIABLE "QMLMODULE_@MODULE_NAME@@VERSION@_FOUND")
+
+if (${CACHE_VARIABLE})
+    return()
+endif()
 
 if (QT_MAJOR_VERSION EQUAL "5")
     include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
@@ -38,6 +43,7 @@ execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" E
 if(ExitCode EQUAL 0)
     set(@GENMODULE@_FOUND TRUE)
     set(@GENMODULE@_VERSION "${PACKAGE_FIND_VERSION}")
+    set(${CACHE_VARIABLE} ON CACHE BOOL "Found this QML module")
 else()
     message(STATUS "qmlplugindump failed for @MODULE_NAME@.")
     set(@GENMODULE@_FOUND FALSE)
