@@ -225,7 +225,11 @@ function(_ecm_qmlmodule_generate_qrc ARG_TARGET)
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${ARG_TARGET}.qrc" "${_qrc_template}")
     qt_add_resources(_qrc_output "${CMAKE_CURRENT_BINARY_DIR}/${ARG_TARGET}.qrc")
 
-    target_sources(${ARG_TARGET} PRIVATE ${_qrc_output})
+
+    set(resourceTarget "${ARG_TARGET}_resources")
+
+    add_library("${resourceTarget}" OBJECT ${_qrc_output})
+    target_link_libraries(${ARG_TARGET} INTERFACE "$<TARGET_OBJECTS:${resourceTarget}>")
 endfunction()
 
 function(ecm_add_qml_module ARG_TARGET)
@@ -359,10 +363,7 @@ function(ecm_finalize_qml_module ARG_TARGET)
 
     if (NOT BUILD_SHARED_LIBS)
         _ecm_qmlmodule_generate_qrc(${ARG_TARGET})
-        set(CPP_RESOURCE_INIT "#include <qglobal.h> \n#include <QDebug> \n void initQmlResource${ARG_TARGET}() {Q_INIT_RESOURCE(${ARG_TARGET}); qWarning()<<Q_FUNC_INFO;};")
-        file(WRITE ${ARGS_TARGET}_init.cpp "${CPP_RESOURCE_INIT}")
-        target_sources(${ARG_TARGET} PRIVATE ${ARGS_TARGET}_init.cpp)
-        target_compile_definitions(${ARG_TARGET} PRIVATE -DQT_PLUGIN_RESOURCE_INIT_FUNCTION=initQmlResource${ARG_TARGET} -DQT_STATICPLUGIN=1)
+        target_compile_definitions(${ARG_TARGET} PRIVATE -DQT_STATICPLUGIN=1)
 
         if (${_qml_only})
             # If we do not have any C++ sources for the target, we need a way to
