@@ -186,6 +186,8 @@ function(_ecm_qmlmodule_generate_qmldir ARG_TARGET)
         get_property(_private SOURCE ${_file} PROPERTY ${_ECM_QMLMODULE_PROPERTY_PRIVATE})
         if (NOT _private)
             string(APPEND _qmldir_template "\n${_classname} ${_version} ${_filename}")
+        else()
+            string(APPEND _qmldir_template "\ninternal ${_classname} ${_filename}")
         endif()
     endforeach()
 
