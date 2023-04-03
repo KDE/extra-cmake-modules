@@ -363,6 +363,26 @@ function(ecm_finalize_qml_module ARG_TARGET)
 
     if (NOT BUILD_SHARED_LIBS)
         _ecm_qmlmodule_generate_qrc(${ARG_TARGET})
+
+        # automatically register the static plugin with downstream applications via Q_IMPORT_PLUGIN
+        set(CPP_PLUGIN_INIT "#include <QtPlugin>\nQ_IMPORT_PLUGIN(${ARG_TARGET})" "${CPP_PLUGIN_INIT}")
+
+        # generate the init file
+        set(CPP_INIT_FILE_NAME "${CMAKE_BINARY_DIR}/${ARG_TARGET}_init.cpp")
+        file(WRITE ${CPP_INIT_FILE_NAME} "${CPP_PLUGIN_INIT}")
+        set_source_files_properties("${CPP_INIT_FILE_NAME}" PROPERTIES GENERATED TRUE)
+
+        # generate the init target, and make the final consumer of the module link to the init object file directly,
+        # to prevent a linker possibly throwing stuff away
+        set(pluginInitTarget "${ARG_TARGET}_init")
+        add_library("${pluginInitTarget}" OBJECT ${CPP_INIT_FILE_NAME})
+        target_link_libraries(${ARG_TARGET} INTERFACE "$<TARGET_OBJECTS:${pluginInitTarget}>")
+        if (TARGET Qt::Core)
+            target_link_libraries(${pluginInitTarget} PRIVATE Qt::Core)
+        else()
+            target_link_libraries(${pluginInitTarget} PRIVATE Qt5::Core)
+        endif()
+
         target_compile_definitions(${ARG_TARGET} PRIVATE QT_STATICPLUGIN)
 
         if (${_qml_only})
