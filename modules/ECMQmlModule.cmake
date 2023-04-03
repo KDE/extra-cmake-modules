@@ -363,7 +363,7 @@ function(ecm_finalize_qml_module ARG_TARGET)
 
     if (NOT BUILD_SHARED_LIBS)
         _ecm_qmlmodule_generate_qrc(${ARG_TARGET})
-        target_compile_definitions(${ARG_TARGET} PRIVATE -DQT_STATICPLUGIN=1)
+        target_compile_definitions(${ARG_TARGET} PRIVATE QT_STATICPLUGIN)
 
         if (${_qml_only})
             # If we do not have any C++ sources for the target, we need a way to
