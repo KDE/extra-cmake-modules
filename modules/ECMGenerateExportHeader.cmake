@@ -566,8 +566,6 @@ function(ecm_generate_export_header target)
     # generate header file
     set(_output "
 #define ${_macro_base_name}_DECL_DEPRECATED_TEXT(text) ${_decl_deprecated_text_definition}
-
-#define ECM_GENERATEEXPORTHEADER_VERSION_VALUE(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
 "
     )
     if (ARGS_GROUP_BASE_NAME)
@@ -630,7 +628,7 @@ function(ecm_generate_export_header target)
 #  endif
 #endif
 
-#define ${_macro_base_name}_BUILD_DEPRECATED_SINCE(major, minor) (ECM_GENERATEEXPORTHEADER_VERSION_VALUE(major, minor, 0) > ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
+#define ${_macro_base_name}_BUILD_DEPRECATED_SINCE(major, minor) (((major<<16)|(minor<<8)) > ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
 "
         )
     else()
@@ -663,7 +661,7 @@ function(ecm_generate_export_header target)
 #endif
 
 #ifdef ${_deprecated_macro_name}
-#  define ${_macro_base_name}_ENABLE_DEPRECATED_SINCE(major, minor) (ECM_GENERATEEXPORTHEADER_VERSION_VALUE(major, minor, 0) > ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT)
+#  define ${_macro_base_name}_ENABLE_DEPRECATED_SINCE(major, minor) (((major<<16)|(minor<<8)) > ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT)
 #else
 #  define ${_macro_base_name}_ENABLE_DEPRECATED_SINCE(major, minor) 0
 #endif
