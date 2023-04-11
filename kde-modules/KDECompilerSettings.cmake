@@ -567,6 +567,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"
     if (KDE_INTERNAL_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.96.0)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=undef")
     endif()
+elseif(MSVC)
+  # similar to -Werror=return-type
+  # https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4715?view=msvc-170
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /we4715")
 endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
     (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 3.5))
