@@ -16,7 +16,7 @@ macro(check_exists file)
     endif()
 endmacro()
 
-check_exists(${BINARY_DIR}/fr/only-process.qm)
+check_exists(${BINARY_DIR}/ECMPoQm/fr/only-process.qm)
 
 set(exp_files
     "share/locale/fr/LC_MESSAGES/process-and-install.qm"
