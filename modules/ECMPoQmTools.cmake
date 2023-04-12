@@ -170,9 +170,12 @@ function(ecm_process_po_files_as_qm lang)
         get_filename_component(po_file ${po_file} ABSOLUTE)
         get_filename_component(filename_base ${po_file} NAME_WE)
 
+        # Use own ECMPoQm/ subfolder for processing the files, to avoid cluttering
+        # the default build dir as well as potential file/dir name clashes from
+        # other build artifacts.
         # Include ${lang} in build dir because we might be called multiple times
         # with the same ${filename_base}
-        set(build_dir ${CMAKE_CURRENT_BINARY_DIR}/${lang})
+        set(build_dir ${CMAKE_CURRENT_BINARY_DIR}/ECMPoQm/${lang})
         set(ts_file ${build_dir}/${filename_base}.ts)
         set(qm_file ${build_dir}/${filename_base}.qm)
 
