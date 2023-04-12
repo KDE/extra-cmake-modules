@@ -603,7 +603,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
 endif()
 
 if (MSVC)
-    # FIXME: do we not want to set the warning level up to level 3? (/W3)
+    # enable linter like warnings including deprecation warnings
+    # https://learn.microsoft.com/en-us/cpp/build/reference/compiler-option-warning-level?view=msvc-170
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
     # Disable warnings:
     # C4250: 'class1' : inherits 'class2::member' via dominance
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250")
