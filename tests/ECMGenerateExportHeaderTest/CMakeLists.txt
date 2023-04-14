@@ -49,6 +49,8 @@ macro(add_generate_export_header_consumer_test _test_variant _exclude_deprecated
                 ${_extra_build_options}
             --test-command dummy
     )
+    set_tests_properties(ecm_generate_export_header-${_consumer_build}
+        PROPERTIES DEPENDS "ecm_generate_export_header-build-${_library}")
 endmacro()
 
 macro(add_generate_export_header_consumer_disable_deprecated_before_and_at_test
