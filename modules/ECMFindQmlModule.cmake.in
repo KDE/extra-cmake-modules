@@ -45,6 +45,8 @@ elseif (QT_MAJOR_VERSION EQUAL "6")
             if ("${CMAKE_MATCH_1}" VERSION_GREATER_EQUAL "@VERSION@")
                 set(@GENMODULE@_FOUND TRUE)
                 set(@GENMODULE@_VERSION "${CMAKE_MATCH_1}")
+            else()
+                set(MODULE_NOTFOUND TRUE)
             endif()
         endif()
     elseif (NOT CMAKE_CROSSCOMPILING) # get the qmlplugindump executable for code below
