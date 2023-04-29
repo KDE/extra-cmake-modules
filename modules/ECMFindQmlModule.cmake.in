@@ -34,11 +34,12 @@ elseif (QT_MAJOR_VERSION EQUAL "6")
     if (NOT QMLDIR_FILE) # Check the install destination, the QT_PLUGIN_PATH might not be set up correctly at this point
         set(QMLDIR_FILE "${qt_qml_dir}/${MODULEDIR}/")
         if (NOT EXISTS "${QMLDIR_FILE}") # Check the Qt installation
-            message(FATAL_ERROR "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${QMLDIR_FILE}")
+            message(WARNING "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${QMLDIR_FILE}")
+            set(MODULE_NOTFOUND TRUE)
         endif()
     endif()
 
-    if (NOT "@VERSION@" STREQUAL "") # Check if we even need to check the version
+    if (NOT MODULE_NOTFOUND AND NOT "@VERSION@" STREQUAL "") # Check if we even need to check the version
         file(READ "${QMLDIR_FILE}" FILE_CONTENTS)
         if ("${FILE_CONTENTS}" MATCHES "# KDE-qmldir-Version: ([0-9]+(\\.[0-9]+)*)")
             if ("${CMAKE_MATCH_1}" VERSION_GREATER_EQUAL "@VERSION@")
@@ -49,13 +50,13 @@ elseif (QT_MAJOR_VERSION EQUAL "6")
     elseif (NOT CMAKE_CROSSCOMPILING) # get the qmlplugindump executable for code below
         find_package(Qt6 COMPONENTS QmlTools REQUIRED)
         get_target_property(QMLPLUGINDUMP_PROGRAM Qt6::qmlplugindump LOCATION)
-    else() # if we don't have a specific version and the qmldir file was found, we are all set
+    elseif(NOT MODULE_NOTFOUND) # if we don't have a specific version and the qmldir file was found, we are all set
         set(@GENMODULE@_FOUND TRUE)
     endif()
 endif()
 
 # If we haven't checked the version above, use qmlplugindump
-if (NOT @GENMODULE@_FOUND)
+if (NOT MODULE_NOTFOUND AND NOT @GENMODULE@_FOUND)
     execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" ERROR_VARIABLE ERRORS_OUTPUT OUTPUT_VARIABLE DISREGARD_VARIABLE RESULT_VARIABLE ExitCode TIMEOUT 30)
     if(ExitCode EQUAL 0)
         set(@GENMODULE@_FOUND TRUE)
