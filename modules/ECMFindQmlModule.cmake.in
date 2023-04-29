@@ -10,7 +10,7 @@ include("${ECM_MODULE_DIR}/QtVersionOption.cmake")
 set(CACHE_VARIABLE "QMLMODULE_@MODULE_NAME@@VERSION@_FOUND")
 
 if (${CACHE_VARIABLE})
-    return()
+    set(@GENMODULE@_FOUND TRUE)
 endif()
 
 if (QT_MAJOR_VERSION EQUAL "5")
@@ -23,7 +23,7 @@ if (QT_MAJOR_VERSION EQUAL "5")
     else()
         execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" ERROR_VARIABLE ERRORS_OUTPUT OUTPUT_VARIABLE DISREGARD_VARIABLE RESULT_VARIABLE ExitCode TIMEOUT 30)
     endif()
-elseif (QT_MAJOR_VERSION EQUAL "6")
+elseif (QT_MAJOR_VERSION EQUAL "6" AND NOT @GENMODULE@_FOUND)
     include(ECMQmlModule)
 
     # Get the qmldir file
