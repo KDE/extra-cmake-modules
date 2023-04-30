@@ -19,6 +19,7 @@ but fail at runtime.
 
   ecm_find_qmlmodule(<module_name>
     [version] # Optional for Qt6 builds
+    [REQUIRED]
   )
 
 Usage example:
@@ -26,6 +27,9 @@ Usage example:
 .. code-block:: cmake
 
   ecm_find_qmlmodule(org.kde.kirigami 2.1)
+  ecm_find_qmlmodule(org.kde.kirigami 2.1 REQUIRED) # CMake will fail if the required version is not found
+  ecm_find_qmlmodule(org.kde.kirigami) # Find it without a given version
+  ecm_find_qmlmodule(org.kde.kirigami REQUIRED) # CMake will fail if it is not found
 
 Since 5.38.0.
 #]=======================================================================]
@@ -35,8 +39,12 @@ set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 function(ecm_find_qmlmodule MODULE_NAME)
     list(LENGTH ARGN ARGC)
     if (QT_MAJOR_VERSION STREQUAL 6)
-      if (ARGC EQUAL 1)
-        list(GET ARGN 0 VERSION)
+        if (ARGC GREATER_EQUAL 1)
+        list(GET ARGN 0 ARG_VERSION)
+        if ("${ARG_VERSION}" MATCHES "([0-9]+(\\.[0-9]+)*)") # Check if it is a version or anything passed on to find_package call
+          set(VERSION ${ARG_VERSION})
+          list(REMOVE_AT ARGN 0) # If it is a version, remove it from the args
+        endif()
       endif()
     else()
       if (ARGC EQUAL 1)
