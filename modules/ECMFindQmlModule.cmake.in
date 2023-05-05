@@ -7,11 +7,6 @@
 
 include(FindPackageHandleStandardArgs)
 include("${ECM_MODULE_DIR}/QtVersionOption.cmake")
-set(CACHE_VARIABLE "QMLMODULE_@MODULE_NAME@@VERSION@_FOUND")
-
-if (${CACHE_VARIABLE})
-    set(@GENMODULE@_FOUND TRUE)
-endif()
 
 if (QT_MAJOR_VERSION EQUAL "5")
     include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
@@ -23,17 +18,18 @@ if (QT_MAJOR_VERSION EQUAL "5")
     else()
         execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" ERROR_VARIABLE ERRORS_OUTPUT OUTPUT_VARIABLE DISREGARD_VARIABLE RESULT_VARIABLE ExitCode TIMEOUT 30)
     endif()
-elseif (QT_MAJOR_VERSION EQUAL "6" AND NOT @GENMODULE@_FOUND)
+elseif (QT_MAJOR_VERSION EQUAL "6")
     include(ECMQmlModule)
 
     # Get the qmldir file
-    include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
-    ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
     _ecm_qmlmodule_uri_to_path(MODULEDIR "@MODULE_NAME@" "@VERSION@")
     find_file(QMLDIR_FILE qmldir PATH_SUFFIXES "${KDE_INSTALL_QMLDIR}/${MODULEDIR}" NO_CACHE)
     if (NOT QMLDIR_FILE) # Check the install destination, the QT_PLUGIN_PATH might not be set up correctly at this point
-        set(QMLDIR_FILE "${qt_qml_dir}/${MODULEDIR}/")
-        if (NOT EXISTS "${QMLDIR_FILE}") # Check the Qt installation
+        # Check the Qt installation
+        include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
+        ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
+        set(QMLDIR_FILE "${qt_qml_dir}/${MODULEDIR}/qmldir")
+        if (NOT EXISTS "${QMLDIR_FILE}")
             message(WARNING "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${QMLDIR_FILE}")
             set(MODULE_NOTFOUND TRUE)
         endif()
@@ -68,10 +64,6 @@ if (NOT MODULE_NOTFOUND AND NOT @GENMODULE@_FOUND)
         message(STATUS "qmlplugindump failed for @MODULE_NAME@.")
         set(@GENMODULE@_FOUND FALSE)
     endif()
-endif()
-
-if (@GENMODULE@_FOUND)
-    set(${CACHE_VARIABLE} ON CACHE BOOL "Found this QML module")
 endif()
 
 find_package_handle_standard_args(@GENMODULE@
