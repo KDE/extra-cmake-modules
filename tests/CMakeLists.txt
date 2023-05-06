@@ -222,7 +222,24 @@ set_package_properties(
         PURPOSE "Required to run tests for the ECMQMLModules module."
 )
 if (TARGET Qt${QT_MAJOR_VERSION}::Quick)
-    add_test_macro(ECMFindQmlModule dummy)
+    set(ECMFindQmlModuleTest.nonexistent_EXTRA_OPTIONS
+        --build-options -DQML_MODULE_NAME=org.kde.ecmtest42 -DQML_MODULE_VERSION=2.0 -DEXPECTED_FOUND_VARAIBLE=FALSE
+    )
+    add_test_variant(ECMFindQmlModuleTest.nonexistent ECMFindQmlModuleTest dummy)
+    set(ECMFindQmlModuleTest.existent_EXTRA_OPTIONS
+        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=2.0 -DEXPECTED_FOUND_VARAIBLE=TRUE
+    )
+    add_test_variant(ECMFindQmlModuleTest.existent ECMFindQmlModuleTest dummy)
+
+
+    set(ECMFindQmlModuleTest.missmatching_version_EXTRA_OPTIONS
+        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=2.9 -DEXPECTED_FOUND_VARAIBLE=FALSE
+    )
+    add_test_variant(ECMFindQmlModuleTest.missmatching_version ECMFindQmlModuleTest dummy)
+    set(ECMFindQmlModuleTest.later_version_found_EXTRA_OPTIONS
+        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=1.9 -DEXPECTED_FOUND_VARAIBLE=TRUE
+    )
+    add_test_variant(ECMFindQmlModuleTest.later_version_found ECMFindQmlModuleTest dummy)
 
     set(ECMQmlModuleTest.static_full_EXTRA_OPTIONS
         --build-target install
