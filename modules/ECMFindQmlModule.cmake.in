@@ -13,13 +13,14 @@ if (QT_MAJOR_VERSION EQUAL "6")
     include(ECMQmlModule)
     # Get the qmldir file
     _ecm_qmlmodule_uri_to_path(MODULEDIR "@MODULE_NAME@" "@VERSION@")
-    find_file(QMLDIR_FILE qmldir PATHS "${KDE_INSTALL_QMLDIR}/${MODULEDIR}" NO_CACHE)
+    set(KDE_QMLDIR "${KDE_INSTALL_FULL_QMLDIR}/${MODULEDIR}")
+    find_file(QMLDIR_FILE qmldir ${KDE_QMLDIR} NO_CACHE)
     if (NOT QMLDIR_FILE) # Check the install destination, the QT_PLUGIN_PATH might not be set up correctly at this point
         # Check the Qt installation
         ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
         set(QMLDIR_FILE "${qt_qml_dir}/${MODULEDIR}/qmldir")
         if (NOT EXISTS "${QMLDIR_FILE}")
-            message(WARNING "qmldir not found in ${KDE_INSTALL_QMLDIR}/${MODULEDIR}/ or ${QMLDIR_FILE}")
+            message(WARNING "qmldir not found in ${KDE_QMLDIR} or ${QMLDIR_FILE}")
             set(MODULE_NOTFOUND TRUE)
         endif()
     endif()
