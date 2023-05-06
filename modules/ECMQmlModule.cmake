@@ -90,7 +90,9 @@ Since 5.91.0
 
 ::
 
-    ecm_finalize_qml_module(<target> DESTINATION <QML install destination>)
+    ecm_finalize_qml_module(<target>
+        [DESTINATION <QML install destination>] # Optional since 6.0
+    )
 
 Finalize the specified QML module target. This must be called after all other
 setup (like adding sources) on the target has been done. It will perform a
@@ -101,8 +103,8 @@ number of tasks:
 - If ``BUILD_SHARED_LIBS`` is off, a QRC file is generated from the QML files
   added to the target. This QRC file will be included when compiling the C++ QML
   module. The built static library will be installed in a subdirection of
-  ``DESTINATION`` based on the QML module's uri. Note that if ``NO_PLUGIN`` is
-  set, a C++ QML plugin will be generated to include the QRC files.
+  ``DESTINATION`` based on the QML module's uri. If this value is not set, KDE_INSTALL_QMLDIR will be used.
+  Note that if ``NO_PLUGIN`` is set, a C++ QML plugin will be generated to include the QRC files.
 - If ``BUILD_SHARED_LIBS`` in on, all generated files, QML sources and the C++
   plugin will be installed in a subdirectory of ``DESTINATION`` based upon the
   QML module's uri. In addition, these files will also be copied to the target's
@@ -346,8 +348,11 @@ function(ecm_finalize_qml_module ARG_TARGET)
 
     _ecm_qmlmodule_verify_qml_target(${ARG_TARGET})
 
+    if (NOT ARG_DESTINATION)
+        set(ARG_DESTINATION "${KDE_INSTALL_QMLDIR}")
+    endif()
     if ("${ARG_DESTINATION}" STREQUAL "")
-        message(FATAL_ERROR "ecm_finalize_qml_module called without required argument DESTINATION")
+        message(FATAL_ERROR "ecm_finalize_qml_module called without argument DESTINATION and KDE_INSTALL_QMLDIR is not set")
     endif()
 
     _ecm_qmlmodule_generate_qmldir(${ARG_TARGET})
