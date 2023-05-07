@@ -227,7 +227,7 @@ if (TARGET Qt${QT_MAJOR_VERSION}::Quick)
     )
     add_test_variant(ECMFindQmlModuleTest.nonexistent ECMFindQmlModuleTest dummy)
     set(ECMFindQmlModuleTest.existent_EXTRA_OPTIONS
-        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=2.0 -DEXPECTED_FOUND_VARAIBLE=TRUE
+        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=2.0 -DEXPECTED_FOUND_VARAIBLE=TRUE -DBUILD_WITH_QT6=ON
     )
     add_test_variant(ECMFindQmlModuleTest.existent ECMFindQmlModuleTest dummy)
 
@@ -236,10 +236,12 @@ if (TARGET Qt${QT_MAJOR_VERSION}::Quick)
         --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=2.9 -DEXPECTED_FOUND_VARAIBLE=FALSE
     )
     add_test_variant(ECMFindQmlModuleTest.missmatching_version ECMFindQmlModuleTest dummy)
-    set(ECMFindQmlModuleTest.later_version_found_EXTRA_OPTIONS
-        --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=1.9 -DEXPECTED_FOUND_VARAIBLE=TRUE
-    )
-    add_test_variant(ECMFindQmlModuleTest.later_version_found ECMFindQmlModuleTest dummy)
+    if (QT_MAJOR_VERSION VERSION_GREATER 5)
+        set(ECMFindQmlModuleTest.later_version_found_EXTRA_OPTIONS
+            --build-options -DQML_MODULE_NAME=org.kde.ecmtest -DQML_MODULE_VERSION=1.9 -DEXPECTED_FOUND_VARAIBLE=TRUE
+        )
+        add_test_variant(ECMFindQmlModuleTest.later_version_found ECMFindQmlModuleTest dummy)
+    endif()
 
     set(ECMQmlModuleTest.static_full_EXTRA_OPTIONS
         --build-target install
