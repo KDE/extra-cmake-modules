@@ -26,6 +26,7 @@ if (DEPENDS)
 endif()
 
 ecm_target_qml_sources(TestModule SOURCES QmlModule.qml)
+ecm_target_qml_sources(TestModule VERSION 2.0 SOURCES QmlModule2.qml)
 
 ecm_finalize_qml_module(TestModule DESTINATION "test")
 

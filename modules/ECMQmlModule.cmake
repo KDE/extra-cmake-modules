@@ -19,12 +19,12 @@ Example usage:
 
 .. code-block:: cmake
 
-    ecm_add_qml_module(ExampleModule URI "org.example.Example" VERSION 1.4)
+    ecm_add_qml_module(ExampleModule URI "org.example.Example")
 
     target_sources(ExampleModule PRIVATE ExamplePlugin.cpp)
     target_link_libraries(ExampleModule PRIVATE Qt::Quick)
 
-    ecm_target_qml_sources(ExampleModule SOURCES ExampleItem.qml)
+    ecm_target_qml_sources(ExampleModule SOURCES ExampleItem.qml) # This will have 1.0 as the default version
     ecm_target_qml_sources(ExampleModule SOURCES AnotherExampleItem.qml VERSION 1.5)
 
     ecm_finalize_qml_module(ExampleModule DESTINATION ${KDE_INSTALL_QMLDIR})
@@ -42,7 +42,9 @@ If the ``VERSION`` argument is specified, it is used to initialize the default
 version that is used by  ``ecm_target_qml_sources`` when adding QML files. If it
 is not specified, a  default of 1.0 is used. Additionally, if a version greater
 than or equal to 2.0 is specified, the major version is appended to the
-installation path of the module.
+Qt5 installation path of the module.
+In case you don't specify and version, but specify a version for the individual sources, the latest
+will be set as the resulting version for this plugin. This will be used in the ECMFindQmlModule module.
 
 If the option ``NO_PLUGIN`` is set, a target is declared that is not expected to
 contain any C++ QML plugin.
@@ -259,15 +261,14 @@ function(ecm_add_qml_module ARG_TARGET)
         add_library(${ARG_TARGET})
     endif()
 
-    if ("${ARG_VERSION}" STREQUAL "")
-        set(ARG_VERSION "1.0")
+    if (ARG_VERSION)
+        set_target_properties(${ARG_TARGET} PROPERTIES ${_ECM_QMLMODULE_PROPERTY_VERSION} "${ARG_VERSION}")
     endif()
 
     set_target_properties(${ARG_TARGET} PROPERTIES
         ${_ECM_QMLMODULE_PROPERTY_URI} "${ARG_URI}"
         ${_ECM_QMLMODULE_PROPERTY_FILES} ""
         ${_ECM_QMLMODULE_PROPERTY_QMLONLY} "${ARG_NO_PLUGIN}"
-        ${_ECM_QMLMODULE_PROPERTY_VERSION} "${ARG_VERSION}"
         ${_ECM_QMLMODULE_PROPERTY_CLASSNAME} "${ARG_CLASSNAME}"
         ${_ECM_QMLMODULE_PROPERTY_DEPENDS} ""
     )
@@ -306,6 +307,10 @@ function(ecm_target_qml_sources ARG_TARGET)
 
     if ("${ARG_VERSION}" STREQUAL "")
         get_target_property(ARG_VERSION ${ARG_TARGET} "_ecm_qml_version")
+    endif()
+    # In case we have not specified a version in add_qml_module, we use 1.0 as a default for the individual QML files
+    if (NOT ARG_VERSION)
+        set(ARG_VERSION "1.0")
     endif()
 
     foreach(_file ${ARG_SOURCES})
@@ -357,11 +362,22 @@ function(ecm_finalize_qml_module ARG_TARGET)
         message(FATAL_ERROR "ecm_finalize_qml_module called without argument DESTINATION and KDE_INSTALL_QMLDIR is not set")
     endif()
 
-    _ecm_qmlmodule_generate_qmldir(${ARG_TARGET})
-
     get_target_property(_qml_uri ${ARG_TARGET} ${_ECM_QMLMODULE_PROPERTY_URI})
     get_target_property(_version ${ARG_TARGET} ${_ECM_QMLMODULE_PROPERTY_VERSION})
+    # Get the latest version of the individual QML sources in case we do not have specified one for the module
+    if (NOT _version)
+        get_target_property(qml_files ${ARG_TARGET} ${_ECM_QMLMODULE_PROPERTY_FILES})
+        set(_version "1.0")
+        foreach(item ${qml_files})
+            get_property(item_version SOURCE ${item} PROPERTY ${_ECM_QMLMODULE_PROPERTY_VERSION})
+            if (item_version AND "${item_version}" VERSION_GREATER "${_version}")
+                set(_version ${item_version})
+            endif()
+        endforeach()
+    endif()
+    set_target_properties(${ARG_TARGET} PROPERTIES ${_ECM_QMLMODULE_PROPERTY_VERSION} "${_version}")
 
+    _ecm_qmlmodule_generate_qmldir(${ARG_TARGET})
     _ecm_qmlmodule_uri_to_path(_plugin_path "${_qml_uri}" "${_version}")
 
     get_target_property(_qml_only ${ARG_TARGET} ${_ECM_QMLMODULE_PROPERTY_QMLONLY})
