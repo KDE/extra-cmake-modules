@@ -10,7 +10,7 @@ include("${ECM_MODULE_DIR}/QtVersionOption.cmake")
 include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
 
 if (QT_MAJOR_VERSION EQUAL "6")
-    include(ECMQmlModule)
+    include(${ECM_MODULE_DIR}/ECMQmlModule.cmake)
     # Get the qmldir file
     _ecm_qmlmodule_uri_to_path(MODULEDIR "@MODULE_NAME@" "@VERSION@")
     set(KDE_QMLDIR "${KDE_INSTALL_FULL_QMLDIR}/${MODULEDIR}")
