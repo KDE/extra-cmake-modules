@@ -72,10 +72,6 @@ where ``<dir>`` is one of (default values in parentheses):
     kconfig description files (``DATAROOTDIR/config.kcfg``)
 ``KCONFUPDATEDIR``
     kconf_update scripts (``DATAROOTDIR/kconf_update``)
-``KSERVICESDIR``
-    services for KDE Frameworks 6 (``DATAROOTDIR/kservices6``)
-``KSERVICETYPESDIR``
-    service types for KDE Frameworks 6 (``DATAROOTDIR/kservicetypes6``)
 ``KXMLGUIDIR``
     knotify description files (``DATAROOTDIR/kxmlgui6``)
 ``KAPPTEMPLATESDIR``
@@ -265,10 +261,6 @@ endif()
 
 
 # KDE Framework-specific things
-_define_relative(KSERVICESDIR DATAROOTDIR "kservices6"
-    "services for KDE Frameworks 6")
-_define_relative(KSERVICETYPESDIR DATAROOTDIR "kservicetypes6"
-    "service types for KDE Frameworks 6")
 _define_relative(KNOTIFYRCDIR DATAROOTDIR "knotifications6"
     "knotify description files")
 # TODO MOVE TO KXMLGUI
