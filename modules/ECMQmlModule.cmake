@@ -15,6 +15,10 @@ bundled into the static library. When using a shared build, the QML plugin and
 relevant QML files are copied to the target's ``RUNTIME_OUTPUT_DIRECTORY`` to make
 it easier to run things directly from the build directory.
 
+Since 6.0.0, when using Qt 6, most functionality of this module has been
+implemented by upstream Qt. Most of the functions here will now forward to the
+similar Qt functions.
+
 Example usage:
 
 .. code-block:: cmake
@@ -32,7 +36,14 @@ Example usage:
 
 ::
 
-    ecm_add_qml_module(<target name> URI <module uri> [VERSION <module version>] [NO_PLUGIN] [CLASSNAME <class name>])
+    ecm_add_qml_module(<target name>
+        URI <module uri>
+        [VERSION <module version>]
+        [NO_PLUGIN] # Deprecated since 6.0.0 when using Qt 6
+        [CLASSNAME <class name>] # Deprecated since 6.0.0 when using Qt 6, use CLASS_NAME instead
+        [QT_NO_PLUGIN] # Since 6.0.0, when using Qt 6
+        [GENERATE_PLUGIN_SOURCE] # Since 6.0.0, when using Qt 6
+    )
 
 This will declare a new CMake target called ``<target name>``. The ``URI``
 argument is required and should be a proper QML module URI. The ``URI`` is used,
@@ -58,6 +69,13 @@ You can add C++ and QML source files to the target using ``target_sources`` and
 
 Since 5.91.0
 
+Since 6.0.0, when used with Qt 6, this will forward to ``qt_add_qml_module``. Any extra arguments will
+be forwarded as well. The ``NO_PLUGIN`` argument is deprecated and implies ``GENERATE_PLUGIN_SOURCE``,
+since modules in Qt 6 always require a plugin or backing target. If you want to use Qt's behaviour for
+``NO_PLUGIN``, use ``QT_NO_PLUGIN`` instead. Additionally, to maintain backward compatibility, by
+default we pass ``NO_GENERATE_PLUGIN_SOURCE`` to ``qt_add_qml_module``. To have Qt generate the plugin
+sources, pass ``GENERATE_PLUGIN_SOURCE``.
+
 ::
 
     ecm_add_qml_module_dependencies(<target> DEPENDS <module string> [<module string> ...])
@@ -66,6 +84,9 @@ Add the list of dependencies specified by the ``DEPENDS`` argument to be listed
 as dependencies in the generated QMLDIR file of ``<target>``.
 
 Since 5.91.0
+
+Since 6.0.0, this is deprecated and ignored when using Qt 6, instead use the
+``DEPENDENCIES`` and ``IMPORTS`` arguments to ``ecm_add_qml_module``.
 
 ::
 
@@ -90,10 +111,20 @@ specified files do not exist.
 
 Since 5.91.0
 
+Since 6.0.0, when used with Qt 6, this will forward to ``qt_target_qml_sources()``.
+The ``SOURCES`` argument will be translated to ``QML_SOURCES``. ``VERSION`` and
+``PRIVATE`` will set Qt's ``QT_QML_SOURCE_VERSIONS`` and ``QT_QML_INTERNAL_TYPE``
+properties on ``SOURCES`` before calling ``qt_target_qml_sources()``. Since Qt
+includes the path relative to the current source dir, for each source file a
+resource alias will be generated with the path stripped. If the ``PATH`` argument
+is set, it will be prefixed to the alias. Any additional arguments will be passed
+to ``qt_target_qml_sources()``.
+
 ::
 
     ecm_finalize_qml_module(<target>
         [DESTINATION <QML install destination>] # Optional since 6.0
+        [VERSION <Project Version>] # Added for 6.0 when using Qt 6
     )
 
 Finalize the specified QML module target. This must be called after all other
@@ -115,6 +146,11 @@ number of tasks:
 This function will fail if ``<target>`` is not a QML module target.
 
 Since 5.91.0
+
+Since 6.0.0, when using Qt 6, this will instead install the files generated
+by ``qt_add_qml_module``. The optional ``VERSION`` argument was added that will
+default to ``PROJECT_VERSION`` and which will write a file that is used by
+``ECMFindQmlModule`` to detect the version of the QML module.
 
 #]========================================================================]
 
@@ -139,6 +175,9 @@ endmacro()
 # so it has been split to separate files.
 if ("${QT_MAJOR_VERSION}" STREQUAL "6")
     include(${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule6.cmake)
+    if (NOT COMMAND ecm_add_qml_module)
+        message(FATAL_ERROR "Failed setting up ECMQmlModule")
+    endif()
 elseif("${QT_MAJOR_VERSION}" STREQUAL "5")
     include(${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule5.cmake)
 else()
