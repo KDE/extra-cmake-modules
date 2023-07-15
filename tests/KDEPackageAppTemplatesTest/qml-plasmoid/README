@@ -25,8 +25,5 @@ plasmoidviewer -a YourAppletName
 The explanation of the template
 http://techbase.kde.org/index.php?title=Development/Tutorials/Plasma/GettingStarted
 
-Plasma techbase pages
-http://techbase.kde.org/Projects/Plasma
-
 Plasma QML API explained
 http://techbase.kde.org/Development/Tutorials/Plasma/QML/API
