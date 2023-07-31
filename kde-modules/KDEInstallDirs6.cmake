@@ -73,7 +73,7 @@ where ``<dir>`` is one of (default values in parentheses):
 ``KCONFUPDATEDIR``
     kconf_update scripts (``DATAROOTDIR/kconf_update``)
 ``KXMLGUIDIR``
-    knotify description files (``DATAROOTDIR/kxmlgui6``)
+    kxmlgui .rc files (``DATAROOTDIR/kxmlgui6``)
 ``KAPPTEMPLATESDIR``
     KAppTemplate and KDevelop templates (``DATAROOTDIR/kdevappwizard/templates``)
 ``KFILETEMPLATESDIR``
@@ -83,7 +83,7 @@ where ``<dir>`` is one of (default values in parentheses):
 ``ICONDIR``
     icons (``DATAROOTDIR/icons``)
 ``LOCALEDIR``
-    knotify description files (``DATAROOTDIR/locale``)
+    locale-dependent data (``DATAROOTDIR/locale``)
 ``SOUNDDIR``
     sound files (``DATAROOTDIR/sounds``)
 ``TEMPLATEDIR``
