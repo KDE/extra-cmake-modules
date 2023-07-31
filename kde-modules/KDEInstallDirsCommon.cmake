@@ -306,7 +306,7 @@ _define_relative(ICONDIR DATAROOTDIR "icons"
     "icons"
     ICON_INSTALL_DIR)
 _define_relative(LOCALEDIR DATAROOTDIR "locale"
-    "knotify description files"
+    "locale-dependent data"
     LOCALE_INSTALL_DIR)
 _define_relative(SOUNDDIR DATAROOTDIR "sounds"
     "sound files"
