@@ -77,7 +77,7 @@ where ``<dir>`` is one of (default values in parentheses):
 ``KSERVICETYPESDIR``
     service types for KDE Frameworks 6 (``DATAROOTDIR/kservicetypes6``)
 ``KXMLGUIDIR``
-    kxmlgui .rc files (``DATAROOTDIR/kxmlgui6``)
+    kxmlgui .rc files (``DATAROOTDIR/kxmlgui5``)
 ``KAPPTEMPLATESDIR``
     KAppTemplate and KDevelop templates (``DATAROOTDIR/kdevappwizard/templates``)
 ``KFILETEMPLATESDIR``
@@ -272,7 +272,7 @@ _define_relative(KSERVICETYPESDIR DATAROOTDIR "kservicetypes6"
 _define_relative(KNOTIFYRCDIR DATAROOTDIR "knotifications6"
     "knotify description files")
 # TODO MOVE TO KXMLGUI
-_define_relative(KXMLGUIDIR DATAROOTDIR "kxmlgui6"
+_define_relative(KXMLGUIDIR DATAROOTDIR "kxmlgui5"
     "kxmlgui .rc files")
 _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories6"
     "Qt Logging categories files")
