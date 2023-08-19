@@ -160,11 +160,14 @@ endif()
 
 find_program(APPSTREAMCLI appstreamcli)
 function(appstreamtest)
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0064 NEW) # enable TEST operator
     if(APPSTREAMCLI AND NOT TEST appstreamtest)
         add_test(NAME appstreamtest COMMAND ${CMAKE_COMMAND} -DAPPSTREAMCLI=${APPSTREAMCLI} -DINSTALL_FILES=${CMAKE_BINARY_DIR}/install_manifest.txt -P ${CMAKE_CURRENT_LIST_DIR}/appstreamtest.cmake)
     else()
         message(STATUS "Could not set up the appstream test. appstreamcli is missing.")
     endif()
+    cmake_policy(POP)
 endfunction()
 
 if(NOT KDE_SKIP_TEST_SETTINGS)
