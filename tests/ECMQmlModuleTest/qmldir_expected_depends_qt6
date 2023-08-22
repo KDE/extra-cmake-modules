@@ -1,0 +1,10 @@
+module Test
+linktarget TestModule
+optional plugin TestModule
+classname TestPlugin
+typeinfo TestModule.qmltypes
+depends OtherTest
+prefer :/qt/qml/Test/
+QmlModule 254.0 QmlModule.qml
+QmlModule2 2.0 QmlModule2.qml
+
