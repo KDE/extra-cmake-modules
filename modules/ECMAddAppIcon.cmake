@@ -83,8 +83,6 @@ Mac OS X notes
 Since 1.7.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
-
 function(ecm_add_app_icon appsources_or_target)
     set(options)
     set(oneValueArgs OUTFILE_BASENAME)

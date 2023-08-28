@@ -178,7 +178,6 @@ Example usage:
 Since 5.62.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
 include(FeatureSummary)
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 

@@ -82,7 +82,6 @@ it uses ``share/locale``.
 Since pre-1.0.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 
 
