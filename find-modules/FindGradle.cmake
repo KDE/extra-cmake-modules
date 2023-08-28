@@ -28,7 +28,6 @@ Since 5.76.0.
 #]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
-include(CMakeParseArguments)
 include(FindPackageHandleStandardArgs)
 
 find_package(Qt${QT_MAJOR_VERSION}Core REQUIRED)

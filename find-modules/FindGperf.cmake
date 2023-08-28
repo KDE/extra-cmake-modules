@@ -99,9 +99,6 @@ set_package_properties(Gperf PROPERTIES
     DESCRIPTION "Perfect hash function generator"
 )
 
-
-include(CMakeParseArguments)
-
 function(ecm_gperf_generate input_file output_file _target_or_sources_var)
     # Parse arguments
     set(oneValueArgs GENERATION_FLAGS)

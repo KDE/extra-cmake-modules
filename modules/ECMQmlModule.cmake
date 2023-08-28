@@ -118,8 +118,6 @@ Since 5.91.0
 
 #]========================================================================]
 
-include(CMakeParseArguments)
-
 set(_ECM_QMLMODULE_STATIC_QMLONLY_H   "${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule.h.in")
 set(_ECM_QMLMODULE_STATIC_QMLONLY_CPP "${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule.cpp.in")
 

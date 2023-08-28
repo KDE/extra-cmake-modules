@@ -56,8 +56,6 @@ Example usage:
 Since 5.73.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
-
 function(ecm_generate_dbus_service_file)
     set(options)
     set(oneValueArgs EXECUTABLE NAME SYSTEMD_SERVICE DESTINATION RENAME)

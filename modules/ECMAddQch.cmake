@@ -256,7 +256,6 @@ Example usage:
 Since 5.36.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
 include(ECMQueryQt)
 

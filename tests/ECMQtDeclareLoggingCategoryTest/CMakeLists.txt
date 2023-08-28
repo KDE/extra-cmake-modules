@@ -6,7 +6,6 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_DIR})
 
 include(QtVersionOption)
 include(ECMQtDeclareLoggingCategory)
-include(CMakeParseArguments)
 
 ecm_qt_declare_logging_category(
     sources

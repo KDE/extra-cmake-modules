@@ -61,7 +61,6 @@ be given; this will be used for both the target and test names (and, as with
 Since pre-1.0.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
 include(ECMMarkAsTest)
 include(ECMMarkNonGuiExecutable)
 

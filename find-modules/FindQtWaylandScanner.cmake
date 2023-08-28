@@ -110,9 +110,6 @@ set_package_properties(QtWaylandScanner PROPERTIES
     DESCRIPTION "Executable that converts XML protocol files to C++ code"
 )
 
-
-include(CMakeParseArguments)
-
 function(ecm_add_qtwayland_client_protocol target_or_sources_var)
     # Parse arguments
     set(oneValueArgs PROTOCOL BASENAME PREFIX)

@@ -52,8 +52,6 @@ library).
 Since pre-1.0.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
-
 function(ecm_use_find_modules)
    set(_options NO_OVERRIDE )
    set(_oneValueArgs DIR )
