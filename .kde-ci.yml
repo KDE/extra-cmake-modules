@@ -2,4 +2,5 @@
 # SPDX-License-Identifier: CC0-1.0
 
 Options:
+  per-test-timeout: 120
   require-passing-tests-on: [ 'Linux', 'FreeBSD', 'Windows' ]
