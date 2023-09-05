@@ -64,25 +64,23 @@ function(ecm_add_qml_module ARG_TARGET)
     endif()
 
     if (NOT TARGET ${ARG_TARGET})
-        set(_use_plugin_target TRUE)
         list(APPEND _arguments PLUGIN_TARGET ${ARG_TARGET})
         if (BUILD_SHARED_LIBS)
             list(APPEND _arguments SHARED)
         else()
             list(APPEND _arguments STATIC)
         endif()
-    else()
-        set(_use_plugin_target FALSE)
     endif()
 
     list(APPEND _arguments ${ARG_UNPARSED_ARGUMENTS})
 
     qt6_add_qml_module(${_arguments})
 
-    if (NOT WIN32 AND ${_use_plugin_target})
-        # KDECMakeSettings sets the prefix to empty but Qt will not load a QML
-        # plugin without prefix. So we need to force it here.
-        set_target_properties(${ARG_TARGET} PROPERTIES PREFIX "lib")
+    # KDECMakeSettings sets the prefix of MODULE targets to empty but Qt will
+    # not load a QML plugin without prefix. So we need to force it here.
+    qt6_query_qml_module(${ARG_TARGET} PLUGIN_TARGET _plugin_target)
+    if (NOT WIN32 AND TARGET ${_plugin_target})
+        set_target_properties(${_plugin_target} PROPERTIES PREFIX "lib")
     endif()
 endfunction()
 
