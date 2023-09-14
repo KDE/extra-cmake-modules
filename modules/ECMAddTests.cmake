@@ -11,11 +11,14 @@ Convenience functions for adding tests.
 
 ::
 
-  ecm_add_tests(<sources> LINK_LIBRARIES <library> [<library> [...]]
-                          [NAME_PREFIX <prefix>]
-                          [GUI]
-                          [TARGET_NAMES_VAR <target_names_var>]
-                          [TEST_NAMES_VAR <test_names_var>])
+  ecm_add_tests(<sources>
+      LINK_LIBRARIES <library> [<library> [...]]
+      [NAME_PREFIX <prefix>]
+      [GUI]
+      [TARGET_NAMES_VAR <target_names_var>]
+      [TEST_NAMES_VAR <test_names_var>]
+      [WORKING_DIRECTORY <dir>] #  Since 5.111
+  )
 
 A convenience function for adding multiple tests, each consisting of a
 single source file. For each file in <sources>, an executable target will be
@@ -45,18 +48,33 @@ whole, for example, using ``set_target_properties()`` or  ``set_tests_properties
 The generated target executables will have the effects of ``ecm_mark_as_test()``
 (from the :module:`ECMMarkAsTest` module) applied to it.
 
+``WORKING_DIRECTORY`` sets the test property `WORKING_DIRECTORY
+<https://cmake.org/cmake/help/latest/prop_test/WORKING_DIRECTORY.html>`_
+in which to execute the test. By default the test will be run in
+``${CMAKE_CURRENT_BINARY_DIR}``. The working directory can be specified using
+generator expressions. Since 5.111.
+
 ::
 
-  ecm_add_test(<sources> LINK_LIBRARIES <library> [<library> [...]]
-                         [TEST_NAME <name>]
-                         [NAME_PREFIX <prefix>]
-                         [GUI])
+  ecm_add_test(
+      <sources>
+      LINK_LIBRARIES <library> [<library> [...]]
+      [TEST_NAME <name>]
+      [NAME_PREFIX <prefix>]
+      [GUI]
+      [WORKING_DIRECTORY <dir>] #  Since 5.111
+  )
 
 This is a single-test form of ``ecm_add_tests`` that allows multiple source files
 to be used for a single test. If using multiple source files, ``TEST_NAME`` must
 be given; this will be used for both the target and test names (and, as with
 ``ecm_add_tests()``, the ``NAME_PREFIX`` argument will be prepended to the test name).
 
+``WORKING_DIRECTORY`` sets the test property `WORKING_DIRECTORY
+<https://cmake.org/cmake/help/latest/prop_test/WORKING_DIRECTORY.html>`_
+in which to execute the test. By default the test will be run in
+``${CMAKE_CURRENT_BINARY_DIR}``. The working directory can be specified using
+generator expressions. Since 5.111.
 
 Since pre-1.0.0.
 #]=======================================================================]
@@ -68,7 +86,7 @@ function(ecm_add_test)
   set(options GUI)
   # TARGET_NAME_VAR and TEST_NAME_VAR are undocumented args used by
   # ecm_add_tests
-  set(oneValueArgs TEST_NAME NAME_PREFIX TARGET_NAME_VAR TEST_NAME_VAR)
+  set(oneValueArgs TEST_NAME NAME_PREFIX TARGET_NAME_VAR TEST_NAME_VAR WORKING_DIRECTORY)
   set(multiValueArgs LINK_LIBRARIES)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
   set(_sources ${ARG_UNPARSED_ARGUMENTS})
@@ -92,7 +110,11 @@ function(ecm_add_test)
   if(NOT ARG_GUI)
     ecm_mark_nongui_executable(${_targetname})
   endif()
-  add_test(NAME ${_testname} COMMAND ${_targetname})
+  set(test_args)
+  if(DEFINED ARG_WORKING_DIRECTORY)
+      list(APPEND test_args WORKING_DIRECTORY ${ARG_WORKING_DIRECTORY})
+  endif()
+  add_test(NAME ${_testname} COMMAND ${_targetname} ${test_args})
   target_link_libraries(${_targetname} ${ARG_LINK_LIBRARIES})
   target_compile_definitions(${_targetname} PRIVATE -DQT_FORCE_ASSERTS)
   ecm_mark_as_test(${_targetname})
@@ -116,13 +138,17 @@ endfunction()
 
 function(ecm_add_tests)
   set(options GUI)
-  set(oneValueArgs NAME_PREFIX TARGET_NAMES_VAR TEST_NAMES_VAR)
+  set(oneValueArgs NAME_PREFIX TARGET_NAMES_VAR TEST_NAMES_VAR WORKING_DIRECTORY)
   set(multiValueArgs LINK_LIBRARIES)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
   if(ARG_GUI)
     set(_exe_type GUI)
   else()
     set(_exe_type "")
+  endif()
+  set(test_args)
+  if(DEFINED ARG_WORKING_DIRECTORY)
+      list(APPEND test_args WORKING_DIRECTORY ${ARG_WORKING_DIRECTORY})
   endif()
   set(test_names)
   set(target_names)
@@ -133,6 +159,7 @@ function(ecm_add_tests)
       TARGET_NAME_VAR target_name
       TEST_NAME_VAR test_name
       ${_exe_type}
+      ${test_args}
     )
     list(APPEND _test_names "${test_name}")
     list(APPEND _target_names "${target_name}")

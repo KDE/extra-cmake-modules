@@ -15,6 +15,7 @@ target_link_libraries(testhelper PUBLIC Qt${QT_MAJOR_VERSION}::Core)
 enable_testing()
 
 include(ECMAddTests)
+include(../../test_helpers.cmake)
 
 # clean up to avoid false-positives from check_files.cmake
 file(REMOVE
@@ -24,6 +25,9 @@ file(REMOVE
     "${CMAKE_CURRENT_BINARY_DIR}/test4.txt"
     "${CMAKE_CURRENT_BINARY_DIR}/test5.txt"
     "${CMAKE_CURRENT_BINARY_DIR}/test6.txt"
+    )
+file(REMOVE_RECURSE
+    "${CMAKE_CURRENT_BINARY_DIR}/test7_dir"
     )
 
 ecm_add_test(test1.cpp
@@ -125,3 +129,21 @@ if (_is_bundle)
 endif()
 
 
+set(exp_workingdir "${CMAKE_CURRENT_BINARY_DIR}/test7_dir")
+file(MAKE_DIRECTORY "${exp_workingdir}") # cmake does not create that for us, will complain otherwise
+ecm_add_test(test7.cpp
+    LINK_LIBRARIES testhelper
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test7_dir"
+    )
+get_property(_dummy TARGET test7 PROPERTY TYPE)
+get_property(_dummy TEST test7 PROPERTY TIMEOUT)
+get_property(_working_dir TEST test7 PROPERTY WORKING_DIRECTORY)
+assert_vars_setequal(_working_dir exp_workingdir)
+get_property(_is_win32 TARGET test7 PROPERTY WIN32_EXECUTABLE)
+if (_is_win32)
+    message(FATAL_ERROR "test7 is a WIN32 executable when it should not be")
+endif()
+get_property(_is_bundle TARGET test7 PROPERTY MACOSX_BUNDLE)
+if (_is_bundle)
+    message(FATAL_ERROR "test7 is an OS/X bundle when it should not be")
+endif()
