@@ -163,7 +163,7 @@ macro(_ecm_qmlmodule_uri_to_path ARG_OUTPUT ARG_PATH ARG_VERSION)
 
     # If the major version of the module is >2.0, Qt expects a ".MajorVersion" suffix on the directory
     # However, we only need to do this in Qt5
-    if (QT_MAJOR_VERSION STREQUAL "5" AND ARG_VERSION VERSION_GREATER_EQUAL 2.0)
+    if ("${QT_MAJOR_VERSION}" STREQUAL "5" AND "${ARG_VERSION}" VERSION_GREATER_EQUAL 2.0)
         string(REGEX MATCH "^([0-9]+)" _version_major ${ARG_VERSION})
         set("${ARG_OUTPUT}" "${_output}.${_version_major}")
     else()
