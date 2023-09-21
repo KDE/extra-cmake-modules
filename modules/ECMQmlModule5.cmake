@@ -141,14 +141,15 @@ function(ecm_add_qml_module ARG_TARGET)
         add_library(${ARG_TARGET})
     endif()
 
-    if (ARG_VERSION)
-        set_target_properties(${ARG_TARGET} PROPERTIES ${_ECM_QMLMODULE_PROPERTY_VERSION} "${ARG_VERSION}")
+    if (NOT ARG_VERSION)
+        set(ARG_VERSION "1.0")
     endif()
 
     set_target_properties(${ARG_TARGET} PROPERTIES
         ${_ECM_QMLMODULE_PROPERTY_URI} "${ARG_URI}"
         ${_ECM_QMLMODULE_PROPERTY_FILES} ""
         ${_ECM_QMLMODULE_PROPERTY_QMLONLY} "${ARG_NO_PLUGIN}"
+        ${_ECM_QMLMODULE_PROPERTY_VERSION} "${ARG_VERSION}"
         ${_ECM_QMLMODULE_PROPERTY_CLASSNAME} "${ARG_CLASSNAME}"
         ${_ECM_QMLMODULE_PROPERTY_DEPENDS} ""
     )
@@ -243,18 +244,6 @@ function(ecm_finalize_qml_module ARG_TARGET)
 
     get_target_property(_qml_uri ${ARG_TARGET} ${_ECM_QMLMODULE_PROPERTY_URI})
     get_target_property(_version ${ARG_TARGET} ${_ECM_QMLMODULE_PROPERTY_VERSION})
-    # Get the latest version of the individual QML sources in case we do not have specified one for the module
-    if (NOT _version)
-        get_target_property(qml_files ${ARG_TARGET} ${_ECM_QMLMODULE_PROPERTY_FILES})
-        set(_version "1.0")
-        foreach(item ${qml_files})
-            get_property(item_version SOURCE ${item} PROPERTY ${_ECM_QMLMODULE_PROPERTY_VERSION})
-            if (item_version AND "${item_version}" VERSION_GREATER "${_version}")
-                set(_version ${item_version})
-            endif()
-        endforeach()
-    endif()
-    set_target_properties(${ARG_TARGET} PROPERTIES ${_ECM_QMLMODULE_PROPERTY_VERSION} "${_version}")
 
     _ecm_qmlmodule_generate_qmldir(${ARG_TARGET})
     _ecm_qmlmodule_uri_to_path(_plugin_path "${_qml_uri}" "${_version}")
