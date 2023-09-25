@@ -55,7 +55,8 @@ set(PRE_COMMIT_HOOK_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/pre-com
 set(CLANG_FORMAT_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/clang-format.sh")
 set(JSON_SCHEMA_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/json-schema.py")
 set(JSON_SCHEMA_IN "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/combined.schema.json.in")
-set(GIT_HOOKS_DIR "${CMAKE_SOURCE_DIR}/.git/hooks")
+set(GIT_DIR "${CMAKE_SOURCE_DIR}/.git")
+set(GIT_HOOKS_DIR "${GIT_DIR}/hooks")
 set(JSON_SCHEMA_OUT "${GIT_HOOKS_DIR}/scripts/combined.schema.json")
 
 function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
@@ -74,7 +75,7 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
 
     find_package(Git QUIET)
 
-    if (NOT IS_DIRECTORY ${GIT_HOOKS_DIR} # In case of tarballs there is no .git directory
+    if (NOT IS_DIRECTORY ${GIT_DIR} # In case of tarballs there is no .git directory
         OR NOT (UNIX OR WIN32)
         OR NOT GIT_FOUND
         )
@@ -112,6 +113,7 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
 
     list(FIND ARG_CHECKS "JSON_SCHEMA" _index)
     if (${_index} GREATER -1)
+      set(_write_hook TRUE)
       foreach(path ${CMAKE_PREFIX_PATH};${CMAKE_INCLUDE_PATH})
           file(GLOB files "${path}/${KDE_INSTALL_DATADIR}/kf6/jsonschema/*.json") 
           set(SCHEMA_FILES ${SCHEMA_FILES};${files})
@@ -138,8 +140,8 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
         configure_file(${PRE_COMMIT_HOOK_UNIX} "${_hook_file}")
     else()
         if(NOT _write_hook)
-            return()
             message(WARNING "No clang-format executable was found, skipping the formatting pre-commit hook")
+            return()
         endif()
         # Doesn't exist? write away
         if(NOT EXISTS ${_hook_file})
