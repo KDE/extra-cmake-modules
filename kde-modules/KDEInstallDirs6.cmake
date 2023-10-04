@@ -292,7 +292,7 @@ set(KF_INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}
                                     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
 )
 
-# on the Mac support an extra install directory for application bundles
+# on macOS support an extra install directory for application bundles
 if(APPLE)
     set(KF_INSTALL_TARGETS_DEFAULT_ARGS  ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
                                           BUNDLE DESTINATION "${KDE_INSTALL_BUNDLEDIR}" )

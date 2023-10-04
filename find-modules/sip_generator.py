@@ -521,7 +521,7 @@ class SipGenerator(object):
 
     def _fn_get_decorators(self, function):
         """
-        The parser does not provide direct access to the complete keywords (explicit, const, static, etc) of a function
+        The parser does not provide direct access to the complete keywords (explicit, const, static, etc.) of a function
         in the displayname. It would be nice to get these from the AST, but I cannot find where they are hiding.
 
         Now, we could resort to using the original source. That does not bode well if you have macros (QOBJECT,
@@ -731,7 +731,7 @@ class SipGenerator(object):
             extract[-1] = extract[-1][:extent.end.column - 1]
         #
         # Return a single line of text.
-        # Replace all kinds of newline variants (DOS, UNIX, MAC style) by single spaces
+        # Replace all kinds of newline variants (DOS, UNIX, classic Mac OS ("\r") style) by single spaces
         #
         return b''.join(extract).decode('utf-8').replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
 

@@ -135,8 +135,8 @@ if(NOT KDE_SKIP_RPATH_SETTINGS)
    endif()
 
    if (UNIX)
-      # for mac os: add install name dir in addition
-      # check: is the rpath stuff below really required on mac os? at least it seems so to use a stock qt from qt.io
+      # for macOS: add install name dir in addition
+      # check: is the rpath stuff below really required on macOS? at least it seems so to use a stock qt from qt.io
       if (APPLE)
          set(CMAKE_INSTALL_NAME_DIR ${_abs_LIB_INSTALL_DIR})
       endif ()

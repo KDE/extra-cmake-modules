@@ -29,22 +29,22 @@ to the variable named ``<sources_var_name>`` or, if the first argument
 is a target (since 5.83), to the ``SOURCES`` property of ``<target>``.
 Any target must be created with add_executable() and not be an alias.
 
-Other icon files are ignored but on Mac SVG files can be supported and
+Other icon files are ignored but on macOS SVG files can be supported and
 it is thus possible to mix those with png files in a single macro call.
 
-The platforms currently supported are Windows and Mac OS X, on all others
+The platforms currently supported are Windows and macOS, on all others
 the call has no effect and is ignored.
 
 ``<size>`` is a numeric pixel size (typically 16, 32, 48, 64, 128 or 256).
 ``<other_text>`` can be any other text. See the platform notes below for any
 recommendations about icon sizes.
 
-``SIDEBAR_ICONS`` can be used to add Mac OS X sidebar
+``SIDEBAR_ICONS`` can be used to add macOS sidebar
 icons to the generated iconset. They are used when a folder monitored by the
 application is dragged into Finder's sidebar. Since 5.49.
 
 ``OUTFILE_BASENAME`` will be used as the basename for the icon file. If
-you specify it, the icon file will be called ``<OUTFILE_BASENAME>.icns`` on Mac OS X
+you specify it, the icon file will be called ``<OUTFILE_BASENAME>.icns`` on macOS
 and ``<OUTFILE_BASENAME>.ico`` on Windows. If you don't specify it, it defaults
 to ``<sources_var_name>.<ext>``. Since 5.49.
 
@@ -56,7 +56,7 @@ Windows notes
    * Icotool (see :find-module:`FindIcoTool`) is required.
    * Supported sizes: 16, 24, 32, 48, 64, 128, 256, 512 and 1024.
 
-Mac OS X notes
+macOS notes
    * The executable target must have the ``MACOSX_BUNDLE`` property set.
    * Icons are added to the bundle.
    * If the ksvg2icns tool from KIconThemes is available, .svg and .svgz
@@ -249,7 +249,7 @@ function(ecm_add_app_icon appsources_or_target)
             message(WARNING "Unable to find the icotool utilities or icons in matching sizes - application will not have an application icon!")
         endif()
     elseif (APPLE AND (mac_icons OR mac_sidebar_icons))
-        # first generate .iconset directory structure, then convert to .icns format using the Mac OS X "iconutil" utility,
+        # first generate .iconset directory structure, then convert to .icns format using the macOS "iconutil" utility,
         # to create retina compatible icon, you need png source files in pixel resolution 16x16, 32x32, 64x64, 128x128,
         # 256x256, 512x512, 1024x1024
         find_program(ICONUTIL_EXECUTABLE NAMES iconutil)

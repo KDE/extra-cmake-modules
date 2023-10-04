@@ -366,7 +366,7 @@ set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDI
                                       INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR_KF5}"
 )
 
-# on the Mac support an extra install directory for application bundles
+# on macOS support an extra install directory for application bundles
 if(APPLE)
     set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}
                                           BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
