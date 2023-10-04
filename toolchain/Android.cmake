@@ -234,7 +234,7 @@ if(ANDROID_NDK_MAJOR VERSION_LESS 23)
 endif()
 
 # these aren't set yet at this point by the Android toolchain, but without
-# those the find_package() call in ECMAndroidDeployQt will fail
+# those the find_package() call in ECMAndroidDeployQt5 will fail
 set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
 set(CMAKE_FIND_LIBRARY_SUFFIXES "_${CMAKE_ANDROID_ARCH_ABI}.so" ".so" ".a")
 
@@ -284,7 +284,7 @@ set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/../cmake" CACHE STRING "")
 if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk")
     get_filename_component(_CMAKE_ANDROID_DIR "${CMAKE_TOOLCHAIN_FILE}" PATH)
     list(LENGTH QTANDROID_EXPORTED_TARGET targetsCount)
-    include(${_CMAKE_ANDROID_DIR}/ECMAndroidDeployQt.cmake)
+    include(${_CMAKE_ANDROID_DIR}/ECMAndroidDeployQt5.cmake)
 
     math(EXPR last "${targetsCount}-1")
     foreach(idx RANGE 0 ${last})
@@ -297,7 +297,7 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk")
             set(APK_DIR "${_qt5Core_install_prefix}/src/android/templates/")
         endif()
 
-        ecm_androiddeployqt("${exportedTarget}" "${ECM_ADDITIONAL_FIND_ROOT_PATH}")
+        ecm_androiddeployqt5("${exportedTarget}" "${ECM_ADDITIONAL_FIND_ROOT_PATH}")
         set_target_properties(create-apk-${exportedTarget} PROPERTIES ANDROID_APK_DIR "${APK_DIR}")
     endforeach()
 else()

@@ -32,7 +32,7 @@ function(_ecm_deferred_androiddeployqt)
 endfunction()
 cmake_language(DEFER DIRECTORY "${CMAKE_SOURCE_DIR}" CALL _ecm_deferred_androiddeployqt)
 
-function(ecm_androiddeployqt QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_PATH)
+function(ecm_androiddeployqt5 QTANDROID_EXPORTED_TARGET ECM_ADDITIONAL_FIND_ROOT_PATH)
     set(EXPORT_DIR "${CMAKE_BINARY_DIR}/${QTANDROID_EXPORTED_TARGET}_build_apk/")
     if (Qt5Core_VERSION VERSION_LESS 5.14.0)
         set(EXECUTABLE_DESTINATION_PATH "${EXPORT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${QTANDROID_EXPORTED_TARGET}.so")
