@@ -104,6 +104,18 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
             set(HAS_CLANG_FORMAT_COMMAND_INCLUDED FALSE)
         endif()
         if (${_index} GREATER -1)
+            # get version of clang-format
+            execute_process(
+                COMMAND "${KDE_CLANG_FORMAT_EXECUTABLE}" --version
+                OUTPUT_VARIABLE _clang_format_version_raw
+                ERROR_VARIABLE _clang_format_version_raw
+            )
+            if (_clang_format_version_raw MATCHES "^clang-format version ([0-9]+)(\\.[0-9]+)*")
+                set(KDE_CLANG_FORMAT_MAJOR_VERSION "${CMAKE_MATCH_1}")
+            endif()
+            unset(_clang_format_version_raw)
+            message(WARNING "Found clang-format version ${KDE_CLANG_FORMAT_MAJOR_VERSION}")
+
             set(CLANG_FORMAT_SCRIPT "\"$(git rev-parse --git-common-dir)\"/hooks/scripts/clang-format.sh")
             configure_file(${CLANG_FORMAT_UNIX} "${GIT_HOOKS_DIR}/scripts/clang-format.sh" @ONLY)
             set(PRE_COMMIT_SCRIPTS "\"$(git rev-parse --git-common-dir)\"/hooks/scripts/clang-format.sh\n${PRE_COMMIT_SCRIPTS}")
