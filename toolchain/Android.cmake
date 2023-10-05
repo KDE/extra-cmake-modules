@@ -233,6 +233,15 @@ if(ANDROID_NDK_MAJOR VERSION_LESS 23)
       "${ANDROID_SYSROOT_PREFIX}/lib/${CMAKE_LIBRARY_ARCHITECTURE}/${ANDROID_PLATFORM_LEVEL}")
 endif()
 
+# Qt6 still expects ABI suffixes but only applies them in its own qt_add_[executable|library] macros
+# as we typically don't use those we need another way to get those
+if (DEFINED __qt_chainload_toolchain_file) # indicator for Qt6, see above
+    set(CMAKE_MODULE_LIBRARY_SUFFIX_C "_${CMAKE_ANDROID_ARCH_ABI}.so")
+    set(CMAKE_MODULE_LIBRARY_SUFFIX_CXX "_${CMAKE_ANDROID_ARCH_ABI}.so")
+    set(CMAKE_SHARED_LIBRARY_SUFFIX_C "_${CMAKE_ANDROID_ARCH_ABI}.so")
+    set(CMAKE_SHARED_LIBRARY_SUFFIX_CXX "_${CMAKE_ANDROID_ARCH_ABI}.so")
+endif()
+
 # these aren't set yet at this point by the Android toolchain, but without
 # those the find_package() call in ECMAndroidDeployQt5 will fail
 set(CMAKE_FIND_LIBRARY_PREFIXES "lib")
