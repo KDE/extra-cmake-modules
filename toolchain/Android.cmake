@@ -56,7 +56,7 @@ Additional options are specified as cache variables (eg: on the command line):
     The build tools version to use.
     Default: newest installed version (e.g. ``30.0.2``).
 ``ANDROID_EXTRA_LIBS``
-    The ";"-separated list of full paths to libs to include in resulting APK.
+    The ";"-separated list of full paths to libs to include in resulting APK (Qt 5 only).
 
 For integrating other libraries which are not part of the Android toolchain,
 like Qt5, and installed to a separate prefix on the host system, the install
@@ -76,8 +76,8 @@ system, make sure to pass ``CMAKE_FIND_ROOT_PATH_BOTH`` or
 ``NO_CMAKE_FIND_ROOT_PATH`` as argument in the call. See the
 ``find_package()`` documentation for more details.
 
-Deploying Qt Applications
-=========================
+Deploying Qt 5 Applications
+===========================
 
 After building the application, you will need to generate an APK that can be
 deployed to an Android device. This module integrates androiddeployqt support
@@ -285,12 +285,12 @@ variable_watch(CMAKE_CXX_COMPILE_OPTIONS_PIE resetPieOption)
 
 set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/../cmake" CACHE STRING "")
 
-######### generation
+######### generation (Qt 5 only)
 
 # Need to ensure we only get in here once, as this file is included twice:
 # from CMakeDetermineSystem.cmake and from CMakeSystem.cmake generated within the
 # build directory.
-if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk")
+if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk" AND NOT __qt_chainload_toolchain_file)
     get_filename_component(_CMAKE_ANDROID_DIR "${CMAKE_TOOLCHAIN_FILE}" PATH)
     list(LENGTH QTANDROID_EXPORTED_TARGET targetsCount)
     include(${_CMAKE_ANDROID_DIR}/ECMAndroidDeployQt5.cmake)
@@ -309,6 +309,6 @@ if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk")
         ecm_androiddeployqt5("${exportedTarget}" "${ECM_ADDITIONAL_FIND_ROOT_PATH}")
         set_target_properties(create-apk-${exportedTarget} PROPERTIES ANDROID_APK_DIR "${APK_DIR}")
     endforeach()
-else()
+elseif (NOT __qt_chainload_toolchain_file)
     message(STATUS "You can export a target by specifying -DQTANDROID_EXPORTED_TARGET=<targetname> and -DANDROID_APK_DIR=<paths>")
 endif()
