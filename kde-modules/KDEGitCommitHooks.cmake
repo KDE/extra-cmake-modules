@@ -110,7 +110,7 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
                 OUTPUT_VARIABLE _clang_format_version_raw
                 ERROR_VARIABLE _clang_format_version_raw
             )
-            if (_clang_format_version_raw MATCHES "^clang-format version ([0-9]+)(\\.[0-9]+)*")
+            if (_clang_format_version_raw MATCHES "clang-format version ([0-9]+)(\\.[0-9]+)*")
                 set(KDE_CLANG_FORMAT_MAJOR_VERSION "${CMAKE_MATCH_1}")
             endif()
             unset(_clang_format_version_raw)
