@@ -83,7 +83,7 @@ Since pre-1.0.0.
 #]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
-
+option(KF_SKIP_PO_PROCESSING "Skip processing of po files" OFF)
 
 # Copied from FindGettext.cmake
 function(_ecm_qm_get_unique_target_name _name _unique_name)
@@ -129,6 +129,9 @@ endfunction()
 
 
 function(ecm_process_po_files_as_qm lang)
+    if (KF_SKIP_PO_PROCESSING)
+      return()
+    endif()
     # Parse arguments
     set(options ALL)
     set(oneValueArgs INSTALL_DESTINATION)
