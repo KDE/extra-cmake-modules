@@ -690,13 +690,6 @@ if (KDE_INTERNAL_QT_MODERNCODE_DEFINITIONS_LEVEL VERSION_GREATER_EQUAL "5.85.0")
         -DQT_NO_KEYWORDS
         -DQT_NO_FOREACH
     )
-    if (NOT WIN32)
-        # Strict iterators can't be used on Windows, they lead to a link error
-        # when application code iterates over a QVector<QPoint> for instance, unless
-        # Qt itself was also built with strict iterators.
-        # See example at https://bugreports.qt.io/browse/AUTOSUITE-946
-        add_definitions(-DQT_STRICT_ITERATORS)
-    endif()
 endif()
 
 _kde_set_default_skip_variable_by_min_ecm(KDE_SKIP_PEDANTIC_WARNINGS_SETTINGS "5.85.0")
