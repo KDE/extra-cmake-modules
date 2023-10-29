@@ -342,10 +342,12 @@ if (WIN32)
     # See http://msdn.microsoft.com/en-us/library/windows/desktop/aa383745%28v=vs.85%29.aspx
     _kde_add_platform_definitions(-DWIN32_LEAN_AND_MEAN)
 
-    # Target Windows Vista
+    # Target Windows 10
     # This enables various bits of new API
     # See http://msdn.microsoft.com/en-us/library/windows/desktop/aa383745%28v=vs.85%29.aspx
-    _kde_add_platform_definitions(-D_WIN32_WINNT=0x0600 -DWINVER=0x0600 -D_WIN32_IE=0x0600)
+    # Windows 10 is the default by Qt6 hence we do not need the next line, but we keep it disabled
+    # to not to start from scratch in case we want to target a different version in the future
+    # _kde_add_platform_definitions(-D_WIN32_WINNT=0x0A00 -DWINVER=0x0A00 -D_WIN32_IE=0x0A00)
 
     # Use the Unicode versions of Windows API by default
     # See http://msdn.microsoft.com/en-us/library/windows/desktop/dd317766%28v=vs.85%29.aspx
