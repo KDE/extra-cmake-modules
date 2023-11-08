@@ -342,7 +342,7 @@ if (WIN32)
     # See http://msdn.microsoft.com/en-us/library/windows/desktop/aa383745%28v=vs.85%29.aspx
     _kde_add_platform_definitions(-DWIN32_LEAN_AND_MEAN)
 
-    if (KDE_INTERNAL_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.240.0)
+    if (KDE_INTERNAL_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.240.0 OR QT_MAJOR_VERSION STREQUAL "6")
         # Target Windows 10
         # This enables various bits of new API
         # See http://msdn.microsoft.com/en-us/library/windows/desktop/aa383745%28v=vs.85%29.aspx
