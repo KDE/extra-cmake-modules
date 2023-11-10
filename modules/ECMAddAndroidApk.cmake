@@ -128,7 +128,7 @@ function (ecm_add_android_apk TARGET)
             -DOUTPUT_FILE="${CMAKE_BINARY_DIR}/${TARGET}-deployment.json"
             "-DTARGET=$<TARGET_FILE:${TARGET}>"
             "-DOUTPUT_DIR=$<TARGET_FILE_DIR:${TARGET}>"
-            "-DAPK_OUTPUT_DIR=${CMAKE_INSTALL_PREFIX}"
+            "-DEXPORT_DIR=${CMAKE_INSTALL_PREFIX}"
             "-DECM_ADDITIONAL_FIND_ROOT_PATH=\"${ECM_ADDITIONAL_FIND_ROOT_PATH}\""
             -P ${_ECM_TOOLCHAIN_DIR}/specifydependencies.cmake
         COMMAND Qt6::androiddeployqt
