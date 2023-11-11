@@ -295,7 +295,7 @@ set(KF_INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}
 # on the Mac support an extra install directory for application bundles
 if(APPLE)
     set(KF_INSTALL_TARGETS_DEFAULT_ARGS  ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
-                                          BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
+                                          BUNDLE DESTINATION "${KDE_INSTALL_BUNDLEDIR}" )
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/KDESetupPrefixScript.cmake)
