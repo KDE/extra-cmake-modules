@@ -33,6 +33,15 @@ will build all APKs defined in a project.
 
 When building for another platform than Android, this function does nothing.
 
+The following variables impact the behavior:
+``ECM_ADDITIONAL_FIND_ROOT_PATH``
+    See documentation in the Android toolchain file.
+
+``ECM_APK_STAGING_ROOT_PATH``
+    For use with Craft's image directory. If set this is used as the source
+    for all content of the APK rather than the search paths used for building.
+    This allows to separate e.g. development files from what ends up in the APK.
+
 Since 6.0.0
 #]=======================================================================]
 
@@ -63,27 +72,36 @@ function (ecm_add_android_apk TARGET)
     if (EXISTS ${CMAKE_BINARY_DIR}/lib)
         set(QML_IMPORT_PATHS ${CMAKE_BINARY_DIR}/lib)
     endif()
-    foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
-        # qmlimportscanner chokes on symlinks, so we need to resolve those first
-        get_filename_component(qml_path "${prefix}/lib/qml" REALPATH)
-        if(EXISTS ${qml_path})
-            if (QML_IMPORT_PATHS)
-                set(QML_IMPORT_PATHS "${QML_IMPORT_PATHS},${qml_path}")
-            else()
-                set(QML_IMPORT_PATHS "${qml_path}")
+    if (ECM_APK_STAGING_ROOT_PATH)
+        set(QML_IMPORT_PATHS "${ECM_APK_STAGING_ROOT_PATH}/lib/qml")
+    else()
+        foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
+            # qmlimportscanner chokes on symlinks, so we need to resolve those first
+            get_filename_component(qml_path "${prefix}/lib/qml" REALPATH)
+            if(EXISTS ${qml_path})
+                if (QML_IMPORT_PATHS)
+                    set(QML_IMPORT_PATHS "${QML_IMPORT_PATHS},${qml_path}")
+                else()
+                    set(QML_IMPORT_PATHS "${qml_path}")
+                endif()
             endif()
-        endif()
-    endforeach()
+        endforeach()
+    endif()
     if (QML_IMPORT_PATHS)
         set(DEFINE_QML_IMPORT_PATHS "\"qml-import-paths\": \"${QML_IMPORT_PATHS}\",")
     endif()
 
     set(EXTRA_PREFIX_DIRS "\"${CMAKE_BINARY_DIR}\"")
     set(EXTRA_LIB_DIRS "\"${CMAKE_BINARY_DIR}/lib\"")
-    foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
-        set(EXTRA_PREFIX_DIRS "${EXTRA_PREFIX_DIRS}, \"${prefix}\"")
-        set(EXTRA_LIB_DIRS "${EXTRA_LIB_DIRS}, \"${prefix}/lib\"")
-    endforeach()
+    if (ECM_APK_STAGING_ROOT_PATH)
+        set(EXTRA_PREFIX_DIRS "${EXTRA_PREFIX_DIRS}, \"${ECM_APK_STAGING_ROOT_PATH}\"")
+        set(EXTRA_LIB_DIRS "${EXTRA_LIB_DIRS}, \"${ECM_APK_STAGING_ROOT_PATH}/lib\"")
+    else()
+        foreach(prefix ${ECM_ADDITIONAL_FIND_ROOT_PATH})
+            set(EXTRA_PREFIX_DIRS "${EXTRA_PREFIX_DIRS}, \"${prefix}\"")
+            set(EXTRA_LIB_DIRS "${EXTRA_LIB_DIRS}, \"${prefix}/lib\"")
+        endforeach()
+    endif()
 
     if (ARGS_ANDROID_DIR AND EXISTS ${ARGS_ANDROID_DIR}/AndroidManifest.xml)
         set(ANDROID_APK_DIR ${ARGS_ANDROID_DIR})
@@ -115,6 +133,10 @@ function (ecm_add_android_apk TARGET)
         set(arguments "\\$(ARGS)")
     endif()
 
+    if (NOT ECM_APK_STAGING_ROOT_PATH)
+        set(ECM_APK_STAGING_ROOT_PATH "${CMAKE_INSTALL_PREFIX}")
+    endif()
+
     file(WRITE ${CMAKE_BINARY_DIR}/ranlib "${CMAKE_RANLIB}")
     set(CREATEAPK_TARGET_NAME "create-apk-${TARGET}")
     add_custom_target(${CREATEAPK_TARGET_NAME}
@@ -128,7 +150,7 @@ function (ecm_add_android_apk TARGET)
             -DOUTPUT_FILE="${CMAKE_BINARY_DIR}/${TARGET}-deployment.json"
             "-DTARGET=$<TARGET_FILE:${TARGET}>"
             "-DOUTPUT_DIR=$<TARGET_FILE_DIR:${TARGET}>"
-            "-DEXPORT_DIR=${CMAKE_INSTALL_PREFIX}"
+            "-DEXPORT_DIR=${ECM_APK_STAGING_ROOT_PATH}"
             "-DECM_ADDITIONAL_FIND_ROOT_PATH=\"${ECM_ADDITIONAL_FIND_ROOT_PATH}\""
             -P ${_ECM_TOOLCHAIN_DIR}/specifydependencies.cmake
         COMMAND Qt6::androiddeployqt
