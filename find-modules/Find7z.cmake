@@ -26,10 +26,13 @@ target:
 ``7z::7z``
     Path to 7z executable
 
+.. note::
+  Before 5.113.0 only works on Windows.
+
 Since 5.85.0.
 #]=======================================================================]
 
-find_program(7z_EXECUTABLE NAMES 7z.exe 7za.exe)
+find_program(7z_EXECUTABLE NAMES 7z 7za)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(7z
