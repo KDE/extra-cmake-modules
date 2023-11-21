@@ -42,6 +42,7 @@ languageMap = {
     "gl": "gl-ES",
     "ia": None, # not supported by Android
     "it": "it-IT",
+    "ka": "ka-GE",
     "ko": "ko-KR",
     "nl": "nl-NL",
     "pl": "pl-PL",
@@ -50,6 +51,7 @@ languageMap = {
     "sr": "sr-Cyrl-RS",
     "sr@latin": "sr-Latn-RS",
     "sv": "sv-SE",
+    "tr": "tr-TR",
     'x-test': None
 }
 
