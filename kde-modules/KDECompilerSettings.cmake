@@ -540,9 +540,16 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT APPLE) OR
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_SHARED_LINKER_FLAGS}")
     set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings ${CMAKE_MODULE_LINKER_FLAGS}")
 
+    string(TOUPPER "CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}" compileflags)
+    if("${CMAKE_CXX_FLAGS} ${${compileflags}}" MATCHES "-fsanitize")
+        set(sanitizers_enabled TRUE)
+    else()
+        set(sanitizers_enabled FALSE)
+    endif()
+
     # Do not allow undefined symbols, even in non-symbolic shared libraries
     # On OpenBSD we must disable this to allow the stuff to properly compile without explicit libc specification
-    if (NOT CMAKE_SYSTEM_NAME MATCHES "OpenBSD")
+    if (NOT CMAKE_SYSTEM_NAME MATCHES "OpenBSD" AND (NOT sanitizers_enabled OR NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined ${CMAKE_SHARED_LINKER_FLAGS}")
         set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--no-undefined ${CMAKE_MODULE_LINKER_FLAGS}")
     endif()
@@ -567,6 +574,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"
     if (KDE_INTERNAL_COMPILERSETTINGS_LEVEL VERSION_GREATER_EQUAL 5.96.0)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=undef")
     endif()
+elseif(MSVC)
+  # similar to -Werror=return-type
+  # https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4715?view=msvc-170
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /we4715")
 endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
     (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 3.5))
@@ -599,7 +610,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
 endif()
 
 if (MSVC)
-    # FIXME: do we not want to set the warning level up to level 3? (/W3)
+    # enable linter like warnings including deprecation warnings
+    # https://learn.microsoft.com/en-us/cpp/build/reference/compiler-option-warning-level?view=msvc-170
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
     # Disable warnings:
     # C4250: 'class1' : inherits 'class2::member' via dominance
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250")

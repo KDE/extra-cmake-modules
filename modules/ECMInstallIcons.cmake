@@ -71,8 +71,6 @@ into ``<icon_install_dir>/hicolor/22x22/actions/menu_new.png``
 Since pre-1.0.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
-
 # A "map" of short type names to the directories.
 # Unknown names produce a warning.
 set(_ECM_ICON_GROUP_mimetypes  "mimetypes")

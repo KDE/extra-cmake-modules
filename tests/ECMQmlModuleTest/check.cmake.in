@@ -8,6 +8,8 @@ set(INSTALL_DIR "@CMAKE_INSTALL_PREFIX@/test")
 set(SHARED "@BUILD_SHARED_LIBS@")
 set(QML_ONLY "@QML_ONLY@")
 set(DEPENDS "@DEPENDS@")
+set(QT_VERSION "@QT_MAJOR_VERSION@")
+set(TEST_INSTALL_DIR "${INSTALL_DIR}/Test")
 
 function(check_file_exists file)
     if (NOT EXISTS ${file})
@@ -33,40 +35,50 @@ endfunction()
 
 if (SHARED)
     check_file_contents(
-        GENERATED "${INSTALL_DIR}/Test/QmlModule.qml"
+        GENERATED "${TEST_INSTALL_DIR}/QmlModule.qml"
         EXPECTED "${SOURCE_DIR}/QmlModule.qml"
     )
 
-    if (NOT QML_ONLY AND NOT DEPENDS)
-        if (WIN32)
-            check_file_exists("${INSTALL_DIR}/Test/TestModule.dll")
-        else()
-            check_file_exists("${INSTALL_DIR}/Test/libTestModule.so")
-        endif()
-
-        check_file_contents(
-            GENERATED "${INSTALL_DIR}/Test/qmldir"
-            EXPECTED "${SOURCE_DIR}/qmldir_expected_full"
-        )
-    endif()
-
     if (QML_ONLY AND NOT DEPENDS)
         check_file_contents(
-            GENERATED "${INSTALL_DIR}/Test/qmldir"
-            EXPECTED "${SOURCE_DIR}/qmldir_expected_qmlonly"
+            GENERATED "${TEST_INSTALL_DIR}/qmldir"
+            EXPECTED "${SOURCE_DIR}/qmldir_expected_qmlonly_qt${QT_VERSION}"
         )
     endif()
 
     if (DEPENDS)
         check_file_contents(
-            GENERATED "${INSTALL_DIR}/Test/qmldir"
-            EXPECTED "${SOURCE_DIR}/qmldir_expected_depends"
+            GENERATED "${TEST_INSTALL_DIR}/qmldir"
+            EXPECTED "${SOURCE_DIR}/qmldir_expected_depends_qt${QT_VERSION}"
         )
     endif()
+
+    if (NOT QML_ONLY AND NOT DEPENDS)
+        check_file_contents(
+            GENERATED "${TEST_INSTALL_DIR}/qmldir"
+            EXPECTED "${SOURCE_DIR}/qmldir_expected_full_qt${QT_VERSION}"
+        )
+    endif()
+
+    if (NOT QML_ONLY OR ${QT_VERSION} GREATER_EQUAL 6)
+        if (WIN32)
+            check_file_exists("${TEST_INSTALL_DIR}/TestModule.dll")
+        else()
+            check_file_exists("${TEST_INSTALL_DIR}/libTestModule.so")
+        endif()
+    endif()
 else()
-    if (WIN32)
-        check_file_exists("${INSTALL_DIR}/Test/TestModule.lib")
+    if (${QT_VERSION} LESS 6)
+        if (WIN32)
+            check_file_exists("${TEST_INSTALL_DIR}/TestModule.lib")
+        else()
+            check_file_exists("${TEST_INSTALL_DIR}/libTestModule.a")
+        endif()
     else()
-        check_file_exists("${INSTALL_DIR}/Test/libTestModule.a")
+        if (WIN32)
+            check_file_exists("@MODULE_OUTPUT_PATH@/TestModule.lib")
+        else()
+            check_file_exists("@MODULE_OUTPUT_PATH@/libTestModule.a")
+        endif()
     endif()
 endif()

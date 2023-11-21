@@ -1,5 +1,5 @@
-project(FindModules)
 cmake_minimum_required(VERSION 3.5)
+project(FindModules)
 
 file(GLOB all_find_modules
      RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/../../find-modules"

@@ -10,6 +10,11 @@
 # Prefix script setup code shared between KDEInstallDirsX.cmake, not public API.
 #
 
+if (CMAKE_CROSSCOMPILING)
+    # we can't run anything when cross-compiling, so no need to even bother with a prefix script in this case
+    return()
+endif()
+
 configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.sh @ONLY)
 
 find_program(FISH_EXECUTABLE fish)

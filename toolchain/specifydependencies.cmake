@@ -80,7 +80,9 @@ if(extraplugins)
 endif()
 
 file(READ "${INPUT_FILE}" CONTENTS)
-file(READ "stl" stl_contents)
+if(EXISTS "stl") # only provided for legacy pre-Clang toolchains
+    file(READ "stl" stl_contents)
+endif()
 
 file(READ "ranlib" ranlib_contents)
 string(REGEX MATCH ".+/toolchains/llvm/prebuilt/.+/bin/(.+)-ranlib" USE_LLVM ${ranlib_contents})

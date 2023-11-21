@@ -1,5 +1,5 @@
-project(KDEInstallDirs.vars_in_sync)
 cmake_minimum_required(VERSION 3.5)
+project(KDEInstallDirs.vars_in_sync)
 
 set(ECM_KDE_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../kde-modules)
 set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules)

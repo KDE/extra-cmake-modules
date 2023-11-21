@@ -306,7 +306,7 @@ _define_relative(ICONDIR DATAROOTDIR "icons"
     "icons"
     ICON_INSTALL_DIR)
 _define_relative(LOCALEDIR DATAROOTDIR "locale"
-    "knotify description files"
+    "locale-dependent data"
     LOCALE_INSTALL_DIR)
 _define_relative(SOUNDDIR DATAROOTDIR "sounds"
     "sound files"
@@ -385,16 +385,6 @@ if (_mixed_core_path_styles)
     message(WARNING "KDE_INSTALL_BINDIR, KDE_INSTALL_LIBDIR and KDE_INSTALL_INCLUDEDIR should either all be absolute paths or all be relative paths.")
 endif()
 
-
-set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-                                      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
-                                      INCLUDES DESTINATION "${KDE_INSTALL_INCLUDEDIR}"
-)
-if(APPLE)
-    set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
-                                          BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
-endif()
 
 # new in cmake 2.8.9: this is used for all installed files which do not have a component set
 # so set the default component name to the name of the project, if a project name has been set:

@@ -49,7 +49,6 @@ Since 5.91
 #]=======================================================================]
 
 function (ecm_set_disabled_deprecation_versions)
-    include(CMakeParseArguments)
     cmake_parse_arguments(ARGS "SHOW_DEPRECATIONS;DISABLE_NEWER_WARNINGS" "" "" ${ARGN})
 
     # support legacy initial flag to opt-in to warnings

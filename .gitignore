@@ -1,3 +1,7 @@
+# Ignore generated cmake files
+cmake/ECMConfig.cmake
+cmake/ECMConfigVersion.cmake
+
 # Ignore the following files
 *~
 *.[oa]
@@ -25,3 +29,4 @@ __pycache__
 .cmake/
 /compile_commands.json
 /.clang-format
+/Testing

@@ -33,6 +33,9 @@ For preparing some values useful in the context it also provides a function
       [EXCLUDE_DEPRECATED_BEFORE_AND_AT <exclude_deprecated_before_and_at_version>]
       [NO_BUILD_SET_DEPRECATED_WARNINGS_SINCE]
       [NO_DEFINITION_EXPORT_TO_BUILD_INTERFACE]
+      [USE_VERSION_HEADER [<version_file_name>]] #  Since 5.106
+      [VERSION_BASE_NAME <version_base_name>] #  Since 5.106
+      [VERSION_MACRO_NAME <version_macro_name>] #  Since 5.106
       [CUSTOM_CONTENT_FROM_VARIABLE <variable>]
   )
 
@@ -84,6 +87,21 @@ The default is that they are set, to the version specified by
 ``EXCLUDE_DEPRECATED_BEFORE_AND_AT``, so e.g. test and examples part of the
 project automatically build against the full API included in the build and
 without any deprecation warnings for it.
+
+``USE_VERSION_HEADER`` defines whether a given header file
+``<version_file_name>`` providing macros specifying the library version should
+be included in the generated header file. By default angle-brackets are used
+for the include statement. To generate includes with double quotes, add
+double quotes to the argument string (needs escaping), e.g. ``\"version.h\"``.
+The macro from the included version header holding the library version is
+given as ``<version_macro_name>`` by the argument ``VERSION_MACRO_NAME`` and
+used in the generated code for calculating defaults. If not specified, the
+defaults for the version file name and the version macro are derived from
+``<version_base_name>`` as passed with ``VERSION_BASE_NAME``, which again
+defaults to ``<base_name>`` or otherwise ``<library_target_name>``.
+The macro name defaults to ``<uppercase_version_base_name>_VERSION``,
+the version file name to ``<lowercase_version_base_name>_version.h``.
+Since 5.106.
 
 ``CUSTOM_CONTENT_FROM_VARIABLE`` specifies the name of a variable whose
 content will be appended at the end of the generated file, before any
@@ -388,7 +406,9 @@ Since 5.64.0.
 #]=======================================================================]
 
 include(GenerateExportHeader)
-include(CMakeParseArguments)
+
+cmake_policy(PUSH)
+cmake_policy(SET CMP0057 NEW) # if IN_LIST
 
 # helper method
 function(_ecm_geh_generate_hex_number _var_name _version)
@@ -452,6 +472,8 @@ function(ecm_generate_export_header target)
         EXPORT_FILE_NAME
         DEPRECATED_BASE_VERSION
         VERSION
+        VERSION_BASE_NAME
+        VERSION_MACRO_NAME
         EXCLUDE_DEPRECATED_BEFORE_AND_AT
         EXPORT_MACRO_NAME
         DEPRECATED_MACRO_NAME
@@ -463,6 +485,7 @@ function(ecm_generate_export_header target)
     )
     set(multiValueArgs
         DEPRECATION_VERSIONS
+        USE_VERSION_HEADER
     )
     cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -504,13 +527,36 @@ function(ecm_generate_export_header target)
     if(NOT ARGS_BASE_NAME)
         set(ARGS_BASE_NAME "${target}")
     endif()
+    if(NOT ARGS_VERSION_BASE_NAME)
+        set(ARGS_VERSION_BASE_NAME "${ARGS_BASE_NAME}")
+    endif()
     string(TOUPPER "${ARGS_BASE_NAME}" _upper_base_name)
     string(TOLOWER "${ARGS_BASE_NAME}" _lower_base_name)
+    set(_version_header)
+    if (USE_VERSION_HEADER IN_LIST ARGS_KEYWORDS_MISSING_VALUES)
+        string(TOLOWER "${ARGS_VERSION_BASE_NAME}" _lower_version_base_name)
+        set(_version_header "${_lower_version_base_name}_version.h")
+    elseif (DEFINED ARGS_USE_VERSION_HEADER)
+        list(LENGTH ARGS_USE_VERSION_HEADER _arg_count)
+        if (_arg_count GREATER 1)
+            message(FATAL_ERROR "USE_VERSION_HEADER only takes 1 or no arg when calling ecm_generate_export_header().")
+        endif()
+        set(_version_header ${ARGS_USE_VERSION_HEADER})
+    endif()
+    if(_version_header)
+        if(ARGS_VERSION_MACRO_NAME)
+            set(_version_hexnumber "${ARGS_VERSION_MACRO_NAME}")
+        else()
+            string(TOUPPER "${ARGS_VERSION_BASE_NAME}" _upper_version_base_name)
+            set(_version_hexnumber "${_upper_version_base_name}_VERSION")
+        endif()
+    else()
+        _ecm_geh_generate_hex_number(_version_hexnumber "${ARGS_VERSION}")
+    endif()
 
     if(NOT ARGS_EXPORT_FILE_NAME)
         set(ARGS_EXPORT_FILE_NAME "${_lower_base_name}_export.h")
     endif()
-    _ecm_geh_generate_hex_number(_version_hexnumber "${ARGS_VERSION}")
     if (ARGS_DEPRECATED_BASE_VERSION STREQUAL "0")
         set(_default_disabled_deprecated_version_hexnumber "0")
     else()
@@ -564,10 +610,16 @@ function(ecm_generate_export_header target)
         set(_decl_deprecated_text_definition "${_macro_base_name}_DECL_DEPRECATED")
     endif()
     # generate header file
-    set(_output "
+    set(_output)
+    if(_version_header)
+        if (_version_header MATCHES "^\".+\"$")
+            string(APPEND _output "#include ${_version_header}\n")
+        else()
+            string(APPEND _output "#include <${_version_header}>\n")
+        endif()
+    endif()
+    string(APPEND _output "
 #define ${_macro_base_name}_DECL_DEPRECATED_TEXT(text) ${_decl_deprecated_text_definition}
-
-#define ECM_GENERATEEXPORTHEADER_VERSION_VALUE(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
 "
     )
     if (ARGS_GROUP_BASE_NAME)
@@ -630,7 +682,7 @@ function(ecm_generate_export_header target)
 #  endif
 #endif
 
-#define ${_macro_base_name}_BUILD_DEPRECATED_SINCE(major, minor) (ECM_GENERATEEXPORTHEADER_VERSION_VALUE(major, minor, 0) > ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
+#define ${_macro_base_name}_BUILD_DEPRECATED_SINCE(major, minor) (((major<<16)|(minor<<8)) > ${_macro_base_name}_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
 "
         )
     else()
@@ -663,7 +715,7 @@ function(ecm_generate_export_header target)
 #endif
 
 #ifdef ${_deprecated_macro_name}
-#  define ${_macro_base_name}_ENABLE_DEPRECATED_SINCE(major, minor) (ECM_GENERATEEXPORTHEADER_VERSION_VALUE(major, minor, 0) > ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT)
+#  define ${_macro_base_name}_ENABLE_DEPRECATED_SINCE(major, minor) (((major<<16)|(minor<<8)) > ${_macro_base_name}_DISABLE_DEPRECATED_BEFORE_AND_AT)
 #else
 #  define ${_macro_base_name}_ENABLE_DEPRECATED_SINCE(major, minor) 0
 #endif
@@ -749,9 +801,6 @@ function(ecm_generate_export_header target)
         endif()
     endif()
 
-    set(_header_file "${ARGS_EXPORT_FILE_NAME}")
-    set(_header_work_file "${_header_file}.work")
-
     # prepare optional arguments to pass through to generate_export_header
     set(_include_guard_name_args)
     if (ARGS_INCLUDE_GUARD_NAME)
@@ -773,10 +822,6 @@ function(ecm_generate_export_header target)
     if (ARGS_STATIC_DEFINE)
         set(_static_define_args STATIC_DEFINE "${ARGS_STATIC_DEFINE}")
     endif()
-    # for older cmake versions we have to manually append our generated content
-    # for newer we use CUSTOM_CONTENT_FROM_VARIABLE
-    set(_custom_content_args)
-    set(_custom_content_args CUSTOM_CONTENT_FROM_VARIABLE _output)
     generate_export_header(${target}
         BASE_NAME ${ARGS_BASE_NAME}
         DEPRECATED_MACRO_NAME "${_macro_base_name}_DECL_DEPRECATED"
@@ -784,31 +829,10 @@ function(ecm_generate_export_header target)
         ${_export_macro_name_args}
         ${_no_export_macro_name_args}
         ${_static_define_args}
-        EXPORT_FILE_NAME "${_header_work_file}"
+        EXPORT_FILE_NAME "${ARGS_EXPORT_FILE_NAME}"
         ${_include_guard_name_args}
-        ${_custom_content_args}
+        CUSTOM_CONTENT_FROM_VARIABLE _output
     )
-
-    if (ARGS_INCLUDE_GUARD_NAME)
-        set(_include_guard "ECM_GENERATEEXPORTHEADER_${ARGS_INCLUDE_GUARD_NAME}")
-    else()
-        set(_include_guard "ECM_GENERATEEXPORTHEADER_${_upper_base_name}_EXPORT_H")
-    endif()
-
-    file(APPEND ${_header_work_file} "
-
-#ifndef ${_include_guard}
-#define ${_include_guard}
-
-${_output}
-
-#endif /* ${_include_guard} */
-"
-    )
-
-    # avoid rebuilding if there was no change
-    execute_process(
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${_header_work_file}" "${_header_file}"
-    )
-    file(REMOVE "${_header_work_file}")
 endfunction()
+
+cmake_policy(POP)

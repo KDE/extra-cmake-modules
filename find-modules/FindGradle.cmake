@@ -28,7 +28,6 @@ Since 5.76.0.
 #]=======================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
-include(CMakeParseArguments)
 include(FindPackageHandleStandardArgs)
 
 find_package(Qt${QT_MAJOR_VERSION}Core REQUIRED)
@@ -57,11 +56,8 @@ add_custom_command(OUTPUT ${Gradle_EXECUTABLE}
 add_custom_target(gradle DEPENDS ${Gradle_EXECUTABLE})
 
 # Android Gradle plugin version (not the Gradle version!) used by Qt, for use in our own build.gradle files
-if (QT_MAJOR_VERSION EQUAL "5")
-    set(Gradle_ANDROID_GRADLE_PLUGIN_VERSION 3.6.4)
-else()
-    set(Gradle_ANDROID_GRADLE_PLUGIN_VERSION 7.0.2)
-endif()
+file(READ ${_qt_install_root}/src/android/templates/build.gradle _build_grade_template)
+string(REGEX MATCH "[0-9]+\.[0-9]+\.[0-9]+" Gradle_ANDROID_GRADLE_PLUGIN_VERSION ${_build_grade_template})
 
 find_package_handle_standard_args(Gradle DEFAULT_MSG Gradle_EXECUTABLE)
 

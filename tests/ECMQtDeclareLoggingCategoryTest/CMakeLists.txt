@@ -1,12 +1,11 @@
-project(ECMQtDeclareLoggingCategoryTest)
 cmake_minimum_required(VERSION 3.5)
+project(ECMQtDeclareLoggingCategoryTest)
 set(ECM_MODULE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../modules")
 
 set(CMAKE_MODULE_PATH ${ECM_MODULE_DIR})
 
 include(QtVersionOption)
 include(ECMQtDeclareLoggingCategory)
-include(CMakeParseArguments)
 
 ecm_qt_declare_logging_category(
     sources

@@ -72,12 +72,8 @@ where ``<dir>`` is one of (default values in parentheses):
     kconfig description files (``DATAROOTDIR/config.kcfg``)
 ``KCONFUPDATEDIR``
     kconf_update scripts (``DATAROOTDIR/kconf_update``)
-``KSERVICESDIR``
-    services for KDE Frameworks 6 (``DATAROOTDIR/kservices6``)
-``KSERVICETYPESDIR``
-    service types for KDE Frameworks 6 (``DATAROOTDIR/kservicetypes6``)
 ``KXMLGUIDIR``
-    knotify description files (``DATAROOTDIR/kxmlgui6``)
+    kxmlgui .rc files (``DATAROOTDIR/kxmlgui5``)
 ``KAPPTEMPLATESDIR``
     KAppTemplate and KDevelop templates (``DATAROOTDIR/kdevappwizard/templates``)
 ``KFILETEMPLATESDIR``
@@ -87,7 +83,7 @@ where ``<dir>`` is one of (default values in parentheses):
 ``ICONDIR``
     icons (``DATAROOTDIR/icons``)
 ``LOCALEDIR``
-    knotify description files (``DATAROOTDIR/locale``)
+    locale-dependent data (``DATAROOTDIR/locale``)
 ``SOUNDDIR``
     sound files (``DATAROOTDIR/sounds``)
 ``TEMPLATEDIR``
@@ -265,14 +261,10 @@ endif()
 
 
 # KDE Framework-specific things
-_define_relative(KSERVICESDIR DATAROOTDIR "kservices6"
-    "services for KDE Frameworks 6")
-_define_relative(KSERVICETYPESDIR DATAROOTDIR "kservicetypes6"
-    "service types for KDE Frameworks 6")
 _define_relative(KNOTIFYRCDIR DATAROOTDIR "knotifications6"
     "knotify description files")
 # TODO MOVE TO KXMLGUI
-_define_relative(KXMLGUIDIR DATAROOTDIR "kxmlgui6"
+_define_relative(KXMLGUIDIR DATAROOTDIR "kxmlgui5"
     "kxmlgui .rc files")
 _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories6"
     "Qt Logging categories files")
@@ -286,16 +278,24 @@ _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories6"
 #   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
+set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                                      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+)
+if(APPLE)
+    set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+                                          BUNDLE DESTINATION "${KDE_INSTALL_BUNDLEDIR}" )
+endif()
+
 set(KF_INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
                                     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
-                                    INCLUDES DESTINATION "${KDE_INSTALL_INCLUDEDIR_KF}"
 )
 
 # on the Mac support an extra install directory for application bundles
 if(APPLE)
     set(KF_INSTALL_TARGETS_DEFAULT_ARGS  ${KF_INSTALL_TARGETS_DEFAULT_ARGS}
-                                          BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
+                                          BUNDLE DESTINATION "${KDE_INSTALL_BUNDLEDIR}" )
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/KDESetupPrefixScript.cmake)

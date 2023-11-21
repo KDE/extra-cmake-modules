@@ -30,7 +30,7 @@ Since 5.83.0
 #]=======================================================================]
 
 find_package(PkgConfig QUIET)
-pkg_check_modules(PC_LIBMOUNT QUIET mount)
+pkg_check_modules(PC_LIBMOUNT QUIET IMPORTED_TARGET mount)
 
 find_path(LibMount_INCLUDE_DIRS NAMES libmount/libmount.h HINTS ${PC_LIBMOUNT_INCLUDE_DIRS})
 find_library(LibMount_LIBRARIES NAMES mount HINTS ${PC_LIBMOUNT_LIBRARY_DIRS})
@@ -62,6 +62,9 @@ if(LibMount_FOUND AND NOT TARGET LibMount::LibMount)
         INTERFACE_INCLUDE_DIRECTORIES "${LibMount_INCLUDE_DIRS}"
         INTERFACE_COMPILE_DEFINITIONS "${PC_LIBMOUNT_CFLAGS_OTHER}"
     )
+    if (TARGET PkgConfig::PC_LIBMOUNT)
+        target_link_libraries(LibMount::LibMount INTERFACE PkgConfig::PC_LIBMOUNT)
+    endif()
 endif()
 
 include(FeatureSummary)

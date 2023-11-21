@@ -2,5 +2,6 @@
 module Test
 plugin TestModule
 classname TestModule
-depends OtherTest
 QmlModule 1.0 QmlModule.qml
+QmlModule2 2.0 QmlModule2.qml
+# KDE-qmldir-Version: 1.0

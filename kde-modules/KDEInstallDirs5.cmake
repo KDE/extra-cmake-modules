@@ -83,7 +83,7 @@ deprecated variable name in square brackets):
     service types for KDE Frameworks 5 (``DATAROOTDIR/kservicetypes5``)
     [``SERVICETYPES_INSTALL_DIR``]
 ``KXMLGUI5DIR`` or (since 5.89) ``KXMLGUIDIR``
-    knotify description files (``DATAROOTDIR/kxmlgui5``)
+    kxmlgui .rc files (``DATAROOTDIR/kxmlgui5``)
     [``KXMLGUI_INSTALL_DIR``]
 ``KAPPTEMPLATESDIR``
     KAppTemplate and KDevelop templates (``DATAROOTDIR/kdevappwizard/templates``)
@@ -96,7 +96,7 @@ deprecated variable name in square brackets):
 ``ICONDIR``
     icons (``DATAROOTDIR/icons``) [``ICON_INSTALL_DIR``]
 ``LOCALEDIR``
-    knotify description files (``DATAROOTDIR/locale``)
+    locale-dependent data (``DATAROOTDIR/locale``)
     [``LOCALE_INSTALL_DIR``]
 ``SOUNDDIR``
     sound files (``DATAROOTDIR/sounds``) [``SOUND_INSTALL_DIR``]
@@ -350,6 +350,16 @@ _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories5"
 #   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
+set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                                      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+                                      INCLUDES DESTINATION "${KDE_INSTALL_INCLUDEDIR}"
+)
+if(APPLE)
+    set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+                                          BUNDLE DESTINATION "${BUNDLE_INSTALL_DIR}" )
+endif()
+
 set(KF5_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                       LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
                                       ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel

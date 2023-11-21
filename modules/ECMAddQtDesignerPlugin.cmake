@@ -178,7 +178,6 @@ Example usage:
 Since 5.62.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
 include(FeatureSummary)
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 
@@ -554,7 +553,7 @@ class ${_collection_classname}
         QDesignerCustomWidgetCollectionInterface
     )
 
-    Q_PLUGIN_METADATA(IID \"org.qt-project.Qt.QDesignerCustomWidgetInterface\")
+    Q_PLUGIN_METADATA(IID \"org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface\")
 
 public:
     explicit ${_collection_classname}(QObject* parent = nullptr);

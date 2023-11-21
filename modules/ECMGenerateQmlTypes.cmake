@@ -27,7 +27,6 @@ test named qmltypes-pluginname-version that makes sure that it doesn't need upda
 Since 5.33.0
 #]=======================================================================]
 
-include(CMakeParseArguments)
 function(ecm_generate_qmltypes)
     if (NOT TARGET qmltypes)
         add_custom_target(qmltypes)
