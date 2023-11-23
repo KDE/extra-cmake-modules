@@ -1,5 +1,5 @@
 {
-   "qt": "@QT6_INSTALL_PREFIX@",
+   "qt": "@ANDROID_QT6_INSTALL_PREFIX@",
    "qtDataDirectory": "@QT6_INSTALL_DATA@",
    "qtLibExecsDirectory": "@QT6_INSTALL_LIBEXECS@",
    "qtLibsDirectory": "@QT6_INSTALL_LIBS@",
