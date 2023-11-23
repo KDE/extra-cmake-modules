@@ -27,12 +27,14 @@ target:
     Path to 7z executable
 
 .. note::
-  Before 5.113.0 only works on Windows.
+    Only works on Windows.
+
+Deprecated: since 5.113, use  :find-module:`Find7Zip`.
 
 Since 5.85.0.
 #]=======================================================================]
 
-find_program(7z_EXECUTABLE NAMES 7z 7za)
+find_program(7z_EXECUTABLE NAMES 7z.exe 7za.exe)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(7z
