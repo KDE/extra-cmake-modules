@@ -103,7 +103,10 @@ any subdirectory or parent directory.
 stored in the file generated and installed.
 
 ``FILE`` specifies the name of the file generated and installed. It will default
-to lower-cased ``<exportid>.categories``.
+to lower-cased ``<exportid>.categories``. The name of the file with info about
+renamed categories will use the same final base name and the suffix
+``.renamecategories``. Note: Before 5.113, the base name should not have any
+further ``.`` in the name, as its end would be defined by that.
 
 ``DESTINATION`` specifies where the generated file will be
 installed.
@@ -377,7 +380,7 @@ function(ecm_qt_install_logging_categories)
     set(_renamed_cats_file)
     if (_renamed_categories)
         get_filename_component(_dir ${ARGS_FILE} DIRECTORY)
-        get_filename_component(_base_name ${ARGS_FILE} NAME_WE)
+        get_filename_component(_base_name ${ARGS_FILE} NAME_WLE)
         set(_renamed_cats_file "${_dir}/${_base_name}.renamecategories")
         set(_renamed_cats_content
 "# KDebugSettings data file
