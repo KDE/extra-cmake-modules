@@ -40,7 +40,7 @@ languageMap = {
     "fi": "fi-FI",
     "fr": "fr-FR",
     "gl": "gl-ES",
-    "ia": None, # not supported by Android
+    "ia": "ia-001",
     "it": "it-IT",
     "ka": "ka-GE",
     "ko": "ko-KR",
