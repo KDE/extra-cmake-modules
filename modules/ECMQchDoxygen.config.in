@@ -38,6 +38,8 @@ BUILTIN_STL_SUPPORT    = NO
 DISTRIBUTE_GROUP_DOC   = NO
 SUBGROUPING            = YES
 LAYOUT_FILE            = @ECM_QCH_DOXYGEN_LAYOUTFILE@
+# Dark colors won't look nice in Qt Assistant
+HTML_COLORSTYLE        = LIGHT
 #---------------------------------------------------------------------------
 # Build related configuration options
 #---------------------------------------------------------------------------
