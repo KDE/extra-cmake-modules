@@ -71,7 +71,7 @@ endif()
 # formatting target
 function(KDE_CLANG_FORMAT)
     if (TARGET clang-format)
-        message(WARNING "the kde_clang_format function was already called")
+        # We can only define one clang-format target
         return()
     endif()
 
