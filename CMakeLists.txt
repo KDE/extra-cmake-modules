@@ -74,6 +74,10 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
+# Everything else should be skipped when ECM is used as a git submodule
+if(NOT CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    return()
+endif()
 
 #
 # Install modules
