@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2014 Alex Merry <alex.merry@kde.org>
 # SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 # SPDX-FileCopyrightText: 2014 Christoph Cullmann <cullmann@kde.org>
+# SPDX-FileCopyrightText: 2023 Louis Moureaux <m_louis30@yahoo.com>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -45,7 +46,7 @@ ecm_find_package_version_check(LibGit2)
 # Use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
 find_package(PkgConfig QUIET)
-pkg_check_modules(PKG_GIT2 QUIET git2)
+pkg_check_modules(PKG_GIT2 QUIET libgit2)
 
 set(LIBGIT2_DEFINITIONS ${PKG_GIT2_CFLAGS_OTHER})
 
@@ -64,11 +65,11 @@ find_library(LIBGIT2_LIBRARY
 
 # get version from header, should work on windows, too
 if(LIBGIT2_INCLUDE_DIR)
-    file(STRINGS "${LIBGIT2_INCLUDE_DIR}/git2/version.h" LIBGIT2_H REGEX "^#define LIBGIT2_VERSION \"[^\"]*\"$")
+    file(STRINGS "${LIBGIT2_INCLUDE_DIR}/git2/version.h" LIBGIT2_H REGEX "^#define LIBGIT2_VERSION +\"[^\"]*\"$")
 
-    string(REGEX REPLACE "^.*LIBGIT2_VERSION \"([0-9]+).*$" "\\1" LIBGIT2_VERSION_MAJOR "${LIBGIT2_H}")
-    string(REGEX REPLACE "^.*LIBGIT2_VERSION \"[0-9]+\\.([0-9]+).*$" "\\1" LIBGIT2_VERSION_MINOR  "${LIBGIT2_H}")
-    string(REGEX REPLACE "^.*LIBGIT2_VERSION \"[0-9]+\\.[0-9]+\\.([0-9]+).*$" "\\1" LIBGIT2_VERSION_PATCH "${LIBGIT2_H}")
+    string(REGEX REPLACE "^.*LIBGIT2_VERSION +\"([0-9]+).*$" "\\1" LIBGIT2_VERSION_MAJOR "${LIBGIT2_H}")
+    string(REGEX REPLACE "^.*LIBGIT2_VERSION +\"[0-9]+\\.([0-9]+).*$" "\\1" LIBGIT2_VERSION_MINOR  "${LIBGIT2_H}")
+    string(REGEX REPLACE "^.*LIBGIT2_VERSION +\"[0-9]+\\.[0-9]+\\.([0-9]+).*$" "\\1" LIBGIT2_VERSION_PATCH "${LIBGIT2_H}")
     set(LIBGIT2_VERSION "${LIBGIT2_VERSION_MAJOR}.${LIBGIT2_VERSION_MINOR}.${LIBGIT2_VERSION_PATCH}")
 
     set(LIBGIT2_MAJOR_VERSION "${LIBGIT2_VERSION_MAJOR}")
