@@ -216,11 +216,17 @@ list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
   ANDROID_SDK_COMPILE_API
 )
 
+# needed for androiddeployqt's stdcpp-path setting
+if (ANDROID_TOOLCHAIN_ROOT)
+    set(ANDROID_SYSROOT_PREFIX "${ANDROID_TOOLCHAIN_ROOT}/sysroot/usr")
+else()
+    set(ANDROID_SYSROOT_PREFIX "${CMAKE_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr")
+endif()
+
 ## HACK: Remove when we can depend on NDK r23
 # Workaround issue https://github.com/android/ndk/issues/929
 if(ANDROID_NDK_MAJOR VERSION_LESS 23)
     unset(CMAKE_SYSROOT)
-    set(ANDROID_SYSROOT_PREFIX "${ANDROID_TOOLCHAIN_ROOT}/sysroot/usr")
 
     list(APPEND CMAKE_SYSTEM_INCLUDE_PATH
       "${ANDROID_SYSROOT_PREFIX}/include/${CMAKE_LIBRARY_ARCHITECTURE}")
