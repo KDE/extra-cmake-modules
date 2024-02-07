@@ -40,7 +40,7 @@ languageMap = {
     "fi": "fi-FI",
     "fr": "fr-FR",
     "gl": "gl-ES",
-    "ia": "ia-001",
+    "ia": None, # not supported by Google Play for meta data
     "it": "it-IT",
     "ka": "ka-GE",
     "ko": "ko-KR",
