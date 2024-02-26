@@ -16,18 +16,3 @@ include:
       - /gitlab-templates/freebsd-qt6.yml
       - /gitlab-templates/windows-qt6.yml
 
-docs:
-    stage: build
-    image: debian:bullseye-slim
-    before_script:
-      - apt-get update && apt-get install --yes --no-install-recommends cmake make gcc libc6-dev umps3 python3-sphinx sphinx-common python3-sphinxcontrib.qthelp
-    script:
-      - mkdir build && cd build && cmake -DBUILD_TESTING=OFF .. && cmake --build .
-      - mkdir ../ecm-docs && mv docs/html/* ../ecm-docs/
-    artifacts:
-      name: ecm-docs-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}
-      expire_in: 1 week
-      when: on_success
-      paths:
-        - ecm-docs/
-
