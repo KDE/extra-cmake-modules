@@ -26,7 +26,7 @@ exclude_patterns = []
 extensions = ['ecm']
 
 ecm_manuals = sorted(glob.glob(r'@CMAKE_CURRENT_SOURCE_DIR@/manual/*.rst'))
-ecm_manual_description = re.compile('^\.\. ecm-manual-description:(.*)$')
+ecm_manual_description = re.compile(r'^\.\. ecm-manual-description:(.*)$')
 man_pages = []
 for fpath in ecm_manuals:
     try:
