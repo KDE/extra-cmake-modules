@@ -82,6 +82,15 @@ function(ecm_add_qml_module ARG_TARGET)
     if (NOT WIN32 AND TARGET ${_plugin_target})
         set_target_properties(${_plugin_target} PROPERTIES PREFIX "lib")
     endif()
+
+    option(VERBOSE_QML_COMPILER "Enable verbose output for qmlcachegen" OFF)
+
+    if (VERBOSE_QML_COMPILER)
+        set_target_properties(${ARG_TARGET} PROPERTIES
+            QT_QMLCACHEGEN_ARGUMENTS "--verbose"
+        )
+    endif()
+
 endfunction()
 
 function(ecm_add_qml_module_dependencies ARG_TARGET)

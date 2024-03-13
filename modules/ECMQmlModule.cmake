@@ -152,6 +152,10 @@ by ``qt_add_qml_module``. The optional ``VERSION`` argument was added that will
 default to ``PROJECT_VERSION`` and which will write a file that is used by
 ``ECMFindQmlModule`` to detect the version of the QML module.
 
+Since 6.1.0
+
+Enabling the option ``VERBOSE_QML_COMPILER`` will activate verbose output for qmlcachegen.
+
 #]========================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
