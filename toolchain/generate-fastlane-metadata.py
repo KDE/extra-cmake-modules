@@ -30,12 +30,102 @@ import zipfile
 # F-Droid is more tolerant than the Play Store here, the latter rejects anything not exactly matching its known codes
 # Android does do the expected fallbacks, so the seemingly "too specific" mappings here are still working as expected
 # see https://developer.android.com/guide/topics/resources/multilingual-support#resource-resolution-examples
+# The following is the list of languages/translations that can be selected on the page "Main store listing" under
+# "Store presence" of Google Play Console (as of 2024-03-15).
+# Afrikaans – af
+# Albanian – sq
+# Amharic – am
+# Arabic – ar
+# Armenian – hy-AM
+# Azerbaijani – az-AZ
+# Bangla – bn-BD
+# Basque – eu-ES
+# Belarusian – be
+# Bulgarian – bg
+# Burmese – my-MM
+# Catalan – ca
+# Chinese (Hong Kong) – zh-HK
+# Chinese (Simplified) – zh-CN
+# Chinese (Traditional) – zh-TW
+# Croatian – hr
+# Czech – cs-CZ
+# Danish – da-DK
+# Dutch – nl-NL
+# English (Australia) – en-AU
+# English (Canada) – en-CA
+# English (United Kingdom) – en-GB
+# English – en-IN
+# English – en-SG
+# English – en-ZA
+# Estonian – et
+# Filipino – fil
+# Finnish – fi-FI
+# French (Canada) – fr-CA
+# French (France) – fr-FR
+# Galician – gl-ES
+# Georgian – ka-GE
+# German – de-DE
+# Greek – el-GR
+# Gujarati – gu
+# Hebrew – iw-IL
+# Hindi – hi-IN
+# Hungarian – hu-HU
+# Icelandic – is-IS
+# Indonesian – id
+# Italian – it-IT
+# Japanese – ja-JP
+# Kannada – kn-IN
+# Kazakh – kk
+# Khmer – km-KH
+# Korean – ko-KR
+# Kyrgyz – ky-KG
+# Lao – lo-LA
+# Latvian – lv
+# Lithuanian – lt
+# Macedonian – mk-MK
+# Malay (Malaysia) – ms-MY
+# Malay – ms
+# Malayalam – ml-IN
+# Marathi – mr-IN
+# Mongolian – mn-MN
+# Nepali – ne-NP
+# Norwegian – no-NO
+# Persian – fa
+# Persian – fa-AE
+# Persian – fa-AF
+# Persian – fa-IR
+# Polish – pl-PL
+# Portuguese (Brazil) – pt-BR
+# Portuguese (Portugal) – pt-PT
+# Punjabi – pa
+# Romanian – ro
+# Romansh – rm
+# Russian – ru-RU
+# Serbian – sr
+# Sinhala – si-LK
+# Slovak – sk
+# Slovenian – sl
+# Spanish (Latin America) – es-419
+# Spanish (Spain) – es-ES
+# Spanish (United States) – es-US
+# Swahili – sw
+# Swedish – sv-SE
+# Tamil – ta-IN
+# Telugu – te-IN
+# Thai – th
+# Turkish – tr-TR
+# Ukrainian – uk
+# Urdu – ur
+# Vietnamese – vi
+# Zulu – zu
 languageMap = {
     None: "en-US",
     "ast": None, # not supported by Google Play for meta data
     "ca-valencia": None, # not supported by Android
     "cs": "cs-CZ",
+    "da": "da-DK",
     "de": "de-DE",
+    "el": "el-GR",
     "eo": None, # neither supported by Android nor by Google Play for meta data
     "es": "es-ES",
     "eu": "eu-ES",
@@ -47,6 +137,7 @@ languageMap = {
     "ka": "ka-GE",
     "ko": "ko-KR",
     "nl": "nl-NL",
+    "nn": "no-NO", # Google Play only supports no-NO (no = macrolanguage for nb/Bokmal and nn/Nynorsk)
     "pl": "pl-PL",
     "pt": "pt-PT",
     "ru": "ru-RU",
