@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
-project(KDEInstallDirs.relative_or_absolute)
+project(KDEInstallDirs.data_dir_value)
 
 set(ECM_KDE_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../kde-modules)
 set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules)
 set(CMAKE_MODULE_PATH "${ECM_KDE_MODULE_DIR}")
 include(KDEInstallDirs)
 
-include(../var_list.cmake)
 include(../../test_helpers.cmake)
 
 if(WIN32)

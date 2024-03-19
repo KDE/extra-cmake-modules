@@ -161,6 +161,23 @@ if (TARGET Qt5::qmake OR TARGET Qt6::Core)
     add_test_variant(KDEInstallDirsTest.relative_or_absolute_qt
                      KDEInstallDirsTest.relative_or_absolute dummy)
 endif ()
+
+add_test_macro(KDEInstallDirsTest.data_dir_value dummy)
+
+set(KDEInstallDirsTest.data_dir_value_no_cmake_vars_EXTRA_OPTIONS
+    --build-options -DKDE_INSTALL_DIRS_NO_CMAKE_VARIABLES=TRUE
+    )
+add_test_variant(KDEInstallDirsTest.data_dir_value_no_cmake_vars
+                 KDEInstallDirsTest.data_dir_value dummy)
+
+if (TARGET Qt5::qmake OR TARGET Qt6::Core)
+    set(KDEInstallDirsTest.data_dir_value_qt_sys_path_EXTRA_OPTIONS
+        --build-options -DKDE_INSTALL_DIRS_NO_CMAKE_VARIABLES=TRUE
+        )
+    add_test_variant(KDEInstallDirsTest.data_dir_value_qt_sys_path
+                    KDEInstallDirsTest.data_dir_value dummy)
+endif()
+
 if (TARGET Qt${QT_MAJOR_VERSION}::Core)
     set(ECMQtDeclareLoggingCategoryTest_EXTRA_OPTIONS
         --build-target all
@@ -171,8 +188,6 @@ if (TARGET Qt${QT_MAJOR_VERSION}::Core)
         ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMQtDeclareLoggingCategoryTest/check.cmake"
     )
 endif()
-
-add_test_macro(KDEInstallDirsTest.data_dir_value dummy)
 
 add_test_macro(FindModules dummy)
 add_test_macro(UseFindModules dummy)
