@@ -172,6 +172,8 @@ if (TARGET Qt${QT_MAJOR_VERSION}::Core)
     )
 endif()
 
+add_test_macro(KDEInstallDirsTest.data_dir_value dummy)
+
 add_test_macro(FindModules dummy)
 add_test_macro(UseFindModules dummy)
 
