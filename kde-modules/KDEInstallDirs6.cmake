@@ -62,7 +62,8 @@ where ``<dir>`` is one of (default values in parentheses):
 ``SHAREDSTATEDIR``
     modifiable architecture-independent data (``com``)
 ``DATAROOTDIR``
-    read-only architecture-independent data root (``share``)
+    read-only architecture-independent data root (``BINDIR/data`` on
+    Windows, ``share`` otherwise)
 ``DATADIR``
     read-only architecture-independent data (``DATAROOTDIR``)
 ``DOCBUNDLEDIR``
