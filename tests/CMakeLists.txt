@@ -164,6 +164,12 @@ endif ()
 
 add_test_macro(KDEInstallDirsTest.data_dir_value dummy)
 
+set(KDEInstallDirsTest.data_dir_no_find_qt_EXTRA_OPTIONS
+    --build-options -DECMTEST_NO_FIND_QT=TRUE
+    )
+add_test_variant(KDEInstallDirsTest.data_dir_no_find_qt
+                KDEInstallDirsTest.data_dir_value dummy)
+
 set(KDEInstallDirsTest.data_dir_value_no_cmake_vars_EXTRA_OPTIONS
     --build-options -DKDE_INSTALL_DIRS_NO_CMAKE_VARIABLES=TRUE
     )
