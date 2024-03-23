@@ -54,6 +54,7 @@ set(_gnu_install_dirs_vars
     SYSCONFDIR
     SHAREDSTATEDIR
     LOCALSTATEDIR
+    RUNSTATEDIR
     LIBDIR
     INCLUDEDIR
     OLDINCLUDEDIR
@@ -89,14 +90,16 @@ macro(_define_relative varname parent subdir docstring)
         set(_aliasname "${ARGV5}")
     endif()
     set(_cmakename)
+    list(FIND _gnu_install_dirs_vars "${varname}" _list_offset)
+
+    set(_name_in_gnu_dirs FALSE)
+    if(NOT _list_offset EQUAL -1)
+        set(_name_in_gnu_dirs TRUE)
+    endif()
+
     if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES)
-        list(FIND _gnu_install_dirs_vars "${varname}" _list_offset)
-        set(_cmakename_is_deprecated FALSE)
-        if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED OR NOT _list_offset EQUAL -1)
+        if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED OR _name_in_gnu_dirs)
             set(_cmakename CMAKE_INSTALL_${varname})
-            if(_list_offset EQUAL -1)
-                set(_cmakename_is_deprecated TRUE)
-            endif()
         endif()
     endif()
 
@@ -146,19 +149,31 @@ macro(_define_relative varname parent subdir docstring)
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
-    elseif(${_cmakename})
-        if(_cmakename_is_deprecated)
+    elseif("${_cmakename}" AND NOT _name_in_gnu_dirs)
+        # Not a CMAKE_INSTALL_  name that is used by GNUInstallDirs, this is deprecated
+        if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
+            # Deprecated is enabled
             message(DEPRECATION "${_cmakename} is deprecated, use KDE_INSTALL_${varname} instead.")
+
+            set(KDE_INSTALL_${varname} "${${_cmakename}}"
+                CACHE PATH
+                    "${docstring} (${_docpath})"
+                    FORCE)
         endif()
-        # The CMAKE_ name was given (probably on the command line): move
-        # it to the new name
+    elseif(${_cmakename})
+        # The CMAKE_INSTALL_ exists in GNUInstallDirs:
+        # copy it to the new KDE_ name
+        message(STATUS "NOTE: KDE_INSTALL_${varname} got its value from ${_cmakename}. If this is unintended, check if you included GNUInstallDirs before KDEInstallDirs.")
         set(KDE_INSTALL_${varname} "${${_cmakename}}"
             CACHE PATH
-                  "${docstring} (${_docpath})"
-                  FORCE)
-    else()
-        # insert an empty value into the cache, indicating the default
-        # should be used (including compatibility vars above)
+                "${docstring} (${_docpath})"
+                FORCE)
+    endif()
+
+    if(NOT KDE_INSTALL_${varname})
+        # Not set elsewhere so insert an empty value into the cache,
+        # indicating the default should be used
+        # (including compatibility vars above)
         set(KDE_INSTALL_${varname} ""
             CACHE PATH "${docstring} (${_docpath})")
         set(KDE_INSTALL_${varname} "${_realpath}")
