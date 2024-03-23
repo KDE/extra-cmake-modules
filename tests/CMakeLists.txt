@@ -126,6 +126,8 @@ set(KDEInstallDirsTest.vars_in_sync_cmake_arg_EXTRA_OPTIONS
 add_test_variant(KDEInstallDirsTest.vars_in_sync_cmake_arg
                  KDEInstallDirsTest.vars_in_sync dummy)
 
+add_test_macro(KDEInstallDirsTest.platform_dependent_value dummy)
+
 # KDEInstallDirs6 explicitly sets KDE_INSTALL_DIRS_NO_DEPRECATED to false,
 # hence this test makes no sense in that case
 if(TARGET Qt5::Core)
