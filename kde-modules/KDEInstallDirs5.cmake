@@ -186,11 +186,21 @@ deprecated counterparts) may be passed to the ``DESTINATION`` options of
 ``install()`` commands for the corresponding file type.  They are set in the
 CMake cache, and so the defaults above can be overridden by users.
 
-Note that the ``KDE_INSTALL_<dir>``, ``CMAKE_INSTALL_<dir>`` or deprecated
-form of the variable can be changed using CMake command line variable
-definitions; in either case, all forms of the variable will be affected. The
-effect of passing multiple forms of the same variable on the command line
-(such as ``KDE_INSTALL_BINDIR`` and ``CMAKE_INSTALL_BINDIR`` is undefined.
+Note that if the ``KDE_INSTALL_<dir>``, ``CMAKE_INSTALL_<dir>`` or deprecated
+form of the variable are set before ``include(KDEInstallDirs)``, they won't be
+overwritten by ``KDEInstallDirs``. This is useful if you eg. want to use CMake
+command line variable definitions to set custom values. There are however some
+other implications you need to be aware of: ``GNUInstallDirs`` defines
+``CMAKE_INSTALL_<dir>`` variables, before hence ``KDEInstallDirs`` will not
+overwritte them if it is included later. In most cases this is unintended and
+if you need to include ``GNUInstallDirs`` you should always do that after after
+you included ``KDEInstallDirs``.
+
+If you set custom values to ``KDE_INSTALL_<dir>`` or ``CMAKE_INSTALL_<dir>``
+as described above always both forms of the variable will be affected.
+The effect of passing multiple forms of the same variable eg. on the command
+line (such as ``KDE_INSTALL_BINDIR`` and ``CMAKE_INSTALL_BINDIR``) is undefined
+and should be avoided.
 
 The variable ``KDE_INSTALL_TARGETS_DEFAULT_ARGS`` is also defined (along with
 the deprecated form ``INSTALL_TARGETS_DEFAULT_ARGS``).  This should be used
