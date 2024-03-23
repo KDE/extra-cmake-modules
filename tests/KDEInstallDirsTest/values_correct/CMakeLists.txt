@@ -22,7 +22,7 @@ else()
 endif()
 
 # BINDIR is documented as "EXECROOTDIR/bin" hence it should contain EXECROOTDIR
-assert_var_contains_str_value(KDE_INSTALL_BINDIR KDE_INSTALL_EXECROOTDIR)
+assert_var_contains_str_value(KDE_INSTALL_BINDIR ${KDE_INSTALL_EXECROOTDIR})
 
 add_executable(dummy main.c)
 set_target_properties(dummy PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
