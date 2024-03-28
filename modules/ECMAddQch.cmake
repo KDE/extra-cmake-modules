@@ -315,7 +315,6 @@ function(_ecm_ensure_qt_qch_targets)
                         QHP_NAMESPACE           "org.qt-project.qt${_lowermodule}"
                         QHP_NAMESPACE_VERSIONED "org.qt-project.qt${_lowermodule}.${_version}"
                         QHP_VIRTUALFOLDER       "qt${_lowermodule}"
-                        IMPORTED TRUE
                     )
                 endif()
             endforeach()
@@ -765,7 +764,6 @@ set_target_properties(${_target} PROPERTIES
     QHP_NAMESPACE \"${_namespace}\"
     QHP_NAMESPACE_VERSIONED \"${_namespace_versioned}\"
     QHP_VIRTUALFOLDER \"${_virtualfolder}\"
-    IMPORTED TRUE
 )
 set_property(TARGET ${_target} PROPERTY LINK_QCHS ${_linkqchs})
 
