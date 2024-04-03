@@ -119,14 +119,17 @@ function(ecm_add_test)
   target_compile_definitions(${_targetname} PRIVATE -DQT_FORCE_ASSERTS)
   ecm_mark_as_test(${_targetname})
   if (CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-    if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-       # https://stackoverflow.com/questions/59862894/how-do-i-make-a-list-in-cmake-with-the-semicolon-value
-       set(PATHSEP "\\\;") # Don't want cmake to treat it like a list
-    else() # e.g. Linux
-      set(PATHSEP ":")
+    set(_plugin_path ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+    if (DEFINED ENV{QT_PLUGIN_PATH})
+      if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+        # https://stackoverflow.com/questions/59862894/how-do-i-make-a-list-in-cmake-with-the-semicolon-value
+        set(PATHSEP "\\\;") # Don't want cmake to treat it like a list
+      else() # e.g. Linux
+        set(PATHSEP ":")
+      endif()
+      set(_plugin_path "${_plugin_path}${PATHSEP}$ENV{QT_PLUGIN_PATH}")
     endif()
-    set(_plugin_path "$ENV{QT_PLUGIN_PATH}")
-    set_property(TEST ${_testname} PROPERTY ENVIRONMENT "QT_PLUGIN_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${PATHSEP}${_plugin_path}")
+    set_property(TEST ${_testname} PROPERTY ENVIRONMENT "QT_PLUGIN_PATH=${_plugin_path}")
   endif()
   if (ARG_TARGET_NAME_VAR)
     set(${ARG_TARGET_NAME_VAR} "${_targetname}" PARENT_SCOPE)
