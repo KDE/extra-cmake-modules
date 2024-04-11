@@ -27,7 +27,7 @@ Additionally, the following imported targets will be defined:
   ``Xkbcommon::Xkbcommon``
     The xkbcommon library
 
-Since 6.1.0
+Since 6.2.0
 #]=======================================================================]
 
 find_package(PkgConfig)
