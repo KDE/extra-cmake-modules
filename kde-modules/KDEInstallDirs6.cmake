@@ -13,9 +13,6 @@
 KDEInstallDirs6
 ---------------
 
-THIS IS CURRENTLY ONLY AN ALPHA VERSION, FOR FRAMEWORKS USAGE ONLY,
-AND TO BE MODIFIED INCREMENTALLY. PLEASE DO NOT USE IN APPLICATIONS YET.
-
 Define KDE standard installation directories for Qt6/KF6 based software.
 
 Note that none of the variables defined by this module provide any
