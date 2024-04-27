@@ -47,11 +47,11 @@ where ``<dir>`` is one of (default values in parentheses):
 ``CMAKEPACKAGEDIR``
     CMake packages, including config files (``LIBDIR/cmake``)
 ``QTPLUGINDIR``
-    Qt plugins (``LIBDIR/plugins`` or qmake-qt5's ``QT_INSTALL_PLUGINS``)
+    Qt plugins (``LIBDIR/plugins`` or qtpaths's ``QT_INSTALL_PLUGINS``)
 ``PLUGINDIR``
     Plugins (``QTPLUGINDIR``) [``PLUGIN_INSTALL_DIR``]
 ``QMLDIR``
-    QtQuick2 imports (``LIBDIR/qml`` or qmake-qt5's ``QT_INSTALL_QML``)
+    QtQuick2 imports (``LIBDIR/qml`` or qtpaths's ``QT_INSTALL_QML``)
 ``INCLUDEDIR``
     C and C++ header files (``include``)
 ``LOCALSTATEDIR``
@@ -97,7 +97,7 @@ where ``<dir>`` is one of (default values in parentheses):
 ``METAINFODIR``
     AppStream component metadata files (``DATAROOTDIR/metainfo``)
 ``QTQCHDIR``
-    documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc/qch`` or qmake-qt5's ``QT_INSTALL_DOCS``)
+    documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc/qch`` or qtpaths's ``QT_INSTALL_DOCS``)
 ``QCHDIR``
     documentation bundles in QCH format (``DATAROOTDIR/doc/qch``)
 ``MANDIR``
