@@ -64,11 +64,17 @@ Deprecated:
 
 Multiple templates can be passed at once.
 
+This function does nothing when cross-compiling.
+
 
 Since 5.18
 #]=======================================================================]
 
 function(kde_package_app_templates)
+    if (CMAKE_CROSSCOMPILING)
+        return()
+    endif()
+
     set(_oneValueArgs INSTALL_DIR)
     set(_multiValueArgs TEMPLATES)
     cmake_parse_arguments(ARG "" "${_oneValueArgs}" "${_multiValueArgs}" ${ARGN} )
