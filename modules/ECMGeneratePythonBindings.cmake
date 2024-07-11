@@ -83,11 +83,7 @@ function(PythonBindings)
         endforeach()
     endforeach()
 
-    get_property(TARGET_INCLUDE_DIRS TARGET "${PB_TARGETNAME}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
-
-    foreach(INCLUDE_DIR TARGET_INCLUDE_DIRS)
-        list(APPEND INCLUDES "-I${INCLUDE_DIR}")
-    endforeach()
+    list(APPEND INCLUDES "-I${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KF6/${PB_PACKAGE_NAME}")
 
     # Set up the options to pass to shiboken.
     set(shiboken_options --enable-pyside-extensions
@@ -121,6 +117,7 @@ function(PythonBindings)
     # Apply relevant include and link flags.
     target_include_directories(${PB_PACKAGE_NAME} PRIVATE ${PYSIDE_PYTHONPATH}/include)
     target_include_directories(${PB_PACKAGE_NAME} PRIVATE ${SHIBOKEN_PYTHON_INCLUDE_DIRS})
+    target_include_directories(${PB_PACKAGE_NAME} PRIVATE "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KF6/${PB_PACKAGE_NAME}")
     target_include_directories(${PB_PACKAGE_NAME} PRIVATE "/usr/include/PySide6/")
     target_include_directories(${PB_PACKAGE_NAME} PRIVATE "/usr/include/PySide6/QtWidgets/")
     target_include_directories(${PB_PACKAGE_NAME} PRIVATE "/usr/include/PySide6/QtGui/")
