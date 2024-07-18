@@ -112,6 +112,7 @@ function(PythonBindings)
     target_link_libraries(${PB_PACKAGE_NAME} PRIVATE
         PySide6::pyside6
         Shiboken6::libshiboken
+        ${Python3_LIBRARIES}
     )
 
     # Apply relevant include and link flags.
@@ -126,9 +127,6 @@ function(PythonBindings)
     foreach(DEPENDENCY ${PB_DEPENDENCIES})
         target_link_libraries(${PB_PACKAGE_NAME} PRIVATE "${DEPENDENCY}")
     endforeach()
-
-    target_link_libraries(${PB_PACKAGE_NAME} PRIVATE Shiboken6::libshiboken)
-    target_link_libraries(${PB_PACKAGE_NAME} PRIVATE PySide6::pyside6)
 
     # Adjust the name of generated module.
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY PREFIX "")
