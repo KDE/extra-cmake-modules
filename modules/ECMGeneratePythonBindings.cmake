@@ -41,7 +41,7 @@ Python wheel (the file format used to distribute Python packages).
 
 function(PythonBindings)
     set(options )
-    set(oneValueArgs TARGETNAME PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM PYPROJECT)
+    set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM PYPROJECT)
     set(multiValueArgs GENERATED_SOURCES DEPENDENCIES)
 
     cmake_parse_arguments(PB "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
