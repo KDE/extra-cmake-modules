@@ -99,7 +99,7 @@ function(PythonBindings)
 
     # Add custom target to run shiboken to generate the binding cpp files.
     add_custom_command(OUTPUT ${PB_GENERATED_SOURCES}
-                        COMMAND $<TARGET_PROPERTY:Shiboken6::shiboken,LOCATION>
+                        COMMAND shiboken6
                         ${shiboken_options} ${PB_WRAPPED_HEADER} ${PB_TYPESYSTEM}
                         DEPENDS ${generated_sources_dependencies}
                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
