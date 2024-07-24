@@ -79,7 +79,9 @@ function(PythonBindings)
         get_property(DEPENDENCY_INCLUDE_DIRS TARGET "${DEPENDENCY}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
 
         foreach(INCLUDE_DIR ${DEPENDENCY_INCLUDE_DIRS})
-            list(APPEND INCLUDES "-I${INCLUDE_DIR}")
+            if (NOT ("${INCLUDE_DIR}" MATCHES "INSTALL_INTERFACE"))
+                list(APPEND INCLUDES "-I${INCLUDE_DIR}")
+            endif()
         endforeach()
     endforeach()
 
@@ -105,6 +107,9 @@ function(PythonBindings)
 
     # Set the cpp files which will be used for the bindings library.
     set(${PB_PACKAGE_NAME}_sources ${PB_GENERATED_SOURCES})
+
+    remove_definitions("-DQT_DEPRECATED_WARNINGS_SINCE")
+    remove_definitions("-DQT_DISABLE_DEPRECATED_BEFORE")
 
     # Define and build the bindings library.
     add_library(${PB_PACKAGE_NAME} SHARED ${${PB_PACKAGE_NAME}_sources})

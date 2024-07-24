@@ -100,21 +100,22 @@ if(PYSIDE6_FOUND)
 
     find_file(PYSIDE_LIBRARY
         ${PYSIDE_LIBRARY_BASENAMES}
-        PATHS ${PYSIDE6_BASEDIR} ${PYSIDE_CUSTOM_PREFIX}/lib
+        PATHS ${PYSIDE6_BASEDIR} ${PYSIDE_CUSTOM_PREFIX}/lib ${PYSIDE_CUSTOM_PREFIX}/lib64
         NO_DEFAULT_PATH)
 
     find_path(PYSIDE_TYPESYSTEMS
         typesystem_core.xml
-        PATHS ${PYSIDE6_BASEDIR}/typesystems ${PYSIDE_CUSTOM_PREFIX}/share/PySide6/typesystems
+        PATHS ${PYSIDE6_BASEDIR}/typesystems ${PYSIDE_CUSTOM_PREFIX}/share/PySide6/typesystems /usr/share/PySide6/typesystems
     )
 endif()
 
-if(PYSIDE6_FOUND)
-    message(STATUS "PySide include dir:         ${PYSIDE_INCLUDE_DIR}")
-    message(STATUS "PySide library:             ${PYSIDE_LIBRARY}")
-    message(STATUS "PySide typesystems:         ${PYSIDE_TYPESYSTEMS}")
-    message(STATUS "PySide6 version:            ${PYSIDE6_SO_VERSION}")
+message(STATUS "PySide custom path:         ${PYSIDE_CUSTOM_PREFIX}")
+message(STATUS "PySide include dir:         ${PYSIDE_INCLUDE_DIR}")
+message(STATUS "PySide library:             ${PYSIDE_LIBRARY}")
+message(STATUS "PySide typesystems:         ${PYSIDE_TYPESYSTEMS}")
+message(STATUS "PySide6 version:            ${PYSIDE6_SO_VERSION}")
 
+if(PYSIDE6_FOUND)
     # Create PySide6 target
     add_library(PySide6::pyside6 SHARED IMPORTED GLOBAL)
     if(MSVC)

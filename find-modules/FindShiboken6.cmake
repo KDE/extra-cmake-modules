@@ -141,7 +141,7 @@ if(SHIBOKEN_BASEDIR)
     list(APPEND SHIBOKEN_SEARCH_PATHS ${SHIBOKEN_GENERATOR_BASEDIR})
     find_file(SHIBOKEN_LIBRARY
         ${SHIBOKEN_LIBRARY_BASENAMES}
-        PATHS ${SHIBOKEN_SEARCH_PATHS} ${SHIBOKEN_CUSTOM_PREFIX}/lib
+        PATHS ${SHIBOKEN_SEARCH_PATHS} ${SHIBOKEN_CUSTOM_PREFIX}/lib ${SHIBOKEN_CUSTOM_PREFIX}/lib64
 
     )
 
@@ -176,11 +176,12 @@ else()
     set(PYTHON_LIMITED_LIBRARIES "")
 endif()
 
+message(STATUS "Shiboken include dir:       ${SHIBOKEN_INCLUDE_DIR}")
+message(STATUS "Shiboken library:           ${SHIBOKEN_LIBRARY}")
+message(STATUS "Shiboken binary:            ${SHIBOKEN_BINARY}")
+message(STATUS "Shiboken version:           ${SHIBOKEN_VERSION}")
+
 if(SHIBOKEN_FOUND)
-    message(STATUS "Shiboken include dir:       ${SHIBOKEN_INCLUDE_DIR}")
-    message(STATUS "Shiboken library:           ${SHIBOKEN_LIBRARY}")
-    message(STATUS "Shiboken binary:            ${SHIBOKEN_BINARY}")
-    message(STATUS "Shiboken version:           ${SHIBOKEN_VERSION}")
 
     # Create shiboken2 target
     add_library(Shiboken6::libshiboken SHARED IMPORTED GLOBAL)
