@@ -39,7 +39,7 @@ Python wheel (the file format used to distribute Python packages).
 
 #]=======================================================================]
 
-function(PythonBindings)
+function(ecm_generate_python_bindings)
     set(options )
     set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM PYPROJECT)
     set(multiValueArgs GENERATED_SOURCES DEPENDENCIES)
