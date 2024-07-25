@@ -7,19 +7,19 @@
 # TODO: there are some hardcoded paths
 
 #[=======================================================================[.rst:
-PythonBindings
---------------
+ECMGeneratePythonBindings
+-------------------------
 
 Generate Python bindings using Shiboken.
 
 ::
 
-  PythonBindings(PACKAGE_NAME <pythonlibrary>
-                 WRAPPED_HEADER <filename>
-                 TYPESYSTEM <filename>
-                 GENERATED_SOURCES <filename> [<filename> [...]]
-                 DEPENDENCIES <target> [<target> [...]]
-                 PYPROJECT <filename> )
+  ecm_generate_python_bindings(PACKAGE_NAME <pythonlibrary>
+                               WRAPPED_HEADER <filename>
+                               TYPESYSTEM <filename>
+                               GENERATED_SOURCES <filename> [<filename> [...]]
+                               DEPENDENCIES <target> [<target> [...]]
+                               PYPROJECT <filename> )
 
 ``<pythonlibrary>`` is the name of the Python library that will be created.
 
@@ -46,21 +46,12 @@ function(ecm_generate_python_bindings)
 
     cmake_parse_arguments(PB "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
-    find_package(Python3 3.7 REQUIRED COMPONENTS Interpreter Development)
-
     if(NOT ${PROJECT_NAME}_PYTHON_BINDINGS_INSTALL_PREFIX)
         set(${PROJECT_NAME}_PYTHON_BINDINGS_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
     endif()
     set(Python3_VERSION_MAJORMINOR "${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}")
     set(BINDINGS_DIR "${INSTALL_LIBRARY_DIR}/python${Python3_VERSION_MAJORMINOR}/site-packages/${PYTHON_BINDING_NAMESPACE}")
     set(${PB_PROJECT_NAME}_PYTHON_BINDINGS_INSTALL_PREFIX "${${PB_PROJECT_NAME}_PYTHON_BINDINGS_INSTALL_PREFIX}/${BINDINGS_DIR}")
-
-    if(NOT TARGET Shiboken6::libshiboken)
-        find_package(Shiboken6 REQUIRED)
-    endif()
-    if(NOT TARGET PySide6::pyside6)
-        find_package(PySide6 REQUIRED)
-    endif()
 
     list(APPEND PB_DEPENDENCIES PySide6::pyside6)
     list(APPEND PB_DEPENDENCIES Shiboken6::libshiboken)
@@ -98,16 +89,18 @@ function(ecm_generate_python_bindings)
     set(generated_sources_dependencies ${PB_WRAPPED_HEADER} ${PB_TYPESYSTEM})
 
     # Add custom target to run shiboken to generate the binding cpp files.
-    add_custom_command(OUTPUT ${PB_GENERATED_SOURCES}
-                        COMMAND shiboken6
-                        ${shiboken_options} ${PB_WRAPPED_HEADER} ${PB_TYPESYSTEM}
-                        DEPENDS ${generated_sources_dependencies}
-                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                        COMMENT "Running generator for ${PB_TYPESYSTEM}")
+    add_custom_command(
+        OUTPUT ${PB_GENERATED_SOURCES}
+        COMMAND shiboken6 ${shiboken_options} ${PB_WRAPPED_HEADER} ${PB_TYPESYSTEM}
+        DEPENDS ${generated_sources_dependencies}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Running generator for ${PB_TYPESYSTEM}"
+    )
 
     # Set the cpp files which will be used for the bindings library.
     set(${PB_PACKAGE_NAME}_sources ${PB_GENERATED_SOURCES})
 
+    # TODO:
     remove_definitions("-DQT_DEPRECATED_WARNINGS_SINCE")
     remove_definitions("-DQT_DISABLE_DEPRECATED_BEFORE")
 
@@ -121,13 +114,13 @@ function(ecm_generate_python_bindings)
     )
 
     # Apply relevant include and link flags.
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE ${PYSIDE_PYTHONPATH}/include)
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE ${SHIBOKEN_PYTHON_INCLUDE_DIRS})
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KF6/${PB_PACKAGE_NAME}")
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE "/usr/include/PySide6/")
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE "/usr/include/PySide6/QtWidgets/")
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE "/usr/include/PySide6/QtGui/")
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE "/usr/include/PySide6/QtCore/")
+    target_include_directories(${PB_PACKAGE_NAME} PRIVATE ${PYSIDE_PYTHONPATH}/include ${SHIBOKEN_PYTHON_INCLUDE_DIRS})
+    # TODO:
+    target_include_directories(${PB_PACKAGE_NAME} PRIVATE "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KF6/${PB_PACKAGE_NAME}"
+                                                          "/usr/include/PySide6/"
+                                                          "/usr/include/PySide6/QtWidgets/"
+                                                          "/usr/include/PySide6/QtGui/"
+                                                          "/usr/include/PySide6/QtCore/" )
 
     foreach(DEPENDENCY ${PB_DEPENDENCIES})
         target_link_libraries(${PB_PACKAGE_NAME} PRIVATE "${DEPENDENCY}")
@@ -135,23 +128,25 @@ function(ecm_generate_python_bindings)
 
     # Adjust the name of generated module.
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY PREFIX "")
-    set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY OUTPUT_NAME "${PB_PACKAGE_NAME}${PYTHON_EXTENSION_SUFFIX}")
+    set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY OUTPUT_NAME "${PB_PACKAGE_NAME}${PYTHON_CONFIG_SUFFIX}${PYTHON_EXTENSION_SUFFIX}")
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/build/lib)
 
-    install(TARGETS ${PB_PACKAGE_NAME}
-            LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}
-            RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}
-            )
+    install(
+        TARGETS ${PB_PACKAGE_NAME}
+        LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}
+        RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}
+    )
 
     # Build Python Wheel
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/${PB_PACKAGE_NAME}")
     configure_file(${PB_PYPROJECT} "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/pyproject.toml" COPYONLY)
 
     add_custom_command(
-            TARGET ${PB_PACKAGE_NAME}
-            POST_BUILD
-            COMMAND python -m build --wheel
-            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}"
-            COMMENT "Building Python Wheel")
+        TARGET ${PB_PACKAGE_NAME}
+        POST_BUILD
+        COMMAND python -m build --wheel
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}"
+        COMMENT "Building Python Wheel"
+    )
 
 endfunction(PythonBindings)
