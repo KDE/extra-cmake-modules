@@ -1,0 +1,27 @@
+[project]
+name = "${PB_PACKAGE_NAME}"
+version = "${PB_VERSION}"
+authors = [
+    { name="The KDE Community" },
+]
+description = "Python bindings for KDE Frameworks"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "PySide6>=6.7.0,<7",
+]
+classifiers = [
+    "Development Status :: 1 - Planning",
+
+    "Operating System :: POSIX :: Linux",
+
+    # TODO: license
+
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Homepage = "https://invent.kde.org/manuelal/pykde6"

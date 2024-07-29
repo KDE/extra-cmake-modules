@@ -39,19 +39,14 @@ Python wheel (the file format used to distribute Python packages).
 
 #]=======================================================================]
 
+set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 function(ecm_generate_python_bindings)
     set(options )
-    set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM PYPROJECT)
+    set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION)
     set(multiValueArgs GENERATED_SOURCES DEPENDENCIES)
 
     cmake_parse_arguments(PB "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
-
-    if(NOT ${PROJECT_NAME}_PYTHON_BINDINGS_INSTALL_PREFIX)
-        set(${PROJECT_NAME}_PYTHON_BINDINGS_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-    endif()
-    set(Python3_VERSION_MAJORMINOR "${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}")
-    set(BINDINGS_DIR "${INSTALL_LIBRARY_DIR}/python${Python3_VERSION_MAJORMINOR}/site-packages/${PYTHON_BINDING_NAMESPACE}")
-    set(${PB_PROJECT_NAME}_PYTHON_BINDINGS_INSTALL_PREFIX "${${PB_PROJECT_NAME}_PYTHON_BINDINGS_INSTALL_PREFIX}/${BINDINGS_DIR}")
 
     list(APPEND PB_DEPENDENCIES PySide6::pyside6)
     list(APPEND PB_DEPENDENCIES Shiboken6::libshiboken)
@@ -100,13 +95,18 @@ function(ecm_generate_python_bindings)
     # Set the cpp files which will be used for the bindings library.
     set(${PB_PACKAGE_NAME}_sources ${PB_GENERATED_SOURCES})
 
-    # TODO:
-    remove_definitions("-DQT_DEPRECATED_WARNINGS_SINCE")
-    remove_definitions("-DQT_DISABLE_DEPRECATED_BEFORE")
+    # PySide6 requires deprecated code to be enabled.
+    get_property(_defs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY COMPILE_DEFINITIONS)
+    list(FILTER _defs EXCLUDE REGEX [[^QT_DISABLE_DEPRECATED_BEFORE=]])
+    set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY COMPILE_DEFINITIONS ${_defs})
+    get_property(_defs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY COMPILE_DEFINITIONS)
+    list(FILTER _defs EXCLUDE REGEX [[^QT_DISABLE_DEPRECATED_BEFORE=]])
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY COMPILE_DEFINITIONS ${_defs})
 
     # Define and build the bindings library.
     add_library(${PB_PACKAGE_NAME} SHARED ${${PB_PACKAGE_NAME}_sources})
 
+    target_compile_definitions(${PB_PACKAGE_NAME} PRIVATE Py_LIMITED_API=0x03050000)
     target_link_libraries(${PB_PACKAGE_NAME} PRIVATE
         PySide6::pyside6
         Shiboken6::libshiboken
@@ -131,15 +131,11 @@ function(ecm_generate_python_bindings)
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY OUTPUT_NAME "${PB_PACKAGE_NAME}${PYTHON_CONFIG_SUFFIX}${PYTHON_EXTENSION_SUFFIX}")
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/build/lib)
 
-    install(
-        TARGETS ${PB_PACKAGE_NAME}
-        LIBRARY DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}
-        RUNTIME DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}
-    )
+    install(TARGETS ${PB_PACKAGE_NAME} LIBRARY DESTINATION "${KDE_INSTALL_LIBDIR}/python-kf6")
 
     # Build Python Wheel
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/${PB_PACKAGE_NAME}")
-    configure_file(${PB_PYPROJECT} "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/pyproject.toml" COPYONLY)
+    configure_file("${MODULES_DIR}/ECMGeneratePythonBindings.toml.in" "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/pyproject.toml")
 
     add_custom_command(
         TARGET ${PB_PACKAGE_NAME}
@@ -149,4 +145,4 @@ function(ecm_generate_python_bindings)
         COMMENT "Building Python Wheel"
     )
 
-endfunction(PythonBindings)
+endfunction()
