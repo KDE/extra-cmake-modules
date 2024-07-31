@@ -15,13 +15,15 @@ Generate Python bindings using Shiboken.
 ::
 
   ecm_generate_python_bindings(PACKAGE_NAME <pythonlibrary>
+                               VERSION <version>
                                WRAPPED_HEADER <filename>
                                TYPESYSTEM <filename>
                                GENERATED_SOURCES <filename> [<filename> [...]]
-                               DEPENDENCIES <target> [<target> [...]]
-                               PYPROJECT <filename> )
+                               QT_LIBS <target> [<target> [...]] )
 
 ``<pythonlibrary>`` is the name of the Python library that will be created.
+
+``VERSION`` is the version of the library.
 
 ``WRAPPED_HEADER`` is a C++ header that contains all the required includes
 for the library.
@@ -31,11 +33,7 @@ for the library.
 ``GENERATED_SOURCES`` is the list of generated C++ source files by Shiboken
 that will be used to build the shared library.
 
-``DEPENDENCIES`` is a list of dependencies that the library uses. They will
-be linked to the shared library.
-
-``PYPROJECT`` is the pyproject.toml file that will be used to build the
-Python wheel (the file format used to distribute Python packages).
+``QT_LIBS`` is the list of Qt libraries that the original library uses.
 
 #]=======================================================================]
 
@@ -44,12 +42,12 @@ set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 function(ecm_generate_python_bindings)
     set(options )
     set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION)
-    set(multiValueArgs GENERATED_SOURCES DEPENDENCIES)
+    set(multiValueArgs GENERATED_SOURCES QT_LIBS)
 
     cmake_parse_arguments(PB "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
-    list(APPEND PB_DEPENDENCIES PySide6::pyside6)
-    list(APPEND PB_DEPENDENCIES Shiboken6::libshiboken)
+    list(APPEND PB_QT_LIBS PySide6::pyside6)
+    list(APPEND PB_QT_LIBS Shiboken6::libshiboken)
 
     # Enable rpaths so that the built shared libraries find their dependencies.
     set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -59,15 +57,12 @@ function(ecm_generate_python_bindings)
 
     # Get the relevant Qt include dirs, to pass them on to shiboken.
     set(INCLUDES "")
-    list(APPEND INCLUDES "-I/usr/include/KF6/")
 
-    foreach(DEPENDENCY ${PB_DEPENDENCIES})
+    foreach(DEPENDENCY ${PB_QT_LIBS})
         get_property(DEPENDENCY_INCLUDE_DIRS TARGET "${DEPENDENCY}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
 
         foreach(INCLUDE_DIR ${DEPENDENCY_INCLUDE_DIRS})
-            if (NOT ("${INCLUDE_DIR}" MATCHES "INSTALL_INTERFACE"))
-                list(APPEND INCLUDES "-I${INCLUDE_DIR}")
-            endif()
+            list(APPEND INCLUDES "-I${INCLUDE_DIR}")
         endforeach()
     endforeach()
 
@@ -106,7 +101,6 @@ function(ecm_generate_python_bindings)
     # Define and build the bindings library.
     add_library(${PB_PACKAGE_NAME} SHARED ${${PB_PACKAGE_NAME}_sources})
 
-    target_compile_definitions(${PB_PACKAGE_NAME} PRIVATE Py_LIMITED_API=0x03050000)
     target_link_libraries(${PB_PACKAGE_NAME} PRIVATE
         PySide6::pyside6
         Shiboken6::libshiboken
@@ -114,21 +108,20 @@ function(ecm_generate_python_bindings)
     )
 
     # Apply relevant include and link flags.
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE ${PYSIDE_PYTHONPATH}/include ${SHIBOKEN_PYTHON_INCLUDE_DIRS})
-    # TODO:
-    target_include_directories(${PB_PACKAGE_NAME} PRIVATE "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KF6/${PB_PACKAGE_NAME}"
-                                                          "/usr/include/PySide6/"
-                                                          "/usr/include/PySide6/QtWidgets/"
-                                                          "/usr/include/PySide6/QtGui/"
-                                                          "/usr/include/PySide6/QtCore/" )
+    target_include_directories(${PB_PACKAGE_NAME} PRIVATE
+        ${PYSIDE_PYTHONPATH}/include
+        ${SHIBOKEN_PYTHON_INCLUDE_DIRS}
+        $<TARGET_PROPERTY:PySide6::pyside6,INTERFACE_INCLUDE_DIRECTORIES>
+        $<TARGET_PROPERTY:Shiboken6::libshiboken,INTERFACE_INCLUDE_DIRECTORIES>
+    )
 
-    foreach(DEPENDENCY ${PB_DEPENDENCIES})
+    foreach(DEPENDENCY ${PB_QT_LIBS})
         target_link_libraries(${PB_PACKAGE_NAME} PRIVATE "${DEPENDENCY}")
     endforeach()
 
     # Adjust the name of generated module.
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY PREFIX "")
-    set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY OUTPUT_NAME "${PB_PACKAGE_NAME}${PYTHON_CONFIG_SUFFIX}${PYTHON_EXTENSION_SUFFIX}")
+    set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY LIBRARY_OUTPUT_NAME "${PB_PACKAGE_NAME}${SHIBOKEN_PYTHON_CONFIG_SUFFIX}${PYTHON_EXTENSION_SUFFIX}")
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/build/lib)
 
     install(TARGETS ${PB_PACKAGE_NAME} LIBRARY DESTINATION "${KDE_INSTALL_LIBDIR}/python-kf6")
@@ -140,7 +133,7 @@ function(ecm_generate_python_bindings)
     add_custom_command(
         TARGET ${PB_PACKAGE_NAME}
         POST_BUILD
-        COMMAND python -m build --wheel
+        COMMAND Python3::Interpreter -m build --wheel
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}"
         COMMENT "Building Python Wheel"
     )
