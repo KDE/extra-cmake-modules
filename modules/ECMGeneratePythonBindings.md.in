@@ -1,0 +1,6 @@
+# ${PB_PACKAGE_NAME}
+
+Python bindings for ${PB_PACKAGE_NAME}.
+
+* [Homepage](${PB_HOMEPAGE_URL})
+* [Issues](${PB_ISSUES_URL})

@@ -4,19 +4,17 @@ version = "${PB_VERSION}"
 authors = [
     { name="The KDE Community" },
 ]
-description = "Python bindings for KDE Frameworks"
+description = "Python bindings for ${PB_PACKAGE_NAME}"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "PySide6>=6.7.0,<7",
+    "PySide6>=${PB_QT_VERSION},<7",
 ]
 classifiers = [
-    "Development Status :: 1 - Planning",
-
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: X11 Applications :: KDE",
+    "Environment :: X11 Applications :: Qt",
     "Operating System :: POSIX :: Linux",
-
-    # TODO: license
-
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -24,4 +22,5 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://invent.kde.org/manuelal/pykde6"
+Homepage = "${PB_HOMEPAGE_URL}"
+Issues = "${PB_ISSUES_URL}"

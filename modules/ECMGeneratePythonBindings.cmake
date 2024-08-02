@@ -19,7 +19,10 @@ Generate Python bindings using Shiboken.
                                WRAPPED_HEADER <filename>
                                TYPESYSTEM <filename>
                                GENERATED_SOURCES <filename> [<filename> [...]]
-                               QT_LIBS <target> [<target> [...]] )
+                               QT_LIBS <target> [<target> [...]]
+                               QT_VERSION <version>
+                               HOMEPAGE_URL <url>
+                               ISSUES_URL <url> )
 
 ``<pythonlibrary>`` is the name of the Python library that will be created.
 
@@ -35,13 +38,19 @@ that will be used to build the shared library.
 
 ``QT_LIBS`` is the list of Qt libraries that the original library uses.
 
+``QT_VERSION`` is the minimum required Qt version.
+
+``HOMEPAGE_URL`` is a URL to the proyect homepage.
+
+``ISSUES_URL` is a URL where users can report bugs and feature request.
+
 #]=======================================================================]
 
 set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 function(ecm_generate_python_bindings)
     set(options )
-    set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION)
+    set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION QT_VERSION HOMEPAGE_URL ISSUES_URL)
     set(multiValueArgs GENERATED_SOURCES QT_LIBS)
 
     cmake_parse_arguments(PB "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
@@ -129,6 +138,7 @@ function(ecm_generate_python_bindings)
     # Build Python Wheel
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/${PB_PACKAGE_NAME}")
     configure_file("${MODULES_DIR}/ECMGeneratePythonBindings.toml.in" "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/pyproject.toml")
+    configure_file("${MODULES_DIR}/ECMGeneratePythonBindings.md.in" "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/README.md")
 
     add_custom_command(
         TARGET ${PB_PACKAGE_NAME}
