@@ -75,7 +75,7 @@ function(ecm_generate_python_bindings)
         endforeach()
     endforeach()
 
-    list(APPEND INCLUDES "-I${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR}/KF6/${PB_PACKAGE_NAME}")
+    list(APPEND INCLUDES "-I${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR_KF}/${PB_PACKAGE_NAME}")
 
     # Set up the options to pass to shiboken.
     set(shiboken_options --enable-pyside-extensions
