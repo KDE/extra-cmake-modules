@@ -56,15 +56,21 @@ export this code.
 
   ecm_add_wayland_server_protocol(<target>
                                   PROTOCOL <xmlfile>
-                                  BASENAME <basename>)
+                                  BASENAME <basename>
+                                  [PRIVATE_CODE])
 
   ecm_add_wayland_server_protocol(<source_files_var>
                                   PROTOCOL <xmlfile>
-                                  BASENAME <basename>)
+                                  BASENAME <basename>
+                                  [PRIVATE_CODE])
 
 Generate Wayland server protocol files from ``<xmlfile>`` XML
 definition for the ``<basename>`` interface and append those files
 to ``<source_files_var>`` or ``<target>``.
+
+``PRIVATE_CODE`` instructs wayland-scanner to hide marshalling code
+from the compiled DSO for use in other DSOs. The default is to
+export this code.
 
 Since 1.4.0.
 #]=======================================================================]
@@ -141,16 +147,22 @@ endfunction()
 
 function(ecm_add_wayland_server_protocol target_or_sources_var)
     # Parse arguments
+    set(options PRIVATE_CODE)
     set(oneValueArgs PROTOCOL BASENAME)
-    cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "" ${ARGN})
 
     if(ARGS_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Unknown keywords given to ecm_add_wayland_server_protocol(): \"${ARGS_UNPARSED_ARGUMENTS}\"")
     endif()
 
+    if(ARGS_PRIVATE_CODE)
+        set(_private_code_option PRIVATE_CODE)
+    endif()
+
     ecm_add_wayland_client_protocol(${target_or_sources_var}
                                     PROTOCOL ${ARGS_PROTOCOL}
-                                    BASENAME ${ARGS_BASENAME})
+                                    BASENAME ${ARGS_BASENAME}
+                                    ${_private_code_option})
 
     get_filename_component(_infile ${ARGS_PROTOCOL} ABSOLUTE)
     set(_server_header "${CMAKE_CURRENT_BINARY_DIR}/wayland-${ARGS_BASENAME}-server-protocol.h")
