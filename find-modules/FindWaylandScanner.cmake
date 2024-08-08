@@ -41,7 +41,8 @@ implementations:
 
   ecm_add_wayland_client_protocol(<source_files_var>
                                   PROTOCOL <xmlfile>
-                                  BASENAME <basename>)
+                                  BASENAME <basename>
+                                  [PRIVATE_CODE])
 
 Generate Wayland client protocol files from ``<xmlfile>`` XML
 definition for the ``<basename>`` interface and append those files
