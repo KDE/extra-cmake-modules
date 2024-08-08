@@ -4,8 +4,6 @@
 
 # Based on https://code.qt.io/cgit/pyside/pyside-setup.git/tree/examples/widgetbinding/CMakeLists.txt
 
-# TODO: there are some hardcoded paths
-
 #[=======================================================================[.rst:
 ECMGeneratePythonBindings
 -------------------------
@@ -19,6 +17,7 @@ Generate Python bindings using Shiboken.
                                WRAPPED_HEADER <filename>
                                TYPESYSTEM <filename>
                                GENERATED_SOURCES <filename> [<filename> [...]]
+                               INCLUDE_DIRS <directory> [<directory> [...]]
                                QT_LIBS <target> [<target> [...]]
                                QT_VERSION <version>
                                HOMEPAGE_URL <url>
@@ -36,13 +35,15 @@ for the library.
 ``GENERATED_SOURCES`` is the list of generated C++ source files by Shiboken
 that will be used to build the shared library.
 
+``INCLUDE_DIRS`` is a list of directories to be included by Shiboken.
+
 ``QT_LIBS`` is the list of Qt libraries that the original library uses.
 
-``QT_VERSION`` is the minimum required Qt version.
+``QT_VERSION`` is the minimum required Qt version of the library.
 
 ``HOMEPAGE_URL`` is a URL to the proyect homepage.
 
-``ISSUES_URL` is a URL where users can report bugs and feature request.
+``ISSUES_URL` is a URL where users can report bugs and feature requests.
 
 #]=======================================================================]
 
@@ -51,7 +52,7 @@ set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 function(ecm_generate_python_bindings)
     set(options )
     set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION QT_VERSION HOMEPAGE_URL ISSUES_URL)
-    set(multiValueArgs GENERATED_SOURCES QT_LIBS)
+    set(multiValueArgs GENERATED_SOURCES INCLUDE_DIRS QT_LIBS)
 
     cmake_parse_arguments(PB "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
@@ -64,7 +65,7 @@ function(ecm_generate_python_bindings)
     set(CMAKE_INSTALL_RPATH ${SHIBOKEN_PYTHON_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-    # Get the relevant Qt include dirs, to pass them on to shiboken.
+    # Get the relevant include dirs, to pass them on to shiboken.
     set(INCLUDES "")
 
     foreach(DEPENDENCY ${PB_QT_LIBS})
@@ -75,7 +76,9 @@ function(ecm_generate_python_bindings)
         endforeach()
     endforeach()
 
-    list(APPEND INCLUDES "-I${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_INCLUDEDIR_KF}/${PB_PACKAGE_NAME}")
+    foreach(INCLUDE_DIR ${PB_INCLUDE_DIRS})
+        list(APPEND INCLUDES "-I${INCLUDE_DIR}")
+    endforeach()
 
     # Set up the options to pass to shiboken.
     set(shiboken_options --enable-pyside-extensions
@@ -99,7 +102,7 @@ function(ecm_generate_python_bindings)
     # Set the cpp files which will be used for the bindings library.
     set(${PB_PACKAGE_NAME}_sources ${PB_GENERATED_SOURCES})
 
-    # PySide6 requires deprecated code to be enabled.
+    # PySide6 uses deprecated code.
     get_property(_defs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY COMPILE_DEFINITIONS)
     list(FILTER _defs EXCLUDE REGEX [[^QT_DISABLE_DEPRECATED_BEFORE=]])
     set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY COMPILE_DEFINITIONS ${_defs})
@@ -132,8 +135,6 @@ function(ecm_generate_python_bindings)
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY PREFIX "")
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY LIBRARY_OUTPUT_NAME "${PB_PACKAGE_NAME}.${Python3_SOABI}")
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/build/lib)
-
-    install(TARGETS ${PB_PACKAGE_NAME} LIBRARY DESTINATION "${KDE_INSTALL_LIBDIR}/python-kf6")
 
     # Build Python Wheel
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/${PB_PACKAGE_NAME}")
