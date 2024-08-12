@@ -2,7 +2,7 @@
 name = "${PB_PACKAGE_NAME}"
 version = "${PB_VERSION}"
 authors = [
-    { name="The KDE Community" },
+    { name="${PB_AUTHOR}" },
 ]
 description = "Python bindings for ${PB_PACKAGE_NAME}"
 readme = "README.md"

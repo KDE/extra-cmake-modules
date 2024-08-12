@@ -21,7 +21,9 @@ Generate Python bindings using Shiboken.
                                QT_LIBS <target> [<target> [...]]
                                QT_VERSION <version>
                                HOMEPAGE_URL <url>
-                               ISSUES_URL <url> )
+                               ISSUES_URL <url>
+                               AUTHOR <string>
+                               README <filename> )
 
 ``<pythonlibrary>`` is the name of the Python library that will be created.
 
@@ -45,13 +47,18 @@ that will be used to build the shared library.
 
 ``ISSUES_URL` is a URL where users can report bugs and feature requests.
 
+``AUTHOR`` is a string with the author of the library.
+
+``README`` is a Markdown file that will be used as the project's
+description on the Python Package Index.
+
 #]=======================================================================]
 
 set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 function(ecm_generate_python_bindings)
     set(options )
-    set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION QT_VERSION HOMEPAGE_URL ISSUES_URL)
+    set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION QT_VERSION HOMEPAGE_URL ISSUES_URL AUTHOR README)
     set(multiValueArgs GENERATED_SOURCES INCLUDE_DIRS QT_LIBS)
 
     cmake_parse_arguments(PB "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
@@ -68,16 +75,16 @@ function(ecm_generate_python_bindings)
     # Get the relevant include dirs, to pass them on to shiboken.
     set(INCLUDES "")
 
-    foreach(DEPENDENCY ${PB_QT_LIBS})
-        get_property(DEPENDENCY_INCLUDE_DIRS TARGET "${DEPENDENCY}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+    foreach(_dependency ${PB_QT_LIBS})
+        get_property(DEPENDENCY_INCLUDE_DIRS TARGET "${_dependency}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
 
-        foreach(INCLUDE_DIR ${DEPENDENCY_INCLUDE_DIRS})
-            list(APPEND INCLUDES "-I${INCLUDE_DIR}")
+        foreach(_include_dir ${DEPENDENCY_INCLUDE_DIRS})
+            list(APPEND INCLUDES "-I${_include_dir}")
         endforeach()
     endforeach()
 
-    foreach(INCLUDE_DIR ${PB_INCLUDE_DIRS})
-        list(APPEND INCLUDES "-I${INCLUDE_DIR}")
+    foreach(_include_dir ${PB_INCLUDE_DIRS})
+        list(APPEND INCLUDES "-I${_include_dir}")
     endforeach()
 
     # Set up the options to pass to shiboken.
@@ -127,8 +134,8 @@ function(ecm_generate_python_bindings)
         $<TARGET_PROPERTY:Shiboken6::libshiboken,INTERFACE_INCLUDE_DIRECTORIES>
     )
 
-    foreach(DEPENDENCY ${PB_QT_LIBS})
-        target_link_libraries(${PB_PACKAGE_NAME} PRIVATE "${DEPENDENCY}")
+    foreach(_dependency ${PB_QT_LIBS})
+        target_link_libraries(${PB_PACKAGE_NAME} PRIVATE "${_dependency}")
     endforeach()
 
     # Adjust the name of generated module.
@@ -139,7 +146,7 @@ function(ecm_generate_python_bindings)
     # Build Python Wheel
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/${PB_PACKAGE_NAME}")
     configure_file("${MODULES_DIR}/ECMGeneratePythonBindings.toml.in" "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/pyproject.toml")
-    configure_file("${MODULES_DIR}/ECMGeneratePythonBindings.md.in" "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/README.md")
+    configure_file(${PB_README} "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/README.md" COPYONLY)
 
     add_custom_command(
         TARGET ${PB_PACKAGE_NAME}
