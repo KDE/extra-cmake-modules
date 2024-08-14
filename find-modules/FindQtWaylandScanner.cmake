@@ -37,17 +37,22 @@ implementations:
   ecm_add_qtwayland_client_protocol(<target>
                                     PROTOCOL <xmlfile>
                                     BASENAME <basename>
-                                    [PREFIX <prefix>])
+                                    [PREFIX <prefix>]
+                                    [PRIVATE_CODE])
 
   ecm_add_qtwayland_client_protocol(<source_files_var>
                                     PROTOCOL <xmlfile>
                                     BASENAME <basename>
-                                    [PREFIX <prefix>])
+                                    [PREFIX <prefix>]
+                                    [PRIVATE_CODE])
 
 Generate C++ wrapper to Wayland client protocol files from ``<xmlfile>``
 XML definition for the ``<basename>`` interface and append those files
 to ``<source_files_var>`` or ``<target>``.  Pass the ``<prefix>`` argument if the interface
 names don't start with ``qt_`` or ``wl_``.
+``PRIVATE_CODE`` instructs wayland-scanner to hide marshalling code
+from the compiled DSO for use in other DSOs. The default is to
+export this code.
 
 WaylandScanner is required and will be searched for.
 
@@ -56,17 +61,22 @@ WaylandScanner is required and will be searched for.
   ecm_add_qtwayland_server_protocol(<target>
                                     PROTOCOL <xmlfile>
                                     BASENAME <basename>
-                                    [PREFIX <prefix>])
+                                    [PREFIX <prefix>]
+                                    [PRIVATE_CODE])
 
   ecm_add_qtwayland_server_protocol(<source_files_var>
                                     PROTOCOL <xmlfile>
                                     BASENAME <basename>
-                                    [PREFIX <prefix>])
+                                    [PREFIX <prefix>]
+                                    [PRIVATE_CODE])
 
 Generate C++ wrapper to Wayland server protocol files from ``<xmlfile>``
 XML definition for the ``<basename>`` interface and append those files
 to ``<source_files_var>`` or ``<target>``.  Pass the ``<prefix>`` argument if the interface
 names don't start with ``qt_`` or ``wl_``.
+``PRIVATE_CODE`` instructs wayland-scanner to hide marshalling code
+from the compiled DSO for use in other DSOs. The default is to
+export this code.
 
 WaylandScanner is required and will be searched for.
 
@@ -113,18 +123,23 @@ set_package_properties(QtWaylandScanner PROPERTIES
 function(ecm_add_qtwayland_client_protocol target_or_sources_var)
     # Parse arguments
     set(oneValueArgs PROTOCOL BASENAME PREFIX)
-    cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
+    set(options PRIVATE_CODE)
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "" ${ARGN})
 
     if(ARGS_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Unknown keywords given to ecm_add_qtwayland_client_protocol(): \"${ARGS_UNPARSED_ARGUMENTS}\"")
     endif()
 
     set(_prefix "${ARGS_PREFIX}")
+    if(ARGS_PRIVATE_CODE)
+        set(_private_code_option PRIVATE_CODE)
+    endif()
 
     find_package(WaylandScanner REQUIRED QUIET)
     ecm_add_wayland_client_protocol(${target_or_sources_var}
                                     PROTOCOL ${ARGS_PROTOCOL}
-                                    BASENAME ${ARGS_BASENAME})
+                                    BASENAME ${ARGS_BASENAME}
+                                    ${_private_code_option})
 
     get_filename_component(_infile ${ARGS_PROTOCOL} ABSOLUTE)
     set(_header "${CMAKE_CURRENT_BINARY_DIR}/qwayland-${ARGS_BASENAME}.h")
@@ -154,18 +169,23 @@ endfunction()
 function(ecm_add_qtwayland_server_protocol target_or_sources_var)
     # Parse arguments
     set(oneValueArgs PROTOCOL BASENAME PREFIX)
-    cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
+    set(options PRIVATE_CODE)
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "" ${ARGN})
 
     if(ARGS_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Unknown keywords given to ecm_add_qtwayland_server_protocol(): \"${ARGS_UNPARSED_ARGUMENTS}\"")
     endif()
 
     set(_prefix "${ARGS_PREFIX}")
+    if(ARGS_PRIVATE_CODE)
+        set(_private_code_option PRIVATE_CODE)
+    endif()
 
     find_package(WaylandScanner REQUIRED QUIET)
     ecm_add_wayland_server_protocol(${target_or_sources_var}
                                     PROTOCOL ${ARGS_PROTOCOL}
-                                    BASENAME ${ARGS_BASENAME})
+                                    BASENAME ${ARGS_BASENAME}
+                                    ${_private_code_option})
 
     get_filename_component(_infile ${ARGS_PROTOCOL} ABSOLUTE)
     set(_header "${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-${ARGS_BASENAME}.h")
