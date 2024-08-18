@@ -51,8 +51,7 @@ if (QT_MAJOR_VERSION STREQUAL "5")
     if(TARGET Qt5::qmake)
         get_target_property(_qmake_executable_default Qt5::qmake LOCATION)
 
-        set(QUERY_EXECUTABLE ${_qmake_executable_default}
-            CACHE FILEPATH "Location of the Qt5 qmake executable")
+        set(QUERY_EXECUTABLE ${_qmake_executable_default})
         set(_cli_option "-query")
     endif()
 elseif(QT_MAJOR_VERSION STREQUAL "6")
@@ -62,8 +61,7 @@ elseif(QT_MAJOR_VERSION STREQUAL "6")
     if (TARGET Qt6::qtpaths)
         get_target_property(_qtpaths_executable Qt6::qtpaths LOCATION)
 
-        set(QUERY_EXECUTABLE ${_qtpaths_executable}
-            CACHE FILEPATH "Location of the Qt6 qtpaths executable")
+        set(QUERY_EXECUTABLE ${_qtpaths_executable})
         set(_cli_option "--query")
     endif()
 endif()
