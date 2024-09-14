@@ -75,7 +75,7 @@ function(KDE_CLANG_FORMAT)
         return()
     endif()
 
-    # add target without specific commands first, we add the real calls file-per-file to avoid command line length issues and enable parallelization
+    # add target without specific commands first, we add the real calls file-per-file to avoid command line length issues
     add_custom_target(clang-format COMMENT "Formatting sources in ${CMAKE_CURRENT_SOURCE_DIR} with ${KDE_CLANG_FORMAT_EXECUTABLE}...")
 
     # run clang-format only if available, else signal the user what is missing
@@ -86,19 +86,17 @@ function(KDE_CLANG_FORMAT)
             get_filename_component(_full_file_path ${_file} REALPATH)
             string(FIND ${_full_file_path} ${_binary_dir} _index)
             if(NOT _index EQUAL 0)
-                get_filename_component(_file_name ${_file} NAME)
-                file(RELATIVE_PATH _rel_file_path ${CMAKE_SOURCE_DIR} ${_full_file_path})
-                string(REPLACE "/" "_" unique_target_name "clang-format-${_rel_file_path}")
-                string(REPLACE "%" "_" unique_target_name ${unique_target_name}) # some imvalid cmake target names
-                string(REPLACE "{" "_" unique_target_name ${unique_target_name})
-                string(REPLACE "}" "_" unique_target_name ${unique_target_name})
-                add_custom_target(${unique_target_name})
-                add_custom_command(TARGET ${unique_target_name}
-                    COMMAND ${KDE_CLANG_FORMAT_EXECUTABLE} -style=file -i ${_full_file_path}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                    DEPENDS ${_full_file_path}
-                )
-                add_dependencies(clang-format ${unique_target_name})
+                add_custom_command(TARGET clang-format
+                    COMMAND
+                        ${KDE_CLANG_FORMAT_EXECUTABLE}
+                        -style=file
+                        -i
+                        ${_full_file_path}
+                    WORKING_DIRECTORY
+                        ${CMAKE_CURRENT_SOURCE_DIR}
+                    COMMENT
+                        "Formatting ${_full_file_path}..."
+                    )
             endif()
         endforeach()
     else()
