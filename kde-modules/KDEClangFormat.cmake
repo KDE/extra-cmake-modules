@@ -81,11 +81,13 @@ function(KDE_CLANG_FORMAT)
     # run clang-format only if available, else signal the user what is missing
     if(KDE_CLANG_FORMAT_EXECUTABLE)
         get_filename_component(_binary_dir ${CMAKE_BINARY_DIR} REALPATH)
+        set(_ci_install_dir "${CMAKE_SOURCE_DIR}/_install") # on the KDE-CI, we install dependencies in-source
         foreach(_file ${ARGV})
             # check if the file is inside the build directory => ignore such files
             get_filename_component(_full_file_path ${_file} REALPATH)
-            string(FIND ${_full_file_path} ${_binary_dir} _index)
-            if(NOT _index EQUAL 0)
+            string(FIND ${_full_file_path} ${_binary_dir} _binary_idx)
+            string(FIND ${_full_file_path} ${_ci_install_dir} _dependency_idx)
+            if(NOT _binary_idx EQUAL 0 AND NOT _dependency_idx EQUAL 0)
                 get_filename_component(_file_name ${_file} NAME)
                 file(RELATIVE_PATH _rel_file_path ${CMAKE_SOURCE_DIR} ${_full_file_path})
                 string(REPLACE "/" "_" unique_target_name "clang-format-${_rel_file_path}")
