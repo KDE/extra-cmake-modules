@@ -278,7 +278,9 @@ _define_relative(LOGGINGCATEGORIESDIR DATAROOTDIR "qlogging-categories6"
 # This can then also be used for packaging with cpack.
 set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                       LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+                                      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                      OBJECTS DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                      COMPONENT Devel
 )
 if(APPLE)
     set(KDE_INSTALL_TARGETS_DEFAULT_ARGS  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
@@ -287,7 +289,9 @@ endif()
 
 set(KF_INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
                                     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-                                    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT Devel
+                                    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                    OBJECTS DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+                                    COMPONENT Devel
 )
 
 # on macOS support an extra install directory for application bundles
