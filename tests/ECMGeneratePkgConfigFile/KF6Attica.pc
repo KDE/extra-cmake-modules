@@ -1,0 +1,12 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=/usr/include/Attica
+
+Name: KF6Attica
+Description: Qt library to access Open Collaboration Services
+URL: https://www.kde.org/
+Version: 6.7.0
+Libs: -L${prefix}/lib -lKF6Attica
+Cflags: -I/usr/include/Attica -I${prefix}/include/foo -I${prefix}/include/bar
+Requires: Qt6Core Qt6Network
