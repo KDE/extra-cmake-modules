@@ -24,7 +24,7 @@ endif()
 qt6_policy(SET QTP0001 NEW)
 
 function(ecm_add_qml_module ARG_TARGET)
-    cmake_parse_arguments(PARSE_ARGV 1 ARG "NO_PLUGIN;QT_NO_PLUGIN;GENERATE_PLUGIN_SOURCE" "URI;VERSION;CLASSNAME" "")
+    cmake_parse_arguments(PARSE_ARGV 1 ARG "NO_PLUGIN;QT_NO_PLUGIN;GENERATE_PLUGIN_SOURCE" "URI;VERSION;CLASSNAME;OUTPUT_TARGETS" "")
 
     if ("${ARG_TARGET}" STREQUAL "")
         message(FATAL_ERROR "ecm_add_qml_module called without a valid target name.")
@@ -74,7 +74,10 @@ function(ecm_add_qml_module ARG_TARGET)
 
     list(APPEND _arguments ${ARG_UNPARSED_ARGUMENTS})
 
-    qt6_add_qml_module(${_arguments})
+    qt6_add_qml_module(${_arguments} OUTPUT_TARGETS _out_targets)
+    if (ARG_OUTPUT_TARGETS)
+        set(${ARG_OUTPUT_TARGETS} ${_out_targets} PARENT_SCOPE)
+    endif()
 
     # KDECMakeSettings sets the prefix of MODULE targets to empty but Qt will
     # not load a QML plugin without prefix. So we need to force it here.
