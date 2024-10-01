@@ -6,6 +6,7 @@
 #=============================================================================
 
 include(CMakeDependentOption)
+enable_language(CXX)
 
 find_package(Sphinx 1.2 MODULE)
 set_package_properties(
@@ -17,9 +18,9 @@ set_package_properties(
         PURPOSE "Required to build documentation for Extra CMake Modules."
 )
 
-find_package(QCollectionGenerator MODULE)
+find_package(Qt6 COMPONENTS ToolsTools)
 set_package_properties(
-    QCollectionGenerator
+    Qt6ToolsTools
     PROPERTIES
         URL "https://www.qt.io/"
         DESCRIPTION "Qt help collection generator."
@@ -39,9 +40,13 @@ cmake_dependent_option(
 )
 add_feature_info(BUILD_MAN_DOCS BUILD_MAN_DOCS "Generate man page documentation for installed modules.")
 
+if(TARGET Qt6::qhelpgenerator)
+    set(QHelpGenerator_FOUND TRUE)
+endif()
+
 cmake_dependent_option(
-    BUILD_QTHELP_DOCS "Build Qt help with Sphinx" OFF
-    "Sphinx_FOUND;QCollectionGenerator_FOUND" OFF
+    BUILD_QTHELP_DOCS "Build Qt help with Sphinx" ON
+    "Sphinx_FOUND;QHelpGenerator_FOUND" OFF
 )
 add_feature_info(BUILD_QTHELP_DOCS BUILD_QTHELP_DOCS "Generate QtHelp documentation for installed modules.")
 
@@ -57,7 +62,7 @@ if(BUILD_QTHELP_DOCS)
     list(APPEND doc_formats qthelp)
     set(qthelp_extra_commands
         COMMAND
-            QCollectionGenerator::Generator
+            Qt6::qhelpgenerator
             ${CMAKE_CURRENT_BINARY_DIR}/qthelp/ExtraCMakeModules.qhcp
     )
 endif()
