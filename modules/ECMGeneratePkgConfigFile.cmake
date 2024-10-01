@@ -165,11 +165,46 @@ function(ECM_GENERATE_PKGCONFIG_FILE)
     list(JOIN PKGCONFIG_TARGET_DEPS " " PKGCONFIG_TARGET_DEPS)
     list(JOIN PKGCONFIG_TARGET_DEPS_PRIVATE " " PKGCONFIG_TARGET_DEPS_PRIVATE)
   endif ()
-  if(IS_ABSOLUTE "${EGPF_INCLUDE_INSTALL_DIR}")
-      set(PKGCONFIG_TARGET_INCLUDES "${EGPF_INCLUDE_INSTALL_DIR}")
-  else()
-      set(PKGCONFIG_TARGET_INCLUDES "\${prefix}/${EGPF_INCLUDE_INSTALL_DIR}")
+  if(TARGET ${EGPF_LIB_NAME})
+    # Generator expression cannot be evaluated when creating the pkgconfig file, we need to convert the public include directories
+    # into something pkgconfig can understand
+    get_target_property(_EGPF_TARGET_INCLUDE_DIRS ${EGPF_LIB_NAME} INTERFACE_INCLUDE_DIRECTORIES)
+
+    # INTERFACE_INCLUDE_DIRS can contain semicolon separated locations. Since CMake still doesn't accept different separators,
+    # We need to convert _EGPF_TARGET_INCLUDE_DIRS to a string, extract the locations and convert it back to a list
+    string(REPLACE ";" "|" _EGPF_TARGET_INCLUDE_DIRS "${_EGPF_TARGET_INCLUDE_DIRS}")
+    list(TRANSFORM _EGPF_TARGET_INCLUDE_DIRS REPLACE "\\$<INSTALL_INTERFACE:([^,>]+)>" "\\1")
+    string(REPLACE "|" ";" _EGPF_TARGET_INCLUDE_DIRS "${_EGPF_TARGET_INCLUDE_DIRS}")
+
+    # Remove any other generator expression.
+    string(GENEX_STRIP "${_EGPF_TARGET_INCLUDE_DIRS}" _EGPF_TARGET_INCLUDE_DIRS)
+
+    # Remove possible duplicate entries a first time
+    list(REMOVE_DUPLICATES _EGPF_TARGET_INCLUDE_DIRS)
+
+    foreach(EGPF_INCLUDE_DIR IN LISTS _EGPF_TARGET_INCLUDE_DIRS)
+      # if the path is not absolute (that would be the case for KDEInstallDirs variables), append \${prefix} before each entry
+      if(NOT IS_ABSOLUTE "${EGPF_INCLUDE_DIR}")
+        list(TRANSFORM _EGPF_TARGET_INCLUDE_DIRS REPLACE "${EGPF_INCLUDE_DIR}" "\${prefix}/${EGPF_INCLUDE_DIR}")
+      endif()
+    endforeach()
   endif()
+
+  if(IS_ABSOLUTE "${EGPF_INCLUDE_INSTALL_DIR}")
+      list(APPEND PKGCONFIG_TARGET_INCLUDES "${EGPF_INCLUDE_INSTALL_DIR}")
+  else()
+      list(APPEND PKGCONFIG_TARGET_INCLUDES "\${prefix}/${EGPF_INCLUDE_INSTALL_DIR}")
+  endif()
+  list(APPEND _EGPF_TARGET_INCLUDE_DIRS "${PKGCONFIG_TARGET_INCLUDES}")
+
+  # Strip trailing '/' if present anywhere
+  list(TRANSFORM _EGPF_TARGET_INCLUDE_DIRS REPLACE "(.*)/$" "\\1")
+
+  # Deduplicate the list a second time, append -I before each entry and convert it to a string
+  list(REMOVE_DUPLICATES _EGPF_TARGET_INCLUDE_DIRS)
+  list(TRANSFORM _EGPF_TARGET_INCLUDE_DIRS PREPEND "-I")
+  string(REPLACE ";" " " PKGCONFIG_CFLAGS_INCLUDES "${_EGPF_TARGET_INCLUDE_DIRS}")
+
   if(IS_ABSOLUTE "${EGPF_LIB_INSTALL_DIR}")
       set(PKGCONFIG_TARGET_LIBS "${EGPF_LIB_INSTALL_DIR}")
   else()
@@ -201,7 +236,7 @@ Description: ${PKGCONFIG_TARGET_DESCRIPTION}
 URL: ${PKGCONFIG_TARGET_URL}
 Version: ${PROJECT_VERSION}
 Libs: -L${PKGCONFIG_TARGET_LIBS} -l${PKGCONFIG_TARGET_LIBNAME}
-Cflags: -I${PKGCONFIG_TARGET_INCLUDES} ${PKGCONFIG_TARGET_DEFINES}
+Cflags: ${PKGCONFIG_CFLAGS_INCLUDES} ${PKGCONFIG_TARGET_DEFINES}
 Requires: ${PKGCONFIG_TARGET_DEPS}
 "
   )

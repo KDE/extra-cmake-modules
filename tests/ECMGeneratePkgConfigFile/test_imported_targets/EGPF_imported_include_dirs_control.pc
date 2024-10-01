@@ -1,0 +1,13 @@
+
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include/KF6/Attica/
+
+Name: EGPF_lib
+Description: Testing additional include dirs in Cflags
+URL: https://www.kde.org/
+Version: 0.1
+Libs: -L${prefix}/lib -lEGPF_lib
+Cflags: -I${prefix}/include/KF6/Attica -I${prefix}/include/KF6/EGPF_lib -I${prefix}/include/KF6/other_dir 
+Requires: 
