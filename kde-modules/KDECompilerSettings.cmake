@@ -102,6 +102,7 @@ The following C++ compiler flags are set:
   - ``-DQT_NO_KEYWORDS``
   - ``-DQT_NO_FOREACH``
   - ``-DQT_STRICT_ITERATORS``
+  - ``-DQT_NO_CONTEXTLESS_CONNECT`` (since 6.7.0)
 
     Strict iterators are not enabled on Windows, because they lead
     to a link error when application code iterates over a QVector<QPoint> for
@@ -745,6 +746,12 @@ if (NOT KDE_SKIP_MISSING_INCLUDE_DIRS_WARNINGS_SETTINGS)
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-include-dirs")
     endif()
+endif()
+
+if (KDE_INTERNAL_QT_MODERNCODE_DEFINITIONS_LEVEL VERSION_GREATER_EQUAL "6.7.0")
+    add_definitions(
+        -DQT_NO_CONTEXTLESS_CONNECT
+    )
 endif()
 
 ############################################################
