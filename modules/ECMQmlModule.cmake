@@ -125,6 +125,7 @@ to ``qt_target_qml_sources()``.
     ecm_finalize_qml_module(<target>
         [DESTINATION <QML install destination>] # Optional since 6.0
         [VERSION <Project Version>] # Added for 6.0 when using Qt 6
+        [EXPORT <export-set>] # Added for 6.8 when using Qt 6
     )
 
 Finalize the specified QML module target. This must be called after all other
@@ -142,6 +143,8 @@ number of tasks:
   plugin will be installed in a subdirectory of ``DESTINATION`` based upon the
   QML module's uri. In addition, these files will also be copied to the target's
   ``RUNTIME_OUTPUT_DIRECTORY`` in a similar subdirectory.
+- If ``BUILD_SHARED_LIBS`` is off, ``EXPORT`` allows to specify a CMake export set
+  all installed targets should be added to.
 
 This function will fail if ``<target>`` is not a QML module target.
 

@@ -146,7 +146,7 @@ function(ecm_target_qml_sources ARG_TARGET)
 endfunction()
 
 function(ecm_finalize_qml_module ARG_TARGET)
-    cmake_parse_arguments(PARSE_ARGV 1 ARG "" "DESTINATION;VERSION" "")
+    cmake_parse_arguments(PARSE_ARGV 1 ARG "" "DESTINATION;VERSION;EXPORT" "")
 
     if (NOT ARG_DESTINATION)
         set(ARG_DESTINATION "${KDE_INSTALL_QMLDIR}")
@@ -179,7 +179,11 @@ function(ecm_finalize_qml_module ARG_TARGET)
         return()
     endif()
 
+    if (ARG_EXPORT AND NOT BUILD_SHARED_LIBS)
+        set(_install_targets_args EXPORT "${ARG_EXPORT}")
+    endif()
     install(TARGETS "${module_plugin_target}"
+        ${_install_targets_args}
         LIBRARY DESTINATION "${module_dir}"
         RUNTIME DESTINATION "${module_dir}"
     )
