@@ -78,6 +78,7 @@ function(ecm_add_qml_module ARG_TARGET)
     if (ARG_OUTPUT_TARGETS)
         set(${ARG_OUTPUT_TARGETS} ${_out_targets} PARENT_SCOPE)
     endif()
+    set_target_properties(${ARG_TARGET} PROPERTIES _ecm_output_targets "${_out_targets}")
 
     # KDECMakeSettings sets the prefix of MODULE targets to empty but Qt will
     # not load a QML plugin without prefix. So we need to force it here.
@@ -142,6 +143,9 @@ function(ecm_target_qml_sources ARG_TARGET)
     if (ARG_OUTPUT_TARGETS)
         set(${ARG_OUTPUT_TARGETS} ${_out_targets} PARENT_SCOPE)
     endif()
+    get_target_property(_ecm_output_targets ${ARG_TARGET} _ecm_output_targets)
+    list(APPEND _ecm_output_targets ${_out_targets})
+    set_target_properties(${ARG_TARGET} PROPERTIES _ecm_output_targets "${_ecm_output_targets}")
 
 endfunction()
 
@@ -187,6 +191,17 @@ function(ecm_finalize_qml_module ARG_TARGET)
         LIBRARY DESTINATION "${module_dir}"
         RUNTIME DESTINATION "${module_dir}"
     )
+
+    # Install dependent targets created for static builds
+    get_target_property(_ecm_output_targets ${ARG_TARGET} _ecm_output_targets)
+    if (_ecm_output_targets AND ARG_EXPORT)
+        install(TARGETS ${_ecm_output_targets}
+            EXPORT ${ARG_EXPORT}
+            LIBRARY DESTINATION "${module_dir}"
+            RUNTIME DESTINATION "${module_dir}"
+            OBJECTS DESTINATION "${module_dir}"
+        )
+    endif()
 
     # Install the QML module meta information.
     install(FILES "${module_qmldir}"   DESTINATION "${module_dir}")
