@@ -17,8 +17,7 @@ Generate Python bindings using Shiboken.
                                WRAPPED_HEADER <filename>
                                TYPESYSTEM <filename>
                                GENERATED_SOURCES <filename> [<filename> [...]]
-                               INCLUDE_DIRS <directory> [<directory> [...]]
-                               QT_LIBS <target> [<target> [...]]
+                               DEPENDENCIES <target> [<target> [...]]
                                QT_VERSION <version>
                                HOMEPAGE_URL <url>
                                ISSUES_URL <url>
@@ -37,11 +36,9 @@ for the library.
 ``GENERATED_SOURCES`` is the list of generated C++ source files by Shiboken
 that will be used to build the shared library.
 
-``INCLUDE_DIRS`` is a list of directories to be included by Shiboken.
-
-``QT_LIBS`` is the list of Qt libraries that the original library uses.
-
 ``QT_VERSION`` is the minimum required Qt version of the library.
+
+``DEPENDENCIES`` is the list of dependencies that the bindings uses.
 
 ``HOMEPAGE_URL`` is a URL to the proyect homepage.
 
@@ -59,12 +56,28 @@ set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 function(ecm_generate_python_bindings)
     set(options )
     set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION QT_VERSION HOMEPAGE_URL ISSUES_URL AUTHOR README)
-    set(multiValueArgs GENERATED_SOURCES INCLUDE_DIRS QT_LIBS)
+    set(multiValueArgs GENERATED_SOURCES DEPENDENCIES)
 
     cmake_parse_arguments(PB "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
-    list(APPEND PB_QT_LIBS PySide6::pyside6)
-    list(APPEND PB_QT_LIBS Shiboken6::libshiboken)
+    # Ugly hacks because PySide6::pyside6 only includes /usr/includes/PySide6 and none of the sub directory
+    # Qt bugreport: PYSIDE-2882
+    get_property(PYSIDE_INCLUDE_DIRS TARGET "PySide6::pyside6" PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+    foreach(PYSIDE_INCLUDE_DIR ${PYSIDE_INCLUDE_DIRS})
+        file(GLOB PYSIDE_SUBDIRS LIST_DIRECTORIES true "${PYSIDE_INCLUDE_DIR}/*")
+        foreach (PYSIDE_SUBDIR ${PYSIDE_SUBDIRS})
+            if (IS_DIRECTORY ${PYSIDE_SUBDIR})
+                set_property(TARGET PySide6::pyside6
+                    APPEND
+                    PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+                    ${PYSIDE_SUBDIR}
+                )
+            endif()
+        endforeach()
+    endforeach()
+
+    list(APPEND PB_DEPENDENCIES PySide6::pyside6)
+    list(APPEND PB_DEPENDENCIES Shiboken6::libshiboken)
 
     # Enable rpaths so that the built shared libraries find their dependencies.
     set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -75,24 +88,30 @@ function(ecm_generate_python_bindings)
     # Get the relevant include dirs, to pass them on to shiboken.
     set(INCLUDES "")
 
-    foreach(_dependency ${PB_QT_LIBS})
+    if(WIN32)
+        set(PATH_SEP "\;")
+    else()
+        set(PATH_SEP ":")
+    endif()
+
+    macro(make_path varname)
+        # accepts any number of path variables
+        string(REPLACE ";" "${PATH_SEP}" ${varname} "${ARGN}")
+    endmacro()
+
+    foreach(_dependency ${PB_DEPENDENCIES})
         get_property(DEPENDENCY_INCLUDE_DIRS TARGET "${_dependency}" PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
 
-        foreach(_include_dir ${DEPENDENCY_INCLUDE_DIRS})
-            list(APPEND INCLUDES "-I${_include_dir}")
-        endforeach()
-    endforeach()
-
-    foreach(_include_dir ${PB_INCLUDE_DIRS})
-        list(APPEND INCLUDES "-I${_include_dir}")
+        make_path(_include_dirs $<JOIN:$<TARGET_PROPERTY:${_dependency},INTERFACE_INCLUDE_DIRECTORIES>,${PATH_SEP}>)
+        list(APPEND INCLUDES "--include-paths=${_include_dirs}")
     endforeach()
 
     # Set up the options to pass to shiboken.
     set(shiboken_options --enable-pyside-extensions
         ${INCLUDES}
-        -I${CMAKE_SOURCE_DIR}
-        -T${CMAKE_SOURCE_DIR}
-        -T${PYSIDE_TYPESYSTEMS}
+        --include-paths=${CMAKE_SOURCE_DIR}
+        --typesystem-paths=${CMAKE_SOURCE_DIR}
+        --typesystem-paths=${PYSIDE_TYPESYSTEMS}
         --output-directory=${CMAKE_CURRENT_BINARY_DIR})
 
     set(generated_sources_dependencies ${PB_WRAPPED_HEADER} ${PB_TYPESYSTEM})
@@ -133,10 +152,6 @@ function(ecm_generate_python_bindings)
         $<TARGET_PROPERTY:PySide6::pyside6,INTERFACE_INCLUDE_DIRECTORIES>
         $<TARGET_PROPERTY:Shiboken6::libshiboken,INTERFACE_INCLUDE_DIRECTORIES>
     )
-
-    foreach(_dependency ${PB_QT_LIBS})
-        target_link_libraries(${PB_PACKAGE_NAME} PRIVATE "${_dependency}")
-    endforeach()
 
     # Hide noisy warnings
     target_compile_options(${PB_PACKAGE_NAME} PRIVATE -Wno-cast-function-type -Wno-missing-include-dirs)
