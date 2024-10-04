@@ -22,7 +22,7 @@ endforeach()
 
 if(metadatafiles)
     set(appstreamcliout "")
-    execute_process(COMMAND ${APPSTREAMCLI} validate ${metadatafiles}
+    execute_process(COMMAND ${APPSTREAMCLI} validate --no-net ${metadatafiles}
         ERROR_VARIABLE appstreamcliout
         OUTPUT_VARIABLE appstreamcliout
         RESULT_VARIABLE result
