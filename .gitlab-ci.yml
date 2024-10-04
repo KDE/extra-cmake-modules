@@ -6,7 +6,6 @@ include:
     file:
       - /gitlab-templates/linux.yml
       - /gitlab-templates/linux-static.yml
-      - /gitlab-templates/android.yml
       - /gitlab-templates/freebsd.yml
       - /gitlab-templates/android-qt6.yml
       - /gitlab-templates/linux-qt6.yml
