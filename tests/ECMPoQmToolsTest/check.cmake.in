@@ -93,8 +93,12 @@ if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
 
     check_translations(TR_TEST_SUBDIR "${TR_TEST_SUBDIR_EXEC}" catalog)
 
-    check_translations(TR_THREAD_TEST "${TR_THREAD_TEST_EXEC}" catalog)
-    check_translations(TR_THREAD_TEST_2 "${TR_THREAD_TEST_2_EXEC}" catalog2)
+    if (TR_THREAD_TEST)
+        check_translations(TR_THREAD_TEST "${TR_THREAD_TEST_EXEC}" catalog)
+    endif()
+    if (TR_THREAD_TEST_2)
+        check_translations(TR_THREAD_TEST_2 "${TR_THREAD_TEST_2_EXEC}" catalog2)
+    endif()
 endif()
 
 if (fail)

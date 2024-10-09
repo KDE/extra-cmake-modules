@@ -159,9 +159,17 @@ assert_var_defined(QMLOADER_FILES)
 add_subdirectory(subdir)
 
 
+# when building against a static Qt the tests doing dynamic loading of a module using Qt wont work
+if (NOT DEFINED QT6_IS_SHARED_LIBS_BUILD OR QT6_IS_SHARED_LIBS_BUILD)
+    file(GENERATE
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/check_conf.cmake"
+        INPUT "${CMAKE_CURRENT_SOURCE_DIR}/check_conf.cmake.in"
+    )
+else()
+    file(GENERATE
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/check_conf.cmake"
+        INPUT "${CMAKE_CURRENT_SOURCE_DIR}/check_conf_static.cmake.in"
+    )
+endif()
 
-file(GENERATE
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/check_conf.cmake"
-    INPUT "${CMAKE_CURRENT_SOURCE_DIR}/check_conf.cmake.in"
-)
 configure_file(check.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/check.cmake" @ONLY)
