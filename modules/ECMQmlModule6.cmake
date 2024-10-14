@@ -72,6 +72,14 @@ function(ecm_add_qml_module ARG_TARGET)
         endif()
     endif()
 
+    # make qmlimportscanner also find QML modules installed
+    # outside of the Qt prefix
+    list(APPEND _import_paths "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_QMLDIR}")
+    foreach(_prefix ${CMAKE_PREFIX_PATH})
+        list(APPEND _import_paths "${_prefix}/${KDE_INSTALL_QMLDIR}")
+    endforeach()
+    list(APPEND _arguments IMPORT_PATH ${_import_paths})
+
     list(APPEND _arguments ${ARG_UNPARSED_ARGUMENTS})
 
     qt6_add_qml_module(${_arguments} OUTPUT_TARGETS _out_targets)
