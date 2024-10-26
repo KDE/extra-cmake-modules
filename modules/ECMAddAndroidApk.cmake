@@ -152,9 +152,10 @@ function (ecm_add_android_apk TARGET)
 
     file(WRITE ${CMAKE_BINARY_DIR}/ranlib "${CMAKE_RANLIB}")
     set(CREATEAPK_TARGET_NAME "create-apk-${APK_NAME}")
+    set(APK_NAME_FULL "${APK_NAME}-${CMAKE_ANDROID_ARCH_ABI}.apk")
     add_custom_target(${CREATEAPK_TARGET_NAME}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Generating $<TARGET_NAME:${TARGET}> with $<TARGET_FILE:Qt6::androiddeployqt>"
+        COMMAND ${CMAKE_COMMAND} -E echo "Generating ${APK_NAME_FULL} with $<TARGET_FILE:Qt6::androiddeployqt>"
         COMMAND ${CMAKE_COMMAND} -E remove_directory "${APK_OUTPUT_DIR}"
         COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${TARGET}>" "${APK_EXECUTABLE_PATH}"
         COMMAND LANG=C ${CMAKE_COMMAND} "-DTARGET=$<TARGET_FILE:${TARGET}>" -P ${_ECM_TOOLCHAIN_DIR}/hasMainSymbol.cmake
@@ -170,7 +171,7 @@ function (ecm_add_android_apk TARGET)
             ${ANDROIDDEPLOYQT_EXTRA_ARGS}
             --gradle
             --input "${CMAKE_BINARY_DIR}/${APK_NAME}-deployment.json"
-            --apk "${ANDROID_APK_OUTPUT_DIR}/${APK_NAME}-${CMAKE_ANDROID_ARCH_ABI}.apk"
+            --apk "${ANDROID_APK_OUTPUT_DIR}/${APK_NAME_FULL}"
             --output "${APK_OUTPUT_DIR}"
             --android-platform android-${ANDROID_SDK_COMPILE_API}
             --deployment bundled
