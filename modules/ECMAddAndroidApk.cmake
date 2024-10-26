@@ -75,7 +75,7 @@ function (ecm_add_android_apk TARGET)
     endif()
 
     set(APK_OUTPUT_DIR "${CMAKE_BINARY_DIR}/${TARGET}_build_apk/")
-    set(APK_EXECUTABLE_PATH "${APK_OUTPUT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${APK_NAME}_${CMAKE_ANDROID_ARCH_ABI}.so")
+    set(APK_EXECUTABLE_PATH "${APK_OUTPUT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${TARGET}_${CMAKE_ANDROID_ARCH_ABI}.so")
 
     set(QML_IMPORT_PATHS "")
     # add build directory to the search path as well, so this works without installation
