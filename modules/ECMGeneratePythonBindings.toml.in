@@ -1,0 +1,26 @@
+[project]
+name = "${PB_PACKAGE_NAME}"
+version = "${PB_VERSION}"
+authors = [
+    { name="${PB_AUTHOR}" },
+]
+description = "Python bindings for ${PB_PACKAGE_NAME}"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "PySide6>=${PB_QT_VERSION},<7",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: X11 Applications :: KDE",
+    "Environment :: X11 Applications :: Qt",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Homepage = "${PB_HOMEPAGE_URL}"
+Issues = "${PB_ISSUES_URL}"
