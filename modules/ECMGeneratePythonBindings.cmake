@@ -8,6 +8,9 @@
 ECMGeneratePythonBindings
 -------------------------
 
+This module is experimental and internal.  The interface will likely
+change in the coming releases.
+
 Generate Python bindings using Shiboken.
 
 ::
