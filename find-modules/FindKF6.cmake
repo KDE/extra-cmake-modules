@@ -80,6 +80,8 @@ foreach(_module ${KF6_FIND_COMPONENTS})
         if(NOT KF6_VERSION OR KF6_VERSION VERSION_GREATER KF6${_module}_VERSION)
             set(KF6_VERSION ${KF6${_module}_VERSION})
         endif()
+    elseif(KF6_FIND_REQUIRED_${_module})
+        message(FATAL_ERROR "Could NOT find required package KF6${_module}.")
     endif()
 endforeach()
 
