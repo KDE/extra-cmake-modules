@@ -48,6 +48,7 @@ include(FindPackageHandleStandardArgs)
 include(FeatureSummary)
 
 set(KF6_VERSION)
+set(KF6_MISSING_REQUIRED_COMPONENTS)
 foreach(_module ${KF6_FIND_COMPONENTS})
     find_package(KF6${_module} ${KF6_FIND_VERSION}
         ${_exact_arg} ${_quiet_arg}
@@ -80,6 +81,8 @@ foreach(_module ${KF6_FIND_COMPONENTS})
         if(NOT KF6_VERSION OR KF6_VERSION VERSION_GREATER KF6${_module}_VERSION)
             set(KF6_VERSION ${KF6${_module}_VERSION})
         endif()
+    elseif(KF6_FIND_REQUIRED_${_module})
+        list(APPEND KF6_MISSING_REQUIRED_COMPONENTS ${_module})
     endif()
 endforeach()
 
@@ -90,6 +93,8 @@ endforeach()
 # on success.
 set(_dummy_req_var "success")
 
+list(JOIN KF6_MISSING_REQUIRED_COMPONENTS " " MISSING_COMPONENTS_STRING)
+
 find_package_handle_standard_args(KF6
     FOUND_VAR
         KF6_FOUND
@@ -98,5 +103,8 @@ find_package_handle_standard_args(KF6
     VERSION_VAR
         KF6_VERSION
     HANDLE_COMPONENTS
+    REASON_FAILURE_MESSAGE "Missing the following required components: ${MISSING_COMPONENTS_STRING}"
 )
 
+unset(MISSING_COMPONENTS_STRING)
+unset(KF6_MISSING_REQUIRED_COMPONENTS)
