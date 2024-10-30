@@ -74,9 +74,13 @@ function(ecm_add_qml_module ARG_TARGET)
 
     # make qmlimportscanner also find QML modules installed
     # outside of the Qt prefix
-    list(APPEND _import_paths "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_QMLDIR}")
+    if(IS_DIRECTORY "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_QMLDIR}")
+        list(APPEND _import_paths "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_QMLDIR}")
+    endif()
     foreach(_prefix ${CMAKE_PREFIX_PATH})
-        list(APPEND _import_paths "${_prefix}/${KDE_INSTALL_QMLDIR}")
+        if(IS_DIRECTORY "${_prefix}/${KDE_INSTALL_QMLDIR}")
+            list(APPEND _import_paths "${_prefix}/${KDE_INSTALL_QMLDIR}")
+        endif()
     endforeach()
     list(APPEND _arguments IMPORT_PATH ${_import_paths})
 
