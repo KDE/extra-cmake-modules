@@ -8,7 +8,9 @@ enable_language(CXX)
 
 include(ECMGeneratePkgConfigFile)
 include(ECMSetupVersion)
-include(KDEInstallDirs6)
+
+# KDEInstallDirs can't be used
+set(EGPF_KDE_INSTALL_INCLUDEDIR_KF "include/KF6")
 
 set(InputFile "${CMAKE_CURRENT_SOURCE_DIR}/EGPF_imported_include_dirs_control.pc")
 
@@ -26,14 +28,14 @@ set_target_properties(EGPF_lib PROPERTIES
     EXPORT_NAME "EGPF_lib"
 )
 
-target_include_directories(EGPF_lib INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF}/Attica;${KDE_INSTALL_INCLUDEDIR_KF}/EGPF_lib;${KDE_INSTALL_INCLUDEDIR_KF}/other_dir>"
+target_include_directories(EGPF_lib INTERFACE "$<INSTALL_INTERFACE:${EGPF_KDE_INSTALL_INCLUDEDIR_KF}/Attica;${EGPF_KDE_INSTALL_INCLUDEDIR_KF}/EGPF_lib;${EGPF_KDE_INSTALL_INCLUDEDIR_KF}/other_dir>"
     PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../:${CMAKE_CURRENT_BINARY_DIR}/..>"
 )
 
 ecm_generate_pkgconfig_file(BASE_NAME EGPF_lib
                             DESCRIPTION "Testing additional include dirs in Cflags"
-                            INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF}/Attica/
+                            INCLUDE_INSTALL_DIR ${EGPF_KDE_INSTALL_INCLUDEDIR_KF}/Attica/
                             FILENAME_VAR OutputFile
                             )
 
