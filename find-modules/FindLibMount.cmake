@@ -32,13 +32,13 @@ Since 5.83.0
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_LIBMOUNT QUIET IMPORTED_TARGET mount)
 
-find_path(LibMount_INCLUDE_DIRS NAMES libmount/libmount.h HINTS ${PC_LIBMOUNT_INCLUDE_DIRS})
+find_path(LibMount_INCLUDE_DIRS NAMES libmount.h PATH_SUFFIXES libmount HINTS ${PC_LIBMOUNT_INCLUDE_DIRS})
 find_library(LibMount_LIBRARIES NAMES mount HINTS ${PC_LIBMOUNT_LIBRARY_DIRS})
 
 set(LibMount_VERSION ${PC_LIBMOUNT_VERSION})
 
 if(LibMount_INCLUDE_DIRS AND NOT LibMount_VERSION)
-    file(READ "${LibMount_INCLUDE_DIRS}/libmount/libmount.h" _LibMount_header_contents)
+    file(READ "${LibMount_INCLUDE_DIRS}/libmount.h" _LibMount_header_contents)
     string(REGEX MATCHALL "#define[ \t]+LIBMOUNT_VERSION[ \t]+\"*[0-9.]+" _LibMount_version_line "${_LibMount_header_contents}")
     unset(_LibMount_header_contents)
     string(REGEX REPLACE ".*LIBMOUNT_VERSION[ \t]+\"*([0-9.]+)\"*" "\\1" _version "${_LibMount_version_line}")
