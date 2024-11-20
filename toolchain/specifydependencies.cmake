@@ -54,7 +54,7 @@ if (ANDROID_EXTRA_LIBS)
 endif()
 
 set(extraplugins)
-foreach(folder "plugins" "share" "lib/qml") #now we check for folders with extra stuff
+foreach(folder "plugins" "share" "lib/qml" "translations") #now we check for folders with extra stuff
     set(plugin "${EXPORT_DIR}/${folder}")
     if(EXISTS "${plugin}")
         list(APPEND extraplugins "${plugin}")
