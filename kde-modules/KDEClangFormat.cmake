@@ -94,11 +94,13 @@ function(KDE_CLANG_FORMAT)
                 string(REPLACE "%" "_" unique_target_name ${unique_target_name}) # some imvalid cmake target names
                 string(REPLACE "{" "_" unique_target_name ${unique_target_name})
                 string(REPLACE "}" "_" unique_target_name ${unique_target_name})
-                add_custom_target(${unique_target_name})
+                add_custom_target(${unique_target_name}
+                    DEPENDS ${_full_file_path}
+                )
                 add_custom_command(TARGET ${unique_target_name}
+                    POST_BUILD
                     COMMAND ${KDE_CLANG_FORMAT_EXECUTABLE} -style=file -i ${_full_file_path}
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                    DEPENDS ${_full_file_path}
                 )
                 add_dependencies(clang-format ${unique_target_name})
             endif()
