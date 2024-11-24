@@ -166,7 +166,7 @@ function(ecm_generate_python_bindings)
     add_custom_command(
         TARGET ${PB_PACKAGE_NAME}
         POST_BUILD
-        COMMAND Python3::Interpreter -m build --wheel
+        COMMAND Python3::Interpreter -m build --wheel --no-isolation
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}"
         COMMENT "Building Python Wheel"
     )
