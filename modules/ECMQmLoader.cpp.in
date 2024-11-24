@@ -99,15 +99,19 @@ namespace {
         // translation for the current locale to overload it.
         loadTranslation(QStringLiteral("en"));
 
-        const QLocale locale = getSystemLocale();
-        if (locale.name() != QStringLiteral("en")) {
-            if (!loadTranslation(locale.name())) {
-                if (!loadTranslation(locale.bcp47Name())) {
-                    const int i = locale.name().indexOf(QLatin1Char('_'));
-                    if (i > 0) {
-                        loadTranslation(locale.name().left(i));
-                    }
-                }
+        auto langs = getSystemLocale().uiLanguages();
+        for (auto it = langs.begin(); it != langs.end(); ++it) {
+            (*it).replace(QLatin1Char('-'), QLatin1Char('_'));
+            const auto idx = (*it).indexOf(QLatin1Char('_'));
+            if (idx > 0) {
+                it = langs.insert(++it, (*it).left(idx));
+            }
+        }
+        langs.removeAll(QStringLiteral("en"));
+        langs.removeDuplicates();
+        for (const auto &lang : langs) {
+            if (loadTranslation(lang)) {
+                break;
             }
         }
 
