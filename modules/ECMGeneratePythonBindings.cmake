@@ -82,12 +82,6 @@ function(ecm_generate_python_bindings)
     list(APPEND PB_DEPENDENCIES PySide6::pyside6)
     list(APPEND PB_DEPENDENCIES Shiboken6::libshiboken)
 
-    # Enable rpaths so that the built shared libraries find their dependencies.
-    set(CMAKE_SKIP_BUILD_RPATH FALSE)
-    set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-    set(CMAKE_INSTALL_RPATH ${SHIBOKEN_PYTHON_MODULE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
     # Get the relevant include dirs, to pass them on to shiboken.
     set(INCLUDES "")
 
