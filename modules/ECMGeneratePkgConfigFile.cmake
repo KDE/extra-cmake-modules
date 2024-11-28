@@ -168,26 +168,29 @@ function(ECM_GENERATE_PKGCONFIG_FILE)
   if(TARGET ${EGPF_LIB_NAME})
     # Generator expression cannot be evaluated when creating the pkgconfig file, we need to convert the public include directories
     # into something pkgconfig can understand
-    get_target_property(_EGPF_TARGET_INCLUDE_DIRS ${EGPF_LIB_NAME} INTERFACE_INCLUDE_DIRECTORIES)
+    get_target_property(__EGPF_TARGET_INCLUDE_DIRS ${EGPF_LIB_NAME} INTERFACE_INCLUDE_DIRECTORIES)
 
-    # INTERFACE_INCLUDE_DIRS can contain semicolon separated locations. Since CMake still doesn't accept different separators,
-    # We need to convert _EGPF_TARGET_INCLUDE_DIRS to a string, extract the locations and convert it back to a list
-    string(REPLACE ";" "|" _EGPF_TARGET_INCLUDE_DIRS "${_EGPF_TARGET_INCLUDE_DIRS}")
-    list(TRANSFORM _EGPF_TARGET_INCLUDE_DIRS REPLACE "\\$<INSTALL_INTERFACE:([^,>]+)>" "\\1")
-    string(REPLACE "|" ";" _EGPF_TARGET_INCLUDE_DIRS "${_EGPF_TARGET_INCLUDE_DIRS}")
+    if(__EGPF_TARGET_INCLUDE_DIRS)
+      set(_EGPF_TARGET_INCLUDE_DIRS "${__EGPF_TARGET_INCLUDE_DIRS}")
+      # INTERFACE_INCLUDE_DIRS can contain semicolon separated locations. Since CMake still doesn't accept different separators,
+      # We need to convert _EGPF_TARGET_INCLUDE_DIRS to a string, extract the locations and convert it back to a list
+      string(REPLACE ";" "|" _EGPF_TARGET_INCLUDE_DIRS "${_EGPF_TARGET_INCLUDE_DIRS}")
+      list(TRANSFORM _EGPF_TARGET_INCLUDE_DIRS REPLACE "\\$<INSTALL_INTERFACE:([^,>]+)>" "\\1")
+      string(REPLACE "|" ";" _EGPF_TARGET_INCLUDE_DIRS "${_EGPF_TARGET_INCLUDE_DIRS}")
 
-    # Remove any other generator expression.
-    string(GENEX_STRIP "${_EGPF_TARGET_INCLUDE_DIRS}" _EGPF_TARGET_INCLUDE_DIRS)
+      # Remove any other generator expression.
+      string(GENEX_STRIP "${_EGPF_TARGET_INCLUDE_DIRS}" _EGPF_TARGET_INCLUDE_DIRS)
 
-    # Remove possible duplicate entries a first time
-    list(REMOVE_DUPLICATES _EGPF_TARGET_INCLUDE_DIRS)
+      # Remove possible duplicate entries a first time
+      list(REMOVE_DUPLICATES _EGPF_TARGET_INCLUDE_DIRS)
 
-    foreach(EGPF_INCLUDE_DIR IN LISTS _EGPF_TARGET_INCLUDE_DIRS)
-      # if the path is not absolute (that would be the case for KDEInstallDirs variables), append \${prefix} before each entry
-      if(NOT IS_ABSOLUTE "${EGPF_INCLUDE_DIR}")
-        list(TRANSFORM _EGPF_TARGET_INCLUDE_DIRS REPLACE "${EGPF_INCLUDE_DIR}" "\${prefix}/${EGPF_INCLUDE_DIR}")
-      endif()
-    endforeach()
+      foreach(EGPF_INCLUDE_DIR IN LISTS _EGPF_TARGET_INCLUDE_DIRS)
+        # if the path is not absolute (that would be the case for KDEInstallDirs variables), append \${prefix} before each entry
+        if(NOT IS_ABSOLUTE "${EGPF_INCLUDE_DIR}")
+          list(TRANSFORM _EGPF_TARGET_INCLUDE_DIRS REPLACE "${EGPF_INCLUDE_DIR}" "\${prefix}/${EGPF_INCLUDE_DIR}")
+        endif()
+      endforeach()
+    endif()
   endif()
 
   if(IS_ABSOLUTE "${EGPF_INCLUDE_INSTALL_DIR}")

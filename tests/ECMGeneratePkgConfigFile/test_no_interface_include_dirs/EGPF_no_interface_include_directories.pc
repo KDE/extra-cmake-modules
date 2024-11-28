@@ -1,0 +1,13 @@
+
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include/KF6
+
+Name: EGPF_lib_without_interface
+Description: Testing generated pkgconfig file without interface_include_directories
+URL: https://www.kde.org/
+Version: 0.1
+Libs: -L${prefix}/lib -lEGPF_lib_without_interface
+Cflags: -I${prefix}/include/KF6 
+Requires: 

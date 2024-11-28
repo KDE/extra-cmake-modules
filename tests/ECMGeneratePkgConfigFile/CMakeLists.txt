@@ -6,3 +6,4 @@ add_test(
     COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/run_test.cmake")
 
 add_subdirectory(test_imported_targets)
+add_subdirectory(test_no_interface_include_dirs)
