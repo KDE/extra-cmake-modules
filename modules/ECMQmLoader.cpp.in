@@ -104,13 +104,13 @@ namespace {
             (*it).replace(QLatin1Char('-'), QLatin1Char('_'));
             const auto idx = (*it).indexOf(QLatin1Char('_'));
             if (idx > 0) {
-                it = langs.insert(++it, (*it).left(idx));
+                const QString genericLang = (*it).left(idx);
+                it = langs.insert(++it, genericLang);
             }
         }
-        langs.removeAll(QStringLiteral("en"));
         langs.removeDuplicates();
         for (const auto &lang : langs) {
-            if (loadTranslation(lang)) {
+            if (lang == QLatin1String("en") || loadTranslation(lang)) {
                 break;
             }
         }

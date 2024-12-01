@@ -87,6 +87,21 @@ if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
         endforeach()
     endfunction()
 
+    function(check_translations_multilang name exec catalog_name langs expected_lang)
+        execute_process(
+            COMMAND "${CMAKE_COMMAND}" -E env "XDG_DATA_DIRS=${ACTUAL_TREE}/share"
+                LANGUAGE=${langs} "${exec}"
+            OUTPUT_VARIABLE output
+        )
+        string(STRIP "${output}" stripped_output)
+        if(NOT stripped_output STREQUAL exp_output_${catalog_name}_${expected_lang})
+            message(WARNING "${name}[${langs}] output was \"${stripped_output}\", but expected \"${exp_output_${catalog_name}_${expected_lang}}\"")
+            set(fail ON PARENT_SCOPE)
+        else()
+            message(STATUS "${name}[${langs}] output was \"${stripped_output}\", as expected")
+        endif()
+    endfunction()
+
     check_translations(TR_TEST "${TR_TEST_EXEC}" catalog)
     check_translations(TR_TEST_TARGET "${TR_TEST_TARGET_EXEC}" catalog)
     check_translations(TR_TEST_2 "${TR_TEST_2_EXEC}" catalog2)
@@ -99,6 +114,9 @@ if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
     if (TR_THREAD_TEST_2)
         check_translations(TR_THREAD_TEST_2 "${TR_THREAD_TEST_2_EXEC}" catalog2)
     endif()
+
+    check_translations_multilang(TR_TEST "${TR_TEST_EXEC}" catalog "de_AT:fr_FR" "de")
+    check_translations_multilang(TR_TEST "${TR_TEST_EXEC}" catalog "en_GB:de_DE" "en")
 endif()
 
 if (fail)
