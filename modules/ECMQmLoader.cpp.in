@@ -120,28 +120,6 @@ namespace {
         }
     }
 
-    // Helper to call load() on the main thread.
-    //
-    // Calling functions on another thread without using moc is non-trivial in
-    // Qt until 5.4 (when some useful QTimer::singleShot overloads were added).
-    //
-    // Instead, we have to use QEvents. Ideally, we'd use a custom QEvent, but
-    // there's a chance this could cause trouble with applications that claim
-    // QEvent codes themselves, but don't register them with Qt (and we also
-    // want to avoid registering a new QEvent code for every plugin that might
-    // be loaded). We use QTimer because it's unlikely to be filtered by
-    // applications, and is also unlikely to cause Qt to do something it
-    // shouldn't.
-    class Loader : public QObject
-    {
-    protected:
-        void timerEvent(QTimerEvent *) Q_DECL_OVERRIDE
-        {
-            load(LoadOptions::CreateWatcher);
-            this->deleteLater();
-        }
-    };
-
     void loadOnMainThread()
     {
         // If this library is loaded after the QCoreApplication instance is
@@ -152,10 +130,7 @@ namespace {
         if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
             load(LoadOptions::CreateWatcher);
         } else {
-            // QObjects inherit their parent object's thread
-            Loader *loader = new Loader();
-            loader->moveToThread(QCoreApplication::instance()->thread());
-            QCoreApplication::instance()->postEvent(loader, new QTimerEvent(0), Qt::HighEventPriority);
+            QMetaObject::invokeMethod(QCoreApplication::instance(), [] { load(LoadOptions::CreateWatcher); }, Qt::QueuedConnection);
         }
     }
 }
