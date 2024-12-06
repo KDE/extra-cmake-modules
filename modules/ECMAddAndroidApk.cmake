@@ -125,7 +125,6 @@ function (ecm_add_android_apk TARGET)
 
     get_target_property(QT6_RCC_BINARY Qt6::rcc LOCATION)
     string(TOLOWER "${CMAKE_HOST_SYSTEM_NAME}" _LOWER_CMAKE_HOST_SYSTEM_NAME)
-    set(APPLICATION_BINARY "${APK_NAME}")
     configure_file("${_ECM_TOOLCHAIN_DIR}/deployment-file-qt6.json.in" "${CMAKE_BINARY_DIR}/${APK_NAME}-deployment.json.in")
 
     if (NOT TARGET create-apk)
