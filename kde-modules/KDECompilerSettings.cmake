@@ -615,6 +615,12 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
    endif()
 endif()
 
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+   if (CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 14.0.0)
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fhardened" )
+   endif()
+endif()
+
 # -w1 turns on warnings and errors
 # FIXME: someone needs to have a closer look at the Intel compiler options
 if (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
