@@ -188,7 +188,7 @@ endif()
 # for Qt6.
 # When building Qt6Base itself the check does not work, hence we have
 # ECM_THREADS_WORKAROUND for that case which set to OFF in the Craft blueprints.
-if (NOT DEFINED ECM_THREADS_WORKAROUND)
+if (NOT DEFINED ECM_THREADS_WORKAROUND AND NOT DEFINED ENV{ECM_THREADS_WORKAROUND})
     set(ECM_THREADS_WORKAROUND TRUE)
 endif()
 get_property(_languages GLOBAL PROPERTY ENABLED_LANGUAGES)
