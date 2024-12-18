@@ -184,11 +184,13 @@ endif()
 # CXX-only projects we still need to do this unconditionally...
 #
 # We cannot use our usual Qt version check at this point though yet,
-# se check whether we are chainloaded by the Qt toolchain as an indicator
+# so check whether we are chainloaded by the Qt toolchain as an indicator
 # for Qt6.
 # When building Qt6Base itself the check does not work, hence we have
 # ECM_THREADS_WORKAROUND for that case which set to OFF in the Craft blueprints.
-if (NOT DEFINED ECM_THREADS_WORKAROUND)
+# As that doesn't propagate to nested CMake calls (e.g. tye_compile), we also check
+# whether that is set via an environment variable (necessary with Qt >= 6.8.1).
+if (NOT DEFINED ECM_THREADS_WORKAROUND AND NOT DEFINED ENV{ECM_THREADS_WORKAROUND})
     set(ECM_THREADS_WORKAROUND TRUE)
 endif()
 get_property(_languages GLOBAL PROPERTY ENABLED_LANGUAGES)
