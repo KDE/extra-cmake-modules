@@ -25,7 +25,7 @@ If not set, the standard template shipped with Qt6 is used, which in usually not
 what you want for production applications.
 
 If ``PACKAGE_NAME`` is given, it is used as name for the Android APK.
-If not set, the ``target`` name is used.
+If not set, the ``target`` name is used. Since 6.10.0
 
 The use of this function creates a build target called ``create-apk-<target>``
 which will run ``androiddeployqt`` to produce an (unsigned) APK, as well
