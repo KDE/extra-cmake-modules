@@ -13,6 +13,7 @@ as well as the associated Fastlane metadata.
 
   ecm_add_android_apk(<target>
       [ANDROID_DIR <dir>]
+      [PACKAGE_NAME <name>]
       # TODO extra args?
   )
 
@@ -22,6 +23,9 @@ If ``ANDROID_DIR`` is given, the Android manifest file as well as any potential
 Gradle build system files or Java/Kotlin source files are taken from that directory.
 If not set, the standard template shipped with Qt6 is used, which in usually not
 what you want for production applications.
+
+If ``PACKAGE_NAME`` is given, it is used as name for the Android APK.
+If not set, the ``target`` name is used.
 
 The use of this function creates a build target called ``create-apk-<target>``
 which will run ``androiddeployqt`` to produce an (unsigned) APK, as well
@@ -59,13 +63,19 @@ find_package(Python3 COMPONENTS Interpreter REQUIRED)
 set(_ECM_TOOLCHAIN_DIR "${CMAKE_CURRENT_LIST_DIR}/../toolchain")
 
 function (ecm_add_android_apk TARGET)
-    cmake_parse_arguments(ARGS "" "ANDROID_DIR" "" ${ARGN})
+    set(oneValueArgs ANDROID_DIR PACKAGE_NAME)
+    cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
     if (NOT ANDROID)
         return()
     endif()
 
+    set(APK_NAME "${TARGET}")
+    if (ARGS_PACKAGE_NAME)
+        set(APK_NAME "${ARGS_PACKAGE_NAME}")
+    endif()
+
     set(APK_OUTPUT_DIR "${CMAKE_BINARY_DIR}/${TARGET}_build_apk/")
-    set(APK_EXECUTABLE_PATH "${APK_OUTPUT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${TARGET}_${CMAKE_ANDROID_ARCH_ABI}.so")
+    set(APK_EXECUTABLE_PATH "${APK_OUTPUT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${APK_NAME}_${CMAKE_ANDROID_ARCH_ABI}.so")
 
     set(QML_IMPORT_PATHS "")
     # add build directory to the search path as well, so this works without installation
@@ -115,7 +125,7 @@ function (ecm_add_android_apk TARGET)
 
     get_target_property(QT6_RCC_BINARY Qt6::rcc LOCATION)
     string(TOLOWER "${CMAKE_HOST_SYSTEM_NAME}" _LOWER_CMAKE_HOST_SYSTEM_NAME)
-    configure_file("${_ECM_TOOLCHAIN_DIR}/deployment-file-qt6.json.in" "${CMAKE_BINARY_DIR}/${TARGET}-deployment.json.in")
+    configure_file("${_ECM_TOOLCHAIN_DIR}/deployment-file-qt6.json.in" "${CMAKE_BINARY_DIR}/${APK_NAME}-deployment.json.in")
 
     if (NOT TARGET create-apk)
         add_custom_target(create-apk)
@@ -140,16 +150,17 @@ function (ecm_add_android_apk TARGET)
     endif()
 
     file(WRITE ${CMAKE_BINARY_DIR}/ranlib "${CMAKE_RANLIB}")
-    set(CREATEAPK_TARGET_NAME "create-apk-${TARGET}")
+    set(CREATEAPK_TARGET_NAME "create-apk-${APK_NAME}")
+    set(APK_NAME_FULL "${APK_NAME}-${CMAKE_ANDROID_ARCH_ABI}.apk")
     add_custom_target(${CREATEAPK_TARGET_NAME}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        COMMAND ${CMAKE_COMMAND} -E echo "Generating $<TARGET_NAME:${TARGET}> with $<TARGET_FILE:Qt6::androiddeployqt>"
+        COMMAND ${CMAKE_COMMAND} -E echo "Generating ${APK_NAME_FULL} with $<TARGET_FILE:Qt6::androiddeployqt>"
         COMMAND ${CMAKE_COMMAND} -E remove_directory "${APK_OUTPUT_DIR}"
         COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${TARGET}>" "${APK_EXECUTABLE_PATH}"
         COMMAND LANG=C ${CMAKE_COMMAND} "-DTARGET=$<TARGET_FILE:${TARGET}>" -P ${_ECM_TOOLCHAIN_DIR}/hasMainSymbol.cmake
         COMMAND LANG=C ${CMAKE_COMMAND}
-            -DINPUT_FILE="${CMAKE_BINARY_DIR}/${TARGET}-deployment.json.in"
-            -DOUTPUT_FILE="${CMAKE_BINARY_DIR}/${TARGET}-deployment.json"
+            -DINPUT_FILE="${CMAKE_BINARY_DIR}/${APK_NAME}-deployment.json.in"
+            -DOUTPUT_FILE="${CMAKE_BINARY_DIR}/${APK_NAME}-deployment.json"
             "-DTARGET=$<TARGET_FILE:${TARGET}>"
             "-DOUTPUT_DIR=$<TARGET_FILE_DIR:${TARGET}>"
             "-DEXPORT_DIR=${ECM_APK_STAGING_ROOT_PATH}"
@@ -158,8 +169,8 @@ function (ecm_add_android_apk TARGET)
         COMMAND Qt6::androiddeployqt
             ${ANDROIDDEPLOYQT_EXTRA_ARGS}
             --gradle
-            --input "${CMAKE_BINARY_DIR}/${TARGET}-deployment.json"
-            --apk "${ANDROID_APK_OUTPUT_DIR}/${TARGET}-${CMAKE_ANDROID_ARCH_ABI}.apk"
+            --input "${CMAKE_BINARY_DIR}/${APK_NAME}-deployment.json"
+            --apk "${ANDROID_APK_OUTPUT_DIR}/${APK_NAME_FULL}"
             --output "${APK_OUTPUT_DIR}"
             --android-platform android-${ANDROID_SDK_COMPILE_API}
             --deployment bundled

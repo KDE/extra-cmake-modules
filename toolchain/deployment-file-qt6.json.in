@@ -12,7 +12,7 @@
    "tool-prefix": "llvm",
    "toolchain-version": "@CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION@",
    "ndk-host": "@_LOWER_CMAKE_HOST_SYSTEM_NAME@-@CMAKE_HOST_SYSTEM_PROCESSOR@",
-   "application-binary": "@TARGET@",
+   "application-binary": "@APK_NAME@",
    "qml-root-path": "@CMAKE_SOURCE_DIR@",
    @DEFINE_QML_IMPORT_PATHS@
    ##EXTRALIBS##
