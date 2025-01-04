@@ -109,7 +109,7 @@ namespace {
             }
         }
         langs.removeDuplicates();
-        for (const auto &lang : langs) {
+        for (const auto &lang : std::as_const(langs)) {
             if (lang == QLatin1String("en") || loadTranslation(lang)) {
                 break;
             }
