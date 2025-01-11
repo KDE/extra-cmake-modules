@@ -109,7 +109,13 @@ namespace {
             }
         }
         langs.removeDuplicates();
-        for (const auto &lang : std::as_const(langs)) {
+        for (const auto &lang :
+#if QT_VERSION_MAJOR == 5
+                qAsConst(langs)
+#else
+                std::as_const(langs)
+#endif
+                ) {
             if (lang == QLatin1String("en") || loadTranslation(lang)) {
                 break;
             }
