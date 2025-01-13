@@ -64,14 +64,22 @@ Deprecated:
 
 Multiple templates can be passed at once.
 
-This function does nothing when cross-compiling.
+Unless setting KDE_INSTALL_APP_TEMPLATES, this function is skipped when cross-compiling.
 
 
 Since 5.18
 #]=======================================================================]
 
+if(NOT CMAKE_CROSSCOMPILING)
+   set(default_kde_install_app_templates ON)
+else()
+   set(default_kde_install_app_templates OFF)
+endif()
+
+option(KDE_INSTALL_APP_TEMPLATES "Skip installation of KAppTemplate/KDevelop compatible application templates" ${default_kde_install_app_templates})
+
 function(kde_package_app_templates)
-    if (CMAKE_CROSSCOMPILING)
+    if (NOT KDE_INSTALL_APP_TEMPLATES)
         return()
     endif()
 
