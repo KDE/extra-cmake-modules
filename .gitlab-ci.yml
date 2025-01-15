@@ -9,6 +9,7 @@ include:
       - /gitlab-templates/freebsd.yml
       - /gitlab-templates/android-qt6.yml
       - /gitlab-templates/linux-qt6.yml
+      - /gitlab-templates/linux-qt6-next.yml
       - /gitlab-templates/linux-qt6-static.yml
       - /gitlab-templates/windows.yml
       - /gitlab-templates/windows-static.yml
