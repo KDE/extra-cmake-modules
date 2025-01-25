@@ -74,7 +74,7 @@ function (ecm_add_android_apk TARGET)
         set(APK_NAME "${ARGS_PACKAGE_NAME}")
     endif()
 
-    set(APK_OUTPUT_DIR "${CMAKE_BINARY_DIR}/${TARGET}_build_apk/")
+    set(APK_OUTPUT_DIR "${CMAKE_BINARY_DIR}/${APK_NAME}_build_apk/")
     set(APK_EXECUTABLE_PATH "${APK_OUTPUT_DIR}/libs/${CMAKE_ANDROID_ARCH_ABI}/lib${APK_NAME}_${CMAKE_ANDROID_ARCH_ABI}.so")
 
     set(QML_IMPORT_PATHS "")
