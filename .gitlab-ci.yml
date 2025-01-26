@@ -17,3 +17,5 @@ include:
       - /gitlab-templates/windows-qt6.yml
       - /gitlab-templates/alpine-qt6.yml
 
+      - /gitlab-templates/xml-lint.yml
+      - /gitlab-templates/yaml-lint.yml

@@ -11,8 +11,8 @@ portingAid: false
 deprecated: false
 release: true
 libraries:
- - qmake: KCoreAddons
-   cmake: "KF5::CoreAddons"
+    - qmake: KCoreAddons
+      cmake: "KF5::CoreAddons"
 cmakename: KF5CoreAddons
 
 public_lib: true
