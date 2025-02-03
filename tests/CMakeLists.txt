@@ -173,6 +173,27 @@ add_test_macro(KDEPackageAppTemplatesTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/KDEPackageAppTemplatesTest/check.cmake"
 )
 
+set(KDEPackageAppTemplatesCrossTest_EXTRA_OPTIONS
+    --build-target install
+    --build-options
+        "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/KDEPackageAppTemplatesCrossTest/InstallDirectory"
+)
+add_test_macro(KDEPackageAppTemplatesCrossTest
+   ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/KDEPackageAppTemplatesCrossTest/check.cmake"
+)
+
+set(KDEPackageAppTemplatesForcedTest_EXTRA_OPTIONS
+    --build-target install
+    --build-options
+        -DKDE_INSTALL_APP_TEMPLATES=ON
+        "-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}/KDEPackageAppTemplatesForcedTest/InstallDirectory"
+)
+add_test_macro(KDEPackageAppTemplatesForcedTest
+   ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/KDEPackageAppTemplatesForcedTest/check.cmake"
+)
+
+
+
 if (TARGET Qt${QT_MAJOR_VERSION}::Core AND TARGET Qt${QT_MAJOR_VERSION}::lconvert)
     set(ECMPoQmToolsTest_EXTRA_OPTIONS
         --build-target install
