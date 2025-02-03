@@ -3,7 +3,7 @@ set(ECM_KDE_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../kde-modules)
 set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
 set(CMAKE_MODULE_PATH "${ECM_KDE_MODULE_DIR}")
 
-set(CMAKE_CROSSCOMPILING OFF)
+set(CMAKE_CROSSCOMPILING ON)
 include(KDEPackageAppTemplates)
 
 message(STATUS "Test: generate compressed template")
