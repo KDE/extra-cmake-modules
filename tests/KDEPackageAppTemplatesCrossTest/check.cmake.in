@@ -1,0 +1,16 @@
+set(CMAKE_MODULE_PATH "@MODULES_DIR@/../kde-modules")
+set(CMAKE_CURRENT_SOURCE_DIR "@CMAKE_CURRENT_SOURCE_DIR@")
+set(CMAKE_CURRENT_BINARY_DIR "@CMAKE_CURRENT_BINARY_DIR@")
+
+
+###########################################################
+
+macro(check_not_exists file)
+    message(STATUS "Checking for ${file}")
+    if (EXISTS ${file})
+        message(FATAL_ERROR "File \"${file}\" does exist")
+    endif()
+endmacro()
+
+message(STATUS "Test: the packaged template has not been generated")
+check_not_exists(${CMAKE_CURRENT_BINARY_DIR}/qml-plasmoid.tar.bz2 )
