@@ -57,13 +57,15 @@ find_path(EGL_INCLUDE_DIR
     HINTS
         ${PKG_EGL_INCLUDE_DIRS}
 )
-find_library(EGL_LIBRARY
-    NAMES
-        EGL
-        libEGL
-    HINTS
-        ${PKG_EGL_LIBRARY_DIRS}
-)
+if(NOT EMSCRIPTEN)
+    find_library(EGL_LIBRARY
+        NAMES
+            EGL
+            libEGL
+        HINTS
+            ${PKG_EGL_LIBRARY_DIRS}
+    )
+endif()
 
 # NB: We do *not* use the version information from pkg-config, as that
 #     is the implementation version (eg: the Mesa version)
@@ -95,7 +97,9 @@ if(EGL_INCLUDE_DIR)
 endif()
 
 cmake_push_check_state(RESET)
-list(APPEND CMAKE_REQUIRED_LIBRARIES "${EGL_LIBRARY}")
+if(NOT EMSCRIPTEN)
+    list(APPEND CMAKE_REQUIRED_LIBRARIES "${EGL_LIBRARY}")
+endif()
 list(APPEND CMAKE_REQUIRED_INCLUDES "${EGL_INCLUDE_DIR}")
 
 check_cxx_source_compiles("
