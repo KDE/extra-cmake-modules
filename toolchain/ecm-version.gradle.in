@@ -1,0 +1,13 @@
+// SPDX-FileCopyrightText: 2025 Volker Krause <vkrause@kde.org>
+// SPDX-License-Identifier: BSD-2-Clause
+
+ext {
+    ecmVersionName = "@PROJECT_VERSION@"
+    // version code needs to be strictly increasing and in sync for multiple APKs with different architectures
+    // we ensure the former by tying this to time and the latter by using CI_PIPELINE_CREATED_AT for builds
+    // in Gitlab pipelines.
+    ecmVersionCode = (int)(new Date().getTime()/1000)
+    if (System.getenv('CI_PIPELINE_CREATED_AT')) {
+        ecmVersionCode = (int)(Date.from(Instant.parse(System.getenv('CI_PIPELINE_CREATED_AT'))).getTime()/1000)
+    }
+}

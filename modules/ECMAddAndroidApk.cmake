@@ -47,6 +47,28 @@ The following variables impact the behavior:
     This allows to separate e.g. development files from what ends up in the APK.
 
 Since 6.0.0
+
+For automatically deriving APK versions from CMake this creates a ``ecm-version.gradle``
+file which defines the following variables:
+``ecmVersionName``: Set to ``PROJECT_VERSION``
+``ecmVersionCode``: Derived from the current time in local builds, and from ``CI_PIPELINE_CREATED_AT``
+    in builds from Gitlab pipelines. This ensures a strictly increasing version code as well as
+    synchronized version codes for APKs of multiple architectures when build in a Gitlab pipeline.
+
+This can be included by calling ``apply from: '../ecm-version.gradle'`` in the project's ``build.gradle``
+file and is typically used in manifest placeholders:
+
+```
+defaultConfig {
+    versionName ecmVersionName
+    versionCode ecmVersionCode
+    manifestPlaceholders = [versionName: ecmVersionName, versionCode: ecmVersionCode]
+    ...
+}
+```
+
+Since 6.12.0
+
 #]=======================================================================]
 
 # make ExecuteCoreModules test pass on Qt5
@@ -68,6 +90,8 @@ function (ecm_add_android_apk TARGET)
     if (NOT ANDROID)
         return()
     endif()
+
+    configure_file(${_ECM_TOOLCHAIN_DIR}/ecm-version.gradle.in ${CMAKE_BINARY_DIR}/ecm-version.gradle)
 
     set(APK_NAME "${TARGET}")
     if (ARGS_PACKAGE_NAME)
