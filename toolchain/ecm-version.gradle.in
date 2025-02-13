@@ -3,11 +3,23 @@
 
 ext {
     ecmVersionName = "@PROJECT_VERSION@"
-    // version code needs to be strictly increasing and in sync for multiple APKs with different architectures
+    // version code needs to be strictly increasing and properly ordered for multiple APKs with different architectures
     // we ensure the former by tying this to time and the latter by using CI_PIPELINE_CREATED_AT for builds
     // in Gitlab pipelines.
+    //
+    // We have the following constraints to satisfy
+    // - Google Play requires different version codes for different architecture APKs
+    // - F-Droid requires ARM32 does not have a higher version code than ARM64
+    // - Google Play require ARM64 to have a higher version code as ARM32
     ecmVersionCode = (int)(new Date().getTime()/1000)
     if (System.getenv('CI_PIPELINE_CREATED_AT')) {
         ecmVersionCode = (int)(Date.from(Instant.parse(System.getenv('CI_PIPELINE_CREATED_AT'))).getTime()/1000)
+        if (System.getenv('KDECI_CRAFT_PLATFORM')) {
+            if (System.getenv('KDECI_CRAFT_PLATFORM').contains('x86_64')) {
+                ecmVersionCode = ecmVersionCode + 1
+            } else if (System.getenv('KDECI_CRAFT_PLATFORM').contains('arm64')) {
+                ecmVersionCode = ecmVersionCode + 2
+            }
+        }
     }
 }
