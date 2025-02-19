@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.16)
 
 # keep version in sync with the one used in consumer/CMakeLists.txt for the library
 # ideally would be send over by an exported target property,

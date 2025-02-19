@@ -1,6 +1,6 @@
 # Test KDEInstallDirs does not crash if a variable like CMAKE_INSTALL_LIBDIR is
 # defined but is not a cache variable.
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.16)
 
 set(ECM_KDE_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../kde-modules)
 set(ECM_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../modules)
