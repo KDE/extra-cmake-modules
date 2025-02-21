@@ -7,11 +7,15 @@
 ECMFindQmlModule
 ----------------
 
-Find QML import modules through a ``find_qmlmodule()`` call.
-It looks for the qmldir and uses the qmlplugindump if needed application to find the plugins and sets them up as
-runtime dependencies.
-This is useful so that when we configure a project we are notified when some
-QML imports are not present in the system.
+Finds QML import modules to set them as runtime dependencies.
+
+Because QML modules are not compile time requirements, they can be easy to miss
+by packagers and developers, causing QML apps to fail to display.
+Use this CMake module to ensure a QML module is installed at compile time
+during CMake configuration.
+
+Internally, this CMake module looks for the qmldir and, if needed, uses
+qmlplugindump to find the plugins and set them up as runtime dependencies.
 
 ::
 
