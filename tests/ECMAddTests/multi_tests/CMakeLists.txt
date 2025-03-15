@@ -194,3 +194,24 @@ get_property(_is_bundle TARGET test11 PROPERTY MACOSX_BUNDLE)
 if (_is_bundle)
     message(FATAL_ERROR "test11 is an OS/X bundle when it should not be")
 endif()
+
+set(exp_env "TEST_ENV=1")
+ecm_add_tests(
+    test12.cpp
+    test13.cpp
+    LINK_LIBRARIES testhelper
+    ENVIRONMENT ${exp_env}
+    )
+get_property(_env TEST test12 PROPERTY ENVIRONMENT)
+assert_vars_setequal(_env exp_env)
+get_property(_env TEST test13 PROPERTY ENVIRONMENT)
+assert_vars_setequal(_env exp_env)
+
+set(exp_compile_def "-DTEST_DEF=1")
+ecm_add_tests(
+    test14.cpp
+    test15.cpp
+    LINK_LIBRARIES testhelper
+    COMPILE_DEFINITIONS ${exp_compile_def}
+    )
+# The checks are carried out by executing the executable file created
