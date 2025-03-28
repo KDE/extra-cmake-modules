@@ -19,6 +19,7 @@ Generate Python bindings using Shiboken.
                                VERSION <version>
                                WRAPPED_HEADER <filename>
                                TYPESYSTEM <filename>
+                               [EXPORT_TYPESYSTEM]
                                GENERATED_SOURCES <filename> [<filename> [...]]
                                DEPENDENCIES <target> [<target> [...]]
                                QT_VERSION <version>
@@ -35,6 +36,9 @@ Generate Python bindings using Shiboken.
 for the library.
 
 ``TYPESYSTEM`` is the XML file where the bindings are defined.
+
+``EXPORT_TYPESYSTEM`` specifies that the typesystem XML file and the
+generated header are exported and can be used by other typesystem XML files.
 
 ``GENERATED_SOURCES`` is the list of generated C++ source files by Shiboken
 that will be used to build the shared library.
@@ -57,7 +61,7 @@ description on the Python Package Index.
 set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 function(ecm_generate_python_bindings)
-    set(options )
+    set(options EXPORT_TYPESYSTEM)
     set(oneValueArgs PACKAGE_NAME WRAPPED_HEADER TYPESYSTEM VERSION QT_VERSION HOMEPAGE_URL ISSUES_URL AUTHOR README)
     set(multiValueArgs GENERATED_SOURCES DEPENDENCIES)
 
@@ -66,6 +70,12 @@ function(ecm_generate_python_bindings)
     # Ugly hacks because PySide6::pyside6 only includes /usr/includes/PySide6 and none of the sub directory
     # Qt bugreport: PYSIDE-2882
     get_property(PYSIDE_INCLUDE_DIRS TARGET "PySide6::pyside6" PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+    if(NOT PYSIDE_INCLUDE_DIR)
+        set(PYSIDE_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include/PySide${QT_MAJOR_VERSION}")
+    endif()
+    if(NOT PYSIDE_INCLUDE_DIR IN_LIST PYSIDE_INCLUDE_DIRS)
+        list(APPEND PYSIDE_INCLUDE_DIRS "${PYSIDE_INCLUDE_DIR}")
+    endif()
     foreach(PYSIDE_INCLUDE_DIR ${PYSIDE_INCLUDE_DIRS})
         file(GLOB PYSIDE_SUBDIRS LIST_DIRECTORIES true "${PYSIDE_INCLUDE_DIR}/*")
         foreach (PYSIDE_SUBDIR ${PYSIDE_SUBDIRS})
@@ -170,5 +180,13 @@ function(ecm_generate_python_bindings)
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}"
         COMMENT "Building Python Wheel"
     )
+
+    # Export the header and the typesystem XML file
+    if (PB_EXPORT_TYPESYSTEM)
+        string(TOLOWER ${PB_PACKAGE_NAME} lower_package_name)
+        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/${lower_package_name}_python.h
+                DESTINATION "${PYSIDE_INCLUDE_DIR}/${PB_PACKAGE_NAME}/")
+        install(FILES "${PB_TYPESYSTEM}" DESTINATION ${PYSIDE_TYPESYSTEMS})
+    endif()
 
 endfunction()
