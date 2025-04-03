@@ -12,3 +12,5 @@ void QmlModule::registerTypes(const char* uri)
 {
     Q_ASSERT(QLatin1String(uri) == QLatin1String("Test"));
 }
+
+#include "moc_qmlmodule.cpp"
