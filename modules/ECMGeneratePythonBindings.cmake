@@ -118,6 +118,7 @@ function(ecm_generate_python_bindings)
         ${INCLUDES}
         --include-paths=${CMAKE_SOURCE_DIR}
         --typesystem-paths=${CMAKE_SOURCE_DIR}
+        --typesystem-paths="${CMAKE_INSTALL_PREFIX}/share/PySide${QT_MAJOR_VERSION}/typesystems"
         --typesystem-paths=${PYSIDE_TYPESYSTEMS}
         --output-directory=${CMAKE_CURRENT_BINARY_DIR})
 
@@ -186,7 +187,7 @@ function(ecm_generate_python_bindings)
         string(TOLOWER ${PB_PACKAGE_NAME} lower_package_name)
         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PB_PACKAGE_NAME}/${lower_package_name}_python.h
                 DESTINATION "${PYSIDE_INCLUDE_DIR}/${PB_PACKAGE_NAME}/")
-        install(FILES "${PB_TYPESYSTEM}" DESTINATION ${PYSIDE_TYPESYSTEMS})
+        install(FILES "${PB_TYPESYSTEM}" DESTINATION "${CMAKE_INSTALL_PREFIX}/share/PySide${QT_MAJOR_VERSION}/typesystems/")
     endif()
 
 endfunction()
