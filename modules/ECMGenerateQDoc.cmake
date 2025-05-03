@@ -71,6 +71,10 @@ function(ecm_generate_qdoc target qdocconf_file)
     set(qdoc_extra_args "")
 
     if (NOT QDOC_BIN)
+        if (NOT TARGET Qt6::qdoc)
+            message("qdoc executable not found, not generating API documentation")
+            return()
+        endif()
         get_target_property(QDOC_BIN Qt6::qdoc LOCATION)
     endif()
 
