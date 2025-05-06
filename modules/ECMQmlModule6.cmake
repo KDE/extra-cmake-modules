@@ -23,6 +23,19 @@ endif()
 # Stop warning about a changed import prefix.
 qt6_policy(SET QTP0001 NEW)
 
+option(ECM_QMLCACHE_UNITY_BUILD "Perform unity builds for source files produced by qmlcachegen." OFF)
+
+# Internal, puts all qmlcachegen cpp source files into the same unity build group
+function(_ecm_qml_module_setup_unity_group ARG_TARGET)
+    get_target_property(_sources ${ARG_TARGET} SOURCES)
+    foreach(_src ${_sources})
+        string(REGEX MATCH "\\.rcc/qmlcache/" _is_qmlcache ${_src})
+        if (_is_qmlcache)
+            set_source_files_properties(${_src} PROPERTIES UNITY_GROUP "qmlcache")
+        endif()
+    endforeach()
+endfunction()
+
 function(ecm_add_qml_module ARG_TARGET)
     cmake_parse_arguments(PARSE_ARGV 1 ARG "NO_PLUGIN;QT_NO_PLUGIN;GENERATE_PLUGIN_SOURCE" "URI;VERSION;CLASSNAME;OUTPUT_TARGETS" "")
 
@@ -107,6 +120,9 @@ function(ecm_add_qml_module ARG_TARGET)
         )
     endif()
 
+    _ecm_qml_module_setup_unity_group(${ARG_TARGET})
+    set_target_properties(${ARG_TARGET} PROPERTIES UNITY_BUILD_MODE GROUP)
+    set_target_properties(${ARG_TARGET} PROPERTIES UNITY_BUILD ${ECM_QMLCACHE_UNITY_BUILD})
 endfunction()
 
 function(ecm_add_qml_module_dependencies ARG_TARGET)
@@ -159,6 +175,7 @@ function(ecm_target_qml_sources ARG_TARGET)
     list(APPEND _ecm_output_targets ${_out_targets})
     set_target_properties(${ARG_TARGET} PROPERTIES _ecm_output_targets "${_ecm_output_targets}")
 
+    _ecm_qml_module_setup_unity_group(${ARG_TARGET})
 endfunction()
 
 function(ecm_finalize_qml_module ARG_TARGET)

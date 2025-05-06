@@ -224,6 +224,13 @@ Since 6.1.0
 Enabling the global option ``VERBOSE_QML_COMPILER`` during CMake configuration
 will activate verbose output for qmlcachegen.
 
+Since 6.18.0
+
+Generate code from qmlcachegen is put into the same ``UNITY_GROUP``. Unity builds
+using this can either be activated manueally per target or with the ``ECM_QMLCACHE_UNITY_BUILD``
+option globally. This can speed up clean builds at the expense of needing more memory
+and making incremental builds slower.
+
 #]========================================================================]
 
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
