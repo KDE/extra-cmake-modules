@@ -238,6 +238,16 @@ function(ecm_finalize_qml_module ARG_TARGET)
         endif()
     endif()
 
+    get_target_property(_sources ${ARG_TARGET} SOURCES)
+    foreach(_src ${_sources})
+        string(REGEX MATCH "\\.rcc/qmlcache/" _is_qmlcache ${_src})
+        if (_is_qmlcache)
+            set_source_files_properties(${_src} PROPERTIES UNITY_GROUP "qmlcache")
+        endif()
+    endforeach()
+    set_target_properties(${ARG_TARGET} PROPERTIES UNITY_BUILD_MODE GROUP)
+    set_target_properties(${ARG_TARGET} PROPERTIES UNITY_BUILD ON)
+
     # Install resources, possibly renamed.
     list(LENGTH module_resources num_files)
     if (NOT "${module_resources}" MATCHES "NOTFOUND" AND ${num_files} GREATER 0)
