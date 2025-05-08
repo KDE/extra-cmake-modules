@@ -12,6 +12,10 @@
 Language: JavaScript
 DisableFormat: true
 ---
+Language: Json
+DisableFormat: false
+IndentWidth: 4
+---
 
 # Style for C++
 Language: Cpp
