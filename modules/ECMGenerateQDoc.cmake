@@ -81,10 +81,10 @@ function(ecm_generate_qdoc target qdocconf_file)
     get_target_property(target_type ${target} TYPE)
     get_target_property(target_bin_dir ${target} BINARY_DIR)
     get_target_property(target_source_dir ${target} SOURCE_DIR)
-    set(doc_output_dir "${target_bin_dir}/.doc")
+    set(doc_output_dir "${CMAKE_BINARY_DIR}/.doc")
 
     # Generate include dir list
-    set(target_include_dirs_file "${doc_output_dir}/$<CONFIG>/includes.txt")
+    set(target_include_dirs_file "${doc_output_dir}/${target}_$<CONFIG>_includes.txt")
 
     set(include_paths_property "$<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>")
 
