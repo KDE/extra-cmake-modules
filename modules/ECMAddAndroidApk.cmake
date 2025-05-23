@@ -91,6 +91,14 @@ function (ecm_add_android_apk TARGET)
         return()
     endif()
 
+    # F-Droid assumes that APKs of different versions have different filenames;
+    # therefore, on CI we add the CI_PIPELINE_CREATED_AT timestamp to the APK filename
+    set(APK_NAME_TIMESTAMP "")
+    if (DEFINED ENV{CI_PIPELINE_CREATED_AT})
+        # remove all non-digits from an ISO 8601 formatted timestamp like 2025-05-21T16:00:54Z
+        string(REGEX REPLACE "^([0-9]+)-([0-9]+)-([0-9]+)T([0-9]+):([0-9]+):([0-9]+).*$" "-\\1\\2\\3\\4\\5\\6" APK_NAME_TIMESTAMP "$ENV{CI_PIPELINE_CREATED_AT}")
+    endif()
+
     configure_file(${_ECM_TOOLCHAIN_DIR}/ecm-version.gradle.in ${CMAKE_BINARY_DIR}/ecm-version.gradle)
 
     set(APK_NAME "${TARGET}")
@@ -175,7 +183,7 @@ function (ecm_add_android_apk TARGET)
 
     file(WRITE ${CMAKE_BINARY_DIR}/ranlib "${CMAKE_RANLIB}")
     set(CREATEAPK_TARGET_NAME "create-apk-${APK_NAME}")
-    set(APK_NAME_FULL "${APK_NAME}-${CMAKE_ANDROID_ARCH_ABI}.apk")
+    set(APK_NAME_FULL "${APK_NAME}${APK_NAME_TIMESTAMP}-${CMAKE_ANDROID_ARCH_ABI}.apk")
     add_custom_target(${CREATEAPK_TARGET_NAME}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMAND ${CMAKE_COMMAND} -E echo "Generating ${APK_NAME_FULL} with $<TARGET_FILE:Qt6::androiddeployqt>"
