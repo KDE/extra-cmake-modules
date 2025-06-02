@@ -115,6 +115,7 @@ set(KDEInstallDirsTest.relative_or_absolute_usr_EXTRA_OPTIONS
                     -DAUTOSTARTDIR_should_be_absolute=TRUE
                     -DCONFDIR_should_be_absolute=TRUE
                     -DSYSCONFDIR_should_be_absolute=TRUE
+                    -DLOCALSTATEDIR_should_be_absolute=TRUE
     )
 add_test_variant(KDEInstallDirsTest.relative_or_absolute_usr
                  KDEInstallDirsTest.relative_or_absolute dummy)

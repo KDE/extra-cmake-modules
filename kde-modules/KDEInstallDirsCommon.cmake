@@ -261,7 +261,12 @@ _define_absolute(INCLUDEDIR "include"
     "C and C++ header files"
     INCLUDE_INSTALL_DIR)
 
-_define_absolute(LOCALSTATEDIR "var"
+set(_default_localstate_dir "var")
+if (CMAKE_INSTALL_PREFIX STREQUAL "/usr")
+    set(_default_localstate_dir "/var")
+endif()
+
+_define_absolute(LOCALSTATEDIR ${_default_localstate_dir}
     "modifiable single-machine data")
 
 _define_absolute(SHAREDSTATEDIR "com"
