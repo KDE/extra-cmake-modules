@@ -171,7 +171,7 @@ function(ecm_generate_qdoc target qdocconf_file)
 
         add_custom_target(generate_qch_${target}
             COMMAND ${QHelpGenerator_EXECUTABLE}
-            "${dest_dir}/html/${doc_target}.qhp"
+            "${dest_dir}/${doc_target}/${doc_target}.qhp"
             -o "${qch_file_path}"
         )
 
@@ -179,7 +179,7 @@ function(ecm_generate_qdoc target qdocconf_file)
         add_dependencies(install_html_docs install_html_docs_${target})
         add_dependencies(install_qch_docs install_qch_docs_${target})
 
-        install(DIRECTORY "${dest_dir}/html/"
+        install(DIRECTORY "${dest_dir}/${doc_target}/"
                 DESTINATION "${KDE_INSTALL_QTQCHDIR}/${doc_target}"
                 COMPONENT _install_html_docs_${target}
                 EXCLUDE_FROM_ALL
