@@ -166,7 +166,7 @@ function(ecm_generate_qdoc target qdocconf_file)
     # generate .qch
     if (TARGET Qt6::qhelpgenerator)
         set(qch_file_name ${doc_target}.qch)
-        set(qch_file_path ${dest_dir}/${doc_target}/${qch_file_name})
+        set(qch_file_path ${dest_dir}/${qch_file_name})
         get_target_property(QHelpGenerator_EXECUTABLE Qt6::qhelpgenerator LOCATION)
 
         add_custom_target(generate_qch_${target}
