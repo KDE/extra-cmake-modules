@@ -55,8 +55,13 @@ add_custom_target(generate_qch)
 add_custom_target(install_qch_docs)
 
 function(ecm_generate_qdoc target qdocconf_file)
-    find_package(Qt6Tools CONFIG REQUIRED)
-    find_package(Qt6 COMPONENTS ToolsTools CONFIG REQUIRED)
+    find_package(Qt6Tools CONFIG QUIET)
+    find_package(Qt6 OPTIONAL_COMPONENTS ToolsTools CONFIG QUIET)
+
+    if (NOT Qt6Tools_FOUND OR NOT Qt6ToolsTools_FOUND)
+        message(STATUS "Qt6Tools or Qt6ToolsTools not found, not generating API documentation")
+        return()
+    endif()
 
     if (NOT TARGET ${target})
         message(FATAL_ERROR "${target} is not a target")
