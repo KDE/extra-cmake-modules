@@ -240,6 +240,9 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
    # and in KDE plugins don't have a prefix.
    set(CMAKE_SHARED_MODULE_PREFIX "")
 
+   # We use private Qt modules in various places, disable the warning about it
+   set(QT_NO_PRIVATE_MODULE_WARNING ON)
+
    unset(EXECUTABLE_OUTPUT_PATH)
    unset(LIBRARY_OUTPUT_PATH)
    unset(CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
