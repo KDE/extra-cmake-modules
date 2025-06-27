@@ -203,7 +203,7 @@ has been done. It will perform a number of tasks:
   ``DESTINATION`` based on the QML module's URI. If this value is not set,
   KDE_INSTALL_QMLDIR will be used. Note that if ``NO_PLUGIN`` is set, a C++
   QML plugin will be generated to include the QRC files.
-- If ``BUILD_SHARED_LIBS`` in on, all generated files, QML sources and the C++
+- If ``BUILD_SHARED_LIBS`` is on, all generated files, QML sources and the C++
   plugin will be installed in a subdirectory of ``DESTINATION`` based on the
   QML module's URI. In addition, these files will also be copied to the target's
   ``RUNTIME_OUTPUT_DIRECTORY`` in a similar subdirectory.
