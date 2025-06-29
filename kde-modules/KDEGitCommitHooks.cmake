@@ -24,6 +24,9 @@ This function will create a pre-commit hook which contains all the given checks.
 In addition to that, you can pass in paths to custom scripts that will be run as the pre-commit hook.
 If a custom hooks directory is set via ``core.hooksPath``, a warning is issued.
 
+The created pre-commit script will also execute any custom user-provided 
+scripts located in .git/hooks/pre-commit.d directory.
+
 Checks:
 
 - ``CLANG_FORMAT`` With this check enabled the ``git clang-format`` tool will be used to make sure that
