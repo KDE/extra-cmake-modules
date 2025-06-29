@@ -1,3 +1,21 @@
 #!/usr/bin/env bash
 
 ${PRE_COMMIT_SCRIPTS}
+
+
+# If the user has custom commit hooks defined in pre-commit.d directory,
+# execute them
+PRE_COMMIT_D_DIR="$(dirname "$0")/pre-commit.d/"
+
+if [ -d "$PRE_COMMIT_D_DIR" ]; then
+    for PRE_COMMIT_D_HOOK in "$PRE_COMMIT_D_DIR"/*; do
+        ./"$PRE_COMMIT_D_HOOK"
+        RESULT=$?
+        if [ $RESULT != 0 ]; then
+            echo "$PRE_COMMIT_D_HOOK returned non-zero: $RESULT, commit aborted"
+            exit $RESULT
+        fi
+    done
+fi
+
+exit 0
