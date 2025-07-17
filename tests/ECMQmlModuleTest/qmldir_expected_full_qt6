@@ -1,6 +1,6 @@
 module Test
 linktarget TestModule
-optional plugin TestModule
+plugin TestModule
 classname TestPlugin
 typeinfo TestModule.qmltypes
 prefer :/qt/qml/Test/
