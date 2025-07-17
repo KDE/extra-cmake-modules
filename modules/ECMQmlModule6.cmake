@@ -73,7 +73,7 @@ function(ecm_add_qml_module ARG_TARGET)
     endif()
 
     if (NOT ARG_GENERATE_PLUGIN_SOURCE)
-        list(APPEND _arguments NO_GENERATE_PLUGIN_SOURCE)
+        list(APPEND _arguments NO_GENERATE_PLUGIN_SOURCE NO_PLUGIN_OPTIONAL)
     endif()
 
     if (NOT TARGET ${ARG_TARGET})
