@@ -282,7 +282,7 @@ def createYml(appname, data):
     if 'url-donation' in data:
         info['Donate'] = data['url-donation'][None]
     else:
-        info['Donate'] = 'https://kde.org/community/donations/'
+        info['Donate'] = 'https://kde.org/donate'
 
     # static data
     info['Translation'] = 'https://l10n.kde.org/'
