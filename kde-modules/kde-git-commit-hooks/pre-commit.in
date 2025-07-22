@@ -2,6 +2,10 @@
 
 ${PRE_COMMIT_SCRIPTS}
 
+RESULT=$?
+if [ $RESULT != 0 ]; then
+    exit $RESULT
+fi
 
 # If the user has custom commit hooks defined in pre-commit.d directory,
 # execute them
