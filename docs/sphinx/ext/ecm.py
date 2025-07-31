@@ -41,11 +41,6 @@ QtHelpBuilder.build_keywords = new_build_keywords
 
 from docutils.parsers.rst import Directive, directives
 from docutils.transforms import Transform
-try:
-    from docutils.utils.error_reporting import SafeString, ErrorString
-except ImportError:
-    # error_reporting was not in utils before version 0.11:
-    from docutils.error_reporting import SafeString, ErrorString
 
 from docutils import io, nodes
 
@@ -80,13 +75,13 @@ class ECMModule(Directive):
             f = io.FileInput(source_path=path, encoding=encoding,
                              error_handler=e_handler)
         except UnicodeEncodeError:
-            raise self.severe('Problems with "%s" directive path:\n'
-                              'Cannot encode input file path "%s" '
-                              '(wrong locale?).' %
-                              (self.name, SafeString(path)))
+            msg = ('Problems with "%s" directive path:\n'
+                   'Cannot encode input file path "%s" '
+                   '(wrong locale?).' % (self.name, path))
+            raise self.severe(msg)
         except IOError as error:
-            raise self.severe('Problems with "%s" directive path:\n%s.' %
-                      (self.name, ErrorString(error)))
+            msg = 'Problems with "%s" directive path:\n%s.' % (self.name, error)
+            raise self.severe(msg)
         raw_lines = f.read().splitlines()
         f.close()
         rst = None
