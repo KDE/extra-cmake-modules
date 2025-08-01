@@ -36,8 +36,8 @@ version of ECM is < 5.83)::
 
   <prefix>_VERSION_STRING - <version> (use <prefix>_VERSION instead)
 
-If CMake policy CMP0048 is not ``NEW``, the following CMake variables will also
-be set::
+With CMake versions older than 4.0.0 and if CMake policy CMP0048 is not ``NEW``,
+the following CMake variables will also be set::
 
   PROJECT_VERSION_MAJOR   - <major>
   PROJECT_VERSION_MINOR   - <minor>
@@ -72,8 +72,8 @@ relative path, it is interpreted as relative to ``CMAKE_CURRENT_BINARY_DIR``. Th
 optional ``COMPATIBILITY`` option is forwarded to
 ``write_basic_package_version_file()``, and defaults to ``AnyNewerVersion``.
 
-If CMake policy CMP0048 is ``NEW``, an alternative form of the command is
-available::
+With CMake versions >= 4.0.0 or if CMake policy CMP0048 is ``NEW``, an alternative
+form of the command is available::
 
   ecm_setup_version(PROJECT
                     [VARIABLE_PREFIX <prefix>]
@@ -110,14 +110,21 @@ function(ecm_setup_version _version)
 
     set(project_manages_version FALSE)
     set(use_project_version FALSE)
-    cmake_policy(GET CMP0048 project_version_policy)
-    if(project_version_policy STREQUAL "NEW")
+    if(CMAKE_MAJOR_VERSION VERSION_GREATER_EQUAL 4)
         set(project_manages_version TRUE)
         if(_version STREQUAL "PROJECT")
             set(use_project_version TRUE)
         endif()
-    elseif(_version STREQUAL "PROJECT")
-        message(FATAL_ERROR "ecm_setup_version given PROJECT argument, but CMP0048 is not NEW")
+    else()
+        cmake_policy(GET CMP0048 project_version_policy)
+        if(project_version_policy STREQUAL "NEW")
+            set(project_manages_version TRUE)
+            if(_version STREQUAL "PROJECT")
+                set(use_project_version TRUE)
+            endif()
+        elseif(_version STREQUAL "PROJECT")
+            message(FATAL_ERROR "ecm_setup_version given PROJECT argument, but CMP0048 is not NEW")
+        endif()
     endif()
 
     set(should_set_prefixed_vars TRUE)

@@ -74,7 +74,8 @@ cache variable is set to something different.
 
 To properly use this macro a version needs to be set. To retrieve it,
 ``ECM_PKGCONFIG_INSTALL_DIR`` uses ``PROJECT_VERSION``. To set it, use the
-``project()`` command or the ``ecm_setup_version()`` macro
+``project()`` command (or if you still set CMP0048 to OLD and don't have
+CMake >= 4 the ``ecm_setup_version()`` macro)
 
 Example usage:
 
