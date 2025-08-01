@@ -11,6 +11,7 @@ Instruct CMake's automoc about C++ preprocessor macros used to define Qt-style p
 ::
 
   ecm_setup_qtplugin_macro_names(
+      [MACRO_NAMES <macro_name> [<macro_name> [...]]] # since 6.18
       [JSON_NONE <macro_name> [<macro_name> [...]]]
       [JSON_ARG1 <macro_name> [<macro_name> [...]]]
       [JSON_ARG2 <macro_name> [<macro_name> [...]]]
@@ -21,21 +22,28 @@ CMake's automoc needs some support when parsing C++ source files to detect wheth
 should be run on those files and if there are also dependencies on other files, like those
 with Qt plugin metadata in JSON format. Because automoc just greps overs the raw plain text
 of the sources without any C++ preprocessor-like processing.
-CMake in newer versions provides the variables ``CMAKE_AUTOMOC_DEPEND_FILTERS`` (CMake >= 3.9.0)
-and ``CMAKE_AUTOMOC_MACRO_NAMES`` (CMake >= 3.10) to allow the developer to assist automoc.
+CMake in newer versions provides the variable ``CMAKE_AUTOMOC_MACRO_NAMES`` (CMake >= 3.10)
+to allow the developer to assist automoc. For Qt up to version 5.15 additionally
+the variable ``CMAKE_AUTOMOC_DEPEND_FILTERS`` (CMake >= 3.9.0) can be used.
 
 This macro cares for the explicit setup needed for those variables for common cases of
 C++ preprocessor macros used for Qt-style plugins.
 
+``MACRO_NAMES`` lists the names of C++ preprocessor macros for Qt-style plugins.
+Requires at least Qt 5.15. Since 6.18.
+
 ``JSON_NONE`` lists the names of C++ preprocessor macros for Qt-style plugins which do not refer to
-external files with the plugin metadata.
+external files with the plugin metadata. Use ``MACRO_NAMES`` instead for Qt >= 5.15.
 
 ``JSON_ARG1`` lists the names of C++ preprocessor macros for Qt-style plugins where the first argument
 to the macro is the name of the external file with the plugin metadata.
+Use ``MACRO_NAMES`` instead for Qt >= 5.15.
 
 ``JSON_ARG2`` is the same as ``JSON_ARG1`` but with the file name being the second argument.
+Use ``MACRO_NAMES`` instead for Qt >= 5.15.
 
 ``JSON_ARG3`` is the same as ``JSON_ARG1`` but with the file name being the third argument.
+Use ``MACRO_NAMES`` instead for Qt >= 5.15.
 
 ``CONFIG_CODE_VARIABLE`` specifies the name of the variable which will get set as
 value some generated CMake code for instructing automoc for the given macro names,
@@ -63,7 +71,7 @@ In the CMake buildsystem of the library one calls
 .. code-block:: cmake
 
   ecm_setup_qtplugin_macro_names(
-      JSON_ARG2
+      MACRO_NAMES
          EXPORT_MYPLUGIN_WITH_JSON
   )
 
@@ -79,7 +87,7 @@ automoc about the usage of that macro.
 .. code-block:: cmake
 
   ecm_setup_qtplugin_macro_names(
-      JSON_ARG2
+      MACRO_NAMES
          EXPORT_MYPLUGIN_WITH_JSON
       CONFIG_CODE_VARIABLE
          PACKAGE_SETUP_AUTOMOC_VARIABLES
@@ -102,7 +110,7 @@ include(CMakePackageConfigHelpers)
 macro(ecm_setup_qtplugin_macro_names)
     set(options )
     set(oneValueArgs CONFIG_CODE_VARIABLE)
-    set(multiValueArgs JSON_NONE JSON_ARG1 JSON_ARG2 JSON_ARG3)
+    set(multiValueArgs MACRO_NAMES JSON_NONE JSON_ARG1 JSON_ARG2 JSON_ARG3)
 
     cmake_parse_arguments(ESQMN "${options}" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
@@ -110,17 +118,33 @@ macro(ecm_setup_qtplugin_macro_names)
         message(FATAL_ERROR "Unknown keywords given to ECM_SETUP_QTPLUGIN_MACRO_NAMES(): \"${ESQMN_UNPARSED_ARGUMENTS}\"")
     endif()
 
+    if(ESQMN_MACRO_NAMES)
+        if(ESQMN_JSON_NONE OR ESQMN_JSON_ARG1 OR ESQMN_JSON_ARG2 OR ESQMN_JSON_ARG3)
+            message(FATAL_ERROR "Use either MACRO_NAMES or any of the JSON_* arguments with ECM_SETUP_QTPLUGIN_MACRO_NAMES()")
+        endif()
+        set(_macro_names ${ESQMN_MACRO_NAMES})
+    else()
+        # nag user to switch to newer args when possible (Qt 5.15 projects ignored nere)
+        if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 6.18 AND QT_MAJOR_VERSION EQUAL 6)
+            message(WARNING "For ECM >= 6.18, use the MACRO_NAMES argument instead of the JSON_* ones with ECM_SETUP_QTPLUGIN_MACRO_NAMES()")
+        endif()
+
+        set(_macro_names
+            ${ESQMN_JSON_NONE}
+            ${ESQMN_JSON_ARG1}
+            ${ESQMN_JSON_ARG2}
+            ${ESQMN_JSON_ARG3}
+        )
+    endif()
+
+
     # CMAKE_AUTOMOC_MACRO_NAMES
-    list(APPEND CMAKE_AUTOMOC_MACRO_NAMES
-        ${ESQMN_JSON_NONE}
-        ${ESQMN_JSON_ARG1}
-        ${ESQMN_JSON_ARG2}
-        ${ESQMN_JSON_ARG3}
-    )
+    list(APPEND CMAKE_AUTOMOC_MACRO_NAMES $[_macro_names})
 
     # CMAKE_AUTOMOC_DEPEND_FILTERS
     # CMake's automoc needs help to find names of plugin metadata files in case Q_PLUGIN_METADATA
     # is indirectly used via other C++ preprocessor macros
+    # Note: unused for Qt >= 5.15.
     foreach(macro_name  ${ESQMN_JSON_ARG1})
         list(APPEND CMAKE_AUTOMOC_DEPEND_FILTERS
             "${macro_name}"
@@ -152,16 +176,10 @@ macro(ecm_setup_qtplugin_macro_names)
 "####################################################################################
 # CMAKE_AUTOMOC
 ")
-        set(_all_macro_names
-            ${ESQMN_JSON_NONE}
-            ${ESQMN_JSON_ARG1}
-            ${ESQMN_JSON_ARG2}
-            ${ESQMN_JSON_ARG3}
-        )
         string(APPEND _content "
 # CMake 3.9+ warns about automoc on files without Q_OBJECT, and doesn't know about other macros.
 # 3.10+ lets us provide more macro names that require automoc.
-foreach(macro_name  ${_all_macro_names})
+foreach(macro_name  ${_macro_names})
     # we can be run multiple times, so add only once
     list (FIND CMAKE_AUTOMOC_MACRO_NAMES \"\${macro_name}\" _index)
     if(_index LESS 0)
