@@ -14,8 +14,8 @@ Try to find FFmpeg components.
 
 The following components are available::
 
-  AVCODEC      AVDEVICE  AVFORMAT  AVUTIL
-  POSTPROCESS  SWSCALE
+  AVCODEC  AVFILTER    AVDEVICE  AVFORMAT
+  AVUTIL   SWRESAMPLE  SWSCALE   POSTPROCESS
 
 If no components are specified in the find_module call, the following ones
 will be choosen as default::
@@ -84,7 +84,7 @@ elseif (DEFINED FFmpeg_FIND_VERSION)
 else ()
   set(_FFmpeg_REQUIRED_VERSION 0)
 endif ()
-set(_FFmpeg_ALL_COMPONENTS AVCODEC AVDEVICE AVFORMAT AVUTIL POSTPROCESS SWSCALE)
+set(_FFmpeg_ALL_COMPONENTS AVCODEC AVFILTER AVDEVICE AVFORMAT AVUTIL POSTPROCESS SWRESAMPLE SWSCALE)
 
 ### Macro: set_component_found
 #
@@ -144,12 +144,14 @@ endmacro()
 if (NOT FFMPEG_LIBRARIES)
 
   # Check for all possible component.
-  find_component(AVCODEC     libavcodec  avcodec  libavcodec/avcodec.h)
-  find_component(AVFORMAT    libavformat avformat libavformat/avformat.h)
-  find_component(AVDEVICE    libavdevice avdevice libavdevice/avdevice.h)
-  find_component(AVUTIL      libavutil   avutil   libavutil/avutil.h)
-  find_component(SWSCALE     libswscale  swscale  libswscale/swscale.h)
-  find_component(POSTPROCESS libpostproc postproc libpostproc/postprocess.h)
+  find_component(AVCODEC     libavcodec     avcodec     libavcodec/avcodec.h)
+  find_component(AVFILTER    libavfilter    avfilter    libavfilter/avfilter.h)
+  find_component(AVFORMAT    libavformat    avformat    libavformat/avformat.h)
+  find_component(AVDEVICE    libavdevice    avdevice    libavdevice/avdevice.h)
+  find_component(AVUTIL      libavutil      avutil      libavutil/avutil.h)
+  find_component(SWRESAMPLE  libswresample  swresample  libswresample/swresample.h)
+  find_component(SWSCALE     libswscale     swscale     libswscale/swscale.h)
+  find_component(POSTPROCESS libpostproc    postproc    libpostproc/postprocess.h)
 
   # Check if the required components were found and add their stuff to the FFMPEG_* vars.
   foreach (_component ${_FFmpeg_ALL_COMPONENTS})
