@@ -644,6 +644,11 @@ if (MSVC)
     # C4661: 'identifier' : no suitable definition provided for explicit
     #         template instantiation request
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4661")
+    # Enable warnings:
+    # C5249: 'bitfield' of type 'enumeration_name' has named enumerators
+    # with values that cannot be represented in the given bit field width
+    # of 'bitfield_width'.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /w35249")
 
     if (CMAKE_CXX_STANDARD GREATER_EQUAL 11)
         # Ensure __cplusplus is correct, otherwise it defaults to 199711L which isn't true
