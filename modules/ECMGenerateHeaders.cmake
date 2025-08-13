@@ -230,7 +230,25 @@ function(ECM_GENERATE_HEADERS camelcase_forwarding_headers_var)
         foreach(_CLASSNAME ${_classnames})
             set(FANCY_HEADER_FILE "${EGH_OUTPUT_DIR}/${prefix}${_CLASSNAME}")
             if (NOT EXISTS ${FANCY_HEADER_FILE})
-                file(WRITE ${FANCY_HEADER_FILE} "#include \"${originalprefix}${originalbasename}.${EGH_HEADER_EXTENSION}\" // IWYU pragma: export\n")
+                set(_content "#include \"${originalprefix}${originalbasename}.${EGH_HEADER_EXTENSION}\" // IWYU pragma: export\n")
+                if (prefix AND "${originalprefix}" STREQUAL "")
+                    # Here a relative include is created, without the namespace prefix.
+                    # This results in some potentially non-unique file content, when other relative forwarding
+                    # headers exist for the same base name (e.g. Prison/Barcode vs. KPkPass/Barcode, which both
+                    # would simply include "barcode.h").
+                    # Some filesystems automatically hardlink files which are identical by the content checksum
+                    # (e.g. for RPM-provided files under /usr, to save storage space).
+                    # This collides with Clang seemingly doing optimization by looking at the inodes of the
+                    # to-be included files, and reusing content from the inode as found with any first path.
+                    # So for a compilation unit which includes multiple forwarding headers with different
+                    # namespaces but same basename, so having same inode with those systems, the latter ones will
+                    # not result in the actual relative original headers being included.
+                    # See https://github.com/llvm/llvm-project/issues/26953
+                    # As counter-measure some unique content is added below, serving some double purpose by giving
+                    # instructions how to use the file, in case someone looks at it.
+                    string(PREPEND _content "// Forwarding header, use by: #include <${prefix}${_CLASSNAME}>\n")
+                endif()
+                file(WRITE ${FANCY_HEADER_FILE} "${_content}")
             endif()
             list(APPEND ${camelcase_forwarding_headers_var} "${FANCY_HEADER_FILE}")
             if (prefix)
