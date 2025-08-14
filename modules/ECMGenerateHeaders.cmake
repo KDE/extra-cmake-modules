@@ -68,9 +68,12 @@ that the original header exists, and to generate originally named forwarding
 headers when ``PREFIX`` is set.
 
 To allow other parts of the source distribution (eg: tests) to use the
-generated headers before installation, it may be desirable to set the
-``INCLUDE_DIRECTORIES`` property for the library target to output_dir.  For
-example, if ``OUTPUT_DIR`` is ``CMAKE_CURRENT_BINARY_DIR`` (the default), you could do
+generated headers before installation, it may be desirable to add to the
+``INCLUDE_DIRECTORIES`` property of the library target the output_dir.
+If ``OUTPUT_DIR`` is ``CMAKE_CURRENT_BINARY_DIR`` (the default) and
+``CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE`` is ``ON`` (as set by
+:kde-module:`KDECMakeSettings`), this is automatically done.
+Otherwise you could do (adapt if ``OUTPUT_DIR`` is something else)
 
 .. code-block:: cmake
 
