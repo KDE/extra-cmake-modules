@@ -133,7 +133,7 @@ macro(_define_relative varname parent subdir docstring)
                 PROPERTY TYPE PATH)
         endif()
     elseif(${_oldstylename})
-       message(DEPRECATION "${_oldstylename} is deprecated, use KDE_INSTALL_${varname} instead.")
+        message(DEPRECATION "${_oldstylename} is deprecated, use KDE_INSTALL_${varname} instead.")
         # The old name was given (probably on the command line): move
         # it to the new name
         set(KDE_INSTALL_${varname} "${${_oldstylename}}"
