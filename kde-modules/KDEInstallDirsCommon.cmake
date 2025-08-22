@@ -95,13 +95,14 @@ macro(_define_relative varname parent subdir docstring)
         set(_cmakename_is_deprecated FALSE)
         # The CMake name (CMAKE_INSTALL_<something>) is only supported for those variables
         # defined by the GNUInstallDirs
-        # However in older ECM versions we supported CMAKE_INSTALL_<something> for all variables
-        # and if deprecated behaviour is enabled we still do
-        if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED OR (${varname} IN_LIST _gnu_install_dirs_vars))
+        if(${varname} IN_LIST _gnu_install_dirs_vars)
             set(_cmakename CMAKE_INSTALL_${varname})
-            if(NOT (${varname} IN_LIST _gnu_install_dirs_vars))
-                set(_cmakename_is_deprecated TRUE)
-            endif()
+        elseif(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
+            # In older ECM versions we supported CMAKE_INSTALL_<something> for all variables
+            # and if deprecated behaviour is enabled we still do
+            set(_cmakename CMAKE_INSTALL_${varname})
+            # However mark this as deprecated
+            set(_cmakename_is_deprecated TRUE)
         endif()
     endif()
 
@@ -164,7 +165,9 @@ macro(_define_relative varname parent subdir docstring)
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
-    else()
+    endif()
+
+    if(NOT KDE_INSTALL_${varname})
         # KDE_INSTALL_${varname} has not been set yet elsewhere so insert an empty value
         # into the cache, indicating the default should be used (including compatibility vars above)
         set(KDE_INSTALL_${varname} ""
