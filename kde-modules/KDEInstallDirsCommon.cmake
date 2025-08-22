@@ -92,17 +92,11 @@ macro(_define_relative varname parent subdir docstring)
 
     set(_cmakename)
     if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES)
-        set(_cmakename_is_deprecated FALSE)
         # The CMake name (CMAKE_INSTALL_<something>) is only supported for those variables
-        # defined by the GNUInstallDirs
-        if(${varname} IN_LIST _gnu_install_dirs_vars)
+        # defined by the GNUInstallDirs. Also in older ECM versions we supported CMAKE_INSTALL_<something>
+        # for all variables and if deprecated behaviour is enabled we still do
+        if((${varname} IN_LIST _gnu_install_dirs_vars) OR NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
             set(_cmakename CMAKE_INSTALL_${varname})
-        elseif(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
-            # In older ECM versions we supported CMAKE_INSTALL_<something> for all variables
-            # and if deprecated behaviour is enabled we still do
-            set(_cmakename CMAKE_INSTALL_${varname})
-            # However mark this as deprecated
-            set(_cmakename_is_deprecated TRUE)
         endif()
     endif()
 
@@ -155,16 +149,31 @@ macro(_define_relative varname parent subdir docstring)
                   "${docstring} (${_docpath})"
                   FORCE)
     elseif(${_cmakename})
-        # If KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES is true, _cmakename will be empty due to
-        # the logic on top of this macro, hence you will never end up here in this case
-        if(_cmakename_is_deprecated)
-            message(DEPRECATION "${_cmakename} is deprecated, use KDE_INSTALL_${varname} instead.")
+        # CMake name was given (eg. on the command line)
+        if(NOT ${varname} IN_LIST _gnu_install_dirs_vars)
+            # CMake name is NOT one of those defined by GNUInstallDirs. This is deprecated.
+            if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED)
+                # Deprecated behavior is enabled, so allow this anyways
+                message(DEPRECATION "${_cmakename} is deprecated, use KDE_INSTALL_${varname} instead.")
+
+                set(KDE_INSTALL_${varname} "${${_cmakename}}"
+                    CACHE PATH
+                        "${docstring} (${_docpath})"
+                        FORCE)
+            endif()
+        else()
+            # CMake name is one of those defined by GNUInstallDirs.
+            # Note: If KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES is true, _cmakename will be empty due to
+            # the logic on top of this macro, hence you will never end up here in this case
+
+            message(WARNING "KDE_INSTALL_${varname} got its value from ${_cmakename}. In most cases this is unintended, check if you included GNUInstallDirs before KDEInstallDirs. Some third party modules include GNUInstallDirs too so eg. find_package(Qt6 ...) is equivalent to include(GNUInstallDirs). If you set ${_cmakename} deliberately before including KDEInstallDirs its recommended to use KDE_INSTALL_${varname} instead to suppress this message.")
+
+            # The CMAKE_ name was given (probably on the command line): move it to the new name
+            set(KDE_INSTALL_${varname} "${${_cmakename}}"
+                CACHE PATH
+                    "${docstring} (${_docpath})"
+                    FORCE)
         endif()
-        # The CMAKE_ name was given (probably on the command line): move it to the new name
-        set(KDE_INSTALL_${varname} "${${_cmakename}}"
-            CACHE PATH
-                  "${docstring} (${_docpath})"
-                  FORCE)
     endif()
 
     if(NOT KDE_INSTALL_${varname})
