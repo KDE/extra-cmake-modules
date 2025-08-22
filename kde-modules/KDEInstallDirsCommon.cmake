@@ -93,6 +93,10 @@ macro(_define_relative varname parent subdir docstring)
     set(_cmakename)
     if(NOT KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES)
         set(_cmakename_is_deprecated FALSE)
+        # The CMake name (CMAKE_INSTALL_<something>) is only supported for those variables
+        # defined by the GNUInstallDirs
+        # However in older ECM versions we supported CMAKE_INSTALL_<something> for all variables
+        # and if deprecated behaviour is enabled we still do
         if(NOT KDE_INSTALL_DIRS_NO_DEPRECATED OR (${varname} IN_LIST _gnu_install_dirs_vars))
             set(_cmakename CMAKE_INSTALL_${varname})
             if(NOT (${varname} IN_LIST _gnu_install_dirs_vars))
@@ -122,7 +126,9 @@ macro(_define_relative varname parent subdir docstring)
     endif()
 
     if(KDE_INSTALL_${varname})
+        # The name was given (eg. on the command line or in the projects CMakeLists.txt)
         # make sure the cache documentation is set correctly
+
         get_property(_iscached CACHE KDE_INSTALL_${varname} PROPERTY VALUE SET)
         if (_iscached)
             # make sure the docs are still set if it was passed on the command line
@@ -133,33 +139,34 @@ macro(_define_relative varname parent subdir docstring)
                 PROPERTY TYPE PATH)
         endif()
     elseif(${_oldstylename})
+        # If KDE_INSTALL_DIRS_NO_DEPRECATED is true, _oldstylename will be empty due to
+        # the logic on top of this macro, hence you will never end up here in this case
         message(DEPRECATION "${_oldstylename} is deprecated, use KDE_INSTALL_${varname} instead.")
-        # The old name was given (probably on the command line): move
-        # it to the new name
+        # The old name was given (probably on the command line): move it to the new name
         set(KDE_INSTALL_${varname} "${${_oldstylename}}"
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
     elseif(${_aliasname})
-        # The alias variable was given (probably on the command line): move
-        # it to the new name
+        # The alias variable was given (probably on the command line): move it to the new name
         set(KDE_INSTALL_${varname} "${${_aliasname}}"
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
     elseif(${_cmakename})
+        # If KDE_INSTALL_DIRS_NO_CMAKE_VARIABLES is true, _cmakename will be empty due to
+        # the logic on top of this macro, hence you will never end up here in this case
         if(_cmakename_is_deprecated)
             message(DEPRECATION "${_cmakename} is deprecated, use KDE_INSTALL_${varname} instead.")
         endif()
-        # The CMAKE_ name was given (probably on the command line): move
-        # it to the new name
+        # The CMAKE_ name was given (probably on the command line): move it to the new name
         set(KDE_INSTALL_${varname} "${${_cmakename}}"
             CACHE PATH
                   "${docstring} (${_docpath})"
                   FORCE)
     else()
-        # insert an empty value into the cache, indicating the default
-        # should be used (including compatibility vars above)
+        # KDE_INSTALL_${varname} has not been set yet elsewhere so insert an empty value
+        # into the cache, indicating the default should be used (including compatibility vars above)
         set(KDE_INSTALL_${varname} ""
             CACHE PATH "${docstring} (${_docpath})")
         set(KDE_INSTALL_${varname} "${_realpath}")
