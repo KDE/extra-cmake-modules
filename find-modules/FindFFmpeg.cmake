@@ -84,20 +84,20 @@ Since 6.18.0.
 
 include(FindPackageHandleStandardArgs)
 
-if (NOT FFmpeg_FIND_COMPONENTS)
+if(NOT FFmpeg_FIND_COMPONENTS)
   # The default components were taken from a survey over other FindFFMPEG.cmake files
   set(FFmpeg_FIND_COMPONENTS AVCODEC AVFORMAT AVUTIL)
-endif ()
+endif()
 
 list(LENGTH FFmpeg_FIND_COMPONENTS _numComponents)
-if ((${_numComponents} GREATER 1) AND DEFINED ${FFmpeg_FIND_VERSION})
+if((${_numComponents} GREATER 1) AND DEFINED ${FFmpeg_FIND_VERSION})
   message(WARNING "Using a required version in combination with multiple COMPONENTS is not supported")
   set(_FFmpeg_REQUIRED_VERSION 0)
-elseif (DEFINED FFmpeg_FIND_VERSION)
+elseif(DEFINED FFmpeg_FIND_VERSION)
   set(_FFmpeg_REQUIRED_VERSION ${FFmpeg_FIND_VERSION})
-else ()
+else()
   set(_FFmpeg_REQUIRED_VERSION 0)
-endif ()
+endif()
 set(_FFmpeg_ALL_COMPONENTS AVCODEC AVFILTER AVDEVICE AVFORMAT AVUTIL POSTPROCESS SWRESAMPLE SWSCALE)
 
 ### Macro: set_component_found
@@ -105,10 +105,10 @@ set(_FFmpeg_ALL_COMPONENTS AVCODEC AVFILTER AVDEVICE AVFORMAT AVUTIL POSTPROCESS
 # Marks the given component as found if both *_LIBRARIES AND *_INCLUDE_DIRS is present.
 
 macro(set_component_found _component )
-  if (${_component}_LIBRARIES AND ${_component}_INCLUDE_DIRS)
+  if(${_component}_LIBRARIES AND ${_component}_INCLUDE_DIRS)
     set(${_component}_FOUND TRUE)
     set(FFmpeg_${_component}_FOUND TRUE)
-  endif ()
+  endif()
 endmacro()
 
 macro(create_target _component )
@@ -129,12 +129,12 @@ endmacro()
 
 macro(find_component _component _pkgconfig _library _header)
 
-  if (NOT WIN32)
+  if(NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
     find_package(PkgConfig)
     pkg_check_modules(PC_${_component} QUIET ${_pkgconfig})
-  endif (NOT WIN32)
+  endif()
 
   find_path(${_component}_INCLUDE_DIRS ${_header}
     HINTS
@@ -165,7 +165,7 @@ macro(find_component _component _pkgconfig _library _header)
 endmacro()
 
 # Check for cached results. If there are skip the costly part.
-if (NOT FFMPEG_LIBRARIES)
+if(NOT FFMPEG_LIBRARIES)
 
   # Check for all possible component.
   find_component(AVCODEC     libavcodec     avcodec     libavcodec/avcodec.h)
@@ -178,18 +178,18 @@ if (NOT FFMPEG_LIBRARIES)
   find_component(POSTPROCESS libpostproc    postproc    libpostproc/postprocess.h)
 
   # Check if the required components were found and add their stuff to the FFMPEG_* vars.
-  foreach (_component ${_FFmpeg_ALL_COMPONENTS})
-    if (${_component}_FOUND)
+  foreach(_component ${_FFmpeg_ALL_COMPONENTS})
+    if(${_component}_FOUND)
       set(FFMPEG_LIBRARIES   ${FFMPEG_LIBRARIES}   ${${_component}_LIBRARIES})
       set(FFMPEG_DEFINITIONS ${FFMPEG_DEFINITIONS} ${${_component}_DEFINITIONS})
       list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
-    endif ()
-  endforeach ()
+    endif()
+  endforeach()
 
   # Build the include path with duplicates removed.
-  if (FFMPEG_INCLUDE_DIRS)
+  if(FFMPEG_INCLUDE_DIRS)
     list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
-  endif ()
+  endif()
 
   # cache the vars.
   set(FFMPEG_INCLUDE_DIRS ${FFMPEG_INCLUDE_DIRS} CACHE STRING "The FFmpeg include directories." FORCE)
@@ -200,27 +200,27 @@ if (NOT FFMPEG_LIBRARIES)
                    FFMPEG_LIBRARIES
                    FFMPEG_DEFINITIONS)
 
-else ()
+else()
   # Set the noncached _FOUND vars for the components.
-  foreach (_component ${_FFmpeg_ALL_COMPONENTS})
+  foreach(_component ${_FFmpeg_ALL_COMPONENTS})
     set_component_found(${_component})
     create_target(${_component})
-  endforeach ()
-endif ()
+  endforeach()
+endif()
 
 # Compile the list of required vars
 unset(_FFmpeg_REQUIRED_VARS)
 set(_FFmpeg_FOUND_LIBRARIES "")
-foreach (_component ${FFmpeg_FIND_COMPONENTS})
-  if (${_component}_FOUND)
-    if (${_component}_VERSION VERSION_LESS _FFmpeg_REQUIRED_VERSION)
+foreach(_component ${FFmpeg_FIND_COMPONENTS})
+  if(${_component}_FOUND)
+    if(${_component}_VERSION VERSION_LESS _FFmpeg_REQUIRED_VERSION)
       message(STATUS "${_component}: ${${_component}_VERSION} < ${_FFmpeg_REQUIRED_VERSION}")
       unset(${_component}_FOUND)
-    endif ()
+    endif()
     list(APPEND _FFmpeg_FOUND_LIBRARIES ${${_component}_LIBRARIES})
-  endif ()
+  endif()
   list(APPEND _FFmpeg_REQUIRED_VARS ${_component}_LIBRARIES ${_component}_INCLUDE_DIRS ${_component}_FOUND)
-endforeach ()
+endforeach()
 list(INSERT _FFmpeg_REQUIRED_VARS 0 _FFmpeg_FOUND_LIBRARIES)
 
 # Give a nice error message if some of the required vars are missing.
