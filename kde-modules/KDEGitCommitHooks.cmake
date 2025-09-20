@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2020-2023 Alexander Lohnau <alexander.lohnau@gmx.de>
 # SPDX-FileCopyrightText: 2022 Ahmad Samir <a.samirh78@gmail.com>
 # SPDX-FileCopyrightText: 2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+# SPDX-FileCopyrightText: 2025 Julius Künzel <julius.kuenzel@kde.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -17,6 +18,7 @@ This module provides the following function:
 
   kde_configure_git_pre_commit_hook(
      CHECKS <check1> [<check2> [...]
+     [INSTALL_PRE_COMMIT_CLI_HOOKS] # since 6.19
      [CUSTOM_SCRIPTS [<script paths> [<script paths> ...]]] # since 5.109
   )
 
@@ -38,8 +40,12 @@ Checks:
   the formatting using this commit hook.
 - ``JSON_SCHEMA`` Since 5.110, uses the check-jsonschema CLI tool to ensure that all files are valid JSON and
   match the KPluginMetaData spec. This only applied if the JSON file has a "KPlugin" object in its root.
-  To ignore invalid files, for example for testing error handling, given files can be exlcuded in the .kde-ci.yml file
+  To ignore invalid files, for example for testing error handling, given files can be exlcuded in the ``.kde-ci.yml`` file
   Define Options.json-validate-ignore with an array of the files you want to ignore
+
+Since 6.18, if the ``INSTALL_PRE_COMMIT_CLI_HOOKS`` option is provided this function will look for the
+`pre-commit <https://pre-commit.com/>`_ executable and, if found, call it to install hooks from
+the ``.pre-commit-config.yaml`` file in the project root.
 
 Example usage:
 
@@ -54,6 +60,7 @@ Since 5.79
 # try to find clang-format in path
 find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
 find_program(KDE_CHECK_JSONSCHEMA_EXECUTABLE check-jsonschema)
+find_program(KDE_CHECK_PRE_COMMIT_EXECUTABLE pre-commit)
 set(PRE_COMMIT_HOOK_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/pre-commit.in")
 set(CLANG_FORMAT_UNIX "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/clang-format.sh")
 set(JSON_SCHEMA_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/json-schema.py")
@@ -61,11 +68,15 @@ set(JSON_SCHEMA_IN "${CMAKE_CURRENT_LIST_DIR}/kde-git-commit-hooks/combined.sche
 set(GIT_DIR "${CMAKE_SOURCE_DIR}/.git")
 set(GIT_HOOKS_DIR "${GIT_DIR}/hooks")
 set(JSON_SCHEMA_OUT "${GIT_HOOKS_DIR}/scripts/combined.schema.json")
+set(PRE_COMMIT_CLI_CONFIGFILE "${CMAKE_SOURCE_DIR}/.pre-commit-config.yaml")
 
 function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
+    set(_options INSTALL_PRE_COMMIT_CLI_HOOKS)
     set(_oneValueArgs "")
     set(_multiValueArgs CHECKS CUSTOM_SCRIPTS)
-    cmake_parse_arguments(ARG "" "${_oneValueArgs}" "${_multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(ARG "${_options}" "${_oneValueArgs}" "${_multiValueArgs}" ${ARGN})
+
+    message(STATUS "${arg_INSTALL_PRE_COMMIT_CLI_HOOKS}")
 
     if(NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         message(STATUS "Project is not top level project - pre-commit hook not installed")
@@ -178,6 +189,21 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
         # so as to not overwrite users' customisations
         if (_idx EQUAL -1)
             file(APPEND ${_hook_file} "${CLANG_FORMAT_SCRIPT}")
+        endif()
+    endif()
+
+    if(ARG_INSTALL_PRE_COMMIT_CLI_HOOKS)
+        if(EXISTS "${PRE_COMMIT_CLI_CONFIGFILE}")
+            if (KDE_CHECK_PRE_COMMIT_EXECUTABLE)
+                message(STATUS "pre-commit executable found, going to call pre-commit install.")
+                execute_process(
+                    COMMAND "${KDE_CHECK_PRE_COMMIT_EXECUTABLE}" install
+                )
+            else()
+                message(WARNING "pre-commit executable not found. Please install it using pip or using your package manager")
+            endif()
+        else()
+            message(FATAL_ERROR "You requested to install hooks for the pre-commit cli, but there is no .pre-commit-config.yaml in the root of your project")
         endif()
     endif()
 endfunction()
