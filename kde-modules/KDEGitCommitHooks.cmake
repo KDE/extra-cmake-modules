@@ -99,14 +99,13 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
     string(REPLACE ";" "\n" PRE_COMMIT_SCRIPTS "${ARG_CUSTOM_SCRIPTS}")
     set(_write_hook FALSE)
     if(KDE_CLANG_FORMAT_EXECUTABLE)
-        list(FIND ARG_CHECKS "CLANG_FORMAT" _index)
         # Used to configure clang-format.sh script
         if (COMMAND KDE_CLANG_FORMAT)
             set(HAS_CLANG_FORMAT_COMMAND_INCLUDED TRUE)
         else()
             set(HAS_CLANG_FORMAT_COMMAND_INCLUDED FALSE)
         endif()
-        if (${_index} GREATER -1)
+        if ("CLANG_FORMAT" IN_LIST ARG_CHECKS)
             # get version of clang-format
             execute_process(
                 COMMAND "${KDE_CLANG_FORMAT_EXECUTABLE}" --version
@@ -126,8 +125,7 @@ function(KDE_CONFIGURE_GIT_PRE_COMMIT_HOOK)
         endif()
     endif()
 
-    list(FIND ARG_CHECKS "JSON_SCHEMA" _index)
-    if (${_index} GREATER -1)
+    if ("JSON_SCHEMA" IN_LIST ARG_CHECKS)
       set(_write_hook TRUE)
       foreach(path ${CMAKE_PREFIX_PATH};${CMAKE_INCLUDE_PATH})
           file(GLOB files "${path}/${KDE_INSTALL_DATADIR}/kf6/jsonschema/*.json") 
