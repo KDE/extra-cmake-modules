@@ -100,12 +100,32 @@ namespace {
         loadTranslation(QStringLiteral("en"));
 
         auto langs = getSystemLocale().uiLanguages();
-        for (auto it = langs.begin(); it != langs.end(); ++it) {
-            (*it).replace(QLatin1Char('-'), QLatin1Char('_'));
-            const auto idx = (*it).indexOf(QLatin1Char('_'));
+
+        for (int i = 0; i < langs.size(); i++) {
+            langs[i].replace(QLatin1Char('-'), QLatin1Char('_'));
+            const auto idx = langs[i].indexOf(QLatin1Char('_'));
             if (idx > 0) {
-                const QString genericLang = (*it).left(idx);
-                it = langs.insert(++it, genericLang);
+                // insert the country stripped language to the ideal position,
+                // that is, after the same langauge dialects.
+                // if langs is [pt_Latn_BR, pt_BR], the pt should be inserted
+                // after pt_BR
+                const QString genericLang = langs[i].left(idx);
+                int j = i + 1;
+                int insertIdx = j;
+                bool found = false;
+                while (j < langs.size()) {
+                    if (langs[j] == genericLang) {
+                        found = true;
+                        break;
+                    }
+                    if (langs[j].startsWith(genericLang)) {
+                        insertIdx = j + 1;
+                    }
+                    j++;
+                }
+                if (!found) {
+                    langs.insert(insertIdx, genericLang);
+                }
             }
         }
         langs.removeDuplicates();

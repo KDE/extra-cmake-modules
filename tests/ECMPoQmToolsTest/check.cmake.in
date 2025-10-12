@@ -26,6 +26,8 @@ set(exp_files
     "share/locale/en/LC_MESSAGES/catalog2.qm"
     "share/locale/de/LC_MESSAGES/catalog.qm"
     "share/locale/de/LC_MESSAGES/catalog2.qm"
+    "share/locale/pt_BR/LC_MESSAGES/catalog.qm"
+    "share/locale/pt/LC_MESSAGES/catalog.qm"
     "custom-dir1/es/LC_MESSAGES/custom-dir1-install-test.qm"
     "custom-dir1/fr/LC_MESSAGES/custom-dir1-install-test.qm"
     "custom-dir2/es/LC_MESSAGES/custom-dir2-install-test.qm"
@@ -69,6 +71,7 @@ if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
     set(exp_output_catalog2_de_AT "${exp_output_catalog2_de}")
     # no french translation provided -> english fallback
     set(exp_output_catalog2_fr "${exp_output_catalog2_en}")
+    set(exp_output_catalog_pt_BR "pt_BR text:pt_BR plural form 5")
 
     function(check_translations name exec catalog_name)
         foreach(lang en de de_AT fr)
@@ -117,6 +120,7 @@ if("@CMAKE_SYSTEM_NAME@" STREQUAL "Linux")
 
     check_translations_multilang(TR_TEST "${TR_TEST_EXEC}" catalog "de_AT:fr_FR" "de")
     check_translations_multilang(TR_TEST "${TR_TEST_EXEC}" catalog "en_GB:de_DE" "en")
+    check_translations_multilang(TR_TEST "${TR_TEST_EXEC}" catalog "pt_Latn_BR:pt_BR:pt_Latn:pt" "pt_BR")
 endif()
 
 if (fail)
