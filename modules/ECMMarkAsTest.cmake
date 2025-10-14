@@ -22,6 +22,8 @@ This will cause the specified targets to not be built unless either
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 if (NOT BUILD_TESTING)
   if(NOT TARGET buildtests)
     add_custom_target(buildtests)

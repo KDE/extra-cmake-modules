@@ -149,6 +149,8 @@ Example usage (with ``SHARED_PREFIX``):
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ECM_GENERATE_HEADERS camelcase_forwarding_headers_var)
     set(options)
     set(oneValueArgs ORIGINAL HEADER_EXTENSION OUTPUT_DIR PREFIX SHARED_PREFIX REQUIRED_HEADERS COMMON_HEADER RELATIVE)

@@ -48,6 +48,8 @@ Example usage:
 Since 5.91
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function (ecm_set_disabled_deprecation_versions)
     cmake_parse_arguments(ARGS "SHOW_DEPRECATIONS;DISABLE_NEWER_WARNINGS" "" "" ${ARGN})
 

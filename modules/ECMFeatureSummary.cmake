@@ -28,6 +28,8 @@ Example:
 Since 5.247
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(FeatureSummary)
 function(ecm_feature_summary)
 

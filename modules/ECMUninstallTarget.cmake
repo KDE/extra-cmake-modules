@@ -35,6 +35,8 @@ not possible to run CMake on the project and then immediately run the
 Since 1.7.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 if (NOT TARGET uninstall)
     configure_file(
         "${CMAKE_CURRENT_LIST_DIR}/ecm_uninstall.cmake.in"

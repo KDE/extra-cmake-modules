@@ -14,6 +14,8 @@ std:atomic.
 Since 5.75.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(CheckCXXSourceCompiles)
 include(CheckLibraryExists)
 

@@ -5,6 +5,8 @@
 
 # Qt 5 implementation of ECMQmlModule
 
+cmake_policy(VERSION 3.16)
+
 set(_ECM_QMLMODULE_STATIC_QMLONLY_H   "${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule.h.in")
 set(_ECM_QMLMODULE_STATIC_QMLONLY_CPP "${CMAKE_CURRENT_LIST_DIR}/ECMQmlModule.cpp.in")
 

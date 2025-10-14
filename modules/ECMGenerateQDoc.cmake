@@ -48,6 +48,8 @@ When combining documentation from multiple projects the recommended procedure is
 Since 6.11.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 add_custom_target(prepare_docs)
 add_custom_target(generate_docs)
 add_custom_target(install_html_docs)

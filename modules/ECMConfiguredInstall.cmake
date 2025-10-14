@@ -31,6 +31,8 @@ This will install the file as foo.txt with any cmake variable replacements made 
 Since 5.73.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ecm_install_configured_files)
     set(options COPYONLY ESCAPE_QUOTES @ONLY)
     set(oneValueArgs DESTINATION COMPONENT)

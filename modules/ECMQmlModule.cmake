@@ -233,6 +233,8 @@ and making incremental builds slower.
 
 #]========================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 
 # This is also used by ECMFindQmlModule, so needs to be available for both

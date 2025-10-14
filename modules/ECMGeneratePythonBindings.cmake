@@ -58,6 +58,8 @@ description on the Python Package Index.
 
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 function(ecm_generate_python_bindings)

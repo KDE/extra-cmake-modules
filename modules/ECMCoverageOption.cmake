@@ -22,6 +22,8 @@ links against ``libgcov``.
 Since 1.3.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 option(BUILD_COVERAGE "Build the project with gcov support" OFF)
 
 if(BUILD_COVERAGE)

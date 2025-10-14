@@ -150,6 +150,8 @@ Example usage:
 Since 5.68.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 set(_ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_CPP "${CMAKE_CURRENT_LIST_DIR}/ECMQtDeclareLoggingCategory.cpp.in")
 set(_ECM_QT_DECLARE_LOGGING_CATEGORY_TEMPLATE_H   "${CMAKE_CURRENT_LIST_DIR}/ECMQtDeclareLoggingCategory.h.in")
 

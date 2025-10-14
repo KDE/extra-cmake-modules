@@ -56,6 +56,8 @@ Example usage:
 Since 5.73.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ecm_generate_dbus_service_file)
     set(options)
     set(oneValueArgs EXECUTABLE NAME SYSTEMD_SERVICE DESTINATION RENAME)

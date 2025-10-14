@@ -55,6 +55,8 @@ an informative diagnostic message if the dependency could not be found.
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_ROOT}/Modules/CMakePackageConfigHelpers.cmake)
 
 set(_ecm_package_config_helpers_included TRUE)

@@ -52,6 +52,8 @@ library).
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ecm_use_find_modules)
    set(_options NO_OVERRIDE )
    set(_oneValueArgs DIR )

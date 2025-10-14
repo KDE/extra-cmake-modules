@@ -83,6 +83,8 @@ macOS notes
 Since 1.7.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ecm_add_app_icon appsources_or_target)
     set(options)
     set(oneValueArgs OUTFILE_BASENAME)

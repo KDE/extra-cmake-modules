@@ -91,6 +91,13 @@ Since pre-1.0.0.
 ``COMPATIBILITY`` option available since 1.6.0.
 #]=======================================================================]
 
+# cache set policy at time of module inclusion
+if(CMAKE_MAJOR_VERSION VERSION_LESS 4)
+    cmake_policy(GET CMP0048 _ecm_setup_version_project_version_policy)
+endif()
+
+cmake_policy(VERSION 3.16)
+
 include(CMakePackageConfigHelpers)
 
 # save the location of the header template while CMAKE_CURRENT_LIST_DIR
@@ -116,8 +123,7 @@ function(ecm_setup_version _version)
             set(use_project_version TRUE)
         endif()
     else()
-        cmake_policy(GET CMP0048 project_version_policy)
-        if(project_version_policy STREQUAL "NEW")
+        if(_ecm_setup_version_project_version_policy STREQUAL "NEW")
             set(project_manages_version TRUE)
             if(_version STREQUAL "PROJECT")
                 set(use_project_version TRUE)

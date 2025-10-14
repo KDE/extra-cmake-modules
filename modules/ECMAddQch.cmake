@@ -256,6 +256,8 @@ Example usage:
 Since 5.36.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
 include(ECMQueryQt)
 

@@ -178,6 +178,8 @@ Example usage:
 Since 5.62.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(FeatureSummary)
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 
