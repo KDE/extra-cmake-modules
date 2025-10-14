@@ -5,6 +5,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 #=============================================================================
 
+cmake_policy(VERSION 3.16)
+
 include(FindPackageHandleStandardArgs)
 include("${ECM_MODULE_DIR}/QtVersionOption.cmake")
 include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
