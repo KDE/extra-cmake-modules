@@ -27,6 +27,8 @@ imported target:
 Since 5.44.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_Libseccomp QUIET libseccomp)
 

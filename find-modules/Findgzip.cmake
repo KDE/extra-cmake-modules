@@ -29,6 +29,8 @@ target:
 Since 5.85.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_program(gzip_EXECUTABLE NAMES gzip)
 
 include(FindPackageHandleStandardArgs)

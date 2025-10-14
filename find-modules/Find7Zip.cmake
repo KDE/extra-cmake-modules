@@ -32,6 +32,8 @@ target:
 Since 5.113.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 if(WIN32)
     find_program(7Zip_EXECUTABLE NAMES 7z 7za)
 else()

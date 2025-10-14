@@ -36,6 +36,8 @@ imported target:
 Since 5.41.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_GLIB2 QUIET glib-2.0)
 

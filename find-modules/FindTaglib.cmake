@@ -31,6 +31,8 @@ target:
 Since 5.72.0
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 
 pkg_check_modules(PC_TAGLIB QUIET taglib)

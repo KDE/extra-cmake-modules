@@ -28,6 +28,8 @@ these may be needed to use inotify.
 Since 5.32.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_path(Inotify_INCLUDE_DIRS sys/inotify.h)
 
 if(Inotify_INCLUDE_DIRS)

@@ -32,6 +32,8 @@ target:
 Since 5.57.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_UDEV QUIET libudev)
 
