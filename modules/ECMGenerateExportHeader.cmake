@@ -407,7 +407,6 @@ Since 5.64.0.
 
 include(GenerateExportHeader)
 
-cmake_policy(PUSH)
 cmake_policy(SET CMP0057 NEW) # if IN_LIST
 
 # helper method
@@ -834,5 +833,3 @@ function(ecm_generate_export_header target)
         CUSTOM_CONTENT_FROM_VARIABLE _output
     )
 endfunction()
-
-cmake_policy(POP)
