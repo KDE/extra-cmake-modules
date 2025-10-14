@@ -70,6 +70,8 @@ Unless setting KDE_INSTALL_APP_TEMPLATES, this function is skipped when cross-co
 Since 5.18
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 if(NOT CMAKE_CROSSCOMPILING)
    set(default_kde_install_app_templates ON)
 else()

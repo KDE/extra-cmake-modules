@@ -237,6 +237,8 @@ for the prefix into a process.
 
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_CURRENT_LIST_DIR}/KDEInstallDirsCommon.cmake)
 
 if(WIN32)

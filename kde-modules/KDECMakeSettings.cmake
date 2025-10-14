@@ -112,6 +112,13 @@ All ``KDE_L10N_*`` options have been deprecated since 5.102.0, as translations
 are meanwhile present inside the source code repositories.
 #]=======================================================================]
 
+# Explicitly pushing current policies on the stack, because this module
+# by its very purpose one day might also want to set policies to the caller scope
+# and consumers be asked to include using NO_POLICY_SCOPE.
+cmake_policy(PUSH)
+
+cmake_policy(VERSION 3.16)
+
 ################# RPATH handling ##################################
 
 if(NOT KDE_SKIP_RPATH_SETTINGS)
@@ -160,8 +167,6 @@ endif()
 
 find_program(APPSTREAMCLI appstreamcli)
 function(appstreamtest)
-    cmake_policy(PUSH)
-    cmake_policy(SET CMP0064 NEW) # enable TEST operator
     if(TEST appstreamtest)
         # already configured
     elseif(APPSTREAMCLI)
@@ -169,7 +174,6 @@ function(appstreamtest)
     else()
         message(STATUS "Could not set up the appstream test. appstreamcli is missing.")
     endif()
-    cmake_policy(POP)
 endfunction()
 
 if(NOT KDE_SKIP_TEST_SETTINGS)
@@ -391,3 +395,6 @@ if(NOT EXISTS ${CMAKE_SOURCE_DIR}/po AND NOT TARGET fetch-translations)
         execute_process(${fetch_commands})
     endif()
 endif()
+
+# see begin
+cmake_policy(POP)
