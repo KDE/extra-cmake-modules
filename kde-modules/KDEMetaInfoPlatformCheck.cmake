@@ -18,6 +18,8 @@ The check can be ignored by setting ``KF_IGNORE_PLATFORM_CHECK`` to ``ON``.
 Since 5.93
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 option(KF_IGNORE_PLATFORM_CHECK "Ignore the supported platform check against metainfo.yaml" OFF)
 if ("$ENV{KF_IGNORE_PLATFORM_CHECK}" STREQUAL "ON")
     message(WARNING "KF_IGNORE_PLATFORM_CHECK set to ON from the environment")

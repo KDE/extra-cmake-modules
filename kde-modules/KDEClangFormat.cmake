@@ -49,6 +49,8 @@ file in the directory with the following contents:
 Since 5.64
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 # try to find clang-format in path
 find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
 

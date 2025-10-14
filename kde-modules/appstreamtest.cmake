@@ -1,3 +1,5 @@
+cmake_policy(VERSION 3.16)
+
 file(GLOB install_done "${INSTALL_FILES}")
 if (install_done)
     file(READ "${INSTALL_FILES}" out)

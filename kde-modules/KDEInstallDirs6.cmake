@@ -194,6 +194,8 @@ file that allows to easily incorporate the necessary environment variables
 for the prefix into a process.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 set(KDE_INSTALL_DIRS_NO_DEPRECATED TRUE)
 
 include(${CMAKE_CURRENT_LIST_DIR}/KDEInstallDirsCommon.cmake)

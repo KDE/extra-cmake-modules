@@ -51,6 +51,8 @@ Example usage:
 Since 5.79
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 # try to find clang-format in path
 find_program(KDE_CLANG_FORMAT_EXECUTABLE clang-format)
 find_program(KDE_CHECK_JSONSCHEMA_EXECUTABLE check-jsonschema)
