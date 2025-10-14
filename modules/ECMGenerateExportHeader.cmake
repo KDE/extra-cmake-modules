@@ -405,9 +405,9 @@ To get the hex number style value the helper macro
 Since 5.64.0.
 #]=======================================================================]
 
-include(GenerateExportHeader)
+cmake_policy(VERSION 3.16)
 
-cmake_policy(SET CMP0057 NEW) # if IN_LIST
+include(GenerateExportHeader)
 
 # helper method
 function(_ecm_geh_generate_hex_number _var_name _version)
