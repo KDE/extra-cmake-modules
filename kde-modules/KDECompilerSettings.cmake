@@ -213,6 +213,10 @@ Example usages:
 Since pre-1.0.0.
 #]=======================================================================]
 
+# Not setting cmake_policy, given this module is supposed to be in the same
+# policy scope as the includer (see also recommendation to use NO_POLICY_SCOPE)
+# So code here needs to be kept compatible with each new cmake version and new policies.
+
 ############################################################
 # Select and check KDE_COMPILERSETTINGS_LEVEL
 # For a specified version of KDE_COMPILERSETTINGS_LEVEL always the same set

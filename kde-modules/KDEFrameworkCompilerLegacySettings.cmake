@@ -15,6 +15,10 @@ module to get more strict settings.
 Kept as is, to be removed on next backward-compatibility-breakage occasion.
 #]=======================================================================]
 
+# Not setting cmake_policy, given this module is supposed to be in the same
+# policy scope as the includer (see also recommendation to use NO_POLICY_SCOPE)
+# So code here needs to be kept compatible with each new cmake version and new policies.
+
 if (NOT CMAKE_CXX_STANDARD)
     if (ECM_GLOBAL_FIND_VERSION VERSION_GREATER_EQUAL 5.84.0)
         set(CMAKE_CXX_STANDARD 17)
