@@ -34,6 +34,8 @@ Deprecated: since 5.113, use  :find-module:`Find7Zip`.
 Since 5.85.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_program(7z_EXECUTABLE NAMES 7z.exe 7za.exe)
 
 include(FindPackageHandleStandardArgs)

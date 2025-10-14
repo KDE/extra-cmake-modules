@@ -81,6 +81,7 @@ following to specify required versions for multiple components:
 Since 6.20.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
 
 include(FindPackageHandleStandardArgs)
 

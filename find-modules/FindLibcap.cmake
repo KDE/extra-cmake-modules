@@ -22,6 +22,8 @@ In addition, the following targets are defined:
 Since 5.80.0
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_program(SETCAP_EXECUTABLE NAMES setcap DOC "The setcap executable")
 
 find_library(Libcap_LIBRARIES NAMES cap DOC "The cap (capabilities) library")

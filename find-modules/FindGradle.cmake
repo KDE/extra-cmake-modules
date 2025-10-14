@@ -27,6 +27,8 @@ Installs a Android AAR library that has been created with ``gradle_add_aar``.
 Since 5.76.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
 include(FindPackageHandleStandardArgs)
 

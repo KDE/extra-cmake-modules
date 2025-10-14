@@ -36,6 +36,8 @@ imported target:
 Since 5.41.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 # Support PulseAudio_MINIMUM_VERSION for compatibility:
 if(NOT PulseAudio_FIND_VERSION)
   set(PulseAudio_FIND_VERSION "${PulseAudio_MINIMUM_VERSION}")

@@ -37,6 +37,8 @@ Bear in mind, however, that if the target is in the link interface of an
 exported library, it must be made available by the package config file.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_epoxy QUIET epoxy)
 

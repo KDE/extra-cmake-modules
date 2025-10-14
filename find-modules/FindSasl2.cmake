@@ -34,6 +34,8 @@ will be available:
 Since 5.41.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 # NOTE: libsasl2.pc doesn't export the include dir.
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_Sasl2 libsasl2)

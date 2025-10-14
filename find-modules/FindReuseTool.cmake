@@ -12,6 +12,8 @@ Finds the REUSE Tool by FSFE: https://github.com/fsfe/reuse-tool
  REUSETOOL_EXECUTABLE - Path to executable
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_program(REUSETOOL_EXECUTABLE NAMES reuse)
 
 include(FindPackageHandleStandardArgs)

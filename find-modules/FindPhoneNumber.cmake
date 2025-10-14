@@ -32,6 +32,8 @@ will be defined.
 Since 5.54.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(ECMFindModuleHelpersStub)
 
 ecm_find_package_version_check(PhoneNumber)

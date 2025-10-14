@@ -83,6 +83,8 @@ WaylandScanner is required and will be searched for.
 Since 1.4.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
 

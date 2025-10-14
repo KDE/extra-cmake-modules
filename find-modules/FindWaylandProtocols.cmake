@@ -18,6 +18,8 @@ This will define the following variables:
     The wayland protocols data directory
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_wayland_protocols QUIET wayland-protocols)
 

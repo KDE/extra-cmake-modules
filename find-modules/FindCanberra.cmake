@@ -33,6 +33,8 @@ exported library, it must be made available by the package config file.
 Since 5.56.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_Canberra QUIET IMPORTED_TARGET libcanberra)
 

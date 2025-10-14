@@ -32,6 +32,8 @@ perform this task).
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
 
 ecm_find_package_version_check(SharedMimeInfo)

@@ -20,6 +20,8 @@ Once done this will define:
 Since 5.80.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 pkg_check_modules(PKG_iso_codes QUIET iso-codes)
 

@@ -29,6 +29,8 @@ If ``LibMount_FOUND`` is TRUE, it will also define the following imported target
 Since 5.83.0
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 find_package(PkgConfig QUIET)
 pkg_check_modules(PC_LIBMOUNT QUIET IMPORTED_TARGET mount)
 
