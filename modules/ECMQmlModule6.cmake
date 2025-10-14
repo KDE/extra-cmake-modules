@@ -5,6 +5,8 @@
 
 # Qt 6 implementation of ECMQmlModule
 
+cmake_policy(VERSION 3.16)
+
 set(QT_NO_CREATE_VERSIONLESS_FUNCTIONS ON)
 find_package(Qt6 COMPONENTS Core Qml CONFIG)
 unset(QT_NO_CREATE_VERSIONLESS_FUNCTIONS)

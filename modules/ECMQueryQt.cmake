@@ -35,6 +35,8 @@ If the call succeeds ``${bin_dir}`` will be set to ``<prefix>/path/to/bin/dir`` 
 Since: 5.93
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 include(CheckLanguage)
 check_language(CXX)

@@ -74,6 +74,8 @@ This is an example of usage::
 Since 1.3.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 # MACRO check_compiler_version
 #-----------------------------
 macro (check_compiler_version gcc_required_version clang_required_version msvc_required_version)

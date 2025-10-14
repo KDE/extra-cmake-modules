@@ -76,6 +76,8 @@ been installed by ecm_create_qm_from_po_files(), and compiles it into ``mylib``.
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 message(AUTHOR_WARNING "ECMCreateQmFromPoFiles is deprecated and will be removed before the release of Extra CMake Modules 1.0. Use ECMPoQmTools instead.")
 
 # Stolen from FindGettext.cmake

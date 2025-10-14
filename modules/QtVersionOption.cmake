@@ -20,6 +20,8 @@ Otherwise Qt5 is picked.
 Since 5.82.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 if (DEFINED QT_MAJOR_VERSION)
     return()
 endif()

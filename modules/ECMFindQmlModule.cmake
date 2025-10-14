@@ -36,6 +36,8 @@ Usage example:
 Since 5.38.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 set(MODULES_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 function(ecm_find_qmlmodule MODULE_NAME)

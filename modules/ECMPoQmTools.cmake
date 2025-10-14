@@ -82,6 +82,8 @@ it uses ``share/locale``.
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
 option(KF_SKIP_PO_PROCESSING "Skip processing of po files" OFF)
 

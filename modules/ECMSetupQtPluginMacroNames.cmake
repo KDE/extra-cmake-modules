@@ -105,6 +105,8 @@ automoc is instructed as well as needed:
 Since 5.45.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(CMakePackageConfigHelpers)
 
 macro(ecm_setup_qtplugin_macro_names)

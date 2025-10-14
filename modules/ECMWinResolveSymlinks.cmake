@@ -25,6 +25,8 @@ icons implemented as symlinks.
 Since 5.28
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ECM_WIN_RESOLVE_SYMLINKS _dir)
   get_filename_component(dir ${_dir} ABSOLUTE)
   find_program(GIT_EXECUTABLE git)

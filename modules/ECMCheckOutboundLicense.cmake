@@ -65,6 +65,8 @@ the CMake ``GLOB`` argument of the ``FILE`` function.
 Since 5.75.0
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(FeatureSummary)
 
 option(SKIP_LICENSE_TESTS "Skip outbound license tests" OFF)

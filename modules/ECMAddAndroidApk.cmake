@@ -71,6 +71,8 @@ Since 6.12.0
 
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 # make ExecuteCoreModules test pass on Qt5
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
 if (QT_MAJOR_VERSION EQUAL 5)

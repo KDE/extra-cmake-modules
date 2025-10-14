@@ -87,6 +87,8 @@ in their ``.pro`` file.
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 # Replicate the logic from KDEInstallDirs.cmake as we can't depend on it
 # Ask qmake if we're using the same prefix as Qt
 set(_should_query_qt OFF)

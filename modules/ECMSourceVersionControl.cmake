@@ -15,6 +15,8 @@ svn checkout, etc).
 Since 5.63
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git" OR
    EXISTS "${CMAKE_SOURCE_DIR}/.svn" OR
    EXISTS "${CMAKE_SOURCE_DIR}/.hg" OR

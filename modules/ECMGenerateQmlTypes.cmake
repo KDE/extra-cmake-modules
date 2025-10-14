@@ -27,6 +27,8 @@ test named qmltypes-pluginname-version that makes sure that it doesn't need upda
 Since 5.33.0
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ecm_generate_qmltypes)
     if (NOT TARGET qmltypes)
         add_custom_target(qmltypes)

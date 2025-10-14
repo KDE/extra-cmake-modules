@@ -19,6 +19,8 @@ than MacOS X or Windows, this will have no effect.
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ecm_mark_nongui_executable)
   foreach(_target ${ARGN})
     set_target_properties(${_target}

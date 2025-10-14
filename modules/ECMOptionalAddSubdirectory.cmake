@@ -33,6 +33,8 @@ one named "foo":
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ECM_OPTIONAL_ADD_SUBDIRECTORY _dir)
   get_filename_component(_fullPath ${_dir} ABSOLUTE)
   if(EXISTS ${_fullPath}/CMakeLists.txt)

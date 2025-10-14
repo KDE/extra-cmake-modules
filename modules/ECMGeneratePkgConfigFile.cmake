@@ -91,6 +91,8 @@ Example usage:
 Since 1.3.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 function(ECM_GENERATE_PKGCONFIG_FILE)
   set(options INSTALL)
   set(oneValueArgs BASE_NAME LIB_NAME FILENAME_VAR INCLUDE_INSTALL_DIR LIB_INSTALL_DIR DESCRIPTION URL)

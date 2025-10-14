@@ -1,3 +1,5 @@
+cmake_policy(VERSION 3.16)
+
 if (${ECM_GLOBAL_FIND_VERSION} VERSION_GREATER_EQUAL 5.93)
     message(DEPRECATION "ECMQueryQmake.cmake is deprecated since 5.93, please use ECMQueryQt.cmake instead.")
 endif()

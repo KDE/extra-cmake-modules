@@ -85,6 +85,8 @@ generator expressions. Since 5.111.
 Since pre-1.0.0.
 #]=======================================================================]
 
+cmake_policy(VERSION 3.16)
+
 include(ECMMarkAsTest)
 include(ECMMarkNonGuiExecutable)
 
