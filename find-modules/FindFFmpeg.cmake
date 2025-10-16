@@ -78,7 +78,7 @@ following to specify required versions for multiple components:
   find_package(FFmpeg 57.40 COMPONENTS AVFORMAT)
   find_package(FFmpeg 55.27 COMPONENTS AVUTIL)
 
-Since 6.18.0.
+Since 6.20.0.
 #]=======================================================================]
 
 
