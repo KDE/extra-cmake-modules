@@ -3,3 +3,4 @@
 
 Options:
   require-passing-tests-on: [ 'Linux', 'FreeBSD' ]
+  cmake-options: '-DBUILD_HTML_DOCS=OFF -DBUILD_MAN_DOCS=OFF -DBUILD_QTHELP_DOCS=OFF'
