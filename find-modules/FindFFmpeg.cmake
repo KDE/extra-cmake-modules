@@ -66,7 +66,7 @@ Additionally for each of the components, the following variables will be defined
     Compiler switches required for using <component>
 
 ``<component>_VERSION``
-    The components version
+    The components version (NOTE: always empty on Windows)
 
 As the versions of the various FFmpeg components differ for a given release,
 and CMake supports only one common version for all components, use the
@@ -77,6 +77,8 @@ following to specify required versions for multiple components:
   find_package(FFmpeg 57.48 COMPONENTS AVCODEC)
   find_package(FFmpeg 57.40 COMPONENTS AVFORMAT)
   find_package(FFmpeg 55.27 COMPONENTS AVUTIL)
+
+NOTE: version checking is skipped on Windows
 
 Since 6.20.0.
 #]=======================================================================]
@@ -214,10 +216,18 @@ unset(_FFmpeg_REQUIRED_VARS)
 set(_FFmpeg_FOUND_LIBRARIES "")
 foreach(_component ${FFmpeg_FIND_COMPONENTS})
   if(${_component}_FOUND)
-    if(${_component}_VERSION VERSION_LESS _FFmpeg_REQUIRED_VERSION)
-      message(STATUS "${_component}: ${${_component}_VERSION} < ${_FFmpeg_REQUIRED_VERSION}")
-      unset(${_component}_FOUND)
+    if(NOT WIN32)
+      if(${_component}_VERSION VERSION_LESS _FFmpeg_REQUIRED_VERSION)
+        message(STATUS "${_component}: ${${_component}_VERSION} < ${_FFmpeg_REQUIRED_VERSION}")
+        unset(${_component}_FOUND)
+      endif()
+    else()
+      # We don't use PkgConfig on Windows an hence the <component>_VERSION var is empty
+      # TODO: We could add some magic to retrieve the version from the .pc files or version headers ourself,
+      # like https://github.com/Kitware/VTK/blob/master/CMake/FindFFMPEG.cmake
+      message(WARNING "${_component}: Version check is not supported on Windows, skipping version check")
     endif()
+
     list(APPEND _FFmpeg_FOUND_LIBRARIES ${${_component}_LIBRARIES})
   endif()
   list(APPEND _FFmpeg_REQUIRED_VARS ${_component}_LIBRARIES ${_component}_INCLUDE_DIRS ${_component}_FOUND)
