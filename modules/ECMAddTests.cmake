@@ -34,6 +34,8 @@ If ``NAME_PREFIX`` is given, this prefix will be prepended to the test names, bu
 not the target names. As a result, it will not prevent clashes between tests
 with the same name in different parts of the project, but it can be used to
 give an indication of where to look for a failing test.
+If ``NAME_PREFIX`` is not set, it will default to the value of the variable
+``ECM_TEST_NAME_PREFIX`` if set in the current scope (since 6.21).
 
 If the flag ``GUI`` is passed the test binaries will be GUI executables, otherwise
 the resulting binaries will be console applications (regardless of the value
@@ -73,14 +75,25 @@ generator expressions. Since 5.111.
 
 This is a single-test form of ``ecm_add_tests`` that allows multiple source files
 to be used for a single test. If using multiple source files, ``TEST_NAME`` must
-be given; this will be used for both the target and test names (and, as with
-``ecm_add_tests()``, the ``NAME_PREFIX`` argument will be prepended to the test name).
+be given; this will be used for both the target and test names.
+
+As with ``ecm_add_tests()``, the ``NAME_PREFIX`` argument will be prepended to the test name.
+If ``NAME_PREFIX`` is not set, it will default to the value of the variable
+``ECM_TEST_NAME_PREFIX`` if set in the current scope (since 6.21).
 
 ``WORKING_DIRECTORY`` sets the test property `WORKING_DIRECTORY
 <https://cmake.org/cmake/help/latest/prop_test/WORKING_DIRECTORY.html>`_
 in which to execute the test. By default the test will be run in
 ``${CMAKE_CURRENT_BINARY_DIR}``. The working directory can be specified using
 generator expressions. Since 5.111.
+
+::
+
+  ECM_TEST_NAME_PREFIX # Since 6.21.0
+
+This variable is used as default for the ``NAME_PREFIX`` argument to the
+``ecm_add_tests()`` and ``ecm_add_test()`` macros.
+
 
 Since pre-1.0.0.
 #]=======================================================================]
@@ -109,6 +122,9 @@ function(ecm_add_test)
     message(FATAL_ERROR "ecm_add_test() called with multiple source files but without setting \"TEST_NAME\"")
   endif()
 
+  if (NOT ARG_NAME_PREFIX)
+      set(ARG_NAME_PREFIX ${ECM_TEST_NAME_PREFIX})
+  endif()
   set(_testname ${ARG_NAME_PREFIX}${_targetname})
   set(gui_args)
   if(ARG_GUI)
@@ -164,6 +180,9 @@ function(ecm_add_tests)
   set(test_args)
   if(DEFINED ARG_WORKING_DIRECTORY)
       list(APPEND test_args WORKING_DIRECTORY ${ARG_WORKING_DIRECTORY})
+  endif()
+  if (NOT ARG_NAME_PREFIX)
+      set(ARG_NAME_PREFIX ${ECM_TEST_NAME_PREFIX})
   endif()
   set(test_names)
   set(target_names)
