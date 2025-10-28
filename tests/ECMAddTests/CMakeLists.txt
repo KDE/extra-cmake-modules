@@ -33,6 +33,26 @@ macro(add_check NAME)
         )
 endmacro()
 
+macro(add_nameprefix_test NAME)
+    string(REPLACE "." "/" dir "${NAME}")
+    string(REGEX REPLACE "[^.]*\\." "" proj "${NAME}")
+    add_test(
+        NAME ecm_add_tests-${NAME}
+        COMMAND
+            ${CMAKE_CTEST_COMMAND}
+            --build-and-test
+            "${CMAKE_CURRENT_SOURCE_DIR}/${dir}"
+            "${CMAKE_CURRENT_BINARY_DIR}/${dir}"
+            --build-two-config
+            --build-generator ${CMAKE_GENERATOR}
+            --build-makeprogram ${CMAKE_MAKE_PROGRAM}
+            --build-project ${proj}
+            --build-options -DBUILD_TESTING:BOOL=ON
+            ${${NAME}_EXTRA_OPTIONS}
+            --test-command "${CMAKE_CTEST_COMMAND}"
+        )
+endmacro()
+
 add_check(single_tests
     test1.txt
     test2.txt
@@ -56,3 +76,5 @@ add_check(multi_tests
     test1011_dir/test11.txt
     )
 
+add_nameprefix_test(nameprefix_by_var_tests)
+add_nameprefix_test(nameprefix_by_path_tests)
