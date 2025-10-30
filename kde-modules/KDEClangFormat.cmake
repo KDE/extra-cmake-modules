@@ -110,6 +110,7 @@ function(KDE_CLANG_FORMAT)
     else()
         add_custom_command(TARGET clang-format
             COMMAND
+                POST_BUILD
                 ${CMAKE_COMMAND} -E echo "Could not set up the clang-format target as the clang-format executable is missing."
             )
     endif()
