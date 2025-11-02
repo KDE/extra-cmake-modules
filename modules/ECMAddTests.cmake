@@ -68,6 +68,8 @@ generator expressions. Since 5.111.
       [TEST_NAME <name>]
       [NAME_PREFIX <prefix>]
       [GUI]
+      [TARGET_NAME_VAR <target_name_var>]
+      [TEST_NAME_VAR <test_name_var>]
       [WORKING_DIRECTORY <dir>] #  Since 5.111
   )
 
@@ -75,6 +77,11 @@ This is a single-test form of ``ecm_add_tests`` that allows multiple source file
 to be used for a single test. If using multiple source files, ``TEST_NAME`` must
 be given; this will be used for both the target and test names (and, as with
 ``ecm_add_tests()``, the ``NAME_PREFIX`` argument will be prepended to the test name).
+
+The ``TARGET_NAME_VAR`` and ``TEST_NAME_VAR`` arguments, if given, should specify a
+variable name to receive the generated target and test name,
+respectively. This makes it convenient to apply properties to them as a
+whole, for example, using ``set_target_properties()`` or  ``set_tests_properties()``.
 
 ``WORKING_DIRECTORY`` sets the test property `WORKING_DIRECTORY
 <https://cmake.org/cmake/help/latest/prop_test/WORKING_DIRECTORY.html>`_
@@ -92,8 +99,6 @@ include(ECMMarkNonGuiExecutable)
 
 function(ecm_add_test)
   set(options GUI)
-  # TARGET_NAME_VAR and TEST_NAME_VAR are undocumented args used by
-  # ecm_add_tests
   set(oneValueArgs TEST_NAME NAME_PREFIX TARGET_NAME_VAR TEST_NAME_VAR WORKING_DIRECTORY)
   set(multiValueArgs COMPILE_DEFINITIONS ENVIRONMENT LINK_LIBRARIES)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})

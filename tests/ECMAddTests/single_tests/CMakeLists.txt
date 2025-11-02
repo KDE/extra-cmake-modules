@@ -30,9 +30,15 @@ file(REMOVE_RECURSE
     "${CMAKE_CURRENT_BINARY_DIR}/test7_dir"
     )
 
+set(exp_target_name "test1")
+set(exp_test_name "test1")
 ecm_add_test(test1.cpp
     LINK_LIBRARIES testhelper
+    TARGET_NAME_VAR target_name
+    TEST_NAME_VAR test_name
     )
+assert_vars_setequal(target_name exp_target_name)
+assert_vars_setequal(test_name exp_test_name)
 # check target exists
 get_property(_dummy TARGET test1 PROPERTY TYPE)
 # check test exists
@@ -63,10 +69,16 @@ if (_is_bundle)
 endif()
 
 
+set(exp_target_name "test3")
+set(exp_test_name "prefix_test3")
 ecm_add_test(test3.cpp
     LINK_LIBRARIES testhelper
     NAME_PREFIX prefix_
+    TARGET_NAME_VAR target_name
+    TEST_NAME_VAR test_name
     )
+assert_vars_setequal(target_name exp_target_name)
+assert_vars_setequal(test_name exp_test_name)
 get_property(_dummy TARGET test3 PROPERTY TYPE)
 get_property(_dummy TEST prefix_test3 PROPERTY TIMEOUT)
 get_property(_is_win32 TARGET test3 PROPERTY WIN32_EXECUTABLE)
