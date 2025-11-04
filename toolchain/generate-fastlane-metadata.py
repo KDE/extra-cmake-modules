@@ -19,6 +19,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from urllib.parse import urlsplit, urlunsplit
 import xdg.DesktopEntry
 import xml.etree.ElementTree as ET
 import yaml
@@ -367,6 +368,14 @@ def createMetadataArchive(applicationName):
         archive.write(file, file)
     os.chdir(oldcwd)
 
+
+# strip user name and password from an URL
+def cleanUrl(url):
+    parts = urlsplit(url)
+    netloc = parts.netloc if '@' not in parts.netloc else parts.netloc.split('@')[1]
+    return urlunsplit((parts.scheme, netloc, parts.path, parts.query, parts.fragment))
+
+
 # Generate metadata for the given appstream and desktop files
 def processAppstreamFile(appstreamFileName, desktopFileName, iconBaseName):
     # appstreamFileName has the form <id>.appdata.xml or <id>.metainfo.xml, so we
@@ -437,7 +446,7 @@ def processAppstreamFile(appstreamFileName, desktopFileName, iconBaseName):
         upstream_ref = subprocess.check_output(['git', 'rev-parse', '--symbolic-full-name', '@{u}'], cwd=arguments.source).decode('utf-8')
         remote = upstream_ref.split('/')[2]
         output = subprocess.check_output(['git', 'remote', 'get-url', remote], cwd=arguments.source).decode('utf-8')
-        data['source-repo'] = output.strip()
+        data['source-repo'] = cleanUrl(output.strip())
 
     # write meta data
     createFastlaneFile( applicationName, "title.txt", data['name'] )
