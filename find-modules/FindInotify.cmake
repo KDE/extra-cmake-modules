@@ -9,7 +9,7 @@ FindInotify
 
 Try to find inotify on this system. This finds:
  - libinotify on Unix like systems, or
- - the kernel's inotify on Linux systems.
+ - the kernel's inotify.
 
 This will define the following variables:
 
@@ -20,8 +20,8 @@ This will define the following variables:
 ``Inotify_INCLUDE_DIRS``
    This has to be passed to target_include_directories()
 
-On Linux and SunOS, the libraries and include directories are empty,
-even though ``Inotify_FOUND`` may be set to TRUE. This is because
+On some platforms like Linux and SunOS, the libraries and include directories
+are empty, even though ``Inotify_FOUND`` may be set to TRUE. This is because
 no special includes or libraries are needed. On other systems
 these may be needed to use inotify.
 
@@ -30,31 +30,48 @@ Since 5.32.0.
 
 cmake_policy(VERSION 3.16)
 
+find_path(Inotify_INCLUDE_DIRS sys/inotify.h PATHS /usr/include NO_DEFAULT_PATH)
 find_path(Inotify_INCLUDE_DIRS sys/inotify.h)
 
 if(Inotify_INCLUDE_DIRS)
-# On Linux and SunOS, there is no library to link against, on the BSDs there is.
-# On the BSD's, inotify is implemented through a library, libinotify.
-    if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "SunOS")
+    # On OSes with a kernel implementation, there is no library to link against.
+    # On some others inotify is implemented through a library, libinotify.
+    # If we found a header, but not a library, assume a kernel implementation
+    find_library(Inotify_LIBRARIES NAMES inotify)
+    if(NOT Inotify_LIBRARIES)
         set(Inotify_FOUND TRUE)
-        set(Inotify_LIBRARIES "")
-        set(Inotify_INCLUDE_DIRS "")
+        set(Inotify_LIBRARIES "" CACHE STRING "" FORCE)
+        set(Inotify_INCLUDE_DIRS "" CACHE STRING "" FORCE)
     else()
-        find_library(Inotify_LIBRARIES NAMES inotify)
-        include(FindPackageHandleStandardArgs)
-        find_package_handle_standard_args(Inotify
-            FOUND_VAR
-                Inotify_FOUND
-            REQUIRED_VARS
-                Inotify_LIBRARIES
-                Inotify_INCLUDE_DIRS
-        )
-        mark_as_advanced(Inotify_LIBRARIES Inotify_INCLUDE_DIRS)
-        include(FeatureSummary)
-        set_package_properties(Inotify PROPERTIES
-            URL "https://github.com/libinotify-kqueue/"
-            DESCRIPTION "inotify API on the *BSD family of operating systems."
-        )
+        # On FreeBSD 15+ we may end up with both in-kernel and libinotify
+        # implementation. To discern between them, compare prefixes of
+        # ${Inotify_INCLUDE_DIRS} and ${Inotify_LIBRARIES}: if we get
+        # /usr/include and /usr/local/lib/libinotify.so then assume that the
+        # kernel implementation is available and user wants it, instead of libinotify
+        cmake_path(GET Inotify_INCLUDE_DIRS PARENT_PATH includes_prefix)
+        cmake_path(GET Inotify_LIBRARIES PARENT_PATH lib_prefix)
+        cmake_path(GET lib_prefix PARENT_PATH lib_prefix)
+        cmake_path(COMPARE includes_prefix EQUAL lib_prefix prefixes_match)
+
+        if(NOT prefixes_match)
+            set(Inotify_FOUND TRUE)
+            set(Inotify_LIBRARIES "" CACHE STRING "" FORCE)
+            set(Inotify_INCLUDE_DIRS "" CACHE STRING "" FORCE)
+        else()
+            include(FindPackageHandleStandardArgs)
+            find_package_handle_standard_args(Inotify
+                FOUND_VAR
+                    Inotify_FOUND
+                REQUIRED_VARS
+                    Inotify_LIBRARIES
+                    Inotify_INCLUDE_DIRS
+            )
+            include(FeatureSummary)
+            set_package_properties(Inotify PROPERTIES
+                URL "https://github.com/libinotify-kqueue/"
+                DESCRIPTION "inotify API on the *BSD family of operating systems."
+            )
+        endif()
     endif()
     if(NOT TARGET Inotify::Inotify)
         add_library(Inotify::Inotify INTERFACE IMPORTED)
