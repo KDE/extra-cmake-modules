@@ -30,6 +30,12 @@ Since 5.32.0.
 
 cmake_policy(VERSION 3.16)
 
+# Immediate fail on Linux or Sun as glibc-dev or other package installed /usr/include/sys/inotify.h
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "SunOS")
+    set(Inotify_FOUND FALSE)
+    return()
+endif()
+
 find_path(Inotify_INCLUDE_DIRS sys/inotify.h PATHS /usr/include NO_DEFAULT_PATH)
 find_path(Inotify_INCLUDE_DIRS sys/inotify.h)
 
@@ -82,4 +88,4 @@ else()
     set(Inotify_FOUND FALSE)
 endif()
 
-mark_as_advanced(Inotify_LIBRARIES Inotify_INCLUDE_DIRS) 
+mark_as_advanced(Inotify_LIBRARIES Inotify_INCLUDE_DIRS)
