@@ -30,6 +30,11 @@ Since 5.32.0.
 
 cmake_policy(VERSION 3.16)
 
+# Reset the cache var before searching for sys/inotify.h
+# This is required, because on systems with native inotify we reset Inotify_INCLUDE_DIRS
+# to an empty string. Rerunning CMake in this case will reuse the empty variable
+# and we will not get into if(Inotify_INCLUDE_DIRS) the second time
+unset(Inotify_INCLUDE_DIRS CACHE)
 find_path(Inotify_INCLUDE_DIRS sys/inotify.h PATHS /usr/include NO_DEFAULT_PATH)
 find_path(Inotify_INCLUDE_DIRS sys/inotify.h)
 
