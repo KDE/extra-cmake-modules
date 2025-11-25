@@ -127,6 +127,8 @@ where ``<dir>`` is one of (default values in parentheses):
     Systemd Units (``lib/systemd``)
 ``SYSTEMDUSERUNITDIR``
     Systemd User Units (``lib/systemd/user``)
+``SYSTEMDSYSTEMUNITDIR``
+    Systemd System Units (``lib/systemd/system``)
 
 If ``KDE_INSTALL_USE_QT_SYS_PATHS`` is set to ``TRUE`` before including this
 module, the default values for some variables are instead queried from
