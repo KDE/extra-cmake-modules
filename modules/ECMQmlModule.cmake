@@ -227,7 +227,7 @@ will activate verbose output for qmlcachegen.
 Since 6.18.0
 
 Generate code from qmlcachegen is put into the same ``UNITY_GROUP``. Unity builds
-using this can either be activated manueally per target or with the ``ECM_QMLCACHE_UNITY_BUILD``
+using this can either be activated manually per target or with the ``ECM_QMLCACHE_UNITY_BUILD``
 option globally. This can speed up clean builds at the expense of needing more memory
 and making incremental builds slower.
 
