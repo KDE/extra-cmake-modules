@@ -97,7 +97,7 @@ function(ecm_generate_qdoc target qdocconf_file)
 
     file(GENERATE
         OUTPUT ${target_include_dirs_file}
-        CONTENT "$<$<BOOL:${include_paths_property}>:-I$<JOIN:${include_paths_property},\n-I>>\n-I$<TARGET_PROPERTY:${target},BINARY_DIR>"
+        CONTENT "$<$<BOOL:${include_paths_property}>:-I$<JOIN:${include_paths_property},\n-I>>\n-I$<TARGET_PROPERTY:${target},BINARY_DIR>\n-I$<TARGET_PROPERTY:${target},SOURCE_DIR>"
     )
     set(include_path_args "@${target_include_dirs_file}")
 
