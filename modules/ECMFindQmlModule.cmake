@@ -7,15 +7,15 @@
 ECMFindQmlModule
 ----------------
 
-Finds QML import modules to set them as runtime dependencies.
+Finds QML import modules to set them as dependencies.
 
-Because QML modules are not compile time requirements, they can be easy to miss
-by packagers and developers, causing QML apps to fail to display.
+Because QML modules are not hard compile time requirements, they can be easy to miss
+by packagers and developers, causing suboptimal build results or runtime issues.
 Use this CMake module to ensure a QML module is installed at compile time
 during CMake configuration.
 
 Internally, this CMake module looks for the qmldir and, if needed, uses
-qmlplugindump to find the plugins and set them up as runtime dependencies.
+qmlplugindump to find the plugins and set them up as dependencies.
 
 ::
 
@@ -60,11 +60,9 @@ function(ecm_find_qmlmodule MODULE_NAME)
     if(COMMAND set_package_properties)
       if (ARG_REQUIRED)
         set(TYPE_STRING TYPE REQUIRED)
-      else()
-        set(TYPE_STRING TYPE RUNTIME)
       endif()
         set_package_properties(${GENMODULE} PROPERTIES
-            DESCRIPTION "QML module '${MODULE_NAME}' is a runtime dependency."
+            DESCRIPTION "QML module '${MODULE_NAME}' is a dependency."
             ${TYPE_STRING})
     endif()
 endfunction()
