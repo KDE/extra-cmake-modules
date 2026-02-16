@@ -162,6 +162,11 @@ Inclusion of this module defines the following variables:
 
     Since 5.85
 
+``ECM_FORCE_ASSERTS``
+    Enable Q_ASSERT regardless of ``CMAKE_BUILD_TYPE``. Off by default.
+
+    Since 6.24
+
 Example usages:
 
 .. code-block:: cmake
@@ -799,6 +804,11 @@ if (CMAKE_GENERATOR STREQUAL "Ninja" AND
     # Force colored warnings in Ninja's output, if the compiler has -fdiagnostics-color support.
     # Rationale in https://github.com/ninja-build/ninja/issues/814
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+endif()
+
+option(ECM_FORCE_ASSERTS "Enable Q_ASSERT regardless of build type" OFF)
+if (ECM_FORCE_ASSERTS)
+    add_definitions(-DQT_FORCE_ASSERTS)
 endif()
 
 include("${ECM_MODULE_DIR}/ECMEnableSanitizers.cmake")
