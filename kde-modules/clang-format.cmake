@@ -93,3 +93,6 @@ AllowShortLambdasOnASingleLine: Empty
 
 # We do not want clang-format to put all arguments on a new line
 AllowAllArgumentsOnNextLine: false
+
+# Add brackets for if-else blocks
+InsertBraces: true
