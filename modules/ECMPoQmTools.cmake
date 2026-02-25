@@ -160,7 +160,7 @@ function(ecm_process_po_files_as_qm lang)
     else()
         # Qt < 5.3.1 does not define Qt5::lconvert
         get_target_property(lrelease_location Qt5::lrelease LOCATION)
-        get_filename_component(lrelease_path ${lrelease_location} PATH)
+        get_filename_component(lrelease_path ${lrelease_location} DIRECTORY)
         find_program(lconvert_executable
             NAMES lconvert-qt5 lconvert
             PATHS ${lrelease_path}

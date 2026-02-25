@@ -83,7 +83,7 @@ find_library(GLIB2_GIO_LIBRARIES
 )
 
 # search the glibconfig.h include dir under the same root where the library is found
-get_filename_component(glib2LibDir "${GLIB2_LIBRARIES}" PATH)
+get_filename_component(glib2LibDir "${GLIB2_LIBRARIES}" DIRECTORY)
 
 find_path(GLIB2_INTERNAL_INCLUDE_DIR glibconfig.h
           PATH_SUFFIXES glib-2.0/include

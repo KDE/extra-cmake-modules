@@ -299,7 +299,7 @@ set(ECM_DIR "${CMAKE_CURRENT_LIST_DIR}/../cmake" CACHE STRING "")
 # from CMakeDetermineSystem.cmake and from CMakeSystem.cmake generated within the
 # build directory.
 if(DEFINED QTANDROID_EXPORTED_TARGET AND NOT TARGET "create-apk" AND NOT __qt_chainload_toolchain_file)
-    get_filename_component(_CMAKE_ANDROID_DIR "${CMAKE_TOOLCHAIN_FILE}" PATH)
+    get_filename_component(_CMAKE_ANDROID_DIR "${CMAKE_TOOLCHAIN_FILE}" DIRECTORY)
     list(LENGTH QTANDROID_EXPORTED_TARGET targetsCount)
     include(${_CMAKE_ANDROID_DIR}/ECMAndroidDeployQt5.cmake)
 
