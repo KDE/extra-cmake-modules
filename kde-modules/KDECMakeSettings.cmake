@@ -90,6 +90,10 @@ Since 5.17.0
 - ``APPLE_SUPPRESS_X11_WARNING`` option since 5.14.0
 - ``CMAKE_AUTORCC`` enabled by default when supported by CMake (>= 3.0) since 5.62.0
 
+Since 6.25.0
+
+Disable ``CMAKE_CXX_SCAN_FOR_MODULES`` by default.
+
 Translations (deprecated)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 A fetch-translations target will be set up that will download translations
@@ -246,6 +250,9 @@ if(NOT KDE_SKIP_BUILD_SETTINGS)
 
    # We use private Qt modules in various places, disable the warning about it
    set(QT_NO_PRIVATE_MODULE_WARNING ON)
+
+   # KDE code doesn't use modules, disable module scanning to avoid unnecessary work
+   set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
    unset(EXECUTABLE_OUTPUT_PATH)
    unset(LIBRARY_OUTPUT_PATH)
