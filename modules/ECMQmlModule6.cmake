@@ -7,9 +7,7 @@
 
 cmake_policy(VERSION 3.16)
 
-set(QT_NO_CREATE_VERSIONLESS_FUNCTIONS ON)
 find_package(Qt6 COMPONENTS Core Qml CONFIG)
-unset(QT_NO_CREATE_VERSIONLESS_FUNCTIONS)
 
 if (NOT TARGET Qt6::Qml)
     message(WARNING "Target Qt6::Qml was not found. ECMQmlModule requires the QML module when building with Qt 6")
