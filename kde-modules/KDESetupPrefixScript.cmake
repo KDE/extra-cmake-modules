@@ -15,6 +15,15 @@ if (CMAKE_CROSSCOMPILING)
     return()
 endif()
 
+find_package(Python3 COMPONENTS Interpreter)
+if (Python3_EXECUTABLE)
+    execute_process(COMMAND ${Python3_EXECUTABLE} -Esc "import sysconfig; print(sysconfig.get_path('platlib', vars={'platbase': '${CMAKE_INSTALL_PREFIX}', 'base': '${CMAKE_INSTALL_PREFIX}'}))" OUTPUT_VARIABLE sysconfig_output)
+    string(STRIP ${sysconfig_output} PYTHON_INSTALL_DIR)
+
+    set(SH_EXPORT_PYTHONPATH "export PYTHONPATH=\"${PYTHON_INSTALL_DIR}\":$PYTHONPATH")
+    set(FISH_EXPORT_PYTHONPATH "set -x --path PYTHONPATH \"${PYTHON_INSTALL_DIR}\" $PYTHONPATH")
+endif()
+
 configure_file(${CMAKE_CURRENT_LIST_DIR}/prefix.sh.cmake ${CMAKE_CURRENT_BINARY_DIR}/prefix.sh @ONLY)
 
 find_program(FISH_EXECUTABLE fish)
