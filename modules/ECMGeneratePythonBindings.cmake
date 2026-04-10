@@ -49,7 +49,7 @@ that will be used to build the shared library.
 
 ``HOMEPAGE_URL`` is a URL to the proyect homepage.
 
-``ISSUES_URL` is a URL where users can report bugs and feature requests.
+``ISSUES_URL`` is a URL where users can report bugs and feature requests.
 
 ``AUTHOR`` is a string with the author of the library.
 
