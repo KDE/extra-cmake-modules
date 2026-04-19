@@ -106,6 +106,9 @@ function (ecm_set_disabled_deprecation_versions)
             # Add 1 to the major version and store it as a hex value
             math(EXPR next_major_version "(${CMAKE_MATCH_1} + 1) * 65536 " OUTPUT_FORMAT HEXADECIMAL)
             add_definitions(-D${DEPRECATION_NAME}_DEPRECATED_WARNINGS_SINCE=${next_major_version})
+        elseif(IS_QT_DEPRECATION)
+            # For KF, this is implicitly the version we disable depreactions
+            add_definitions(-D${DEPRECATION_NAME}_DEPRECATED_WARNINGS_SINCE=${DEPRECATION_HEX_VERSION})
         endif()
 
     endforeach()
