@@ -15,6 +15,7 @@ The following sanitizers are supported:
 - Thread Sanitizer
 - Leak Sanitizer
 - Undefined Behaviour Sanitizer
+- Realtime Sanitizer
 
 All of them are implemented in Clang, depending on your version, and
 there is an work in progress in GCC, where some of them are currently
@@ -45,9 +46,10 @@ The options are:
 - leak
 - undefined
 - fuzzer
+- realtime
 
-The sanitizers "address", "memory" and "thread" are mutually exclusive.  You
-cannot enable two of them in the same build.
+The sanitizers "address", "memory", "thread" and "realtime" are mutually
+exclusive.  You cannot enable two of them in the same build.
 
 "leak" requires the  "address" sanitizer.
 
@@ -146,6 +148,9 @@ macro (enable_sanitizer_flags sanitize_option)
     elseif (${sanitize_option} MATCHES "fuzzer")
         check_compiler_version("99.99" "6.0" "99.99")
         set(XSAN_COMPILE_FLAGS "-fsanitize=fuzzer")
+    elseif (${sanitize_option} MATCHES "realtime")
+        check_compiler_version("99.99" "20.0" "99.99")
+        set(XSAN_COMPILE_FLAGS "-fsanitize=realtime")
     else ()
         message(FATAL_ERROR "Compiler sanitizer option \"${sanitize_option}\" not supported.")
     endif ()
