@@ -47,7 +47,7 @@ that will be used to build the shared library.
 
 ``DEPENDENCIES`` is the list of dependencies that the bindings uses.
 
-``HOMEPAGE_URL`` is a URL to the proyect homepage.
+``HOMEPAGE_URL`` is a URL to the project homepage.
 
 ``ISSUES_URL`` is a URL where users can report bugs and feature requests.
 
@@ -180,7 +180,9 @@ function(ecm_generate_python_bindings)
     )
 
     # Hide noisy warnings
-    target_compile_options(${PB_PACKAGE_NAME} PRIVATE -Wno-cast-function-type -Wno-missing-include-dirs)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(${PB_PACKAGE_NAME} PRIVATE -Wno-cast-function-type -Wno-missing-include-dirs -Wno-keyword-macro -Wno-shadow)
+    endif()
 
     # Adjust the name of generated module.
     set_property(TARGET ${PB_PACKAGE_NAME} PROPERTY PREFIX "")
