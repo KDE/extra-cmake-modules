@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.29)
 # Preliminary setup
 #
 
-set(VERSION "6.26.0") # handled by release scripts
+set(VERSION "6.27.0") # handled by release scripts
 
 project(ECM
     VERSION "${VERSION}"
