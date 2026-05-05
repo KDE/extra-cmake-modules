@@ -100,6 +100,8 @@ where ``<dir>`` is one of (default values in parentheses):
     documentation bundles in QCH format for Qt-extending libraries (``DATAROOTDIR/doc/qch`` or qtpaths's ``QT_INSTALL_DOCS``)
 ``QCHDIR``
     documentation bundles in QCH format (``DATAROOTDIR/doc/qch``)
+``QTMETATYPESDIR``
+    Qt metatypes files  (``metatypes`` or qtpaths's ``QT_INSTALL_ARCHDATA/metatypes``). Since 6.27.
 ``MANDIR``
     man documentation (``DATAROOTDIR/man``)
 ``INFODIR``
@@ -240,6 +242,18 @@ if(KDE_INSTALL_USE_QT_SYS_PATHS)
         file(RELATIVE_PATH qt_qml_dir ${qt_install_prefix_dir} ${qt_qml_dir})
     endif()
    _define_absolute(QMLDIR ${qt_qml_dir} "QtQuick2 imports")
+
+   ecm_query_qt(qt_archdata_dir QT_INSTALL_ARCHDATA)
+
+   if(_qt_prefix_is_cmake_install_prefix)
+        file(RELATIVE_PATH qt_archdata_dir ${qt_install_prefix_dir} ${qt_archdata_dir})
+    endif()
+
+    if (qt_archdata_dir)
+        _define_absolute(QTMETATYPESDIR "${qt_archdata_dir}/metatypes" "Qt metatypes files")
+    else()
+        _define_non_cache(QTMETATYPESDIR "metatypes")
+    endif()
 else()
     set(_pluginsDirParent LIBDIR)
     if (ANDROID)
@@ -251,6 +265,8 @@ else()
 
     _define_relative(QMLDIR LIBDIR "qml"
         "QtQuick2 imports")
+
+    _define_non_cache(QTMETATYPESDIR "metatypes")
 endif()
 
 _define_relative(PLUGINDIR QTPLUGINDIR ""
