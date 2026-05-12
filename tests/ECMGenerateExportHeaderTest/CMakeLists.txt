@@ -1,11 +1,14 @@
 set(installation_path "${CMAKE_CURRENT_BINARY_DIR}/installation/")
 
-macro(add_generate_export_header_library_test _exclude_deprecated_before_and_at)
-    if("${ARGV1}" STREQUAL "WITH_GROUP")
+macro(add_generate_export_header_library_test _exclude_deprecated_before_and_at _deprecated_attribute_type)
+    if("${ARGV2}" STREQUAL "WITH_GROUP")
         set(_set_group_option "-DSET_GROUP=TRUE")
         set(_library_buildname "library-${_exclude_deprecated_before_and_at}-group")
     else()
         set(_library_buildname "library-${_exclude_deprecated_before_and_at}")
+    endif()
+    if (${_deprecated_attribute_type} STREQUAL "COMPILER")
+        string(APPEND _library_buildname "-compiler")
     endif()
     add_test(NAME ecm_generate_export_header-build-${_library_buildname}
         COMMAND ${CMAKE_CTEST_COMMAND}
@@ -19,18 +22,22 @@ macro(add_generate_export_header_library_test _exclude_deprecated_before_and_at)
             --build-target install
             --build-options
                 "-DEXCLUDE_DEPRECATED_BEFORE_AND_AT=${_exclude_deprecated_before_and_at}"
+                "-DDEPRECATED_ATTRIBUTE_TYPE:STRING=${_deprecated_attribute_type}"
                 "-DCMAKE_INSTALL_PREFIX:PATH=${installation_path}/${_library_buildname}"
                 ${_set_group_option}
             --test-command dummy
     )
 endmacro()
 
-macro(add_generate_export_header_consumer_test _test_variant _exclude_deprecated_before_and_at _group_test_mode _consumer_build)
+macro(add_generate_export_header_consumer_test _test_variant _exclude_deprecated_before_and_at _deprecated_attribute_type _group_test_mode _consumer_build)
     set(_extra_build_options ${ARGN})
-    if(_group_test_mode STREQUAL "GROUPLESS")
+    if(${_group_test_mode} STREQUAL "GROUPLESS")
         set(_library "library-${_exclude_deprecated_before_and_at}")
     else()
         set(_library "library-${_exclude_deprecated_before_and_at}-group")
+    endif()
+    if (${_deprecated_attribute_type} STREQUAL "COMPILER")
+        string(APPEND _library "-compiler")
     endif()
     add_test(NAME ecm_generate_export_header-${_consumer_build}
         COMMAND ${CMAKE_CTEST_COMMAND}
@@ -44,6 +51,7 @@ macro(add_generate_export_header_consumer_test _test_variant _exclude_deprecated
             --build-options
                 "-DTEST_VARIANT:STRING=${_test_variant}"
                 "-DDEPRECATED_EXCLUDED_BEFORE_AND_AT:STRING=${_exclude_deprecated_before_and_at}"
+                "-DDEPRECATED_ATTRIBUTE_TYPE:STRING=${_deprecated_attribute_type}"
                 "-DLIBRARY:STRING=${_library}"
                 "-DGROUP_MODE:STRING=${_group_test_mode}"
                 ${_extra_build_options}
@@ -64,6 +72,7 @@ macro(add_generate_export_header_consumer_disable_deprecated_before_and_at_test
     )
     add_generate_export_header_consumer_test(DISABLE_DEPRECATED_BEFORE_AND_AT
         ${_exclude_deprecated_before_and_at}
+        "STANDARD"
         ${_group_test_mode}
         ${_consumer_build}
         ${_extra_build_options}
@@ -74,6 +83,7 @@ macro(add_generate_export_header_consumer_no_deprecated_test _exclude_deprecated
     set(_consumer_build "consumer-NO-DEPRECATED-${_exclude_deprecated_before_and_at}-${_group_test_mode}")
     add_generate_export_header_consumer_test(NO_DEPRECATED
         ${_exclude_deprecated_before_and_at}
+        "STANDARD"
         ${_group_test_mode}
         ${_consumer_build}
     )
@@ -90,10 +100,13 @@ math(EXPR _last_index ${library_versions_count}-1)
 foreach(_group_arg "" "WITH_GROUP")
     foreach(_index RANGE ${_last_index})
         list(GET library_versions ${_index} _exclude_deprecated_before_and_at)
-        add_generate_export_header_library_test(${_exclude_deprecated_before_and_at} ${_group_arg})
+        add_generate_export_header_library_test(${_exclude_deprecated_before_and_at} "STANDARD" ${_group_arg})
     endforeach()
 endforeach()
 
+# test generating the library using compiler-specific deprecation attribute macros
+# no need to repeat covering visibility macros here
+add_generate_export_header_library_test(0 "COMPILER" "")
 
 set(group_test_modes "GROUPLESS" "GROUP_USE_DIRECT" "GROUP_USE_GROUP")
 
@@ -120,3 +133,13 @@ foreach(_group_test_mode ${group_test_modes})
         add_generate_export_header_consumer_no_deprecated_test(${_exclude_deprecated_before_and_at} ${_group_test_mode})
     endforeach()
 endforeach()
+
+# test with compiler-specific deprecation attribute macros
+# no need to repeat covering visibility macros here
+add_generate_export_header_consumer_test(DISABLE_DEPRECATED_BEFORE_AND_AT
+    "0"
+    "COMPILER"
+    "GROUPLESS"
+    "consumer-compiler"
+    "-DLIBRARY_DISABLE_DEPRECATED_BEFORE_AND_AT:STRING=0"
+)

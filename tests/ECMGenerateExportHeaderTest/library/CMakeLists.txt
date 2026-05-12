@@ -21,8 +21,17 @@ if(SET_GROUP)
     set(_group_args GROUP_BASE_NAME LIBGROUP)
 endif()
 
+# adapt macro used for enum deprecation
+if(${DEPRECATED_ATTRIBUTE_TYPE} STREQUAL "STANDARD")
+    set(ENUM_DEPRECATION_MACRO_NAME "LIBRARY_DEPRECATED_VERSION")
+else()
+    set(ENUM_DEPRECATION_MACRO_NAME "LIBRARY_ENUMERATOR_DEPRECATED_VERSION")
+endif()
+configure_file(library.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/library.hpp" @ONLY)
+
 ecm_generate_export_header(library
     ${_group_args}
+    DEPRECATED_ATTRIBUTE_TYPE ${DEPRECATED_ATTRIBUTE_TYPE}
     VERSION ${library_VERSION}
     DEPRECATION_VERSIONS 2.0 2.12
     EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
@@ -32,7 +41,7 @@ install(TARGETS library DESTINATION lib EXPORT library_targets)
 
 install(EXPORT library_targets FILE LibraryTargets.cmake DESTINATION lib/library)
 install(FILES
-    library.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/library.hpp"
     "${CMAKE_CURRENT_BINARY_DIR}/library_export.h"
     DESTINATION ${_public_includedir}
 )
