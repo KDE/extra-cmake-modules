@@ -144,7 +144,15 @@ endmacro()
 
 set_deprecated_variable(CMAKE_ANDROID_NDK ANDROID_NDK "$ENV{ANDROID_NDK}")
 set_deprecated_variable(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION ANDROID_GCC_VERSION "clang")
-set_deprecated_variable(CMAKE_ANDROID_API ANDROID_API_LEVEL "21")
+
+# try to determine default API level from environment
+# we unfortunately can't make this dependent on the Qt version as we don't know that here yet
+set(_default_api_level "21")
+if($ENV{ANDROID_NDK_PLATFORM} MATCHES "^android-([0-9]+)$")
+    set(_default_api_level ${CMAKE_MATCH_1})
+endif()
+
+set_deprecated_variable(CMAKE_ANDROID_API ANDROID_API_LEVEL ${_default_api_level})
 if(NOT DEFINED ENV{ANDROID_ARCH})
     set(ENV{ANDROID_ARCH} "arm")
 endif()
