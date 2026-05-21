@@ -181,7 +181,14 @@ function(ecm_generate_python_bindings)
 
     # Hide noisy warnings
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        target_compile_options(${PB_PACKAGE_NAME} PRIVATE -Wno-cast-function-type -Wno-missing-include-dirs -Wno-keyword-macro -Wno-shadow)
+        target_compile_options(${PB_PACKAGE_NAME} PRIVATE
+            -Wno-cast-function-type
+            -Wno-keyword-macro
+            -Wno-missing-include-dirs
+            -Wno-overloaded-virtual
+            -Wno-shadow
+            -Wno-zero-as-null-pointer-constant
+        )
     endif()
 
     # Adjust the name of generated module.
