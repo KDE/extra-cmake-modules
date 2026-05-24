@@ -3,6 +3,8 @@ project(ExecuteCoreModules)
 set(ECM_GLOBAL_FIND_VERSION "5.90.0")
 
 file(GLOB all_core_modules "${CMAKE_CURRENT_SOURCE_DIR}/../../modules/*cmake")
+# drop helper scripts from the list
+list(FILTER all_core_modules EXCLUDE REGEX "modules/ecm_.*cmake")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../modules)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../find-modules)
