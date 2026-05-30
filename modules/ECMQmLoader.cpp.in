@@ -77,7 +77,11 @@ namespace {
             return false;
         }
 #else
+# ifdef Q_OS_MACOS
+        const QString fullPath = QStandardPaths::locate(QStandardPaths::AppLocalDataLocation, subPath);
+# else
         const QString fullPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, subPath);
+# endif
         if (fullPath.isEmpty()) {
             return false;
         }
