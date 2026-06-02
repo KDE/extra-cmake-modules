@@ -259,6 +259,11 @@ macro(ecm_find_package_handle_library_components module_name)
                     INTERFACE_INCLUDE_DIRECTORIES "${${module_name}_${ecm_fpwc_comp}_INCLUDE_DIR}"
                     INTERFACE_LINK_LIBRARIES "${ecm_fpwc_dep_targets}"
                 )
+                if("${${module_name}_${ecm_fpwc_comp}_LIBRARY}" MATCHES "\\${CMAKE_STATIC_LIBRARY_SUFFIX}$")
+                    set_target_properties(${module_name}::${ecm_fpwc_comp} PROPERTIES
+                        INTERFACE_LINK_LIBRARIES "${PKG_${module_name}_${ecm_fpwc_comp}_LINK_LIBRARIES}"
+                    )
+                endif()
             endif()
             list(APPEND ${module_name}_TARGETS
                         "${module_name}::${ecm_fpwc_comp}")
