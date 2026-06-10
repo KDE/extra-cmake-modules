@@ -303,7 +303,7 @@ def processLocalImages(applicationName, data):
     imageFiles = glob.glob('metadata/**/*.png', recursive=True)
     imageFiles.extend(glob.glob('metadata/**/*.jpg', recursive=True))
     for image in imageFiles:
-        # noramlize single- vs multi-app layouts
+        # normalize single- vs multi-app layouts
         imageDestName = image.replace('metadata/android', 'metadata/' + applicationName)
 
         # copy image

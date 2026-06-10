@@ -76,6 +76,6 @@ if (NOT "${KF_IGNORE_PLATFORM_CHECK}")
     endforeach()
 
     if (NOT _MetainfoFoundSupportedPlatform)
-        message(FATAL_ERROR "Your current platform '${CMAKE_SYSTEM_NAME}' is not supported. The list of supported platorms is '${_MetainfoSupportedPlatforms}'.If you think this is a mistake or you are working on enabling the platform please build with the KF_IGNORE_PLATFORM_CHECK variable set to true")
+        message(FATAL_ERROR "Your current platform '${CMAKE_SYSTEM_NAME}' is not supported. The list of supported platforms is '${_MetainfoSupportedPlatforms}'.If you think this is a mistake or you are working on enabling the platform please build with the KF_IGNORE_PLATFORM_CHECK variable set to true")
     endif()
 endif()

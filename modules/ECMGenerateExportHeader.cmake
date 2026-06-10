@@ -129,7 +129,7 @@ would only append the string passed as argument value.
 
 The function ``ecm_generate_export_header`` defines C++ preprocessor macros
 in the generated export header, some for use in the sources of the library
-the header is generated for, other for use by projects linking agsinst the
+the header is generated for, other for use by projects linking against the
 library.
 
 The macros for use in the library C++ sources are these, next to those also

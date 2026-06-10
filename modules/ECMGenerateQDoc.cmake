@@ -29,7 +29,7 @@ Example usage:
 
   ecm_add_qch(KF6::CoreAddons kcoreaddons.qdocconf)
 
-Documentation is not built as part of the normal build, it needs to be explicity
+Documentation is not built as part of the normal build, it needs to be explicitly
 invoked using the following build targets:
 
 * ``prepare_docs`` runs the prepare step from qdoc, which processes sources and creates index files

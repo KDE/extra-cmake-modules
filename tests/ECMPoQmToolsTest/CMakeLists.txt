@@ -132,7 +132,7 @@ target_link_libraries(tr_thread_test PRIVATE Qt${QT_MAJOR_VERSION}::Core)
 # make sure the moc file is only visible to this test/target
 set(MOC_DIR "${CMAKE_CURRENT_BINARY_DIR}/tr_thread_test_2_moc")
 qt_generate_moc(tr_thread_test.cpp "${MOC_DIR}/tr_thread_test.moc")
-# Unset SKIP_AUTOMOC again, to not interfer with AUTOMOC as set for tr_thread_test
+# Unset SKIP_AUTOMOC again, to not interfere with AUTOMOC as set for tr_thread_test
 set_source_files_properties(tr_thread_test PROPERTIES SKIP_AUTOMOC OFF)
 
 set(tr_thread_test_2_SRCS
@@ -159,7 +159,7 @@ assert_var_defined(QMLOADER_FILES)
 add_subdirectory(subdir)
 
 
-# when building against a static Qt the tests doing dynamic loading of a module using Qt wont work
+# when building against a static Qt the tests doing dynamic loading of a module using Qt won't work
 if (NOT DEFINED QT6_IS_SHARED_LIBS_BUILD OR QT6_IS_SHARED_LIBS_BUILD)
     file(GENERATE
         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/check_conf.cmake"

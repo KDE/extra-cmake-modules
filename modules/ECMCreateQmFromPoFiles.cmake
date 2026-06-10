@@ -206,7 +206,7 @@ endfunction()
 #
 # This is a macro so that the value written in ${ARGS_CREATE_LOADER} is
 # correctly propagated to ECM_CREATE_QM_FROM_PO_FILES parent scope. If it were
-# not a macro, ECM_CREATE_QM_FROM_PO_FILES would have to ckeck if
+# not a macro, ECM_CREATE_QM_FROM_PO_FILES would have to check if
 # CREATE_LOADER is in the arguments and propagate the value itself.
 macro(_ECM_CREATE_QM_FROM_PO_FILES_LEGACY)
     set(options)

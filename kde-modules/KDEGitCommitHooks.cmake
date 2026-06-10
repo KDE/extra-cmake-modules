@@ -32,13 +32,13 @@ Checks:
 - ``CLANG_FORMAT`` With this check enabled the ``git clang-format`` tool will be used to make sure that
   the changed parts are properly formatted. In case the changes are not properly formatted an error
   message with the command to preview the formatting changes and to format the files in place
-  will be displayed. This tool will reuse the exsting ``.clang-format`` file, in case you
+  will be displayed. This tool will reuse the existing ``.clang-format`` file, in case you
   want to use the one provided by ECM you can include ``include(KDEClangFormat)`` which will copy
   the file to the source dir. It is also recommended to reformat the entire project before enforcing
   the formatting using this commit hook.
 - ``JSON_SCHEMA`` Since 5.110, uses the check-jsonschema CLI tool to ensure that all files are valid JSON and
   match the KPluginMetaData spec. This only applied if the JSON file has a "KPlugin" object in its root.
-  To ignore invalid files, for example for testing error handling, given files can be exlcuded in the .kde-ci.yml file
+  To ignore invalid files, for example for testing error handling, given files can be excluded in the .kde-ci.yml file
   Define Options.json-validate-ignore with an array of the files you want to ignore
 
 Example usage:

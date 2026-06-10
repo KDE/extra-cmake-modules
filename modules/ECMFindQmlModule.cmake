@@ -46,7 +46,7 @@ function(ecm_find_qmlmodule MODULE_NAME)
         if (ARG_UNPARSED_ARGUMENTS)
           list(GET ARG_UNPARSED_ARGUMENTS 0 VERSION) # If we have any unparsed args, that should be the version
         endif()
-        set(ARGN "") # The find_package call below should not recieve arguments in KF6
+        set(ARGN "") # The find_package call below should not receive arguments in KF6
     else()
         list(GET ARGN 0 VERSION)
         list(REMOVE_AT ARGN 0)

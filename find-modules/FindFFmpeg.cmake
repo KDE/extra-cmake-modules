@@ -18,7 +18,7 @@ The following components are available::
   AVUTIL   SWRESAMPLE  SWSCALE   POSTPROCESS
 
 If no components are specified in the find_module call, the following ones
-will be choosen as default::
+will be chosen as default::
 
   AVFORMAT AVUTIL AVCODEC
 

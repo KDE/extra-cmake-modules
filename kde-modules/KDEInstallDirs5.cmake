@@ -192,7 +192,7 @@ overwritten by ``KDEInstallDirs``. This is useful if you eg. want to use CMake
 command line variable definitions to set custom values. There are however some
 other implications you need to be aware of: ``GNUInstallDirs`` defines
 ``CMAKE_INSTALL_<dir>`` variables, before hence ``KDEInstallDirs`` will not
-overwritte them if it is included later. In most cases this is unintended and
+overwrite them if it is included later. In most cases this is unintended and
 if you need to include ``GNUInstallDirs`` you should always do that after after
 you included ``KDEInstallDirs``.
 

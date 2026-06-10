@@ -110,7 +110,7 @@ namespace {
             const auto idx = langs[i].indexOf(QLatin1Char('_'));
             if (idx > 0) {
                 // insert the country stripped language to the ideal position,
-                // that is, after the same langauge dialects.
+                // that is, after the same language dialects.
                 // if langs is [pt_Latn_BR, pt_BR], the pt should be inserted
                 // after pt_BR
                 const QString genericLang = langs[i].left(idx);

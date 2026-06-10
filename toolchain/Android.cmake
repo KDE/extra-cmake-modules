@@ -288,7 +288,7 @@ set(CMAKE_CXX_LINK_EXECUTABLE
 )
 
 # As our executables are shared libraries, we also need them build with position independent code (PIC).
-# Qt 5 forces that anyway, but in Qt 6 that is no longer the case for exectuables (which we pretend to build here),
+# Qt 5 forces that anyway, but in Qt 6 that is no longer the case for executables (which we pretend to build here),
 # and so we end up with just PIE (coming from CMake).
 # And as subsequent steps overwrite that setting again, we have to watch for that and redo our change.
 set(CMAKE_CXX_COMPILE_OPTIONS_PIE "-fPIC")
