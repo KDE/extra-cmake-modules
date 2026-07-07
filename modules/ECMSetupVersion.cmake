@@ -192,6 +192,22 @@ function(ecm_setup_version _version)
         set(HEADER_VERSION_MAJOR "${_major}")
         set(HEADER_VERSION_MINOR "${_minor}")
         set(HEADER_VERSION_PATCH "${_patch}")
+        # handle patch or even minor level not being set
+        if (_minor STREQUAL "")
+            set(_minor_number 0)
+        else()
+            set(_minor_number "${_minor}")
+        endif()
+        if (_patch STREQUAL "")
+            set(_patch_number 0)
+        else()
+            set(_patch_number "${_patch}")
+        endif()
+        math(
+            EXPR HEADER_VERSION_HEXNUMBER "${_major}*65536 + ${_minor_number}*256 + ${_patch_number}"
+            OUTPUT_FORMAT HEXADECIMAL
+        )
+
         configure_file("${_ECM_SETUP_VERSION_HEADER_TEMPLATE}" "${ESV_VERSION_HEADER}")
     endif()
 
