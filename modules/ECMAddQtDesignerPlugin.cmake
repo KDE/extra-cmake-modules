@@ -77,7 +77,7 @@ rules for the generated plugin are associated.
       [WHATSTHIS <whatsthis>]
       [GROUP <group>]
       [CREATE_WIDGET_CODE_FROM_VARIABLE <create_widget_code_variable>]
-      [INITIALIZE_CODE_FROM_VARIABLE <initialize_code_variable]
+      [INITIALIZE_CODE_FROM_VARIABLE <initialize_code_variable] # since 6.29 (see details)
       [DOM_XML_FROM_VARIABLE <dom_xml_variable>]
       [IMPL_CLASS_NAME <impl_class_name>]
       [CONSTRUCTOR_ARGS_CODE <constructor_args_code>]
@@ -121,7 +121,8 @@ code to use with the override of
 ``QDesignerCustomWidgetInterface::initialize(QDesignerFormEditorInterface* core)``.
 The code has to use the present class member ``m_initialized`` to track and
 update the state. The default code simply sets ``m_initialized`` to
-``true``, if it was not before.
+``true``, if it was not before. Note that while this argument was presnet in
+versions before 6.29, it was ignored when used.
 
 ``DOM_XML_FROM_VARIABLE`` specifies the variable to get from the string to
 use with the optional override of
@@ -266,7 +267,7 @@ function(ecm_qtdesignerplugin_widget widget)
     set(ECM_QTDESIGNERPLUGIN_${widget}_ICON "${ARGS_ICON}" PARENT_SCOPE)
     set(ECM_QTDESIGNERPLUGIN_${widget}_IS_CONTAINER "${_is_container}" PARENT_SCOPE)
     set(ECM_QTDESIGNERPLUGIN_${widget}_CREATE_WIDGET_CODE "${_create_widget_code}" PARENT_SCOPE)
-    set(ECM_QTDESIGNERPLUGIN_${widget}_INITIALIZE_CODE "${${INITIALIZE_CODE_FROM_VARIABLE}}" PARENT_SCOPE)
+    set(ECM_QTDESIGNERPLUGIN_${widget}_INITIALIZE_CODE "${${ARGS_INITIALIZE_CODE_FROM_VARIABLE}}" PARENT_SCOPE)
     set(ECM_QTDESIGNERPLUGIN_${widget}_DOM_XML "${${ARGS_DOM_XML_FROM_VARIABLE}}" PARENT_SCOPE)
 endfunction()
 
