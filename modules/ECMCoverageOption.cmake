@@ -14,10 +14,11 @@ your tests. This module makes it easy to build with support for
 
 When this module is included, a ``BUILD_COVERAGE`` option is added (default
 ``OFF``). Turning this option on enables GCC's coverage instrumentation, and
-links against ``libgcov``.
+links against ``libgcov``. On Clang, the option enables
+`coverage compatible with GCC <https://clang.llvm.org/docs/SourceBasedCodeCoverage.html>`_
+using --coverage.
 
-.. note::
-  This will probably break the build if you are not using GCC.
+Clang support was added on version 6.29.
 
 Since 1.3.0.
 #]=======================================================================]
@@ -27,6 +28,13 @@ cmake_policy(VERSION 3.16)
 option(BUILD_COVERAGE "Build the project with gcov support" OFF)
 
 if(BUILD_COVERAGE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
+    elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g --coverage")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+    else()
+        message(WARNING "Was not able to enable coverage for compiler ${CMAKE_CXX_COMPILER_ID}")
+    endif()
 endif()
