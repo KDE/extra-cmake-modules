@@ -121,7 +121,7 @@ code to use with the override of
 ``QDesignerCustomWidgetInterface::initialize(QDesignerFormEditorInterface* core)``.
 The code has to use the present class member ``m_initialized`` to track and
 update the state. The default code simply sets ``m_initialized`` to
-``true``, if it was not before. Note that while this argument was presnet in
+``true``, if it was not before. Note that while this argument was available in
 versions before 6.29, it was ignored when used.
 
 ``DOM_XML_FROM_VARIABLE`` specifies the variable to get from the string to
