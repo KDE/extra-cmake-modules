@@ -209,10 +209,10 @@ else()
 endif()
 
 include(${ECM_MODULE_DIR}/ECMQueryQt.cmake)
-ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX)
+ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX TRY)
 
 set(_qt_prefix_is_cmake_install_prefix FALSE)
-if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
+if(qt_install_prefix_dir AND qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
     set(_qt_prefix_is_cmake_install_prefix TRUE)
 endif()
 
