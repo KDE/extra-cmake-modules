@@ -86,14 +86,19 @@ Since 1.4.0.
 cmake_policy(VERSION 3.16)
 
 include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpersStub.cmake)
-include("${ECM_MODULE_DIR}/ECMQueryQt.cmake")
 
 ecm_find_package_version_check(QtWaylandScanner)
 
 if (QT_MAJOR_VERSION STREQUAL "5")
-    ecm_query_qt(qtwaylandscanner_dir QT_HOST_BINS)
+    if(NOT DEFINED QT_HOST_BINS)
+        include(${ECM_MODULE_DIR}/ECMQueryQt.cmake)
+        ecm_query_qt(qtwaylandscanner_dir QT_HOST_BINS)
+    endif()
 else()
-    ecm_query_qt(qtwaylandscanner_dir QT_HOST_LIBEXECS)
+    if(NOT DEFINED QT_HOST_LIBEXECS)
+        include(${ECM_MODULE_DIR}/ECMQueryQt.cmake)
+        ecm_query_qt(qtwaylandscanner_dir QT_HOST_LIBEXECS)
+    endif()
 endif()
 
 # Find qtwaylandscanner
