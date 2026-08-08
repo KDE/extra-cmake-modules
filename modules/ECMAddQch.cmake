@@ -259,8 +259,10 @@ Since 5.36.0.
 cmake_policy(VERSION 3.16)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../modules/QtVersionOption.cmake)
-include(ECMQueryQt)
-
+if(NOT DEFINED QT_INSTALL_DOCS)
+    include(ECMQueryQt)
+    ecm_query_qt(qt_docs_dir QT_INSTALL_DOCS TRY)
+endif()
 
 # Helper method: adding the LINK_QCHS property to a Qt QCH targets, from module base names ("Core" etc.)
 # if target does not exist (e.g. because no tagsfile was found), this is a no-op
@@ -283,7 +285,6 @@ function(_ecm_ensure_qt_qch_targets)
         # get Qt version, if any
         find_package(Qt${QT_MAJOR_VERSION}Core CONFIG QUIET)
         # lookup tag files
-        ecm_query_qt(qt_docs_dir QT_INSTALL_DOCS TRY)
         find_path(_qtcoreTagsPath qtcore/qtcore.tags
             PATHS
                 ${qt_docs_dir}
