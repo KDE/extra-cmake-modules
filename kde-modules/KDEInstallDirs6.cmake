@@ -208,8 +208,10 @@ else()
     _define_non_cache(LIBEXECDIR_KF "${CMAKE_INSTALL_LIBEXECDIR}/kf6")
 endif()
 
-include(${ECM_MODULE_DIR}/ECMQueryQt.cmake)
-ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX)
+if(KDE_INSTALL_USE_QT_SYS_PATHS OR NOT DEFINED QT_INSTALL_PREFIX)
+    include(${ECM_MODULE_DIR}/ECMQueryQt.cmake)
+    ecm_query_qt(qt_install_prefix_dir QT_INSTALL_PREFIX)
+endif()
 
 set(_qt_prefix_is_cmake_install_prefix FALSE)
 if(qt_install_prefix_dir STREQUAL "${CMAKE_INSTALL_PREFIX}")
