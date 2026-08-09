@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2014-2016 Aleix Pol <aleixpol@kde.org>
 # SPDX-FileCopyrightText: 2017 Friedrich W. H. Kossebau <kossebau@kde.org>
 # SPDX-FileCopyrightText: 2022 Ahmad Samir <a.samir78@gmail.com>
+# SPDX-FileCopyrightText: 2026 Andreas Sturmlechner <asturm@gentoo.org>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 #[=======================================================================[.rst:
@@ -17,6 +18,9 @@ This module defines the following function:
 ::
 
     ecm_query_qt(<result_variable> <qt_variable> [TRY])
+
+The method will first check if a variable <<qt_variable>_CACHED> is defined, and use
+its value for <qt_variable> instead of proceeding to query Qt tooling for it.
 
 Passing ``TRY`` will result in the method not making the build fail if the executable
 used for querying has not been found, but instead simply print a warning message and
@@ -75,26 +79,30 @@ function(ecm_query_qt result_variable qt_variable)
 
     cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if(NOT QUERY_EXECUTABLE)
-        if(ARGS_TRY)
-            set(${result_variable} "" PARENT_SCOPE)
-            message(STATUS "No ${_exec_name_text} executable found. Can't check ${qt_variable}")
-            return()
-        else()
-            message(FATAL_ERROR "No ${_exec_name_text} executable found. Can't check ${qt_variable} as required")
+    if(DEFINED ${qt_variable}_CACHED)
+        message(STATUS "Setting ${qt_variable} from ${qt_variable}_CACHED: \"${${qt_variable}_CACHED}\"")
+        set(output ${${qt_variable}_CACHED})
+    else()
+        if(NOT QUERY_EXECUTABLE)
+            if(ARGS_TRY)
+                set(${result_variable} "" PARENT_SCOPE)
+                message(STATUS "No ${_exec_name_text} executable found. Can't check ${qt_variable}")
+                return()
+            else()
+                message(FATAL_ERROR "No ${_exec_name_text} executable found. Can't check ${qt_variable} as required")
+            endif()
+        endif()
+        execute_process(
+            COMMAND ${QUERY_EXECUTABLE} ${_cli_option} "${qt_variable}"
+            RESULT_VARIABLE return_code
+            OUTPUT_VARIABLE output
+        )
+        if(NOT return_code EQUAL 0)
+            message(WARNING "Failed call: ${QUERY_EXECUTABLE} ${_cli_option} ${qt_variable}")
+            message(FATAL_ERROR "${_exec_name_text} call failed: ${return_code}")
         endif()
     endif()
-    execute_process(
-        COMMAND ${QUERY_EXECUTABLE} ${_cli_option} "${qt_variable}"
-        RESULT_VARIABLE return_code
-        OUTPUT_VARIABLE output
-    )
-    if(return_code EQUAL 0)
-        string(STRIP "${output}" output)
-        file(TO_CMAKE_PATH "${output}" output_path)
-        set(${result_variable} "${output_path}" PARENT_SCOPE)
-    else()
-        message(WARNING "Failed call: ${QUERY_EXECUTABLE} ${_cli_option} ${qt_variable}")
-        message(FATAL_ERROR "${_exec_name_text} call failed: ${return_code}")
-    endif()
+    string(STRIP "${output}" output)
+    file(TO_CMAKE_PATH "${output}" output_path)
+    set(${result_variable} "${output_path}" PARENT_SCOPE)
 endfunction()
