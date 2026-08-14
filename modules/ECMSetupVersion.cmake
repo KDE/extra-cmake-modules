@@ -36,6 +36,10 @@ version of ECM is < 5.83)::
 
   <prefix>_VERSION_STRING - <version> (use <prefix>_VERSION instead)
 
+Since ECM 6.30 additionally the forms ``<major>.<minor>`` and ``<major>``
+are supported, the variables for the respective missing components are set to
+empty strings.
+
 With CMake versions older than 4.0.0 and if CMake policy CMP0048 is not ``NEW``,
 the following CMake variables will also be set::
 
@@ -150,9 +154,22 @@ function(ecm_setup_version _version)
         string(REGEX REPLACE "0*([0-9]+)" "\\1" _minor "${PROJECT_VERSION_MINOR}")
         string(REGEX REPLACE "0*([0-9]+)" "\\1" _patch "${PROJECT_VERSION_PATCH}")
     else()
-        string(REGEX REPLACE "^0*([0-9]+)\\.[0-9]+\\.[0-9]+.*" "\\1" _major "${_version}")
-        string(REGEX REPLACE "^[0-9]+\\.0*([0-9]+)\\.[0-9]+.*" "\\1" _minor "${_version}")
-        string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.0*([0-9]+).*" "\\1" _patch "${_version}")
+        # not applying final "$", to be able to ignore .<tweak>, possibly also other appendices in usage
+        string(REGEX MATCH "^0*([0-9]+)(\\.0*([0-9]+)(\\.0*([0-9]+))?)?" _match "${_version}")
+        if(_match STREQUAL "")
+            message(FATAL_ERROR "ecm_setup_version given version argument not matching <major>[.<minor>[.<patch>][.<tweak>]]: ${_version}")
+        endif()
+        set(_major ${CMAKE_MATCH_1})
+        if (CMAKE_MATCH_COUNT GREATER_EQUAL 3)
+            set(_minor ${CMAKE_MATCH_3})
+        else()
+            set(_minor "")
+        endif()
+        if (CMAKE_MATCH_COUNT GREATER_EQUAL 5)
+            set(_patch ${CMAKE_MATCH_5})
+        else()
+            set(_patch "")
+        endif()
     endif()
 
     if(NOT DEFINED ESV_SOVERSION) # use DEFINED, so "0" as valid SO version is not evaluated to FALSE
