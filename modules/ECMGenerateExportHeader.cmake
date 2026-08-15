@@ -18,7 +18,7 @@ For preparing some values useful in the context it also provides a function
 ::
 
   ecm_generate_export_header(<library_target_name>
-      VERSION <version>
+      [VERSION <version>] # Optional since 6.30
       [BASE_NAME <base_name>]
       [GROUP_BASE_NAME <group_base_name>]
       [EXPORT_MACRO_NAME <export_macro_name>]
@@ -41,7 +41,8 @@ For preparing some values useful in the context it also provides a function
   )
 
 ``VERSION`` specifies the version of the library, given in the format
-"<major>.<minor>.<patchlevel>".
+"<major>.<minor>.<patchlevel>". Since 6.30 this argument is optional if
+``${PROJECT_VERSION}`` is set and will default to that.
 
 ``GROUP_BASE_NAME`` specifies the name to use for the macros defining
 library group default values. If set, this will generate code supporting
@@ -515,15 +516,25 @@ function(ecm_generate_export_header target)
     # helper string
     set(_version_triple_regexp "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$")
     # args sanity check
-    if (NOT ARGS_VERSION)
-        message(FATAL_ERROR "No VERSION passed when calling ecm_generate_export_header().")
-    elseif(NOT ARGS_VERSION MATCHES ${_version_triple_regexp})
-        message(FATAL_ERROR "VERSION expected to be in x.y.z format when calling ecm_generate_export_header().")
+    if (ARGS_VERSION)
+        if(NOT ARGS_VERSION MATCHES ${_version_triple_regexp})
+            message(FATAL_ERROR "VERSION expected to be in x.y.z format when calling ecm_generate_export_header(), is: ${ARGS_VERSION}")
+        endif()
+        set(_version ${ARGS_VERSION})
+    else()
+        if (PROJECT_VERSION)
+            if(NOT PROJECT_VERSION MATCHES ${_version_triple_regexp})
+                message(FATAL_ERROR "PROJECT_VERSION expected to be in x.y.z format when calling ecm_generate_export_header(), is: ${PROJECT_VERSION}")
+            endif()
+            set(_version ${PROJECT_VERSION})
+        else()
+            message(FATAL_ERROR "No VERSION passed when calling ecm_generate_export_header().")
+        endif()
     endif()
     if (NOT ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
         set(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT 0)
     elseif(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT STREQUAL "CURRENT")
-        set(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT ${ARGS_VERSION})
+        set(ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT ${_version})
     elseif(NOT ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT MATCHES ${_version_triple_regexp} AND
            NOT ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT STREQUAL "0")
         message(FATAL_ERROR "EXCLUDE_DEPRECATED_BEFORE_AND_AT expected to be in \"x.y.z\" format, \"0\" or \"CURRENT\" when calling ecm_generate_export_header().")
@@ -532,12 +543,12 @@ function(ecm_generate_export_header target)
         if (ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT)
             set(ARGS_DEPRECATED_BASE_VERSION "${ARGS_EXCLUDE_DEPRECATED_BEFORE_AND_AT}")
         else()
-            string(REGEX REPLACE ${_version_triple_regexp} "\\1" _version_major "${ARGS_VERSION}")
+            string(REGEX REPLACE ${_version_triple_regexp} "\\1" _version_major "${_version}")
             set(ARGS_DEPRECATED_BASE_VERSION "${_version_major}.0.0")
         endif()
     else()
         if(ARGS_DEPRECATED_BASE_VERSION STREQUAL "CURRENT")
-            set(ARGS_DEPRECATED_BASE_VERSION ${ARGS_VERSION})
+            set(ARGS_DEPRECATED_BASE_VERSION ${_version})
         elseif(NOT ARGS_DEPRECATED_BASE_VERSION MATCHES ${_version_triple_regexp} AND
                NOT ARGS_DEPRECATED_BASE_VERSION STREQUAL "0")
             message(FATAL_ERROR "DEPRECATED_BASE_VERSION expected to be in \"x.y.z\" format, \"0\" or \"CURRENT\" when calling ecm_generate_export_header().")
@@ -574,7 +585,7 @@ function(ecm_generate_export_header target)
             set(_version_hexnumber "${_upper_version_base_name}_VERSION")
         endif()
     else()
-        _ecm_geh_generate_hex_number(_version_hexnumber "${ARGS_VERSION}")
+        _ecm_geh_generate_hex_number(_version_hexnumber "${_version}")
     endif()
 
     if(NOT ARGS_EXPORT_FILE_NAME)
