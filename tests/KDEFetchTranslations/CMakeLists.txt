@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project(extra-cmake-modules)
 
 # order is important (install dirs before cmake settings)!
