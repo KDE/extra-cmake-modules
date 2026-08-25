@@ -7,6 +7,11 @@ set(all_kde_modules
     KDECMakeSettings
     KDECompilerSettings
     KDEFrameworkCompilerSettings
+
+    KDEClangFormat
+    KDEGitCommitHooks
+    KDEMetaInfoPlatformCheck
+    KDEPackageAppTemplates
 )
 
 set(ECM_KDE_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../kde-modules)

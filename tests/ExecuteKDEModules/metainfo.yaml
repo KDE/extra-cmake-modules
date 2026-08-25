@@ -1,0 +1,9 @@
+# Needed for KDEMetaInfoPlatformCheck
+description: ExecuteKDEModules test
+platforms:
+    - name: Linux
+    - name: FreeBSD
+    - name: Windows
+    - name: macOS
+    - name: Android
+release: false

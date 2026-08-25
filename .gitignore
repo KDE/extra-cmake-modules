@@ -2,6 +2,9 @@
 cmake/ECMConfig.cmake
 cmake/ECMConfigVersion.cmake
 
+# Ignore generated test clang-format file
+tests/ExecuteKDEModules/.clang-format
+
 # Ignore the following files
 *~
 *.[oa]
