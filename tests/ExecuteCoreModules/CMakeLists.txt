@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project(ExecuteCoreModules)
 set(ECM_GLOBAL_FIND_VERSION "5.90.0")
 
