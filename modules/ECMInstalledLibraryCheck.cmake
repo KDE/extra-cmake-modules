@@ -300,7 +300,7 @@ function(ecm_add_installed_library_check _target)
     set(_preprocessor_macro_check_data "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_PREPROCESSOR_MACRO_CHECK_DATA>")
     set(_version_check_prefix "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_VERSION_PREPROCESSOR_MACRO_CHECK_PREFIX>")
     set(_version_check_data "$<TARGET_PROPERTY:${_target},ECM_INSTALLED_LIBRARY_VERSION_PREPROCESSOR_MACRO_CHECK_DATA>")
-    set(_version_preprocessor_macro_check_data "$<IF:$<BOOL:${_version_check_data}>,${_version_check_prefix}:,>${_version_check_data}$<IF:$<STREQUAL:${_version_check_data},DEFAULT>,|$<TARGET_PROPERTY:${_target},VERSION>|${_package_version},>")
+    set(_version_preprocessor_macro_check_data "$<$<BOOL:${_version_check_data}>:${_version_check_prefix}:>${_version_check_data}$<$<STREQUAL:${_version_check_data},DEFAULT>:|$<TARGET_PROPERTY:${_target},VERSION>|${_package_version}>")
 
     # prepare non-generator-expression list values for passing as command
     # avoids space being used as list separator when expanding there even inside ""
