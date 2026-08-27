@@ -109,8 +109,14 @@ endforeach()
 add_custom_target(documentation ALL DEPENDS ${doc_format_outputs})
 
 if(BUILD_MAN_DOCS)
-    file(GLOB man_rst RELATIVE ${ECM_SOURCE_DIR}/docs/manual
-        ${ECM_SOURCE_DIR}/docs/manual/*.[1-9].rst)
+    set(man_rst
+        ecm.7.rst
+        ecm-developer.7.rst
+        ecm-find-modules.7.rst
+        ecm-kde-modules.7.rst
+        ecm-modules.7.rst
+        ecm-toolchains.7.rst
+    )
     foreach(m ${man_rst})
         if("x${m}" MATCHES "^x(.+)\\.([1-9])\\.rst$")
             set(name "${CMAKE_MATCH_1}")

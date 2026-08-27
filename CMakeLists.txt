@@ -42,6 +42,7 @@ set(CMAKECONFIG_INSTALL_DIR       ${SHARE_INSTALL_DIR}/ECM/cmake/)
 set(FIND_MODULES_INSTALL_DIR      ${SHARE_INSTALL_DIR}/ECM/find-modules/)
 set(KDE_MODULES_INSTALL_DIR       ${SHARE_INSTALL_DIR}/ECM/kde-modules)
 set(MODULES_INSTALL_DIR           ${SHARE_INSTALL_DIR}/ECM/modules/)
+set(TEST_MODULES_INSTALL_DIR      ${SHARE_INSTALL_DIR}/ECM/test-modules/)
 set(TOOLCHAIN_MODULES_INSTALL_DIR ${SHARE_INSTALL_DIR}/ECM/toolchain/)
 
 set(DOC_INSTALL_DIR ${SHARE_INSTALL_DIR}/doc/ECM
@@ -83,23 +84,15 @@ endif()
 # Install modules
 #
 
-file(GLOB installModuleFiles ${CMAKE_SOURCE_DIR}/modules/*[^~])
-install(FILES ${installModuleFiles} DESTINATION ${MODULES_INSTALL_DIR})
+add_subdirectory(modules)
 
-file(GLOB installTestModuleFiles ${CMAKE_SOURCE_DIR}/test-modules/*[^~])
-install(FILES ${installTestModuleFiles} DESTINATION ${SHARE_INSTALL_DIR}/ECM/test-modules)
+add_subdirectory(test-modules)
 
-file(GLOB installKdeModuleFiles LIST_DIRECTORIES FALSE ${CMAKE_SOURCE_DIR}/kde-modules/*[^~])
-install(FILES ${installKdeModuleFiles} DESTINATION ${KDE_MODULES_INSTALL_DIR})
-# The scripts need to be executable
-file(GLOB installKDECommitHooks ${CMAKE_SOURCE_DIR}/kde-modules/kde-git-commit-hooks/*[^~])
-install(PROGRAMS ${installKDECommitHooks} DESTINATION ${KDE_MODULES_INSTALL_DIR}/kde-git-commit-hooks)
+add_subdirectory(kde-modules)
 
-file(GLOB installFindModuleFiles ${CMAKE_SOURCE_DIR}/find-modules/*.cmake ${CMAKE_SOURCE_DIR}/find-modules/*.py)
-install(FILES ${installFindModuleFiles} DESTINATION ${FIND_MODULES_INSTALL_DIR})
+add_subdirectory(find-modules)
 
-file(GLOB installToolchainModuleFiles ${CMAKE_SOURCE_DIR}/toolchain/*[^~])
-install(FILES ${installToolchainModuleFiles} DESTINATION ${TOOLCHAIN_MODULES_INSTALL_DIR})
+add_subdirectory(toolchain)
 
 
 #

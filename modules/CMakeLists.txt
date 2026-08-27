@@ -1,0 +1,68 @@
+# SPDX-FileCopyrightText: 2026 Friedrich W. H. Kossebau <kossebau@kde.org>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+install(FILES
+    CheckAtomic.cmake
+    ECMAddAndroidApk.cmake
+    ECMAddAppIcon.cmake
+    ECMAddQch.cmake
+    ECMQchDoxygen.config.in
+    ECMQchDoxygenLayout.xml
+    ECMAddQtDesignerPlugin.cmake
+    ECMAddTests.cmake
+    ECMCheckOutboundLicense.cmake
+    check-outbound-license.py
+    ECMConfiguredInstall.cmake
+    ECMCoverageOption.cmake
+    ECMCreateQmFromPoFiles.cmake
+    ECMDeprecationSettings.cmake
+    ECMEnableSanitizers.cmake
+    ECMFeatureSummary.cmake
+    ECMFindModuleHelpers.cmake
+    ECMFindQmlModule.cmake
+    ECMFindQmlModule.cmake.in
+    ECMGenerateDBusServiceFile.cmake
+    ECMGenerateExportHeader.cmake
+    ECMGenerateHeaders.cmake
+    ECMGeneratePkgConfigFile.cmake
+    ECMGeneratePriFile.cmake
+    ECMGeneratePythonBindings.cmake
+    ECMGeneratePythonBindings.toml.in
+    ECMGeneratePythonBindings.toml.in.license
+    ECMGenerateQDoc.cmake
+    ECMGenerateQmlTypes.cmake
+    ECMInstalledLibraryCheck.cmake
+    ecm_create_installed_library_check.cmake
+    ECMInstallIcons.cmake
+    ECMMarkAsTest.cmake
+    ECMMarkNonGuiExecutable.cmake
+    ECMOptionalAddSubdirectory.cmake
+    ECMPackageConfigHelpers.cmake
+    ECMPoQmTools.cmake
+    ECMQmLoader.cpp.in
+    ECMQmlModule5.cmake
+    ECMQmlModule6.cmake
+    ECMQmlModule.cmake
+    ECMQmlModule.cpp.in
+    ECMQmlModule.cpp.in.license
+    ECMQmlModule.h.in
+    ECMQmlModule.h.in.license
+    ECMQMLModules.cmake
+    ECMQtDeclareLoggingCategory.cmake
+    ECMQtDeclareLoggingCategory.cpp.in
+    ECMQtDeclareLoggingCategory.h.in
+    ECMQueryQmake.cmake
+    ECMQueryQt.cmake
+    ECMSetupQtPluginMacroNames.cmake
+    ECMSetupVersion.cmake
+    ECMVersionHeader.h.in
+    ECMSourceVersionControl.cmake
+    ECMUninstallTarget.cmake
+    ecm_uninstall.cmake.in
+    ECMUseFindModules.cmake
+    ECMWinResolveSymlinks.cmake
+    QtVersionOption.cmake
+
+    DESTINATION ${MODULES_INSTALL_DIR}
+)
