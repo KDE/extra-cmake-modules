@@ -215,7 +215,7 @@ function(_set_preprocessor_macro_check_code _var_name _check_data)
 
     _set_macro_check_init_code(_init_check_code "preprocessor macros")
 
-    set(_macros_check_code "\n\"${_init_check_code}${_check_statements}\"")
+    set(_macros_check_code "\n\"\n${_init_check_code}${_check_statements}\"")
 
     set(${_var_name} ${_macros_check_code} PARENT_SCOPE)
 endfunction()
@@ -296,7 +296,7 @@ endfunction()
 function(_set_cmake_variables_check_code _var_name _check_data)
     set(_check_code)
     if (_verbose_mode)
-        string(APPEND _check_code "\nmessage(STATUS \"Checking CMake variables\")\n")
+        string(APPEND _check_code "message(STATUS \"Checking CMake variables\")\n")
     endif()
 
     foreach(_cmake_variable_data IN LISTS _check_data)
@@ -353,6 +353,7 @@ string(JOIN "\n    " _include_strings_lines ${INCLUDE_STRINGS})
 set(_cmake_variables_check_code)
 if (CMAKE_VARIABLES_CHECK_DATA)
     _set_cmake_variables_check_code(_cmake_variables_check_code "${CMAKE_VARIABLES_CHECK_DATA}")
+    string(PREPEND _cmake_variables_check_code "\n")
 endif()
 
 set(_compile_definitions_check_code)
