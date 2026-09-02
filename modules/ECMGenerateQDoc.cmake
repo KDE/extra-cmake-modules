@@ -112,8 +112,8 @@ function(ecm_generate_qdoc target qdocconf_file)
     set(index_dirs ${dest_dir};${docs_dir})
 
     foreach(path ${CMAKE_PREFIX_PATH} ${CMAKE_INSTALL_PREFIX})
-      if (EXISTS ${path}/${KDE_INSTALL_DATAROOTDIR}/doc)
-        list(APPEND ${index_dirs} "${path}/${KDE_INSTALL_DATAROOTDIR}/doc")
+      if (EXISTS "${path}/${KDE_INSTALL_DATAROOTDIR}/doc")
+        list(APPEND index_dirs "${path}/${KDE_INSTALL_DATAROOTDIR}/doc")
       endif()
     endforeach()
 
