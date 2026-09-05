@@ -17,6 +17,9 @@ end
 set -x --path XDG_CONFIG_DIRS "@KDE_INSTALL_FULL_CONFDIR@" $XDG_CONFIG_DIRS
 
 set -x --path QT_PLUGIN_PATH "@KDE_INSTALL_FULL_QTPLUGINDIR@" $QT_PLUGIN_PATH
+# QML_IMPORT_PATH was re-added in Qt 6.2 as a preferred alternative to QML2_IMPORT_PATH
+set -x --path QML_IMPORT_PATH "@KDE_INSTALL_FULL_QMLDIR@" $QML_IMPORT_PATH
+# QML2_IMPORT_PATH is deprecated, but various scripts may still be using it.
 set -x --path QML2_IMPORT_PATH "@KDE_INSTALL_FULL_QMLDIR@" $QML2_IMPORT_PATH
 
 set -x --path QT_QUICK_CONTROLS_STYLE_PATH "@KDE_INSTALL_FULL_QMLDIR@/QtQuick/Controls.2/" $QT_QUICK_CONTROLS_STYLE_PATH
