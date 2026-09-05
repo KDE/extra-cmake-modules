@@ -61,6 +61,9 @@ if (NOT CMAKE_CROSSCOMPILING AND NOT MODULE_NOTFOUND AND NOT @GENMODULE@_FOUND A
         find_program(QMLPLUGINDUMP_PROGRAM NAMES qmlplugindump HINTS ${qt_binaries_dir})
     endif()
 
+    # QML_IMPORT_PATH was re-added in Qt 6.2 as a preferred alternative to QML2_IMPORT_PATH
+    set(ENV{QML_IMPORT_PATH} ${KDE_INSTALL_FULL_QMLDIR})
+    # QML2_IMPORT_PATH is deprecated, but various scripts may still be using it.
     set(ENV{QML2_IMPORT_PATH} ${KDE_INSTALL_FULL_QMLDIR})
     execute_process(COMMAND "${QMLPLUGINDUMP_PROGRAM}" "@MODULE_NAME@" "@VERSION@" ERROR_VARIABLE ERRORS_OUTPUT OUTPUT_VARIABLE DISREGARD_VARIABLE RESULT_VARIABLE ExitCode TIMEOUT 30)
     if(ExitCode EQUAL 0)
