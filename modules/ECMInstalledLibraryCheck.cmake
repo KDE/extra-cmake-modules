@@ -70,6 +70,13 @@ in the public interface is not complete, but can not be changed.
 
 ::
 
+  ecm_installed_library_check_header_file_set_includes(<library_target>)
+
+This function registers all public and interface header file sets of the target
+as include strings with the check.
+
+::
+
   ecm_installed_library_check_include_strings(<library_target>
       HEADERS <header> [...]
       [PREFIX <prefix>]
@@ -344,6 +351,45 @@ function(ecm_add_installed_library_check _target)
     )
 
     add_dependencies(all_installed_library_check ${_check_target_name})
+endfunction()
+
+
+function(_get_public_headers _target _output)
+    get_target_property(_sets "${_target}" INTERFACE_HEADER_SETS)
+    set(_result)
+
+    foreach(_set IN LISTS _sets)
+        get_target_property(_files "${_target}" HEADER_SET_${_set})
+        get_target_property(_bases "${_target}" HEADER_DIRS_${_set})
+
+        foreach(_file IN LISTS _files)
+            foreach(_base IN LISTS _bases)
+                cmake_path(IS_PREFIX _base "${_file}" NORMALIZE _is_correct_base)
+                if(_is_correct_base)
+                    file(RELATIVE_PATH _rel "${_base}" "${_file}")
+                    list(APPEND _result "${_rel}")
+                    break()
+                endif()
+            endforeach()
+        endforeach()
+    endforeach()
+
+    set("${_output}" "${_result}" PARENT_SCOPE)
+endfunction()
+
+
+function(ecm_installed_library_check_header_file_set_includes _target)
+    # store data with library target
+    get_target_property(_names "${_target}" ECM_INSTALLED_LIBRARY_INCLUDE_STRINGS)
+    if(_names STREQUAL "_names-NOTFOUND")
+        set(_names)
+    endif()
+
+    _get_public_headers("${_target}" _headers)
+
+    list(APPEND _names ${_headers})
+
+    set_target_properties(${_target} PROPERTIES ECM_INSTALLED_LIBRARY_INCLUDE_STRINGS "${_names}")
 endfunction()
 
 
