@@ -96,6 +96,9 @@ function(KDE_CLANG_FORMAT)
                 string(REPLACE "%" "_" unique_target_name ${unique_target_name}) # some imvalid cmake target names
                 string(REPLACE "{" "_" unique_target_name ${unique_target_name})
                 string(REPLACE "}" "_" unique_target_name ${unique_target_name})
+                # append a random number tag in case same file name in multiple locations
+                string(RANDOM LENGTH 5 _random)
+                set(unique_target_name "${unique_target_name}${_random}")
                 add_custom_target(${unique_target_name}
                     DEPENDS ${_full_file_path}
                 )
