@@ -7,6 +7,7 @@ install(FILES
     Find7z.cmake
     Find7Zip.cmake
     FindCanberra.cmake
+    FindDesktopFileUtils.cmake
     FindEGL.cmake
     Findepoxy.cmake
     FindFFmpeg.cmake
