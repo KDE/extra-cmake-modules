@@ -664,6 +664,9 @@ if (MSVC)
         # https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
     endif()
+
+    # allow more sections in object files
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif()
 
 option(ENABLE_BSYMBOLICFUNCTIONS "Make use of -Bsymbolic-functions" OFF)
