@@ -364,3 +364,5 @@ set(ECMGenerateDBusServiceFileTest_EXTRA_OPTIONS
 add_test_macro(ECMGenerateDBusServiceFileTest
     ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/ECMGenerateDBusServiceFileTest/check_tree.cmake"
 )
+
+add_test_macro(ECMEnableSanitizers dummy)
