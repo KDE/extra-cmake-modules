@@ -61,7 +61,6 @@ if(UDev_FOUND AND NOT TARGET UDev::UDev)
 endif()
 
 # backward compat variables, remove for KF6
-set(UDEV_FOUND ${UDev_FOUND})
 set(UDEV_LIBS ${UDev_LIBRARIES})
 set(UDEV_INCLUDE_DIR ${UDev_INCLUDE_DIRS})
 mark_as_advanced(UDEV_FOUND UDEV_LIBS UDEV_INCLUDE_DIR)

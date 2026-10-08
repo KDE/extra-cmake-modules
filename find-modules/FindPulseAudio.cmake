@@ -91,7 +91,6 @@ find_package_handle_standard_args(PulseAudio REQUIRED_VARS PulseAudio_LIBRARIES 
 set(PULSEAUDIO_INCLUDE_DIR "${PulseAudio_INCLUDE_DIRS}")
 set(PULSEAUDIO_LIBRARY "${PulseAudio_LIBRARIES}")
 set(PULSEAUDIO_MAINLOOP_LIBRARY "${PulseAudio_MAINLOOP_LIBRARY}")
-set(PULSEAUDIO_FOUND "${PulseAudio_FOUND}")
 
 if(PulseAudio_FOUND AND NOT TARGET PulseAudio::PulseAudio)
   add_library(PulseAudio::PulseAudio UNKNOWN IMPORTED)
