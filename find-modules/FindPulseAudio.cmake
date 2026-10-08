@@ -108,3 +108,24 @@ include(FeatureSummary)
 set_package_properties(PulseAudio PROPERTIES
   URL "https://www.freedesktop.org/wiki/Software/PulseAudio"
   DESCRIPTION "Sound server, for sound stream routing and mixing")
+
+# warn about outdated variables
+function(_deprecate_FindPulseAudio_var varname access_type newvarname)
+    if(access_type STREQUAL "READ_ACCESS")
+        message(DEPRECATION "\${${varname}} will be gone in future ECM versions. Since 5.41, use imported target PulseAudio::PulseAudio or \${${newvarname}} instead.")
+    endif()
+endfunction()
+
+function(_deprecate_PULSEAUDIO_INCLUDE_DIR varname access_type)
+    _deprecate_FindPulseAudio_var(${varname} ${access_type} PulseAudio_INCLUDE_DIRS)
+endfunction()
+function(_deprecate_PULSEAUDIO_LIBRARY varname access_type)
+    _deprecate_FindPulseAudio_var(${varname} ${access_type} PulseAudio_LIBRARIES)
+endfunction()
+function(_deprecate_PULSEAUDIO_MAINLOOP_LIBRARY varname access_type)
+    _deprecate_FindPulseAudio_var(${varname} ${access_type} PulseAudio_MAINLOOP_LIBRARY)
+endfunction()
+
+variable_watch(PULSEAUDIO_INCLUDE_DIR _deprecate_PULSEAUDIO_INCLUDE_DIR)
+variable_watch(PULSEAUDIO_LIBRARY _deprecate_PULSEAUDIO_LIBRARY)
+variable_watch(PULSEAUDIO_MAINLOOP_LIBRARY _deprecate_PULSEAUDIO_MAINLOOP_LIBRARY)
