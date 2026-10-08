@@ -28,7 +28,6 @@ pkg_get_variable(WaylandProtocols_DATADIR wayland-protocols pkgdatadir)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(WaylandProtocols
-    FOUND_VAR WaylandProtocols_FOUND
     REQUIRED_VARS WaylandProtocols_DATADIR
     VERSION_VAR WaylandProtocols_VERSION
 )

@@ -118,8 +118,6 @@ if(NOT Poppler_VERSION)
 endif()
 
 find_package_handle_standard_args(Poppler
-    FOUND_VAR
-        Poppler_FOUND
     REQUIRED_VARS
         Poppler_LIBRARIES
     VERSION_VAR

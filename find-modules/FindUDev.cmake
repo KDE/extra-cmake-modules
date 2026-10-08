@@ -44,7 +44,6 @@ set(UDev_VERSION ${PC_UDEV_VERSION})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UDev
-    FOUND_VAR UDev_FOUND
     REQUIRED_VARS UDev_INCLUDE_DIRS UDev_LIBRARIES
     VERSION_VAR UDev_VERSION
 )

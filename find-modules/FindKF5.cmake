@@ -93,8 +93,6 @@ endforeach()
 set(_dummy_req_var "success")
 
 find_package_handle_standard_args(KF5
-    FOUND_VAR
-        KF5_FOUND
     REQUIRED_VARS
         _dummy_req_var
     VERSION_VAR

@@ -121,8 +121,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(EGL
-    FOUND_VAR
-        EGL_FOUND
     REQUIRED_VARS
         ${required_vars}
     VERSION_VAR

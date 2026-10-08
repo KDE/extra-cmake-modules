@@ -52,8 +52,6 @@ set(Canberra_VERSION ${PC_Canberra_VERSION})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Canberra
-    FOUND_VAR
-        Canberra_FOUND
     REQUIRED_VARS
         Canberra_LIBRARIES
         Canberra_INCLUDE_DIRS

@@ -68,8 +68,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Taglib
-    FOUND_VAR
-        Taglib_FOUND
     REQUIRED_VARS
         Taglib_LIBRARIES
         Taglib_INCLUDE_DIRS

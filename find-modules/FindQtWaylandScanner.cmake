@@ -101,8 +101,6 @@ find_program(QtWaylandScanner_EXECUTABLE NAMES qtwaylandscanner HINTS ${qtwaylan
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(QtWaylandScanner
-    FOUND_VAR
-        QtWaylandScanner_FOUND
     REQUIRED_VARS
         QtWaylandScanner_EXECUTABLE
 )

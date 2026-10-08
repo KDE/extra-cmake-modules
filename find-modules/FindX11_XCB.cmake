@@ -66,8 +66,6 @@ find_library(X11_XCB_LIBRARY
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(X11_XCB
-    FOUND_VAR
-        X11_XCB_FOUND
     REQUIRED_VARS
         X11_XCB_LIBRARY
         X11_XCB_INCLUDE_DIR

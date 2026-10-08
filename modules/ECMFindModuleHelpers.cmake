@@ -227,8 +227,6 @@ macro(ecm_find_package_handle_library_components module_name)
 
         set(FPHSA_NAME_MISMATCHED 1)
         find_package_handle_standard_args(${module_name}_${ecm_fpwc_comp}
-            FOUND_VAR
-                ${module_name}_${ecm_fpwc_comp}_FOUND
             REQUIRED_VARS
                 ${module_name}_${ecm_fpwc_comp}_LIBRARY
                 ${module_name}_${ecm_fpwc_comp}_INCLUDE_DIR

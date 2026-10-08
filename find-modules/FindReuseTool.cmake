@@ -18,8 +18,6 @@ find_program(REUSETOOL_EXECUTABLE NAMES reuse)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ReuseTool
-    FOUND_VAR
-        REUSETOOL_FOUND
     REQUIRED_VARS
         REUSETOOL_EXECUTABLE
 )

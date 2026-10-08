@@ -50,8 +50,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(7Zip
-    FOUND_VAR
-        7Zip_FOUND
     REQUIRED_VARS
         7Zip_EXECUTABLE
 )

@@ -86,8 +86,6 @@ find_program(WaylandScanner_EXECUTABLE NAMES wayland-scanner)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(WaylandScanner
-    FOUND_VAR
-        WaylandScanner_FOUND
     REQUIRED_VARS
         WaylandScanner_EXECUTABLE
 )

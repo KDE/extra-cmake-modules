@@ -76,8 +76,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Gperf
-    FOUND_VAR
-        Gperf_FOUND
     REQUIRED_VARS
         Gperf_EXECUTABLE
     VERSION_VAR

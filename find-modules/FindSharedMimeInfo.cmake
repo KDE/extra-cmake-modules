@@ -52,8 +52,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(SharedMimeInfo
-    FOUND_VAR
-        SharedMimeInfo_FOUND
     REQUIRED_VARS
         UPDATE_MIME_DATABASE_EXECUTABLE
     VERSION_VAR

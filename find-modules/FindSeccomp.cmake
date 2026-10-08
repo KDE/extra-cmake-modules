@@ -47,8 +47,6 @@ find_library(Seccomp_LIBRARIES
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Seccomp
-    FOUND_VAR
-        Seccomp_FOUND
     REQUIRED_VARS
         Seccomp_LIBRARIES
         Seccomp_INCLUDE_DIRS

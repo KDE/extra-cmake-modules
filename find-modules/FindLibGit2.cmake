@@ -83,8 +83,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LibGit2
-    FOUND_VAR
-        LIBGIT2_FOUND
     REQUIRED_VARS
         LIBGIT2_LIBRARY
         LIBGIT2_INCLUDE_DIR

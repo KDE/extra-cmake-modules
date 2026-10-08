@@ -29,7 +29,7 @@ find_program(SETCAP_EXECUTABLE NAMES setcap DOC "The setcap executable")
 find_library(Libcap_LIBRARIES NAMES cap DOC "The cap (capabilities) library")
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Libcap FOUND_VAR Libcap_FOUND
+find_package_handle_standard_args(Libcap
                                       REQUIRED_VARS SETCAP_EXECUTABLE Libcap_LIBRARIES)
 
 if(Libcap_FOUND AND NOT TARGET Libcap::SetCapabilities)

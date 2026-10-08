@@ -37,8 +37,6 @@ ecm_find_package_version_check(IcoTool)
 find_program(IcoTool_EXECUTABLE NAMES icotool)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(IcoTool
-    FOUND_VAR
-        IcoTool_FOUND
     REQUIRED_VARS
         IcoTool_EXECUTABLE
 )

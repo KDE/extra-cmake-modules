@@ -63,7 +63,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(epoxy
-    FOUND_VAR epoxy_FOUND
     REQUIRED_VARS epoxy_LIBRARIES epoxy_INCLUDE_DIRS
     VERSION_VAR epoxy_VERSION
 )

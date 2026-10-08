@@ -72,7 +72,6 @@ endif()
 include(FindPackageHandleStandardArgs)
 
 find_package_handle_standard_args(Sasl2
-    FOUND_VAR Sasl2_FOUND
     REQUIRED_VARS Sasl2_LIBRARIES Sasl2_INCLUDE_DIRS
     VERSION_VAR Sasl2_VERSION
 )

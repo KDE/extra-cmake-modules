@@ -58,8 +58,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Sphinx
-    FOUND_VAR
-        Sphinx_FOUND
     REQUIRED_VARS
         Sphinx_BUILD_EXECUTABLE
     VERSION_VAR

@@ -40,8 +40,6 @@ find_program(7z_EXECUTABLE NAMES 7z.exe 7za.exe)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(7z
-    FOUND_VAR
-        7z_FOUND
     REQUIRED_VARS
         7z_EXECUTABLE
 )

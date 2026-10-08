@@ -35,8 +35,6 @@ find_program(gzip_EXECUTABLE NAMES gzip)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(gzip
-    FOUND_VAR
-        gzip_FOUND
     REQUIRED_VARS
         gzip_EXECUTABLE
 )

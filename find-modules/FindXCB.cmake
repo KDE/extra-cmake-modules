@@ -154,8 +154,6 @@ ecm_find_package_handle_library_components(XCB
 )
 
 find_package_handle_standard_args(XCB
-    FOUND_VAR
-        XCB_FOUND
     REQUIRED_VARS
         XCB_LIBRARIES
     VERSION_VAR

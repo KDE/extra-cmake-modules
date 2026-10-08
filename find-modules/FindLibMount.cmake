@@ -50,7 +50,6 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LibMount
-    FOUND_VAR LibMount_FOUND
     REQUIRED_VARS LibMount_INCLUDE_DIRS LibMount_LIBRARIES
     VERSION_VAR LibMount_VERSION
 )

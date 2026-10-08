@@ -98,8 +98,6 @@ set(_dummy_req_var "success")
 list(JOIN KF6_MISSING_REQUIRED_COMPONENTS " " MISSING_COMPONENTS_STRING)
 
 find_package_handle_standard_args(KF6
-    FOUND_VAR
-        KF6_FOUND
     REQUIRED_VARS
         _dummy_req_var
     VERSION_VAR

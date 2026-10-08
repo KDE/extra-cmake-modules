@@ -208,8 +208,6 @@ as the version of the whole package.  After that, finish off with
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(Foo
-      FOUND_VAR
-          Foo_FOUND
       REQUIRED_VARS
           Foo_LIBRARIES
       VERSION_VAR

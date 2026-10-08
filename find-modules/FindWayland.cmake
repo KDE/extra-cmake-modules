@@ -110,8 +110,6 @@ if(NOT Wayland_VERSION)
 endif()
 
 find_package_handle_standard_args(Wayland
-    FOUND_VAR
-        Wayland_FOUND
     REQUIRED_VARS
         Wayland_LIBRARIES
     VERSION_VAR

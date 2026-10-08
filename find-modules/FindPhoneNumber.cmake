@@ -58,8 +58,6 @@ ecm_find_package_handle_library_components(PhoneNumber
     COMPONENTS ${PhoneNumber_components}
 )
 find_package_handle_standard_args(PhoneNumber
-    FOUND_VAR
-        PhoneNumber_FOUND
     REQUIRED_VARS
         PhoneNumber_LIBRARIES
     VERSION_VAR

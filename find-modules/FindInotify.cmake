@@ -65,8 +65,6 @@ if(Inotify_INCLUDE_DIRS)
         else()
             include(FindPackageHandleStandardArgs)
             find_package_handle_standard_args(Inotify
-                FOUND_VAR
-                    Inotify_FOUND
                 REQUIRED_VARS
                     Inotify_LIBRARIES
                     Inotify_INCLUDE_DIRS

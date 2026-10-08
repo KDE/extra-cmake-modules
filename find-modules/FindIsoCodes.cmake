@@ -31,7 +31,6 @@ pkg_get_variable(IsoCodes_DOMAINS iso-codes domains)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(IsoCodes
-    FOUND_VAR IsoCodes_FOUND
     REQUIRED_VARS IsoCodes_DOMAINS IsoCodes_PREFIX
     VERSION_VAR IsoCodes_VERSION
 )
