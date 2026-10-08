@@ -64,6 +64,23 @@ set(UDEV_LIBS ${UDev_LIBRARIES})
 set(UDEV_INCLUDE_DIR ${UDev_INCLUDE_DIRS})
 mark_as_advanced(UDEV_FOUND UDEV_LIBS UDEV_INCLUDE_DIR)
 
+# warn about outdated variables
+function(_ecm_deprecate_FindUDev_var varname access_type newvarname)
+    if(access_type STREQUAL "READ_ACCESS")
+        message(DEPRECATION "\${${varname}} will be gone in future ECM versions. Since 5.57, use imported target UDev::UDev or \${${newvarname}} instead.")
+    endif()
+endfunction()
+
+function(_ecm_deprecate_UDEV_LIBS varname access_type)
+    _ecm_deprecate_FindUDev_var(${varname} ${access_type} UDev_LIBRARIES)
+endfunction()
+function(_ecm_deprecate_UDEV_INCLUDE_DIR varname access_type)
+    _ecm_deprecate_FindUDev_var(${varname} ${access_type} UDev_INCLUDE_DIRS)
+endfunction()
+
+variable_watch(UDEV_LIBS _ecm_deprecate_UDEV_LIBS)
+variable_watch(UDEV_INCLUDE_DIR _ecm_deprecate_UDEV_INCLUDE_DIR)
+
 include(FeatureSummary)
 set_package_properties(UDev PROPERTIES
     DESCRIPTION "API for enumerating and introspecting local devices (part of systemd)"
