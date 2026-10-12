@@ -190,7 +190,20 @@ Example usage:
 Since pre-1.0.0.
 #]=======================================================================]
 
+# The targets made here link with the policies of the project, which cmake_policy(VERSION) would unset.
+foreach(_ecm_policy CMP0156 CMP0179 CMP0181)
+    if(POLICY ${_ecm_policy})
+        cmake_policy(GET ${_ecm_policy} _ecm_${_ecm_policy})
+    endif()
+endforeach()
 cmake_policy(VERSION 3.16)
+foreach(_ecm_policy CMP0156 CMP0179 CMP0181)
+    if(_ecm_${_ecm_policy})
+        cmake_policy(SET ${_ecm_policy} ${_ecm_${_ecm_policy}})
+    endif()
+    unset(_ecm_${_ecm_policy})
+endforeach()
+unset(_ecm_policy)
 
 include(ECMMarkAsTest)
 include(ECMMarkNonGuiExecutable)
