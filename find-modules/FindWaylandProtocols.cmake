@@ -16,6 +16,8 @@ This will define the following variables:
     The version of wayland-protocols
 ``WaylandProtocols_DATADIR``
     The wayland protocols data directory
+
+Since 5.74.0.
 #]=======================================================================]
 
 cmake_policy(VERSION 3.16)

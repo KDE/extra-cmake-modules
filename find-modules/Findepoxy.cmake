@@ -35,6 +35,8 @@ If ``epoxy_FOUND`` is TRUE, it will also define the following imported target:
 In general we recommend using the imported target, as it is easier to use.
 Bear in mind, however, that if the target is in the link interface of an
 exported library, it must be made available by the package config file.
+
+Since 5.78.0.
 #]=======================================================================]
 
 cmake_policy(VERSION 3.16)
