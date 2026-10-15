@@ -17,6 +17,9 @@ if (QT_MAJOR_VERSION EQUAL "6")
     _ecm_qmlmodule_uri_to_path(MODULEDIR "@MODULE_NAME@" "@VERSION@")
     set(KDE_QMLDIR "${KDE_INSTALL_FULL_QMLDIR}/${MODULEDIR}")
     find_file(QMLDIR_FILE qmldir ${KDE_QMLDIR} NO_CACHE)
+    if (NOT QMLDIR_FILE)
+        find_file(QMLDIR_FILE qmldir PATHS ENV QML_IMPORT_PATH ENV QML2_IMPORT_PATH PATH_SUFFIXES "${MODULEDIR}" NO_CACHE)
+    endif()
     if (NOT QMLDIR_FILE) # Check the install destination, the QT_PLUGIN_PATH might not be set up correctly at this point
         # Check the Qt installation
         ecm_query_qt(qt_qml_dir QT_INSTALL_QML)
