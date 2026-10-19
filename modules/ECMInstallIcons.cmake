@@ -145,10 +145,10 @@ macro(_ecm_install_icons_v1 _defaultpath)
    endforeach (_current_ICON)
 
    # and now the svg icons
-   file(GLOB _icons *.svgz)
+   file(GLOB _icons *.svg *.svgz)
    foreach (_current_ICON ${_icons} )
       # since CMake 2.6 regex matches are stored in special variables CMAKE_MATCH_x, if it didn't match, they are empty
-      string(REGEX MATCH "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz)$" _dummy "${_current_ICON}")
+      string(REGEX MATCH "^.*/([a-zA-Z]+)sc\\-([a-z]+)\\-(.+\\.svgz?)$" _dummy "${_current_ICON}")
       set(_type  "${CMAKE_MATCH_1}")
       set(_group "${CMAKE_MATCH_2}")
       set(_name  "${CMAKE_MATCH_3}")
