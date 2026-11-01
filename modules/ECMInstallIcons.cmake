@@ -38,6 +38,8 @@ emblems, emotes, intl, mimetypes, places, status) and ``<ext>`` is ``.png`` or
 ``.svgz`` and ``.mng`` files are installed as well, but the specification does
 not allow them: GTK does not load them, and ``gtk-update-icon-cache`` leaves
 them out of the ``icon-theme.cache`` file it writes for the theme.
+Since 6.33.0, a ``.svgz`` icon prints a deprecation warning: install it
+uncompressed as ``.svg`` instead.
 
 The typical installation directory is ``share/icons``.
 
@@ -257,6 +259,9 @@ function(ecm_install_icons)
             endif()
             if(NOT _ECM_ICON_GROUP_${group})
                 message(WARNING "${icon} group (${group}) is not recognized")
+            endif()
+            if(ext STREQUAL "svgz")
+                message(DEPRECATION "${icon} is a .svgz file, which the FreeDesktop.org icon theme specification does not allow: GTK does not load it, and icon-theme.cache leaves it out. Install it uncompressed as .svg instead.")
             endif()
             if(size STREQUAL "sc")
                 if(NOT ext STREQUAL "svg" AND NOT ext STREQUAL "svgz")
