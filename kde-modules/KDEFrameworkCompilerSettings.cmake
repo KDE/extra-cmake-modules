@@ -68,3 +68,10 @@ kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 
 # add the metainfo platform check
 include(KDEMetaInfoPlatformCheck)
+
+include (ECMDeprecationSettings)
+if (NOT DEFINED ${REQUIRED_QT_VERSION})
+    set (REQUIRED_QT_VERSION "6.10.0")
+endif()
+_ecm_geh_generate_hex_number_from_version(HEX_VERSION ${REQUIRED_QT_VERSION})
+add_compile_definitions(QT_ENABLE_STRICT_MODE_UP_TO=${HEX_VERSION})
