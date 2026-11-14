@@ -135,6 +135,12 @@ with CI/CD pipelines:
 
 cmake_minimum_required(VERSION "3.18")
 
+# Qt's qt.toolchain.cmake sets ANDROID_SDK_ROOT as a normal variable before
+# chainloading this file. Keep it instead of letting set(CACHE) drop it.
+if(POLICY CMP0126)
+    cmake_policy(SET CMP0126 NEW)
+endif()
+
 macro(set_deprecated_variable actual_variable deprecated_variable default_value)
     set(${deprecated_variable} "${default_value}" CACHE STRING "Deprecated. Use ${actual_variable}")
     if (NOT DEFINED ${actual_variable})
