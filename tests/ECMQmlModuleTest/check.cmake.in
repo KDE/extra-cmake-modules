@@ -24,12 +24,15 @@ function (check_file_contents)
         message(FATAL_ERROR "${ARGS_GENERATED} was not generated")
     endif()
     file(READ "${ARGS_GENERATED}" generated_contents)
+    # Newer Qt versions add an "export <version>" line to the generated qmldir.
+    # Ignore it so the expected files work with all Qt 6 versions.
+    string(REGEX REPLACE "\nexport [0-9]+\\.[0-9]+\n" "\n" generated_contents "${generated_contents}")
     if (NOT EXISTS "${ARGS_EXPECTED}")
         message(FATAL_ERROR "Original ${ARGS_EXPECTED} was not found")
     endif()
     file(READ "${ARGS_EXPECTED}" original_contents)
     if (NOT "${generated_contents}" STREQUAL "${original_contents}")
-        message(FATAL_ERROR "${generated_file} contains '${generated_contents}' instead of '${original_contents}'")
+        message(FATAL_ERROR "${ARGS_GENERATED} contains '${generated_contents}' instead of '${original_contents}'")
     endif()
 endfunction()
 
