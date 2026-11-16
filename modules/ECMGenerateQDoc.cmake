@@ -14,11 +14,19 @@ It allows to generate both online HTML documentation as well as
 
 ::
 
-  ecm_generate_qdoc(<target_name> <qdocconf_file>)
+  ecm_generate_qdoc(<target_name> <qdocconf_file>
+                    [HEADERS <header> [<header> ...]])
 
 ``target_name`` is the library target for which the documentation is generated.
 
 ``qdocconf_file`` is the .qdocconf file that controls the documentation generation.
+
+``HEADERS`` lists the header files to document, typically the same list that is
+passed to ``install()`` (for example the ``REQUIRED_HEADERS`` variable filled by
+``ecm_generate_headers``). Relative paths are resolved against the current
+source directory. The files are appended to the ``headers`` variable of the
+qdocconf file, so it does not need to list them by hand (and should not use
+``headerdirs`` then). Since 6.33.0.
 
 If the project contains multiple libraries with documented APIs ``ecm_generate_qdoc``
 should be called for each one.
@@ -57,6 +65,11 @@ add_custom_target(generate_qch)
 add_custom_target(install_qch_docs)
 
 function(ecm_generate_qdoc target qdocconf_file)
+    cmake_parse_arguments(PARSE_ARGV 2 ARG "" "" "HEADERS")
+    if (ARG_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Unknown arguments given to ecm_generate_qdoc(): \"${ARG_UNPARSED_ARGUMENTS}\"")
+    endif()
+
     find_package(Qt6Tools CONFIG QUIET)
     find_package(Qt6 OPTIONAL_COMPONENTS ToolsTools CONFIG QUIET)
 
@@ -124,13 +137,28 @@ function(ecm_generate_qdoc target qdocconf_file)
 
 
     get_filename_component(doc_target "${qdocconf_file}" NAME_WLE)
+
+    set(qdocconf_path "${target_source_dir}/${qdocconf_file}")
+    if (ARG_HEADERS)
+        # Wrap the project qdocconf file and append the given headers to it
+        set(headers_content "")
+        foreach(header IN LISTS ARG_HEADERS)
+            get_filename_component(header "${header}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+            string(APPEND headers_content " \\\n    ${header}")
+        endforeach()
+        set(qdocconf_path "${doc_output_dir}/${target}_${doc_target}.qdocconf")
+        file(GENERATE
+            OUTPUT "${qdocconf_path}"
+            CONTENT "include(${full_qdocconf_path})\n\nheaders +=${headers_content}\n"
+        )
+    endif()
     set(qdoc_qch_output_dir "${CMAKE_BINARY_DIR}/${INSTALL_DOCDIR}")
     set(index_dir "${CMAKE_BINARY_DIR}/${INSTALL_DOCDIR}")
 
     # prepare docs target
     set(prepare_qdoc_args
         -outputdir ${dest_dir}/${doc_target}
-        "${target_source_dir}/${qdocconf_file}"
+        "${qdocconf_path}"
         -prepare
         ${index_dir_arg}
         -no-link-errors
@@ -154,7 +182,7 @@ function(ecm_generate_qdoc target qdocconf_file)
     # generate docs target
     set(generate_qdoc_args
         -outputdir ${dest_dir}/${doc_target}
-        "${target_source_dir}/${qdocconf_file}"
+        "${qdocconf_path}"
         -generate
         ${index_dir_arg}
         -installdir ${dest_dir}
