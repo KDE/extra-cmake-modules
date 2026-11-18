@@ -19,6 +19,7 @@ headers in the deployed directory layout.
       [PACKAGE_TARGET_NAMESPACE <package_target_namespace>]
       [NO_PACKAGE_TARGET_NAMESPACE]
       [COMPILE_DEFINITIONS <definition> [...]]
+      [QT_STRICT_MODE_LEVEL <version>] # Since 6.33
       [EXTRA_DEPENDENCIES <dependency> [<version>] [...]]
       [EXTRA_LINK_LIBRARIES <library> [...]]
   )
@@ -59,6 +60,13 @@ in the package without any namespace.
 
 ``COMPILE_DEFINITIONS`` can be used to set custom definitions for the test
 builds against the headers.
+
+``QT_STRICT_MODE_LEVEL`` can be used as convenience argument to add
+``-DQT_ENABLE_STRICT_MODE_UP_TO=<hex_version>`` (see
+`documentation <https://doc.qt.io/qt-6/qtglobal.html#QT_ENABLE_STRICT_MODE_UP_TO>`_)
+to any list of custom definitions for the test builds against the headers, next
+to those set with ``COMPILE_DEFINITIONS``. The argument ``<version>`` will be
+converted to the hexadecimal value as used with the definition. Since 6.33.
 
 ``EXTRA_DEPENDENCIES`` can be used to add custom dependencies to search for
 with ``find_package()``. This can be used if the current dependencies declared
@@ -223,7 +231,7 @@ endif()
 
 function(ecm_add_installed_library_check _target)
     set(options NO_PACKAGE_TARGET_NAMESPACE NO_PACKAGE_VERSION)
-    set(oneValueArgs PACKAGE_NAME PACKAGE_VERSION PACKAGE_TARGET_NAMESPACE)
+    set(oneValueArgs PACKAGE_NAME PACKAGE_VERSION PACKAGE_TARGET_NAMESPACE QT_STRICT_MODE_LEVEL)
     set(multiValueArgs EXTRA_DEPENDENCIES EXTRA_LINK_LIBRARIES COMPILE_DEFINITIONS)
 
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -242,6 +250,28 @@ function(ecm_add_installed_library_check _target)
     get_target_property(_type ${_target} TYPE)
     if(NOT ${_type} IN_LIST _library_types)
         message(FATAL_ERROR "ecm_add_installed_library_check cannot be called on a target which is not some library. Was: ${_type}")
+    endif()
+    set(_qt_strict_mode_level)
+    if (ARG_QT_STRICT_MODE_LEVEL)
+        string(REGEX MATCH "^([0-9]+)(\\.([0-9]+)(\\.([0-9]+))?)?$" _match "${ARG_QT_STRICT_MODE_LEVEL}")
+        if(_match STREQUAL "")
+            message(FATAL_ERROR "ecm_add_installed_library_check given QT_STRICT_MODE_LEVEL argument not matching <major>[.<minor>[.<patch>]]: ${ARG_QT_STRICT_MODE_LEVEL}")
+        endif()
+        set(_major ${CMAKE_MATCH_1})
+        if (CMAKE_MATCH_COUNT GREATER_EQUAL 3)
+            set(_minor ${CMAKE_MATCH_3})
+        else()
+            set(_minor "0")
+        endif()
+        if (CMAKE_MATCH_COUNT GREATER_EQUAL 5)
+            set(_patch ${CMAKE_MATCH_5})
+        else()
+            set(_patch "0")
+        endif()
+        math(
+            EXPR _qt_strict_mode_level "${_major}*65536 + ${_minor}*256 + ${_patch}"
+            OUTPUT_FORMAT HEXADECIMAL
+        )
     endif()
 
     # setup data
@@ -267,6 +297,9 @@ function(ecm_add_installed_library_check _target)
         else()
             set(_library_target_namespace "${_package_name}::")
         endif()
+    endif()
+    if (_qt_strict_mode_level)
+        list(APPEND ARG_COMPILE_DEFINITIONS "-DQT_ENABLE_STRICT_MODE_UP_TO=${_qt_strict_mode_level}")
     endif()
 
     set(_compiler_propagation)
