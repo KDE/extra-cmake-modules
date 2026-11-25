@@ -204,6 +204,7 @@ function(ecm_finalize_qml_module ARG_TARGET)
         TYPEINFO module_typeinfo
         QML_FILES module_qml_files
         RESOURCES module_resources
+        EXTRA_QMLDIRS extra_qmldirs
     )
 
     set(module_dir "${ARG_DESTINATION}/${module_target_path}")
@@ -235,6 +236,13 @@ function(ecm_finalize_qml_module ARG_TARGET)
     # Install the QML module meta information.
     install(FILES "${module_qmldir}"   DESTINATION "${module_dir}")
     install(FILES "${module_typeinfo}" DESTINATION "${module_dir}")
+
+    get_filename_component(module_qmldir_dir "${module_qmldir}" DIRECTORY)
+    foreach(extra_qmldir IN LISTS extra_qmldirs)
+        get_filename_component(extra_qmldir_dir "${extra_qmldir}" DIRECTORY)
+        file(RELATIVE_PATH dest_dir "${module_qmldir_dir}" "${extra_qmldir_dir}")
+        install(FILES "${extra_qmldir}" DESTINATION "${module_dir}/${dest_dir}")
+    endforeach()
 
     # Install QML files, possibly renamed.
     # see Kirigami::StyleSelector::resolveFileX, on Android we never use QML files from disk
